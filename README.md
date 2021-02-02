@@ -1,1 +1,1 @@
-# sunbird-collecion-editor
+# sunbird-collection-editor
