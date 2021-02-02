@@ -1,0 +1,58 @@
+*[lang="en"] body {
+  font-family: var(--font-stack-en);
+}
+
+html,
+body {
+  height: 100%;
+  // font-size: $font-size-base;
+}
+
+body {
+  background: $body-background-color !important;
+  position: relative;
+  font-family: $font-stack-en;
+  letter-spacing: 0.2px;
+  height: auto;
+  color: $default-text-color;
+  // padding-bottom: 336px;
+  min-height: 100vh;
+  text-rendering: optimizeLegibility;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  text-align: left;
+  margin: 0;
+
+  &.pushable {
+    background: $body-background-color !important;
+
+    &>.pusher {
+      background: transparent !important;
+      padding-bottom: 400px !important;
+
+      &.dimmed {
+        height: 100vh;
+      }
+    }
+  }
+}
+
+.font-italic {
+    font-style: italic;
+}
+
+@media only screen and (max-width: 1199px) and (min-width: 768px) {
+  .ui.container {
+    width: 95%;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+
+@media (min-width: 1280px) {
+    .ui.container, .ui.grid.container {
+        width: 95% !important;
+    }  
+}

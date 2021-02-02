@@ -1,0 +1,123 @@
+
+<div class="sb-prominent-filter sb-bg-header-blue" [formGroup]="searchFilterForm">
+  <div class="ui container pt-5 pb-20">
+    <div class="d-flex flex-w-wrap flex-jc-space-between flex-ai-center">
+      <div class="sb-search-box small no-btn">
+        <div class="input-div relative">
+            <i class="search icon"></i>
+            <input class="sb-search-input" type="text" placeholder="Search Library" />
+        </div>
+        <button class="sb-btn sb-btn-normal">{{labelMessages.lbl.search}}</button>
+      </div>
+      <div class="fs-0-785 cursor-pointer" (click)="showfilter()">
+        {{labelMessages.lbl.filterText}}
+        <i *ngIf="isFilterShow" class="caret up icon"></i>
+        <i *ngIf="!isFilterShow" class="caret down icon"></i>
+      </div>
+    </div>
+    <div class="sb-prominent-filter-container pt-16" *ngIf="isFilterShow">
+      <hr class="mb-20 w-100">
+      <div class="sb-prominent-filter-field">
+        <label class="fsmall d-block">Content Type(s)
+        </label>
+        <sui-multi-select class="selection sb-select-searchfilter d-block" placeholder=""
+          formControlName="contentType" #contentTypes [options]="filters.contentType" [isSearchable]='true'
+        >
+            <sui-select-option *ngFor="let contentType of contentTypes.filteredOptions" [value]="contentType"
+            > </sui-select-option>
+        </sui-multi-select>
+      </div>
+      <!-- <div class="sb-prominent-filter-field">
+        <label class="fsmall d-block">Purpose
+        </label>
+        <sui-multi-select class="selection sb-select-searchfilter d-block" placeholder=""
+          formControlName="gradeLevel" #gradeLevels [options]="filters.gradeLevel" [isSearchable]='true'
+        >
+            <sui-select-option *ngFor="let gradeLevel of gradeLevels.filteredOptions" [value]="gradeLevel"
+          > </sui-select-option>
+        </sui-multi-select>
+      </div> -->
+      <!-- <div class="sb-prominent-filter-field">
+        <label class="fsmall d-block">Topics
+        </label>
+        <sui-multi-select class="selection sb-select-searchfilter d-block" placeholder=""
+          formControlName="gradeLevel" #gradeLevels [options]="filters.gradeLevel" [isSearchable]='true'
+        >
+            <sui-select-option *ngFor="let gradeLevel of gradeLevels.filteredOptions" [value]="gradeLevel"
+          > </sui-select-option>
+        </sui-multi-select>
+      </div> -->
+      <!-- <div class="sb-prominent-filter-field">
+        <label class="fsmall d-block">Board
+        </label>
+        <sui-multi-select class="selection sb-select-searchfilter d-block" placeholder=""
+          formControlName="gradeLevel" #gradeLevels [options]="filters.gradeLevel" [isSearchable]='true'
+          >
+            <sui-select-option *ngFor="let gradeLevel of gradeLevels.filteredOptions" [value]="gradeLevel"
+            > </sui-select-option>
+        </sui-multi-select>
+      </div> -->
+      <div class="sb-prominent-filter-field">
+        <label class="fsmall d-block">Purpose
+        </label>
+        <sui-multi-select class="selection sb-select-searchfilter d-block" placeholder=""
+          formControlName="gradeLevel" #gradeLevels [options]="filters.gradeLevel" [isSearchable]='true'
+        >
+            <sui-select-option *ngFor="let gradeLevel of gradeLevels.filteredOptions" [value]="gradeLevel"
+          > </sui-select-option>
+        </sui-multi-select>
+      </div>
+      <div class="sb-prominent-filter-field">
+        <label class="fsmall d-block">Topic(s)
+        </label>
+        <sui-multi-select class="selection sb-select-searchfilter d-block" placeholder=""
+          formControlName="gradeLevel" #gradeLevels [options]="filters.gradeLevel" [isSearchable]='true'
+        >
+            <sui-select-option *ngFor="let gradeLevel of gradeLevels.filteredOptions" [value]="gradeLevel"
+          > </sui-select-option>
+        </sui-multi-select>
+      </div>
+      <div class="sb-prominent-filter-field">
+        <label class="fsmall d-block">Board
+        </label>
+        <sui-multi-select class="selection sb-select-searchfilter d-block" placeholder=""
+          formControlName="gradeLevel" #gradeLevels [options]="filters.gradeLevel" [isSearchable]='true'
+        >
+            <sui-select-option *ngFor="let gradeLevel of gradeLevels.filteredOptions" [value]="gradeLevel"
+          > </sui-select-option>
+        </sui-multi-select>
+      </div>
+      <div class="sb-prominent-filter-field">
+        <label class="fsmall d-block">Class(es)
+        </label>
+        <sui-multi-select class="selection sb-select-searchfilter d-block" placeholder=""
+          formControlName="gradeLevel" #gradeLevels [options]="filters.gradeLevel" [isSearchable]='true'
+        >
+            <sui-select-option *ngFor="let gradeLevel of gradeLevels.filteredOptions" [value]="gradeLevel"
+          > </sui-select-option>
+        </sui-multi-select>
+      </div>
+      <div class="sb-prominent-filter-field">
+        <label class="fsmall d-block">Medium
+        </label>
+        <sui-multi-select class="selection sb-select-searchfilter d-block" placeholder=""
+          formControlName="medium" #mediums [options]="filters.medium">
+            <sui-select-option *ngFor="let medium of mediums.filteredOptions" [value]="medium"
+            > </sui-select-option>
+        </sui-multi-select>
+      </div>
+      <div class="sb-prominent-filter-field">
+        <label class="fsmall d-block">Subject
+        </label>
+        <sui-multi-select class="selection sb-select-searchfilter d-block" placeholder=""
+          formControlName="subject" #subjects [options]="filters.subject">
+            <sui-select-option *ngFor="let subject of subjects.filteredOptions" [value]="subject"> </sui-select-option>
+        </sui-multi-select>
+      </div>
+      <div class="d-flex flex-as-center pt-10 sb-btn-cover">
+        <button type="button" class="sb-btn sb-btn-normal sb-btn-outline-primary ml-5" (click)="resetFilter();">Reset</button>
+        <button type="button" class="sb-btn sb-btn-normal sb-btn-primary ml-15" (click)="applyFilter();">Apply</button>
+      </div>
+    </div>
+  </div>
+</div>

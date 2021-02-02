@@ -1,0 +1,194 @@
+.sb-treePicker-body {
+    display: flex;
+    flex-wrap: wrap;
+    height: 100%;
+  
+    .sb-treePicker-selectionSection {
+      width: 400px;
+      padding: 16px;
+      border-width: 0 1px 0 0;
+      border-color: #ccc;
+      border-style: solid;
+  
+      .sb-search-box {
+        max-width: 392px;
+        width: 100%;
+        margin: 0 0 16px 0;
+  
+        .sb-search-icon {
+          color: #aaa;
+        }
+      }
+    }
+  
+    .sb-treePicker-selectedSection {
+      width: calc(100% - 400px);
+      padding: 16px;
+  
+      .list {
+        .node {
+          display: none;
+  
+          &.picked {
+            display: block;
+          }
+        }
+  
+        .empty {
+          display: none;
+        }
+      }
+  
+      .sb-treePicker-selected-count {
+        color: #00c786;
+      }
+    }
+  
+    .tree .node,
+    .list .node {
+      margin: 0 0 8px 0;
+      min-height: 16px;
+    }
+  
+    .tree .node .head,
+    .list .node .head {
+      display: flex;
+      align-items: center;
+    }
+  
+    .tree .node .icon,
+    .list .node .icon,
+    .tree .node .name,
+    .list .node .name {
+      cursor: pointer;
+      vertical-align: middle;
+    }
+  
+    .tree .node .icon,
+    .list .node .icon {
+      margin: 0 8px 0 0;
+    }
+  
+    .tree .node .name,
+    .list .node .name {
+      color: #666;
+    }
+  
+    .tree .node .disabled,
+    .list .node .disabled {
+      opacity: 0.3;
+      cursor: default;
+    }
+  
+    .tree .node .content,
+    .list .node .content {
+      display: none;
+      border-left: 1px dotted #ccc;
+      border-right: 0;
+      margin: 8px;
+      padding: 0 8px;
+    }
+  
+    .tree .node .sb-treePicker-searchedQuery,
+    .list .node .sb-treePicker-searchedQuery {
+      background: #ffc107;
+    }
+  
+    .tree .node .add.icon:before,
+    .list .node .add.icon:before,
+    .tree .node .minus.icon:before,
+    .list .node .minus.icon:before,
+    .tree .node .checkmark:before,
+    .list .node .checkmark:before {
+      font-size: 10px;
+      line-height: 11px;
+      border-radius: 4px;
+      border: 1px solid #80a7ce;
+      height: 16px;
+      width: 16px;
+      padding: 2px;
+      color: #80a7ce;
+      display: inline-block;
+      vertical-align: middle;
+    }
+  
+    .tree .node .checkmark:before,
+    .list .node .checkmark:before {
+      color: #fff;
+      background: #00c786 !important;
+      border-color: #00c786;
+    }
+  
+    .tree .node .square,
+    .list .node .square {
+      color: #80a7ce;
+      font-size: 16px;
+    }
+  
+    .tree .node .square,
+    .list .node .square,
+    .tree .node .minus,
+    .list .node .minus,
+    .tree .node .checkmark,
+    .list .node .checkmark {
+      display: none;
+    }
+  
+    .tree .node.opened>.head .name,
+    .list .node.opened>.head .name {
+      color: #333;
+    }
+  
+    .tree .node.opened>.head .add,
+    .list .node.opened>.head .add {
+      display: none;
+    }
+  
+    .tree .node.opened>.head .minus,
+    .list .node.opened>.head .minus,
+    .tree .node.childless .head .square,
+    .list .node.childless .head .square {
+      display: inline-block;
+    }
+  
+    .tree .node.childless .head .add,
+    .list .node.childless .head .add,
+    .tree .node.childless .content .add,
+    .list .node.childless .content .add,
+    .tree .node.childless .content .minus,
+    .list .node.childless .content .minus {
+      display: none;
+    }
+  
+    .tree .node.picked .checkmark,
+    .list .node.picked .checkmark {
+      display: inline-block;
+      margin: 0 10px 0 0;
+    }
+  
+    .tree .node.picked .head .square,
+    .list .node.picked .head .square {
+      display: none;
+    }
+  
+    .tree .picked .name {
+      color: #00c786;
+    }
+  }
+  
+  [dir="rtl"] .sb-treePicker-body {
+    .sb-treePicker-selectionSection {
+      border-width: 0 0 0 1px;
+    }
+  
+    .tree .node .icon,
+    .list .node .icon {
+      margin: 0 0 0 8px;
+    }
+  
+    .tree .node .content,
+    .list .node .content {
+      border-left: 0;
+      border-right: 1px dotted #ccc;
+    }
+  }

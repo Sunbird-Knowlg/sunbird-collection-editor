@@ -1,0 +1,36 @@
+<div class="add-to-library mb-30">
+  <!-- Blue Header -->
+  <div class="sb-bg-color-primary add-to-library__header">
+    <div class="ui container relative position">
+      <div class="d-flex flex-ai-center">
+        <button class="sb-btn sb-btn-primary sb-btn-xs back-btn px-0" (click)="back();"><i class="arrow left icon fs-1"></i></button>
+        <div class="ml-8 sb-color-white">
+          <div class="d-flex flex-ai-center fsmall">
+            <div class="font-weight-bold fs-1-16">Add from Library</div>
+            <div class="sb-border-vertical mx-15"></div>
+            <div class="flex flex-wrap">
+              <h5>Chapter 1</h5>
+              <span>Science</span><span class="add-to-library-dot"></span><span>Class 10</span><span
+                class="add-to-library-dot"></span><span>DP-1205</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- Filter -->
+  <lib-library-filter (filterChangeEvent)="onFilterChange($event);"></lib-library-filter>
+  <div class="ui container min-h-500" >
+    <!-- Player Section -->
+    <div class="sb-g add-to-library__toc-player">
+      <!-- Left Sidebar for cards -->
+      <section class="sb-g-col-xs-12 sb-g-col-md-4 sb-g-col-lg-4">
+          <lib-library-list>  </lib-library-list>   
+      </section>
+      <!-- Right Player Sections -->
+      <section class="sb-g-col-xs-12 sb-g-col-md-8 sb-g-col-lg-8 relative position ml-24">
+          <lib-library-player></lib-library-player> 
+      </section>
+    </div>
+  </div>
+</div>
