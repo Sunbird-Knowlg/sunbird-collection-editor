@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'lib-library-player',
@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./library-player.component.scss']
 })
 export class LibraryPlayerComponent implements OnInit {
-
+@Input() contentListDetails;
   constructor() { }
 
   ngOnInit() {

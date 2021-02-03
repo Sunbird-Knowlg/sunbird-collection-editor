@@ -30,7 +30,6 @@ export class ContentplayerPageComponent implements OnInit, AfterViewInit, OnDest
       }
     });
   }
-
   ngAfterViewInit() {
     // this.loadDefaultPlayer();
   }
