@@ -127,5 +127,7 @@ export class EditorService {
     };
     return this.dataService.post(req);
   }
-
+  fetchContentListDetails(req) {
+    return this.publicDataService.post(req);
+  }
 }

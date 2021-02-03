@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, SimpleChanges } from '@angular/core';
 import * as _ from 'lodash-es';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -30,7 +30,15 @@ export class ContentplayerPageComponent implements OnInit, AfterViewInit, OnDest
       }
     });
   }
-
+  // ngOnChanges(changes: SimpleChanges) {
+  //   // changes.prop contains the old and the new value...
+  //   this.editorService.nodeData$.pipe(takeUntil(this.onComponentDestroy$)).subscribe((data: IeventData) => {
+  //     if (data.type === 'nodeSelect' && (!this.playerConfig || this.playerConfig.metadata.identifier !== data.metadata.identifier)) {
+  //       this.content = data.metadata;
+  //       this.getContentDetails();
+  //     }
+  //   });
+  // }
   ngAfterViewInit() {
     // this.loadDefaultPlayer();
   }

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { EditorService } from '../../services';
 
 @Component({
   selector: 'lib-library-list',
@@ -6,10 +7,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./library-list.component.scss']
 })
 export class LibraryListComponent implements OnInit {
+@Input() contentList;
+@Output() contentChangeEvent = new EventEmitter<any>();
 
-  constructor() { }
+  constructor(public editorService: EditorService) { }
 
   ngOnInit() {
   }
-
+  onSelectContent(content) {
+    this.editorService.emitSelectedNodeMetaData({type: 'nodeSelect', metadata: content});
+  }
+  onContentChange(selectedContent: any) {
+    this.contentChangeEvent.emit({content: selectedContent});
+  }
 }
