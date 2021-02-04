@@ -1,3 +1,5 @@
+<div class="aspectratio" data-ratio="16:9" #aspectRatio>
+
 <iframe #contentIframe id="contentPlayer" *ngIf="playerType === 'default-player'" class="contentViewerIframeShadow" name="contentPlayer"></iframe>
 
 <sunbird-pdf-player *ngIf="playerType === 'pdf-player'" [playerConfig]="playerConfig"
@@ -5,8 +7,8 @@
 
 <sunbird-video-player *ngIf="playerType === 'video-player'" [playerConfig]="playerConfig"
 (playerEvent)="eventHandler($event)" (telemetryEvent)="generateContentReadEvent($event, true)"></sunbird-video-player>
-
-<div class="ui grid text-font">
+</div>
+<div class="ui grid text-font mt-15">
     <div class="six wide column">
         <div class="sb-field-group">
             <label class="sb-color-gray-100">Name</label>
