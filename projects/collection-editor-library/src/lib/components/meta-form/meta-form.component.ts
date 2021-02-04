@@ -131,53 +131,22 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
     }
 
 
-    // tslint:disable-next-line:max-line-length
-    // this.formDataConfig = _.map(_.filter(_.cloneDeep(formConfig), data => {
-    //   if (this.metaDataFields.visibility === 'Default' && _.includes(this.rootLevelConfig, data.code)) {
-    //     return data;
-    //   } else if (this.metaDataFields.visibility === 'Parent' && _.includes(this.unitLevelConfig, data.code)) {
-    //     console.log('---->//////', data);
-    //     return data;
-    //   }
-    // }), val => {
-    //   if (_.get(this.metaDataFields, val.code)) {
-    //     val.default = _.get(this.metaDataFields, val.code);
-    //   }
-    //   if (val.code === 'title' && _.get(this.metaDataFields, 'name')) {
-    //     val.default = _.get(this.metaDataFields, 'name');
-    //   }
-    //   return val;
-    // });
-
-
     this.formFieldProperties = _.cloneDeep(formConfig);
     console.log(this.formFieldProperties);
 
-    // _.forEach(_.cloneDeep(this.formConfig), section => {
-    //   _.forEach(section.fields, field => {
-    //     field.default = _.get(this.metaDataFields, field.code);
-    //   });
-    //   this.formDataConfig.push(section);
-    // });
-
-
-    // console.log('config--->', this.formDataConfig);
   }
 
   outputData(eventData) {
-    if (eventData) {
-      console.log('eventData outputData------>', eventData);
-      // this.metaDataFields = eventData.value;
-      // this.treeService.setNodeTitle(_.get(this.metaDataFields, 'name'));
-    }
+    // if (eventData) {
+    //   console.log('eventData outputData------>', eventData);
+    // }
   }
 
   onStatusChanges(eventData) {
-    // if (eventData) {
-    //   console.log('eventData statusChanges------>', eventData);
-    //   this.metaDataFields = eventData.value;
-    //   this.treeService.setNodeTitle(_.get(this.metaDataFields, 'name'));
-    // }
+    if (eventData) {
+      console.log('eventData statusChanges------>', eventData);
+      this.helperService.getFormStatus(eventData);
+    }
   }
 
   valueChanges(eventData) {
