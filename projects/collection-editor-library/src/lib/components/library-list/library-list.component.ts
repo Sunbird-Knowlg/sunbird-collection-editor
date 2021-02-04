@@ -11,12 +11,15 @@ export class LibraryListComponent implements OnInit {
 @Input() showAddedContent;
 @Output() contentChangeEvent = new EventEmitter<any>();
 @Output() moveEvent = new EventEmitter<any>();
+public selectedContent: any ;
   constructor(public editorService: EditorService) { }
 
   ngOnInit() {
+    this.selectedContent = this.contentList[0];
   }
 
   onSelectContent(content) {
+    this.selectedContent = content;
     this.editorService.emitSelectedNodeMetaData({type: 'nodeSelect', metadata: content});
   }
 

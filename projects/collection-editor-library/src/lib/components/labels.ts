@@ -7,6 +7,10 @@ export const labelMessages = {
         contentType: 'Content Type',
         reset: 'Reset',
         apply: 'apply',
-        filterText: 'what kind of content are you looking for?'
+        filterText: 'what kind of content are you looking for?',
+        selectContent: 'Select content',
+        noMatchingContent: 'Sorry there is no matching content',
+        changeFilterMessage: 'Changing filter helps you find more content',
+        changeFilter: 'Change filters'
     }
 };

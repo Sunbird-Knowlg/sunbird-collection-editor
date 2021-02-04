@@ -20,7 +20,7 @@
   </div>
 <!-- Filter -->
   <lib-library-filter [filterOpenStatus]="isFilterOpen" (filterChangeEvent)="onFilterChange($event);"></lib-library-filter>
-  <div class="ui container min-h-500" *ngIf="!showLoader">
+  <div class="ui container min-h-500" *ngIf="!showLoader && contentList?.length">
     <!-- Player Section -->
     <div class="sb-g add-to-library__toc-player">
       <!-- Left Sidebar for cards -->
@@ -32,5 +32,15 @@
           <lib-library-player [contentListDetails]="selectedContent"></lib-library-player> 
       </section>
     </div>
+  </div>
+</div>
+
+<!--not found-->
+<div class="ui container" *ngIf="!showLoader && !contentList?.length">
+  <div class="add-to-library__no-result">
+    <h5 class="font-weight-bold">{{labelMessages?.lbl?.noMatchingContent}}</h5>
+    <img alt="No Content available" class="mt-16" src="assets/images/emptyResult.svg">
+    <h6 class="sb-color-gray-300 font-weight-normal mt-8">{{labelMessages?.lbl?.changeFilterMessage}}</h6>
+    <button class="sb-btn sb-btn-secondary sb-btn-normal mt-16" (click)="openFilter();">{{labelMessages?.lbl?.changeFilter}}</button>
   </div>
 </div>

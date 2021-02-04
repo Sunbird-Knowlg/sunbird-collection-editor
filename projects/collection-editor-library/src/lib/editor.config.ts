@@ -13,12 +13,6 @@ export const toolbarConfig = {
     buttonType: 'button',
     style: 'sb-btn sb-btn-normal sb-btn-primary mr-10',
     slot: `<i class="trash alternate outline icon"></i>`
-  },
-  {
-    name: 'add from library',
-    type: 'addFromLibrary',
-    buttonType: 'button',
-    style: 'sb-btn sb-btn-normal sb-btn-outline-primary mr-10',
   }
   // {
   //   name: 'Add Resource',
