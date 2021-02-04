@@ -1,6 +1,5 @@
 <div class="add-to-library mb-30" *ngIf="!showLibraryPage">
-  <lib-editor-header
-    [toolbarConfig]="toolbarConfig"
+  <lib-editor-header *ngIf="treeService.getTreeObject()"
     (toolbarEmitter)="toolbarEventListener($event)"
   >
   </lib-editor-header>

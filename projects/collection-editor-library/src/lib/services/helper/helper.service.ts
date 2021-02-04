@@ -79,6 +79,48 @@ export class HelperService {
     return result;
 }
 
+  reviewContent(contentId): Observable<any> {
+    const option = {
+      url: 'content/v3/review/' + contentId,
+      data: {
+        request: {
+          content: {}
+        }
+      }
+    };
+    return this.publicDataService.post(option);
+  }
+
+  submitRequestChanges(contentId, comment) {
+    const requestBody = {
+      request: {
+        content: {
+          rejectComment: _.trim(comment)
+        }
+      }
+    };
+    const option = {
+      url: `content/v3/reject/${contentId}`,
+      data: requestBody
+    };
+    return this.publicDataService.post(option);
+  }
+
+  publishContent(contentId) {
+    const requestBody = {
+      request: {
+        content: {
+          lastPublishedBy: this.editorService.editorConfig.context.uid
+        }
+      }
+    };
+    const option = {
+      url: `content/v3/publish/${contentId}`,
+      data: requestBody
+    };
+    return this.publicDataService.post(option);
+  }
+
   public getTimeSpentText(pdfPlayerStartTime) {
       const duration = new Date().getTime() - pdfPlayerStartTime;
       const minutes = Math.floor(duration / 60000);
