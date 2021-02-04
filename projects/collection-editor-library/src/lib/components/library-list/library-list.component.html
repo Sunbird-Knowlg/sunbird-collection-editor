@@ -5,15 +5,14 @@
   <div class="d-flex flex-w-wrap flex-jc-space-between flex-ai-baseline mb-15">
     <div>   
       <small class="sb-color-gray-200 d-block pb-10">Select a content to add to the textbook</small>
-      <sui-checkbox class="toggle"></sui-checkbox>
+      <sui-checkbox class="toggle" [(ngModel)]="showAddedContent" (checkChange)="onShowAddedContentChange();"></sui-checkbox>
         <small class="d-block mt-5 fs-0785"> Show content added to textbook</small>
     </div>
       <div class="sb-w-75">
         <label class="d-block font-weight-normal fs-0785">Sort By</label>
         <sui-multi-select class="selection" placeholder="A - Z"
                           #multiSelect>
-            <sui-select-option 
-                               >
+            <sui-select-option>
             </sui-select-option>
         </sui-multi-select>
     </div>
@@ -24,18 +23,18 @@
       <div class="sbchapter__item mb-0 d-flex flex-dc" (click)="onSelectContent(content)">
       <!-- <div class="sbchapter__img"><img src="./assets/images/book.png" /></div> -->
       <h4 class="ml-8 w-80">
-        <div class="sbcard__title mb-0 font-weight-bold ellipsis w-90" popupDelay="1000" suiPopup
+        <div class="sbcard__title mb-0 font-weight-bold ellipsis w-75" popupDelay="1000" suiPopup
         popupText="{{content.name}}">{{content.name}}</div>
         <div class="sbchapter__item__title text-left sb__ellipsis sb__ellipsis--two mr-8 sb-color-black">
           By CBSE 
         </div>
       </h4>
-      <div class="btn-addtoLibrary pt-5 pr-10">
+      <div class="btn-addtoLibrary pt-5 pr-10" *ngIf="!showAddedContent">
         <button class="sb-btn sb-btn-xs sb-btn-dark-green sb-left-icon-btn font-weight-bold text-inherit">
           <i class="plus square icon mr-4" ></i>Select content 
         </button>
       </div>
-      <div class="textbookBtnLink absolute">
+      <div class="textbookBtnLink absolute" *ngIf="showAddedContent">
         <button type="button" class="sb-btn sb-btn-normal sb-btn-link sb-btn-hover-none
          sb-btn-link-secondary sb-left-icon-btn fs-0-785"><i class="circle check icon"></i>
          Added to textbook</button>
@@ -44,5 +43,5 @@
     </div>
   </div>
   <h6 class="sb-color-gray-400 font-weight-normal mt-20">Changing filters make you find more content</h6>
-  <a class="sb-color-primary cursor-pointer font-weight-bold fs-0-785 text-inherit">Change filters</a>
+  <a class="sb-color-primary cursor-pointer font-weight-bold fs-0-785 text-inherit" (click)="changeFilter()">Change filters</a>
 </div>
