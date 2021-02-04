@@ -20,9 +20,7 @@
             <lib-meta-form [rootFormConfig]="rootFormConfig" [formFieldValues]="formFieldValues" [unitFormConfig]="unitFormConfig" (prevNodeMetadata)="updateNodeMetadata($event)"></lib-meta-form>
           </ng-container>
           <ng-container *ngIf="selectedNodeData?.folder === false && selectedNodeData?.data?.root !== true">
-            <div class="aspectratio" data-ratio="16:9" #aspectRatio>
               <lib-contentplayer-page></lib-contentplayer-page>
-            </div>
           </ng-container>
         </div>
       </div>

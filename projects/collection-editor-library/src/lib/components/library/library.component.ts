@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { EditorTelemetryService } from '../../services';
-import {EditorService} from '../../services/editor/editor.service'
+import {EditorService} from '../../services/editor/editor.service';
 @Component({
   selector: 'lib-library',
   templateUrl: './library.component.html',
@@ -11,7 +11,10 @@ export class LibraryComponent implements OnInit {
   @Output() libraryEmitter = new EventEmitter<any>();
   public pageId = 'library';
   public contentList: any;
-  selectedContent:any;
+  selectedContent: any;
+  showAddedContent = true;
+  showLoader = true;
+  public isFilterOpen = false;
   constructor(private telemetryService: EditorTelemetryService, private editorService: EditorService ) { }
 
   ngOnInit() {
@@ -25,21 +28,44 @@ export class LibraryComponent implements OnInit {
 
   onFilterChange(event: any) {
     console.log('event', event);
+    if (event.action === 'filterStatusChange') {
+      this.isFilterOpen = event.filterStatus;
+    }
   }
   fetchContentList() {
     const option = {
       url: 'composite/v3/search',
     data: {
-      "request":{"filters":{}}
+      request: {filters: {}}
     }
     };
     this.editorService.fetchContentListDetails(option).subscribe((response: any) => {
-      console.log(response, 'result')
-        this.contentList = response.result.content;
-        this.selectedContent = this.contentList[0];
+      console.log(response, 'result');
+      this.contentList = response.result.content;
+      this.selectedContent = this.contentList[0];
+      this.showLoader = false;
       });
   }
   onContentChangeEvent(event: any) {
     this.selectedContent = event.content;
+  }
+
+  showResourceTemplate(event) {
+    switch (event.action) {
+      case 'showFilter':
+        this.openFilter();
+        break;
+      default:
+        break;
+    }
+  }
+
+  openFilter(): void {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
+    this.isFilterOpen = true;
   }
 }
