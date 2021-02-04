@@ -1,28 +1,3 @@
-export const toolbarConfig = {
-  headerName: 'Edit Collection',
-  title: 'Digital-Textbook Editor',
-  buttons: [{
-    name: 'Save as draft',
-    type: 'saveContent',
-    buttonType: 'button',
-    style: 'sb-btn sb-btn-normal sb-btn-outline-primary mr-10',
-  },
-  {
-    name: 'Submit',
-    type: 'submitContent',
-    buttonType: 'button',
-    style: 'sb-btn sb-btn-normal sb-btn-primary mr-10',
-    slot: `<i class="trash alternate outline icon"></i>`
-  }
-  // {
-  //   name: 'Add Resource',
-  //   type: 'addResource',
-  //   buttonType: 'button',
-  //   style: 'sb-btn sb-btn-normal sb-btn-primary',
-  //   slot: `<i class="trash alternate outline icon"></i>`
-  // }
-  ]
-}
 export const labelConfig = {
   save_collection_btn_label: 'Save as Daft',
   save_collection_btn_icon : '',
