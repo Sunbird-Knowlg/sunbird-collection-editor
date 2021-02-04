@@ -26,7 +26,7 @@ export class TreeService {
   }
 
   getTreeObject() {
-    return $(this.treeNativeElement).fancytree('getTree');
+    return this.treeNativeElement && $(this.treeNativeElement).fancytree('getTree');
   }
 
   getHierarchy() {
