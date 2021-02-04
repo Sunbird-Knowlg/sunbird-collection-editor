@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
-import { catchError, map, tap} from 'rxjs/operators';
+import { Observable, of, Subject, throwError } from 'rxjs';
+import { catchError, map, skipWhile, tap} from 'rxjs/operators';
 import * as _ from 'lodash-es';
 import { PublicDataService, DataService, EditorService } from '../index';
 import { PLAYER_CONFIG } from '../../editor.config';
@@ -17,6 +17,9 @@ interface PlayerConfig {
 export class HelperService {
   private _availableLicenses: Array<any>;
   private _channelData: any;
+  public _formStatus$ = new Subject<any>();
+  public readonly formStatus$: Observable<any> = this._formStatus$
+    .asObservable().pipe(skipWhile(data => data === undefined || data === null));
   constructor(private publicDataService: PublicDataService, private dataService: DataService, private editorService: EditorService) { }
 
   initialize(channelId, defaultLicense?: any) {
@@ -78,6 +81,48 @@ export class HelperService {
     }
     return result;
 }
+
+  reviewContent(contentId): Observable<any> {
+    const option = {
+      url: 'content/v3/review/' + contentId,
+      data: {
+        request: {
+          content: {}
+        }
+      }
+    };
+    return this.publicDataService.post(option);
+  }
+
+  submitRequestChanges(contentId, comment) {
+    const requestBody = {
+      request: {
+        content: {
+          rejectComment: _.trim(comment)
+        }
+      }
+    };
+    const option = {
+      url: `content/v3/reject/${contentId}`,
+      data: requestBody
+    };
+    return this.publicDataService.post(option);
+  }
+
+  publishContent(contentId) {
+    const requestBody = {
+      request: {
+        content: {
+          lastPublishedBy: this.editorService.editorConfig.context.uid
+        }
+      }
+    };
+    const option = {
+      url: `content/v3/publish/${contentId}`,
+      data: requestBody
+    };
+    return this.publicDataService.post(option);
+  }
 
   public getTimeSpentText(pdfPlayerStartTime) {
       const duration = new Date().getTime() - pdfPlayerStartTime;
@@ -150,5 +195,9 @@ export class HelperService {
     const rollUp = {};
     data.forEach((element, index) => rollUp['l' + (index + 1)] = element);
     return rollUp;
+  }
+
+  getFormStatus(event) {
+    this._formStatus$.next(event);
   }
 }

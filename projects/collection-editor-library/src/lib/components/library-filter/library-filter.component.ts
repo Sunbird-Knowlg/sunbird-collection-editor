@@ -13,7 +13,7 @@ import { takeUntil, filter, take } from 'rxjs/operators';
   templateUrl: './library-filter.component.html',
   styleUrls: ['./library-filter.component.scss']
 })
-export class LibraryFilterComponent implements OnInit {
+export class LibraryFilterComponent implements OnInit, OnChanges {
 
   labelMessages = labelMessages;
   @Input() sessionContext: any;
@@ -36,6 +36,10 @@ export class LibraryFilterComponent implements OnInit {
     this.editorConfig = this.editorService.editorConfig.config;
     this.initializeForm();
     this.fetchFrameWorkDetails();
+  }
+
+  ngOnChanges() {
+    this.isFilterShow = this.filterOpenStatus;
   }
 
   initializeForm() {
