@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { EditorTelemetryService } from '../../services';
+import * as _ from 'lodash-es';
 import {EditorService} from '../../services/editor/editor.service';
 @Component({
   selector: 'lib-library',
@@ -12,9 +13,12 @@ export class LibraryComponent implements OnInit {
   public pageId = 'library';
   public contentList: any;
   selectedContent: any;
-  showAddedContent = true;
+  public childNodes: any;
+  showAddedContent = false;
   showLoader = true;
-  public isFilterOpen = false;
+  isFilterOpen = false;
+  showSelectResourceModal = false;
+  public selectedContentDetails: string;
   constructor(private telemetryService: EditorTelemetryService, private editorService: EditorService ) { }
 
   ngOnInit() {
@@ -43,9 +47,26 @@ export class LibraryComponent implements OnInit {
       console.log(response, 'result');
       this.contentList = response.result.content;
       this.selectedContent = this.contentList[0];
+      // this.filterContentList();
       this.showLoader = false;
       });
   }
+
+  // filterContentList(selectedContentId?) {
+  //   if (_.isEmpty(this.contentList)) { return; }
+  //   _.forEach(this.contentList, (value, key) => {
+  //     value.isAdded = _.includes(this.childNodes, value.identifier);
+  //   });
+  //   if (selectedContentId) {
+  //     this.selectedContentDetails = _.pick(
+  //       _.find(this.contentList, { identifier: selectedContentId }), ['name', 'identifier', 'isAdded']
+  //     );
+  //   } else {
+  //     const selectedContentIndex = this.showAddedContent ? 0 : _.findIndex(this.contentList, { isAdded: false });
+  //     this.selectedContentDetails = _.pick(this.contentList[selectedContentIndex], ['name', 'identifier', 'isAdded']);
+  //   }
+  // }
+
   onContentChangeEvent(event: any) {
     this.selectedContent = event.content;
   }
@@ -54,6 +75,12 @@ export class LibraryComponent implements OnInit {
     switch (event.action) {
       case 'showFilter':
         this.openFilter();
+        break;
+      case 'beforeMove':
+        this.showSelectResourceModal = true;
+        break;
+      case 'cancelMove':
+        this.showSelectResourceModal = false;
         break;
       default:
         break;
