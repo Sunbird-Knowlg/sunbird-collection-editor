@@ -38,7 +38,7 @@ export class LibraryComponent implements OnInit {
     const option = {
       url: 'composite/v3/search',
     data: {
-      "request":{"filters":{"textbook_name":"Math-Magic","status":["live", "Draft"],"medium":["English", "Hindi"]}}
+      request: {filters: {}}
     }
     };
     this.editorService.fetchContentListDetails(option).subscribe((response: any) => {
