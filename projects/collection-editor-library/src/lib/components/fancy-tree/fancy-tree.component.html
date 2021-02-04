@@ -1,4 +1,24 @@
-<div #fancyTree></div>
+<div #fancyTree>
+  <div class="d-flex flex-jc-space-between px-15 pt-10">
+    <div class="font-weight-bold">Folders</div>
+    <div>
+      <a class="p-0 ml-15 va-top" tabindex="0">
+        <div suiDropdown class="ui dropdown right top pointing">
+           <i class="fa fa-ellipsis-v sb-color-black"></i>
+             <div class="menu" suiDropdownMenu>
+                     <a class="item fs-0-785">
+                       <i class="fa fa-download sb-color-primary cursor-pointer ui pr-10 sb-color-black"></i>Download Tree Metadata
+                    </a>
+                 <a class="item fs-0-785">
+                   <i class="fa fa-upload sb-color-primary cursor-pointer ui pr-10 sb-color-black"></i> Update Tree Metadata
+                 </a>      
+               </div>
+            </div>
+          </a>
+      </div>
+  </div>
+  <hr>
+</div>
 <div class="sb-fixed-with-whitebg pr-20 d-flex flex-jc-space-between ">
   <div class="d-flex">
     <div class="sb-btn-cover">
@@ -8,7 +28,10 @@
         <button (click)="addChild();"  class="sb-btn sb-btn-outline-primary sb-btn-normal sb-btn-radius b-none"><i class="icon plus"></i> Add Child</button>
     </div>
   </div>
-  <button  class="sb-btn sb-btn-outline-primary sb-btn-normal mt-10"><i class="icon plus"></i> Add from library</button>
+  <div>
+      <button  class="sb-btn sb-btn-primary sb-btn-normal mt-10 mr-10"><i class="icon plus"></i> Create new</button>
+      <button  class="sb-btn sb-btn-outline-primary sb-btn-normal mt-10"><i class="icon plus"></i> Add from library</button>
+  </div>
 </div>
 <sui-modal *ngIf="showDeleteConfirmationPopUp" [mustScroll]="true" [isClosable]="true" [transitionDuration]="0"
   [size]="'normal'" class="sb-modal" appBodyScroll

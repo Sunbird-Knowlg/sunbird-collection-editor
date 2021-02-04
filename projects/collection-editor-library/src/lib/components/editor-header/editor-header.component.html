@@ -14,6 +14,9 @@
     {{ toolbarConfig.title }}
   </div>
   <div class="d-flex flex-ai-center">
+    <a class="sb-color-primary fs-0-785"><i class="fa fa-qrcode mr-5"></i>QR Code<i class="fa fa-caret-down ml-5"></i></a>
+    <a class="sb-color-primary fs-0-785 mx-10"><i class="fa fa-plus mr-5"></i>Add Collaborator</a>
+    <div class="seperator"></div>
     <button *ngFor="let button of toolbarConfig.buttons" class="{{ button.style }}"
       (click)="buttonEmitter($event, button)">
       <i *ngIf="button.slot" class="{{ button.slot }}"></i> {{ button.name }}
