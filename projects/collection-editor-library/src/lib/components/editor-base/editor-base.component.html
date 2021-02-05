@@ -30,7 +30,7 @@
 </div>
 
 <ng-container *ngIf="showLibraryPage">
-  <lib-library [libraryInput]="libraryComponentInput" (libraryEmitter)="libraryEventListener($event)">
+  <lib-library [libraryInput]="libraryComponentInput" [collectionData]="collectionData" (libraryEmitter)="libraryEventListener($event)">
   </lib-library>
 </ng-container>
 

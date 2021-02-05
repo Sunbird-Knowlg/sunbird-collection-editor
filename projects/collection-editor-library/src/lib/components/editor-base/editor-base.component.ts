@@ -33,6 +33,7 @@ export class EditorBaseComponent implements OnInit {
   public formFieldValues: any = {};
   public showLibraryPage = false;
   public libraryComponentInput: any;
+  collectionData: any;
 
   constructor(public treeService: TreeService, private editorService: EditorService,
               private activatedRoute: ActivatedRoute, private frameworkService: FrameworkService,
@@ -47,6 +48,7 @@ export class EditorBaseComponent implements OnInit {
     this.treeService.initialize(this.editorConfig);
     this.fetchCollectionHierarchy().subscribe(
       (response) => {
+        this.collectionData = _.get(response, 'result.content');
         const collection = _.get(response, 'result.content');
         const organisationFramework = _.get(this.editorConfig, 'context.framework') || _.get(collection, 'framework');
         const targetFramework = _.get(this.editorConfig, 'context.targetFWIds') || _.get(collection, 'targetFWIds');

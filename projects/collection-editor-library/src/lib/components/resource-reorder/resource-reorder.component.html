@@ -15,8 +15,8 @@
       <div title class="sb-accordion-title d-flex flex-ai-center mt-0">
         <div class="item d-flex flex-ai-center cursor-pointer width-100">
           <div *ngIf="!selectedContentDetails"  [ngClass]="{'sb-radio-btn-checkbox sb-radio-btn-primary width-100': !(this.prevUnitSelect === mainUnit.identifier)}">
-            <!-- <input *ngIf = "!(this.prevUnitSelect === mainUnit.identifier)" (click)="onSelectBehaviour($event)" type="radio" id="{{mainUnit.identifier}}" value="{{mainUnit.identifier}}" name="mainUnit" [(ngModel)]="unitSelected" (click)="showMoveButton = true;"
-            > -->
+            <input *ngIf = "!(this.prevUnitSelect === mainUnit.identifier)" (click)="onSelectBehaviour($event)" type="radio" id="{{mainUnit.identifier}}" value="{{mainUnit.identifier}}" name="mainUnit" [(ngModel)]="unitSelected" (click)="showMoveButton = true;"
+            >
             <label for="{{mainUnit.identifier}}" class="sb-color-primary font-weight-bold">{{mainUnit.name}}</label>
           </div>
           <div *ngIf="selectedContentDetails"  class="sb-radio-btn-checkbox sb-radio-btn-primary width-100">

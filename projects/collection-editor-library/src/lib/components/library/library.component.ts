@@ -9,6 +9,7 @@ import {EditorService} from '../../services/editor/editor.service';
 })
 export class LibraryComponent implements OnInit {
   @Input() libraryInput: any;
+  @Input() collectionData: any;
   @Output() libraryEmitter = new EventEmitter<any>();
   public pageId = 'library';
   public contentList: any;
@@ -19,11 +20,15 @@ export class LibraryComponent implements OnInit {
   isFilterOpen = false;
   showSelectResourceModal = false;
   public selectedContentDetails: string;
+  collectionUnits: any;
   constructor(private telemetryService: EditorTelemetryService, private editorService: EditorService ) { }
 
   ngOnInit() {
     this.telemetryService.telemetryPageId = this.pageId;
     this.fetchContentList();
+    this.collectionUnits = _.get(this.collectionData, 'children');
+
+    console.log('this.collectionUnits', this.collectionUnits);
   }
 
   back() {

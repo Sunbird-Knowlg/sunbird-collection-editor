@@ -20,7 +20,7 @@
   </div>
 <!-- Filter -->
   <lib-library-filter [filterOpenStatus]="isFilterOpen" (filterChangeEvent)="onFilterChange($event);"></lib-library-filter>
-  <lib-skeleton-loader [width]="'50%'" [height]="'12px'" class="sb-dock-flex-auto"></lib-skeleton-loader>
+  <!-- <lib-skeleton-loader [width]="'50%'" [height]="'12px'" class="sb-dock-flex-auto"></lib-skeleton-loader> -->
   <div class="ui container min-h-500" *ngIf="!showLoader">
     <!-- Player Section -->
     <div class="sb-g add-to-library__toc-player">
@@ -37,5 +37,5 @@
 </div>
 
 <div *ngIf="showSelectResourceModal">
-  <lib-resource-reorder [selectedContentDetails]="selectedContent" (moveEvent)="showResourceTemplate($event)"></lib-resource-reorder>
+  <lib-resource-reorder [selectedContentDetails]="selectedContent" [collectionUnits]="collectionUnits" (moveEvent)="showResourceTemplate($event)"></lib-resource-reorder>
 </div>
