@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { TreeService, EditorService, FrameworkService, HelperService, EditorTelemetryService } from '../../services';
 import { IEditorConfig } from '../../interfaces';
-import { toolbarConfig } from '../../editor.config';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -20,7 +19,6 @@ export class EditorBaseComponent implements OnInit {
   @Input() editorConfig: IEditorConfig | undefined;
   public collectionTreeNodes: any;
   public selectedNodeData: any = {};
-  toolbarConfig = toolbarConfig;
   public showQuestionTemplate = false;
   public showResourceModal = false;
   private editorParams: IeditorParams;

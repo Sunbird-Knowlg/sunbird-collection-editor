@@ -1,8 +1,7 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil, filter, take } from 'rxjs/operators';
 import { EditorService, TreeService, FrameworkService, HelperService } from '../../services';
-import { IeventData } from '../../interfaces';
 import * as _ from 'lodash-es';
 
 @Component({
@@ -16,12 +15,8 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   @Input() nodeMetadata: any;
   private onComponentDestroy$ = new Subject<any>();
   public metaDataFields: any;
-  public formOutputData: any;
   public frameworkDetails: any = {};
   public formFieldProperties: any;
-  public valueChange: boolean;
-  public formDataConfig;
-  @Output() public prevNodeMetadata: EventEmitter<IeventData> = new EventEmitter();
   constructor(private editorService: EditorService, private treeService: TreeService,
               private frameworkService: FrameworkService, private helperService: HelperService) { }
 
