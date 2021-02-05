@@ -19,7 +19,7 @@ import { EditorService } from './services';
   declarations: [CollectionEditorLibraryComponent, ContentplayerPageComponent, EditorBaseComponent,
     EditorHeaderComponent, FancyTreeComponent, MetaFormComponent, LibraryComponent, LibraryFilterComponent, LibraryListComponent,
     LibraryPlayerComponent],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule.forRoot([]), CommonFormElementsModule, InfiniteScrollModule,
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, CommonFormElementsModule, InfiniteScrollModule,
   HttpClientModule, SuiModule, SunbirdPdfPlayerModule, SunbirdVideoPlayerModule],
   exports: [CollectionEditorLibraryComponent, EditorBaseComponent]
 })

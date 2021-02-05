@@ -21,12 +21,6 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   public formFieldProperties: any;
   public valueChange: boolean;
   public formDataConfig;
-  public rootLevelConfig = ['title', 'description', 'board', 'medium', 'gradeLevel', 'subject', 'topic',
-  'boardIds', 'gradeLevelIds', 'subjectIds', 'mediumIds', 'topicsIds',
-  'targetFWIds', 'targetBoardIds', 'targetGradeLevelIds', 'targetSubjectIds', 'targetMediumIds', 'targetTopicIds'];
-  public unitLevelConfig = ['title', 'description', 'keywords', 'topic'];
-  public organisationFrameworkFields = ['boardIds', 'gradeLevelIds', 'subjectIds', 'mediumIds'];
-  public targetFrameWorkFields = ['targetBoardIds', 'targetGradeLevelIds', 'targetSubjectIds', 'targetMediumIds'];
   @Output() public prevNodeMetadata: EventEmitter<IeventData> = new EventEmitter();
   constructor(private editorService: EditorService, private treeService: TreeService,
               private frameworkService: FrameworkService, private helperService: HelperService) { }
@@ -41,8 +35,7 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   fetchFrameWorkDetails() {
     this.frameworkService.frameworkData$.pipe(
       takeUntil(this.onComponentDestroy$),
-      filter(data => _.get(data, `frameworkdata.${this.frameworkService.organisationFramework}`)),
-      take(1)
+      filter(data => _.get(data, `frameworkdata.${this.frameworkService.organisationFramework}`))
     ).subscribe((frameworkDetails: any) => {
       if (frameworkDetails && !frameworkDetails.err) {
         const frameworkData = frameworkDetails.frameworkdata[this.frameworkService.organisationFramework].categories;
@@ -51,7 +44,6 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
           code: 'topic'
         }), 'terms');
         this.frameworkDetails.targetFrameworks = _.filter(frameworkDetails.frameworkdata, (value, key) => {
-
           return _.includes(this.frameworkService.targetFrameworkIds, key);
         });
         this.attachDefaultValues();
@@ -62,9 +54,6 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   attachDefaultValues() {
     this.metaDataFields = _.get(this.nodeMetadata, 'data.metadata');
     const categoryMasterList = this.frameworkDetails.frameworkData;
-    console.log(categoryMasterList);
-    console.log(`VISIBILITY ${this.metaDataFields.visibility}`);
-
     const formConfig  = (this.metaDataFields.visibility === 'Default') ?
      _.cloneDeep(this.rootFormConfig) : _.cloneDeep(this.unitFormConfig);
     _.forEach(formConfig, (section) => {
@@ -114,13 +103,24 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
       });
     }
 
+
     this.formFieldProperties = _.cloneDeep(formConfig);
     console.log(this.formFieldProperties);
+
   }
 
-  outputData(event: any) {}
+  outputData(eventData) {
+    // if (eventData) {
+    //   console.log('eventData outputData------>', eventData);
+    // }
+  }
 
-  onStatusChanges(event: any) {}
+  onStatusChanges(eventData) {
+    if (eventData) {
+      console.log('eventData statusChanges------>', eventData);
+      this.helperService.getFormStatus(eventData);
+    }
+  }
 
   valueChanges(event: any) {
     console.log(event);

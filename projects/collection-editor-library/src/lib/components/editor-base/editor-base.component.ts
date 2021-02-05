@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { TreeService, EditorService, FrameworkService, HelperService, EditorTelemetryService } from '../../services';
 import { IEditorConfig } from '../../interfaces';
 import { toolbarConfig } from '../../editor.config';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { map, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import * as _ from 'lodash-es';
@@ -33,8 +33,10 @@ export class EditorBaseComponent implements OnInit {
 
   constructor(private editorService: EditorService, public treeService: TreeService,
               private activatedRoute: ActivatedRoute, private frameworkService: FrameworkService,
-              private helperService: HelperService, public telemetryService: EditorTelemetryService) {
-              this.editorParams = { collectionId: _.get(this.activatedRoute, 'snapshot.params.collectionId') };
+              private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router) {
+    this.editorParams = {
+      collectionId: _.get(this.activatedRoute, 'snapshot.params.contentId')
+    };
   }
 
   ngOnInit() {
@@ -77,16 +79,25 @@ export class EditorBaseComponent implements OnInit {
   }
 
   toolbarEventListener(event) {
-    switch (event.button.type) {
+    switch (event.button) {
       case 'saveContent':
-        this.saveContent();
+        this.saveContent().then(messg => alert(messg)).catch(err => alert(err));
         break;
       case 'addResource':
         this.showResourceModal = true;
         break;
       case 'addFromLibrary':
-        this.showLibraryComponentPage();
+          this.showLibraryComponentPage();
+          break;
+      case 'submitContent':
+        this.sendForReview();
         break;
+      case 'rejectContent':
+      this.rejectContent(event.comment);
+      break;
+      case 'publishContent':
+      this.publishContent();
+      break;
       default:
         break;
     }
@@ -104,14 +115,45 @@ export class EditorBaseComponent implements OnInit {
   }
 
   saveContent() {
-    this.editorService.updateHierarchy()
+    return new Promise((resolve, reject) => {
+      this.editorService.updateHierarchy()
       .pipe(map(data => _.get(data, 'result'))).subscribe(response => {
         if (!_.isEmpty(response.identifiers)) {
           this.treeService.replaceNodeId(response.identifiers);
         }
         this.treeService.clearTreeCache();
-        alert('Hierarchy is Sucessfuly Updated');
+        resolve('Hierarchy is Sucessfuly Updated');
+      }, err => {
+        reject('Something went wrong, Please try later');
       });
+    });
+  }
+
+  sendForReview() {
+    this.saveContent().then(messg => {
+      this.helperService.reviewContent(this.editorParams.collectionId).subscribe(data => {
+        alert('Successfully sent for review');
+        this.router.navigate(['workspace/content/create']);
+      }, err => {
+
+      });
+    }).catch(err => alert(err));
+  }
+
+  rejectContent(comment) {
+    this.helperService.submitRequestChanges(this.editorParams.collectionId, comment).subscribe(res => {
+      alert('Content is sent back for correction');
+      this.router.navigate(['workspace/content/create']);
+    }, err => {
+    });
+  }
+
+  publishContent() {
+    this.helperService.publishContent(this.editorParams.collectionId).subscribe(res => {
+      alert('Successfully published');
+      this.router.navigate(['workspace/content/create']);
+    }, err => {
+    });
   }
 
   treeEventListener(event: any) {
