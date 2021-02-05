@@ -393,7 +393,9 @@ export class FancyTreeComponent implements AfterViewInit, OnDestroy {
         break;
     }
   }
-
+  addFromLibrary() {
+    this.editorService.emitshowLibraryPageEvent('showLibraryPage');
+  }
   getTelemetryInteractEdata(id?) {
     return {
       id: id || 'collection-toc',
