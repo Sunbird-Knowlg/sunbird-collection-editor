@@ -18,10 +18,8 @@ import { SkeletonLoaderComponent } from './components/skeleton-loader/skeleton-l
 @NgModule({
   declarations: [CollectionEditorLibraryComponent, CollectionTreeComponent, ContentplayerPageComponent, EditorBaseComponent,
     EditorHeaderComponent, FancyTreeComponent, MetaFormComponent, LibraryComponent, LibraryFilterComponent, LibraryListComponent,
-    LibraryPlayerComponent,
-    ResourceReorderComponent,
-    SkeletonLoaderComponent],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule.forRoot([]), CommonFormElementsModule, InfiniteScrollModule,
+    LibraryPlayerComponent, ResourceReorderComponent, SkeletonLoaderComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, CommonFormElementsModule, InfiniteScrollModule,
   HttpClientModule, SuiModule, SunbirdPdfPlayerModule, SunbirdVideoPlayerModule],
   exports: [CollectionEditorLibraryComponent, EditorBaseComponent]
 })
