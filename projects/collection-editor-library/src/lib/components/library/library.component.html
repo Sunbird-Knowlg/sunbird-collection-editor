@@ -39,3 +39,13 @@
 <div *ngIf="showSelectResourceModal">
   <lib-resource-reorder [selectedContentDetails]="selectedContent" [collectionUnits]="collectionUnits" (moveEvent)="showResourceTemplate($event)"></lib-resource-reorder>
 </div>
+
+<!--empty result -->
+<div class="ui container" *ngIf="!showLoader && !contentList?.length">
+  <div class="add-to-library__no-result">
+    <h5 class="font-weight-bold">{{labelMessages?.lbl?.noMatchingContent}}</h5>
+    <img alt="No Content available" class="mt-16" src="assets/images/emptyResult.svg">
+    <h6 class="sb-color-gray-300 font-weight-normal mt-8">{{labelMessages?.lbl?.changeFilterMessage}}</h6>
+    <button class="sb-btn sb-btn-secondary sb-btn-normal mt-16" (click)="openFilter();">{{labelMessages?.lbl?.changeFilter}}</button>
+  </div>
+</div>

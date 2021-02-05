@@ -76,6 +76,9 @@ export class EditorBaseComponent implements OnInit {
     // this.helperService.initialize(_.get(this.editorConfig, 'context.defaultLicense'));
     // this.frameworkService.initialize(_.get(this.editorConfig, 'context.framework'));
     this.telemetryService.start({type: 'editor', pageid: this.telemetryPageId});
+
+    this.editorService.getshowLibraryPageEmitter()
+      .subscribe(item => this.showLibraryComponentPage());
   }
 
   fetchCollectionHierarchy(): Observable<any> {

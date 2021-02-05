@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { EditorTelemetryService } from '../../services';
 import * as _ from 'lodash-es';
 import {EditorService} from '../../services/editor/editor.service';
+import {labelMessages} from '../labels';
 @Component({
   selector: 'lib-library',
   templateUrl: './library.component.html',
