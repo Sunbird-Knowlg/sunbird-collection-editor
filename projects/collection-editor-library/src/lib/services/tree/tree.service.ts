@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import 'jquery.fancytree';
+import { EditorConfig } from '../../interfaces';
 import { UUID } from 'angular2-uuid';
 declare var $: any;
 import * as _ from 'lodash-es';
-import { EditorService } from '../../services';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,10 @@ export class TreeService {
   };
   treeNativeElement: any;
 
-  constructor(private editorService: EditorService) {
+  constructor() {}
+
+  public initialize(editorConfig: EditorConfig) {
+    this.config = editorConfig.config;
   }
 
   setTreeElement(el) {
@@ -33,11 +36,15 @@ export class TreeService {
     const nodeId = activeNode.data.id;
     activeNode.data.metadata = {...activeNode.data.metadata, ...newData};
     activeNode.title = newData.name;
+    newData = _.pickBy(newData, _.identity);
+    const attributions = newData.attributions;
+    if (attributions && _.isString(attributions)) {
+      newData.attributions = attributions.split(',');
+    }
     this.setTreeCache(nodeId, newData, activeNode.data.root);
   }
 
   addNode(data, createType) {
-    this.config = _.get(this.editorService.editorConfig, 'config');
     let newNode;
     data = data || {};
     const selectedNode = this.getActiveNode();
@@ -119,10 +126,6 @@ export class TreeService {
   setTreeCache(nodeId, data, isRootNode?) {
     if (this.treeCache.nodesModified[nodeId]) {
       this.treeCache.nodesModified[nodeId].metadata = data;
-      const attributions = this.treeCache.nodesModified[nodeId].metadata.attributions;
-      if (attributions && _.isString(attributions)) {
-        this.treeCache.nodesModified[nodeId].metadata.attributions = attributions.split(',');
-      }
     } else {
       // tslint:disable-next-line:max-line-length
       this.treeCache.nodesModified[nodeId] = {root: isRootNode ? true : false, metadata: {...data}, ...(nodeId.includes('do_') ? {isNew: false} : {isNew: true})};

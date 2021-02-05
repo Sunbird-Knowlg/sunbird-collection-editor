@@ -1,8 +1,5 @@
 <div class="add-to-library mb-30" *ngIf="!showLibraryPage">
-  <lib-editor-header
-    (toolbarEmitter)="toolbarEventListener($event)"
-  >
-  </lib-editor-header>
+  <lib-editor-header (toolbarEmitter)="toolbarEventListener($event)"> </lib-editor-header> <!--// TODO::  *ngIf="treeService.getTreeObject()" -->
   <div class="min-h-500 sb-bg-white">
     <div class="ui">
       <div class="ui twelve column grid m-0">

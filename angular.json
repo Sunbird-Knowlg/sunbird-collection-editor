@@ -175,7 +175,7 @@
           },
           "configurations": {
             "production": {
-              "project": "projects/course-editor-library/ng-package.prod.json"
+              "project": "projects/collection-editor-library/ng-package.prod.json"
             }
           }
         },

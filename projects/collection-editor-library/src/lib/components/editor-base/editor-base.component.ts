@@ -39,6 +39,7 @@ export class EditorBaseComponent implements OnInit {
 
   ngOnInit() {
     this.editorService.editorConfig = this.editorConfig;
+    this.treeService.initialize(this.editorConfig);
     this.fetchCollectionHierarchy().subscribe(
       (response) => {
         const collection = _.get(response, 'result.content');
@@ -50,7 +51,8 @@ export class EditorBaseComponent implements OnInit {
         if (!_.isEmpty(targetFramework)) {
           this.frameworkService.getTargetFrameworkCategories(targetFramework);
         }
-        this.helperService.initialize(_.get(collection, 'originData.channel'), _.get(this.editorConfig, 'context.defaultLicense'));
+        const channel = _.get(collection, 'channel') || _.get(this.editorConfig, 'context.channel');
+        this.helperService.initialize(channel, _.get(this.editorConfig, 'context.defaultLicense'));
       });
     this.editorService.getCategoryDefinition(this.editorConfig.config.primaryCategory,
       this.editorConfig.context.channel, this.editorConfig.config.objectType)

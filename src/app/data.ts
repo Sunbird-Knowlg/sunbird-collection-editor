@@ -2,7 +2,7 @@ export const editorConfig = {
     context: {
       identifier: 'do_1132092070802718721685',
       channel: '01307938306521497658',
-      framework: 'TPD',
+      framework: 'ekstep_ncert_k-12', // added temp use this : TPD targetFWIds: ['tn_k-12'], // TODO::
       targetFWIds: ['tn_k-12'],
       authToken: ' ',
       sid: 'iYO2K6dOSdA0rwq7NeT1TDzS-dbqduvV',
@@ -82,18 +82,18 @@ export const editorConfig = {
       children: {},
       hierarchy: {
           level1: {
-              name: 'Chapter',
+              name: 'Module',
               type: 'Unit',
               mimeType: 'application/vnd.ekstep.content-collection',
-              contentType: 'Textbook Unit',
+              contentType: 'Course Unit',
               iconClass: 'fa fa-folder-o',
               children: {}
           },
           level2: {
-              name: 'Sub-Chapter',
+              name: 'Sub-Module',
               type: 'Unit',
               mimeType: 'application/vnd.ekstep.content-collection',
-              contentType: 'Textbook Unit',
+              contentType: 'Course Unit',
               iconClass: 'fa fa-folder-o',
               children: {
                   Content: [
@@ -102,9 +102,6 @@ export const editorConfig = {
                       'eTextbook',
                       'Teacher Resource',
                       'Course Assessment'
-                  ],
-                  QuestionSet: [
-                      'Practice Question Set'
                   ]
               }
           }
