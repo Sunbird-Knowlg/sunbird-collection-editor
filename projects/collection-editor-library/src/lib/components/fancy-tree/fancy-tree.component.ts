@@ -1,10 +1,11 @@
 import { takeUntil } from 'rxjs/operators';
-import { Component, AfterViewInit, Input, ViewChild, ElementRef, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, AfterViewInit, Input, ViewChild, ElementRef, Output, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import 'jquery.fancytree';
 import * as _ from 'lodash-es';
 import { ActivatedRoute } from '@angular/router';
 import { EditorService, TreeService, EditorTelemetryService, HelperService } from '../../services';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
+import { UUID } from 'angular2-uuid';
 declare var $: any;
 
 @Component({
@@ -12,13 +13,14 @@ declare var $: any;
   templateUrl: './fancy-tree.component.html',
   styleUrls: ['./fancy-tree.component.scss']
 })
-export class FancyTreeComponent implements AfterViewInit, OnDestroy {
+export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('fancyTree', {static: false}) public tree: ElementRef;
   @Input() public nodes: any;
   @Input() public options: any;
   @Output() public treeEventEmitter: EventEmitter<any> = new EventEmitter();
   public config: any;
   public showTree: boolean;
+  public rootNode: any;
   public rootMenuTemplate = `<span class="ui dropdown sb-dotted-dropdown" autoclose="itemClick" suidropdown="" tabindex="0">
   <span id="contextMenu" class="p-0 w-auto"><i class="icon ellipsis vertical sb-color-black"></i></span>
   <span id= "contextMenuDropDown" class="menu transition hidden" suidropdownmenu="" style="">
@@ -41,21 +43,64 @@ export class FancyTreeComponent implements AfterViewInit, OnDestroy {
   private onComponentDestroy$ = new Subject<any>();
   public showDeleteConfirmationPopUp: boolean;
 
-  ngAfterViewInit() {
+  ngOnInit() {
     this.config = this.editorService.editorConfig.config;
+    this.initialize();
+  }
+
+  ngAfterViewInit() {
     this.renderTree(this.getTreeConfig());
     this.resourceAddition();
-    // const rootNode = $(this.tree.nativeElement).fancytree('getRootNode');
-    // const firstChild = rootNode.getFirstChild().getFirstChild(); // rootNode.getFirstChild() will always be available.
-    // firstChild ? firstChild.setActive() : rootNode.getFirstChild().setActive(); // select the first children node by default
+  }
+
+  private initialize() {
+    const data = this.nodes.data;
+    const treeData = this.buildTree(this.nodes.data);
+    this.rootNode = [{
+      id: data.identifier || UUID.UUID(),
+      title: data.name,
+      tooltip: data.name,
+      objectType: data.primaryCategory,
+      metadata: _.omit(data, ['children', 'collections']),
+      folder: true,
+      children: treeData,
+      root: true,
+      icon: _.get(this.config, 'iconClass')
+    }];
+  }
+
+  buildTree(data, tree?, level?) {
+    tree = tree || [];
+    if (data.children) { data.children = _.sortBy(data.children, ['index']); }
+    data.level = level ? (level + 1) : 1;
+    _.forEach(data.children, (child) => {
+      // const objectType = this.getObjectType(child.contentType);
+      const childTree = [];
+      // if (objectType) {
+      tree.push({
+        id: child.identifier || UUID.UUID(),
+        title: child.name,
+        tooltip: child.name,
+        objectType: child.visibility === 'Parent' ? _.get(this.config, `hierarchy.level${data.level}.type`) : 'Content',
+        metadata: _.omit(child, ['children', 'collections']),
+        folder: child.visibility === 'Parent' ? true : false,
+        children: childTree,
+        root: false,
+        // tslint:disable-next-line:max-line-length
+        icon: child.visibility === 'Parent' ? (_.get(this.config, `hierarchy.level.${data.level}.iconClass`) || 'fa fa-folder-o') : 'fa fa-file-o'
+      });
+      if (child.visibility === 'Parent') {
+        this.buildTree(child, childTree, data.level);
+      }
+      // }
+    });
+    return tree;
   }
 
   renderTree(options) {
     options = { ...options, ...this.options };
     $(this.tree.nativeElement).fancytree(options);
-
     this.treeService.setTreeElement(this.tree.nativeElement);
-
     if (this.options.showConnectors) {
       $('.fancytree-container').addClass('fancytree-connectors');
     }
@@ -74,7 +119,7 @@ export class FancyTreeComponent implements AfterViewInit, OnDestroy {
     const options: any = {
       extensions: ['glyph', 'dnd5'],
       clickFolderMode: 3,
-      source: this.nodes,
+      source: this.rootNode,
       glyph: {
         preset: 'awesome4',
         map: {

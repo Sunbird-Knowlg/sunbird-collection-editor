@@ -13,7 +13,7 @@ import * as _ from 'lodash-es';
 export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   @Input() rootFormConfig: any;
   @Input() unitFormConfig: any;
-  @Input() formFieldValues: any;
+  @Input() nodeMetadata: any;
   private onComponentDestroy$ = new Subject<any>();
   public metaDataFields: any;
   public formOutputData: any;
@@ -28,28 +28,15 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   public organisationFrameworkFields = ['boardIds', 'gradeLevelIds', 'subjectIds', 'mediumIds'];
   public targetFrameWorkFields = ['targetBoardIds', 'targetGradeLevelIds', 'targetSubjectIds', 'targetMediumIds'];
   @Output() public prevNodeMetadata: EventEmitter<IeventData> = new EventEmitter();
-  constructor(private editorService: EditorService, public treeService: TreeService,
+  constructor(private editorService: EditorService, private treeService: TreeService,
               private frameworkService: FrameworkService, private helperService: HelperService) { }
 
   ngOnChanges() {
-
+    this.fetchFrameWorkDetails();
   }
 
   ngOnInit() {
-    this.editorService.nodeData$.pipe(takeUntil(this.onComponentDestroy$)).subscribe((data: IeventData) => {
-      console.log('incoming data --->', data);
-      if (this.valueChange || data.type === 'saveContent') {
-        this.prevNodeMetadata.emit({type: data.type, metadata: this.formOutputData || this.metaDataFields});
-        this.valueChange = false;
-      }
-      this.metaDataFields = data.metadata ? data.metadata : this.metaDataFields;
-      this.fetchFrameWorkDetails();
-    });
   }
-
-  // dataChanged(e) {
-  //   this.treeService.setNodeTitle(_.get(this.metaDataFields, 'name'));
-  // }
 
   fetchFrameWorkDetails() {
     this.frameworkService.frameworkData$.pipe(
@@ -73,6 +60,7 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   attachDefaultValues() {
+    this.metaDataFields = _.get(this.nodeMetadata, 'data.metadata');
     const categoryMasterList = this.frameworkDetails.frameworkData;
     console.log(categoryMasterList);
     console.log(`VISIBILITY ${this.metaDataFields.visibility}`);
@@ -101,8 +89,8 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
             field.range = _.map(licenses, 'name');
           }
         }
-        if(field.code === 'additionalCategories' && this.formFieldValues.additionalCategories) {
-          field.range = this.formFieldValues.additionalCategories;
+        if (field.code === 'additionalCategories') {
+          field.range = _.get(this.editorService.editorConfig, 'context.additionalCategories');
         }
       });
     });
@@ -113,10 +101,6 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
       _.forEach(this.frameworkDetails.targetFrameworks, (framework) => {
         _.forEach(formConfig, (section) => {
           _.forEach(section.fields, field => {
-            // const frameworkCategory = _.find(framework.categories, {
-            //   code: field.sourceCategory // boardIds, targetBoardIds
-            // });
-
             const frameworkCategory = _.find(framework.categories, category => {
               return category.code === field.sourceCategory && _.includes(field.code, 'target');
             });
@@ -130,67 +114,17 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
       });
     }
 
-
-    // tslint:disable-next-line:max-line-length
-    // this.formDataConfig = _.map(_.filter(_.cloneDeep(formConfig), data => {
-    //   if (this.metaDataFields.visibility === 'Default' && _.includes(this.rootLevelConfig, data.code)) {
-    //     return data;
-    //   } else if (this.metaDataFields.visibility === 'Parent' && _.includes(this.unitLevelConfig, data.code)) {
-    //     console.log('---->//////', data);
-    //     return data;
-    //   }
-    // }), val => {
-    //   if (_.get(this.metaDataFields, val.code)) {
-    //     val.default = _.get(this.metaDataFields, val.code);
-    //   }
-    //   if (val.code === 'title' && _.get(this.metaDataFields, 'name')) {
-    //     val.default = _.get(this.metaDataFields, 'name');
-    //   }
-    //   return val;
-    // });
-
-
     this.formFieldProperties = _.cloneDeep(formConfig);
     console.log(this.formFieldProperties);
-
-    // _.forEach(_.cloneDeep(this.formConfig), section => {
-    //   _.forEach(section.fields, field => {
-    //     field.default = _.get(this.metaDataFields, field.code);
-    //   });
-    //   this.formDataConfig.push(section);
-    // });
-
-
-    // console.log('config--->', this.formDataConfig);
   }
 
-  outputData(eventData) {
-    if (eventData) {
-      console.log('eventData outputData------>', eventData);
-      // this.metaDataFields = eventData.value;
-      // this.treeService.setNodeTitle(_.get(this.metaDataFields, 'name'));
-    }
-  }
+  outputData(event: any) {}
 
-  onStatusChanges(eventData) {
-    // if (eventData) {
-    //   console.log('eventData statusChanges------>', eventData);
-    //   this.metaDataFields = eventData.value;
-    //   this.treeService.setNodeTitle(_.get(this.metaDataFields, 'name'));
-    // }
-  }
+  onStatusChanges(event: any) {}
 
-  valueChanges(eventData) {
-    console.log(eventData);
-    if (eventData) {
-      this.valueChange = true;
-      this.formOutputData = {};
-      _.forIn(eventData, (val, key) => {
-        key === 'name' ? this.metaDataFields['name'] = val : this.metaDataFields[key] = val;
-        key === 'name' ? this.formOutputData['name'] = val : this.formOutputData[key] = val;
-      });
-      this.treeService.setNodeTitle(_.get(eventData, 'name'));
-    }
+  valueChanges(event: any) {
+    console.log(event);
+    this.treeService.updateNode(event);
   }
 
   ngOnDestroy() {

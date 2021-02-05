@@ -16,9 +16,7 @@ export class LibraryListComponent implements OnInit {
   ngOnInit() {
   }
 
-  onSelectContent(content) {
-    this.editorService.emitSelectedNodeMetaData({type: 'nodeSelect', metadata: content});
-  }
+  onSelectContent(content) {}
 
   onContentChange(selectedContent: any) {
     this.contentChangeEvent.emit({content: selectedContent});

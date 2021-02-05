@@ -111,20 +111,7 @@ export const formConfigRoot = [
           placeholder: 'Select Additional Category',
           renderingHints: {
           },
-          range: ['Classroom Teaching Video',
-            'Concept Map',
-            'Curiosity Question Set',
-            'Experiential Resource',
-            'Explanation Video',
-            'Focus Spot',
-            'Learning Outcome Definition',
-            'Lesson Plan',
-            'Marking Scheme Rubric',
-            'Pedagogy Flow',
-            'Previous Board Exam Papers',
-            'TV Lesson',
-            'Textbook'
-          ],
+          range: ['Textbook', 'Lesson Plan'],
           required: false,
           visible: true
         }

@@ -10,56 +10,12 @@ export const editorConfig = {
       uid: 'bf020396-0d7b-436f-ae9f-869c6780fc45',
       additionalCategories: [
         {
-          value: 'Classroom Teaching Video',
-          label: 'Classroom Teaching Video'
-        },
-        {
-          value: 'Concept Map',
-          label: 'Concept Map'
-        },
-        {
-          value: 'Curiosity Question Set',
-          label: 'Curiosity Question Set'
-        },
-        {
           value: 'Textbook',
           label: 'Textbook'
         },
         {
-          value: 'Experiential Resource',
-          label: 'Experiential Resource'
-        },
-        {
-          value: 'Explanation Video',
-          label: 'Explanation Video'
-        },
-        {
-          value: 'Focus Spot',
-          label: 'Focus Spot'
-        },
-        {
-          value: 'Learning Outcome Definition',
-          label: 'Learning Outcome Definition'
-        },
-        {
-          value: 'Marking Scheme Rubric',
-          label: 'Marking Scheme Rubric'
-        },
-        {
-          value: 'Pedagogy Flow',
-          label: 'Pedagogy Flow'
-        },
-        {
           value: 'Lesson Plan',
           label: 'Lesson Plan'
-        },
-        {
-          value: 'Previous Board Exam Papers',
-          label: 'Previous Board Exam Papers'
-        },
-        {
-          value: 'TV Lesson',
-          label: 'TV Lesson'
         }
       ],
       pdata: {

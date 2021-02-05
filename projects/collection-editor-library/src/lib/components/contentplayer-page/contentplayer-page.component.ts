@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import * as _ from 'lodash-es';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -12,33 +12,31 @@ declare var $: any;
   templateUrl: './contentplayer-page.component.html',
   styleUrls: ['./contentplayer-page.component.scss']
 })
-export class ContentplayerPageComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ContentplayerPageComponent implements OnInit, OnChanges {
   @ViewChild('contentIframe', {static: false}) contentIframe: ElementRef;
+  @Input() contentMetadata: any;
   public contentDetails: any;
   public playerConfig: any;
-  private onComponentDestroy$ = new Subject<any>();
   public content: any;
   public playerType: string;
+  public contentId: string;
   constructor(private editorService: EditorService, private helperService: HelperService, private treeService: TreeService) { }
 
-  ngOnInit() {
-    // this.getContentDetails();
-    this.editorService.nodeData$.pipe(takeUntil(this.onComponentDestroy$)).subscribe((data: IeventData) => {
-      if (data.type === 'nodeSelect' && (!this.playerConfig || this.playerConfig.metadata.identifier !== data.metadata.identifier)) {
-        this.content = data.metadata;
-        this.getContentDetails();
-      }
-    });
-  }
-  ngAfterViewInit() {
-    // this.loadDefaultPlayer();
+  ngOnInit() {}
+
+  ngOnChanges() {
+    this.contentMetadata = _.get(this.contentMetadata, 'data.metadata');
+    if (this.contentId !== this.contentMetadata.identifier) {
+      this.contentId = this.contentMetadata.identifier;
+      this.getContentDetails();
+    }
   }
 
   getContentDetails() {
     this.playerType = 'default-player';
-    this.editorService.fetchContentDetails(this.content.identifier).subscribe(res => {
+    this.editorService.fetchContentDetails(this.contentId).subscribe(res => {
       this.contentDetails = {
-        contentId: this.content.identifier,
+        contentId : this.contentId,
         contentData: _.get(res, 'result.content')
       };
       this.playerConfig = this.helperService.getPlayerConfig(this.contentDetails);
@@ -93,16 +91,7 @@ export class ContentplayerPageComponent implements OnInit, AfterViewInit, OnDest
     }
   }
 
-  eventHandler(e) {
+  eventHandler(e) {}
 
-  }
-
-  generateContentReadEvent(e, boo) {
-
-  }
-
-  ngOnDestroy() {
-    this.onComponentDestroy$.next();
-    this.onComponentDestroy$.complete();
-  }
+  generateContentReadEvent(e, boo) {}
 }
