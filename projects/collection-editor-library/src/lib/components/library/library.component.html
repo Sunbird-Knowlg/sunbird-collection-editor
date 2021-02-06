@@ -34,7 +34,25 @@
     </div>
   </div>
 </div>
+<lib-resource-reorder [selectedContentDetails]="selectedContent"></lib-resource-reorder>
 
+<div class="ui container" >
+  <div class="sb-g add-to-library__toc-player">
+    <!-- Left Sidebar for cards -->
+    <section class="sb-g-col-xs-12 sb-g-col-md-4 sb-g-col-lg-4">
+      <div class="sbtoc-container pr-8 mt-20">
+        <div class="sbaccordion__panel-content p-16 mb-8 sb-dock-skeleton-bx">
+          <div class="sbchapter__item" *ngFor="let number of [].constructor(4)">
+            <lib-skeleton-loader [width]="'90%'" [height]="'12px'" class="sb-dock-flex-auto"></lib-skeleton-loader>
+            <div>
+              <lib-skeleton-loader [width]="'30%'" [height]="'12px'" class="sb-dock-flex-auto"></lib-skeleton-loader>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+   </div> 
+</div>
 <!--empty result -->
 <div class="ui container" *ngIf="!showLoader && !contentList?.length">
   <div class="add-to-library__no-result">
