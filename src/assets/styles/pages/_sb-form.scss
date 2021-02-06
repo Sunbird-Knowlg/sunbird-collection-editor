@@ -1,3 +1,4 @@
+//Form UI
 .add-to-library {
   .dynamic-form {
     label {
@@ -93,6 +94,7 @@
     margin: 1rem 0 !important;
   }
 }
+//Footer UI
 .sb-fixed-with-whitebg {
   position: fixed;
   width: 100%;
@@ -139,7 +141,7 @@
     font-size: 0.785rem !important;
   }
 }
-
+//Player UI
 lib-contentplayer-page{
   height:380px
 }
@@ -190,6 +192,7 @@ lib-contentplayer-page{
     background:var(--white);
  }
 }
+//select content modal UI
 .sb-chapterlist-accordion {	
   &.ui.styled.accordion {	
     background: inherit;	
@@ -283,4 +286,11 @@ lib-contentplayer-page{
 }
 .ui.scrolling.modal{
   box-shadow: none;
+}
+//Toggle UI
+.sbtoc-container .ui.toggle.checkbox label:before{
+  width: 4rem !important;
+}
+.ui.toggle.checkbox input:checked~label:after{
+  left: 3rem !important;
 }
