@@ -31,7 +31,7 @@
         </div>
       </h4>
       <div class="btn-addtoLibrary pt-5 pr-10" *ngIf="content.identifier === selectedContent.identifier && !content.isAdded">
-        <button class="sb-btn sb-btn-xs sb-btn-dark-green sb-left-icon-btn font-weight-bold text-inherit">
+        <button class="sb-btn sb-btn-xs sb-btn-dark-green sb-left-icon-btn font-weight-bold text-inherit" (click)="addToLibrary()">
           <i class="plus square icon mr-4" ></i>Select content 
         </button>
       </div>
