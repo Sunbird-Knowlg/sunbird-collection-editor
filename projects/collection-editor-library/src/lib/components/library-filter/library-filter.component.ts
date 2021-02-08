@@ -17,7 +17,7 @@ import { EditorService } from '../../services';
 })
 export class LibraryFilterComponent implements OnInit, OnChanges {
   @Input() sessionContext: any;
-  @Input() collectionData: any;
+  @Input() filterDefaultValues: any;
   @Input() filterOpenStatus: boolean;
   @Output() filterChangeEvent: EventEmitter<any> = new EventEmitter();
 
@@ -43,12 +43,20 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
     this.currentFilters = {
       'primaryCategory': _.get(this.editorConfig, 'hierarchy.level2.children.Content'),
       'board': [],
-      'gradeLevel': [],
       'medium': [],
+      'gradeLevel': [],
       'subject': [],
     }
-    console.log(this.collectionData);
+    this.setFilterDefaultValues();
     this.fetchFrameWorkDetails();
+  }
+
+  setFilterDefaultValues() {
+    _.forEach(this.filterFields, (field) => {
+      if (this.filterDefaultValues[field.code]) {
+        field.default = this.filterDefaultValues[field.code];
+      }
+    });
   }
 
   ngOnChanges() {

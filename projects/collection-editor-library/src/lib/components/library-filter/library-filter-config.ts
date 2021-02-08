@@ -34,7 +34,7 @@ export const libraryFilterConfig = [
         label: 'Board/Syllabus',
         required: false,
         name: 'Board/Syllabus',
-        inputType: 'nestedselect',
+        inputType: 'select',
         placeholder: 'Select Board/Syllabus',
         section: {
           index: 3,

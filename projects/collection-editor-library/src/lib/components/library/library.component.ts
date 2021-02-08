@@ -2,8 +2,9 @@ import { filter } from 'rxjs/operators';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { EditorTelemetryService } from '../../services';
 import * as _ from 'lodash-es';
-import {EditorService} from '../../services/editor/editor.service';
-import {labelMessages} from '../labels';
+import { EditorService } from '../../services/editor/editor.service';
+import { labelMessages } from '../labels';
+
 @Component({
   selector: 'lib-library',
   templateUrl: './library.component.html',
@@ -26,7 +27,8 @@ export class LibraryComponent implements OnInit {
   public showLoader = true;
   public isFilterOpen = false;
   collectionhierarcyData: any;
-  constructor(private telemetryService: EditorTelemetryService, private editorService: EditorService ) { }
+  public defaultFilters: any;
+  constructor(private telemetryService: EditorTelemetryService, private editorService: EditorService) { }
 
   ngOnInit() {
     this.collectionId = _.get(this.libraryInput, 'collectionId');
@@ -34,10 +36,11 @@ export class LibraryComponent implements OnInit {
       this.collectionhierarcyData = response.result.content;
       this.collectionUnits = _.get(this.collectionhierarcyData, 'children');
       this.collectionHierarchy = this.getUnitWithChildren(this.collectionhierarcyData, this.collectionId);
-      });
+      this.setDefaultFilters();
+      this.fetchContentList();
+    });
     this.telemetryService.telemetryPageId = this.pageId;
     this.childNodes = _.get(this.collectionData, 'childNodes');
-    this.fetchContentList();
   }
 
   back() {
@@ -56,11 +59,22 @@ export class LibraryComponent implements OnInit {
     }
   }
 
+  setDefaultFilters(){
+    this.defaultFilters = _.pickBy({
+      'primaryCategory': _.get(this.editorService.editorConfig.config, 'hierarchy.level2.children.Content'),
+      'board': _.get(this.collectionhierarcyData, 'board'),
+      'gradeLevel': _.get(this.collectionhierarcyData, 'gradeLevel'),
+      'medium': _.get(this.collectionhierarcyData, 'medium'),
+      'subject': _.get(this.collectionhierarcyData, 'subject'),
+    });
+  }
+
   fetchContentList(filters?) {
+    filters = filters || this.defaultFilters;
     const option = {
       url: 'composite/v3/search',
       data: {
-        request: { filters: {...filters} }
+        request: { filters: { ...filters } }
       }
     };
     this.editorService.fetchContentListDetails(option).subscribe((response: any) => {
@@ -138,12 +152,12 @@ export class LibraryComponent implements OnInit {
     this.isFilterOpen = true;
   }
   filterContentList() {
-      if (_.isEmpty(this.contentList)) { return; }
-      _.forEach(this.contentList, (value, key) => {
-        value.isAdded = _.includes(this.childNodes, value.identifier);
-      });
+    if (_.isEmpty(this.contentList)) { return; }
+    _.forEach(this.contentList, (value, key) => {
+      value.isAdded = _.includes(this.childNodes, value.identifier);
+    });
 
-      const selectedContentIndex = this.showAddedContent ? 0 : _.findIndex(this.contentList, { isAdded: false });
-      this.selectedContent = this.contentList[selectedContentIndex];
-    }
+    const selectedContentIndex = this.showAddedContent ? 0 : _.findIndex(this.contentList, { isAdded: false });
+    this.selectedContent = this.contentList[selectedContentIndex];
   }
+}
