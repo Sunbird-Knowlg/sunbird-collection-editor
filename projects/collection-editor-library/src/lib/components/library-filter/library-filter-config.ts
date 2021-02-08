@@ -1,3 +1,4 @@
+import { Output } from '@angular/core';
 export const libraryFilterConfig = [
   {
     name: 'LibrayFilters',
@@ -38,7 +39,8 @@ export const libraryFilterConfig = [
         section: {
           index: 3,
           name: ''
-        }
+        },
+        output: 'name'
       },
       {
         code: 'medium',
@@ -58,7 +60,8 @@ export const libraryFilterConfig = [
         section: {
           index: 3,
           name: ''
-        }
+        },
+        output: 'code'
       },
       {
         code: 'gradeLevel',
@@ -78,7 +81,8 @@ export const libraryFilterConfig = [
         section: {
           index: 3,
           name: ''
-        }
+        },
+        output: 'code'
       }, {
         code: 'subject',
         visible: true,
@@ -97,7 +101,8 @@ export const libraryFilterConfig = [
         section: {
           index: 3,
           name: ''
-        }
+        },
+        output: 'code'
       },
       {
         code: 'topic',
