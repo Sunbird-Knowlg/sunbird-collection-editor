@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import {labelMessages} from '../labels';
 
 @Component({
   selector: 'lib-library-player',
@@ -7,6 +8,7 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class LibraryPlayerComponent implements OnInit {
 @Input() contentListDetails;
+labelMessages = labelMessages;
   constructor() { }
 
   ngOnInit() {

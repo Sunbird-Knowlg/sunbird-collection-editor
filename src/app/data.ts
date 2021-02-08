@@ -1,9 +1,9 @@
 export const editorConfig = {
     context: {
-      identifier: 'do_113193433773948928111',
+      identifier: 'do_1132092070802718721685',
       channel: '01307938306521497658',
-      framework: 'tn_k-12',
-      targetFWIds: ['ekstep_ncert_k-12'],
+      framework: 'ekstep_ncert_k-12',
+      targetFWIds: ['tn_k-12'],
       authToken: ' ',
       sid: 'iYO2K6dOSdA0rwq7NeT1TDzS-dbqduvV',
       did: '7e85b4967aebd6704ba1f604f20056b6',

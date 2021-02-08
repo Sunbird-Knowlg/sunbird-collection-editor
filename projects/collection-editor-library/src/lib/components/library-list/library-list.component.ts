@@ -8,16 +8,14 @@ import { EditorService } from '../../services';
 })
 export class LibraryListComponent implements OnInit {
 @Input() contentList;
-@Input() showAddedContent;
+@Input() showAddedContent: Boolean;
 @Output() contentChangeEvent = new EventEmitter<any>();
 @Output() moveEvent = new EventEmitter<any>();
+@Input() selectedContent: any;
   constructor(public editorService: EditorService) { }
 
   ngOnInit() {
-  }
-
-  onSelectContent(content) {
-    this.editorService.emitSelectedNodeMetaData({type: 'nodeSelect', metadata: content});
+    console.log(this.selectedContent, 'selectedContent');
   }
 
   onContentChange(selectedContent: any) {
@@ -36,6 +34,9 @@ export class LibraryListComponent implements OnInit {
   }
 
   onShowAddedContentChange() {
-   console.log('this.showAddedContent', this.showAddedContent);
+   this.moveEvent.emit({
+    action: 'showAddedContent',
+    status: this.showAddedContent
+  });
   }
 }

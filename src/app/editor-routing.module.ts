@@ -4,12 +4,12 @@ import { CollectionEditorComponent } from './collection-editor/collection-editor
 
 const routes: Routes = [
   {
-    path: 'edit/collection/:collectionId', component: CollectionEditorComponent, pathMatch: 'full',
+    path: 'edit/collection/:contentId', component: CollectionEditorComponent, pathMatch: 'full',
   }
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
 export class EditorRoutingModule { }

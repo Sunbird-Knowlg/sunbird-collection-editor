@@ -59,6 +59,12 @@ export class FancyTreeComponent implements AfterViewInit, OnDestroy {
     if (this.options.showConnectors) {
       $('.fancytree-container').addClass('fancytree-connectors');
     }
+    setTimeout(() => {
+      const rootNode = this.treeService.getFirstChild();
+      if (rootNode) {
+        this.treeService.setActiveNode(rootNode);
+      }
+    });
     this.showTree = true;
   }
 
@@ -387,7 +393,9 @@ export class FancyTreeComponent implements AfterViewInit, OnDestroy {
         break;
     }
   }
-
+  addFromLibrary() {
+    this.editorService.emitshowLibraryPageEvent('showLibraryPage');
+  }
   getTelemetryInteractEdata(id?) {
     return {
       id: id || 'collection-toc',

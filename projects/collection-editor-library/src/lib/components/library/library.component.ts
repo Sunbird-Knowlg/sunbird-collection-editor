@@ -1,7 +1,9 @@
 import { filter } from 'rxjs/operators';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { EditorTelemetryService } from '../../services';
-import { EditorService } from '../../services/editor/editor.service';
+import {EditorService} from '../../services/editor/editor.service';
+import {labelMessages} from '../labels';
+import * as _ from 'lodash-es';
 @Component({
   selector: 'lib-library',
   templateUrl: './library.component.html',
@@ -10,16 +12,20 @@ import { EditorService } from '../../services/editor/editor.service';
 export class LibraryComponent implements OnInit {
   @Input() libraryInput: any;
   @Output() libraryEmitter = new EventEmitter<any>();
+  @Input() collectionData: any;
   public pageId = 'library';
   public contentList: any;
   selectedContent: any;
-  showAddedContent = true;
+  public showAddedContent: Boolean = false;
   showLoader = true;
   public isFilterOpen = false;
-  constructor(private telemetryService: EditorTelemetryService, private editorService: EditorService) { }
+  labelMessages = labelMessages;
+  public childNodes: any;
+  constructor(private telemetryService: EditorTelemetryService, private editorService: EditorService ) { }
 
   ngOnInit() {
     this.telemetryService.telemetryPageId = this.pageId;
+    this.childNodes = _.get(this.collectionData, 'childNodes');
     this.fetchContentList();
   }
 
@@ -47,12 +53,12 @@ export class LibraryComponent implements OnInit {
       }
     };
     this.editorService.fetchContentListDetails(option).subscribe((response: any) => {
-      console.log(response, 'result');
       this.contentList = response.result.content;
-      this.selectedContent = this.contentList[0];
+      this.filterContentList();
       this.showLoader = false;
     });
   }
+
   onContentChangeEvent(event: any) {
     this.selectedContent = event.content;
   }
@@ -62,6 +68,10 @@ export class LibraryComponent implements OnInit {
       case 'showFilter':
         this.openFilter();
         break;
+        case 'showAddedContent':
+        this.showAddedContent = event.status;
+          this.filterContentList();
+          break;
       default:
         break;
     }
@@ -75,4 +85,13 @@ export class LibraryComponent implements OnInit {
     });
     this.isFilterOpen = true;
   }
-}
+  filterContentList() {
+      if (_.isEmpty(this.contentList)) { return; }
+      _.forEach(this.contentList, (value, key) => {
+        value.isAdded = _.includes(this.childNodes, value.identifier);
+      });
+
+      const selectedContentIndex = this.showAddedContent ? 0 : _.findIndex(this.contentList, { 'isAdded': false });
+      this.selectedContent = this.contentList[selectedContentIndex];
+    }
+  }
