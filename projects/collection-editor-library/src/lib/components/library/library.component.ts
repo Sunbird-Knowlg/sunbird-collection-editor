@@ -1,6 +1,7 @@
+import { filter } from 'rxjs/operators';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { EditorTelemetryService } from '../../services';
-import {EditorService} from '../../services/editor/editor.service';
+import { EditorService } from '../../services/editor/editor.service';
 @Component({
   selector: 'lib-library',
   templateUrl: './library.component.html',
@@ -15,7 +16,7 @@ export class LibraryComponent implements OnInit {
   showAddedContent = true;
   showLoader = true;
   public isFilterOpen = false;
-  constructor(private telemetryService: EditorTelemetryService, private editorService: EditorService ) { }
+  constructor(private telemetryService: EditorTelemetryService, private editorService: EditorService) { }
 
   ngOnInit() {
     this.telemetryService.telemetryPageId = this.pageId;
@@ -27,24 +28,30 @@ export class LibraryComponent implements OnInit {
   }
 
   onFilterChange(event: any) {
-    console.log('event', event);
-    if (event.action === 'filterStatusChange') {
-      this.isFilterOpen = event.filterStatus;
+    switch (event.action) {
+      case 'filterDataChange':
+        console.log(event.filters);
+        this.fetchContentList(event.filters);
+        break;
+      case 'filterStatusChange':
+        this.isFilterOpen = event.filterStatus;
+        break;
     }
   }
-  fetchContentList() {
+
+  fetchContentList(filters?) {
     const option = {
       url: 'composite/v3/search',
-    data: {
-      request: {filters: {}}
-    }
+      data: {
+        request: { filters: {...filters} }
+      }
     };
     this.editorService.fetchContentListDetails(option).subscribe((response: any) => {
       console.log(response, 'result');
       this.contentList = response.result.content;
       this.selectedContent = this.contentList[0];
       this.showLoader = false;
-      });
+    });
   }
   onContentChangeEvent(event: any) {
     this.selectedContent = event.content;
