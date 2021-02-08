@@ -20,7 +20,8 @@
   <!-- Class separator -->
   <div class="sb-library-scroll">
     <div *ngFor="let content of contentList">
-      <div class="sbchapter__item mb-0 d-flex flex-dc" [ngClass]="{'selected':content.identifier === selectedContent.identifier}" (click)="onSelectContent(content)">
+      <div class="sbchapter__item mb-0 d-flex flex-dc" [ngClass]=" {'selected':content.identifier === selectedContent.identifier}"
+       (click)="onContentChange(content)" [class.d-none]="content.isAdded && !showAddedContent">
       <!-- <div class="sbchapter__img"><img src="./assets/images/book.png" /></div> -->
       <h4 class="ml-8 w-80">
         <div class="sbcard__title mb-0 font-weight-bold ellipsis w-75" popupDelay="1000" suiPopup
@@ -29,15 +30,15 @@
           By CBSE 
         </div>
       </h4>
-      <div class="btn-addtoLibrary pt-5 pr-10" *ngIf="!showAddedContent">
+      <div class="btn-addtoLibrary pt-5 pr-10" *ngIf="content.identifier === selectedContent.identifier && !content.isAdded">
         <button class="sb-btn sb-btn-xs sb-btn-dark-green sb-left-icon-btn font-weight-bold text-inherit">
           <i class="plus square icon mr-4" ></i>Select content 
         </button>
       </div>
-      <div class="textbookBtnLink absolute" *ngIf="showAddedContent">
+      <div class="textbookBtnLink absolute"  [hidden]="!content.isAdded">
         <button type="button" class="sb-btn sb-btn-normal sb-btn-link sb-btn-hover-none
          sb-btn-link-secondary sb-left-icon-btn fs-0-785"><i class="circle check icon"></i>
-         Added to textbook</button>
+         Added to collection</button>
       </div>
       </div>
     </div>

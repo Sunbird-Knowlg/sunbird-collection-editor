@@ -13,21 +13,17 @@ import {labelMessages} from '../labels';
 export class ResourceReorderComponent implements OnInit {
   labelMessages = labelMessages;
   unitSelected: string;
+  @Input() selectedContentDetails;
   @Input() collectionId;
   @Input() collectionUnits;
   @Input() programContext;
   @Input() prevUnitSelect;
   showMoveButton = false;
   @ViewChild('modal', {static: true}) modal;
-  selectedContentDetails: any;
   @Output() moveEvent = new EventEmitter<any>();
-  private onComponentDestroy$ = new Subject<any>();
   constructor(private editorService: EditorService) { }
 
   ngOnInit() {
-    this.editorService.nodeData$.pipe(takeUntil(this.onComponentDestroy$)).subscribe((contentdata: IeventData) => {
-      this.selectedContentDetails = _.get(contentdata, 'metadata');
-    });
   }
 
   onSelectBehaviour(e) {
@@ -38,8 +34,9 @@ export class ResourceReorderComponent implements OnInit {
     this.editorService.addResourceToHierarchy(this.collectionId, this.prevUnitSelect, this.selectedContentDetails.identifier)
     .subscribe((data) => {
       this.modal.deny();
-      alert('content is added to Hierarchy');
+      alert('Content is added to hierarchy...');
     }, err => {
+      alert('Something went wrong...');
     });
   }
 

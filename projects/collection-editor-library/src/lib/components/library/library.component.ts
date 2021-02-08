@@ -15,23 +15,28 @@ export class LibraryComponent implements OnInit {
   @Output() libraryEmitter = new EventEmitter<any>();
   public pageId = 'library';
   public contentList: any;
-  selectedContent: any;
+  public selectedContent: any;
   public childNodes: any;
-  showAddedContent = false;
-  showLoader = true;
-  isFilterOpen = false;
   showSelectResourceModal = false;
   collectionUnits: any;
   collectionHierarchy = [];
   collectionId: string;
+  public showAddedContent = false;
+  public showLoader = true;
+  public isFilterOpen = false;
+  collectionhierarcyData: any;
   constructor(private telemetryService: EditorTelemetryService, private editorService: EditorService ) { }
 
   ngOnInit() {
     this.collectionId = _.get(this.libraryInput, 'collectionId');
+    this.editorService.fetchCollectionHierarchy(this.libraryInput).subscribe((response: any) => {
+      this.collectionhierarcyData = response.result.content;
+      this.collectionUnits = _.get(this.collectionhierarcyData, 'children');
+      this.collectionHierarchy = this.getUnitWithChildren(this.collectionhierarcyData, this.collectionId);
+      });
     this.telemetryService.telemetryPageId = this.pageId;
+    this.childNodes = _.get(this.collectionData, 'childNodes');
     this.fetchContentList();
-    this.collectionUnits = _.get(this.collectionData, 'children');
-    this.collectionHierarchy = this.getUnitWithChildren(this.collectionData, this.collectionId);
   }
 
   back() {
@@ -39,7 +44,6 @@ export class LibraryComponent implements OnInit {
   }
 
   onFilterChange(event: any) {
-    console.log('event', event);
     if (event.action === 'filterStatusChange') {
       this.isFilterOpen = event.filterStatus;
     }
@@ -52,9 +56,8 @@ export class LibraryComponent implements OnInit {
     }
     };
     this.editorService.fetchContentListDetails(option).subscribe((response: any) => {
-      console.log(response, 'result');
       this.contentList = response.result.content;
-      this.selectedContent = this.contentList[0];
+      this.filterContentList();
       this.showLoader = false;
       });
   }
@@ -109,6 +112,10 @@ export class LibraryComponent implements OnInit {
       case 'closeHierarchyPopup':
         this.showSelectResourceModal = false;
         break;
+      case 'showAddedContent':
+        this.showAddedContent = event.status;
+        this.filterContentList();
+        break;
       default:
         break;
     }
@@ -122,4 +129,13 @@ export class LibraryComponent implements OnInit {
     });
     this.isFilterOpen = true;
   }
-}
+  filterContentList() {
+      if (_.isEmpty(this.contentList)) { return; }
+      _.forEach(this.contentList, (value, key) => {
+        value.isAdded = _.includes(this.childNodes, value.identifier);
+      });
+
+      const selectedContentIndex = this.showAddedContent ? 0 : _.findIndex(this.contentList, { isAdded: false });
+      this.selectedContent = this.contentList[selectedContentIndex];
+    }
+  }
