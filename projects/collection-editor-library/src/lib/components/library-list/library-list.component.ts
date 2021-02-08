@@ -15,7 +15,6 @@ export class LibraryListComponent implements OnInit {
   constructor(public editorService: EditorService) { }
 
   ngOnInit() {
-    console.log(this.selectedContent, 'selectedContent');
   }
 
   onContentChange(selectedContent: any) {
