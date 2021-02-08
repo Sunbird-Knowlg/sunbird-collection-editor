@@ -9,6 +9,7 @@ import {labelMessages} from '../labels';
   styleUrls: ['./library.component.scss']
 })
 export class LibraryComponent implements OnInit {
+  labelMessages = labelMessages;
   @Input() libraryInput: any;
   @Input() collectionData: any;
   @Output() libraryEmitter = new EventEmitter<any>();
@@ -20,16 +21,17 @@ export class LibraryComponent implements OnInit {
   showLoader = true;
   isFilterOpen = false;
   showSelectResourceModal = false;
-  public selectedContentDetails: string;
   collectionUnits: any;
+  collectionHierarchy = [];
+  collectionId: string;
   constructor(private telemetryService: EditorTelemetryService, private editorService: EditorService ) { }
 
   ngOnInit() {
+    this.collectionId = _.get(this.libraryInput, 'collectionId');
     this.telemetryService.telemetryPageId = this.pageId;
     this.fetchContentList();
     this.collectionUnits = _.get(this.collectionData, 'children');
-
-    console.log('this.collectionUnits', this.collectionUnits);
+    this.collectionHierarchy = this.getUnitWithChildren(this.collectionData, this.collectionId);
   }
 
   back() {
@@ -53,25 +55,44 @@ export class LibraryComponent implements OnInit {
       console.log(response, 'result');
       this.contentList = response.result.content;
       this.selectedContent = this.contentList[0];
-      // this.filterContentList();
       this.showLoader = false;
       });
   }
 
-  // filterContentList(selectedContentId?) {
-  //   if (_.isEmpty(this.contentList)) { return; }
-  //   _.forEach(this.contentList, (value, key) => {
-  //     value.isAdded = _.includes(this.childNodes, value.identifier);
-  //   });
-  //   if (selectedContentId) {
-  //     this.selectedContentDetails = _.pick(
-  //       _.find(this.contentList, { identifier: selectedContentId }), ['name', 'identifier', 'isAdded']
-  //     );
-  //   } else {
-  //     const selectedContentIndex = this.showAddedContent ? 0 : _.findIndex(this.contentList, { isAdded: false });
-  //     this.selectedContentDetails = _.pick(this.contentList[selectedContentIndex], ['name', 'identifier', 'isAdded']);
-  //   }
-  // }
+  getUnitWithChildren(data, collectionId) {
+    const self = this;
+    const childData = data.children;
+    if (_.isEmpty(childData)) { return []; }
+    const tree = childData.map(child => {
+      // if (child.identifier === this.collectionUnitId) {
+      //   this.selectedUnitName = child.name;
+      // }
+      const treeItem = this.generateNodeMeta(child);
+      const treeUnit = self.getUnitWithChildren(child, collectionId);
+      const treeChildren = treeUnit && treeUnit.filter(item => item.contentType === 'TextBookUnit');
+      // tslint:disable-next-line:no-string-literal
+      treeItem['children'] = (treeChildren && treeChildren.length > 0) ? treeChildren : null;
+      return treeItem;
+    });
+    return tree;
+  }
+
+  generateNodeMeta(node) {
+    const nodeMeta = {
+      identifier: node.identifier,
+      name: node.name,
+      contentType: node.contentType,
+      topic: node.topic,
+      status: node.status,
+      creator: node.creator,
+      createdBy: node.createdBy || null,
+      parentId: node.parent || null,
+      organisationId: _.has(node, 'organisationId') ? node.organisationId : null,
+      prevStatus: node.prevStatus || null,
+    };
+    return nodeMeta;
+  }
+
 
   onContentChangeEvent(event: any) {
     this.selectedContent = event.content;
@@ -82,10 +103,10 @@ export class LibraryComponent implements OnInit {
       case 'showFilter':
         this.openFilter();
         break;
-      case 'beforeMove':
+      case 'openHierarchyPopup':
         this.showSelectResourceModal = true;
         break;
-      case 'cancelMove':
+      case 'closeHierarchyPopup':
         this.showSelectResourceModal = false;
         break;
       default:

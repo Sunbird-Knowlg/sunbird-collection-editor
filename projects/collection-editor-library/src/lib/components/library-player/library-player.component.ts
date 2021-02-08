@@ -16,7 +16,7 @@ labelMessages = labelMessages;
 
   addToLibrary() {
     this.moveEvent.emit({
-      action: 'beforeMove'
+      action: 'openHierarchyPopup'
     });
   }
 

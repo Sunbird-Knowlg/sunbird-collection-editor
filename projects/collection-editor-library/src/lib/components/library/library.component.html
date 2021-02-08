@@ -37,7 +37,7 @@
 </div>
 
 <div *ngIf="showSelectResourceModal">
-  <lib-resource-reorder [selectedContentDetails]="selectedContent" [collectionUnits]="collectionUnits" (moveEvent)="showResourceTemplate($event)"></lib-resource-reorder>
+  <lib-resource-reorder [collectionUnits]="collectionHierarchy" [collectionId]="collectionId" (moveEvent)="showResourceTemplate($event)"></lib-resource-reorder>
 </div>
 
 <!--empty result -->

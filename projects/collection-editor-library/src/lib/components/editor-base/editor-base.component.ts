@@ -114,7 +114,7 @@ export class EditorBaseComponent implements OnInit {
 
   showLibraryComponentPage() {
     this.libraryComponentInput = {
-      questionSetId: this.editorParams.collectionId
+      collectionId: this.editorParams.collectionId
     };
     this.showLibraryPage = true;
   }
