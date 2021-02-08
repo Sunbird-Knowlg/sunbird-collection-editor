@@ -38,4 +38,11 @@ export class LibraryListComponent implements OnInit {
     status: this.showAddedContent
   });
   }
+
+  addToLibrary() {
+    this.moveEvent.emit({
+      action: 'openHierarchyPopup'
+    });
+  }
+
 }
