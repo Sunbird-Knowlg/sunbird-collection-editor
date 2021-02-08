@@ -1,0 +1,11 @@
+.library-filter {
+    .two-column-grid{
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .list-border.cursor-pointer{
+        margin-top: 12px;
+    }
+    .list-border{
+        background: #ffffff;
+    }
+}
