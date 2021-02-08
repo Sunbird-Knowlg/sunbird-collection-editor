@@ -1,4 +1,3 @@
-import { filter } from 'rxjs/operators';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { EditorTelemetryService } from '../../services';
 import * as _ from 'lodash-es';
@@ -50,8 +49,7 @@ export class LibraryComponent implements OnInit {
   onFilterChange(event: any) {
     switch (event.action) {
       case 'filterDataChange':
-        console.log(event.filters);
-        this.fetchContentList(event.filters);
+        this.fetchContentList(event.filters, event.query);
         break;
       case 'filterStatusChange':
         this.isFilterOpen = event.filterStatus;
@@ -59,7 +57,7 @@ export class LibraryComponent implements OnInit {
     }
   }
 
-  setDefaultFilters(){
+  setDefaultFilters() {
     this.defaultFilters = _.pickBy({
       'primaryCategory': _.get(this.editorService.editorConfig.config, 'hierarchy.level2.children.Content'),
       'board': _.get(this.collectionhierarcyData, 'board'),
@@ -69,12 +67,16 @@ export class LibraryComponent implements OnInit {
     });
   }
 
-  fetchContentList(filters?) {
+  fetchContentList(filters?, query?) {
     filters = filters || this.defaultFilters;
     const option = {
       url: 'composite/v3/search',
       data: {
-        request: { filters: { ...filters } }
+        query: query || "",
+        request: {
+          // @Todo remove hardcoded objectType
+          filters: _.pickBy({ ...filters, ...{ "status": ["Live"], "objectType": "content" } })
+        }
       }
     };
     this.editorService.fetchContentListDetails(option).subscribe((response: any) => {

@@ -1,4 +1,3 @@
-import { Output } from '@angular/core';
 export const libraryFilterConfig = [
   {
     name: 'LibrayFilters',
@@ -7,8 +6,9 @@ export const libraryFilterConfig = [
         code: 'primaryCategory',
         dataType: 'text',
         description: 'Type',
-        editable: false,
+        editable: true,
         index: 4,
+        default: [],
         renderingHints: { class: 'sb-g-col-lg-1' },
         inputType: 'nestedselect',
         label: 'Type',

@@ -1,10 +1,10 @@
-<div class="sb-prominent-filter sb-bg-header-blue" [formGroup]="searchFilterForm">
+<div class="sb-prominent-filter sb-bg-header-blue">
   <div class="ui container pt-5 pb-20">
     <div class="d-flex flex-w-wrap flex-jc-space-between flex-ai-center">
       <div class="sb-search-box small no-btn">
         <div class="input-div relative">
           <i class="search icon"></i>
-          <input class="sb-search-input" type="text" placeholder="Search Library" />
+          <input class="sb-search-input" [(ngModel)]="searchQuery" type="text" (keyup.enter)="onQueryEnter($event);" placeholder="Search Library" />
         </div>
         <button class="sb-btn sb-btn-normal">{{labelMessages.lbl.search}}</button>
       </div>

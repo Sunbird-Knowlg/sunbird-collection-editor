@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, ViewEncapsulation} from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
 import * as _ from 'lodash-es';
 // import { data } from './data';
 import {labelMessages} from '../labels';
@@ -17,16 +16,13 @@ import { EditorService } from '../../services';
 })
 export class LibraryFilterComponent implements OnInit, OnChanges {
   @Input() sessionContext: any;
-  @Input() filterDefaultValues: any;
+  @Input() filterValues: any;
   @Input() filterOpenStatus: boolean;
   @Output() filterChangeEvent: EventEmitter<any> = new EventEmitter();
 
   labelMessages = labelMessages;
-  // filters = data.filters;
   filterConfig: any;
   filterFields = _.get(_.first(libraryFilterConfig), 'fields');
-  // activeFilterData = data.activeFilterData;
-  searchFilterForm: FormGroup;
   public isFilterShow = false;
   public telemetryPageId: string;
   public framework = 'ekstep_ncert_k-12';
@@ -34,8 +30,9 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
   public frameworkDetails: any = {};
   public currentFilters: any;
   private editorConfig: any;
-  private filterValues: any;
-  constructor( private sbFormBuilder: FormBuilder, private frameworkService: FrameworkService,
+  public searchQuery: string;
+
+  constructor(private frameworkService: FrameworkService,
     public editorService: EditorService) { }
 
   ngOnInit() {
@@ -53,8 +50,8 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
 
   setFilterDefaultValues() {
     _.forEach(this.filterFields, (field) => {
-      if (this.filterDefaultValues[field.code]) {
-        field.default = this.filterDefaultValues[field.code];
+      if (this.filterValues[field.code]) {
+        field.default = this.filterValues[field.code];
       }
     });
   }
@@ -137,14 +134,11 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
     const index = this.filterFields.findIndex(e => _.get(e, 'code') === "primaryCategory");
     if (index !==  -1) {
       this.filterFields[index]['range'] = this.currentFilters['primaryCategory'];
-      this.filterFields[index]['default'] = this.currentFilters['primaryCategory'];
     }
 
-    libraryFilterConfig[0]['fields'] = _.cloneDeep(this.filterFields);
+    libraryFilterConfig[0]['fields'] = this.filterFields;
     this.filterConfig = libraryFilterConfig;
-    debugger;
   }
-
 
   // should get applied association data from framework details
   getOnChangeAssociationValues(selectedFilter, caterory) {
@@ -163,6 +157,10 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
     return getAssociationsData;
   }
 
+  onQueryEnter(event) {
+    this.emitApplyFilter()
+  }
+
   showfilter() {
     this.isFilterShow = !this.isFilterShow;
     this.filterChangeEvent.emit({
@@ -172,14 +170,26 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
   }
 
   resetFilter() {
-    this.searchFilterForm.reset();
-    this.applyFilter();
+    this.filterValues = {};
+    this.searchQuery  = '';
+    this.filterFields = _.get(_.first(libraryFilterConfig), 'fields');
+    _.forEach(this.filterFields, (field) => {
+        field.default = '';
+    });
+    this.filterConfig = null;
+    this.filterConfig = _.cloneDeep(libraryFilterConfig);
+    this.emitApplyFilter();
   }
 
   applyFilter() {
+    this.emitApplyFilter();
+  }
+
+  emitApplyFilter() {
     this.filterChangeEvent.emit({
       action: 'filterDataChange',
-      filters: _.pickBy(this.filterValues)
+      filters: this.filterValues,
+      query: this.searchQuery
     });
   }
 
