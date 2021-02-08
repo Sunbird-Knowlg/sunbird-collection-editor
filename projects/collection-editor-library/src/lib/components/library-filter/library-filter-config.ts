@@ -40,7 +40,7 @@ export const libraryFilterConfig = [
           index: 3,
           name: ''
         },
-        output: 'name'
+        output:'name'
       },
       {
         code: 'medium',
@@ -61,7 +61,7 @@ export const libraryFilterConfig = [
           index: 3,
           name: ''
         },
-        output: 'code'
+        output:'name'
       },
       {
         code: 'gradeLevel',
@@ -82,7 +82,7 @@ export const libraryFilterConfig = [
           index: 3,
           name: ''
         },
-        output: 'code'
+        output:'name'
       }, {
         code: 'subject',
         visible: true,
@@ -102,7 +102,7 @@ export const libraryFilterConfig = [
           index: 3,
           name: ''
         },
-        output: 'code'
+        output:'name'
       },
       {
         code: 'topic',

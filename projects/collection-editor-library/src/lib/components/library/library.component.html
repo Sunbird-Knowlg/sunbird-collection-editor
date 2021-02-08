@@ -19,7 +19,7 @@
     </div>
   </div>
 <!-- Filter -->
-  <lib-library-filter [filterOpenStatus]="isFilterOpen" (filterChangeEvent)="onFilterChange($event);"></lib-library-filter>
+  <lib-library-filter [collectionData]="collectionData" [filterOpenStatus]="isFilterOpen" (filterChangeEvent)="onFilterChange($event);"></lib-library-filter>
   <div class="ui container min-h-500" *ngIf="!showLoader && contentList?.length">
     <!-- Player Section -->
     <div class="sb-g add-to-library__toc-player">
@@ -29,7 +29,7 @@
       </section>
       <!-- Right Player Sections -->
       <section class="sb-g-col-xs-12 sb-g-col-md-8 sb-g-col-lg-8 relative position ml-24">
-          <lib-library-player [contentListDetails]="selectedContent"></lib-library-player> 
+          <lib-library-player [contentListDetails]="selectedContent"></lib-library-player>
       </section>
     </div>
   </div>

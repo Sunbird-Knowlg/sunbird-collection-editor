@@ -16,6 +16,7 @@ import { EditorService } from '../../services';
 })
 export class LibraryFilterComponent implements OnInit, OnChanges {
   @Input() sessionContext: any;
+  @Input() collectionData: any;
   @Input() filterOpenStatus: boolean;
   @Output() filterChangeEvent: EventEmitter<any> = new EventEmitter();
 
@@ -45,6 +46,7 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
       'medium': [],
       'subject': [],
     }
+    console.log(this.collectionData);
     this.fetchFrameWorkDetails();
   }
 
@@ -131,6 +133,7 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
 
     libraryFilterConfig[0]['fields'] = _.cloneDeep(this.filterFields);
     this.filterConfig = libraryFilterConfig;
+    debugger;
   }
 
 
