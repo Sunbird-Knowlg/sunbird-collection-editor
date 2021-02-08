@@ -15,13 +15,13 @@
       </div>
     </div>
 
-    <div class="sb-prominent-filter-container pt-16" *ngIf="isFilterShow">
+    <div class="library-filter pt-16" *ngIf="isFilterShow">
       <hr class="mb-20">
       <ng-container *ngIf="filterConfig">
         <sb-dynamic-form [config]="filterConfig" (initialize)="outputData($event)"
           (statusChanges)="onStatusChanges($event)" (valueChanges)="valueChanges($event)"></sb-dynamic-form>
       </ng-container>
-      <div class="d-flex flex-as-center pt-10 sb-btn-cover">
+      <div class="d-flex flex-as-center pt-10 sb-btn-cover flex-jc-space-end">
         <button type="button" class="sb-btn sb-btn-normal sb-btn-outline-primary ml-5"
           (click)="resetFilter();">Reset</button>
         <button type="button" class="sb-btn sb-btn-normal sb-btn-primary ml-15" (click)="applyFilter();">Apply</button>

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, ViewEncapsulation} from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import * as _ from 'lodash-es';
 // import { data } from './data';
@@ -12,7 +12,8 @@ import { EditorService } from '../../services';
 @Component({
   selector: 'lib-library-filter',
   templateUrl: './library-filter.component.html',
-  styleUrls: ['./library-filter.component.scss']
+  styleUrls: ['./library-filter.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class LibraryFilterComponent implements OnInit, OnChanges {
   @Input() sessionContext: any;
