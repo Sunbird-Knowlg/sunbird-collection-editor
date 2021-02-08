@@ -11,6 +11,7 @@ export const labelMessages = {
         selectContent: 'Select content',
         noMatchingContent: 'Sorry there is no matching content',
         changeFilterMessage: 'Changing filter helps you find more content',
-        changeFilter: 'Change filters'
+        changeFilter: 'Change filters',
+        whereDoYouWantToAddThisContent: 'Where do you want to add this content?'
     }
 };

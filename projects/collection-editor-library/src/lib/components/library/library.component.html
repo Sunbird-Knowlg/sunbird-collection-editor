@@ -19,8 +19,8 @@
     </div>
   </div>
 <!-- Filter -->
-  <lib-library-filter [collectionData]="collectionData" [filterOpenStatus]="isFilterOpen" (filterChangeEvent)="onFilterChange($event);"></lib-library-filter>
-  <div class="ui container min-h-500" *ngIf="!showLoader && contentList?.length">
+  <lib-library-filter *ngIf="!showLoader" [filterOpenStatus]="isFilterOpen" (filterChangeEvent)="onFilterChange($event);"></lib-library-filter>
+  <div class="ui container min-h-500" *ngIf="!showLoader">
     <!-- Player Section -->
     <div class="sb-g add-to-library__toc-player">
       <!-- Left Sidebar for cards -->
@@ -29,10 +29,32 @@
       </section>
       <!-- Right Player Sections -->
       <section class="sb-g-col-xs-12 sb-g-col-md-8 sb-g-col-lg-8 relative position ml-24">
-          <lib-library-player [contentListDetails]="selectedContent"></lib-library-player>
+          <lib-library-player [contentListDetails]="selectedContent" (moveEvent)="showResourceTemplate($event)"></lib-library-player>
       </section>
     </div>
   </div>
+</div>
+
+<div class="ui container" *ngIf="showLoader">
+  <div class="sb-g add-to-library__toc-player">
+    <!-- Left Sidebar for cards -->
+    <section class="sb-g-col-xs-12 sb-g-col-md-4 sb-g-col-lg-4">
+      <div class="sbtoc-container pr-8 mt-20">
+        <div class="sbaccordion__panel-content p-16 mb-8 sb-dock-skeleton-bx">
+          <div class="sbchapter__item" *ngFor="let number of [].constructor(4)">
+            <lib-skeleton-loader [width]="'90%'" [height]="'12px'" class="sb-dock-flex-auto"></lib-skeleton-loader>
+            <div>
+              <lib-skeleton-loader [width]="'30%'" [height]="'12px'" class="sb-dock-flex-auto"></lib-skeleton-loader>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+   </div>
+</div>
+
+<div *ngIf="showSelectResourceModal">
+  <lib-resource-reorder [collectionUnits]="collectionHierarchy" [selectedContentDetails]="selectedContent" [collectionId]="collectionId" (moveEvent)="showResourceTemplate($event)"></lib-resource-reorder>
 </div>
 
 <!--empty result -->
