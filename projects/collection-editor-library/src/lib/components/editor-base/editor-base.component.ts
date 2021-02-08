@@ -31,7 +31,7 @@ export class EditorBaseComponent implements OnInit {
   public formFieldValues: any = {};
   public showLibraryPage = false;
   public libraryComponentInput: any;
-
+  public collectionData: any;
   constructor(public treeService: TreeService, private editorService: EditorService,
               private activatedRoute: ActivatedRoute, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router) {
@@ -46,6 +46,7 @@ export class EditorBaseComponent implements OnInit {
     this.fetchCollectionHierarchy().subscribe(
       (response) => {
         const collection = _.get(response, 'result.content');
+        this.collectionData = _.get(response, 'result.content');
         const organisationFramework = _.get(this.editorConfig, 'context.framework') || _.get(collection, 'framework');
         const targetFramework = _.get(this.editorConfig, 'context.targetFWIds') || _.get(collection, 'targetFWIds');
         this.formFieldValues.additionalCategories =  _.get(this.editorConfig, 'context.additionalCategories');

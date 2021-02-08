@@ -2,7 +2,7 @@ export const editorConfig = {
     context: {
       identifier: 'do_1132092070802718721685',
       channel: '01307938306521497658',
-      framework: 'TPD',
+      framework: 'ekstep_ncert_k-12',
       targetFWIds: ['tn_k-12'],
       authToken: ' ',
       sid: 'iYO2K6dOSdA0rwq7NeT1TDzS-dbqduvV',
