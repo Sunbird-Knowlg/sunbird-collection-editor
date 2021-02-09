@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import { TreeService, EditorService, FrameworkService, HelperService, EditorTelemetryService, ToasterService } from '../../services';
 import { IEditorConfig } from '../../interfaces';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -14,7 +14,7 @@ interface IeditorParams {
   templateUrl: './editor-base.component.html',
   styleUrls: ['./editor-base.component.scss']
 })
-export class EditorBaseComponent implements OnInit {
+export class EditorBaseComponent implements OnInit, OnDestroy {
 
   @Input() editorConfig: IEditorConfig | undefined;
   public collectionTreeNodes: any;
@@ -28,6 +28,7 @@ export class EditorBaseComponent implements OnInit {
   public unitFormConfig: any;
   public showLibraryPage = false;
   public libraryComponentInput: any;
+  public editorMode;
   constructor(public treeService: TreeService, private editorService: EditorService,
               private activatedRoute: ActivatedRoute, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
@@ -37,8 +38,14 @@ export class EditorBaseComponent implements OnInit {
     };
   }
 
+  @HostListener('window:unload', ['$event'])
+  unloadHandler(event) {
+    this.generateTelemetryEndEvent();
+  }
+
   ngOnInit() {
-    this.editorService.editorConfig = this.editorConfig;
+    this.editorService.initialize(this.editorConfig);
+    this.editorMode = this.editorService.editorMode;
     this.treeService.initialize(this.editorConfig);
     this.fetchCollectionHierarchy().subscribe(
       (response) => {
@@ -183,13 +190,18 @@ export class EditorBaseComponent implements OnInit {
     this.showResourceModal = false;
   }
 
-  generateTelemetryEndEvent(eventMode) {
+  generateTelemetryEndEvent() {
     const telemetryEnd = {
       type: 'editor',
       pageid: this.telemetryPageId,
-      mode: eventMode || '',
+      mode: this.editorMode,
       duration: _.toString((Date.now() - this.pageStartTime) / 1000)
     };
     this.telemetryService.end(telemetryEnd);
+  }
+
+  ngOnDestroy() {
+    this.generateTelemetryEndEvent();
+    this.treeService.clearTreeCache();
   }
 }

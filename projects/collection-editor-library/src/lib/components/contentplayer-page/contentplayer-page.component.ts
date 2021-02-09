@@ -22,7 +22,7 @@ export class ContentplayerPageComponent implements OnInit, OnChanges {
   ngOnInit() {}
 
   ngOnChanges() {
-    this.contentMetadata = _.get(this.contentMetadata, 'data.metadata');
+    this.contentMetadata = _.get(this.contentMetadata, 'data.metadata') || this.contentMetadata;
     if (this.contentId !== this.contentMetadata.identifier) {
       this.contentId = this.contentMetadata.identifier;
       this.getContentDetails();

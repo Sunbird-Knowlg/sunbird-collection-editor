@@ -11,6 +11,7 @@ export class EditorService {
   data: any;
   private _editorConfig: EditorConfig;
   public questionStream$ = new Subject<any>();
+  private _editorMode = 'edit';
 
   // tslint:disable-next-line:variable-name
   public _resourceAddition$ = new Subject<any>();
@@ -22,12 +23,17 @@ export class EditorService {
               private dataService: DataService,
               private publicDataService: PublicDataService) { }
 
-  public set editorConfig(editorConfig: EditorConfig) {
-    this._editorConfig = editorConfig;
+  public initialize(config: EditorConfig) {
+    this._editorConfig = config;
+    this._editorMode = _.get(this._editorConfig, 'config.mode');
   }
 
   public get editorConfig(): EditorConfig {
     return this._editorConfig;
+  }
+
+  get editorMode() {
+    return this._editorMode;
   }
 
   emitResourceAddition(data) {

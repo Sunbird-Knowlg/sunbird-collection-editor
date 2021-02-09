@@ -126,7 +126,9 @@ export class TreeService {
 
   setTreeCache(nodeId, data, isRootNode?) {
     if (this.treeCache.nodesModified[nodeId]) {
-      this.treeCache.nodesModified[nodeId].metadata = data;
+      const primaryCategory = this.treeCache.nodesModified[nodeId].metadata.primaryCategory;
+      // tslint:disable-next-line:max-line-length
+      this.treeCache.nodesModified[nodeId].metadata = _.isEqual(primaryCategory, 'Textbook Unit') ? _.assign(this.treeCache.nodesModified[nodeId].metadata, data) : data; // TODO:: rethink this
     } else {
       // tslint:disable-next-line:max-line-length
       this.treeCache.nodesModified[nodeId] = {root: isRootNode ? true : false, metadata: {...data}, ...(nodeId.includes('do_') ? {isNew: false} : {isNew: true})};
