@@ -145,3 +145,11 @@
   .fancytree-lastsib{
     margin-left: 20px;
   } 
+  sb-dotted-dropdown{
+    line-height: 1rem;
+    .menu{
+      .item{
+        font-size: 0.785rem !important;
+      }
+    }
+  }

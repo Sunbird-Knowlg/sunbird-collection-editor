@@ -137,7 +137,8 @@
     }
     .sb-textarea-container{
       .sb-textarea{
-        height: 2.9rem;
+        height: 2.9rem;   
+        padding-top: 0.5rem !important;
       }
       label{
         padding: 0 !important;
