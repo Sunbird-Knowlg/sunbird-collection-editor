@@ -42,6 +42,7 @@ export class ContentplayerPageComponent implements OnInit, AfterViewInit, OnDest
   }
   getContentDetails() {
     this.playerType = 'default-player';
+    this.contentDetails = {contentData: this.contentListDetails};
     this.editorService.fetchContentDetails(this.content.identifier).subscribe(res => {
       this.contentDetails = {
         contentId: this.content.identifier,
