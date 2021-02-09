@@ -68,7 +68,9 @@ export class EditorBaseComponent implements OnInit {
     this.pageStartTime = Date.now();
     this.telemetryService.initializeTelemetry(this.editorConfig);
     this.telemetryService.telemetryPageId = this.telemetryPageId;
-    this.telemetryService.start({ type: 'editor', pageid: this.telemetryPageId });
+    this.telemetryService.start({type: 'editor', pageid: this.telemetryPageId});
+    this.editorService.getshowLibraryPageEmitter()
+      .subscribe(item => this.showLibraryComponentPage());
   }
 
   fetchCollectionHierarchy(): Observable<any> {
