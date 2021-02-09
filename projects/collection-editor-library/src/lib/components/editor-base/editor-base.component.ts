@@ -119,7 +119,11 @@ export class EditorBaseComponent implements OnInit {
   }
 
   libraryEventListener(event: any) {
-    this.showLibraryPage = false;
+    this.fetchCollectionHierarchy().subscribe((res: any) => {
+      this.showLibraryPage = false;
+      this.telemetryPageId = 'collection-editor';
+      this.telemetryService.telemetryPageId = this.telemetryPageId;
+    });
   }
 
   saveContent() {
