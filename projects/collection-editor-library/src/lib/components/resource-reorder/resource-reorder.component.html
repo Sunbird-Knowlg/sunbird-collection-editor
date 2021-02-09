@@ -1,0 +1,58 @@
+<sui-modal [mustScroll]="true" [isClosable]="true" [transitionDuration]="0"
+[size]="'normal'" class="sb-modal" appBodyScroll (dismissed)="closePopup()" #modal>
+<div class="sb-modal-header">
+  {{labelMessages.lbl.whereDoYouWantToAddThisContent}}
+</div>
+<!-- Selection of Layout in modal -->
+<div class="sb-modal-content sb-chapterlist-modal scrolling content sb-dock-accordion py-20">
+  <sui-accordion class="styled fluid sb-accordion sb-chapterlist-accordion sb-select-content" [closeOthers]="true">
+    <div *ngFor="let mainUnit of collectionUnits" class="sb-toc-accor-1"> 
+    <sui-accordion-panel [isOpen]="true">
+      <div title class="sb-accordion-title d-flex flex-ai-center mt-0">
+        <div class="item d-flex flex-ai-center cursor-pointer w-100">
+            <label for="{{mainUnit.identifier}}" class="sb-color-primary font-weight-bold">{{mainUnit.name}}</label>
+          </div>
+          <div class="sb-radio-btn-checkbox sb-radio-btn-primary width-100">
+            <input (click)="onSelectBehaviour($event)" type="radio" id="{{mainUnit.identifier}}" value="{{mainUnit.identifier}}" name="mainUnit" [(ngModel)]="prevUnitSelect"
+            >
+            <label for="{{mainUnit.identifier}}" class="sb-color-primary font-weight-bold"></label>
+          </div>
+        <div class="chevron-icon">
+          <i class="chevron down icon"></i>
+        </div>
+      </div>
+      <div content *ngFor="let childUnit of mainUnit.children">
+        <div class="chapter-lists level1">
+          <div class="chapter-lists--item mt-10">
+            <div class="item d-flex flex-ai-center cursor-pointer w-100">
+              <label for="{{childUnit.identifier}}" class="w-100 fs-0785">{{childUnit.name}}</label>
+              <div class="w-30">
+                <label for="{{childUnit.identifier}}"></label>
+                <input type="radio" id="{{childUnit.identifier}}" value="{{childUnit.identifier}}" name="childUnit" [(ngModel)]="prevUnitSelect" class="sb-radio-btn-checkbox sb-radio-btn-primary sb-custom-radio">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sui-accordion-panel>
+    </div>
+  </sui-accordion>
+</div>
+
+<div class="sb-modal-actions flex-dr flex-jc-space-between py-10" *ngIf="selectedContentDetails">
+  <div class="ui tiny breadcrumb fxsmall line-height-1-3 w-80 d-flex sb-content-breadcrumb">
+      Adding <span class="font-weight-bold px-10  section">{{selectedContentDetails?.name}}</span>
+      <!--to
+    <span class="section ml-10" *ngFor="let unit of collectionUnitsBreadcrumb;first as first;last as last;">
+      <i class="right chevron icon divider b-0" [hidden]="first"></i>
+      <span [class.font-weight-bold]="first" > {{ unit }}</span>
+    </span> -->
+  </div>
+  <div class="w-20 text-right">
+    <button id="addResource" class="sb-btn sb-btn-normal text-inherit sb-btn-primary text-right" (click)="addResource()"
+    >
+     AddContent
+    </button>
+  </div>
+</div>
+</sui-modal>

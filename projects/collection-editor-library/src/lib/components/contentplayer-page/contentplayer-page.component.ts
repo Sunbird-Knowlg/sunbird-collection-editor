@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, OnChanges } from '@angular/core';
 import * as _ from 'lodash-es';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -12,8 +12,9 @@ declare var $: any;
   templateUrl: './contentplayer-page.component.html',
   styleUrls: ['./contentplayer-page.component.scss']
 })
-export class ContentplayerPageComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ContentplayerPageComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
   @ViewChild('contentIframe', {static: false}) contentIframe: ElementRef;
+  @Input() contentListDetails: any;
   public contentDetails: any;
   public playerConfig: any;
   private onComponentDestroy$ = new Subject<any>();
@@ -33,9 +34,15 @@ export class ContentplayerPageComponent implements OnInit, AfterViewInit, OnDest
   ngAfterViewInit() {
     // this.loadDefaultPlayer();
   }
-
+  ngOnChanges() {
+    if (this.contentListDetails.identifier && this.contentListDetails) {
+      this.content = this.contentListDetails;
+      this.getContentDetails();
+    }
+  }
   getContentDetails() {
     this.playerType = 'default-player';
+    this.contentDetails = {contentData: this.contentListDetails};
     this.editorService.fetchContentDetails(this.content.identifier).subscribe(res => {
       this.contentDetails = {
         contentId: this.content.identifier,

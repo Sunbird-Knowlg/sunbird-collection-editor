@@ -150,7 +150,7 @@ export class TreeService {
 
   setTreeCache(nodeId, data) {
     if (this.treeCache.nodesModified[nodeId]) {
-      this.treeCache.nodesModified[nodeId]['metadata'] = {...this.treeCache.nodesModified[nodeId]['metadata'], ...data};
+      this.treeCache.nodesModified[nodeId].metadata = {...this.treeCache.nodesModified[nodeId].metadata, ...data};
     } else {
       // tslint:disable-next-line:max-line-length
       this.treeCache.nodesModified[nodeId] = {root: false, metadata: {...data}, ...(nodeId.includes('do_') ? {isNew: false} : {isNew: true})};
@@ -186,5 +186,10 @@ export class TreeService {
       dropDownElement.addClass('hidden');
       dropDownElement.removeClass('visible');
     });
+  }
+
+  reloadTree(nodes: any) {
+    this.getTreeObject().reload(nodes);
+    this.getTreeObject().getNodeByKey('_2').setActive();
   }
 }
