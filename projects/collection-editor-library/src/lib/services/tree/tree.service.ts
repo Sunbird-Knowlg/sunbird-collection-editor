@@ -4,6 +4,7 @@ import { EditorConfig } from '../../interfaces';
 import { UUID } from 'angular2-uuid';
 declare var $: any;
 import * as _ from 'lodash-es';
+import { ToasterService } from '../../services';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class TreeService {
   };
   treeNativeElement: any;
 
-  constructor() {}
+  constructor(private toasterService: ToasterService) {}
 
   public initialize(editorConfig: EditorConfig) {
     this.config = editorConfig.config;
@@ -158,7 +159,7 @@ export class TreeService {
       const iChars = "!`~@#$^*+=[]\\\'{}|\"<>%/";
       for (let i = 0; i < text.length; i++) {
         if (iChars.indexOf(text.charAt(i)) !== -1) {
-         alert('Special character "' + text.charAt(i) + '" is not allowed');
+         this.toasterService.error('Special character "' + text.charAt(i) + '" is not allowed');
         }
       }
       // tslint:disable-next-line:max-line-length

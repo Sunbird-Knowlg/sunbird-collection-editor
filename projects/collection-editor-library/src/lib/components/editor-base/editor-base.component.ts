@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { TreeService, EditorService, FrameworkService, HelperService, EditorTelemetryService } from '../../services';
+import { TreeService, EditorService, FrameworkService, HelperService, EditorTelemetryService, ToasterService } from '../../services';
 import { IEditorConfig } from '../../interfaces';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map, tap } from 'rxjs/operators';
@@ -31,7 +31,8 @@ export class EditorBaseComponent implements OnInit {
 
   constructor(private editorService: EditorService, public treeService: TreeService,
               private activatedRoute: ActivatedRoute, private frameworkService: FrameworkService,
-              private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router) {
+              private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
+              private toasterService: ToasterService) {
     this.editorParams = {
       collectionId: _.get(this.activatedRoute, 'snapshot.params.contentId')
     };
@@ -83,7 +84,11 @@ export class EditorBaseComponent implements OnInit {
   toolbarEventListener(event) {
     switch (event.button) {
       case 'saveContent':
-        this.saveContent().then(messg => alert(messg)).catch(err => alert(err));
+        this.saveContent().then((message: string) => {
+          this.toasterService.success(message);
+        }).catch(((error: string) => {
+          this.toasterService.error(error);
+        }));
         break;
       case 'addResource':
         this.showResourceModal = true;
@@ -134,27 +139,29 @@ export class EditorBaseComponent implements OnInit {
   sendForReview() {
     this.saveContent().then(messg => {
       this.helperService.reviewContent(this.editorParams.collectionId).subscribe(data => {
-        alert('Successfully sent for review');
+        this.toasterService.success('Successfully sent for review');
         this.router.navigate(['workspace/content/create']);
       }, err => {
-
+        this.toasterService.error('Sending for review failed. Please try again...');
       });
-    }).catch(err => alert(err));
+    }).catch(err => this.toasterService.error(err));
   }
 
   rejectContent(comment) {
     this.helperService.submitRequestChanges(this.editorParams.collectionId, comment).subscribe(res => {
-      alert('Content is sent back for correction');
+      this.toasterService.success('Content is sent back for correction');
       this.router.navigate(['workspace/content/create']);
     }, err => {
+      this.toasterService.error('Rejecting failed. Please try again...')
     });
   }
 
   publishContent() {
     this.helperService.publishContent(this.editorParams.collectionId).subscribe(res => {
-      alert('Successfully published');
+      this.toasterService.success('Successfully published');
       this.router.navigate(['workspace/content/create']);
     }, err => {
+      this.toasterService.error('Publishing failed. Please try again...');
     });
   }
 

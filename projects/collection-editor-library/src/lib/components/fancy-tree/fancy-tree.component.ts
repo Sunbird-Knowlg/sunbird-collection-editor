@@ -3,7 +3,7 @@ import { Component, AfterViewInit, Input, ViewChild, ElementRef, Output, EventEm
 import 'jquery.fancytree';
 import * as _ from 'lodash-es';
 import { ActivatedRoute } from '@angular/router';
-import { EditorService, TreeService, EditorTelemetryService, HelperService } from '../../services';
+import { EditorService, TreeService, EditorTelemetryService, HelperService, ToasterService } from '../../services';
 import { Subject } from 'rxjs';
 import { UUID } from 'angular2-uuid';
 declare var $: any;
@@ -39,7 +39,8 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   // tslint:disable-next-line:max-line-length
   public contentMenuTemplate = `<span id="contextMenu"><span id= "removeNodeIcon"> <i class="fa fa-trash-o" type="button"></i> </span></span>`;
   constructor(public activatedRoute: ActivatedRoute, public treeService: TreeService, private editorService: EditorService,
-              public telemetryService: EditorTelemetryService, private helperService: HelperService) { }
+              public telemetryService: EditorTelemetryService, private helperService: HelperService,
+              private toasterService: ToasterService) { }
   private onComponentDestroy$ = new Subject<any>();
   public showDeleteConfirmationPopUp: boolean;
 
@@ -224,14 +225,6 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     $(this.tree.nativeElement).fancytree('getTree').visit((node) => { node.setExpanded(flag); });
   }
 
-  something() {
-    return this.somee();
-  }
-
-  somee() {
-    alert('nfjsdh');
-  }
-
   collapseAllChildrens(flag) {
     const rootNode = $(this.tree.nativeElement).fancytree('getRootNode').getFirstChild();
     _.forEach(rootNode.children, (child) => {
@@ -245,13 +238,13 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     const nodeConfig = this.config.hierarchy[tree.getActiveNode().getLevel()];
     const childrenTypes = _.get(nodeConfig, 'children.Content');
     if ((((tree.getActiveNode().getLevel() - 1) >= this.config.maxDepth))) {
-      return alert('Sorry, this operation is not allowed...');
+      return this.toasterService.error('Sorry, this operation is not allowed...');
     }
     if (resource) {
       if (_.includes(childrenTypes, resource.primaryCategory)) {
         this.treeService.addNode(resource, 'child');
       } else {
-        alert('Invalida Content Type ....');
+        this.toasterService.error('Invalida Content Type ....');
       }
     } else {
       this.treeService.addNode({}, 'child');
@@ -268,7 +261,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.treeService.addNode({}, 'sibling');
       // this.treeEventEmitter.emit({'type': 'addSibling', 'data' : 'sibling'});
     } else {
-      alert('Sorry, this operation is not allowed.');
+      this.toasterService.error('Sorry, this operation is not allowed.');
     }
   }
 
@@ -372,7 +365,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       //   position: 'topCenter',
       //   icon: 'fa fa-warning'
       // })
-      alert('This operation is not allowed!');
+      this.toasterService.error('This operation is not allowed!');
       return false;
     }
 
