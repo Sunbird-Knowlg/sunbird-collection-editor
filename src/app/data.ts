@@ -2,7 +2,7 @@ export const editorConfig = {
     context: {
       identifier: 'do_1132092070802718721685',
       channel: '01307938306521497658',
-      framework: 'TPD',
+      framework: 'ekstep_ncert_k-12', // added temp use this : TPD targetFWIds: ['tn_k-12'], // TODO::
       targetFWIds: ['tn_k-12'],
       authToken: ' ',
       sid: 'iYO2K6dOSdA0rwq7NeT1TDzS-dbqduvV',
@@ -10,56 +10,12 @@ export const editorConfig = {
       uid: 'bf020396-0d7b-436f-ae9f-869c6780fc45',
       additionalCategories: [
         {
-          value: 'Classroom Teaching Video',
-          label: 'Classroom Teaching Video'
-        },
-        {
-          value: 'Concept Map',
-          label: 'Concept Map'
-        },
-        {
-          value: 'Curiosity Question Set',
-          label: 'Curiosity Question Set'
-        },
-        {
           value: 'Textbook',
           label: 'Textbook'
         },
         {
-          value: 'Experiential Resource',
-          label: 'Experiential Resource'
-        },
-        {
-          value: 'Explanation Video',
-          label: 'Explanation Video'
-        },
-        {
-          value: 'Focus Spot',
-          label: 'Focus Spot'
-        },
-        {
-          value: 'Learning Outcome Definition',
-          label: 'Learning Outcome Definition'
-        },
-        {
-          value: 'Marking Scheme Rubric',
-          label: 'Marking Scheme Rubric'
-        },
-        {
-          value: 'Pedagogy Flow',
-          label: 'Pedagogy Flow'
-        },
-        {
           value: 'Lesson Plan',
           label: 'Lesson Plan'
-        },
-        {
-          value: 'Previous Board Exam Papers',
-          label: 'Previous Board Exam Papers'
-        },
-        {
-          value: 'TV Lesson',
-          label: 'TV Lesson'
         }
       ],
       pdata: {
@@ -126,18 +82,18 @@ export const editorConfig = {
       children: {},
       hierarchy: {
           level1: {
-              name: 'Chapter',
+              name: 'Module',
               type: 'Unit',
               mimeType: 'application/vnd.ekstep.content-collection',
-              contentType: 'Textbook Unit',
+              contentType: 'Course Unit',
               iconClass: 'fa fa-folder-o',
               children: {}
           },
           level2: {
-              name: 'Sub-Chapter',
+              name: 'Sub-Module',
               type: 'Unit',
               mimeType: 'application/vnd.ekstep.content-collection',
-              contentType: 'Textbook Unit',
+              contentType: 'Course Unit',
               iconClass: 'fa fa-folder-o',
               children: {
                   Content: [
@@ -146,9 +102,6 @@ export const editorConfig = {
                       'eTextbook',
                       'Teacher Resource',
                       'Course Assessment'
-                  ],
-                  QuestionSet: [
-                      'Practice Question Set'
                   ]
               }
           }

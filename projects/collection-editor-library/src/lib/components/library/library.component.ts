@@ -50,7 +50,7 @@ export class LibraryComponent implements OnInit {
       });
   }
   onSelectContent(content) {
-    this.editorService.emitSelectedNodeMetaData({type: 'nodeSelect', metadata: content});
+    // this.editorService.emitSelectedNodeMetaData({type: 'nodeSelect', metadata: content});
   }
   onContentChangeEvent(event: any) {
     this.selectedContent = event.content;

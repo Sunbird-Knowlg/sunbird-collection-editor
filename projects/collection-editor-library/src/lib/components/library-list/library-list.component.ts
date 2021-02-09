@@ -20,7 +20,7 @@ public selectedContent: any ;
 
   onSelectContent(content) {
     this.selectedContent = content;
-    this.editorService.emitSelectedNodeMetaData({type: 'nodeSelect', metadata: content});
+    // this.editorService.emitSelectedNodeMetaData({type: 'nodeSelect', metadata: content});
   }
 
   onContentChange(selectedContent: any) {

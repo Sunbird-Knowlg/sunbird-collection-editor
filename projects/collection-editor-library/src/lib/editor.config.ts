@@ -18,94 +18,94 @@ export const labelConfig = {
 };
 
 export const PLAYER_CONFIG = {
-  "playerConfig": {
-    "context": {
-      "mode": "play",
-      "partner": [],
-      "pdata": {
-        "id": "sunbird.portal",
-        "ver": "1.8.0",
-        "pid": "sunbird-portal"
+  playerConfig: {
+    context: {
+      mode: 'play',
+      partner: [],
+      pdata: {
+        id: 'sunbird.portal',
+        ver: '1.8.0',
+        pid: 'sunbird-portal'
       }
     },
-    "config": {
-      "showEndPage": false,
-      "endPage": [
+    config: {
+      showEndPage: false,
+      endPage: [
         {
-          "template": "assessment",
-          "contentType": [
-            "SelfAssess"
+          template: 'assessment',
+          contentType: [
+            'SelfAssess'
           ]
         }
       ],
-      "showStartPage": true,
-      "host": "",
-      "overlay": {
-        "showUser": false
+      showStartPage: true,
+      host: '',
+      overlay: {
+        showUser: false
       },
-      "splash": {
-        "text": "",
-        "icon": "",
-        "bgImage": "assets/icons/splacebackground_1.png",
-        "webLink": ""
+      splash: {
+        text: '',
+        icon: '',
+        bgImage: 'assets/icons/splacebackground_1.png',
+        webLink: ''
       },
-      "sideMenu": {
+      sideMenu: {
         showDownload: true,
         showExit: false,
         showShare: true
       },
-      "apislug": "/action",
-      "repos": [
-        "/sunbird-plugins/renderer"
+      apislug: '/action',
+      repos: [
+        '/sunbird-plugins/renderer'
       ],
-      "plugins": [
+      plugins: [
         {
-          "id": "org.sunbird.iframeEvent",
-          "ver": 1.0,
-          "type": "plugin"
+          id: 'org.sunbird.iframeEvent',
+          ver: 1.0,
+          type: 'plugin'
         },
         {
-          "id": "org.sunbird.player.endpage",
-          "ver": 1.1,
-          "type": "plugin"
+          id: 'org.sunbird.player.endpage',
+          ver: 1.1,
+          type: 'plugin'
         }
       ]
     }
   },
-  "contentType": {
-    "Course": "Course"
+  contentType: {
+    Course: 'Course'
   },
-  "MIME_TYPE": {
-    "collection": "application/vnd.ekstep.content-collection",
-    "ecmlContent": "application/vnd.ekstep.ecml-archive",
-    "genericMimeType": [
-      "application/pdf",
-      "video/mp4",
-      "video/x-youtube",
-      "video/youtube",
-      "application/vnd.ekstep.html-archive",
-      "application/epub",
-      "application/vnd.ekstep.h5p-archive",
-      "video/webm",
-      "text/x-url"
+  MIME_TYPE: {
+    collection: 'application/vnd.ekstep.content-collection',
+    ecmlContent: 'application/vnd.ekstep.ecml-archive',
+    genericMimeType: [
+      'application/pdf',
+      'video/mp4',
+      'video/x-youtube',
+      'video/youtube',
+      'application/vnd.ekstep.html-archive',
+      'application/epub',
+      'application/vnd.ekstep.h5p-archive',
+      'video/webm',
+      'text/x-url'
     ],
-    "pdf": "application/pdf",
-    "mp4": "video/mp4",
-    "youtube": "video/x-youtube",
-    "pYoutube": "video/youtube",
-    "html": "application/vnd.ekstep.html-archive",
-    "ePub": "application/epub",
-    "h5p": "application/vnd.ekstep.h5p-archive",
-    "webm": "video/webm",
-    "xUrl": "text/x-url"
+    pdf: 'application/pdf',
+    mp4: 'video/mp4',
+    youtube: 'video/x-youtube',
+    pYoutube: 'video/youtube',
+    html: 'application/vnd.ekstep.html-archive',
+    ePub: 'application/epub',
+    h5p: 'application/vnd.ekstep.h5p-archive',
+    webm: 'video/webm',
+    xUrl: 'text/x-url'
   },
-  "playerType": {
+  playerType: {
     'pdf-player': ['application/pdf'],
     'video-player': ['video/mp4', 'video/webm']
   },
-  "baseURL": "/content/preview/preview.html?webview=true",
-  "localBaseUrl": "/contentPlayer/preview/preview.html?",
-  "cdnUrl": "/content/preview/preview_cdn.html?webview=true"
+  baseURL: '/content/preview/preview.html?webview=true',
+  localBaseUrl: '/contentPlayer/preview/preview.html?',
+  cdnUrl: '/content/preview/preview_cdn.html?webview=true'
 };
 
 
