@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { EditorTelemetryService } from '../../services';
 import {EditorService} from '../../services/editor/editor.service';
+import {labelMessages} from '../labels';
 @Component({
   selector: 'lib-library',
   templateUrl: './library.component.html',
@@ -15,6 +16,7 @@ export class LibraryComponent implements OnInit {
   showAddedContent = true;
   showLoader = true;
   public isFilterOpen = false;
+  labelMessages = labelMessages;
   constructor(private telemetryService: EditorTelemetryService, private editorService: EditorService ) { }
 
   ngOnInit() {
@@ -43,8 +45,12 @@ export class LibraryComponent implements OnInit {
       console.log(response, 'result');
       this.contentList = response.result.content;
       this.selectedContent = this.contentList[0];
+      this.onSelectContent(this.selectedContent);
       this.showLoader = false;
       });
+  }
+  onSelectContent(content) {
+    this.editorService.emitSelectedNodeMetaData({type: 'nodeSelect', metadata: content});
   }
   onContentChangeEvent(event: any) {
     this.selectedContent = event.content;

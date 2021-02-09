@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Injectable, EventEmitter } from '@angular/core';
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { TreeService, DataService, PublicDataService } from '../../services';
 import { EditorConfig } from '../../interfaces';
 
@@ -14,6 +14,7 @@ export class EditorService {
 
   // tslint:disable-next-line:variable-name
   public _resourceAddition$ = new Subject<any>();
+  public showLibraryPage: EventEmitter<number> = new EventEmitter();
   public readonly resourceAddition$: Observable<any> = this._resourceAddition$
     .asObservable().pipe(skipWhile(data => data === undefined || data === null));
 
@@ -33,6 +34,12 @@ export class EditorService {
     this._resourceAddition$.next(data);
   }
 
+  emitshowLibraryPageEvent(page) {
+    this.showLibraryPage.emit(page);
+  }
+  getshowLibraryPageEmitter() {
+    return this.showLibraryPage;
+  }
   fetchCollectionHierarchy(data): Observable<any> {
     const hierarchyUrl = 'content/v3/hierarchy/' + data.collectionId;
     const req = {
