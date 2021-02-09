@@ -34,6 +34,10 @@ export class ResourceReorderComponent implements OnInit {
     this.editorService.addResourceToHierarchy(this.collectionId, this.prevUnitSelect, this.selectedContentDetails.identifier)
     .subscribe((data) => {
       this.modal.deny();
+      this.moveEvent.emit({
+        action: 'contentAdded',
+        data: this.selectedContentDetails
+      });
       alert('Content is added to hierarchy...');
     }, err => {
       alert('Something went wrong...');

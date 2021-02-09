@@ -80,9 +80,13 @@ export class LibraryComponent implements OnInit {
       }
     };
     this.editorService.fetchContentListDetails(option).subscribe((response: any) => {
-      this.contentList = response.result.content;
-      this.filterContentList();
       this.showLoader = false;
+      if(!(_.get(response, 'result.count'))) {
+        this.contentList = []
+      } else {
+        this.contentList = response.result.content;
+        this.filterContentList();
+      }
     });
   }
 
@@ -140,6 +144,10 @@ export class LibraryComponent implements OnInit {
         this.showAddedContent = event.status;
         this.filterContentList();
         break;
+        case 'contentAdded':
+          this.childNodes.push(event.data.identifier);
+          this.filterContentList(true);
+          break;
       default:
         break;
     }
@@ -153,13 +161,14 @@ export class LibraryComponent implements OnInit {
     });
     this.isFilterOpen = true;
   }
-  filterContentList() {
+  filterContentList(isContentAdded?) {
     if (_.isEmpty(this.contentList)) { return; }
     _.forEach(this.contentList, (value, key) => {
       value.isAdded = _.includes(this.childNodes, value.identifier);
     });
-
-    const selectedContentIndex = this.showAddedContent ? 0 : _.findIndex(this.contentList, { isAdded: false });
-    this.selectedContent = this.contentList[selectedContentIndex];
+    if(!isContentAdded) {
+      const selectedContentIndex = this.showAddedContent ? 0 : _.findIndex(this.contentList, { isAdded: false });
+      this.selectedContent = this.contentList[selectedContentIndex];
+    }
   }
 }
