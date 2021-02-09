@@ -33,17 +33,17 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
   public searchQuery: string;
 
   constructor(private frameworkService: FrameworkService,
-    public editorService: EditorService) { }
+              public editorService: EditorService) { }
 
   ngOnInit() {
     this.editorConfig = this.editorService.editorConfig.config;
     this.currentFilters = {
-      'primaryCategory': _.get(this.editorConfig, 'hierarchy.level2.children.Content'),
-      'board': [],
-      'medium': [],
-      'gradeLevel': [],
-      'subject': [],
-    }
+      primaryCategory: _.get(this.editorConfig, 'hierarchy.level2.children.Content'),
+      board: [],
+      medium: [],
+      gradeLevel: [],
+      subject: [],
+    };
     this.setFilterDefaultValues();
     this.fetchFrameWorkDetails();
   }
@@ -121,7 +121,7 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
     return _.sortBy(_.unionBy(resultArray, 'identifier'), 'index');
   }
 
-  populateFilters(){
+  populateFilters() {
     const categoryMasterList = this.frameworkDetails.frameworkData;
     _.forEach(categoryMasterList, (category) => {
       _.forEach(this.filterFields, (formFieldCategory) => {
@@ -131,12 +131,12 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
       });
     });
 
-    const index = this.filterFields.findIndex(e => _.get(e, 'code') === "primaryCategory");
+    const index = this.filterFields.findIndex(e => _.get(e, 'code') === 'primaryCategory');
     if (index !==  -1) {
-      this.filterFields[index]['range'] = this.currentFilters['primaryCategory'];
+      this.filterFields[index].range = this.currentFilters.primaryCategory;
     }
 
-    libraryFilterConfig[0]['fields'] = this.filterFields;
+    libraryFilterConfig[0].fields = this.filterFields;
     this.filterConfig = libraryFilterConfig;
   }
 
@@ -148,7 +148,7 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
     let getAssociationsData = [];
     _.forEach(selectedFilter, (value) => {
       const getAssociationData = _.map(_.get(mediumData, 'terms'), (framework) => {
-        if (framework['name'] === value) {
+        if (framework.name === value) {
           return framework;
         }
       });
@@ -195,11 +195,9 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
   }
 
   outputData($event) {
-    console.log($event);
   }
 
   onStatusChanges($event) {
-    console.log($event);
   }
 
   valueChanges($event) {
