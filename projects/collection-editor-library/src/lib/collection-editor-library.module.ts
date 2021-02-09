@@ -13,12 +13,14 @@ import { ContentplayerPageComponent, EditorBaseComponent, EditorHeaderComponent,
 import {SunbirdPdfPlayerModule} from '@project-sunbird/sunbird-pdf-player-v8';
 import { SunbirdVideoPlayerModule } from '@project-sunbird/sunbird-video-player-v8';
 import { EditorService } from './services';
+import { ResourceReorderComponent } from './components/resource-reorder/resource-reorder.component';
+import { SkeletonLoaderComponent } from './components/skeleton-loader/skeleton-loader.component';
 
 @NgModule({
   providers: [EditorService],
   declarations: [CollectionEditorLibraryComponent, ContentplayerPageComponent, EditorBaseComponent,
     EditorHeaderComponent, FancyTreeComponent, MetaFormComponent, LibraryComponent, LibraryFilterComponent, LibraryListComponent,
-    LibraryPlayerComponent],
+    LibraryPlayerComponent, ResourceReorderComponent, SkeletonLoaderComponent],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, CommonFormElementsModule, InfiniteScrollModule,
   HttpClientModule, SuiModule, SunbirdPdfPlayerModule, SunbirdVideoPlayerModule],
   exports: [CollectionEditorLibraryComponent, EditorBaseComponent]

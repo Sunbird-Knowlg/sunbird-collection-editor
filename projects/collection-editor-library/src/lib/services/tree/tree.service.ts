@@ -176,4 +176,9 @@ export class TreeService {
       dropDownElement.removeClass('visible');
     });
   }
+
+  reloadTree(nodes: any) {
+    this.getTreeObject().reload(nodes);
+    this.getTreeObject().getNodeByKey('_2').setActive();
+  }
 }

@@ -106,6 +106,9 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       $('.fancytree-container').addClass('fancytree-connectors');
     }
     setTimeout(() => {
+      this.treeService.reloadTree(this.nodes);
+    }, 0);
+    setTimeout(() => {
       const rootNode = this.treeService.getFirstChild();
       if (rootNode) {
         this.treeService.setActiveNode(rootNode);

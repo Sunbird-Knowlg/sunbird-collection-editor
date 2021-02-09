@@ -71,6 +71,20 @@ export class EditorService {
     return this.publicDataService.patch(req);
   }
 
+  addResourceToHierarchy(collection, unitIdentifier, contentId): Observable<any> {
+    const req = {
+      url: 'content/v3/hierarchy/add',
+      data: {
+        request: {
+          rootId: collection,
+          unitId: unitIdentifier,
+          children: [contentId]
+        }
+      }
+    };
+    return this.publicDataService.patch(req);
+  }
+
   public getQuestionStream$() {
     return this.questionStream$;
   }

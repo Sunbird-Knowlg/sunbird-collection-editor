@@ -28,8 +28,7 @@ export class EditorBaseComponent implements OnInit {
   public unitFormConfig: any;
   public showLibraryPage = false;
   public libraryComponentInput: any;
-
-  constructor(private editorService: EditorService, public treeService: TreeService,
+  constructor(public treeService: TreeService, private editorService: EditorService,
               private activatedRoute: ActivatedRoute, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
               private toasterService: ToasterService) {
@@ -112,13 +111,17 @@ export class EditorBaseComponent implements OnInit {
 
   showLibraryComponentPage() {
     this.libraryComponentInput = {
-      questionSetId: this.editorParams.collectionId
+      collectionId: this.editorParams.collectionId
     };
     this.showLibraryPage = true;
   }
 
   libraryEventListener(event: any) {
-    this.showLibraryPage = false;
+    this.fetchCollectionHierarchy().subscribe((res: any) => {
+      this.showLibraryPage = false;
+      this.telemetryPageId = 'collection-editor';
+      this.telemetryService.telemetryPageId = this.telemetryPageId;
+    });
   }
 
   saveContent() {

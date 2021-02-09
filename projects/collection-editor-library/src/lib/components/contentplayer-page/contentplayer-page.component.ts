@@ -1,8 +1,5 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
 import * as _ from 'lodash-es';
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
-import { IeventData } from '../../interfaces';
 import { EditorService, HelperService, TreeService } from '../../services';
 import { PLAYER_CONFIG } from '../../editor.config';
 declare var $: any;
@@ -31,7 +28,6 @@ export class ContentplayerPageComponent implements OnInit, OnChanges {
       this.getContentDetails();
     }
   }
-
   getContentDetails() {
     this.playerType = 'default-player';
     this.editorService.fetchContentDetails(this.contentId).subscribe(res => {
