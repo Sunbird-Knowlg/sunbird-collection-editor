@@ -767,43 +767,6 @@ $progressCircle: xs calculateRem(16px) 4px 10px, sm calculateRem(24px) 6px 10px,
   overflow: inherit !important;
 }
 
-.selecttarget {
-  width: 100%;
-  border: 1px solid rgba(34, 36, 38, 0.15);
-  font-size: 0.8rem;
-  padding: 0.4rem 0.2rem;
-
-  .dropdown.icon {
-    float: right !important;
-  }
-
-  .menu {
-    width: 100%;
-  }
-}
-
-
-.hover-none {
-  &:hover {
-    background: none !important;
-  }
-}
-
-.sb-checkbox-tnc {
-  .sb-required {
-    position: absolute;
-    padding-left: 0;
-    left: 18px;
-  }
-}
-
-
-// For grid column start add class
-// .sb-g-col-lg-2 for 2
-// .sb-g-col-lg-2 for 3
-// FOR SB FORMS
-
-
 .h-7 {
   height: 7px;
 }
@@ -838,15 +801,7 @@ $progressCircle: xs calculateRem(16px) 4px 10px, sm calculateRem(24px) 6px 10px,
   }
 }
 
-sui-accordion{
-  box-shadow: none !important;
-}
+
 #fancytree-drop-marker{
   display: none !important;
-}
-
-.text-font{
-  label,.fs-0-92{
-    font-size: 0.8rem !important;
-  }
 }

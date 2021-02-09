@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { TreeService, EditorService, HelperService} from '../../services';
@@ -9,7 +9,8 @@ import { NgForm } from '@angular/forms';
 @Component({
   selector: 'lib-editor-header',
   templateUrl: './editor-header.component.html',
-  styleUrls: ['./editor-header.component.scss']
+  styleUrls: ['./editor-header.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class EditorHeaderComponent implements OnInit, OnDestroy {
 
