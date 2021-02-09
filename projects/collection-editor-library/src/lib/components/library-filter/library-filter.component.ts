@@ -158,7 +158,8 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
   }
 
   onQueryEnter(event) {
-    this.emitApplyFilter()
+    this.emitApplyFilter();
+    return false;
   }
 
   showfilter() {

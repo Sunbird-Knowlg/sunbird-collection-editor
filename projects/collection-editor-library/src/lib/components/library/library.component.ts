@@ -72,8 +72,8 @@ export class LibraryComponent implements OnInit {
     const option = {
       url: 'composite/v3/search',
       data: {
-        query: query || "",
         request: {
+          query: query || "",
           // @Todo remove hardcoded objectType
           filters: _.pickBy({ ...filters, ...{ "status": ["Live"], "objectType": "content" } })
         }

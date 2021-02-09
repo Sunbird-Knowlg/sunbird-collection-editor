@@ -11,7 +11,7 @@ export const libraryFilterConfig = [
         default: [],
         renderingHints: { class: 'sb-g-col-lg-1' },
         inputType: 'nestedselect',
-        label: 'Type',
+        label: 'Content Type(s)',
         name: 'Type',
         placeholder: '',
         required: false,
@@ -31,16 +31,16 @@ export const libraryFilterConfig = [
         renderingHints: { class: 'sb-g-col-lg-1' },
         description: 'Board',
         index: 6,
-        label: 'Board/Syllabus',
+        label: 'Board',
         required: false,
-        name: 'Board/Syllabus',
+        name: 'Board',
         inputType: 'select',
-        placeholder: 'Select Board/Syllabus',
+        placeholder: 'Select Board',
         section: {
           index: 3,
           name: ''
         },
-        output:'name'
+        output: 'name'
       },
       {
         code: 'medium',
@@ -61,7 +61,7 @@ export const libraryFilterConfig = [
           index: 3,
           name: ''
         },
-        output:'name'
+        output: 'name'
       },
       {
         code: 'gradeLevel',
@@ -73,7 +73,7 @@ export const libraryFilterConfig = [
         renderingHints: { class: 'sb-g-col-lg-1' },
         description: 'Class',
         index: 8,
-        label: 'Class',
+        label: 'Class(es)',
         required: false,
         name: 'Class',
         inputType: 'nestedselect',
@@ -82,8 +82,9 @@ export const libraryFilterConfig = [
           index: 3,
           name: ''
         },
-        output:'name'
-      }, {
+        output: 'name'
+      },
+      {
         code: 'subject',
         visible: true,
         depends: ['board', 'medium', 'gradeLevel'],
@@ -102,7 +103,7 @@ export const libraryFilterConfig = [
           index: 3,
           name: ''
         },
-        output:'name'
+        output: 'name'
       },
       {
         code: 'topic',
@@ -116,7 +117,7 @@ export const libraryFilterConfig = [
         description: 'Choose a Topics',
         index: 11,
         inputType: 'topicselector',
-        label: 'Topics',
+        label: 'Topic(s)',
         placeholder: 'Choose Topics',
         required: false
       }
