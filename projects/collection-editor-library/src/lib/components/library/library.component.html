@@ -20,7 +20,7 @@
   </div>
 <!-- Filter -->
   <lib-library-filter *ngIf="!showLoader" [filterValues]="defaultFilters" [filterOpenStatus]="isFilterOpen" (filterChangeEvent)="onFilterChange($event);"></lib-library-filter>
-  <div class="ui container min-h-500" *ngIf="!showLoader">
+  <div class="ui container min-h-500" *ngIf="!showLoader && contentList?.length">
     <!-- Player Section -->
     <div class="sb-g add-to-library__toc-player">
       <!-- Left Sidebar for cards -->
