@@ -64,6 +64,6 @@
     <img alt="No Content available" class="mt-16" src="assets/images/emptyResult.svg">
     <h6 class="sb-color-gray-300 font-weight-normal mt-8">{{labelMessages?.lbl?.changeFilterMessage}}</h6>
     <button class="sb-btn sb-btn-secondary sb-btn-normal mt-16" libTelemetryInteract
-    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('change_filter','click','launch', 'no_result')" (click)="openFilter();">{{labelMessages?.lbl?.changeFilter}}</button>
+    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('change_filter','click','launch', telemetryService?.telemetryPageId)" (click)="openFilter();">{{labelMessages?.lbl?.changeFilter}}</button>
   </div>
 </div>
