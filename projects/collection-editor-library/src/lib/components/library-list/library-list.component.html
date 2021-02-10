@@ -1,12 +1,12 @@
 <div class="sbtoc-container pr-8 mt-20">
   <div class="title sb-color-primary font-weight-bold fs-1">
-    Showing ({{contentList?.length}}) content
+    Showing ({{contentList?.length}}) most relevant content
   </div>
   <div class="d-flex flex-w-wrap flex-jc-space-between flex-ai-baseline mb-15">
     <div>
-      <small class="sb-color-gray-200 d-block pb-10">Select a content to add to the textbook</small>
+      <small class="sb-color-gray-200 d-block pb-10">Use search and filters above to find more content</small>
       <sui-checkbox class="toggle" [(ngModel)]="showAddedContent" (checkChange)="onShowAddedContentChange();"></sui-checkbox>
-        <small class="d-block mt-5 fs-0785"> Show content added to textbook</small>
+        <small class="d-block mt-5 fs-0785"> Show already added content too</small>
     </div>
       <!-- <div class="sb-w-75">
         <label class="d-block font-weight-normal fs-0785">Sort By</label>
