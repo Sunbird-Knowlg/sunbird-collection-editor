@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, OnChanges } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, OnChanges, ViewEncapsulation} from '@angular/core';
 import * as _ from 'lodash-es';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -10,7 +10,8 @@ declare var $: any;
 @Component({
   selector: 'lib-contentplayer-page',
   templateUrl: './contentplayer-page.component.html',
-  styleUrls: ['./contentplayer-page.component.scss']
+  styleUrls: ['./contentplayer-page.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ContentplayerPageComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
   @ViewChild('contentIframe', {static: false}) contentIframe: ElementRef;
