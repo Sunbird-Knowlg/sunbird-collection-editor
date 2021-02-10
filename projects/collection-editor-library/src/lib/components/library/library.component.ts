@@ -27,7 +27,7 @@ export class LibraryComponent implements OnInit {
   public isFilterOpen = false;
   collectionhierarcyData: any;
   public defaultFilters: any;
-  constructor(private telemetryService: EditorTelemetryService, private editorService: EditorService) { }
+  constructor(public telemetryService: EditorTelemetryService, private editorService: EditorService) { }
 
   ngOnInit() {
     this.collectionId = _.get(this.libraryInput, 'collectionId');
