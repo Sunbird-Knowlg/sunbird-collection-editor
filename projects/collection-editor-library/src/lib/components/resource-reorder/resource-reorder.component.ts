@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ViewEncapsulation} from '@angular/core';
 import { EditorService } from '../../services';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -10,7 +10,8 @@ import { EditorTelemetryService } from '../../services';
 @Component({
   selector: 'lib-resource-reorder',
   templateUrl: './resource-reorder.component.html',
-  styleUrls: ['./resource-reorder.component.scss']
+  styleUrls: ['./resource-reorder.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ResourceReorderComponent implements OnInit {
   labelMessages = labelMessages;

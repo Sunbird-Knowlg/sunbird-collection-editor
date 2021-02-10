@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import * as _ from 'lodash-es';
 import { UUID } from 'angular2-uuid';
 import { TreeService, EditorService } from '../../services';
@@ -6,7 +6,8 @@ import { TreeService, EditorService } from '../../services';
 @Component({
   selector: 'lib-collection-tree-new',
   templateUrl: './collection-tree.component.html',
-  styleUrls: ['./collection-tree.component.scss']
+  styleUrls: ['./collection-tree.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class CollectionTreeComponent implements OnInit {
 
