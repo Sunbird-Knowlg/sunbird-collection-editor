@@ -12,7 +12,6 @@ import { labelMessages } from '../labels';
 export class LibraryComponent implements OnInit {
   labelMessages = labelMessages;
   @Input() libraryInput: any;
-  @Input() collectionData: any;
   @Output() libraryEmitter = new EventEmitter<any>();
   public pageId = 'library';
   public contentList: any;
@@ -37,9 +36,9 @@ export class LibraryComponent implements OnInit {
       this.collectionHierarchy = this.getUnitWithChildren(this.collectionhierarcyData, this.collectionId);
       this.setDefaultFilters();
       this.fetchContentList();
+      this.telemetryService.telemetryPageId = this.pageId;
+      this.childNodes = _.get(this.collectionhierarcyData, 'childNodes');
     });
-    this.telemetryService.telemetryPageId = this.pageId;
-    this.childNodes = _.get(this.collectionData, 'childNodes');
   }
 
   back() {
