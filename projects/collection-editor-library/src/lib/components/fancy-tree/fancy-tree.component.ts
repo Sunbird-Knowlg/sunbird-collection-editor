@@ -1,5 +1,6 @@
 import { takeUntil } from 'rxjs/operators';
-import { Component, AfterViewInit, Input, ViewChild, ElementRef, Output, EventEmitter, OnDestroy, OnInit } from '@angular/core';
+import { Component, AfterViewInit, Input, ViewChild, ElementRef, Output, EventEmitter,
+   OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import 'jquery.fancytree';
 import * as _ from 'lodash-es';
 import { ActivatedRoute } from '@angular/router';
@@ -11,7 +12,8 @@ declare var $: any;
 @Component({
   selector: 'lib-fancy-tree',
   templateUrl: './fancy-tree.component.html',
-  styleUrls: ['./fancy-tree.component.scss']
+  styleUrls: ['./fancy-tree.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('fancyTree', {static: false}) public tree: ElementRef;

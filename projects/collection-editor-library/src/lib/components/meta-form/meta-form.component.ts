@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil, filter, take } from 'rxjs/operators';
 import { EditorService, TreeService, FrameworkService, HelperService } from '../../services';
@@ -7,7 +7,8 @@ import * as _ from 'lodash-es';
 @Component({
   selector: 'lib-meta-form',
   templateUrl: './meta-form.component.html',
-  styleUrls: ['./meta-form.component.scss']
+  styleUrls: ['./meta-form.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   @Input() rootFormConfig: any;

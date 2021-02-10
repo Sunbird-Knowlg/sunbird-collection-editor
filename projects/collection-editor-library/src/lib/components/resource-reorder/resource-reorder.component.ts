@@ -1,11 +1,12 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ViewEncapsulation} from '@angular/core';
 import { EditorService, ToasterService } from '../../services';
 import * as _ from 'lodash-es';
 import {labelMessages} from '../labels';
 @Component({
   selector: 'lib-resource-reorder',
   templateUrl: './resource-reorder.component.html',
-  styleUrls: ['./resource-reorder.component.scss']
+  styleUrls: ['./resource-reorder.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ResourceReorderComponent implements OnInit {
   labelMessages = labelMessages;

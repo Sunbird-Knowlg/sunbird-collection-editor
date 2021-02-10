@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild, OnChanges, ViewEncapsulation} from '@angular/core';
 import * as _ from 'lodash-es';
 import { EditorService, HelperService, TreeService } from '../../services';
 import { PLAYER_CONFIG } from '../../editor.config';
@@ -7,7 +7,8 @@ declare var $: any;
 @Component({
   selector: 'lib-contentplayer-page',
   templateUrl: './contentplayer-page.component.html',
-  styleUrls: ['./contentplayer-page.component.scss']
+  styleUrls: ['./contentplayer-page.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ContentplayerPageComponent implements OnInit, OnChanges {
   @ViewChild('contentIframe', {static: false}) contentIframe: ElementRef;
