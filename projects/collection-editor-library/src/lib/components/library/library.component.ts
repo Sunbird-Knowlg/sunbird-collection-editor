@@ -1,15 +1,16 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, AfterViewInit } from '@angular/core';
 import { EditorTelemetryService } from '../../services';
 import * as _ from 'lodash-es';
 import { EditorService } from '../../services/editor/editor.service';
 import { labelMessages } from '../labels';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'lib-library',
   templateUrl: './library.component.html',
   styleUrls: ['./library.component.scss']
 })
-export class LibraryComponent implements OnInit {
+export class LibraryComponent implements OnInit, AfterViewInit {
   labelMessages = labelMessages;
   @Input() libraryInput: any;
   @Input() collectionData: any;
@@ -27,7 +28,12 @@ export class LibraryComponent implements OnInit {
   public isFilterOpen = false;
   collectionhierarcyData: any;
   public defaultFilters: any;
-  constructor(private telemetryService: EditorTelemetryService, private editorService: EditorService) { }
+  pageStartTime: any;
+  constructor(private telemetryService: EditorTelemetryService,
+              private editorService: EditorService,
+              private router: Router) {
+              this.pageStartTime = Date.now();
+              }
 
   ngOnInit() {
     this.collectionId = _.get(this.libraryInput, 'collectionId');
@@ -40,6 +46,13 @@ export class LibraryComponent implements OnInit {
     });
     this.telemetryService.telemetryPageId = this.pageId;
     this.childNodes = _.get(this.collectionData, 'childNodes');
+  }
+
+  ngAfterViewInit() {
+    this.telemetryService.impression({
+      type: 'edit', pageid: this.telemetryService.telemetryPageId, uri: this.router.url,
+      duration: _.toString((Date.now() - this.pageStartTime) / 1000)
+    });
   }
 
   back() {
@@ -59,11 +72,11 @@ export class LibraryComponent implements OnInit {
 
   setDefaultFilters() {
     this.defaultFilters = _.pickBy({
-      'primaryCategory': _.get(this.editorService.editorConfig.config, 'hierarchy.level2.children.Content'),
-      'board': _.get(this.collectionhierarcyData, 'board'),
-      'gradeLevel': _.get(this.collectionhierarcyData, 'gradeLevel'),
-      'medium': _.get(this.collectionhierarcyData, 'medium'),
-      'subject': _.get(this.collectionhierarcyData, 'subject'),
+      primaryCategory: _.get(this.editorService.editorConfig.config, 'hierarchy.level2.children.Content'),
+      board: _.get(this.collectionhierarcyData, 'board'),
+      gradeLevel: _.get(this.collectionhierarcyData, 'gradeLevel'),
+      medium: _.get(this.collectionhierarcyData, 'medium'),
+      subject: _.get(this.collectionhierarcyData, 'subject'),
     });
   }
 
@@ -73,16 +86,16 @@ export class LibraryComponent implements OnInit {
       url: 'composite/v3/search',
       data: {
         request: {
-          query: query || "",
+          query: query || '',
           // @Todo remove hardcoded objectType
-          filters: _.pickBy({ ...filters, ...{ "status": ["Live"], "objectType": "content" } })
+          filters: _.pickBy({ ...filters, ...{ status: ['Live'], objectType: 'content' } })
         }
       }
     };
     this.editorService.fetchContentListDetails(option).subscribe((response: any) => {
       this.showLoader = false;
-      if(!(_.get(response, 'result.count'))) {
-        this.contentList = []
+      if (!(_.get(response, 'result.count'))) {
+        this.contentList = [];
       } else {
         this.contentList = response.result.content;
         this.filterContentList();
@@ -166,7 +179,7 @@ export class LibraryComponent implements OnInit {
     _.forEach(this.contentList, (value, key) => {
       value.isAdded = _.includes(this.childNodes, value.identifier);
     });
-    if(!isContentAdded) {
+    if (!isContentAdded) {
       const selectedContentIndex = this.showAddedContent ? 0 : _.findIndex(this.contentList, { isAdded: false });
       this.selectedContent = this.contentList[selectedContentIndex];
     }
