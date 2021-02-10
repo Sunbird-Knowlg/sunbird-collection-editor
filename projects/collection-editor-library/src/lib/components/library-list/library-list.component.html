@@ -6,7 +6,7 @@
     <div>
       <small class="sb-color-gray-200 d-block pb-10">{{labelMessages?.lbl?.selectContentToAdd}}</small>
       <sui-checkbox class="toggle" libTelemetryInteract
-      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('Show_content_added_to_textbook','click','launch', 'library-list', {showAddedContent: showAddedContent})"
+      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('Show_content_added_to_collection','click','launch', 'library-list', {showAddedContent: !showAddedContent})"
        [(ngModel)]="showAddedContent" (checkChange)="onShowAddedContentChange();"></sui-checkbox>
         <small class="d-block mt-5 fs-0785"> {{labelMessages?.lbl?.showContentAddedToCollection}}</small>
     </div>
@@ -24,7 +24,7 @@
     <div *ngFor="let content of contentList">
       <div class="sbchapter__item mb-0 d-flex flex-dc" [ngClass]=" {'selected':content.identifier === selectedContent.identifier}"
        (click)="onContentChange(content)" libTelemetryInteract
-       [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('on_click_content','click','launch', 'library-list', {selectedContentId: selectedContent.identifier})" 
+       [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('on_click_content','click','launch', 'library-list')" 
        [class.d-none]="content.isAdded && !showAddedContent">
       <!-- <div class="sbchapter__img"><img src="./assets/images/book.png" /></div> -->
       <h4 class="ml-8 w-80">
