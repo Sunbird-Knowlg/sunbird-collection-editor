@@ -14,7 +14,7 @@ export class LibraryComponent implements OnInit {
   @Input() libraryInput: any;
   @Input() collectionData: any;
   @Output() libraryEmitter = new EventEmitter<any>();
-  public pageId = 'library';
+  public pageId = 'add_from_library';
   public contentList: any;
   public selectedContent: any;
   public childNodes: any;
@@ -27,7 +27,7 @@ export class LibraryComponent implements OnInit {
   public isFilterOpen = false;
   collectionhierarcyData: any;
   public defaultFilters: any;
-  constructor(private telemetryService: EditorTelemetryService, private editorService: EditorService) { }
+  constructor(public telemetryService: EditorTelemetryService, private editorService: EditorService) { }
 
   ngOnInit() {
     this.collectionId = _.get(this.libraryInput, 'collectionId');

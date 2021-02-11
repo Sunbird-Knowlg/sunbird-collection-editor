@@ -7,7 +7,8 @@
       <i class="icon star"></i> </span>
     </div>
   </div>
-  <div class="d-flex content-video__player__screenpart d-flex" *ngIf="!contentListDetails?.isAdded" (click)="addToLibrary()">
+  <div class="d-flex content-video__player__screenpart d-flex" libTelemetryInteract
+  [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('select_content','click','launch', telemetryService?.telemetryPageId)" *ngIf="!contentListDetails?.isAdded" (click)="addToLibrary()">
     <button type="button" class="sb-btn sb-btn-normal sb-btn-dark-green"
       ><i class="plus square icon"></i>{{labelMessages?.lbl?.selectContent}}</button>
   </div>
