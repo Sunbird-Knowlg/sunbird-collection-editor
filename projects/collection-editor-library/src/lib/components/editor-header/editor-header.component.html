@@ -3,7 +3,7 @@
   <div class="ui container py-15">
     <div class="d-flex flex-ai-center sb-color-white">
       <button class="sb-btn sb-btn-primary sb-btn-xs back-btn px-0 hover-none fs-0-92 font-weight-bold">
-        <i class="arrow left icon"></i>Course Editor
+        <i class="arrow left icon"></i> Back
       </button>
     </div>
   </div>
@@ -11,7 +11,7 @@
 
 <div class="d-flex flex-jc-space-between flex-ai-center py-20 ui container">
   <div class="practical-header__title font-weight-bold pl-20 fs-0-92">
-    Course editor
+    {{ labelConfigData.title }}
   </div>
   <div class="d-flex flex-ai-center" *ngIf="labelConfigData">
     <!-- <button *ngFor="let button of toolbarConfig.buttons" class="{{ button.style }}"

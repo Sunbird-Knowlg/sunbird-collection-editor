@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, V
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { TreeService, EditorService, HelperService} from '../../services';
-import { labelConfig } from '../../editor.config';
 import * as _ from 'lodash-es';
 import { NgForm } from '@angular/forms';
 
@@ -13,39 +12,29 @@ import { NgForm } from '@angular/forms';
   encapsulation: ViewEncapsulation.None,
 })
 export class EditorHeaderComponent implements OnInit, OnDestroy {
-
+  // tslint:disable-next-line:no-input-rename
+  @Input('toolbarConfig') labelConfigData: any;
   @Output() toolbarEmitter = new EventEmitter<any>();
   @ViewChild('FormControl', {static: false}) FormControl: NgForm;
   private onComponentDestroy$ = new Subject<any>();
-  public labelConfigData: any;
   public editorConfig: any;
   public visibility: any;
   public showReviewModal: boolean;
   public showRequestChangesPopup: boolean;
   public rejectComment: string;
   public contentComment: string;
-  public formStatus: boolean;
   constructor(private editorService: EditorService, private treeService: TreeService, private helperService: HelperService) { }
 
   ngOnInit() {
-    this.labelConfigData = _.clone(labelConfig);
-    this.editorConfig = _.cloneDeep(this.editorService.editorConfig);
-    setTimeout(() => {
-      this.handleActionButtons(); // Header buttons should behave based on tree updated
-    }, 100);
-    this.helperService.formStatus$.pipe(takeUntil(this.onComponentDestroy$)).subscribe((data) => {
-      this.formStatus = data.isValid; // Header buttons should behave based on tree updated
-    });
+    this.handleActionButtons();
   }
 
   handleActionButtons() {
     this.visibility = {};
-    this.visibility.saveContent = this.editorConfig.config.mode === 'edit';
-    // tslint:disable-next-line:max-line-length
-    // this.visibility.submitContent = this.editorConfig.config.mode === 'edit' && this.treeService.getFirstChild().getFirstChild();
-    this.visibility.submitContent = this.editorConfig.config.mode === 'edit';
-    this.visibility.rejectContent = this.editorConfig.config.mode === 'review';
-    this.visibility.publishContent = this.editorConfig.config.mode === 'review';
+    this.visibility.saveContent = this.editorService.editorMode === 'edit';
+    this.visibility.submitContent = this.editorService.editorMode === 'edit';
+    this.visibility.rejectContent = this.editorService.editorMode === 'review';
+    this.visibility.publishContent = this.editorService.editorMode === 'review';
   }
 
   buttonEmitter(action) {

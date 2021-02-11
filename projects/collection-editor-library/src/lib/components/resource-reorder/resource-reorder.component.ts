@@ -2,6 +2,8 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ViewEncapsul
 import { EditorService, ToasterService } from '../../services';
 import * as _ from 'lodash-es';
 import {labelMessages} from '../labels';
+import { EditorTelemetryService } from '../../services';
+
 @Component({
   selector: 'lib-resource-reorder',
   templateUrl: './resource-reorder.component.html',
@@ -19,9 +21,13 @@ export class ResourceReorderComponent implements OnInit {
   showMoveButton = false;
   @ViewChild('modal', {static: true}) modal;
   @Output() moveEvent = new EventEmitter<any>();
-  constructor(private editorService: EditorService, private toasterService: ToasterService) { }
+  collectionUnitsBreadcrumb: any = [];
+  constructor(private editorService: EditorService,
+              public telemetryService: EditorTelemetryService, private toasterService: ToasterService) {
+               }
 
   ngOnInit() {
+    this.setCollectionUnitBreadcrumb();
   }
 
   onSelectBehaviour(e) {
@@ -50,5 +56,47 @@ export class ResourceReorderComponent implements OnInit {
         identifier: ''
       }
     });
+  }
+
+  getParentsHelper(tree: any, id: string, parents: Array<any>) {
+    const self = this;
+    if (tree.identifier === id) {
+      return {
+        found: true,
+        parents: [...parents, tree.name]
+      };
+    }
+    let result = {
+      found: false,
+    };
+    if (tree.children) {
+      _.forEach(tree.children, (subtree, key) => {
+        const maybeParents = _.concat([], parents);
+        if (tree.identifier !== undefined) {
+          maybeParents.push(tree.name);
+        }
+        const maybeResult: any = self.getParentsHelper(subtree, id, maybeParents);
+        if (maybeResult.found) {
+          result = maybeResult;
+          return false;
+        }
+      });
+    }
+    return result;
+  }
+
+  getParents(data: Array<any>, id: string) {
+    const tree = {
+      children: data
+    };
+    return this.getParentsHelper(tree, id, []);
+  }
+
+  setCollectionUnitBreadcrumb(): void {
+    if (!this.prevUnitSelect) { return; }
+    const selctedUnitParents: any = this.getParents(this.collectionUnits, this.prevUnitSelect);
+    if (selctedUnitParents.found) {
+      this.collectionUnitsBreadcrumb = [...selctedUnitParents.parents];
+    }
   }
 }

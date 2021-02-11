@@ -15,11 +15,10 @@ interface PlayerConfig {
 })
 
 export class HelperService {
+  // tslint:disable-next-line:variable-name
   private _availableLicenses: Array<any>;
+  // tslint:disable-next-line:variable-name
   private _channelData: any;
-  public _formStatus$ = new Subject<any>();
-  public readonly formStatus$: Observable<any> = this._formStatus$
-    .asObservable().pipe(skipWhile(data => data === undefined || data === null));
   constructor(private publicDataService: PublicDataService, private dataService: DataService, private editorService: EditorService) { }
 
   initialize(channelId, defaultLicense?: any) {
@@ -68,9 +67,9 @@ export class HelperService {
   }
 
   get channelData() {
-    // return this._channelData;
-    // tslint:disable-next-line:max-line-length
-    return {contentPrimaryCategories: ['Course Assessment', 'eTextbook', 'Explanation Content', 'Learning Resource', 'Practice Question Set']};
+    return {
+      contentPrimaryCategories: ['Course Assessment', 'eTextbook', 'Explanation Content', 'Learning Resource', 'Practice Question Set']
+    };
   }
   public uniqueId(length = 32) {
     let result = '';
@@ -195,9 +194,5 @@ export class HelperService {
     const rollUp = {};
     data.forEach((element, index) => rollUp['l' + (index + 1)] = element);
     return rollUp;
-  }
-
-  getFormStatus(event) {
-    this._formStatus$.next(event);
   }
 }
