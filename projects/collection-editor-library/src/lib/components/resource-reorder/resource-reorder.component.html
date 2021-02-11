@@ -7,7 +7,7 @@
 <div class="sb-modal-content sb-chapterlist-modal scrolling content sb-dock-accordion py-20">
   <sui-accordion class="styled fluid sb-accordion sb-chapterlist-accordion sb-select-content" [closeOthers]="true">
     <div *ngFor="let mainUnit of collectionUnits" class="sb-toc-accor-1"> 
-    <sui-accordion-panel [isOpen]="mainUnit.children && mainUnit.children.length > 0 ? true : false">
+    <sui-accordion-panel [isOpen]="mainUnit?.children && mainUnit?.children.length > 0 ? true : false">
       <div title class="sb-accordion-title d-flex flex-ai-center mt-0">
         <div class="item d-flex flex-ai-center cursor-pointer w-100">
             <label for="{{mainUnit.identifier}}" class="sb-color-primary font-weight-bold">{{mainUnit.name}}</label>
@@ -24,7 +24,7 @@
           <i class="chevron down icon"></i>
         </div>
       </div>
-      <div content *ngFor="let childUnit of mainUnit.children">
+      <div content *ngFor="let childUnit of mainUnit?.children">
         <div class="chapter-lists level1">
           <div class="chapter-lists--item mt-10">
             <div class="item d-flex flex-ai-center cursor-pointer w-100">
