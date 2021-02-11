@@ -7,13 +7,13 @@
 <div class="sb-modal-content sb-chapterlist-modal scrolling content sb-dock-accordion py-20">
   <sui-accordion class="styled fluid sb-accordion sb-chapterlist-accordion sb-select-content" [closeOthers]="true">
     <div *ngFor="let mainUnit of collectionUnits" class="sb-toc-accor-1"> 
-    <sui-accordion-panel [isOpen]="true">
+    <sui-accordion-panel [isOpen]="mainUnit.children && mainUnit.children.length > 0 ? true : false">
       <div title class="sb-accordion-title d-flex flex-ai-center mt-0">
         <div class="item d-flex flex-ai-center cursor-pointer w-100">
             <label for="{{mainUnit.identifier}}" class="sb-color-primary font-weight-bold">{{mainUnit.name}}</label>
           </div>
           <div class="sb-radio-btn-checkbox sb-radio-btn-primary width-100">
-            <input (click)="onSelectBehaviour($event)" type="radio" id="{{mainUnit.identifier}}" value="{{mainUnit.identifier}}" name="mainUnit" 
+            <input (click)="onSelectBehaviour($event)" type="radio" disabled="{{mainUnit.showButton}}" id="{{mainUnit.identifier}}" value="{{mainUnit.identifier}}" name="mainUnit"
             [(ngModel)]="prevUnitSelect" (change)="setCollectionUnitBreadcrumb();"
             libTelemetryInteract
             [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata(mainUnit.identifier,'select','radio_button', telemetryService.telemetryPageId, {key:'dialog_id',value:'add_to'})"
@@ -31,7 +31,7 @@
               <label for="{{childUnit.identifier}}" class="w-100 fs-0785">{{childUnit.name}}</label>
               <div class="w-30">
                 <label for="{{childUnit.identifier}}"></label>
-                <input type="radio" id="{{childUnit.identifier}}" value="{{childUnit.identifier}}" name="childUnit" 
+                <input type="radio" id="{{childUnit.identifier}}" disabled="{{childUnit.showButton}}" value="{{childUnit.identifier}}" name="childUnit"
                 [(ngModel)]="prevUnitSelect" class="sb-radio-btn-checkbox sb-radio-btn-primary sb-custom-radio" (change)="setCollectionUnitBreadcrumb();"
                 libTelemetryInteract
                 [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata(childUnit.identifier,'select','radio_button', telemetryService.telemetryPageId, {key:'dialog_id',value:'add_to'})"
