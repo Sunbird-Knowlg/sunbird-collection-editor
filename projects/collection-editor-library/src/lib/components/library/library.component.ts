@@ -29,7 +29,7 @@ export class LibraryComponent implements OnInit, AfterViewInit {
   collectionhierarcyData: any;
   public defaultFilters: any;
   pageStartTime: any;
-  constructor(private telemetryService: EditorTelemetryService,
+  constructor(public telemetryService: EditorTelemetryService,
               private editorService: EditorService,
               private router: Router) {
               this.pageStartTime = Date.now();

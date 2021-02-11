@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { EditorService } from '../../services';
-
+import { EditorTelemetryService } from '../../services';
+import {labelMessages} from '../labels';
 @Component({
   selector: 'lib-library-list',
   templateUrl: './library-list.component.html',
@@ -12,7 +13,8 @@ export class LibraryListComponent implements OnInit {
 @Output() contentChangeEvent = new EventEmitter<any>();
 @Output() moveEvent = new EventEmitter<any>();
 @Input() selectedContent: any;
-  constructor(public editorService: EditorService) { }
+labelMessages = labelMessages;
+  constructor(public editorService: EditorService, public telemetryService: EditorTelemetryService ) { }
 
   ngOnInit() {
   }

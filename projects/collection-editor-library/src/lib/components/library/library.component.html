@@ -6,7 +6,7 @@
         <button class="sb-btn sb-btn-primary sb-btn-xs back-btn px-0" (click)="back();"><i class="arrow left icon fs-1"></i></button>
         <div class="ml-8 sb-color-white">
           <div class="d-flex flex-ai-center fsmall">
-            <div class="font-weight-bold fs-1-16">Add from Library</div>
+            <div class="font-weight-bold fs-1-16">{{labelMessages?.lbl?.addFromLibrary}}</div>
             <!-- <div class="sb-border-vertical mx-15"></div>
             <div class="flex flex-wrap">
               <h5>Chapter 1</h5>
@@ -63,6 +63,7 @@
     <h5 class="font-weight-bold">{{labelMessages?.lbl?.noMatchingContent}}</h5>
     <img alt="No Content available" class="mt-16" src="assets/images/emptyResult.svg">
     <h6 class="sb-color-gray-300 font-weight-normal mt-8">{{labelMessages?.lbl?.changeFilterMessage}}</h6>
-    <button class="sb-btn sb-btn-secondary sb-btn-normal mt-16" (click)="openFilter();">{{labelMessages?.lbl?.changeFilter}}</button>
+    <button class="sb-btn sb-btn-secondary sb-btn-normal mt-16" libTelemetryInteract
+    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('change_filter','click','launch', telemetryService?.telemetryPageId)" (click)="openFilter();">{{labelMessages?.lbl?.changeFilter}}</button>
   </div>
 </div>
