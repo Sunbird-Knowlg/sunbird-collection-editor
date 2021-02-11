@@ -1,8 +1,8 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { TreeService, DataService, PublicDataService } from '../../services';
 import { EditorConfig } from '../../interfaces';
-
+import { labelConfig} from '../../editor.config';
 import * as _ from 'lodash-es';
 import { skipWhile } from 'rxjs/operators';
 
@@ -34,6 +34,10 @@ export class EditorService {
 
   get editorMode() {
     return this._editorMode;
+  }
+
+  getToolbarConfig() {
+    return _.cloneDeep(_.merge(labelConfig, _.get(this.editorConfig, 'context.labels')));
   }
 
   emitResourceAddition(data) {
