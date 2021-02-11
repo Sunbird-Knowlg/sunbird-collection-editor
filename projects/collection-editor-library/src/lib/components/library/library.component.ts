@@ -37,7 +37,7 @@ export class LibraryComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.collectionId = _.get(this.libraryInput, 'collectionId');
-    this.editorService.fetchCollectionHierarchy(this.libraryInput).subscribe((response: any) => {
+    this.editorService.fetchCollectionHierarchy(this.collectionId).subscribe((response: any) => {
       this.collectionhierarcyData = response.result.content;
       this.collectionUnits = _.get(this.collectionhierarcyData, 'children');
       this.collectionHierarchy = this.getUnitWithChildren(this.collectionhierarcyData, this.collectionId);
