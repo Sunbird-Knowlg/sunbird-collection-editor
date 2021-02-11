@@ -7,7 +7,7 @@ import { FrameworkService } from '../../services';
 import { Subject } from 'rxjs';
 import { takeUntil, filter, take, map } from 'rxjs/operators';
 import { EditorService } from '../../services';
-import { EditorTelemetryService } from '../../services';
+import { EditorTelemetryService, TreeService } from '../../services';
 
 @Component({
   selector: 'lib-library-filter',
@@ -30,17 +30,21 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
   private onComponentDestroy$ = new Subject<any>();
   public frameworkDetails: any = {};
   public currentFilters: any;
-  private editorConfig: any;
   public searchQuery: string;
 
   constructor(private frameworkService: FrameworkService,
               public editorService: EditorService,
-              public telemetryService: EditorTelemetryService) { }
+              public telemetryService: EditorTelemetryService,
+              public treeService: TreeService) { }
 
   ngOnInit() {
-    this.editorConfig = this.editorService.editorConfig.config;
+    const selectedNode = this.treeService.getActiveNode();
+    const contentTypes = _.flatten(_.map(_.get(this.editorService.editorConfig.config, `hierarchy.level${selectedNode.getLevel()}.children`), function (val) {
+      return val;
+    }));
+
     this.currentFilters = {
-      primaryCategory: _.get(this.editorConfig, 'hierarchy.level2.children.Content'),
+      primaryCategory: contentTypes,
       board: [],
       medium: [],
       gradeLevel: [],

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, AfterViewInit } from '@angular/core';
-import { EditorTelemetryService } from '../../services';
+import { EditorTelemetryService, TreeService } from '../../services';
 import * as _ from 'lodash-es';
 import { EditorService } from '../../services/editor/editor.service';
 import { labelMessages } from '../labels';
@@ -29,10 +29,11 @@ export class LibraryComponent implements OnInit, AfterViewInit {
   public defaultFilters: any;
   pageStartTime: any;
   constructor(public telemetryService: EditorTelemetryService,
-              private editorService: EditorService,
-              private router: Router) {
-              this.pageStartTime = Date.now();
-              }
+    private editorService: EditorService,
+    public treeService: TreeService,
+    private router: Router) {
+    this.pageStartTime = Date.now();
+  }
 
   ngOnInit() {
     this.collectionId = _.get(this.libraryInput, 'collectionId');
@@ -70,8 +71,16 @@ export class LibraryComponent implements OnInit, AfterViewInit {
   }
 
   setDefaultFilters() {
+    const selectedNode = this.treeService.getActiveNode();
+    console.log(this.editorService.editorConfig.config);
+
+    const contentTypes = _.flatten(_.map(_.get(this.editorService.editorConfig.config, `hierarchy.level${selectedNode.getLevel()}.children`), function (val) {
+      return val;
+    }));
+
+    debugger;
     this.defaultFilters = _.pickBy({
-      primaryCategory: _.get(this.editorService.editorConfig.config, 'hierarchy.level2.children.Content'),
+      primaryCategory: contentTypes,
       board: _.get(this.collectionhierarcyData, 'board'),
       gradeLevel: _.get(this.collectionhierarcyData, 'gradeLevel'),
       medium: _.get(this.collectionhierarcyData, 'medium'),
@@ -87,7 +96,10 @@ export class LibraryComponent implements OnInit, AfterViewInit {
         request: {
           query: query || '',
           // @Todo remove hardcoded objectType
-          filters: _.pickBy({ ...filters, ...{ status: ['Live'], objectType: 'content' } })
+          filters: _.pickBy({ ...filters, ...{ status: ['Live'] } }),
+          sort_by: {
+            "lastUpdatedOn": "desc"
+          }
         }
       }
     };
@@ -96,7 +108,7 @@ export class LibraryComponent implements OnInit, AfterViewInit {
       if (!(_.get(response, 'result.count'))) {
         this.contentList = [];
       } else {
-        this.contentList = response.result.content;
+        this.contentList = _.concat(_.get(response.result, 'content'), _.get(response.result, 'QuestionSet'));
         this.filterContentList();
       }
     });
