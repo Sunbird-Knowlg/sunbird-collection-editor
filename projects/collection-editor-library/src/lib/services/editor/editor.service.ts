@@ -50,8 +50,8 @@ export class EditorService {
   getshowLibraryPageEmitter() {
     return this.showLibraryPage;
   }
-  fetchCollectionHierarchy(data): Observable<any> {
-    const hierarchyUrl = 'content/v3/hierarchy/' + data.collectionId;
+  fetchCollectionHierarchy(collectionId): Observable<any> {
+    const hierarchyUrl = 'content/v3/hierarchy/' + collectionId;
     const req = {
       url: hierarchyUrl,
       param: { mode: 'edit' }

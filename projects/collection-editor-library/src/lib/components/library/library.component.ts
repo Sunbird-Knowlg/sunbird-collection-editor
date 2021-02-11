@@ -40,7 +40,7 @@ export class LibraryComponent implements OnInit, AfterViewInit {
     const activeNode = this.treeService.getActiveNode();
     this.selectedUnit = _.get(activeNode, 'data.id');
     this.collectionId = _.get(this.libraryInput, 'collectionId');
-    this.editorService.fetchCollectionHierarchy(this.libraryInput).subscribe((response: any) => {
+    this.editorService.fetchCollectionHierarchy(this.collectionId).subscribe((response: any) => {
       this.collectionhierarcyData = response.result.content;
       this.collectionHierarchy = this.getUnitWithChildren(this.collectionhierarcyData, this.collectionId);
       this.setDefaultFilters();

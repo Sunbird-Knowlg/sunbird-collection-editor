@@ -18,9 +18,12 @@ export class ContentplayerPageComponent implements OnInit, OnChanges {
   public content: any;
   public playerType: string;
   public contentId: string;
+  public editorConfig;
   constructor(private editorService: EditorService, private helperService: HelperService, private treeService: TreeService) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.editorConfig = _.cloneDeep(this.editorService.editorConfig);
+  }
 
   ngOnChanges() {
     this.contentMetadata = _.get(this.contentMetadata, 'data.metadata') || this.contentMetadata;
