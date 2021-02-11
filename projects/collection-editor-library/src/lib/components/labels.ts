@@ -15,9 +15,10 @@ export const labelMessages = {
         whereDoYouWantToAddThisContent: 'Where do you want to add this content?',
         selectContentToAdd: 'Use search and filters above to find more content',
         addedToCollection: 'Added to collection',
-        changingFilters:'Changing filters make you find more content',
+        changingFilters: 'Changing filters make you find more content',
         ChangeFilters: 'Change filters',
         addFromLibrary: 'Add from Library',
-        showContentAddedToCollection: 'Show content added to collection'
+        showContentAddedToCollection: 'Show content added to collection',
+        addContent: 'Add content'
     }
 };
