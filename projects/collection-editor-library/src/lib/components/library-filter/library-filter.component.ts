@@ -1,8 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges, ViewEncapsulation} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, ViewEncapsulation } from '@angular/core';
 import * as _ from 'lodash-es';
-// import { data } from './data';
-import {labelMessages} from '../labels';
-import { libraryFilterConfig } from './library-filter-config';
+import { labelMessages } from '../labels';
 import { FrameworkService } from '../../services';
 import { Subject } from 'rxjs';
 import { takeUntil, filter, take, map } from 'rxjs/operators';
@@ -19,12 +17,13 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
   @Input() sessionContext: any;
   @Input() filterValues: any;
   @Input() filterOpenStatus: boolean;
+  @Input() searchFormConfig: any;
   @Output() filterChangeEvent: EventEmitter<any> = new EventEmitter();
 
   labelMessages = labelMessages;
-  filterConfig: any;
-  filterFields = _.get(_.first(libraryFilterConfig), 'fields');
+  public filterConfig: any;
   public isFilterShow = false;
+  public filterFields: any;
   public telemetryPageId: string;
   public framework = 'ekstep_ncert_k-12';
   private onComponentDestroy$ = new Subject<any>();
@@ -33,11 +32,12 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
   public searchQuery: string;
 
   constructor(private frameworkService: FrameworkService,
-              public editorService: EditorService,
-              public telemetryService: EditorTelemetryService,
-              public treeService: TreeService) { }
+    public editorService: EditorService,
+    public telemetryService: EditorTelemetryService,
+    public treeService: TreeService) { }
 
   ngOnInit() {
+    this.filterFields = this.searchFormConfig;
     const selectedNode = this.treeService.getActiveNode();
     const contentTypes = _.flatten(_.map(_.get(this.editorService.editorConfig.config, `hierarchy.level${selectedNode.getLevel()}.children`), function (val) {
       return val;
@@ -138,12 +138,14 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
     });
 
     const index = this.filterFields.findIndex(e => _.get(e, 'code') === 'primaryCategory');
-    if (index !==  -1) {
+    if (index !== -1) {
       this.filterFields[index].range = this.currentFilters.primaryCategory;
     }
 
-    libraryFilterConfig[0].fields = this.filterFields;
-    this.filterConfig = libraryFilterConfig;
+    this.filterConfig = [{
+      name: "searchForm",
+      fields: this.filterFields
+    }];
   }
 
   // should get applied association data from framework details
@@ -178,13 +180,17 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
 
   resetFilter() {
     this.filterValues = {};
-    this.searchQuery  = '';
-    this.filterFields = _.get(_.first(libraryFilterConfig), 'fields');
+    this.searchQuery = '';
     _.forEach(this.filterFields, (field) => {
-        field.default = '';
+      field.default = '';
     });
+
     this.filterConfig = null;
-    this.filterConfig = _.cloneDeep(libraryFilterConfig);
+    this.filterConfig = [{
+      name: "searchForm",
+      fields: _.cloneDeep(this.filterFields)
+    }];
+
     this.emitApplyFilter();
   }
 

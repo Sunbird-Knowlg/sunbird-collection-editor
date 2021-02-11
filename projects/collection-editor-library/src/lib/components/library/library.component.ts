@@ -14,6 +14,7 @@ export class LibraryComponent implements OnInit, AfterViewInit {
   labelMessages = labelMessages;
   @Input() libraryInput: any;
   @Output() libraryEmitter = new EventEmitter<any>();
+  public searchFormConfig : any;
   public pageId = 'add_from_library';
   public contentList: any;
   public selectedContent: any;
@@ -37,6 +38,7 @@ export class LibraryComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.collectionId = _.get(this.libraryInput, 'collectionId');
+    this.searchFormConfig = _.get(this.libraryInput, 'searchFormConfig');
     this.editorService.fetchCollectionHierarchy(this.collectionId).subscribe((response: any) => {
       this.collectionhierarcyData = response.result.content;
       this.collectionUnits = _.get(this.collectionhierarcyData, 'children');
@@ -72,16 +74,13 @@ export class LibraryComponent implements OnInit, AfterViewInit {
 
   setDefaultFilters() {
     const selectedNode = this.treeService.getActiveNode();
-    console.log(this.editorService.editorConfig.config);
-
     const contentTypes = _.flatten(_.map(_.get(this.editorService.editorConfig.config, `hierarchy.level${selectedNode.getLevel()}.children`), function (val) {
       return val;
     }));
 
-    debugger;
     this.defaultFilters = _.pickBy({
       primaryCategory: contentTypes,
-      board: _.get(this.collectionhierarcyData, 'board'),
+      board: [_.get(this.collectionhierarcyData, 'board')],
       gradeLevel: _.get(this.collectionhierarcyData, 'gradeLevel'),
       medium: _.get(this.collectionhierarcyData, 'medium'),
       subject: _.get(this.collectionhierarcyData, 'subject'),
@@ -108,7 +107,7 @@ export class LibraryComponent implements OnInit, AfterViewInit {
       if (!(_.get(response, 'result.count'))) {
         this.contentList = [];
       } else {
-        this.contentList = _.concat(_.get(response.result, 'content'), _.get(response.result, 'QuestionSet'));
+        this.contentList = _.compact(_.concat(_.get(response.result, 'content'), _.get(response.result, 'QuestionSet')));
         this.filterContentList();
       }
     });
@@ -188,7 +187,9 @@ export class LibraryComponent implements OnInit, AfterViewInit {
   filterContentList(isContentAdded?) {
     if (_.isEmpty(this.contentList)) { return; }
     _.forEach(this.contentList, (value, key) => {
-      value.isAdded = _.includes(this.childNodes, value.identifier);
+      if(value) {
+        value.isAdded = _.includes(this.childNodes, value.identifier);
+      }
     });
     if (!isContentAdded) {
       const selectedContentIndex = this.showAddedContent ? 0 : _.findIndex(this.contentList, { isAdded: false });

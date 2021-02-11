@@ -27,7 +27,7 @@ export class EditorBaseComponent implements OnInit, OnDestroy {
   public rootFormConfig: any;
   public unitFormConfig: any;
   public showLibraryPage = false;
-  public libraryComponentInput: any;
+  public libraryComponentInput = {};
   public editorMode;
   public collectionId;
   toolbarConfig: any;
@@ -69,6 +69,7 @@ export class EditorBaseComponent implements OnInit, OnDestroy {
         (response) => {
           this.unitFormConfig = _.get(response, 'result.objectCategoryDefinition.forms.unitMetadata.properties');
           this.rootFormConfig = _.get(response, 'result.objectCategoryDefinition.forms.create.properties');
+          this.libraryComponentInput['searchFormConfig'] = _.get(response, 'result.objectCategoryDefinition.forms.search.properties')
         },
         (error) => {
           console.log(error);
@@ -131,9 +132,7 @@ export class EditorBaseComponent implements OnInit, OnDestroy {
   }
 
   showLibraryComponentPage() {
-    this.libraryComponentInput = {
-      collectionId: this.collectionId
-    };
+    this.libraryComponentInput['collectionId'] = this.collectionId;
     this.showLibraryPage = true;
   }
 
