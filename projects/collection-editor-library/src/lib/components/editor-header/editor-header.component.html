@@ -24,7 +24,7 @@
       {{labelConfigData.save_collection_btn_label}}
     </button>
 
-    <button *ngIf="visibility && visibility.submitContent" class="sb-btn sb-btn-normal sb-btn-primary mr-10" (click)="buttonEmitter({type:'submitContent'})">
+    <button *ngIf="visibility && visibility.submitContent && labelConfigData.showSubmitBtn" class="sb-btn sb-btn-normal sb-btn-primary mr-10" (click)="buttonEmitter({type:'submitContent'})">
       <i class="{{labelConfigData.submit_collection_btn_icon}}"></i> 
       {{labelConfigData.submit_collection_btn_label}}
     </button>

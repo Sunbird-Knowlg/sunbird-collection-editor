@@ -84,10 +84,16 @@ export class EditorBaseComponent implements OnInit, OnDestroy {
   }
 
   fetchCollectionHierarchy(): Observable<any> {
-    return this.editorService.fetchCollectionHierarchy(this.editorParams).pipe(tap(data =>
+    return this.editorService.fetchCollectionHierarchy(this.editorParams).pipe(tap(data => {
       this.collectionTreeNodes = {
         data: _.get(data, 'result.content')
-      }));
+      };
+      if (_.isEmpty(this.collectionTreeNodes.data.children)) {
+        this.toolbarConfig.showSubmitBtn = false;
+      } else {
+        this.toolbarConfig.showSubmitBtn = true;
+      }
+    }));
   }
 
   toolbarEventListener(event) {
@@ -132,10 +138,12 @@ export class EditorBaseComponent implements OnInit, OnDestroy {
   }
 
   showLibraryComponentPage() {
-    this.libraryComponentInput = {
-      collectionId: this.editorParams.collectionId
-    };
-    this.showLibraryPage = true;
+    this.saveContent().then(res => {
+      this.libraryComponentInput = {
+        collectionId: this.editorParams.collectionId
+      };
+      this.showLibraryPage = true;
+    }).catch(err => this.toasterService.error(err));
   }
 
   libraryEventListener(event: any) {
@@ -193,10 +201,28 @@ export class EditorBaseComponent implements OnInit, OnDestroy {
   treeEventListener(event: any) {
     switch (event.type) {
       case 'nodeSelect':
+        this.updateSubmitBtnVisibility();
         this.selectedNodeData = _.cloneDeep(event.data);
         break;
+        case 'deleteNode':
+          this.deleteNode();
+          break;
       default:
         break;
+    }
+  }
+
+  deleteNode() {
+    this.treeService.removeNode();
+    this.updateSubmitBtnVisibility();
+  }
+
+  updateSubmitBtnVisibility() {
+    const rootFirstChildNode = this.treeService.getFirstChild();
+    if (rootFirstChildNode && !rootFirstChildNode.children) {
+      this.toolbarConfig.showSubmitBtn = false;
+    } else {
+      this.toolbarConfig.showSubmitBtn = true;
     }
   }
 

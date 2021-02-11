@@ -11,9 +11,9 @@ import { NgForm } from '@angular/forms';
   styleUrls: ['./editor-header.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class EditorHeaderComponent implements OnInit, OnDestroy {
+export class EditorHeaderComponent implements OnDestroy, OnInit {
   // tslint:disable-next-line:no-input-rename
-  @Input('toolbarConfig') labelConfigData: any;
+  @Input() labelConfigData: any;
   @Output() toolbarEmitter = new EventEmitter<any>();
   @ViewChild('FormControl', {static: false}) FormControl: NgForm;
   private onComponentDestroy$ = new Subject<any>();

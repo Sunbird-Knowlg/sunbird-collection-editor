@@ -87,6 +87,7 @@ export class TreeService {
     const afterDeleteNode = selectedNode.getPrevSibling() ? selectedNode.getPrevSibling() : selectedNode.getParent();
     this.setActiveNode(afterDeleteNode);
     selectedNode.remove();
+    this.clearTreeCache(selectedNode.data);
     $('span.fancytree-title').attr('style', 'width:11em;text-overflow:ellipsis;white-space:nowrap;overflow:hidden');
     $(this.treeNativeElement).scrollLeft($('.fancytree-lastsib').width());
     $(this.treeNativeElement).scrollTop($('.fancytree-lastsib').height());
