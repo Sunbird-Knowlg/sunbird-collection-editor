@@ -107,3 +107,26 @@
     margin-right: 3.7rem;
     margin-top: 0.6rem;
   }
+  .sb-content-breadcrumb {
+    vertical-align: bottom;
+
+    .section {
+      &:first-child {
+        max-width: 30%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block !important;
+        white-space: nowrap;
+      }
+
+      &:nth-child(2n),
+      &:nth-child(3n),
+      &:nth-child(4n) {
+        max-width: 10%;
+        // overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block !important;
+        white-space: nowrap;
+      }
+    }
+  }
