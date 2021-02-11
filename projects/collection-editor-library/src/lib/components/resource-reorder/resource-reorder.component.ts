@@ -100,7 +100,6 @@ export class ResourceReorderComponent implements OnInit {
     const selctedUnitParents: any = this.getParents(this.collectionUnits, this.prevUnitSelect);
     if (selctedUnitParents.found) {
       this.collectionUnitsBreadcrumb = [...selctedUnitParents.parents];
-      console.log('collectionUnitsBreadcrumb', this.collectionUnitsBreadcrumb);
     }
   }
 }

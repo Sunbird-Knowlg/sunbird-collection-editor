@@ -13,5 +13,8 @@ export const labelMessages = {
         changeFilterMessage: 'Changing filter helps you find more content',
         changeFilter: 'Change filters',
         whereDoYouWantToAddThisContent: 'Where do you want to add this content?'
+    },
+    btn: {
+        addContent: 'Add content'
     }
 };

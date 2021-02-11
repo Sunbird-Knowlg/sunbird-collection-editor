@@ -15,7 +15,7 @@ export class LibraryComponent implements OnInit, AfterViewInit {
   @Input() libraryInput: any;
   @Input() collectionData: any;
   @Output() libraryEmitter = new EventEmitter<any>();
-  public pageId = 'library';
+  public pageId = 'add_from_library';
   public contentList: any;
   public selectedContent: any;
   public childNodes: any;
