@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil, filter, take } from 'rxjs/operators';
 import { EditorService, TreeService, FrameworkService, HelperService } from '../../services';
@@ -14,6 +14,7 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   @Input() rootFormConfig: any;
   @Input() unitFormConfig: any;
   @Input() nodeMetadata: any;
+  @Output() toolbarEmitter = new EventEmitter<any>();
   private onComponentDestroy$ = new Subject<any>();
   public metaDataFields: any;
   public frameworkDetails: any = {};
@@ -112,14 +113,12 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   onStatusChanges(eventData) {
-    if (eventData) {
-      console.log('eventData statusChanges------>', eventData);
-      this.helperService.getFormStatus(eventData);
-    }
+    console.log('eventData statusChanges------>', eventData);
   }
 
   valueChanges(event: any) {
     console.log(event);
+    this.toolbarEmitter.emit({ button: 'onFormValueChange', event });
     this.treeService.updateNode(event);
   }
 

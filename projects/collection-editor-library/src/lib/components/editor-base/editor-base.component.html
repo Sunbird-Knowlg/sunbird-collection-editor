@@ -1,5 +1,5 @@
 <div class="add-to-library mb-30" *ngIf="!showLibraryPage">
-  <lib-editor-header (toolbarEmitter)="toolbarEventListener($event)"> </lib-editor-header> <!--// TODO::  *ngIf="treeService.getTreeObject()" -->
+  <lib-editor-header [toolbarConfig]="toolbarConfig" (toolbarEmitter)="toolbarEventListener($event)"> </lib-editor-header> <!--// TODO::  *ngIf="treeService.getTreeObject()" -->
   <div class="min-h-500 sb-bg-white">
     <div class="ui">
       <div class="ui twelve column grid m-0">
@@ -13,7 +13,8 @@
         <!-- Right Player Sections -->
         <div class="eight wide column bg-white pl-40 mb-10">
           <ng-container *ngIf="selectedNodeData?.folder === true || selectedNodeData?.data?.root === true">
-            <lib-meta-form [rootFormConfig]="rootFormConfig" [nodeMetadata]="selectedNodeData" [unitFormConfig]="unitFormConfig"></lib-meta-form>
+            <lib-meta-form [rootFormConfig]="rootFormConfig" [nodeMetadata]="selectedNodeData" [unitFormConfig]="unitFormConfig"
+            (toolbarEmitter)="toolbarEventListener($event)"></lib-meta-form>
           </ng-container>
           <ng-container *ngIf="selectedNodeData?.folder === false && selectedNodeData?.data?.root !== true">
               <lib-contentplayer-page  [contentMetadata]="selectedNodeData" ></lib-contentplayer-page>

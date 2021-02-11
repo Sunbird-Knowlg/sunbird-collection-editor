@@ -4,19 +4,17 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { CollectionEditorLibraryModule } from 'collection-editor-library';
 import { AppComponent } from './app.component';
-import { EditorRoutingModule } from './editor-routing.module';
-import { CollectionEditorComponent } from './collection-editor/collection-editor.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    CollectionEditorComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
     CollectionEditorLibraryModule,
-    EditorRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    RouterModule.forRoot([])
   ],
   providers: [],
   bootstrap: [AppComponent]

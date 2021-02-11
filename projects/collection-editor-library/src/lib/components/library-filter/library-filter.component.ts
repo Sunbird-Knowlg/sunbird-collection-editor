@@ -7,6 +7,7 @@ import { FrameworkService } from '../../services';
 import { Subject } from 'rxjs';
 import { takeUntil, filter, take, map } from 'rxjs/operators';
 import { EditorService } from '../../services';
+import { EditorTelemetryService } from '../../services';
 
 @Component({
   selector: 'lib-library-filter',
@@ -33,7 +34,8 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
   public searchQuery: string;
 
   constructor(private frameworkService: FrameworkService,
-              public editorService: EditorService) { }
+              public editorService: EditorService,
+              public telemetryService: EditorTelemetryService) { }
 
   ngOnInit() {
     this.editorConfig = this.editorService.editorConfig.config;

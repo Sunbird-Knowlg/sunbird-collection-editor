@@ -1,19 +1,20 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, AfterViewInit } from '@angular/core';
 import { EditorTelemetryService } from '../../services';
 import * as _ from 'lodash-es';
 import { EditorService } from '../../services/editor/editor.service';
 import { labelMessages } from '../labels';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'lib-library',
   templateUrl: './library.component.html',
   styleUrls: ['./library.component.scss']
 })
-export class LibraryComponent implements OnInit {
+export class LibraryComponent implements OnInit, AfterViewInit {
   labelMessages = labelMessages;
   @Input() libraryInput: any;
   @Output() libraryEmitter = new EventEmitter<any>();
-  public pageId = 'library';
+  public pageId = 'add_from_library';
   public contentList: any;
   public selectedContent: any;
   public childNodes: any;
@@ -26,11 +27,16 @@ export class LibraryComponent implements OnInit {
   public isFilterOpen = false;
   collectionhierarcyData: any;
   public defaultFilters: any;
-  constructor(private telemetryService: EditorTelemetryService, private editorService: EditorService) { }
+  pageStartTime: any;
+  constructor(public telemetryService: EditorTelemetryService,
+              private editorService: EditorService,
+              private router: Router) {
+              this.pageStartTime = Date.now();
+              }
 
   ngOnInit() {
     this.collectionId = _.get(this.libraryInput, 'collectionId');
-    this.editorService.fetchCollectionHierarchy(this.libraryInput).subscribe((response: any) => {
+    this.editorService.fetchCollectionHierarchy(this.collectionId).subscribe((response: any) => {
       this.collectionhierarcyData = response.result.content;
       this.collectionUnits = _.get(this.collectionhierarcyData, 'children');
       this.collectionHierarchy = this.getUnitWithChildren(this.collectionhierarcyData, this.collectionId);
@@ -38,6 +44,13 @@ export class LibraryComponent implements OnInit {
       this.fetchContentList();
       this.telemetryService.telemetryPageId = this.pageId;
       this.childNodes = _.get(this.collectionhierarcyData, 'childNodes');
+    });
+  }
+
+  ngAfterViewInit() {
+    this.telemetryService.impression({
+      type: 'edit', pageid: this.telemetryService.telemetryPageId, uri: this.router.url,
+      duration: _.toString((Date.now() - this.pageStartTime) / 1000)
     });
   }
 

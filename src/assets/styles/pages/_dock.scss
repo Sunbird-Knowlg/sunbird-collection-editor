@@ -482,30 +482,6 @@ hr {
   }
 }
 
-.sb-content-breadcrumb {
-  vertical-align: bottom;
-
-  .section {
-    &:first-child {
-      max-width: 30%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: inline-block !important;
-      white-space: nowrap;
-    }
-
-    &:nth-child(2n),
-    &:nth-child(3n),
-    &:nth-child(4n) {
-      max-width: 10%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: inline-block !important;
-      white-space: nowrap;
-    }
-  }
-}
-
 .sb-prominent-filter-container {
   input[type="text"] {
     margin: 0.5rem !important;

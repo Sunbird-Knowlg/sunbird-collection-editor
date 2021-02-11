@@ -15,12 +15,12 @@ import { SunbirdVideoPlayerModule } from '@project-sunbird/sunbird-video-player-
 import { EditorService } from './services';
 import { ResourceReorderComponent } from './components/resource-reorder/resource-reorder.component';
 import { SkeletonLoaderComponent } from './components/skeleton-loader/skeleton-loader.component';
-
+import { TelemetryInteractDirective } from './directives';
 @NgModule({
   providers: [EditorService],
   declarations: [CollectionEditorLibraryComponent, ContentplayerPageComponent, EditorBaseComponent,
     EditorHeaderComponent, FancyTreeComponent, MetaFormComponent, LibraryComponent, LibraryFilterComponent, LibraryListComponent,
-    LibraryPlayerComponent, ResourceReorderComponent, SkeletonLoaderComponent],
+    LibraryPlayerComponent, ResourceReorderComponent, SkeletonLoaderComponent, TelemetryInteractDirective],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, CommonFormElementsModule, InfiniteScrollModule,
   HttpClientModule, SuiModule, SunbirdPdfPlayerModule, SunbirdVideoPlayerModule],
   exports: [CollectionEditorLibraryComponent, EditorBaseComponent]

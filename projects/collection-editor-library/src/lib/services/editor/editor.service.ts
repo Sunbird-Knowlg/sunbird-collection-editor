@@ -1,8 +1,8 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { TreeService, DataService, PublicDataService } from '../../services';
 import { EditorConfig } from '../../interfaces';
-
+import { labelConfig} from '../../editor.config';
 import * as _ from 'lodash-es';
 import { skipWhile } from 'rxjs/operators';
 
@@ -36,6 +36,10 @@ export class EditorService {
     return this._editorMode;
   }
 
+  getToolbarConfig() {
+    return _.cloneDeep(_.merge(labelConfig, _.get(this.editorConfig, 'context.labels')));
+  }
+
   emitResourceAddition(data) {
     this._resourceAddition$.next(data);
   }
@@ -46,8 +50,8 @@ export class EditorService {
   getshowLibraryPageEmitter() {
     return this.showLibraryPage;
   }
-  fetchCollectionHierarchy(data): Observable<any> {
-    const hierarchyUrl = 'content/v3/hierarchy/' + data.collectionId;
+  fetchCollectionHierarchy(collectionId): Observable<any> {
+    const hierarchyUrl = 'content/v3/hierarchy/' + collectionId;
     const req = {
       url: hierarchyUrl,
       param: { mode: 'edit' }
