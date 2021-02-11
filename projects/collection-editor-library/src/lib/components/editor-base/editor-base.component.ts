@@ -139,7 +139,7 @@ export class EditorBaseComponent implements OnInit, OnDestroy {
   showLibraryComponentPage() {
     this.saveContent().then(res => {
       this.libraryComponentInput = {
-        collectionId: this.editorParams.collectionId
+        collectionId: this.collectionId
       };
       this.showLibraryPage = true;
     }).catch(err => this.toasterService.error(err));
