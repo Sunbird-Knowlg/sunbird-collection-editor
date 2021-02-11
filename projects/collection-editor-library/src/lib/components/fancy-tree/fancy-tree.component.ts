@@ -7,7 +7,6 @@ import { ActivatedRoute } from '@angular/router';
 import { EditorService, TreeService, EditorTelemetryService, HelperService, ToasterService } from '../../services';
 import { Subject } from 'rxjs';
 import { UUID } from 'angular2-uuid';
-import { ThrowStmt } from '@angular/compiler';
 declare var $: any;
 
 @Component({
@@ -121,8 +120,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       if (rootNode) {
         this.treeService.setActiveNode(rootNode);
       }
-      this.addChildButton(rootNode);
-      this.addSiblingButton(rootNode);
+      this.eachNodeActionButton(rootNode);
     });
     this.showTree = true;
   }
@@ -207,8 +205,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         const node = data.node;
         // this.treeEventEmitter.emit({ 'type': 'nodeSelect', 'data': node });
         this.telemetryService.interact({ edata: this.getTelemetryInteractEdata()});
-        this.addChildButton(node);
-        this.addSiblingButton(node);
+        this.eachNodeActionButton(node);
         return true;
       },
       activate: (event, data) => {
@@ -247,8 +244,9 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  addChildButton(node) {
-    this.showAddChildButton = ((node.getLevel() - 1) >= this.config.maxDepth) ? false : true; 
+  eachNodeActionButton(node) {
+    this.showAddChildButton = ((node.getLevel() - 1) >= this.config.maxDepth) ? false : true;
+    this.showAddSiblingButton = (!node.data.root) ? true : false; 
   }
 
   addChild(resource?) {
@@ -269,10 +267,6 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.treeService.addNode({}, 'child');
     }
       // this.treeEventEmitter.emit({'type': 'addChild', 'data' : (rootNode.data.root ? 'child' : 'sibling')});
-  }
-
-  addSiblingButton(node) {
-    this.showAddSiblingButton = (!node.data.root) ? true : false; 
   }
 
   addSibling() {
