@@ -1,22 +1,17 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { TreeService, DataService, PublicDataService } from '../../services';
-import { IeventData, EditorConfig } from '../../interfaces';
+import { EditorConfig } from '../../interfaces';
 
 import * as _ from 'lodash-es';
-import { map, skipWhile } from 'rxjs/operators';
+import { skipWhile } from 'rxjs/operators';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class EditorService {
   data: any;
   private _editorConfig: EditorConfig;
   public questionStream$ = new Subject<any>();
-  // tslint:disable-next-line:variable-name
-  private _nodeData$ = new BehaviorSubject<IeventData>(undefined);
-  public readonly nodeData$: Observable<IeventData> = this._nodeData$
-    .asObservable().pipe(skipWhile(data => data === undefined || data === null));
+  private _editorMode = 'edit';
 
   // tslint:disable-next-line:variable-name
   public _resourceAddition$ = new Subject<any>();
@@ -28,16 +23,17 @@ export class EditorService {
               private dataService: DataService,
               private publicDataService: PublicDataService) { }
 
-  public set editorConfig(editorConfig: EditorConfig) {
-    this._editorConfig = editorConfig;
+  public initialize(config: EditorConfig) {
+    this._editorConfig = config;
+    this._editorMode = _.get(this._editorConfig, 'config.mode');
   }
 
   public get editorConfig(): EditorConfig {
     return this._editorConfig;
   }
 
-  emitSelectedNodeMetaData(data: IeventData) {
-    this._nodeData$.next(data);
+  get editorMode() {
+    return this._editorMode;
   }
 
   emitResourceAddition(data) {

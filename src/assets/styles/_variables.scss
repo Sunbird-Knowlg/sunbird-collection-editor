@@ -328,6 +328,7 @@
   
   // spaces
   $base-block-space: 0.5rem;
+  $block-padding-xy: ($base-block-space * 2);
 
   // Filters
 $sb-prominent-filter-background-color: $white-color;

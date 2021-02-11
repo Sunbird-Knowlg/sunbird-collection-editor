@@ -9,7 +9,7 @@ import {labelMessages} from '../labels';
 })
 export class LibraryListComponent implements OnInit {
 @Input() contentList;
-@Input() showAddedContent: Boolean;
+@Input() showAddedContent: any;
 @Output() contentChangeEvent = new EventEmitter<any>();
 @Output() moveEvent = new EventEmitter<any>();
 @Input() selectedContent: any;

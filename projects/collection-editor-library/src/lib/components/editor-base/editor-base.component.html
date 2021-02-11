@@ -1,26 +1,22 @@
 <div class="add-to-library mb-30" *ngIf="!showLibraryPage">
-  <lib-editor-header *ngIf="treeService.getTreeObject()"
-    (toolbarEmitter)="toolbarEventListener($event)"
-  >
-  </lib-editor-header>
+  <lib-editor-header (toolbarEmitter)="toolbarEventListener($event)"> </lib-editor-header> <!--// TODO::  *ngIf="treeService.getTreeObject()" -->
   <div class="min-h-500 sb-bg-white">
     <div class="ui">
       <div class="ui twelve column grid m-0">
         <!-- Left Sidebar for cards -->
         <div class="three wide column p-0 h-100vh">
-          <lib-collection-tree-new *ngIf="collectionTreeNodes && collectionTreeNodes.data"
-            [nodes]="collectionTreeNodes"
-            (treeEventEmitter)="treeEventListener($event)"
-          >
-          </lib-collection-tree-new>
+          <lib-fancy-tree  *ngIf="collectionTreeNodes && collectionTreeNodes.data"
+          [nodes]="collectionTreeNodes" [options]="{ showConnectors: true }"
+          (treeEventEmitter)="treeEventListener($event)" class="sb-collectionTree-fancyTree sb-collectionTree-fancyTreelist">
+          </lib-fancy-tree>
         </div>
         <!-- Right Player Sections -->
         <div class="eight wide column bg-white pl-40 mb-10">
           <ng-container *ngIf="selectedNodeData?.folder === true || selectedNodeData?.data?.root === true">
-            <lib-meta-form [rootFormConfig]="rootFormConfig" [formFieldValues]="formFieldValues" [unitFormConfig]="unitFormConfig" (prevNodeMetadata)="updateNodeMetadata($event)"></lib-meta-form>
+            <lib-meta-form [rootFormConfig]="rootFormConfig" [nodeMetadata]="selectedNodeData" [unitFormConfig]="unitFormConfig"></lib-meta-form>
           </ng-container>
           <ng-container *ngIf="selectedNodeData?.folder === false && selectedNodeData?.data?.root !== true">
-              <lib-contentplayer-page></lib-contentplayer-page>
+              <lib-contentplayer-page  [contentMetadata]="selectedNodeData" ></lib-contentplayer-page>
           </ng-container>
         </div>
       </div>
@@ -29,7 +25,7 @@
 </div>
 
 <ng-container *ngIf="showLibraryPage">
-  <lib-library [libraryInput]="libraryComponentInput" [collectionData]="collectionData" (libraryEmitter)="libraryEventListener($event)">
+  <lib-library [libraryInput]="libraryComponentInput" (libraryEmitter)="libraryEventListener($event)">
   </lib-library>
 </ng-container>
 

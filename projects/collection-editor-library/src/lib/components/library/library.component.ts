@@ -12,7 +12,6 @@ import { labelMessages } from '../labels';
 export class LibraryComponent implements OnInit {
   labelMessages = labelMessages;
   @Input() libraryInput: any;
-  @Input() collectionData: any;
   @Output() libraryEmitter = new EventEmitter<any>();
   public pageId = 'add_from_library';
   public contentList: any;
@@ -37,9 +36,9 @@ export class LibraryComponent implements OnInit {
       this.collectionHierarchy = this.getUnitWithChildren(this.collectionhierarcyData, this.collectionId);
       this.setDefaultFilters();
       this.fetchContentList();
+      this.telemetryService.telemetryPageId = this.pageId;
+      this.childNodes = _.get(this.collectionhierarcyData, 'childNodes');
     });
-    this.telemetryService.telemetryPageId = this.pageId;
-    this.childNodes = _.get(this.collectionData, 'childNodes');
   }
 
   back() {
@@ -59,11 +58,11 @@ export class LibraryComponent implements OnInit {
 
   setDefaultFilters() {
     this.defaultFilters = _.pickBy({
-      'primaryCategory': _.get(this.editorService.editorConfig.config, 'hierarchy.level2.children.Content'),
-      'board': _.get(this.collectionhierarcyData, 'board'),
-      'gradeLevel': _.get(this.collectionhierarcyData, 'gradeLevel'),
-      'medium': _.get(this.collectionhierarcyData, 'medium'),
-      'subject': _.get(this.collectionhierarcyData, 'subject'),
+      primaryCategory: _.get(this.editorService.editorConfig.config, 'hierarchy.level2.children.Content'),
+      board: _.get(this.collectionhierarcyData, 'board'),
+      gradeLevel: _.get(this.collectionhierarcyData, 'gradeLevel'),
+      medium: _.get(this.collectionhierarcyData, 'medium'),
+      subject: _.get(this.collectionhierarcyData, 'subject'),
     });
   }
 
@@ -73,16 +72,16 @@ export class LibraryComponent implements OnInit {
       url: 'composite/v3/search',
       data: {
         request: {
-          query: query || "",
+          query: query || '',
           // @Todo remove hardcoded objectType
-          filters: _.pickBy({ ...filters, ...{ "status": ["Live"], "objectType": "content" } })
+          filters: _.pickBy({ ...filters, ...{ status: ['Live'], objectType: 'content' } })
         }
       }
     };
     this.editorService.fetchContentListDetails(option).subscribe((response: any) => {
       this.showLoader = false;
-      if(!(_.get(response, 'result.count'))) {
-        this.contentList = []
+      if (!(_.get(response, 'result.count'))) {
+        this.contentList = [];
       } else {
         this.contentList = response.result.content;
         this.filterContentList();
@@ -144,10 +143,10 @@ export class LibraryComponent implements OnInit {
         this.showAddedContent = event.status;
         this.filterContentList();
         break;
-        case 'contentAdded':
-          this.childNodes.push(event.data.identifier);
-          this.filterContentList(true);
-          break;
+      case 'contentAdded':
+        this.childNodes.push(event.data.identifier);
+        this.filterContentList(true);
+        break;
       default:
         break;
     }
@@ -166,7 +165,7 @@ export class LibraryComponent implements OnInit {
     _.forEach(this.contentList, (value, key) => {
       value.isAdded = _.includes(this.childNodes, value.identifier);
     });
-    if(!isContentAdded) {
+    if (!isContentAdded) {
       const selectedContentIndex = this.showAddedContent ? 0 : _.findIndex(this.contentList, { isAdded: false });
       this.selectedContent = this.contentList[selectedContentIndex];
     }

@@ -1,9 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ViewEncapsulation} from '@angular/core';
-import { EditorService } from '../../services';
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { EditorService, ToasterService } from '../../services';
 import * as _ from 'lodash-es';
-import { IeventData } from '../../interfaces';
 import {labelMessages} from '../labels';
 @Component({
   selector: 'lib-resource-reorder',
@@ -22,7 +19,7 @@ export class ResourceReorderComponent implements OnInit {
   showMoveButton = false;
   @ViewChild('modal', {static: true}) modal;
   @Output() moveEvent = new EventEmitter<any>();
-  constructor(private editorService: EditorService) { }
+  constructor(private editorService: EditorService, private toasterService: ToasterService) { }
 
   ngOnInit() {
   }
@@ -39,9 +36,9 @@ export class ResourceReorderComponent implements OnInit {
         action: 'contentAdded',
         data: this.selectedContentDetails
       });
-      alert('Content is added to hierarchy...');
+      this.toasterService.success('Content is added to hierarchy...');
     }, err => {
-      alert('Something went wrong...');
+      this.toasterService.error('Something went wrong...');
     });
   }
 
