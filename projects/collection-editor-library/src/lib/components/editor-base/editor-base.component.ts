@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { TreeService, EditorService, FrameworkService, HelperService, EditorTelemetryService, ToasterService } from '../../services';
 import { IEditorConfig } from '../../interfaces';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -30,11 +30,14 @@ export class EditorBaseComponent implements OnInit, OnDestroy {
   public libraryComponentInput = {};
   public editorMode;
   public collectionId;
+  public isCurrentNodeFolder: boolean;
+  public isCurrentNodeRoot: boolean;
   toolbarConfig: any;
   constructor(public treeService: TreeService, private editorService: EditorService,
               private activatedRoute: ActivatedRoute, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
-              private toasterService: ToasterService) {
+              private toasterService: ToasterService,
+              private changeDetectionRef: ChangeDetectorRef) {
   }
 
   @HostListener('window:unload', ['$event'])
@@ -84,7 +87,8 @@ export class EditorBaseComponent implements OnInit, OnDestroy {
   }
 
   fetchCollectionHierarchy(): Observable<any> {
-    return this.editorService.fetchCollectionHierarchy(this.collectionId).pipe(tap(data =>
+    return this.editorService.fetchCollectionHierarchy(this.collectionId).pipe(
+      tap(data =>
       this.collectionTreeNodes = {
         data: _.get(data, 'result.content')
       }));
@@ -192,6 +196,9 @@ export class EditorBaseComponent implements OnInit, OnDestroy {
     switch (event.type) {
       case 'nodeSelect':
         this.selectedNodeData = _.cloneDeep(event.data);
+        this.isCurrentNodeFolder = _.get(this.selectedNodeData, 'folder');
+        this.isCurrentNodeRoot = _.get(this.selectedNodeData, 'data.root');
+        this.changeDetectionRef.detectChanges();
         break;
       default:
         break;

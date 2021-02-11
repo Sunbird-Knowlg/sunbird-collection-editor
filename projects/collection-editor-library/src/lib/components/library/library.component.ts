@@ -29,19 +29,21 @@ export class LibraryComponent implements OnInit, AfterViewInit {
   collectionhierarcyData: any;
   public defaultFilters: any;
   pageStartTime: any;
+  selectedUnit: string;
   constructor(public telemetryService: EditorTelemetryService,
-    private editorService: EditorService,
-    public treeService: TreeService,
-    private router: Router) {
-    this.pageStartTime = Date.now();
-  }
+              private editorService: EditorService,
+              private router: Router,
+              private treeService: TreeService) {
+              this.pageStartTime = Date.now();
+              }
 
   ngOnInit() {
+    const activeNode = this.treeService.getActiveNode();
+    this.selectedUnit = _.get(activeNode, 'data.id');
     this.collectionId = _.get(this.libraryInput, 'collectionId');
     this.searchFormConfig = _.get(this.libraryInput, 'searchFormConfig');
     this.editorService.fetchCollectionHierarchy(this.collectionId).subscribe((response: any) => {
       this.collectionhierarcyData = response.result.content;
-      this.collectionUnits = _.get(this.collectionhierarcyData, 'children');
       this.collectionHierarchy = this.getUnitWithChildren(this.collectionhierarcyData, this.collectionId);
       this.setDefaultFilters();
       this.fetchContentList();
@@ -113,16 +115,16 @@ export class LibraryComponent implements OnInit, AfterViewInit {
     });
   }
 
-  getUnitWithChildren(data, collectionId) {
+  getUnitWithChildren(data, collectionId, level?) {
     const self = this;
     const childData = data.children;
     if (_.isEmpty(childData)) { return []; }
+    data.level = level ? (level + 1) : 1;
     const tree = childData.map(child => {
-      // if (child.identifier === this.collectionUnitId) {
-      //   this.selectedUnitName = child.name;
-      // }
-      const treeItem = this.generateNodeMeta(child);
-      const treeUnit = self.getUnitWithChildren(child, collectionId);
+      const treeItem: any = this.generateNodeMeta(child);
+      // tslint:disable-next-line:max-line-length
+      treeItem.showButton = _.isEmpty(_.get(this.editorService.editorConfig, `config.hierarchy.level${data.level}.children`)) ? true : false;
+      const treeUnit = self.getUnitWithChildren(child, collectionId, data.level);
       const treeChildren = treeUnit && treeUnit.filter(item => item.contentType === 'TextBookUnit');
       // tslint:disable-next-line:no-string-literal
       treeItem['children'] = (treeChildren && treeChildren.length > 0) ? treeChildren : null;
@@ -142,7 +144,7 @@ export class LibraryComponent implements OnInit, AfterViewInit {
       createdBy: node.createdBy || null,
       parentId: node.parent || null,
       organisationId: _.has(node, 'organisationId') ? node.organisationId : null,
-      prevStatus: node.prevStatus || null,
+      prevStatus: node.prevStatus || null
     };
     return nodeMeta;
   }

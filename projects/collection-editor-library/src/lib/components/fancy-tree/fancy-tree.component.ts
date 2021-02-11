@@ -22,6 +22,8 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() public treeEventEmitter: EventEmitter<any> = new EventEmitter();
   public config: any;
   public showTree: boolean;
+  public showAddChildButton: boolean;
+  public showAddSiblingButton: boolean;
   public rootNode: any;
   public rootMenuTemplate = `<span class="ui dropdown sb-dotted-dropdown" autoclose="itemClick" suidropdown="" tabindex="0">
   <span id="contextMenu" class="p-0 w-auto"><i class="icon ellipsis vertical sb-color-black"></i></span>
@@ -47,7 +49,10 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   public showDeleteConfirmationPopUp: boolean;
 
   ngOnInit() {
-    this.config = this.editorService.editorConfig.config;
+    this.config = _.cloneDeep(this.editorService.editorConfig.config);
+    if (!_.get(this.config, 'maxDepth')) {
+      this.config.maxDepth = 4;
+    }
     this.initialize();
   }
 
@@ -115,6 +120,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       if (rootNode) {
         this.treeService.setActiveNode(rootNode);
       }
+      this.eachNodeActionButton(rootNode);
     });
     this.showTree = true;
   }
@@ -199,6 +205,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         const node = data.node;
         // this.treeEventEmitter.emit({ 'type': 'nodeSelect', 'data': node });
         this.telemetryService.interact({ edata: this.getTelemetryInteractEdata()});
+        this.eachNodeActionButton(node);
         return true;
       },
       activate: (event, data) => {
@@ -235,6 +242,11 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     _.forEach(rootNode.children, (child) => {
       child.setExpanded(flag);
     });
+  }
+
+  eachNodeActionButton(node) {
+    this.showAddChildButton = ((node.getLevel() - 1) >= this.config.maxDepth) ? false : true;
+    this.showAddSiblingButton = (!node.data.root) ? true : false; 
   }
 
   addChild(resource?) {
@@ -283,6 +295,10 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     // tslint:disable-next-line:max-line-length
     const menuTemplate = node.data.root === true ? this.rootMenuTemplate : (node.data.objectType === 'Unit' ? this.folderMenuTemplate : this.contentMenuTemplate);
     const iconsButton = $(menuTemplate);
+    if ((node.getLevel() - 1) >= this.config.maxDepth) {
+      iconsButton.find("#addchild").remove();
+    }
+
     let contextMenu = $($nodeSpan[0]).find(`#contextMenu`);
 
     if (!contextMenu.length) {
