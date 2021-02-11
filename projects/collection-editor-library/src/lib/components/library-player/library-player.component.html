@@ -11,7 +11,7 @@
   [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('select_content','click','launch', telemetryService?.telemetryPageId)" *ngIf="!contentListDetails?.isAdded" (click)="addToLibrary()">
     <button type="button" class="sb-btn sb-btn-normal sb-btn-dark-green"
     libTelemetryInteract
-    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('select_content','click','launch', telemetryService.telemetryPageId)"
+    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('select_content','click','launch', telemetryService?.telemetryPageId)"
       ><i class="plus square icon"></i>{{labelMessages?.lbl?.selectContent}}</button>
   </div>
 </div>
