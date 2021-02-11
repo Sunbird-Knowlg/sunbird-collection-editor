@@ -29,14 +29,12 @@ export class EditorBaseComponent implements OnInit, OnDestroy {
   public showLibraryPage = false;
   public libraryComponentInput: any;
   public editorMode;
+  public collectionId;
   toolbarConfig: any;
   constructor(public treeService: TreeService, private editorService: EditorService,
-    private activatedRoute: ActivatedRoute, private frameworkService: FrameworkService,
-    private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
-    private toasterService: ToasterService) {
-    this.editorParams = {
-      collectionId: _.get(this.activatedRoute, 'snapshot.params.contentId')
-    };
+              private activatedRoute: ActivatedRoute, private frameworkService: FrameworkService,
+              private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
+              private toasterService: ToasterService) {
   }
 
   @HostListener('window:unload', ['$event'])
@@ -48,6 +46,7 @@ export class EditorBaseComponent implements OnInit, OnDestroy {
     this.editorService.initialize(this.editorConfig);
     this.editorMode = this.editorService.editorMode;
     this.treeService.initialize(this.editorConfig);
+    this.collectionId = _.get(this.editorConfig, 'context.identifier');
     this.toolbarConfig = this.editorService.getToolbarConfig();
     this.fetchCollectionHierarchy().subscribe(
       (response) => {
@@ -84,7 +83,7 @@ export class EditorBaseComponent implements OnInit, OnDestroy {
   }
 
   fetchCollectionHierarchy(): Observable<any> {
-    return this.editorService.fetchCollectionHierarchy(this.editorParams).pipe(tap(data => {
+    return this.editorService.fetchCollectionHierarchy(this.collectionId).pipe(tap(data => {
       this.collectionTreeNodes = {
         data: _.get(data, 'result.content')
       };
@@ -171,7 +170,7 @@ export class EditorBaseComponent implements OnInit, OnDestroy {
 
   sendForReview() {
     this.saveContent().then(messg => {
-      this.helperService.reviewContent(this.editorParams.collectionId).subscribe(data => {
+      this.helperService.reviewContent(this.collectionId).subscribe(data => {
         this.toasterService.success('Successfully sent for review');
         this.router.navigate(['workspace/content/create']);
       }, err => {
@@ -181,16 +180,16 @@ export class EditorBaseComponent implements OnInit, OnDestroy {
   }
 
   rejectContent(comment) {
-    this.helperService.submitRequestChanges(this.editorParams.collectionId, comment).subscribe(res => {
+    this.helperService.submitRequestChanges(this.collectionId, comment).subscribe(res => {
       this.toasterService.success('Content is sent back for correction');
       this.router.navigate(['workspace/content/create']);
     }, err => {
-      this.toasterService.error('Rejecting failed. Please try again...')
+      this.toasterService.error('Rejecting failed. Please try again...');
     });
   }
 
   publishContent() {
-    this.helperService.publishContent(this.editorParams.collectionId).subscribe(res => {
+    this.helperService.publishContent(this.collectionId).subscribe(res => {
       this.toasterService.success('Successfully published');
       this.router.navigate(['workspace/content/create']);
     }, err => {
