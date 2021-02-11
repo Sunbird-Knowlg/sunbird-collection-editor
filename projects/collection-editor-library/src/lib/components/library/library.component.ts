@@ -111,9 +111,6 @@ export class LibraryComponent implements OnInit, AfterViewInit {
     if (_.isEmpty(childData)) { return []; }
     data.level = level ? (level + 1) : 1;
     const tree = childData.map(child => {
-      // if (child.identifier === this.collectionUnitId) {
-      //   this.selectedUnitName = child.name;
-      // }
       const treeItem: any = this.generateNodeMeta(child);
       // tslint:disable-next-line:max-line-length
       treeItem.showButton = _.isEmpty(_.get(this.editorService.editorConfig, `config.hierarchy.level${data.level}.children`)) ? true : false;
