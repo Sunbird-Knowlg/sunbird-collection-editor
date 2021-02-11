@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { EditorService, TreeService, EditorTelemetryService, HelperService, ToasterService } from '../../services';
 import { Subject } from 'rxjs';
 import { UUID } from 'angular2-uuid';
+import { ThrowStmt } from '@angular/compiler';
 declare var $: any;
 
 @Component({
@@ -22,6 +23,8 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() public treeEventEmitter: EventEmitter<any> = new EventEmitter();
   public config: any;
   public showTree: boolean;
+  public showAddChildButton: boolean;
+  public showAddSiblingButton: boolean;
   public rootNode: any;
   public rootMenuTemplate = `<span class="ui dropdown sb-dotted-dropdown" autoclose="itemClick" suidropdown="" tabindex="0">
   <span id="contextMenu" class="p-0 w-auto"><i class="icon ellipsis vertical sb-color-black"></i></span>
@@ -47,7 +50,10 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   public showDeleteConfirmationPopUp: boolean;
 
   ngOnInit() {
-    this.config = this.editorService.editorConfig.config;
+    this.config = _.cloneDeep(this.editorService.editorConfig.config);
+    if (!_.get(this.config, 'maxDepth')) {
+      this.config.maxDepth = 4;
+    }
     this.initialize();
   }
 
@@ -115,6 +121,8 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       if (rootNode) {
         this.treeService.setActiveNode(rootNode);
       }
+      this.addChildButton(rootNode);
+      this.addSiblingButton(rootNode);
     });
     this.showTree = true;
   }
@@ -199,6 +207,8 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         const node = data.node;
         // this.treeEventEmitter.emit({ 'type': 'nodeSelect', 'data': node });
         this.telemetryService.interact({ edata: this.getTelemetryInteractEdata()});
+        this.addChildButton(node);
+        this.addSiblingButton(node);
         return true;
       },
       activate: (event, data) => {
@@ -237,6 +247,10 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  addChildButton(node) {
+    this.showAddChildButton = ((node.getLevel() - 1) >= this.config.maxDepth) ? false : true; 
+  }
+
   addChild(resource?) {
     const tree = $(this.tree.nativeElement).fancytree('getTree');
     const rootNode = $(this.tree.nativeElement).fancytree('getRootNode').getFirstChild();
@@ -255,6 +269,10 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.treeService.addNode({}, 'child');
     }
       // this.treeEventEmitter.emit({'type': 'addChild', 'data' : (rootNode.data.root ? 'child' : 'sibling')});
+  }
+
+  addSiblingButton(node) {
+    this.showAddSiblingButton = (!node.data.root) ? true : false; 
   }
 
   addSibling() {
@@ -283,6 +301,10 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     // tslint:disable-next-line:max-line-length
     const menuTemplate = node.data.root === true ? this.rootMenuTemplate : (node.data.objectType === 'Unit' ? this.folderMenuTemplate : this.contentMenuTemplate);
     const iconsButton = $(menuTemplate);
+    if ((node.getLevel() - 1) >= this.config.maxDepth) {
+      iconsButton.find("#addchild").remove();
+    }
+
     let contextMenu = $($nodeSpan[0]).find(`#contextMenu`);
 
     if (!contextMenu.length) {
