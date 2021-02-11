@@ -29,10 +29,11 @@ export class EditorBaseComponent implements OnInit, OnDestroy {
   public showLibraryPage = false;
   public libraryComponentInput: any;
   public editorMode;
+  toolbarConfig: any;
   constructor(public treeService: TreeService, private editorService: EditorService,
-              private activatedRoute: ActivatedRoute, private frameworkService: FrameworkService,
-              private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
-              private toasterService: ToasterService) {
+    private activatedRoute: ActivatedRoute, private frameworkService: FrameworkService,
+    private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
+    private toasterService: ToasterService) {
     this.editorParams = {
       collectionId: _.get(this.activatedRoute, 'snapshot.params.contentId')
     };
@@ -47,9 +48,11 @@ export class EditorBaseComponent implements OnInit, OnDestroy {
     this.editorService.initialize(this.editorConfig);
     this.editorMode = this.editorService.editorMode;
     this.treeService.initialize(this.editorConfig);
+    this.toolbarConfig = this.editorService.getToolbarConfig();
     this.fetchCollectionHierarchy().subscribe(
       (response) => {
         const collection = _.get(response, 'result.content');
+        this.toolbarConfig.title = collection.name;
         const organisationFramework = _.get(this.editorConfig, 'context.framework') || _.get(collection, 'framework');
         const targetFramework = _.get(this.editorConfig, 'context.targetFWIds') || _.get(collection, 'targetFWIds');
         if (organisationFramework) {
@@ -75,7 +78,7 @@ export class EditorBaseComponent implements OnInit, OnDestroy {
     this.pageStartTime = Date.now();
     this.telemetryService.initializeTelemetry(this.editorConfig);
     this.telemetryService.telemetryPageId = this.telemetryPageId;
-    this.telemetryService.start({type: 'editor', pageid: this.telemetryPageId});
+    this.telemetryService.start({ type: 'editor', pageid: this.telemetryPageId });
     this.editorService.getshowLibraryPageEmitter()
       .subscribe(item => this.showLibraryComponentPage());
   }
@@ -100,20 +103,32 @@ export class EditorBaseComponent implements OnInit, OnDestroy {
         this.showResourceModal = true;
         break;
       case 'addFromLibrary':
-          this.showLibraryComponentPage();
-          break;
+        this.showLibraryComponentPage();
+        break;
       case 'submitContent':
         this.sendForReview();
         break;
       case 'rejectContent':
-      this.rejectContent(event.comment);
-      break;
+        this.rejectContent(event.comment);
+        break;
       case 'publishContent':
-      this.publishContent();
-      break;
+        this.publishContent();
+        break;
+      case 'onFormValueChange':
+        this.updateToolbarTitle(event);
+        break;
       default:
         break;
     }
+  }
+
+  updateToolbarTitle(data: any) {
+    const selectedNode = this.treeService.getActiveNode();
+    if (!_.isEmpty(data.event.name) && selectedNode.data.root) {
+      this.toolbarConfig.title = data.event.name;
+    } else if (_.isEmpty(data.event.name) && selectedNode.data.root) {
+      this.toolbarConfig.title = 'Untitled';
+    } else {}
   }
 
   showLibraryComponentPage() {
@@ -134,15 +149,15 @@ export class EditorBaseComponent implements OnInit, OnDestroy {
   saveContent() {
     return new Promise((resolve, reject) => {
       this.editorService.updateHierarchy()
-      .pipe(map(data => _.get(data, 'result'))).subscribe(response => {
-        if (!_.isEmpty(response.identifiers)) {
-          this.treeService.replaceNodeId(response.identifiers);
-        }
-        this.treeService.clearTreeCache();
-        resolve('Hierarchy is Sucessfuly Updated');
-      }, err => {
-        reject('Something went wrong, Please try later');
-      });
+        .pipe(map(data => _.get(data, 'result'))).subscribe(response => {
+          if (!_.isEmpty(response.identifiers)) {
+            this.treeService.replaceNodeId(response.identifiers);
+          }
+          this.treeService.clearTreeCache();
+          resolve('Hierarchy is Sucessfuly Updated');
+        }, err => {
+          reject('Something went wrong, Please try later');
+        });
     });
   }
 
