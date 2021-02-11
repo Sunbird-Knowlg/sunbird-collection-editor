@@ -8,12 +8,12 @@
           libTelemetryInteract
           [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('search_library','click',undefined, this.telemetryService?.telemetryPageId)"/>
         </div>
-        <button class="sb-btn sb-btn-normal">{{labelMessages.lbl.search}}</button>
+        <button class="sb-btn sb-btn-normal">{{labelMessages?.lbl?.search}}</button>
       </div>
       <div class="fs-0-785 cursor-pointer" (click)="showfilter()"
         libTelemetryInteract
         [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('filter_accordion','click',undefined, this.telemetryService?.telemetryPageId)">
-        {{labelMessages.lbl.filterText}}
+        {{labelMessages?.lbl?.filterText}}
         <i *ngIf="isFilterShow" class="caret up icon"></i>
         <i *ngIf="!isFilterShow" class="caret down icon"></i>
       </div>
