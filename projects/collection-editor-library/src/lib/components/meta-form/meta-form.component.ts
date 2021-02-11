@@ -1,48 +1,32 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil, filter, take } from 'rxjs/operators';
 import { EditorService, TreeService, FrameworkService, HelperService } from '../../services';
-import { IeventData } from '../../interfaces';
 import * as _ from 'lodash-es';
 
 @Component({
   selector: 'lib-meta-form',
   templateUrl: './meta-form.component.html',
-  styleUrls: ['./meta-form.component.scss']
+  styleUrls: ['./meta-form.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   @Input() rootFormConfig: any;
   @Input() unitFormConfig: any;
-  @Input() formFieldValues: any;
+  @Input() nodeMetadata: any;
   private onComponentDestroy$ = new Subject<any>();
   public metaDataFields: any;
-  public formOutputData: any;
   public frameworkDetails: any = {};
   public formFieldProperties: any;
-  public valueChange: boolean;
-  public formDataConfig;
-  @Output() public prevNodeMetadata: EventEmitter<IeventData> = new EventEmitter();
-  constructor(private editorService: EditorService, public treeService: TreeService,
+  constructor(private editorService: EditorService, private treeService: TreeService,
               private frameworkService: FrameworkService, private helperService: HelperService) { }
 
   ngOnChanges() {
-
+    this.fetchFrameWorkDetails();
   }
 
   ngOnInit() {
-    this.editorService.nodeData$.pipe(takeUntil(this.onComponentDestroy$)).subscribe((data: IeventData) => {
-      if (this.valueChange || data.type === 'saveContent') {
-        this.prevNodeMetadata.emit({type: data.type, metadata: this.formOutputData || this.metaDataFields});
-        this.valueChange = false;
-      }
-      this.metaDataFields = data.metadata ? data.metadata : this.metaDataFields;
-      this.fetchFrameWorkDetails();
-    });
   }
-
-  // dataChanged(e) {
-  //   this.treeService.setNodeTitle(_.get(this.metaDataFields, 'name'));
-  // }
 
   fetchFrameWorkDetails() {
     this.frameworkService.frameworkData$.pipe(
@@ -64,6 +48,7 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   attachDefaultValues() {
+    this.metaDataFields = _.get(this.nodeMetadata, 'data.metadata');
     const categoryMasterList = this.frameworkDetails.frameworkData;
     const formConfig  = (this.metaDataFields.visibility === 'Default') ?
      _.cloneDeep(this.rootFormConfig) : _.cloneDeep(this.unitFormConfig);
@@ -89,8 +74,8 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
             field.range = _.map(licenses, 'name');
           }
         }
-        if (field.code === 'additionalCategories' && this.formFieldValues.additionalCategories) {
-          field.range = this.formFieldValues.additionalCategories;
+        if (field.code === 'additionalCategories') {
+          field.range = _.get(this.editorService.editorConfig, 'context.additionalCategories');
         }
       });
     });
@@ -101,10 +86,6 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
       _.forEach(this.frameworkDetails.targetFrameworks, (framework) => {
         _.forEach(formConfig, (section) => {
           _.forEach(section.fields, field => {
-            // const frameworkCategory = _.find(framework.categories, {
-            //   code: field.sourceCategory // boardIds, targetBoardIds
-            // });
-
             const frameworkCategory = _.find(framework.categories, category => {
               return category.code === field.sourceCategory && _.includes(field.code, 'target');
             });
@@ -137,17 +118,9 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  valueChanges(eventData) {
-    console.log(eventData);
-    if (eventData) {
-      this.valueChange = true;
-      this.formOutputData = {};
-      _.forIn(eventData, (val, key) => {
-        key === 'name' ? this.metaDataFields['name'] = val : this.metaDataFields[key] = val;
-        key === 'name' ? this.formOutputData['name'] = val : this.formOutputData[key] = val;
-      });
-      this.treeService.setNodeTitle(_.get(eventData, 'name'));
-    }
+  valueChanges(event: any) {
+    console.log(event);
+    this.treeService.updateNode(event);
   }
 
   ngOnDestroy() {

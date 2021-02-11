@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CollectionTreeComponent } from './collection-tree.component';
+import { ResourceReorderComponent } from './resource-reorder.component';
 
-describe('CollectionTreeComponent', () => {
-  let component: CollectionTreeComponent;
-  let fixture: ComponentFixture<CollectionTreeComponent>;
+describe('ResourceReorderComponent', () => {
+  let component: ResourceReorderComponent;
+  let fixture: ComponentFixture<ResourceReorderComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CollectionTreeComponent ]
+      declarations: [ ResourceReorderComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CollectionTreeComponent);
+    fixture = TestBed.createComponent(ResourceReorderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

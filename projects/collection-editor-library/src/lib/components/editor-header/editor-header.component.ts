@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { TreeService, EditorService, HelperService} from '../../services';
@@ -9,7 +9,8 @@ import { NgForm } from '@angular/forms';
 @Component({
   selector: 'lib-editor-header',
   templateUrl: './editor-header.component.html',
-  styleUrls: ['./editor-header.component.scss']
+  styleUrls: ['./editor-header.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class EditorHeaderComponent implements OnInit, OnDestroy {
 
@@ -29,25 +30,22 @@ export class EditorHeaderComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.labelConfigData = _.clone(labelConfig);
     this.editorConfig = _.cloneDeep(this.editorService.editorConfig);
-    this.editorService.nodeData$.pipe(takeUntil(this.onComponentDestroy$)).subscribe((data) => {
-      console.log('incoming data --->', data);
-      setTimeout(() => {
-        this.handleActionButtons(); // Header buttons should behave based on tree updated
-      }, 100);
-    });
+    setTimeout(() => {
+      this.handleActionButtons(); // Header buttons should behave based on tree updated
+    }, 100);
     this.helperService.formStatus$.pipe(takeUntil(this.onComponentDestroy$)).subscribe((data) => {
       this.formStatus = data.isValid; // Header buttons should behave based on tree updated
     });
   }
 
   handleActionButtons() {
-    console.log(this.treeService.getFirstChild().getFirstChild(), '---------+++++++');
     this.visibility = {};
-    this.visibility['saveContent'] = this.editorConfig.config.mode === 'edit';
+    this.visibility.saveContent = this.editorConfig.config.mode === 'edit';
     // tslint:disable-next-line:max-line-length
-    this.visibility['submitContent'] = this.editorConfig.config.mode === 'edit' && this.treeService.getFirstChild().getFirstChild();
-    this.visibility['rejectContent'] = this.editorConfig.config.mode === 'review';
-    this.visibility['publishContent'] = this.editorConfig.config.mode === 'review';
+    // this.visibility.submitContent = this.editorConfig.config.mode === 'edit' && this.treeService.getFirstChild().getFirstChild();
+    this.visibility.submitContent = this.editorConfig.config.mode === 'edit';
+    this.visibility.rejectContent = this.editorConfig.config.mode === 'review';
+    this.visibility.publishContent = this.editorConfig.config.mode === 'review';
   }
 
   buttonEmitter(action) {

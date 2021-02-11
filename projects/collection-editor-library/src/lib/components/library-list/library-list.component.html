@@ -1,43 +1,44 @@
 <div class="sbtoc-container pr-8 mt-20">
   <div class="title sb-color-primary font-weight-bold fs-1">
-    Showing ({{contentList.length}}) content  
+    Showing ({{contentList?.length}}) most relevant content
   </div>
   <div class="d-flex flex-w-wrap flex-jc-space-between flex-ai-baseline mb-15">
-    <div>   
-      <small class="sb-color-gray-200 d-block pb-10">Select a content to add to the textbook</small>
+    <div>
+      <small class="sb-color-gray-200 d-block pb-10">Use search and filters above to find more content</small>
       <sui-checkbox class="toggle" [(ngModel)]="showAddedContent" (checkChange)="onShowAddedContentChange();"></sui-checkbox>
-        <small class="d-block mt-5 fs-0785"> Show content added to textbook</small>
+        <small class="d-block mt-5 fs-0785"> Show already added content too</small>
     </div>
-      <div class="sb-w-75">
+      <!-- <div class="sb-w-75">
         <label class="d-block font-weight-normal fs-0785">Sort By</label>
         <sui-multi-select class="selection" placeholder="A - Z"
                           #multiSelect>
             <sui-select-option>
             </sui-select-option>
         </sui-multi-select>
-    </div>
+    </div> -->
   </div>
   <!-- Class separator -->
   <div class="sb-library-scroll">
     <div *ngFor="let content of contentList">
-      <div class="sbchapter__item mb-0 d-flex flex-dc" [ngClass]="{'selected':content.identifier === selectedContent.identifier}" (click)="onSelectContent(content)">
+      <div class="sbchapter__item mb-0 d-flex flex-dc" [ngClass]=" {'selected':content.identifier === selectedContent.identifier}"
+       (click)="onContentChange(content)" [class.d-none]="content.isAdded && !showAddedContent">
       <!-- <div class="sbchapter__img"><img src="./assets/images/book.png" /></div> -->
       <h4 class="ml-8 w-80">
         <div class="sbcard__title mb-0 font-weight-bold ellipsis w-75" popupDelay="1000" suiPopup
         popupText="{{content.name}}">{{content.name}}</div>
         <div class="sbchapter__item__title text-left sb__ellipsis sb__ellipsis--two mr-8 sb-color-black">
-          By CBSE 
+          By CBSE
         </div>
       </h4>
-      <div class="btn-addtoLibrary pt-5 pr-10" *ngIf="!showAddedContent">
-        <button class="sb-btn sb-btn-xs sb-btn-dark-green sb-left-icon-btn font-weight-bold text-inherit">
-          <i class="plus square icon mr-4" ></i>Select content 
+      <div class="btn-addtoLibrary pt-5 pr-10" *ngIf="content.identifier === selectedContent.identifier && !content.isAdded">
+        <button class="sb-btn sb-btn-xs sb-btn-dark-green sb-left-icon-btn font-weight-bold text-inherit" (click)="addToLibrary()">
+          <i class="plus square icon mr-4" ></i>Select content
         </button>
       </div>
-      <div class="textbookBtnLink absolute" *ngIf="showAddedContent">
+      <div class="textbookBtnLink absolute"  [hidden]="!content.isAdded">
         <button type="button" class="sb-btn sb-btn-normal sb-btn-link sb-btn-hover-none
          sb-btn-link-secondary sb-left-icon-btn fs-0-785"><i class="circle check icon"></i>
-         Added to textbook</button>
+         Added to collection</button>
       </div>
       </div>
     </div>
