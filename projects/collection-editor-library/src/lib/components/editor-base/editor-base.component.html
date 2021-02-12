@@ -12,11 +12,11 @@
         </div>
         <!-- Right Player Sections -->
         <div class="eight wide column bg-white pl-40 mb-10">
-          <ng-container *ngIf="selectedNodeData?.folder === true || selectedNodeData?.data?.root === true">
+          <ng-container *ngIf="isCurrentNodeFolder === true || isCurrentNodeRoot === true">
             <lib-meta-form [rootFormConfig]="rootFormConfig" [nodeMetadata]="selectedNodeData" [unitFormConfig]="unitFormConfig"
             (toolbarEmitter)="toolbarEventListener($event)"></lib-meta-form>
           </ng-container>
-          <ng-container *ngIf="selectedNodeData?.folder === false && selectedNodeData?.data?.root !== true">
+          <ng-container *ngIf="isCurrentNodeFolder === false && isCurrentNodeRoot !== true">
               <lib-contentplayer-page  [contentMetadata]="selectedNodeData" ></lib-contentplayer-page>
           </ng-container>
         </div>

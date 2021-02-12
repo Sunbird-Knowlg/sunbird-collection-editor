@@ -1,14 +1,10 @@
-import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { TreeService, EditorService, FrameworkService, HelperService, EditorTelemetryService, ToasterService } from '../../services';
 import { IEditorConfig } from '../../interfaces';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import * as _ from 'lodash-es';
-
-interface IeditorParams {
-  collectionId: string;
-}
 @Component({
   selector: 'lib-editor-base',
   templateUrl: './editor-base.component.html',
@@ -21,7 +17,6 @@ export class EditorBaseComponent implements OnInit, OnDestroy {
   public selectedNodeData: any = {};
   public showQuestionTemplate = false;
   public showResourceModal = false;
-  private editorParams: IeditorParams;
   public telemetryPageId = 'collection-editor';
   public pageStartTime;
   public rootFormConfig: any;
@@ -30,11 +25,14 @@ export class EditorBaseComponent implements OnInit, OnDestroy {
   public libraryComponentInput: any;
   public editorMode;
   public collectionId;
+  public isCurrentNodeFolder: boolean;
+  public isCurrentNodeRoot: boolean;
   toolbarConfig: any;
   constructor(public treeService: TreeService, private editorService: EditorService,
               private activatedRoute: ActivatedRoute, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
-              private toasterService: ToasterService) {
+              private toasterService: ToasterService,
+              private changeDetectionRef: ChangeDetectorRef) {
   }
 
   @HostListener('window:unload', ['$event'])
@@ -202,6 +200,9 @@ export class EditorBaseComponent implements OnInit, OnDestroy {
       case 'nodeSelect':
         this.updateSubmitBtnVisibility();
         this.selectedNodeData = _.cloneDeep(event.data);
+        this.isCurrentNodeFolder = _.get(this.selectedNodeData, 'folder');
+        this.isCurrentNodeRoot = _.get(this.selectedNodeData, 'data.root');
+        this.changeDetectionRef.detectChanges();
         break;
         case 'deleteNode':
           this.deleteNode();
