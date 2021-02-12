@@ -1,8 +1,8 @@
 <div class="add-to-library mb-30" *ngIf="!showLibraryPage">
   <lib-editor-header [labelConfigData]="toolbarConfig" (toolbarEmitter)="toolbarEventListener($event)"> </lib-editor-header> <!--// TODO::  *ngIf="treeService.getTreeObject()" -->
-  <div class="min-h-500 sb-bg-white">
+  <div class="min-h-500 h-100vh">
     <div class="ui">
-      <div class="ui twelve column grid m-0">
+      <div class="ui twelve column grid m-0 sb-bg-white">
         <!-- Left Sidebar for cards -->
         <div class="three wide column p-0 h-100vh">
           <lib-fancy-tree  *ngIf="collectionTreeNodes && collectionTreeNodes.data"
@@ -11,7 +11,7 @@
           </lib-fancy-tree>
         </div>
         <!-- Right Player Sections -->
-        <div class="eight wide column bg-white pl-40 mb-10">
+        <div class="eight wide column bg-white pl-40 mb-10 w-73">
           <ng-container *ngIf="isCurrentNodeFolder === true || isCurrentNodeRoot === true">
             <lib-meta-form [rootFormConfig]="rootFormConfig" [nodeMetadata]="selectedNodeData" [unitFormConfig]="unitFormConfig"
             (toolbarEmitter)="toolbarEventListener($event)"></lib-meta-form>
