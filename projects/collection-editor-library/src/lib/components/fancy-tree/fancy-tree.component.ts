@@ -274,7 +274,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   addSibling() {
-    this.telemetryService.interact({ edata: this.getTelemetryInteractEdata('sibling')});
+    this.telemetryService.interact({ edata: this.getTelemetryInteractEdata('add_sibling')});
     const tree = $(this.tree.nativeElement).fancytree('getTree');
     const rootNode = $(this.tree.nativeElement).fancytree('getRootNode').getFirstChild();
 
