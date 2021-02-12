@@ -12,7 +12,7 @@
         <div class="item d-flex flex-ai-center cursor-pointer w-100">
             <label for="{{mainUnit?.identifier}}" class="sb-color-primary font-weight-bold">{{mainUnit?.name}}</label>
           </div>
-          <div class="sb-radio-btn-checkbox sb-radio-btn-primary width-100">
+          <div class="sb-radio-btn-checkbox sb-radio-btn-primary width-100" [ngClass]="{'disabled': mainUnit?.showButton}">
             <input (click)="onSelectBehaviour($event)" type="radio" disabled="{{mainUnit?.showButton}}" id="{{mainUnit?.identifier}}" value="{{mainUnit?.identifier}}" name="mainUnit"
             [(ngModel)]="prevUnitSelect" (change)="setCollectionUnitBreadcrumb();"
             libTelemetryInteract

@@ -1,5 +1,6 @@
 .sb-collectionTree-fancyTreelist {
     .ui-fancytree {
+      margin-bottom: 1rem !important;
       &:before {
         background: none !important;
       }
@@ -146,7 +147,7 @@
     margin-left: 20px;
   } 
   .sb-dotted-dropdown{
-    line-height: 1rem;
+    line-height: 1.4rem;
     .menu{
       .item{
         font-size: 0.785rem !important;
