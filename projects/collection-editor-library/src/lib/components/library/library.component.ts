@@ -14,6 +14,7 @@ export class LibraryComponent implements OnInit, AfterViewInit {
   labelMessages = labelMessages;
   @Input() libraryInput: any;
   @Output() libraryEmitter = new EventEmitter<any>();
+  public searchFormConfig : any;
   public pageId = 'add_from_library';
   public contentList: any;
   public selectedContent: any;
@@ -40,6 +41,7 @@ export class LibraryComponent implements OnInit, AfterViewInit {
     const activeNode = this.treeService.getActiveNode();
     this.selectedUnit = _.get(activeNode, 'data.id');
     this.collectionId = _.get(this.libraryInput, 'collectionId');
+    this.searchFormConfig = _.get(this.libraryInput, 'searchFormConfig');
     this.editorService.fetchCollectionHierarchy(this.collectionId).subscribe((response: any) => {
       this.collectionhierarcyData = response.result.content;
       this.collectionHierarchy = this.getUnitWithChildren(this.collectionhierarcyData, this.collectionId);
@@ -73,9 +75,14 @@ export class LibraryComponent implements OnInit, AfterViewInit {
   }
 
   setDefaultFilters() {
+    const selectedNode = this.treeService.getActiveNode();
+    const contentTypes = _.flatten(_.map(_.get(this.editorService.editorConfig.config, `hierarchy.level${selectedNode.getLevel()}.children`), function (val) {
+      return val;
+    }));
+
     this.defaultFilters = _.pickBy({
-      primaryCategory: _.get(this.editorService.editorConfig.config, 'hierarchy.level2.children.Content'),
-      board: _.get(this.collectionhierarcyData, 'board'),
+      primaryCategory: contentTypes,
+      board: [_.get(this.collectionhierarcyData, 'board')],
       gradeLevel: _.get(this.collectionhierarcyData, 'gradeLevel'),
       medium: _.get(this.collectionhierarcyData, 'medium'),
       subject: _.get(this.collectionhierarcyData, 'subject'),
@@ -90,7 +97,10 @@ export class LibraryComponent implements OnInit, AfterViewInit {
         request: {
           query: query || '',
           // @Todo remove hardcoded objectType
-          filters: _.pickBy({ ...filters, ...{ status: ['Live'], objectType: 'content' } })
+          filters: _.pickBy({ ...filters, ...{ status: ['Live'] } }),
+          sort_by: {
+            "lastUpdatedOn": "desc"
+          }
         }
       }
     };
@@ -99,7 +109,7 @@ export class LibraryComponent implements OnInit, AfterViewInit {
       if (!(_.get(response, 'result.count'))) {
         this.contentList = [];
       } else {
-        this.contentList = response.result.content;
+        this.contentList = _.compact(_.concat(_.get(response.result, 'content'), _.get(response.result, 'QuestionSet')));
         this.filterContentList();
       }
     });
@@ -179,7 +189,9 @@ export class LibraryComponent implements OnInit, AfterViewInit {
   filterContentList(isContentAdded?) {
     if (_.isEmpty(this.contentList)) { return; }
     _.forEach(this.contentList, (value, key) => {
-      value.isAdded = _.includes(this.childNodes, value.identifier);
+      if(value) {
+        value.isAdded = _.includes(this.childNodes, value.identifier);
+      }
     });
     if (!isContentAdded) {
       const selectedContentIndex = this.showAddedContent ? 0 : _.findIndex(this.contentList, { isAdded: false });
