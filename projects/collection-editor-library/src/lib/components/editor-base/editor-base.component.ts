@@ -1,4 +1,5 @@
-import { Component, HostListener, Input, OnDestroy, OnInit, ChangeDetectorRef, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, HostListener, Input, OnDestroy, OnInit, ChangeDetectorRef, EventEmitter,
+   Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { TreeService, EditorService, FrameworkService, HelperService, EditorTelemetryService, ToasterService } from '../../services';
 import { IEditorConfig } from '../../interfaces';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -8,7 +9,8 @@ import * as _ from 'lodash-es';
 @Component({
   selector: 'lib-editor-base',
   templateUrl: './editor-base.component.html',
-  styleUrls: ['./editor-base.component.scss']
+  styleUrls: ['./editor-base.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class EditorBaseComponent implements OnInit, OnDestroy {
 
