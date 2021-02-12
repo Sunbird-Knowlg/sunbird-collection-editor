@@ -115,12 +115,9 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     setTimeout(() => {
       this.treeService.reloadTree(this.rootNode);
-    }, 0);
-    setTimeout(() => {
+      this.treeService.setActiveNode();
       const rootNode = this.treeService.getFirstChild();
-      if (rootNode) {
-        this.treeService.setActiveNode(rootNode);
-      }
+      rootNode.setExpanded(true);
       this.addFromLibraryButton(0);
       this.eachNodeActionButton(rootNode);
     });
@@ -198,9 +195,6 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       },
       init: (event, data) => {
-        if ($(this.tree.nativeElement).fancytree('getTree').getNodeByKey('_2')) {
-          $(this.tree.nativeElement).fancytree('getTree').getNodeByKey('_2').setActive();
-        }
       },
       click: (event, data): boolean => {
         this.tree.nativeElement.click();
@@ -236,20 +230,9 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     return options;
   }
 
-  expandAll(flag) {
-    $(this.tree.nativeElement).fancytree('getTree').visit((node) => { node.setExpanded(flag); });
-  }
-
-  collapseAllChildrens(flag) {
-    const rootNode = $(this.tree.nativeElement).fancytree('getRootNode').getFirstChild();
-    _.forEach(rootNode.children, (child) => {
-      child.setExpanded(flag);
-    });
-  }
-
   eachNodeActionButton(node) {
     this.showAddChildButton = ((node.getLevel() - 1) >= this.config.maxDepth) ? false : true;
-    this.showAddSiblingButton = (!node.data.root) ? true : false; 
+    this.showAddSiblingButton = (!node.data.root) ? true : false;
   }
 
   addChild(resource?) {
@@ -299,7 +282,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     const menuTemplate = node.data.root === true ? this.rootMenuTemplate : (node.data.objectType === 'Unit' ? this.folderMenuTemplate : this.contentMenuTemplate);
     const iconsButton = $(menuTemplate);
     if ((node.getLevel() - 1) >= this.config.maxDepth) {
-      iconsButton.find("#addchild").remove();
+      iconsButton.find('#addchild').remove();
     }
 
     let contextMenu = $($nodeSpan[0]).find(`#contextMenu`);
