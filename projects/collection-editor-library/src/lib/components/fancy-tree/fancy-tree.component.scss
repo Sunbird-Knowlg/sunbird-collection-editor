@@ -135,6 +135,7 @@
     .sb-btn-cover{
       padding: 0.5rem 2.2rem 0.5rem 0.5rem;
       border-right: solid 1px #ccc;
+      width: 100%;
       .sb-btn{
         &:hover{
           background: none !important;
@@ -157,4 +158,10 @@
   .eight.bg-white{
     border-left: solid 1px var(--gray-100);
     padding-bottom: 4.5rem !important;
+  }
+  .b-none{
+    border: none !important;
+  }
+  .w-25{
+    width: 25%;
   }
