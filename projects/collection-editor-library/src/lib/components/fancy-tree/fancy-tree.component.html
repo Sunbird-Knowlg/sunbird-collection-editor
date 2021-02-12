@@ -1,14 +1,14 @@
 <div #fancyTree></div>
 <div class="sb-fixed-with-whitebg pr-20 d-flex flex-jc-space-between ">
-  <div class="d-flex">
+  <div class="d-flex w-25">
     <div class="sb-btn-cover">
-      <button *ngIf="config && config.mode === 'edit'" (click)="addSibling();" class="sb-btn sb-btn-outline-primary sb-btn-normal sb-btn-radius ml-20 mr-10 b-none"><i class="icon plus"></i> Sibling</button>
+      <button *ngIf="config && config.mode === 'edit'" [ngClass]="!this.showAddSiblingButton ? 'disabled' : ''"  (click)="addSibling();" class="sb-btn sb-btn-outline-primary sb-btn-normal sb-btn-radius ml-20 mr-10 b-none"><i class="icon plus"></i> Sibling</button>
     </div>
     <div class="sb-btn-cover">
-        <button *ngIf="config && config.mode === 'edit'" (click)="addChild();"  class="sb-btn sb-btn-outline-primary sb-btn-normal sb-btn-radius b-none"><i class="icon plus"></i> Add Child</button>
+        <button *ngIf="config && config.mode === 'edit'" [ngClass]="!this.showAddChildButton ? 'disabled' : ''" (click)="addChild();"  class="sb-btn sb-btn-outline-primary sb-btn-normal sb-btn-radius b-none"><i class="icon plus"></i> Add Child</button>
     </div>
   </div>
-  <button (click)="addFromLibrary();" class="sb-btn sb-btn-outline-primary sb-btn-normal mt-10"><i class="icon plus"></i> Add from library</button>
+  <button (click)="addFromLibrary();" [ngClass]="!this.showLibraryButton ? 'disabled' : ''" class="sb-btn sb-btn-outline-primary sb-btn-normal mt-10 mr-30"><i class="icon plus"></i> Add from library</button>
 </div>
 <sui-modal *ngIf="showDeleteConfirmationPopUp" [mustScroll]="true" [isClosable]="true" [transitionDuration]="0"
   [size]="'normal'" class="sb-modal" appBodyScroll
