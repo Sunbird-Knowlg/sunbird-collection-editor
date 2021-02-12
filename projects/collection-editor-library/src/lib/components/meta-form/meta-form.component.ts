@@ -106,14 +106,10 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
 
   }
 
-  outputData(eventData) {
-    // if (eventData) {
-    //   console.log('eventData outputData------>', eventData);
-    // }
-  }
+  outputData(eventData: any) {}
 
-  onStatusChanges(eventData) {
-    console.log('eventData statusChanges------>', eventData);
+  onStatusChanges(event) {
+    this.toolbarEmitter.emit({ button: 'onFormStatusChange', event });
   }
 
   valueChanges(event: any) {
