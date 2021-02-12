@@ -6,7 +6,8 @@ import { labelConfig} from '../../editor.config';
 import * as _ from 'lodash-es';
 import { skipWhile } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
+
 export class EditorService {
   data: any;
   private _editorConfig: EditorConfig;
@@ -146,7 +147,7 @@ export class EditorService {
         }
       }
     };
-    return this.dataService.post(req);
+    return this.publicDataService.post(req);
   }
   fetchContentListDetails(req) {
     return this.publicDataService.post(req);
