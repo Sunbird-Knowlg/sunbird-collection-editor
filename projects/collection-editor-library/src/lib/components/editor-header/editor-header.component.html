@@ -19,22 +19,22 @@
       <i *ngIf="button.slot" class="{{ button.slot }}"></i> {{ button.name }}
     </button> -->
 
-    <button *ngIf="visibility && visibility.saveContent" class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10" (click)="buttonEmitter({type:'saveContent'})">
+    <button *ngIf="visibility && visibility?.saveContent" class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10" (click)="buttonEmitter({type:'saveContent'})">
       <i class="{{labelConfigData.save_collection_btn_icon}}"></i> 
       {{labelConfigData.save_collection_btn_label}}
     </button>
 
-    <button *ngIf="visibility && visibility.submitContent" class="sb-btn sb-btn-normal sb-btn-primary mr-10" (click)="buttonEmitter({type:'submitContent'})">
+    <button *ngIf="visibility && visibility?.submitContent && labelConfigData?.showSubmitBtn" class="sb-btn sb-btn-normal sb-btn-primary mr-10" (click)="buttonEmitter({type:'submitContent'})">
       <i class="{{labelConfigData.submit_collection_btn_icon}}"></i> 
       {{labelConfigData.submit_collection_btn_label}}
     </button>
 
-    <button *ngIf="visibility && visibility.rejectContent" class="sb-btn sb-btn-normal sb-btn-primary mr-10" (click)="showRequestChangesPopup = true">
+    <button *ngIf="visibility && visibility?.rejectContent" class="sb-btn sb-btn-normal sb-btn-primary mr-10" (click)="showRequestChangesPopup = true">
       <i class="{{labelConfigData.reject_collection_btn_icon}}"></i> 
       {{labelConfigData.reject_collection_btn_label}}
     </button>
 
-    <button *ngIf="visibility && visibility.publishContent" class="sb-btn sb-btn-normal sb-btn-primary mr-10" (click)="buttonEmitter({type: 'publishContent'})">
+    <button *ngIf="visibility && visibility?.publishContent" class="sb-btn sb-btn-normal sb-btn-primary mr-10" (click)="buttonEmitter({type: 'publishContent'})">
       <i class="{{labelConfigData.publish_collection_btn_icon}}"></i> 
       {{labelConfigData.publish_collection_btn_label}}
     </button>

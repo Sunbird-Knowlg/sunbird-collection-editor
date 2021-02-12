@@ -431,7 +431,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   removeNode() {
-    this.treeService.removeNode();
+    this.treeEventEmitter.emit({ type: 'deleteNode'});
     this.telemetryService.interact({ edata: this.getTelemetryInteractEdata('delete-node')});
   }
 
