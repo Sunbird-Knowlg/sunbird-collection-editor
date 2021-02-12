@@ -76,7 +76,7 @@ export class LibraryComponent implements OnInit, AfterViewInit {
 
   setDefaultFilters() {
     const selectedNode = this.treeService.getActiveNode();
-    const contentTypes = _.flatten(_.map(_.get(this.editorService.editorConfig.config, `hierarchy.level${selectedNode.getLevel()}.children`), function (val) {
+    const contentTypes = _.flatten(_.map(_.get(this.editorService.editorConfig.config, `hierarchy.level${selectedNode.getLevel() - 1}.children`), function (val) {
       return val;
     }));
 
