@@ -12,7 +12,7 @@
         <div class="item d-flex flex-ai-center cursor-pointer w-100">
             <label for="{{mainUnit?.identifier}}" class="sb-color-primary font-weight-bold">{{mainUnit?.name}}</label>
           </div>
-          <div class="sb-radio-btn-checkbox sb-radio-btn-primary width-100">
+          <div class="sb-radio-btn-checkbox sb-radio-btn-primary width-100" [ngClass]="{'disabled': mainUnit?.showButton}">
             <input (click)="onSelectBehaviour($event)" type="radio" disabled="{{mainUnit?.showButton}}" id="{{mainUnit?.identifier}}" value="{{mainUnit?.identifier}}" name="mainUnit"
             [(ngModel)]="prevUnitSelect" (change)="setCollectionUnitBreadcrumb();"
             libTelemetryInteract
@@ -24,11 +24,11 @@
           <i class="chevron down icon"></i>
         </div>
       </div>
-      <div content *ngFor="let childUnit of mainUnit?.children">
+      <div content *ngFor="let childUnit of mainUnit?.children" class="sb-row-bb">
         <div class="chapter-lists level1">
-          <div class="chapter-lists--item mt-10">
+          <div class="chapter-lists--item">
             <div class="item d-flex flex-ai-center cursor-pointer w-100">
-              <label for="{{childUnit?.identifier}}" class="w-100 fs-0785">{{childUnit?.name}}</label>
+              <label for="{{childUnit?.identifier}}" class="w-100 fs-0785 p-1">{{childUnit?.name}}</label>
               <div class="w-30">
                 <label for="{{childUnit?.identifier}}"></label>
                 <input type="radio" id="{{childUnit?.identifier}}" disabled="{{childUnit?.showButton}}" value="{{childUnit?.identifier}}" name="childUnit"
