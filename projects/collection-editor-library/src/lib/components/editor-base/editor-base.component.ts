@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, HostListener, Input, OnDestroy, OnInit, ChangeDetectorRef, EventEmitter, Output } from '@angular/core';
 import { TreeService, EditorService, FrameworkService, HelperService, EditorTelemetryService, ToasterService } from '../../services';
 import { IEditorConfig } from '../../interfaces';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,6 +13,7 @@ import * as _ from 'lodash-es';
 export class EditorBaseComponent implements OnInit, OnDestroy {
 
   @Input() editorConfig: IEditorConfig | undefined;
+  @Output() editorEmitter = new EventEmitter<any>();
   public collectionTreeNodes: any;
   public selectedNodeData: any = {};
   public showQuestionTemplate = false;
@@ -121,9 +122,16 @@ export class EditorBaseComponent implements OnInit, OnDestroy {
       case 'onFormValueChange':
         this.updateToolbarTitle(event);
         break;
+      case 'backContent':
+        this.redirectToChapterListTab();
+        break;
       default:
         break;
     }
+  }
+
+  redirectToChapterListTab() {
+    this.editorEmitter.emit({close: true, library: 'collection_editor'});
   }
 
   updateToolbarTitle(data: any) {
@@ -169,7 +177,7 @@ export class EditorBaseComponent implements OnInit, OnDestroy {
     this.saveContent().then(messg => {
       this.helperService.reviewContent(this.collectionId).subscribe(data => {
         this.toasterService.success('Successfully sent for review');
-        this.router.navigate(['workspace/content/create']);
+        this.redirectToChapterListTab();
       }, err => {
         this.toasterService.error('Sending for review failed. Please try again...');
       });
@@ -179,7 +187,7 @@ export class EditorBaseComponent implements OnInit, OnDestroy {
   rejectContent(comment) {
     this.helperService.submitRequestChanges(this.collectionId, comment).subscribe(res => {
       this.toasterService.success('Content is sent back for correction');
-      this.router.navigate(['workspace/content/create']);
+      this.redirectToChapterListTab();
     }, err => {
       this.toasterService.error('Rejecting failed. Please try again...');
     });
@@ -188,7 +196,7 @@ export class EditorBaseComponent implements OnInit, OnDestroy {
   publishContent() {
     this.helperService.publishContent(this.collectionId).subscribe(res => {
       this.toasterService.success('Successfully published');
-      this.router.navigate(['workspace/content/create']);
+      this.redirectToChapterListTab();
     }, err => {
       this.toasterService.error('Publishing failed. Please try again...');
     });
