@@ -157,10 +157,10 @@
     .sb-dropdown{
       margin: 1rem 0 !important;
     }
-    .sb-search-input::-webkit-input-placeholder {
-      padding-left: 1.4rem !important;
-    }
     .dynamic-form{
+      .sb-search-input::-webkit-input-placeholder {
+        padding-left: 1.4rem !important;
+      }
       .required{
         label{
           &:after{
