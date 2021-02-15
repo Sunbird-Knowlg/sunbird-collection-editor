@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import 'jquery.fancytree';
-import { EditorConfig } from '../../interfaces';
 import { UUID } from 'angular2-uuid';
 declare var $: any;
 import * as _ from 'lodash-es';
-import { ToasterService } from '../../services';
+import { EditorConfig } from '../../interfaces/inputConfig';
+import { ToasterService } from '../toaster/toaster.service';
 
 @Injectable({
   providedIn: 'root'

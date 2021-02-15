@@ -1,11 +1,13 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, ViewEncapsulation } from '@angular/core';
 import * as _ from 'lodash-es';
-import { labelMessages } from '../labels';
-import { FrameworkService } from '../../services';
 import { Subject } from 'rxjs';
-import { takeUntil, filter, take, map } from 'rxjs/operators';
-import { EditorService } from '../../services';
-import { EditorTelemetryService, TreeService } from '../../services';
+import { takeUntil, filter, take } from 'rxjs/operators';
+import { TreeService } from '../../services/tree/tree.service';
+import { EditorService } from '../../services/editor/editor.service';
+import { FrameworkService } from '../../services/framework/framework.service';
+import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
+import { labelMessages } from '../labels';
+
 
 @Component({
   selector: 'lib-library-filter',

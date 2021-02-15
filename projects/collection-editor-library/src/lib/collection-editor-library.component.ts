@@ -1,6 +1,4 @@
-import { Component, Input, OnInit, TemplateRef } from '@angular/core';
-import { EditorConfig } from './interfaces';
-
+import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'lib-collection-editor-library',
   template: `

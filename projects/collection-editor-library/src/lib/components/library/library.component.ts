@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output, AfterViewInit } from '@angular/core';
-import { EditorTelemetryService, TreeService } from '../../services';
 import * as _ from 'lodash-es';
+import { TreeService } from '../../services/tree/tree.service';
 import { EditorService } from '../../services/editor/editor.service';
+import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { labelMessages } from '../labels';
 import { Router } from '@angular/router';
 

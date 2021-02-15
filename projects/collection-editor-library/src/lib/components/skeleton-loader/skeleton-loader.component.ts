@@ -7,9 +7,9 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class SkeletonLoaderComponent implements OnInit {
 
-  @Input('height') height: string;
-  @Input('width') width: string;
-  @Input('mTop') mTop: string;
+  @Input() height: string;
+  @Input() width: string;
+  @Input() mTop: string;
   skeletonStyles: object;
   constructor() { }
 

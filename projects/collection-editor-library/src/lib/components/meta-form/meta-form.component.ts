@@ -1,8 +1,12 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { Subject } from 'rxjs';
-import { takeUntil, filter, take } from 'rxjs/operators';
-import { EditorService, TreeService, FrameworkService, HelperService } from '../../services';
 import * as _ from 'lodash-es';
+import { takeUntil, filter } from 'rxjs/operators';
+import { TreeService } from '../../services/tree/tree.service';
+import { EditorService } from '../../services/editor/editor.service';
+import { FrameworkService } from '../../services/framework/framework.service';
+import { HelperService } from '../../services/helper/helper.service';
+
 
 @Component({
   selector: 'lib-meta-form',

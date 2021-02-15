@@ -1,10 +1,16 @@
-import { takeUntil } from 'rxjs/operators';
 import { Component, AfterViewInit, Input, ViewChild, ElementRef, Output, EventEmitter,
    OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { takeUntil } from 'rxjs/operators';
 import 'jquery.fancytree';
 import * as _ from 'lodash-es';
 import { ActivatedRoute } from '@angular/router';
-import { EditorService, TreeService, EditorTelemetryService, HelperService, ToasterService } from '../../services';
+import { TreeService } from '../../services/tree/tree.service';
+import { EditorService } from '../../services/editor/editor.service';
+import { HelperService } from '../../services/helper/helper.service';
+import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
+import { ToasterService } from '../../services/toaster/toaster.service';
+
+
 import { Subject } from 'rxjs';
 import { UUID } from 'angular2-uuid';
 declare var $: any;
