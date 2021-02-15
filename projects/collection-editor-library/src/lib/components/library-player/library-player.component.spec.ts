@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { LibraryPlayerComponent } from './library-player.component';
+import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
+import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 
 describe('LibraryPlayerComponent', () => {
   let component: LibraryPlayerComponent;
@@ -8,7 +11,10 @@ describe('LibraryPlayerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LibraryPlayerComponent ]
+      providers: [EditorTelemetryService],
+      imports: [HttpClientTestingModule],
+      declarations: [ LibraryPlayerComponent, TelemetryInteractDirective ],
+      schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();
   }));
@@ -16,7 +22,7 @@ describe('LibraryPlayerComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(LibraryPlayerComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    // fixture.detectChanges();
   });
 
   it('should create', () => {
