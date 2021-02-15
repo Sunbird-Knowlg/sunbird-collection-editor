@@ -1,7 +1,8 @@
-import { Component, HostListener, Input, OnDestroy, OnInit, ChangeDetectorRef, EventEmitter, Output, ViewEncapsulation, AfterViewInit } from '@angular/core';
+import { Component, HostListener, Input, OnDestroy, OnInit, ChangeDetectorRef,
+  EventEmitter, Output, ViewEncapsulation, AfterViewInit, ViewChild } from '@angular/core';
 import { TreeService, EditorService, FrameworkService, HelperService, EditorTelemetryService, ToasterService } from '../../services';
 import { IEditorConfig } from '../../interfaces';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { map, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import * as _ from 'lodash-es';
@@ -15,23 +16,26 @@ export class EditorBaseComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() editorConfig: IEditorConfig | undefined;
   @Output() editorEmitter = new EventEmitter<any>();
+  @ViewChild('modal', {static: false}) private modal;
   public collectionTreeNodes: any;
   public selectedNodeData: any = {};
   public showQuestionTemplate = false;
   public showResourceModal = false;
+  public showConfirmPopup = false;
+  public terms = false;
   public telemetryPageId = 'collection-editor';
   public pageStartTime;
   public rootFormConfig: any;
   public unitFormConfig: any;
   public showLibraryPage = false;
-  public libraryComponentInput = {};
+  public libraryComponentInput: any = {};
   public editorMode;
   public collectionId;
   public isCurrentNodeFolder: boolean;
   public isCurrentNodeRoot: boolean;
+  public submitFormStatus = true;
   toolbarConfig: any;
-  constructor(public treeService: TreeService, private editorService: EditorService,
-              private activatedRoute: ActivatedRoute, private frameworkService: FrameworkService,
+  constructor(public treeService: TreeService, private editorService: EditorService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
               private toasterService: ToasterService,
               private changeDetectionRef: ChangeDetectorRef) {
@@ -69,7 +73,7 @@ export class EditorBaseComponent implements OnInit, OnDestroy, AfterViewInit {
         (response) => {
           this.unitFormConfig = _.get(response, 'result.objectCategoryDefinition.forms.unitMetadata.properties');
           this.rootFormConfig = _.get(response, 'result.objectCategoryDefinition.forms.create.properties');
-          this.libraryComponentInput['searchFormConfig'] = _.get(response, 'result.objectCategoryDefinition.forms.search.properties')
+          this.libraryComponentInput.searchFormConfig = _.get(response, 'result.objectCategoryDefinition.forms.search.properties');
         },
         (error) => {
           console.log(error);
@@ -119,13 +123,17 @@ export class EditorBaseComponent implements OnInit, OnDestroy, AfterViewInit {
         this.showLibraryComponentPage();
         break;
       case 'submitContent':
-        this.sendForReview();
+        this.submitHandler();
         break;
       case 'rejectContent':
         this.rejectContent(event.comment);
         break;
       case 'publishContent':
         this.publishContent();
+        break;
+      case 'onFormStatusChange':
+        const selectedNode = this.treeService.getActiveNode();
+        if (selectedNode.data.root) { this.submitFormStatus = event.event.isValid; }
         break;
       case 'onFormValueChange':
         this.updateToolbarTitle(event);
@@ -153,7 +161,7 @@ export class EditorBaseComponent implements OnInit, OnDestroy, AfterViewInit {
 
   showLibraryComponentPage() {
     this.saveContent().then(res => {
-      this.libraryComponentInput['collectionId'] = this.collectionId;
+      this.libraryComponentInput.collectionId = this.collectionId;
       this.showLibraryPage = true;
     }).catch(err => this.toasterService.error(err));
   }
@@ -168,6 +176,10 @@ export class EditorBaseComponent implements OnInit, OnDestroy, AfterViewInit {
 
   saveContent() {
     return new Promise((resolve, reject) => {
+      if (!this.submitFormStatus) {
+        this.treeService.setActiveNode();
+        return reject('Please fill the required metadata');
+      }
       this.editorService.updateHierarchy()
         .pipe(map(data => _.get(data, 'result'))).subscribe(response => {
           if (!_.isEmpty(response.identifiers)) {
@@ -179,6 +191,21 @@ export class EditorBaseComponent implements OnInit, OnDestroy, AfterViewInit {
           reject('Something went wrong, Please try later');
         });
     });
+  }
+
+  submitHandler() {
+    if (this.validateFormStatus()) {
+      this.showConfirmPopup = true;
+    }
+  }
+
+  validateFormStatus() {
+    if (!this.submitFormStatus) {
+      this.toasterService.error('Please fill the required metadata');
+      this.treeService.setActiveNode();
+      return false;
+    }
+    return true;
   }
 
   sendForReview() {
@@ -259,5 +286,8 @@ export class EditorBaseComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy() {
     this.generateTelemetryEndEvent();
     this.treeService.clearTreeCache();
+    if (this.modal && this.modal.deny) {
+      this.modal.deny();
+    }
   }
 }

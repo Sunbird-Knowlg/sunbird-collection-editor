@@ -101,8 +101,13 @@ export class TreeService {
     return this.getTreeObject().getActiveNode();
   }
 
-  setActiveNode(node) {
-    node.setActive(true);
+  setActiveNode(node?) {
+    const rootFirstChildNode = this.getFirstChild();
+    if (node) {
+      node.setActive(true);
+    } else {
+      rootFirstChildNode.setActive(true);
+    }
   }
 
   getFirstChild() {
@@ -182,6 +187,6 @@ export class TreeService {
 
   reloadTree(nodes: any) {
     this.getTreeObject().reload(nodes);
-    this.getTreeObject().getNodeByKey('_2').setActive();
+    $('span.fancytree-title').attr('style', 'width:15em;text-overflow:ellipsis;white-space:nowrap;overflow:hidden');
   }
 }
