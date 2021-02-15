@@ -236,6 +236,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   addChild(resource?) {
+    this.telemetryService.interact({ edata: this.getTelemetryInteractEdata('add_child')});
     const tree = $(this.tree.nativeElement).fancytree('getTree');
     const rootNode = $(this.tree.nativeElement).fancytree('getRootNode').getFirstChild();
     const nodeConfig = this.config.hierarchy[tree.getActiveNode().getLevel()];
@@ -256,6 +257,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   addSibling() {
+    this.telemetryService.interact({ edata: this.getTelemetryInteractEdata('add_sibling')});
     const tree = $(this.tree.nativeElement).fancytree('getTree');
     const rootNode = $(this.tree.nativeElement).fancytree('getRootNode').getFirstChild();
 
@@ -415,7 +417,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   removeNode() {
     this.treeEventEmitter.emit({ type: 'deleteNode'});
-    this.telemetryService.interact({ edata: this.getTelemetryInteractEdata('delete-node')});
+    this.telemetryService.interact({ edata: this.getTelemetryInteractEdata('delete')});
   }
 
   handleActionButtons(el) {
@@ -428,11 +430,9 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         break;
       case 'addsibling':
         this.addSibling();
-        this.telemetryService.interact({ edata: this.getTelemetryInteractEdata('add-sibling')});
         break;
       case 'addchild':
         this.addChild();
-        this.telemetryService.interact({ edata: this.getTelemetryInteractEdata('add-child')});
         break;
       case 'addresource':
         break;

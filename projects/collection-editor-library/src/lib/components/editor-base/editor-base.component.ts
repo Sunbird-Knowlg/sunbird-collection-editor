@@ -1,8 +1,8 @@
-import { Component, HostListener, Input, OnDestroy, OnInit, ChangeDetectorRef, EventEmitter,
-   Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, HostListener, Input, OnDestroy, OnInit, ChangeDetectorRef,
+  EventEmitter, Output, ViewEncapsulation, AfterViewInit, ViewChild } from '@angular/core';
 import { TreeService, EditorService, FrameworkService, HelperService, EditorTelemetryService, ToasterService } from '../../services';
 import { IEditorConfig } from '../../interfaces';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { map, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import * as _ from 'lodash-es';
@@ -12,7 +12,7 @@ import * as _ from 'lodash-es';
   styleUrls: ['./editor-base.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class EditorBaseComponent implements OnInit, OnDestroy {
+export class EditorBaseComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() editorConfig: IEditorConfig | undefined;
   @Output() editorEmitter = new EventEmitter<any>();
@@ -35,8 +35,7 @@ export class EditorBaseComponent implements OnInit, OnDestroy {
   public isCurrentNodeRoot: boolean;
   public submitFormStatus = true;
   toolbarConfig: any;
-  constructor(public treeService: TreeService, private editorService: EditorService,
-              private activatedRoute: ActivatedRoute, private frameworkService: FrameworkService,
+  constructor(public treeService: TreeService, private editorService: EditorService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
               private toasterService: ToasterService,
               private changeDetectionRef: ChangeDetectorRef) {
@@ -74,7 +73,7 @@ export class EditorBaseComponent implements OnInit, OnDestroy {
         (response) => {
           this.unitFormConfig = _.get(response, 'result.objectCategoryDefinition.forms.unitMetadata.properties');
           this.rootFormConfig = _.get(response, 'result.objectCategoryDefinition.forms.create.properties');
-          this.libraryComponentInput.searchFormConfig = _.get(response, 'result.objectCategoryDefinition.forms.search.properties')
+          this.libraryComponentInput.searchFormConfig = _.get(response, 'result.objectCategoryDefinition.forms.search.properties');
         },
         (error) => {
           console.log(error);
@@ -86,6 +85,13 @@ export class EditorBaseComponent implements OnInit, OnDestroy {
     this.telemetryService.start({ type: 'editor', pageid: this.telemetryPageId });
     this.editorService.getshowLibraryPageEmitter()
       .subscribe(item => this.showLibraryComponentPage());
+  }
+
+  ngAfterViewInit() {
+    this.telemetryService.impression({
+      type: 'edit', pageid: this.telemetryService.telemetryPageId, uri: this.router.url,
+      duration: _.toString((Date.now() - this.pageStartTime) / 1000)
+    });
   }
 
   fetchCollectionHierarchy(): Observable<any> {

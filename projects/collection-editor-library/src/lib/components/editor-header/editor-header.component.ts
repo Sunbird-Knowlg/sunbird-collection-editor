@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { TreeService, EditorService, HelperService} from '../../services';
+import { TreeService, EditorService, HelperService, EditorTelemetryService} from '../../services';
 import * as _ from 'lodash-es';
 import { NgForm } from '@angular/forms';
 
@@ -23,7 +23,8 @@ export class EditorHeaderComponent implements OnDestroy, OnInit {
   public showRequestChangesPopup: boolean;
   public rejectComment: string;
   public contentComment: string;
-  constructor(private editorService: EditorService, private treeService: TreeService, private helperService: HelperService) { }
+  constructor(private editorService: EditorService, private treeService: TreeService,
+    private helperService: HelperService, public telemetryService: EditorTelemetryService) { }
 
   ngOnInit() {
     this.handleActionButtons();
