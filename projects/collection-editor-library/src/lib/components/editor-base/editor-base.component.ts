@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, OnDestroy, OnInit, ChangeDetectorRef, EventEmitter, Output, ViewEncapsulation } from '@angular/core';
+import { Component, HostListener, Input, OnDestroy, OnInit, ChangeDetectorRef, EventEmitter, Output, ViewEncapsulation, AfterViewInit } from '@angular/core';
 import { TreeService, EditorService, FrameworkService, HelperService, EditorTelemetryService, ToasterService } from '../../services';
 import { IEditorConfig } from '../../interfaces';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,7 +11,7 @@ import * as _ from 'lodash-es';
   styleUrls: ['./editor-base.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class EditorBaseComponent implements OnInit, OnDestroy {
+export class EditorBaseComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() editorConfig: IEditorConfig | undefined;
   @Output() editorEmitter = new EventEmitter<any>();
@@ -81,6 +81,13 @@ export class EditorBaseComponent implements OnInit, OnDestroy {
     this.telemetryService.start({ type: 'editor', pageid: this.telemetryPageId });
     this.editorService.getshowLibraryPageEmitter()
       .subscribe(item => this.showLibraryComponentPage());
+  }
+
+  ngAfterViewInit() {
+    this.telemetryService.impression({
+      type: 'edit', pageid: this.telemetryService.telemetryPageId, uri: this.router.url,
+      duration: _.toString((Date.now() - this.pageStartTime) / 1000)
+    });
   }
 
   fetchCollectionHierarchy(): Observable<any> {
