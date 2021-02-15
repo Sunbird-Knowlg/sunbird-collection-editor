@@ -194,21 +194,18 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
           mode: 'dimm'
         }
       },
-      init: (event, data) => {
-      },
+      init: (event, data) => {},
       click: (event, data): boolean => {
         this.tree.nativeElement.click();
-        const node = data.node;
-        this.addFromLibraryButton(node.getLevel() - 1);
-        // this.treeEventEmitter.emit({ 'type': 'nodeSelect', 'data': node });
         this.telemetryService.interact({ edata: this.getTelemetryInteractEdata()});
-        this.eachNodeActionButton(node);
         return true;
       },
       activate: (event, data) => {
         this.treeEventEmitter.emit({ type: 'nodeSelect', data: data.node });
         setTimeout(() => {
           this.attachContextMenu(data.node, true);
+          this.addFromLibraryButton(data.node.getLevel() - 1);
+          this.eachNodeActionButton(data.node);
         }, 10);
       },
       renderNode: (event, data) => {
@@ -231,14 +228,14 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   eachNodeActionButton(node) {
-    this.showAddChildButton = ((node.getLevel() - 1) >= this.config.maxDepth) ? false : true;
-    this.showAddSiblingButton = (!node.data.root) ? true : false;
+    this.showAddChildButton = ((node.folder === false) || ((node.getLevel() - 1) >= this.config.maxDepth)) ? false : true;
+    // tslint:disable-next-line:max-line-length
+    this.showAddSiblingButton = ((node.folder === true) && (!node.data.root) && !((node.getLevel() - 1) > this.config.maxDepth)) ? true : false;
   }
 
   addChild(resource?) {
     this.telemetryService.interact({ edata: this.getTelemetryInteractEdata('add_child')});
     const tree = $(this.tree.nativeElement).fancytree('getTree');
-    const rootNode = $(this.tree.nativeElement).fancytree('getRootNode').getFirstChild();
     const nodeConfig = this.config.hierarchy[tree.getActiveNode().getLevel()];
     const childrenTypes = _.get(nodeConfig, 'children.Content');
     if ((((tree.getActiveNode().getLevel() - 1) >= this.config.maxDepth))) {
@@ -253,18 +250,15 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       this.treeService.addNode({}, 'child');
     }
-      // this.treeEventEmitter.emit({'type': 'addChild', 'data' : (rootNode.data.root ? 'child' : 'sibling')});
   }
 
   addSibling() {
     this.telemetryService.interact({ edata: this.getTelemetryInteractEdata('add_sibling')});
     const tree = $(this.tree.nativeElement).fancytree('getTree');
-    const rootNode = $(this.tree.nativeElement).fancytree('getRootNode').getFirstChild();
 
     const node = tree.getActiveNode();
     if (!node.data.root) {
       this.treeService.addNode({}, 'sibling');
-      // this.treeEventEmitter.emit({'type': 'addSibling', 'data' : 'sibling'});
     } else {
       this.toasterService.error('Sorry, this operation is not allowed.');
     }

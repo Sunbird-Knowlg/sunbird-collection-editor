@@ -42,7 +42,7 @@ export class TreeService {
     if (attributions && _.isString(attributions)) {
       newData.attributions = attributions.split(',');
     }
-    this.setTreeCache(nodeId, newData, activeNode.data.root);
+    this.setTreeCache(nodeId, newData, activeNode.data);
   }
 
   addNode(data, createType) {
@@ -64,12 +64,12 @@ export class TreeService {
       newNode = (createType === 'sibling') ? selectedNode.appendSibling(node) : selectedNode.addChildren(node);
       if (_.isEmpty(newNode.data.metadata)) {
         // tslint:disable-next-line:max-line-length
-        newNode.data.metadata = { mimeType: 'application/vnd.ekstep.content-collection', code: node.id, name: node.title };
+        newNode.data.metadata = { mimeType: _.get(nodeConfig, 'mimeType'), code: node.id, name: node.title };
       }
       // tslint:disable-next-line:max-line-length
-      // const modificationData = { isNew: true, root: false, metadata: { mimeType: 'application/vnd.ekstep.content-collection', contentType: _.get(this.getActiveNode(), 'data.objectType'), code: node.id, name: node.title } };
+      // const modificationData = { isNew: true, root: false, metadata: { mimeType: _.get(nodeConfig, 'mimeType'), contentType: _.get(this.getActiveNode(), 'data.objectType'), code: node.id, name: node.title } };
       // tslint:disable-next-line:max-line-length
-      const metadata = { mimeType: 'application/vnd.ekstep.content-collection', code: node.id, name: node.title, primaryCategory: 'Textbook Unit' };
+      const metadata = { mimeType: _.get(nodeConfig, 'mimeType'), code: node.id, name: node.title, primaryCategory: _.get(nodeConfig, 'contentType') };
       this.setTreeCache(node.id, metadata);
     } else {
       newNode = (createType === 'sibling') ? selectedNode.appendSibling(node) : selectedNode.addChildren(node);
@@ -130,14 +130,13 @@ export class TreeService {
     });
   }
 
-  setTreeCache(nodeId, data, isRootNode?) {
+  setTreeCache(nodeId, data, activeNode?) {
     if (this.treeCache.nodesModified[nodeId]) {
-      const primaryCategory = this.treeCache.nodesModified[nodeId].metadata.primaryCategory;
       // tslint:disable-next-line:max-line-length
-      this.treeCache.nodesModified[nodeId].metadata = _.isEqual(primaryCategory, 'Textbook Unit') ? _.assign(this.treeCache.nodesModified[nodeId].metadata, data) : data; // TODO:: rethink this
+      this.treeCache.nodesModified[nodeId].metadata = activeNode && activeNode.root === false ? _.assign(this.treeCache.nodesModified[nodeId].metadata, data) : data; // TODO:: rethink this
     } else {
       // tslint:disable-next-line:max-line-length
-      this.treeCache.nodesModified[nodeId] = {root: isRootNode ? true : false, metadata: {...data}, ...(nodeId.includes('do_') ? {isNew: false} : {isNew: true})};
+      this.treeCache.nodesModified[nodeId] = {root: activeNode && activeNode.root ? true : false, metadata: {...data}, ...(nodeId.includes('do_') ? {isNew: false} : {isNew: true})};
       this.treeCache.nodes.push(nodeId); // To track sequence of modifiation
     }
   }
