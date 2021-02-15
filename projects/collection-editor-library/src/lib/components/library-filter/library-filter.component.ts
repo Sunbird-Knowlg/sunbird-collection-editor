@@ -32,14 +32,15 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
   public searchQuery: string;
 
   constructor(private frameworkService: FrameworkService,
-    public editorService: EditorService,
-    public telemetryService: EditorTelemetryService,
-    public treeService: TreeService) { }
+              public editorService: EditorService,
+              public telemetryService: EditorTelemetryService,
+              public treeService: TreeService) { }
 
   ngOnInit() {
     this.filterFields = this.searchFormConfig;
     const selectedNode = this.treeService.getActiveNode();
-    const contentTypes = _.flatten(_.map(_.get(this.editorService.editorConfig.config, `hierarchy.level${selectedNode.getLevel()}.children`), function (val) {
+    const contentTypes = _.flatten(
+      _.map(_.get(this.editorService.editorConfig.config, `hierarchy.level${selectedNode.getLevel() - 1}.children`), (val) => {
       return val;
     }));
 
@@ -143,7 +144,7 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
     }
 
     this.filterConfig = [{
-      name: "searchForm",
+      name: 'searchForm',
       fields: this.filterFields
     }];
   }
@@ -187,7 +188,7 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
 
     this.filterConfig = null;
     this.filterConfig = [{
-      name: "searchForm",
+      name: 'searchForm',
       fields: _.cloneDeep(this.filterFields)
     }];
 
