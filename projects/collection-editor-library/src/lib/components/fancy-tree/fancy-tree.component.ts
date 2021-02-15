@@ -232,7 +232,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   eachNodeActionButton(node) {
     this.showAddChildButton = ((node.getLevel() - 1) >= this.config.maxDepth) ? false : true;
-    this.showAddSiblingButton = (!node.data.root) ? true : false;
+    this.showAddSiblingButton = (!node.data.root) && !((node.getLevel() - 1) >= this.config.maxDepth)? true : false;
   }
 
   addChild(resource?) {
