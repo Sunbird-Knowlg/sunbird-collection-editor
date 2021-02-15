@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
-import { ServerResponse, Framework, FrameworkData } from '../../interfaces';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { skipWhile } from 'rxjs/operators';
 import * as _ from 'lodash-es';
-import { DataService } from '../../services';
+import { ServerResponse } from '../../interfaces/serverResponse';
+import { Framework } from '../../interfaces/framework';
+import { FrameworkData } from '../../interfaces/framework';
+import { DataService } from '../data/data.service';
 
 @Injectable({
   providedIn: 'root'

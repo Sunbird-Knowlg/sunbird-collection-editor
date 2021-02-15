@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { LibraryFilterComponent } from './library-filter.component';
 
 describe('LibraryFilterComponent', () => {

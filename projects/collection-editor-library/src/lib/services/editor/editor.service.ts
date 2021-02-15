@@ -1,11 +1,12 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { TreeService, DataService, PublicDataService } from '../../services';
-import { EditorConfig } from '../../interfaces';
-import { labelConfig} from '../../editor.config';
 import * as _ from 'lodash-es';
 import { skipWhile } from 'rxjs/operators';
-
+import { TreeService } from '../tree/tree.service';
+import { DataService } from '../data/data.service';
+import { PublicDataService } from '../public-data/public-data.service';
+import { EditorConfig } from '../../interfaces/inputConfig';
+import { labelConfig} from '../../editor.config';
 @Injectable({ providedIn: 'root' })
 
 export class EditorService {
@@ -74,7 +75,7 @@ export class EditorService {
         request: {
           data: {
             ...this.getCollectionHierarchy(),
-            ...{lastUpdatedBy: 'b8d50233-5a4d-4a8c-9686-9c8bccd2c448'}
+            ...{lastUpdatedBy: 'b8d50233-5a4d-4a8c-9686-9c8bccd2c448'} // TODO:
           }
         }
       }
