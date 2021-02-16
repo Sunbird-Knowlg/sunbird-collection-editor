@@ -1,7 +1,9 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { TreeService, EditorService, HelperService, EditorTelemetryService} from '../../services';
+import { TreeService } from '../../services/tree/tree.service';
+import { EditorService } from '../../services/editor/editor.service';
+import { HelperService } from '../../services/helper/helper.service';
+import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import * as _ from 'lodash-es';
 import { NgForm } from '@angular/forms';
 

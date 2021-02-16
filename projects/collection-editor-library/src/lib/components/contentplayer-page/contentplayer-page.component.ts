@@ -1,6 +1,8 @@
 import { Component, ElementRef, Input, OnInit, ViewChild, OnChanges, ViewEncapsulation} from '@angular/core';
 import * as _ from 'lodash-es';
-import { EditorService, HelperService, TreeService } from '../../services';
+import { EditorService} from '../../services/editor/editor.service';
+import { HelperService } from '../../services/helper/helper.service';
+import { TreeService } from '../../services/tree/tree.service';
 import { PLAYER_CONFIG } from '../../editor.config';
 declare var $: any;
 

@@ -1,12 +1,14 @@
 
 import { of as observableOf, throwError as observableThrowError, Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
-import { ServerResponse, RequestParam, HttpOptions } from '../../interfaces';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UUID } from 'angular2-uuid';
 // import * as moment from 'moment';
 import * as _ from 'lodash-es';
+import { ServerResponse } from '../../interfaces/serverResponse';
+import { RequestParam } from '../../interfaces/requestParam';
+import { HttpOptions } from '../../interfaces/httpOptions';
 
 /**
  * Service to provide base CRUD methods to make api request.
@@ -184,7 +186,7 @@ export class DataService {
       Accept: 'application/json',
       // 'X-Consumer-ID': 'X-Consumer-ID',
       'X-Source': 'web',
-      ts: '2020-12-31T16:23:27+05:30', // moment().format(),
+      ts: '2020-12-31T16:23:27+05:30', // moment().format(), //TODO::
       'X-msgid': UUID.UUID(),
       // tslint:disable-next-line:max-line-length
       Authorization: ''

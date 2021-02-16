@@ -185,7 +185,10 @@
           "options": {
             "main": "projects/collection-editor-library/src/test.ts",
             "tsConfig": "projects/collection-editor-library/tsconfig.spec.json",
-            "karmaConfig": "projects/collection-editor-library/karma.conf.js"
+            "karmaConfig": "projects/collection-editor-library/karma.conf.js",
+            "scripts": [
+              "src/assets/libs/iziToast/iziToast.min.js"
+            ]
           }
         },
         "lint": {

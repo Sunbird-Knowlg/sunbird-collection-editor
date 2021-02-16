@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { CollectionEditorLibraryService } from './collection-editor-library.service';
 
 describe('CourseEditorLibraryService', () => {

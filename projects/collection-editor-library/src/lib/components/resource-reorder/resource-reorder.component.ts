@@ -1,8 +1,10 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ViewEncapsulation} from '@angular/core';
-import { EditorService, ToasterService } from '../../services';
 import * as _ from 'lodash-es';
 import {labelMessages} from '../labels';
-import { EditorTelemetryService } from '../../services';
+import { EditorService } from '../../services/editor/editor.service';
+import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
+import { ToasterService } from '../../services/toaster/toaster.service';
+
 
 @Component({
   selector: 'lib-resource-reorder',

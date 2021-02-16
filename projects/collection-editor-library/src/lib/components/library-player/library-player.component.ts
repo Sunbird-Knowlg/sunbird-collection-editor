@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {labelMessages} from '../labels';
-import { EditorTelemetryService } from '../../services';
+import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 @Component({
   selector: 'lib-library-player',
   templateUrl: './library-player.component.html',

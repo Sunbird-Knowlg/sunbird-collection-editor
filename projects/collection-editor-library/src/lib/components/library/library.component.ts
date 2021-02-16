@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output, AfterViewInit } from '@angular/core';
-import { EditorTelemetryService, TreeService } from '../../services';
 import * as _ from 'lodash-es';
+import { TreeService } from '../../services/tree/tree.service';
 import { EditorService } from '../../services/editor/editor.service';
+import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { labelMessages } from '../labels';
 import { Router } from '@angular/router';
 
@@ -14,7 +15,7 @@ export class LibraryComponent implements OnInit, AfterViewInit {
   labelMessages = labelMessages;
   @Input() libraryInput: any;
   @Output() libraryEmitter = new EventEmitter<any>();
-  public searchFormConfig : any;
+  public searchFormConfig: any;
   public pageId = 'add_from_library';
   public contentList: any;
   public selectedContent: any;
@@ -76,7 +77,8 @@ export class LibraryComponent implements OnInit, AfterViewInit {
 
   setDefaultFilters() {
     const selectedNode = this.treeService.getActiveNode();
-    const contentTypes = _.flatten(_.map(_.get(this.editorService.editorConfig.config, `hierarchy.level${selectedNode.getLevel()}.children`), function (val) {
+    const contentTypes = _.flatten(
+      _.map(_.get(this.editorService.editorConfig.config, `hierarchy.level${selectedNode.getLevel() - 1}.children`), (val) => {
       return val;
     }));
 
@@ -99,7 +101,7 @@ export class LibraryComponent implements OnInit, AfterViewInit {
           // @Todo remove hardcoded objectType
           filters: _.pickBy({ ...filters, ...{ status: ['Live'] } }),
           sort_by: {
-            "lastUpdatedOn": "desc"
+            lastUpdatedOn: 'desc'
           }
         }
       }
@@ -189,7 +191,7 @@ export class LibraryComponent implements OnInit, AfterViewInit {
   filterContentList(isContentAdded?) {
     if (_.isEmpty(this.contentList)) { return; }
     _.forEach(this.contentList, (value, key) => {
-      if(value) {
+      if (value) {
         value.isAdded = _.includes(this.childNodes, value.identifier);
       }
     });

@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { EditorBaseComponent } from './editor-base.component';
 
 describe('EditorBaseComponent', () => {

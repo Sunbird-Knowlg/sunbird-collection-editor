@@ -1,7 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewEncapsulation} from '@angular/core';
-import { EditorService } from '../../services';
-import { EditorTelemetryService } from '../../services';
 import {labelMessages} from '../labels';
+import { EditorService } from '../../services/editor/editor.service';
+import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
+
 @Component({
   selector: 'lib-library-list',
   templateUrl: './library-list.component.html',

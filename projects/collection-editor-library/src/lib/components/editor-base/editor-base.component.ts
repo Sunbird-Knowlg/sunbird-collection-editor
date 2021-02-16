@@ -1,7 +1,12 @@
 import { Component, HostListener, Input, OnDestroy, OnInit, ChangeDetectorRef,
   EventEmitter, Output, ViewEncapsulation, AfterViewInit, ViewChild } from '@angular/core';
-import { TreeService, EditorService, FrameworkService, HelperService, EditorTelemetryService, ToasterService } from '../../services';
-import { IEditorConfig } from '../../interfaces';
+import { TreeService } from '../../services/tree/tree.service';
+import { EditorService } from '../../services/editor/editor.service';
+import { FrameworkService } from '../../services/framework/framework.service';
+import { HelperService } from '../../services/helper/helper.service';
+import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
+import { ToasterService } from '../../services/toaster/toaster.service';
+import { IEditorConfig } from '../../interfaces/editor.config';
 import { Router } from '@angular/router';
 import { map, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
