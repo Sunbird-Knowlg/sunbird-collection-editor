@@ -1,11 +1,13 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { EditorService } from '../../services';
-import { EditorTelemetryService } from '../../services';
+import { Component, OnInit, Input, Output, EventEmitter, ViewEncapsulation} from '@angular/core';
 import {labelMessages} from '../labels';
+import { EditorService } from '../../services/editor/editor.service';
+import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
+
 @Component({
   selector: 'lib-library-list',
   templateUrl: './library-list.component.html',
-  styleUrls: ['./library-list.component.scss']
+  styleUrls: ['./library-list.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class LibraryListComponent implements OnInit {
 @Input() contentList;

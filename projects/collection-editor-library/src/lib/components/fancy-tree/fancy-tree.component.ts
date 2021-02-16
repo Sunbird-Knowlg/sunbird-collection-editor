@@ -1,10 +1,16 @@
-import { takeUntil } from 'rxjs/operators';
 import { Component, AfterViewInit, Input, ViewChild, ElementRef, Output, EventEmitter,
    OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { takeUntil } from 'rxjs/operators';
 import 'jquery.fancytree';
 import * as _ from 'lodash-es';
 import { ActivatedRoute } from '@angular/router';
-import { EditorService, TreeService, EditorTelemetryService, HelperService, ToasterService } from '../../services';
+import { TreeService } from '../../services/tree/tree.service';
+import { EditorService } from '../../services/editor/editor.service';
+import { HelperService } from '../../services/helper/helper.service';
+import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
+import { ToasterService } from '../../services/toaster/toaster.service';
+
+
 import { Subject } from 'rxjs';
 import { UUID } from 'angular2-uuid';
 declare var $: any;
@@ -115,12 +121,9 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     setTimeout(() => {
       this.treeService.reloadTree(this.rootNode);
-    }, 0);
-    setTimeout(() => {
+      this.treeService.setActiveNode();
       const rootNode = this.treeService.getFirstChild();
-      if (rootNode) {
-        this.treeService.setActiveNode(rootNode);
-      }
+      rootNode.setExpanded(true);
       this.addFromLibraryButton(0);
       this.eachNodeActionButton(rootNode);
     });
@@ -197,24 +200,18 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
           mode: 'dimm'
         }
       },
-      init: (event, data) => {
-        if ($(this.tree.nativeElement).fancytree('getTree').getNodeByKey('_2')) {
-          $(this.tree.nativeElement).fancytree('getTree').getNodeByKey('_2').setActive();
-        }
-      },
+      init: (event, data) => {},
       click: (event, data): boolean => {
         this.tree.nativeElement.click();
-        const node = data.node;
-        this.addFromLibraryButton(node.getLevel() - 1);
-        // this.treeEventEmitter.emit({ 'type': 'nodeSelect', 'data': node });
         this.telemetryService.interact({ edata: this.getTelemetryInteractEdata()});
-        this.eachNodeActionButton(node);
         return true;
       },
       activate: (event, data) => {
         this.treeEventEmitter.emit({ type: 'nodeSelect', data: data.node });
         setTimeout(() => {
           this.attachContextMenu(data.node, true);
+          this.addFromLibraryButton(data.node.getLevel() - 1);
+          this.eachNodeActionButton(data.node);
         }, 10);
       },
       renderNode: (event, data) => {
@@ -236,25 +233,15 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     return options;
   }
 
-  expandAll(flag) {
-    $(this.tree.nativeElement).fancytree('getTree').visit((node) => { node.setExpanded(flag); });
-  }
-
-  collapseAllChildrens(flag) {
-    const rootNode = $(this.tree.nativeElement).fancytree('getRootNode').getFirstChild();
-    _.forEach(rootNode.children, (child) => {
-      child.setExpanded(flag);
-    });
-  }
-
   eachNodeActionButton(node) {
-    this.showAddChildButton = ((node.getLevel() - 1) >= this.config.maxDepth) ? false : true;
-    this.showAddSiblingButton = (!node.data.root) ? true : false; 
+    this.showAddChildButton = ((node.folder === false) || ((node.getLevel() - 1) >= this.config.maxDepth)) ? false : true;
+    // tslint:disable-next-line:max-line-length
+    this.showAddSiblingButton = ((node.folder === true) && (!node.data.root) && !((node.getLevel() - 1) > this.config.maxDepth)) ? true : false;
   }
 
   addChild(resource?) {
+    this.telemetryService.interact({ edata: this.getTelemetryInteractEdata('add_child')});
     const tree = $(this.tree.nativeElement).fancytree('getTree');
-    const rootNode = $(this.tree.nativeElement).fancytree('getRootNode').getFirstChild();
     const nodeConfig = this.config.hierarchy[tree.getActiveNode().getLevel()];
     const childrenTypes = _.get(nodeConfig, 'children.Content');
     if ((((tree.getActiveNode().getLevel() - 1) >= this.config.maxDepth))) {
@@ -269,17 +256,15 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       this.treeService.addNode({}, 'child');
     }
-      // this.treeEventEmitter.emit({'type': 'addChild', 'data' : (rootNode.data.root ? 'child' : 'sibling')});
   }
 
   addSibling() {
+    this.telemetryService.interact({ edata: this.getTelemetryInteractEdata('add_sibling')});
     const tree = $(this.tree.nativeElement).fancytree('getTree');
-    const rootNode = $(this.tree.nativeElement).fancytree('getRootNode').getFirstChild();
 
     const node = tree.getActiveNode();
     if (!node.data.root) {
       this.treeService.addNode({}, 'sibling');
-      // this.treeEventEmitter.emit({'type': 'addSibling', 'data' : 'sibling'});
     } else {
       this.toasterService.error('Sorry, this operation is not allowed.');
     }
@@ -299,7 +284,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     const menuTemplate = node.data.root === true ? this.rootMenuTemplate : (node.data.objectType === 'Unit' ? this.folderMenuTemplate : this.contentMenuTemplate);
     const iconsButton = $(menuTemplate);
     if ((node.getLevel() - 1) >= this.config.maxDepth) {
-      iconsButton.find("#addchild").remove();
+      iconsButton.find('#addchild').remove();
     }
 
     let contextMenu = $($nodeSpan[0]).find(`#contextMenu`);
@@ -432,7 +417,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   removeNode() {
     this.treeEventEmitter.emit({ type: 'deleteNode'});
-    this.telemetryService.interact({ edata: this.getTelemetryInteractEdata('delete-node')});
+    this.telemetryService.interact({ edata: this.getTelemetryInteractEdata('delete')});
   }
 
   handleActionButtons(el) {
@@ -445,11 +430,9 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         break;
       case 'addsibling':
         this.addSibling();
-        this.telemetryService.interact({ edata: this.getTelemetryInteractEdata('add-sibling')});
         break;
       case 'addchild':
         this.addChild();
-        this.telemetryService.interact({ edata: this.getTelemetryInteractEdata('add-child')});
         break;
       case 'addresource':
         break;

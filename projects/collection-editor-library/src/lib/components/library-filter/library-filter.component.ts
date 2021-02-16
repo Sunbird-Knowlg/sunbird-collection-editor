@@ -1,11 +1,13 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, ViewEncapsulation } from '@angular/core';
 import * as _ from 'lodash-es';
-import { labelMessages } from '../labels';
-import { FrameworkService } from '../../services';
 import { Subject } from 'rxjs';
-import { takeUntil, filter, take, map } from 'rxjs/operators';
-import { EditorService } from '../../services';
-import { EditorTelemetryService, TreeService } from '../../services';
+import { takeUntil, filter, take } from 'rxjs/operators';
+import { TreeService } from '../../services/tree/tree.service';
+import { EditorService } from '../../services/editor/editor.service';
+import { FrameworkService } from '../../services/framework/framework.service';
+import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
+import { labelMessages } from '../labels';
+
 
 @Component({
   selector: 'lib-library-filter',
@@ -32,14 +34,15 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
   public searchQuery: string;
 
   constructor(private frameworkService: FrameworkService,
-    public editorService: EditorService,
-    public telemetryService: EditorTelemetryService,
-    public treeService: TreeService) { }
+              public editorService: EditorService,
+              public telemetryService: EditorTelemetryService,
+              public treeService: TreeService) { }
 
   ngOnInit() {
     this.filterFields = this.searchFormConfig;
     const selectedNode = this.treeService.getActiveNode();
-    const contentTypes = _.flatten(_.map(_.get(this.editorService.editorConfig.config, `hierarchy.level${selectedNode.getLevel() - 1}.children`), function (val) {
+    const contentTypes = _.flatten(
+      _.map(_.get(this.editorService.editorConfig.config, `hierarchy.level${selectedNode.getLevel() - 1}.children`), (val) => {
       return val;
     }));
 
@@ -143,7 +146,7 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
     }
 
     this.filterConfig = [{
-      name: "searchForm",
+      name: 'searchForm',
       fields: this.filterFields
     }];
   }
@@ -187,7 +190,7 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
 
     this.filterConfig = null;
     this.filterConfig = [{
-      name: "searchForm",
+      name: 'searchForm',
       fields: _.cloneDeep(this.filterFields)
     }];
 

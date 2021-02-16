@@ -2,7 +2,9 @@
 <div class="sb-bg-color-primary">
   <div class="ui container py-15">
     <div class="d-flex flex-ai-center sb-color-white">
-      <button class="sb-btn sb-btn-primary sb-btn-xs back-btn px-0 hover-none fs-0-92 font-weight-bold">
+      <button class="sb-btn sb-btn-primary sb-btn-xs back-btn px-0 hover-none fs-0-92 font-weight-bold"
+      (click)="buttonEmitter({type: 'backContent'})" libTelemetryInteract
+      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('back','click','launch', telemetryService.telemetryPageId)">
         <i class="arrow left icon"></i> Back
       </button>
     </div>
@@ -19,22 +21,28 @@
       <i *ngIf="button.slot" class="{{ button.slot }}"></i> {{ button.name }}
     </button> -->
 
-    <button *ngIf="visibility && visibility?.saveContent" class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10" (click)="buttonEmitter({type:'saveContent'})">
+    <button *ngIf="visibility && visibility?.saveContent" class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10" (click)="buttonEmitter({type:'saveContent'})" libTelemetryInteract
+    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('save_as_draft','click','submit', telemetryService.telemetryPageId)"
+    >
       <i class="{{labelConfigData.save_collection_btn_icon}}"></i> 
       {{labelConfigData.save_collection_btn_label}}
     </button>
 
-    <button *ngIf="visibility && visibility?.submitContent && labelConfigData?.showSubmitBtn" class="sb-btn sb-btn-normal sb-btn-primary mr-10" (click)="buttonEmitter({type:'submitContent'})">
+    <button *ngIf="visibility && visibility?.submitContent && labelConfigData?.showSubmitBtn" class="sb-btn sb-btn-normal sb-btn-primary mr-10" (click)="buttonEmitter({type:'submitContent'})" libTelemetryInteract
+    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('submit','click','submit', telemetryService.telemetryPageId)"
+    >
       <i class="{{labelConfigData.submit_collection_btn_icon}}"></i> 
       {{labelConfigData.submit_collection_btn_label}}
     </button>
 
-    <button *ngIf="visibility && visibility?.rejectContent" class="sb-btn sb-btn-normal sb-btn-primary mr-10" (click)="showRequestChangesPopup = true">
+    <button *ngIf="visibility && visibility?.rejectContent" class="sb-btn sb-btn-normal sb-btn-primary mr-10" (click)="showRequestChangesPopup = true" libTelemetryInteract
+    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('reject','click','submit', telemetryService.telemetryPageId)">
       <i class="{{labelConfigData.reject_collection_btn_icon}}"></i> 
       {{labelConfigData.reject_collection_btn_label}}
     </button>
 
-    <button *ngIf="visibility && visibility?.publishContent" class="sb-btn sb-btn-normal sb-btn-primary mr-10" (click)="buttonEmitter({type: 'publishContent'})">
+    <button *ngIf="visibility && visibility?.publishContent" class="sb-btn sb-btn-normal sb-btn-primary mr-10" (click)="buttonEmitter({type: 'publishContent'})" libTelemetryInteract
+    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('publish','click','submit', telemetryService.telemetryPageId)">
       <i class="{{labelConfigData.publish_collection_btn_icon}}"></i> 
       {{labelConfigData.publish_collection_btn_label}}
     </button>
@@ -62,9 +70,11 @@
       </div>
   </div>
   <div class="sb-modal-actions">
-    <button id="submitReview" type="submit" class="sb-btn sb-btn-normal" [ngClass]="{'sb-btn-primary': FormControl.form.valid, 'sb-btn-disabled': !FormControl.form.valid}" (click)="buttonEmitter({type: 'rejectContent', comment: rejectComment}); showRequestChangesPopup = false;"
+    <button id="submitReview" type="submit" class="sb-btn sb-btn-normal" [ngClass]="{'sb-btn-primary': FormControl.form.valid, 'sb-btn-disabled': !FormControl.form.valid}" (click)="buttonEmitter({type: 'rejectContent', comment: rejectComment}); showRequestChangesPopup = false;" libTelemetryInteract
+    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('submit_review','click','submit', telemetryService.telemetryPageId)"
     > Submit Review </button>
-    <button class="sb-btn sb-btn-normal sb-btn-outline-primary" (click)="modal.deny('denied')">Cancel</button>
+    <button class="sb-btn sb-btn-normal sb-btn-outline-primary" (click)="modal.deny('denied')"
+    libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('cancel','click','launch', telemetryService.telemetryPageId)">Cancel</button>
   </div>
 </form>
 </sui-modal>
@@ -83,6 +93,8 @@
       </div>
   </div>
   <div class="sb-modal-actions">
-    <button type="button" class="sb-btn sb-btn-normal sb-btn-primary" (click)="showReviewModal=false"> Continue </button>
+    <button type="button" class="sb-btn sb-btn-normal sb-btn-primary" (click)="showReviewModal=false"
+    libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('continue','click','launch', telemetryService.telemetryPageId)"
+    > Continue </button>
   </div>
 </sui-modal>

@@ -1,5 +1,6 @@
 .sb-collectionTree-fancyTreelist {
     .ui-fancytree {
+      margin-bottom: 1rem !important;
       &:before {
         background: none !important;
       }
@@ -132,8 +133,9 @@
     z-index: 2;
     padding: 0 !important;
     .sb-btn-cover{
-      padding: 0.5rem 2.2rem 0.5rem 0.5rem;
+      padding: 0.5rem 2.21rem 0.5rem 0.5rem;
       border-right: solid 1px #ccc;
+      width: 100%;
       .sb-btn{
         &:hover{
           background: none !important;
@@ -146,7 +148,7 @@
     margin-left: 20px;
   } 
   .sb-dotted-dropdown{
-    line-height: 1rem;
+    line-height: 1.4rem;
     .menu{
       .item{
         font-size: 0.785rem !important;
@@ -156,4 +158,11 @@
   .eight.bg-white{
     border-left: solid 1px var(--gray-100);
     padding-bottom: 4.5rem !important;
+  }
+  .b-none{
+    border: none !important;
+  }
+  .w-25{
+    width: 25.1%;
+    max-width: 25.1%;
   }

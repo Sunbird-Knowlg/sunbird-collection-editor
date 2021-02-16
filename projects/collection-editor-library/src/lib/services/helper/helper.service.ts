@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, Subject, throwError } from 'rxjs';
-import { catchError, map, skipWhile, tap} from 'rxjs/operators';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, map, tap} from 'rxjs/operators';
 import * as _ from 'lodash-es';
-import { PublicDataService, DataService, EditorService } from '../index';
+import { PublicDataService} from '../public-data/public-data.service';
+import { DataService} from '../data/data.service';
+import { EditorService } from '../editor/editor.service';
 import { PLAYER_CONFIG } from '../../editor.config';
 interface PlayerConfig {
   config: any;
