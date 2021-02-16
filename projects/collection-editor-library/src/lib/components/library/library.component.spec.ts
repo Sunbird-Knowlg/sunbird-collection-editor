@@ -5,7 +5,6 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
 import * as mockData from './library.component.spec.data';
 const testData = mockData.mockData;
 
@@ -16,9 +15,8 @@ describe('LibraryComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [EditorTelemetryService,
-        { provide: Router }],
+      imports: [HttpClientTestingModule, RouterTestingModule],
+      providers: [EditorTelemetryService],
       declarations: [ LibraryComponent, TelemetryInteractDirective ],
       schemas: [NO_ERRORS_SCHEMA]
     })
@@ -47,4 +45,10 @@ describe('LibraryComponent', () => {
     const generatedNodeData = component.generateNodeMeta(testData.nodeData);
     expect(generatedNodeData).toEqual(testData.generatedNodeData);
   }));
+
+  it('#getUnitWithChildren() should return expected result', fakeAsync(() => {
+    const collectionHierarchy = component.getUnitWithChildren(testData.collectionHierarchyData, testData.collectionId);
+    expect(collectionHierarchy).toEqual(testData.collectionHierarchy);
+  }));
+
 });
