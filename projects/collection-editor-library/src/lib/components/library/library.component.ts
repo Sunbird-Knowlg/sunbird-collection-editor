@@ -84,10 +84,10 @@ export class LibraryComponent implements OnInit, AfterViewInit {
 
     this.defaultFilters = _.pickBy({
       primaryCategory: contentTypes,
-      board: [_.get(this.collectionhierarcyData, 'board')],
-      gradeLevel: _.get(this.collectionhierarcyData, 'gradeLevel'),
-      medium: _.get(this.collectionhierarcyData, 'medium'),
-      subject: _.get(this.collectionhierarcyData, 'subject'),
+      board: _.get(this.collectionhierarcyData, 'board') || _.get(this.collectionhierarcyData, 'boardIds'),
+      gradeLevel: _.get(this.collectionhierarcyData, 'gradeLevel') || _.get(this.collectionhierarcyData, 'gradeLevelIds'),
+      medium: _.get(this.collectionhierarcyData, 'medium') || _.get(this.collectionhierarcyData, 'mediumIds'),
+      subject: _.get(this.collectionhierarcyData, 'subject') || _.get(this.collectionhierarcyData, 'subjectIds'),
     });
   }
 
@@ -127,9 +127,10 @@ export class LibraryComponent implements OnInit, AfterViewInit {
       // tslint:disable-next-line:max-line-length
       treeItem.showButton = _.isEmpty(_.get(this.editorService.editorConfig, `config.hierarchy.level${data.level}.children`)) ? true : false;
       const treeUnit = self.getUnitWithChildren(child, collectionId, data.level);
-      const treeChildren = treeUnit && treeUnit.filter(item => item.contentType === 'TextBookUnit');
-      // tslint:disable-next-line:no-string-literal
-      treeItem['children'] = (treeChildren && treeChildren.length > 0) ? treeChildren : null;
+      const treeChildren = treeUnit && treeUnit.filter(item => {
+        return item.visibility === 'Parent' && item.mimeType === 'application/vnd.ekstep.content-collection';
+      }); // TODO: rethink this : need to check for questionSet
+      treeItem.children = (treeChildren && treeChildren.length > 0) ? treeChildren : null;
       return treeItem;
     });
     return tree;
@@ -146,7 +147,9 @@ export class LibraryComponent implements OnInit, AfterViewInit {
       createdBy: node.createdBy || null,
       parentId: node.parent || null,
       organisationId: _.has(node, 'organisationId') ? node.organisationId : null,
-      prevStatus: node.prevStatus || null
+      prevStatus: node.prevStatus || null,
+      visibility: node.visibility,
+      mimeType: node.mimeType
     };
     return nodeMeta;
   }
