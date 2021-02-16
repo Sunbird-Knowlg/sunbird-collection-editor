@@ -50,6 +50,8 @@ export class LibraryComponent implements OnInit, AfterViewInit {
       this.fetchContentList();
       this.telemetryService.telemetryPageId = this.pageId;
       this.childNodes = _.get(this.collectionhierarcyData, 'childNodes');
+    }, err => {
+      console.log(err);
     });
   }
 

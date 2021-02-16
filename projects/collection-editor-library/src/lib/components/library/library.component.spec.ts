@@ -6,8 +6,9 @@ import { TelemetryInteractDirective } from '../../directives/telemetry-interact/
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import * as mockData from './library.component.spec.data';
+import { TreeService } from '../../services/tree/tree.service';
+import { EditorService } from '../../services/editor/editor.service';
 const testData = mockData.mockData;
-
 
 describe('LibraryComponent', () => {
   let component: LibraryComponent;
@@ -16,7 +17,7 @@ describe('LibraryComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, RouterTestingModule],
-      providers: [EditorTelemetryService],
+      providers: [EditorTelemetryService, TreeService, EditorService],
       declarations: [ LibraryComponent, TelemetryInteractDirective ],
       schemas: [NO_ERRORS_SCHEMA]
     })
@@ -32,6 +33,17 @@ describe('LibraryComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('#fetchCollectionHierarchy should call after ngOnInit', fakeAsync(() => {
+    const treeService = TestBed.get(TreeService);
+    const editorService = TestBed.get(EditorService);
+    spyOn(treeService, 'getActiveNode').and.callFake(() => {
+      return { getLevel: () => 2 };
+    });
+    spyOn(editorService, 'fetchCollectionHierarchy').and.callThrough();
+    component.ngOnInit();
+    expect(editorService.fetchCollectionHierarchy).toHaveBeenCalled();
+  }));
 
   it('#generateNodeMeta() should return expected result', fakeAsync(() => {
     const generatedNodeData = component.generateNodeMeta(testData.nodeData);
