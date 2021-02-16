@@ -33,14 +33,6 @@ describe('LibraryComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  xit('#setDefaultFilters should call after ngOnInit', () => {
-    spyOn(component, 'setDefaultFilters').and.callThrough();
-    spyOn(component, 'fetchContentList').and.callThrough();
-    component.ngOnInit();
-    expect(component.setDefaultFilters).toHaveBeenCalled();
-    expect(component.fetchContentList).toHaveBeenCalled();
-  });
-
   it('#generateNodeMeta() should return expected result', fakeAsync(() => {
     const generatedNodeData = component.generateNodeMeta(testData.nodeData);
     expect(generatedNodeData).toEqual(testData.generatedNodeData);
