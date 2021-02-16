@@ -7,7 +7,6 @@ import { EditorTelemetryService } from '../../services/telemetry/telemetry.servi
 import { Router } from '@angular/router';
 import { CommonFormElementsModule } from 'common-form-elements';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { FancyTreeComponent } from '../fancy-tree/fancy-tree.component';
 import { SuiModule } from 'ng2-semantic-ui/dist';
 import * as $ from 'jquery';
 import 'jquery.fancytree';
