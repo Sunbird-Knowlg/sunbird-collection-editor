@@ -13,7 +13,7 @@
             <label for="{{mainUnit?.identifier}}" class="sb-color-primary font-weight-bold">{{mainUnit?.name}}</label>
           </div>
           <div class="sb-radio-btn-checkbox sb-radio-btn-primary width-100" [ngClass]="{'disabled': mainUnit?.showButton}">
-            <input (click)="onSelectBehaviour($event)" type="radio" disabled="{{mainUnit?.showButton}}" id="{{mainUnit?.identifier}}" value="{{mainUnit?.identifier}}" name="mainUnit"
+            <input type="radio" disabled="{{mainUnit?.showButton}}" id="{{mainUnit?.identifier}}" value="{{mainUnit?.identifier}}" name="mainUnit"
             [(ngModel)]="prevUnitSelect" (change)="setCollectionUnitBreadcrumb();"
             libTelemetryInteract
             [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata(mainUnit?.identifier,'select','radio_button', telemetryService?.telemetryPageId, {key:'dialog_id',value:'add_to'})"

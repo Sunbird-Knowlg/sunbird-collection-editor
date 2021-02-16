@@ -1,5 +1,14 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { LibraryComponent } from './library.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
+import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
+import * as mockData from './library.component.spec.data';
+const testData = mockData.mockData;
+
 
 describe('LibraryComponent', () => {
   let component: LibraryComponent;
@@ -7,7 +16,11 @@ describe('LibraryComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LibraryComponent ]
+      imports: [HttpClientTestingModule],
+      providers: [EditorTelemetryService,
+        { provide: Router }],
+      declarations: [ LibraryComponent, TelemetryInteractDirective ],
+      schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();
   }));
@@ -15,10 +28,23 @@ describe('LibraryComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(LibraryComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    // fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  xit('#setDefaultFilters should call after ngOnInit', () => {
+    spyOn(component, 'setDefaultFilters').and.callThrough();
+    spyOn(component, 'fetchContentList').and.callThrough();
+    component.ngOnInit();
+    expect(component.setDefaultFilters).toHaveBeenCalled();
+    expect(component.fetchContentList).toHaveBeenCalled();
+  });
+
+  it('#generateNodeMeta() should return expected result', fakeAsync(() => {
+    const generatedNodeData = component.generateNodeMeta(testData.nodeData);
+    expect(generatedNodeData).toEqual(testData.generatedNodeData);
+  }));
 });
