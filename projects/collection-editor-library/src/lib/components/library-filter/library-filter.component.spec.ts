@@ -31,8 +31,6 @@ const mockEditorService = {
   }
 };
 
-// declare var $: any;
-
 describe('LibraryFilterComponent', () => {
   let component: LibraryFilterComponent;
   let fixture: ComponentFixture<LibraryFilterComponent>;
