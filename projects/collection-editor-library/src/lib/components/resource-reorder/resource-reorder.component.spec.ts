@@ -53,27 +53,23 @@ describe('ResourceReorderComponent', () => {
     expect(component.moveEvent.emit).toHaveBeenCalledWith(testData.closePopUp);
   });
 
-  it('#getParents() call #getParentsHelper() with expected parameters', inject([EditorService],
-    (editorService) => {
-      spyOn(component, 'getParentsHelper').and.callThrough();
-      spyOn(component, 'getParents').and.callThrough();
-      component.getParents(testData.collectionUnits, testData.prevUnitSelect);
-      expect(component.getParentsHelper).toHaveBeenCalledWith(
-        {
-          'children': testData.collectionUnits
-        },
+  it('#getParents() call #getParentsHelper() with expected parameters', () => {
+    spyOn(component, 'getParentsHelper').and.callThrough();
+    spyOn(component, 'getParents').and.callThrough();
+    component.getParents(testData.collectionUnits, testData.prevUnitSelect);
+    expect(component.getParentsHelper).toHaveBeenCalledWith (
+      { 'children': testData.collectionUnits },
         testData.prevUnitSelect,
         []
-        );
-  }));
+      );
+  });
 
-  it('#setCollectionUnitBreadcrumb() call #getParents() with expected parameters', inject([EditorService],
-    (editorService) => {
-      spyOn(component, 'getParents').and.callThrough();
-      spyOn(component, 'setCollectionUnitBreadcrumb').and.callThrough();
-      component.setCollectionUnitBreadcrumb();
-      expect(component.getParents).toHaveBeenCalledWith(testData.collectionUnits, testData.prevUnitSelect);
-      expect(component.collectionUnitsBreadcrumb).toEqual(testData.collectionUnitsBreadcrumb);
-  }));
+  it('#setCollectionUnitBreadcrumb() call #getParents() with expected parameters', () => {
+    spyOn(component, 'getParents').and.callThrough();
+    spyOn(component, 'setCollectionUnitBreadcrumb').and.callThrough();
+    component.setCollectionUnitBreadcrumb();
+    expect(component.getParents).toHaveBeenCalledWith(testData.collectionUnits, testData.prevUnitSelect);
+    expect(component.collectionUnitsBreadcrumb).toEqual(testData.collectionUnitsBreadcrumb);
+  });
 
 });
