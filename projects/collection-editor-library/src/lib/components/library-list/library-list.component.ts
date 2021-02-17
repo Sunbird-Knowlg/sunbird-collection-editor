@@ -26,11 +26,6 @@ labelMessages = labelMessages;
   }
 
   changeFilter() {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: 'smooth'
-    });
     this.moveEvent.emit({
       action: 'showFilter'
     });

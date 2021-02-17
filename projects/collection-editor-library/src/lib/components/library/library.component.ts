@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, OnInit, Output, AfterViewInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import * as _ from 'lodash-es';
 import { TreeService } from '../../services/tree/tree.service';
 import { EditorService } from '../../services/editor/editor.service';
+import { ToasterService } from '../../services/toaster/toaster.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { labelMessages } from '../labels';
 import { Router } from '@angular/router';
@@ -9,7 +10,8 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'lib-library',
   templateUrl: './library.component.html',
-  styleUrls: ['./library.component.scss']
+  styleUrls: ['./library.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class LibraryComponent implements OnInit, AfterViewInit {
   labelMessages = labelMessages;
@@ -34,7 +36,8 @@ export class LibraryComponent implements OnInit, AfterViewInit {
   constructor(public telemetryService: EditorTelemetryService,
               private editorService: EditorService,
               private router: Router,
-              private treeService: TreeService) {
+              private treeService: TreeService,
+              private toasterService: ToasterService) {
               this.pageStartTime = Date.now();
               }
 
@@ -50,6 +53,8 @@ export class LibraryComponent implements OnInit, AfterViewInit {
       this.fetchContentList();
       this.telemetryService.telemetryPageId = this.pageId;
       this.childNodes = _.get(this.collectionhierarcyData, 'childNodes');
+    }, err => {
+      this.toasterService.error(this.labelMessages.err.somethingWentWrong);
     });
   }
 
@@ -183,10 +188,10 @@ export class LibraryComponent implements OnInit, AfterViewInit {
   }
 
   openFilter(): void {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: 'smooth'
+    window.scrollTo({	
+      top: 0,	
+      left: 0,	
+      behavior: 'smooth'	
     });
     this.isFilterOpen = true;
   }

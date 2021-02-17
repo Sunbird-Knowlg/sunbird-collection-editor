@@ -8,7 +8,7 @@ import { EditorTelemetryService } from '../../services/telemetry/telemetry.servi
 describe('LibraryPlayerComponent', () => {
   let component: LibraryPlayerComponent;
   let fixture: ComponentFixture<LibraryPlayerComponent>;
-
+  const mockData = {action: 'openHierarchyPopup'};
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       providers: [EditorTelemetryService],
@@ -27,5 +27,10 @@ describe('LibraryPlayerComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+  it('should call addToLibrary', () => {
+    spyOn(component.moveEvent, 'emit').and.returnValue(mockData);
+    component.addToLibrary();
+    expect(component.moveEvent.emit).toHaveBeenCalledWith(mockData); 
   });
 });
