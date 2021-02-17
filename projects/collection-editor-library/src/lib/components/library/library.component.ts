@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, AfterViewInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import * as _ from 'lodash-es';
 import { TreeService } from '../../services/tree/tree.service';
 import { EditorService } from '../../services/editor/editor.service';
@@ -10,7 +10,8 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'lib-library',
   templateUrl: './library.component.html',
-  styleUrls: ['./library.component.scss']
+  styleUrls: ['./library.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class LibraryComponent implements OnInit, AfterViewInit {
   labelMessages = labelMessages;
