@@ -133,9 +133,10 @@
     z-index: 2;
     padding: 0 !important;
     .sb-btn-cover{
-      padding: 0.5rem 2.21rem 0.5rem 0.5rem;
+      padding: 0.5rem;
       border-right: solid 1px #ccc;
-      width: 100%;
+      width: 50%;
+      text-align: center;
       .sb-btn{
         &:hover{
           background: none !important;
