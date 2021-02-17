@@ -3,7 +3,6 @@ import { Component, AfterViewInit, Input, ViewChild, ElementRef, Output, EventEm
 import { takeUntil } from 'rxjs/operators';
 import 'jquery.fancytree';
 import * as _ from 'lodash-es';
-import { ActivatedRoute } from '@angular/router';
 import { TreeService } from '../../services/tree/tree.service';
 import { EditorService } from '../../services/editor/editor.service';
 import { HelperService } from '../../services/helper/helper.service';
@@ -49,7 +48,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   <span id= "removeNodeIcon"> <i class="fa fa-trash-o" type="button"></i> </span>`;
   // tslint:disable-next-line:max-line-length
   public contentMenuTemplate = `<span id="contextMenu"><span id= "removeNodeIcon"> <i class="fa fa-trash-o" type="button"></i> </span></span>`;
-  constructor(public activatedRoute: ActivatedRoute, public treeService: TreeService, private editorService: EditorService,
+  constructor( public treeService: TreeService, private editorService: EditorService,
               public telemetryService: EditorTelemetryService, private helperService: HelperService,
               private toasterService: ToasterService) { }
   private onComponentDestroy$ = new Subject<any>();
