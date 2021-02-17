@@ -53,7 +53,7 @@ export class LibraryComponent implements OnInit, AfterViewInit {
       this.telemetryService.telemetryPageId = this.pageId;
       this.childNodes = _.get(this.collectionhierarcyData, 'childNodes');
     }, err => {
-      this.toasterService.error('Something went wrong');
+      this.toasterService.error(this.labelMessages.err.somethingWentWrong);
     });
   }
 
