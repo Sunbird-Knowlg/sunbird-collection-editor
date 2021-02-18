@@ -83,71 +83,44 @@ describe('LibraryFilterComponent', () => {
   });
 
   it('should call onQueryEnter', () => {
-    const treeService = TestBed.get(TreeService);
-    spyOn(component, 'fetchFrameWorkDetails').and.callThrough();
-    spyOn(treeService, 'getActiveNode').and.callFake(() => {
-      return { getLevel: () => 2 };
-    });
-    component.ngOnInit();
-
+    spyOn(component, 'onQueryEnter');
     const fixture = TestBed.createComponent(LibraryFilterComponent);
     fixture.detectChanges();
-
     const input = fixture.debugElement.query(By.css('input'));
     input.triggerEventHandler('keyup.enter', {});
     fixture.detectChanges();
-
-    spyOn(component, 'onQueryEnter');
+    expect(component.onQueryEnter).toHaveBeenCalled();
   });
 
   it('should call showfilter', () => {
-    const treeService = TestBed.get(TreeService);
-    spyOn(component, 'fetchFrameWorkDetails').and.callThrough();
-    spyOn(treeService, 'getActiveNode').and.callFake(() => {
-      return { getLevel: () => 2 };
-    });
-    component.ngOnInit();
-
+    spyOn(component, 'showfilter');
     const fixture = TestBed.createComponent(LibraryFilterComponent);
     fixture.detectChanges();
 
     const div = fixture.debugElement.query(By.css('div'));
     div.triggerEventHandler('click', {});
     fixture.detectChanges();
-    spyOn(component, 'showfilter');
+    expect(component.showfilter).toHaveBeenCalled();
   });
 
   it('should call resetFilter', () => {
-    const treeService = TestBed.get(TreeService);
-    spyOn(component, 'fetchFrameWorkDetails').and.callThrough();
-    spyOn(treeService, 'getActiveNode').and.callFake(() => {
-      return { getLevel: () => 2 };
-    });
-    component.ngOnInit();
-
+    spyOn(component, 'resetFilter');
     const fixture = TestBed.createComponent(LibraryFilterComponent);
     fixture.detectChanges();
 
     const button = fixture.debugElement.query(By.css('button'));
     button.triggerEventHandler('click', {});
     fixture.detectChanges();
-    spyOn(component, 'resetFilter');
+    expect(component.resetFilter).toHaveBeenCalled();
   });
 
   it('should call applyFilter', () => {
-    const treeService = TestBed.get(TreeService);
-    spyOn(component, 'fetchFrameWorkDetails').and.callThrough();
-    spyOn(treeService, 'getActiveNode').and.callFake(() => {
-      return { getLevel: () => 2 };
-    });
-    component.ngOnInit();
-
+    spyOn(component, 'applyFilter');
     const fixture = TestBed.createComponent(LibraryFilterComponent);
     fixture.detectChanges();
-
     const button = fixture.debugElement.query(By.css('button'));
     button.triggerEventHandler('click', {});
     fixture.detectChanges();
-    spyOn(component, 'applyFilter');
+    expect(component.applyFilter).toHaveBeenCalled();
   });
 });
