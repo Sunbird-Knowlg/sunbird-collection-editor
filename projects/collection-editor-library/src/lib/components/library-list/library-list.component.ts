@@ -39,11 +39,11 @@ public sortContent = false;
   });
   }
   sortContentList() {
+    this.sortContent = !this.sortContent;
     this.moveEvent.emit({
       action: 'sortContentList',
-      status: !this.sortContent
+      status: this.sortContent
     });  
-    this.sortContent = !this.sortContent;
   }
   addToLibrary() {
     this.moveEvent.emit({
