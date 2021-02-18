@@ -10,14 +10,12 @@
        [(ngModel)]="showAddedContent" (checkChange)="onShowAddedContentChange();"></sui-checkbox>
         <small class="d-block mt-5 fs-0785"> {{labelMessages?.lbl?.showContentAddedToCollection}}</small>
     </div>
-      <!-- <div class="sb-w-75">
-        <label class="d-block font-weight-normal fs-0785">Sort By</label>
-        <sui-multi-select class="selection" placeholder="A - Z"
-                          #multiSelect>
-            <sui-select-option>
-            </sui-select-option>
-        </sui-multi-select>
-    </div> -->
+    <div class="sb-w-75">
+      <label class="d-block font-weight-normal fs-0785">{{labelMessages?.lbl?.sortBy}}</label>
+      <div (click)="sortContentList();" libTelemetryInteract
+      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('Sort_By','click','launch', telemetryService?.telemetryPageId, {sortContent: !sortContent})"
+       [ngClass]="{'sb-btn-outline-primary': sortContent}" class="sb-btn sb-btn-outline-gray sb-btn-normal ripple">A - Z</div>
+</div>
   </div>
   <!-- Class separator -->
   <div class="sb-library-scroll">

@@ -19,7 +19,8 @@ export const labelMessages = {
         ChangeFilters: 'Change filters',
         addFromLibrary: 'Add from Library',
         showContentAddedToCollection: 'Show content added to collection',
-        addContent: 'Add content'
+        addContent: 'Add content',
+        sortBy: 'Sort By'
     },
     err : {
         somethingWentWrong : 'Something went wrong'

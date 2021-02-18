@@ -16,6 +16,7 @@ export class LibraryListComponent implements OnInit {
 @Output() moveEvent = new EventEmitter<any>();
 @Input() selectedContent: any;
 labelMessages = labelMessages;
+public sortContent = false;
   constructor(public editorService: EditorService, public telemetryService: EditorTelemetryService ) { }
 
   ngOnInit() {
@@ -37,7 +38,13 @@ labelMessages = labelMessages;
     status: this.showAddedContent
   });
   }
-
+  sortContentList() {
+    this.moveEvent.emit({
+      action: 'sortContentList',
+      status: !this.sortContent
+    });  
+    this.sortContent = !this.sortContent;
+  }
   addToLibrary() {
     this.moveEvent.emit({
       action: 'openHierarchyPopup'
