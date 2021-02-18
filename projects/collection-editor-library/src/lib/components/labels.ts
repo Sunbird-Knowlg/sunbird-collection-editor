@@ -20,5 +20,8 @@ export const labelMessages = {
         addFromLibrary: 'Add from Library',
         showContentAddedToCollection: 'Show content added to collection',
         addContent: 'Add content'
+    },
+    err : {
+        somethingWentWrong : 'Something went wrong'
     }
 };

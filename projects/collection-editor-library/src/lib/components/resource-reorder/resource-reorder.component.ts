@@ -32,10 +32,6 @@ export class ResourceReorderComponent implements OnInit {
     this.setCollectionUnitBreadcrumb();
   }
 
-  onSelectBehaviour(e) {
-    e.stopPropagation();
-  }
-
   addResource() {
     this.editorService.addResourceToHierarchy(this.collectionId, this.prevUnitSelect, this.selectedContentDetails.identifier)
     .subscribe((data) => {
