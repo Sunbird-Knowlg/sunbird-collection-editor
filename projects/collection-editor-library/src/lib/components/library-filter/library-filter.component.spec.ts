@@ -49,42 +49,64 @@ describe('LibraryFilterComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(LibraryFilterComponent);
     component = fixture.componentInstance;
-    // fixture.detectChanges();
+    const treeService = TestBed.get(TreeService);
+    spyOn(treeService, 'getActiveNode').and.callFake(() => {
+      return { getLevel: () => 2 };
+    });
+    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should called setFilterDefaultValues', () => {
+  it('#ngOnInit should call method #setFilterDefaultValues', () => {
     const treeService = TestBed.get(TreeService);
     spyOn(component, 'setFilterDefaultValues').and.callThrough();
-    spyOn(treeService, 'getActiveNode').and.callFake(() => {
-      return { getLevel: () => 2 };
-    });
     component.ngOnInit();
     expect(component.setFilterDefaultValues).toHaveBeenCalled();
   });
 
-  it('should called fetchFrameWorkDetails', () => {
+  it('#ngOnInit should call method #fetchFrameWorkDetails', () => {
     const treeService = TestBed.get(TreeService);
     spyOn(component, 'fetchFrameWorkDetails').and.callThrough();
-    spyOn(treeService, 'getActiveNode').and.callFake(() => {
-      return { getLevel: () => 2 };
-    });
     component.ngOnInit();
     expect(component.fetchFrameWorkDetails).toHaveBeenCalled();
   });
 
-  it('should called emitApplyFilter', () => {
+  it('#applyFilter should call method #emitApplyFilter', () => {
     spyOn(component, 'emitApplyFilter');
     component.applyFilter();
     expect(component.emitApplyFilter).toHaveBeenCalled();
   });
 
-  it('should call onQueryEnter', () => {
+  it('#showfilter should toggle #isFilterShow', () => {
+    component.showfilter();
+    expect(component.isFilterShow).toBe(true, 'on after first click');
+    component.showfilter();
+    expect(component.isFilterShow).toBe(false, 'on after second click');
+  });
+
+  it('#showfilter should emit #filterChangeEvent event', () => {
+    spyOn(component.filterChangeEvent, 'emit');
+    component.showfilter();
+    expect(component.filterChangeEvent.emit).toHaveBeenCalled();
+  });
+
+  it('#emitApplyFilter should call #emit event', () => {
+    spyOn(component.filterChangeEvent, 'emit').and.callThrough();
+    component.emitApplyFilter();
+    expect(component.filterChangeEvent.emit).toHaveBeenCalled();
+  });
+
+  it('#onQueryEnter should call method #emitApplyFilter', () => {
+    spyOn(component, 'emitApplyFilter');
+    component.onQueryEnter({});
+    expect(component.emitApplyFilter).toHaveBeenCalled();
+  });
+
+  it('#onQueryEnter should call on enter key press in search input field', () => {
     spyOn(component, 'onQueryEnter');
-    const fixture = TestBed.createComponent(LibraryFilterComponent);
     fixture.detectChanges();
     const input = fixture.debugElement.query(By.css('input'));
     input.triggerEventHandler('keyup.enter', {});
@@ -92,31 +114,26 @@ describe('LibraryFilterComponent', () => {
     expect(component.onQueryEnter).toHaveBeenCalled();
   });
 
-  it('should call showfilter', () => {
-    spyOn(component, 'showfilter');
-    const fixture = TestBed.createComponent(LibraryFilterComponent);
-    fixture.detectChanges();
-
-    const div = fixture.debugElement.query(By.css('div'));
-    div.triggerEventHandler('click', {});
-    fixture.detectChanges();
-    expect(component.showfilter).toHaveBeenCalled();
+  it('#resetFilter should remove filters selected values and call method #emitApplyFilter', ()=> {
+    spyOn(component, 'emitApplyFilter');
+    component.resetFilter();
+    expect(component.filterValues).toEqual({});
+    expect(component.searchQuery).toEqual('');
+    expect(component.emitApplyFilter).toHaveBeenCalled();
   });
 
-  it('should call resetFilter', () => {
-    spyOn(component, 'resetFilter');
-    const fixture = TestBed.createComponent(LibraryFilterComponent);
+  xit('#resetFilter should call on reset filter button click', () => {
+    spyOn(component, 'resetFilter').and.callThrough();
+    component.isFilterShow = true;
     fixture.detectChanges();
-
-    const button = fixture.debugElement.query(By.css('button'));
+    const button = fixture.debugElement.query(By.css('#resetFilter'));
     button.triggerEventHandler('click', {});
     fixture.detectChanges();
     expect(component.resetFilter).toHaveBeenCalled();
   });
 
-  it('should call applyFilter', () => {
+  xit('#applyFilter should call on apply filter button click', () => {
     spyOn(component, 'applyFilter');
-    const fixture = TestBed.createComponent(LibraryFilterComponent);
     fixture.detectChanges();
     const button = fixture.debugElement.query(By.css('button'));
     button.triggerEventHandler('click', {});
