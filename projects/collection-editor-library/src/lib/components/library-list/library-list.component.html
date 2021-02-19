@@ -14,7 +14,7 @@
       <label class="d-block font-weight-normal fs-0785">{{labelMessages?.lbl?.sortBy}}</label>
       <div (click)="sortContentList();" libTelemetryInteract
       [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('Sort_By','click','launch', telemetryService?.telemetryPageId, {sortContent: !sortContent})"
-       [ngClass]="{'sb-btn-outline-primary': sortContent}" class="sb-btn sb-btn-outline-gray sb-btn-normal ripple">A - Z</div>
+       [ngClass]="{'sb-btn-outline-primary': sortContent}" class="sb-btn sb-btn-outline-gray sb-btn-normal ripple">{{labelMessages?.lbl?.sortlabel}}</div>
 </div>
   </div>
   <!-- Class separator -->
