@@ -20,7 +20,8 @@ export const labelMessages = {
         addFromLibrary: 'Add from Library',
         showContentAddedToCollection: 'Show content added to collection',
         addContent: 'Add content',
-        sortBy: 'Sort By'
+        sortBy: 'Sort By',
+        sortlabel: 'A - Z'
     },
     err : {
         somethingWentWrong : 'Something went wrong'
