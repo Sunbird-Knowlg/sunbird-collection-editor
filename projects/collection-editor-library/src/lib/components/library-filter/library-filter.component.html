@@ -10,7 +10,7 @@
         </div>
         <button class="sb-btn sb-btn-normal">{{labelMessages?.lbl?.search}}</button>
       </div>
-      <div id="libShowFilter" class="fs-0-785 cursor-pointer" (click)="showfilter()"
+      <div class="fs-0-785 cursor-pointer" (click)="showfilter()"
         libTelemetryInteract
         [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('filter_accordion','click',undefined, this.telemetryService?.telemetryPageId)">
         {{labelMessages?.lbl?.filterText}}
@@ -26,11 +26,11 @@
           (statusChanges)="onStatusChanges($event)" (valueChanges)="valueChanges($event)"></sb-dynamic-form>
       </ng-container>
       <div class="d-flex flex-as-center pt-10 sb-btn-cover flex-jc-space-end">
-        <button id="resetFilter" type="button" class="sb-btn sb-btn-normal sb-btn-outline-primary ml-5" (click)="resetFilter();"
+        <button type="button" class="sb-btn sb-btn-normal sb-btn-outline-primary ml-5" (click)="resetFilter();"
         libTelemetryInteract
         [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('reset','click','submit', this.telemetryService?.telemetryPageId)"
         >Reset</button>
-        <button id="applyFilter" type="button" class="sb-btn sb-btn-normal sb-btn-primary ml-15" (click)="applyFilter();"
+        <button type="button" class="sb-btn sb-btn-normal sb-btn-primary ml-15" (click)="applyFilter();"
         libTelemetryInteract
         [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('apply','click','submit', this.telemetryService?.telemetryPageId, {filters: filterValues})"
         >Apply</button>
