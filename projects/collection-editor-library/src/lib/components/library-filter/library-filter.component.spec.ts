@@ -121,23 +121,4 @@ describe('LibraryFilterComponent', () => {
     expect(component.searchQuery).toEqual('');
     expect(component.emitApplyFilter).toHaveBeenCalled();
   });
-
-  xit('#resetFilter should call on reset filter button click', () => {
-    spyOn(component, 'resetFilter').and.callThrough();
-    component.isFilterShow = true;
-    fixture.detectChanges();
-    const button = fixture.debugElement.query(By.css('#resetFilter'));
-    button.triggerEventHandler('click', {});
-    fixture.detectChanges();
-    expect(component.resetFilter).toHaveBeenCalled();
-  });
-
-  xit('#applyFilter should call on apply filter button click', () => {
-    spyOn(component, 'applyFilter');
-    fixture.detectChanges();
-    const button = fixture.debugElement.query(By.css('button'));
-    button.triggerEventHandler('click', {});
-    fixture.detectChanges();
-    expect(component.applyFilter).toHaveBeenCalled();
-  });
 });
