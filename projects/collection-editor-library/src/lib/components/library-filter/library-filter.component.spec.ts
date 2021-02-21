@@ -15,16 +15,16 @@ import { By } from '@angular/platform-browser';
 
 const mockEditorService = {
   editorConfig: {
-    config : {
+    config: {
       hierarchy: {
-          level1: {
-              name: 'Module',
-              type: 'Unit',
-              mimeType: 'application/vnd.ekstep.content-collection',
-              contentType: 'Course Unit',
-              iconClass: 'fa fa-folder-o',
-              children: {}
-          }
+        level1: {
+          name: 'Module',
+          type: 'Unit',
+          mimeType: 'application/vnd.ekstep.content-collection',
+          contentType: 'Course Unit',
+          iconClass: 'fa fa-folder-o',
+          children: {}
+        }
       }
     }
   }
@@ -42,8 +42,7 @@ describe('LibraryFilterComponent', () => {
       providers: [EditorTelemetryService, { provide: Router, useClass: RouterStub }, TreeService, { provide: EditorService, useValue: mockEditorService }],
       declarations: [LibraryFilterComponent, TelemetryInteractDirective],
       imports: [FormsModule, CommonFormElementsModule, HttpClientTestingModule, SuiModule]
-    })
-      .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -61,15 +60,13 @@ describe('LibraryFilterComponent', () => {
   });
 
   it('#ngOnInit should call method #setFilterDefaultValues', () => {
-    const treeService = TestBed.get(TreeService);
-    spyOn(component, 'setFilterDefaultValues').and.callThrough();
+    spyOn(component, 'setFilterDefaultValues');
     component.ngOnInit();
     expect(component.setFilterDefaultValues).toHaveBeenCalled();
   });
 
   it('#ngOnInit should call method #fetchFrameWorkDetails', () => {
-    const treeService = TestBed.get(TreeService);
-    spyOn(component, 'fetchFrameWorkDetails').and.callThrough();
+    spyOn(component, 'fetchFrameWorkDetails');
     component.ngOnInit();
     expect(component.fetchFrameWorkDetails).toHaveBeenCalled();
   });
@@ -94,7 +91,7 @@ describe('LibraryFilterComponent', () => {
   });
 
   it('#emitApplyFilter should call #emit event', () => {
-    spyOn(component.filterChangeEvent, 'emit').and.callThrough();
+    spyOn(component.filterChangeEvent, 'emit');
     component.emitApplyFilter();
     expect(component.filterChangeEvent.emit).toHaveBeenCalled();
   });
@@ -108,17 +105,22 @@ describe('LibraryFilterComponent', () => {
   it('#onQueryEnter should call on enter key press in search input field', () => {
     spyOn(component, 'onQueryEnter');
     fixture.detectChanges();
-    const input = fixture.debugElement.query(By.css('input'));
+    const input = fixture.debugElement.query(By.css('#searchInputField'));
     input.triggerEventHandler('keyup.enter', {});
     fixture.detectChanges();
     expect(component.onQueryEnter).toHaveBeenCalled();
   });
 
-  it('#resetFilter should remove filters selected values and call method #emitApplyFilter', ()=> {
+  it('#resetFilter should remove filters values and call method #emitApplyFilter', () => {
     spyOn(component, 'emitApplyFilter');
     component.resetFilter();
     expect(component.filterValues).toEqual({});
     expect(component.searchQuery).toEqual('');
     expect(component.emitApplyFilter).toHaveBeenCalled();
+  });
+
+  it('#valueChanges should set value in #filterValues', ()=> {
+    component.valueChanges({});
+    expect(component.filterValues).toBeDefined();
   });
 });
