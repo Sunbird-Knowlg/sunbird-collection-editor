@@ -27,7 +27,6 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
   public isFilterShow = false;
   public filterFields: any;
   public telemetryPageId: string;
-  public framework = 'ekstep_ncert_k-12';
   private onComponentDestroy$ = new Subject<any>();
   public frameworkDetails: any = {};
   public currentFilters: any;
