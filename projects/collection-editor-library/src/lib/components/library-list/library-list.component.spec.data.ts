@@ -134,5 +134,13 @@ export const mockData = {
         "resourceType": "Learn",
         "node_id": 29619
     }
+} ,
+   sortContentList: {
+    action: 'sortContentList',
+    status: true
+},
+unSortContentList: {
+    action: 'sortContentList',
+    status: false
 }
 }

@@ -55,4 +55,18 @@ describe('LibraryListComponent', () => {
     component.onContentChange(mockData.selectedContent.content);
     expect(component.contentChangeEvent.emit).toHaveBeenCalledWith(mockData.selectedContent); 
   });
+  it('should call sortContentList and sort content list', () => {
+    component.sortContent = false;
+    spyOn(component.moveEvent, 'emit').and.returnValue(mockData.sortContentList);
+    component.sortContentList();
+    expect(component.moveEvent.emit).toHaveBeenCalledWith(mockData.sortContentList); 
+    expect(component.sortContent).toBeTruthy;
+  });
+  it('should call sortContentList and set to previous order', () => {
+    component.sortContent = true;
+    spyOn(component.moveEvent, 'emit').and.returnValue(mockData.unSortContentList);
+    component.sortContentList();
+    expect(component.moveEvent.emit).toHaveBeenCalledWith(mockData.unSortContentList); 
+    expect(component.sortContent).toBeFalsy;
+  });
 });

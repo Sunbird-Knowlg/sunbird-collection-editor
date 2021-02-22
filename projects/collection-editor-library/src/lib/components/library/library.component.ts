@@ -182,10 +182,20 @@ export class LibraryComponent implements OnInit, AfterViewInit {
         this.childNodes.push(event.data.identifier);
         this.filterContentList(true);
         break;
+        case 'sortContentList':
+          this.sortContentList(event.status)
+          break;
       default:
         break;
     }
   }
+sortContentList(status){
+  this.contentList = this.contentList.sort((a, b) => {
+    return this.editorService.sort(status ? b: a,status ? a:  b, status ? 'name': 'lastUpdatedOn');
+  });
+    const selectedContentIndex = this.showAddedContent ? 0 : _.findIndex(this.contentList, { isAdded: false });
+    this.selectedContent = this.contentList[selectedContentIndex];
+}
 
   openFilter(): void {
     window.scrollTo({	

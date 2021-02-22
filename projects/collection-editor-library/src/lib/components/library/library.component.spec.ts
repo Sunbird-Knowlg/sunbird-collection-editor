@@ -90,4 +90,9 @@ describe('LibraryComponent', () => {
     component.onContentChangeEvent(mockData.selectedContent);
     expect(component.selectedContent).toEqual(mockData.selectedContent.content);
   });
+  it('should call sortContentList', () => {
+    component.contentList = mockData.unSortedContentList;
+    component.sortContentList(true);
+    expect(component.contentList).toEqual(mockData.secondContentList);
+  });
 });
