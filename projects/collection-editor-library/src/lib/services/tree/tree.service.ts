@@ -54,7 +54,7 @@ export class TreeService {
     const nodeConfig = (createType === 'sibling') ? this.config.hierarchy[`level${selectedNode.getLevel() - 1}`] : this.config.hierarchy[`level${selectedNode.getLevel()}`];
     node.title = data.name ? (data.name) : _.get(nodeConfig, 'name');
     node.tooltip = node.tiltle;
-    node.objectType = (data.visibility && data.visibility === 'Default') ? data.primaryCategory : nodeConfig.type;
+    node.objectType = (data.visibility && data.visibility === 'Default') ? data.contentType : nodeConfig.contentType;
     node.id = data.identifier ? data.identifier : UUID.UUID();
     node.root = false;
     node.folder = (data.visibility && data.visibility === 'Default') ? false : true;
@@ -63,19 +63,15 @@ export class TreeService {
     if (node.folder) {
       newNode = (createType === 'sibling') ? selectedNode.appendSibling(node) : selectedNode.addChildren(node);
       if (_.isEmpty(newNode.data.metadata)) {
-        // tslint:disable-next-line:max-line-length
         newNode.data.metadata = { mimeType: _.get(nodeConfig, 'mimeType'), code: node.id, name: node.title };
       }
       // tslint:disable-next-line:max-line-length
-      // const modificationData = { isNew: true, root: false, metadata: { mimeType: _.get(nodeConfig, 'mimeType'), contentType: _.get(this.getActiveNode(), 'data.objectType'), code: node.id, name: node.title } };
-      // tslint:disable-next-line:max-line-length
-      const metadata = { mimeType: _.get(nodeConfig, 'mimeType'), code: node.id, name: node.title, primaryCategory: _.get(nodeConfig, 'contentType') };
+      const metadata = { mimeType: _.get(nodeConfig, 'mimeType'), code: node.id, name: node.title, contentType: _.get(nodeConfig, 'contentType') };
       this.setTreeCache(node.id, metadata);
     } else {
       newNode = (createType === 'sibling') ? selectedNode.appendSibling(node) : selectedNode.addChildren(node);
     }
     newNode.setActive();
-    // selectedNode.sortChildren(null, true);
     selectedNode.setExpanded();
     $('span.fancytree-title').attr('style', 'width:11em;text-overflow:ellipsis;white-space:nowrap;overflow:hidden');
     $(this.treeNativeElement).scrollLeft($('.fancytree-lastsib').width());

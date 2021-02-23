@@ -138,7 +138,7 @@ export class EditorBaseComponent implements OnInit, OnDestroy, AfterViewInit {
         break;
       case 'onFormStatusChange':
         const selectedNode = this.treeService.getActiveNode();
-        if (selectedNode.data.root) { this.submitFormStatus = event.event.isValid; }
+        if (selectedNode && selectedNode.data.root) { this.submitFormStatus = event.event.isValid; }
         break;
       case 'onFormValueChange':
         this.updateToolbarTitle(event);
