@@ -277,7 +277,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     const $nodeSpan = $(node.span);
     // tslint:disable-next-line:max-line-length   // TODO:: (node.data.objectType === 'CourseUnit') check this condition
-    const menuTemplate = node.data.root === true ? this.rootMenuTemplate : (node.data.objectType === 'CourseUnit' ? this.folderMenuTemplate : this.contentMenuTemplate);
+    const menuTemplate = node.data.root === true ? this.rootMenuTemplate : (node.data.root === false && node.folder === true  ? this.folderMenuTemplate : this.contentMenuTemplate);
     const iconsButton = $(menuTemplate);
     if ((node.getLevel() - 1) >= this.config.maxDepth) {
       iconsButton.find('#addchild').remove();
