@@ -26,7 +26,7 @@ export class EditorHeaderComponent implements OnDestroy, OnInit {
   public rejectComment: string;
   public contentComment: string;
   constructor(private editorService: EditorService, private treeService: TreeService,
-    private helperService: HelperService, public telemetryService: EditorTelemetryService) { }
+              private helperService: HelperService, public telemetryService: EditorTelemetryService) { }
 
   ngOnInit() {
     this.handleActionButtons();

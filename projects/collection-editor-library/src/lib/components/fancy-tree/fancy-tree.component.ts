@@ -58,6 +58,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.config = _.cloneDeep(this.editorService.editorConfig.config);
+    this.config.mode =  _.get(this.config, 'mode').toLowerCase();
     if (!_.get(this.config, 'maxDepth')) {
       this.config.maxDepth = 4;
     }

@@ -27,7 +27,7 @@ export class EditorService {
 
   public initialize(config: EditorConfig) {
     this._editorConfig = config;
-    this._editorMode = _.get(this._editorConfig, 'config.mode');
+    this._editorMode = _.get(this._editorConfig, 'config.mode').toLowerCase();
   }
 
   public get editorConfig(): EditorConfig {
