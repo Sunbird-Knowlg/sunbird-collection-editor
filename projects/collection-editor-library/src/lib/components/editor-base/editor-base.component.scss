@@ -1,3 +1,7 @@
+.add-to-library{
+  position: relative;
+  z-index: 999 !important;
+}
 .sb-checkbox-tnc {
     .sb-required {
       position: absolute;
@@ -11,4 +15,7 @@
 }
 .ui.column.grid>[class*="eight wide"].column{
     width: 73% !important;
+}
+.footer-fix{
+  padding-bottom: 1rem !important;
 }
