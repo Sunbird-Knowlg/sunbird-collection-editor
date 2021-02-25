@@ -28,6 +28,9 @@
           &-ico-c{
             padding-left: 18px !important;
           }
+          &-ico-cf{
+            padding-left: 25px !important;
+          }
           &-expanded {
             padding: 15px 33px;
             border: 1px solid transparent;
@@ -130,7 +133,7 @@
     right: 0;
     bottom: 0;
     background-color: #fff;
-    z-index: 2;
+    z-index: 155;
     padding: 0 !important;
     .sb-btn-cover{
       padding: 0.5rem;
