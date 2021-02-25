@@ -111,7 +111,7 @@ export class LibraryComponent implements OnInit, AfterViewInit {
       }
     };
     this.editorService.fetchContentListDetails(option).subscribe((response: any) => {
-     // this.showLoader = false;
+      this.showLoader = false;
       if (!(_.get(response, 'result.count'))) {
         this.contentList = [];
       } else {
