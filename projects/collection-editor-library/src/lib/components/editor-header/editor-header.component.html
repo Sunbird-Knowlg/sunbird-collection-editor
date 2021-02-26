@@ -50,7 +50,7 @@
 </div>
 
 <sui-modal *ngIf="showRequestChangesPopup" [mustScroll]="true" [isClosable]="false" [transitionDuration]="0"
-  [size]="'normal'" class="sb-modal" appBodyScroll #modal (dismissed)="showRequestChangesPopup = false;">
+  [size]="'normal'" class="sb-modal bx-none overflow-modal" appBodyScroll #modal (dismissed)="showRequestChangesPopup = false;">
   <div class="sb-modal-header">
       Add Review Comments
   </div>
@@ -80,7 +80,7 @@
 </sui-modal>
 
 <sui-modal *ngIf="showReviewModal" [mustScroll]="true" [isClosable]="true" [transitionDuration]="0"
-  [size]="'normal'" class="sb-modal" appBodyScroll
+  [size]="'normal'" class="sb-modal bx-none overflow-modal" appBodyScroll
   (dismissed)="showReviewModal = !showReviewModal" #modal>
   <div class="sb-modal-header">
       Review Comments
