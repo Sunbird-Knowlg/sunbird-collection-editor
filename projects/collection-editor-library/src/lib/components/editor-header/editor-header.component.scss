@@ -26,4 +26,16 @@
       background: none !important;
     }
   }
+  .bx-none .ui.modal{
+    box-shadow:none !important;
+  }
   
+  .overflow-modal {
+    .ui.modal{
+      box-shadow: none;
+    }
+    .sb-tabset-segment{
+      border: none;
+    }
+  }
+    
