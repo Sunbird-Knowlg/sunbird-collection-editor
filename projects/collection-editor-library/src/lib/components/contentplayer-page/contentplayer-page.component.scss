@@ -88,7 +88,7 @@ lib-contentplayer-page{
       &__title {
         font-weight: bold;
         color: var(--primary-400);
-        font-size: $font-size-md;
+        font-size: 16px;
   
         &__subtitle {
           display: flex;
@@ -106,7 +106,7 @@ lib-contentplayer-page{
         .separator {
           border-left: calculateRem(0.5px)solid var(--gray-400);
           height: calculateRem(40px);
-          width: ($base-block-space);
+          width: 0.5rem;
         }
       }
     }
