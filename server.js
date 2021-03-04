@@ -32,6 +32,28 @@ app.all(['/api/framework/v1/read/*', '/learner/framework/v1/read/*', '/api/chann
 }));
 
 
+
+app.use([
+    '/action/questionset/v1/*',
+    '/action/question/v1/*',
+    '/action/object/category/definition/v1/*',
+    ], proxy('dev.sunbirded.org', {
+    https: true,
+    proxyReqPathResolver: function (req) {
+        let originalUrl = req.originalUrl.replace('/action/', '/api/')
+        console.log('proxyReqPathResolver questionset', originalUrl, require('url').parse(originalUrl).path);
+        return require('url').parse(originalUrl).path;
+    },
+    proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
+        console.log('proxyReqOptDecorator questionset')
+        // you can update headers
+        proxyReqOpts.headers['Content-Type'] = 'application/json';
+        proxyReqOpts.headers['user-id'] = 'content-editor';
+        proxyReqOpts.headers['authorization'] = 'Bearer ';
+        return proxyReqOpts;
+    }
+}));
+
 app.use(['/api','/assets','/action'], proxy('dock.sunbirded.org', {
     https: true,
     proxyReqPathResolver: function(req) {

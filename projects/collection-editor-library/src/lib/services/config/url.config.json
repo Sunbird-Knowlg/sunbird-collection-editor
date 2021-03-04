@@ -1,0 +1,19 @@
+{
+  "URLS": {
+    "QuestionSet": {
+      "CREATE": "questionset/v1/create",
+      "READ": "questionset/v1/read",
+      "HIERARCHY_READ": "questionset/v1/hierarchy",
+      "HIERARCHY_UPDATE": "questionset/v1/hierarchy/update"
+    },
+    "Collection": {
+      "READ": "content/v3/hierarchy",
+      "UPDATE": "content/v3/update",
+      "REVIEW": "content/v3/review",
+      "HIERARCHY_ADD": "content/v3/hierarchy/add",
+      "HIERARCHY_READ": "content/v3/hierarchy",
+      "HIERARCHY_REMOVE": "content/v3/hierarchy/remove",
+      "HIERARCHY_UPDATE": "content/v3/hierarchy/update"
+    }
+  }
+}
