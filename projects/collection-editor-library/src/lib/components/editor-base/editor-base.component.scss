@@ -1,6 +1,15 @@
-.add-to-library{
+.add-to-library {
   position: relative;
   z-index: 999 !important;
+  .sb-required {
+    color:#ff4558;
+    padding-left: 2px;
+    position: relative;
+    top: -5px;
+  }
+  .container {
+    width: 95% !important;
+  }
 }
 .sb-checkbox-tnc {
     .sb-required {
