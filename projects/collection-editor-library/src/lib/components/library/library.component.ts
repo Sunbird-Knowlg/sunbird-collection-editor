@@ -103,7 +103,7 @@ export class LibraryComponent implements OnInit, AfterViewInit {
       data: {
         request: {
           query: query || '',
-          filters: _.pickBy({ ...filters, ...{ status: ['Live'] } }),
+          filters: _.pickBy({ ...filters, ...{ status: ['Live'], mimeType: {'!=': 'application/vnd.ekstep.content-collection'} } }),
           sort_by: {
             lastUpdatedOn: 'desc'
           }
