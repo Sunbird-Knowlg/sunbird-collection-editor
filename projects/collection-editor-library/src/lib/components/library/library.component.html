@@ -36,7 +36,7 @@
   </div>
 </div>
 
-<div class="ui container" *ngIf="showLoader">
+<div class="ui container result-no-found" *ngIf="showLoader">
   <div class="sb-g add-to-library__toc-player">
     <!-- Left Sidebar for cards -->
     <section class="sb-g-col-xs-12 sb-g-col-md-4 sb-g-col-lg-4">
@@ -59,7 +59,7 @@
 </div>
 
 <!--empty result -->
-<div class="ui container" *ngIf="!showLoader && !contentList?.length">
+<div class="ui container result-no-found" *ngIf="!showLoader && !contentList?.length">
   <div class="add-to-library__no-result">
     <h5 class="font-weight-bold">{{labelMessages?.lbl?.noMatchingContent}}</h5>
     <img alt="No Content available" class="mt-16" src="assets/images/emptyResult.svg">

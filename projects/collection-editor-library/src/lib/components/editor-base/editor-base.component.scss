@@ -1,10 +1,7 @@
-body{
-  background: #fff !important;
-}
-
 .add-to-library {
   position: relative;
   z-index: 999 !important;
+  background: #e5edf5;
   .sb-required {
     color:#ff4558;
     padding-left: 2px;
@@ -31,4 +28,7 @@ body{
 }
 .footer-fix{
   padding-bottom: 1rem !important;
+}
+.bg-white,.ui.twelve.grid{
+  background: #fff !important;
 }
