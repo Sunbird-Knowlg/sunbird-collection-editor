@@ -147,3 +147,7 @@
       background: var(--gray-0);
     }
   }
+  .sb-library-scroll{
+    max-height: calc(100vh - 72px);
+    overflow: auto;
+  }

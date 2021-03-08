@@ -2,6 +2,7 @@
 //select content modal UI
 .sb-chapterlist-accordion { 
     &.ui.styled.accordion { 
+      padding: 0.6rem 0.76rem;
       background: inherit;  
       .active.title { 
         border: 1px solid $primary-200; 
@@ -113,16 +114,6 @@
         display: inline-block !important;
         white-space: nowrap;
       }
-
-      // &:nth-child(2n),
-      // &:nth-child(3n),
-      // &:nth-child(4n) {
-      //   max-width: 10%;
-      //   // overflow: hidden;
-      //   text-overflow: ellipsis;
-      //   display: inline-block !important;
-      //   white-space: nowrap;
-      // }
     }
   }
 .sb-radio-btn-checkbox{
@@ -149,4 +140,40 @@
 } 
 .p-1{
   padding: 1rem;;
+}
+.sb-toc-accor-1 {
+  .chapter-lists--item {
+    .item-name,
+    label {
+      border-left: 0.0625rem dashed var(--gray-300);
+      margin-left: 1.1rem;
+      padding-left: 1.6rem !important;
+    }
+  }
+}
+
+.sb-toc-accor-2 {
+  .chapter-lists--item {
+    .item-name {
+      @extend .item-name;
+      margin-left: 2.3rem;
+    }
+  }
+}
+
+.sb-toc-accor-3 {
+  .chapter-lists--item {
+    .item-name {
+      @extend .item-name;
+      margin-left: 4rem;
+    }
+  }
+}
+
+.sb-chapterlist-accordion {
+  .chapter-lists--item {
+    &:hover {
+      background: none !important;
+    }
+  }
 }
