@@ -3,6 +3,15 @@
       height: 55px;
       line-height: 50px;
     }
+    &__no-result {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: calculateRem(88px) 0 0 0;
+      width: calculateRem(320px);
+      text-align: center;
+      margin: 0 auto;
+    }
 }
 .sb-dock-skeleton-bx{
   border-top: .0625rem solid #e0e0e0;
@@ -133,4 +142,10 @@
 
 .bg-white{
   background :#fff;
+}
+
+.result-no-found{
+  width: 95% !important;
+  background: #fff !important;
+  height: 100vh;
 }
