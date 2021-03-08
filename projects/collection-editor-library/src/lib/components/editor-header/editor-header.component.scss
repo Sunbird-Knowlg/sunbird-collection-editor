@@ -151,8 +151,14 @@
   .sb-bg-lightBlue {
     background: var(--primary-0) !important;
   }
-  .sb-btn-primary{
-    &:hover{
-      background: var(--primary-400) !important;
+  .add-to-library{
+    .back-btn{
+      &:hover{
+        background: none !important;
+      }
     }
+    .back-btn {
+      min-width: auto;
+    }
+  
   }
