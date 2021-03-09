@@ -7,8 +7,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: calculateRem(88px) 0 0 0;
-      width: calculateRem(320px);
+      padding: 5.5rem 0 0 0;
+      width: 20rem;
       text-align: center;
       margin: 0 auto;
     }
@@ -146,6 +146,8 @@
 
 .result-no-found{
   background: #fff !important;
+  position: relative;
+  z-index: 9999 !important;
   .ui.container{
     width: 100% !important;
     height: 100vh;
