@@ -1,5 +1,4 @@
-export const mockData  = 
-{
+export const mockData  = {
     config: {
     mode: 'edit',
     maxDepth: 2,
@@ -35,4 +34,4 @@ export const mockData  =
         }
     }
   }
-}
+};

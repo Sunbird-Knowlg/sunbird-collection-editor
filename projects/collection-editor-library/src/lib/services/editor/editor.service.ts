@@ -7,6 +7,7 @@ import { DataService } from '../data/data.service';
 import { PublicDataService } from '../public-data/public-data.service';
 import { EditorConfig } from '../../interfaces/inputConfig';
 import { labelConfig} from '../../editor.config';
+import { ConfigService } from '../config/config.service';
 @Injectable({ providedIn: 'root' })
 
 export class EditorService {
@@ -23,11 +24,12 @@ export class EditorService {
 
   constructor(public treeService: TreeService,
               private dataService: DataService,
+              public configService: ConfigService,
               private publicDataService: PublicDataService) { }
 
   public initialize(config: EditorConfig) {
     this._editorConfig = config;
-    this._editorMode = _.get(this._editorConfig, 'config.mode');
+    this._editorMode = _.get(this._editorConfig, 'config.mode').toLowerCase();
   }
 
   public get editorConfig(): EditorConfig {
@@ -53,7 +55,11 @@ export class EditorService {
     return this.showLibraryPage;
   }
   fetchCollectionHierarchy(collectionId): Observable<any> {
-    const hierarchyUrl = 'content/v3/hierarchy/' + collectionId;
+    // const hierarchyUrl = 'content/v3/hierarchy/' + collectionId;
+    console.log(this.configService.urlConFig);
+
+    const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
+    const hierarchyUrl = `${url.HIERARCHY_READ}/${collectionId}`;
     const req = {
       url: hierarchyUrl,
       param: { mode: 'edit' }

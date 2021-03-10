@@ -1,1 +1,6 @@
-<lib-editor-base [editorConfig]="editorConfig" ></lib-editor-base>
+<button (click)="setType('question')">Question Set Editor</button>
+<button (click)="setType('collection')">Collection Editor</button>
+<lib-editor-base *ngIf="editor === 'question'" [editorConfig]="editorConfig"></lib-editor-base>
+
+
+<lib-editor-base *ngIf="editor === 'collection'" [editorConfig]="editorConfig"></lib-editor-base>

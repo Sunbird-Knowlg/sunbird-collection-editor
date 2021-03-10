@@ -1,5 +1,7 @@
-import { Component, AfterViewInit, Input, ViewChild, ElementRef, Output, EventEmitter,
-   OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  Component, AfterViewInit, Input, ViewChild, ElementRef, Output, EventEmitter,
+  OnDestroy, OnInit, ViewEncapsulation
+} from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import 'jquery.fancytree';
 import * as _ from 'lodash-es';
@@ -21,7 +23,7 @@ declare var $: any;
   encapsulation: ViewEncapsulation.None,
 })
 export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('fancyTree', {static: false}) public tree: ElementRef;
+  @ViewChild('fancyTree', { static: false }) public tree: ElementRef;
   @Input() public nodes: any;
   @Input() public options: any;
   @Output() public treeEventEmitter: EventEmitter<any> = new EventEmitter();
@@ -30,7 +32,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   public showAddChildButton: boolean;
   public showAddSiblingButton: boolean;
   public rootNode: any;
-  public showLibraryButton =  false;
+  public showLibraryButton = false;
   public rootMenuTemplate = `<span class="ui dropdown sb-dotted-dropdown" autoclose="itemClick" suidropdown="" tabindex="0">
   <span id="contextMenu" class="p-0 w-auto"><i class="icon ellipsis vertical sb-color-black"></i></span>
   <span id= "contextMenuDropDown" class="menu transition hidden" suidropdownmenu="" style="">
@@ -48,7 +50,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   <span id= "removeNodeIcon"> <i class="fa fa-trash-o" type="button"></i> </span>`;
   // tslint:disable-next-line:max-line-length
   public contentMenuTemplate = `<span id="contextMenu"><span id= "removeNodeIcon"> <i class="fa fa-trash-o" type="button"></i> </span></span>`;
-  constructor( public treeService: TreeService, private editorService: EditorService,
+  constructor(public treeService: TreeService, private editorService: EditorService,
               public telemetryService: EditorTelemetryService, private helperService: HelperService,
               private toasterService: ToasterService) { }
   private onComponentDestroy$ = new Subject<any>();
@@ -56,6 +58,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.config = _.cloneDeep(this.editorService.editorConfig.config);
+    this.config.mode =  _.get(this.config, 'mode').toLowerCase();
     if (!_.get(this.config, 'maxDepth')) {
       this.config.maxDepth = 4;
     }
@@ -74,7 +77,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       id: data.identifier || UUID.UUID(),
       title: data.name,
       tooltip: data.name,
-      objectType: data.primaryCategory,
+      objectType: data.contentType,
       metadata: _.omit(data, ['children', 'collections']),
       folder: true,
       children: treeData,
@@ -95,7 +98,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         id: child.identifier || UUID.UUID(),
         title: child.name,
         tooltip: child.name,
-        objectType: child.visibility === 'Parent' ? _.get(this.config, `hierarchy.level${data.level}.type`) : 'Content',
+        objectType: child.visibility === 'Parent' ? _.get(this.config, `hierarchy.level${data.level}.contentType`) : 'Content',
         metadata: _.omit(child, ['children', 'collections']),
         folder: child.visibility === 'Parent' ? true : false,
         children: childTree,
@@ -158,7 +161,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
           /** This function MUST be defined to enable dragging for the tree.
            *  Return false to cancel dragging of node.
            */
-          const draggable = _.get(this.config, 'mode') === 'Edit' ? true : false;
+          const draggable = _.get(this.config, 'mode') === 'edit' ? true : false;
           return draggable;
         },
         dragEnter: (node, data) => {
@@ -171,13 +174,13 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
            */
           // Prevent dropping a parent below another parent (only sort
           // nodes under the same parent)
-/*           if(node.parent !== data.otherNode.parent){
-            return false;
-          }
-          // Don't allow dropping *over* a node (would create a child)
-          return ["before", "after"];
-*/
-           return true;
+          /*           if(node.parent !== data.otherNode.parent){
+                      return false;
+                    }
+                    // Don't allow dropping *over* a node (would create a child)
+                    return ["before", "after"];
+          */
+          return true;
         },
         dragDrop: (node, data) => {
           /** This function MUST be defined to enable dropping of items on
@@ -199,10 +202,10 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
           mode: 'dimm'
         }
       },
-      init: (event, data) => {},
+      init: (event, data) => { },
       click: (event, data): boolean => {
         this.tree.nativeElement.click();
-        this.telemetryService.interact({ edata: this.getTelemetryInteractEdata()});
+        this.telemetryService.interact({ edata: this.getTelemetryInteractEdata() });
         return true;
       },
       activate: (event, data) => {
@@ -214,16 +217,12 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         }, 10);
       },
       renderNode: (event, data) => {
-        // if (data.node.data.root) {
-        //   // data.node.span.style.display = 'none';
-        // }
         const node = data.node;
         const $nodeSpan = $(node.span);
 
         // check if span of node already rendered
         if (!$nodeSpan.data('rendered')) {
           this.attachContextMenu(node);
-
           // span rendered
           $nodeSpan.data('rendered', true);
         }
@@ -239,7 +238,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   addChild(resource?) {
-    this.telemetryService.interact({ edata: this.getTelemetryInteractEdata('add_child')});
+    this.telemetryService.interact({ edata: this.getTelemetryInteractEdata('add_child') });
     const tree = $(this.tree.nativeElement).fancytree('getTree');
     const nodeConfig = this.config.hierarchy[tree.getActiveNode().getLevel()];
     const childrenTypes = _.get(nodeConfig, 'children.Content');
@@ -258,7 +257,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   addSibling() {
-    this.telemetryService.interact({ edata: this.getTelemetryInteractEdata('add_sibling')});
+    this.telemetryService.interact({ edata: this.getTelemetryInteractEdata('add_sibling') });
     const tree = $(this.tree.nativeElement).fancytree('getTree');
 
     const node = tree.getActiveNode();
@@ -278,9 +277,8 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
     const $nodeSpan = $(node.span);
-    // const deleteTemplate = `<span> <i class="fa fa-trash-o" type="button"  onclick=""></i> </span>`;
-    // tslint:disable-next-line:max-line-length
-    const menuTemplate = node.data.root === true ? this.rootMenuTemplate : (node.data.objectType === 'Unit' ? this.folderMenuTemplate : this.contentMenuTemplate);
+    // tslint:disable-next-line:max-line-length   // TODO:: (node.data.objectType === 'CourseUnit') check this condition
+    const menuTemplate = node.data.root === true ? this.rootMenuTemplate : (node.data.root === false && node.folder === true  ? this.folderMenuTemplate : this.contentMenuTemplate);
     const iconsButton = $(menuTemplate);
     if ((node.getLevel() - 1) >= this.config.maxDepth) {
       iconsButton.find('#addchild').remove();
@@ -332,10 +330,6 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   dropNode(node, data) {
-    // let objectType;
-    // if (data.otherNode.getLevel() === node.getLevel()) {
-    //   objectType = node.getParent().data.objectType;
-    // } else
     // tslint:disable-next-line:max-line-length
     if (data.otherNode.data.objectType !== 'Content' && (this.maxTreeDepth(data.otherNode) + (node.getLevel() - 1)) > _.get(this.config, 'maxDepth')) {
       return this.dropNotAllowed();
@@ -343,39 +337,23 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     if (_.get(data, 'otherNode.data.objectType') === 'Content' && !this.checkContentAddition(node, data.otherNode)) {
       return this.dropNotAllowed();
     }
-    // else if (data.hitMode === 'before' || data.hitMode === 'after') {
-    //   objectType = node.getParent().data.objectType;
-    // } else {
-    //   objectType = node.data.objectType;
-    // }
-
-    // const dropAllowed = _.includes(this.getObjectType(objectType).childrenTypes, data.otherNode.data.objectType);
-    // if (dropAllowed) {
     data.otherNode.moveTo(node, data.hitMode);
     return true;
-    // } else {
-    //   return false;
-    // }
   }
 
-    dragDrop(node, data) {
-      if ((data.hitMode === 'before' || data.hitMode === 'after' || data.hitMode === 'over') && data.node.data.root) {
-        return this.dropNotAllowed();
-      }
-      if (_.get(this.config, 'maxDepth')) {
-        return this.dropNode(node, data);
-      }
+  dragDrop(node, data) {
+    if ((data.hitMode === 'before' || data.hitMode === 'after' || data.hitMode === 'over') && data.node.data.root) {
+      return this.dropNotAllowed();
     }
+    if (_.get(this.config, 'maxDepth')) {
+      return this.dropNode(node, data);
+    }
+  }
 
-    dropNotAllowed() {
-      // ecEditor.dispatchEvent('org.ekstep.toaster:warning', {
-      //   title: 'This operation is not allowed!',
-      //   position: 'topCenter',
-      //   icon: 'fa fa-warning'
-      // })
-      this.toasterService.error('This operation is not allowed!');
-      return false;
-    }
+  dropNotAllowed() {
+    this.toasterService.error('This operation is not allowed!');
+    return false;
+  }
 
   maxTreeDepth(root) {
     const buffer = [{ node: root, depth: 1 }];
@@ -400,23 +378,20 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       return false;
     }
     const nodeConfig = this.config.hierarchy[`level${targetNode.getLevel() - 1}`];
-    const [Content, QuestionSet] = [_.get(nodeConfig, 'children.Content'), _.get(nodeConfig, 'children.QuestionSet')];
-    if (Content && Content.length) {
-      return _.includes(Content, _.get(contentNode, 'data.metadata.primaryCategory')) ? true : false;
-    }
-    if (QuestionSet && QuestionSet.length) {
-      return _.includes(QuestionSet, _.get(contentNode, 'data.metadata.primaryCategory')) ? true : false;
+    const contentPrimaryCategories = _.flatMap(_.get(nodeConfig, 'children'));
+    if (!_.isEmpty(contentPrimaryCategories)) {
+      return _.includes(contentPrimaryCategories, _.get(contentNode, 'data.metadata.primaryCategory')) ? true : false;
     }
     // tslint:disable-next-line:max-line-length
-    if (_.get(this.helperService.getChannelData, 'contentPrimaryCategories') && _.includes(_.get(this.helperService.getChannelData, 'contentPrimaryCategories'), _.get(contentNode, 'data.metadata.primaryCategory')) ) {
-      return true;
-    }
+    // if (_.get(this.helperService.getChannelData, 'contentPrimaryCategories') && _.includes(_.get(this.helperService.getChannelData, 'contentPrimaryCategories'), _.get(contentNode, 'data.metadata.primaryCategory'))) {
+    //   return true;
+    // } // TODO : check this
     return false;
   }
 
   removeNode() {
-    this.treeEventEmitter.emit({ type: 'deleteNode'});
-    this.telemetryService.interact({ edata: this.getTelemetryInteractEdata('delete')});
+    this.treeEventEmitter.emit({ type: 'deleteNode' });
+    this.telemetryService.interact({ edata: this.getTelemetryInteractEdata('delete') });
   }
 
   handleActionButtons(el) {
@@ -439,12 +414,12 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   addFromLibraryButton(nodeLevel) {
     if (nodeLevel === 0) {
-     this.showLibraryButton = _.isEmpty(_.get(this.config, 'children')) ? false : true;
+      this.showLibraryButton = _.isEmpty(_.get(this.config, 'children')) ? false : true;
     } else {
-     const hierarchylevelData =  this.config.hierarchy[`level${nodeLevel}`];
-     this.showLibraryButton = _.isEmpty(_.get(hierarchylevelData, 'children')) ? false : true;
+      const hierarchylevelData = this.config.hierarchy[`level${nodeLevel}`];
+      this.showLibraryButton = _.isEmpty(_.get(hierarchylevelData, 'children')) ? false : true;
     }
-   }
+  }
   addFromLibrary() {
     this.editorService.emitshowLibraryPageEvent('showLibraryPage');
   }

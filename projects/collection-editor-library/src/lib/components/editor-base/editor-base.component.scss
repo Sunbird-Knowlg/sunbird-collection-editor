@@ -1,3 +1,17 @@
+.add-to-library {
+  position: relative;
+  z-index: 999 !important;
+  background: #e5edf5;
+  .sb-required {
+    color:#ff4558;
+    padding-left: 2px;
+    position: relative;
+    top: -5px;
+  }
+  .container {
+    width: 95% !important;
+  }
+}
 .sb-checkbox-tnc {
     .sb-required {
       position: absolute;
@@ -11,4 +25,10 @@
 }
 .ui.column.grid>[class*="eight wide"].column{
     width: 73% !important;
+}
+.footer-fix{
+  padding-bottom: 1rem !important;
+}
+.bg-white,.ui.twelve.grid{
+  background: #fff !important;
 }

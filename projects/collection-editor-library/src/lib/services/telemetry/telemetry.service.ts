@@ -13,8 +13,6 @@ export class EditorTelemetryService {
   telemetryEvent = new EventEmitter<any>();
   private context: Context;
   private telemetryObject: any;
-  private contentSessionId: string;
-  private playSessionId: string;
   private pdata: any;
   private sid: string;
   private uid: string;
@@ -29,8 +27,6 @@ export class EditorTelemetryService {
     this.duration = new Date().getTime();
     this.context = config.context;
     this.channel = config.context.channel;
-    this.contentSessionId = this.helperService.uniqueId();
-    this.playSessionId = this.helperService.uniqueId();
     this.channel = config.context.channel;
     this.pdata = this.context.pdata;
     this.sid =  this.context.sid;
@@ -54,8 +50,7 @@ export class EditorTelemetryService {
             host: config.context.host || '',
             endpoint: config.context.endpoint || '/data/v3/telemetry',
             tags: config.context.tags,
-            cdata: _.merge(this.context.cdata, [{ id: this.contentSessionId, type: 'ContentSession' },
-            { id: this.playSessionId, type: 'PlaySession' }])
+            cdata: this.context.cdata || []
           },
           userOrgDetails: {}
         }
@@ -133,8 +128,7 @@ export class EditorTelemetryService {
         env: this.env,
         sid: this.sid,
         uid: this.uid,
-        cdata: _.merge(this.context.cdata, [{ id: this.contentSessionId, type: 'ContentSession' },
-            { id: this.playSessionId, type: 'PlaySession' }]),
+        cdata: this.context.cdata || [],
         rollup: this.rollup || {}
       }
     });

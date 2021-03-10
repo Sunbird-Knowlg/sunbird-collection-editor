@@ -11,6 +11,8 @@ import { Router } from '@angular/router';
 import { map, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import * as _ from 'lodash-es';
+import { ConfigService } from '../../services/config/config.service';
+import { Config } from 'protractor';
 @Component({
   selector: 'lib-editor-base',
   templateUrl: './editor-base.component.html',
@@ -43,6 +45,7 @@ export class EditorBaseComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(public treeService: TreeService, private editorService: EditorService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
               private toasterService: ToasterService,
+              public configService: ConfigService,
               private changeDetectionRef: ChangeDetectorRef) {
   }
 
@@ -59,7 +62,7 @@ export class EditorBaseComponent implements OnInit, OnDestroy, AfterViewInit {
     this.toolbarConfig = this.editorService.getToolbarConfig();
     this.fetchCollectionHierarchy().subscribe(
       (response) => {
-        const collection = _.get(response, 'result.content');
+        const collection = _.get(response, `result.${this.configService.categoryConfig[this.editorConfig.config.objectType]}`);
         this.toolbarConfig.title = collection.name;
         const organisationFramework = _.get(this.editorConfig, 'context.framework') || _.get(collection, 'framework');
         const targetFramework = _.get(this.editorConfig, 'context.targetFWIds') || _.get(collection, 'targetFWIds');
@@ -102,7 +105,7 @@ export class EditorBaseComponent implements OnInit, OnDestroy, AfterViewInit {
   fetchCollectionHierarchy(): Observable<any> {
     return this.editorService.fetchCollectionHierarchy(this.collectionId).pipe(tap(data => {
       this.collectionTreeNodes = {
-        data: _.get(data, 'result.content')
+        data: _.get(data, `result.${this.configService.categoryConfig[this.editorConfig.config.objectType]}`)
       };
       if (_.isEmpty(this.collectionTreeNodes.data.children)) {
         this.toolbarConfig.showSubmitBtn = false;
@@ -138,7 +141,7 @@ export class EditorBaseComponent implements OnInit, OnDestroy, AfterViewInit {
         break;
       case 'onFormStatusChange':
         const selectedNode = this.treeService.getActiveNode();
-        if (selectedNode.data.root) { this.submitFormStatus = event.event.isValid; }
+        if (selectedNode && selectedNode.data.root) { this.submitFormStatus = event.event.isValid; }
         break;
       case 'onFormValueChange':
         this.updateToolbarTitle(event);

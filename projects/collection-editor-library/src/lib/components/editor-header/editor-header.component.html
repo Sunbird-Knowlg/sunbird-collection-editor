@@ -11,6 +11,7 @@
   </div>
 </div>
 
+<div class="sb-bg-lightBlue">
 <div class="d-flex flex-jc-space-between flex-ai-center py-20 ui container">
   <div class="practical-header__title font-weight-bold pl-20 fs-0-92">
     {{ labelConfigData.title }}
@@ -35,22 +36,23 @@
       {{labelConfigData.submit_collection_btn_label}}
     </button>
 
-    <button *ngIf="visibility && visibility?.rejectContent" class="sb-btn sb-btn-normal sb-btn-primary mr-10" (click)="showRequestChangesPopup = true" libTelemetryInteract
+    <button *ngIf="visibility && visibility?.rejectContent" class="sb-btn sb-btn-outline-error sb-btn-normal ripple mr-10" (click)="showRequestChangesPopup = true" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('reject','click','submit', telemetryService.telemetryPageId)">
       <i class="{{labelConfigData.reject_collection_btn_icon}}"></i> 
       {{labelConfigData.reject_collection_btn_label}}
     </button>
 
-    <button *ngIf="visibility && visibility?.publishContent" class="sb-btn sb-btn-normal sb-btn-primary mr-10" (click)="buttonEmitter({type: 'publishContent'})" libTelemetryInteract
+    <button *ngIf="visibility && visibility?.publishContent" class="sb-btn sb-btn-secondary sb-btn-normal ripple" (click)="buttonEmitter({type: 'publishContent'})" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('publish','click','submit', telemetryService.telemetryPageId)">
       <i class="{{labelConfigData.publish_collection_btn_icon}}"></i> 
       {{labelConfigData.publish_collection_btn_label}}
     </button>
   </div> 
 </div>
+</div>
 
 <sui-modal *ngIf="showRequestChangesPopup" [mustScroll]="true" [isClosable]="false" [transitionDuration]="0"
-  [size]="'normal'" class="sb-modal" appBodyScroll #modal (dismissed)="showRequestChangesPopup = false;">
+  [size]="'normal'" class="sb-modal bx-none overflow-modal" appBodyScroll #modal (dismissed)="showRequestChangesPopup = false;">
   <div class="sb-modal-header">
       Add Review Comments
   </div>
@@ -80,7 +82,7 @@
 </sui-modal>
 
 <sui-modal *ngIf="showReviewModal" [mustScroll]="true" [isClosable]="true" [transitionDuration]="0"
-  [size]="'normal'" class="sb-modal" appBodyScroll
+  [size]="'normal'" class="sb-modal bx-none overflow-modal" appBodyScroll
   (dismissed)="showReviewModal = !showReviewModal" #modal>
   <div class="sb-modal-header">
       Review Comments
