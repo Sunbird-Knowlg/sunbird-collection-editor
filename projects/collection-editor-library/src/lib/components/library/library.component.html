@@ -35,36 +35,38 @@
     </div>
   </div>
 </div>
-
-<div class="ui container" *ngIf="showLoader">
-  <div class="sb-g add-to-library__toc-player">
-    <!-- Left Sidebar for cards -->
-    <section class="sb-g-col-xs-12 sb-g-col-md-4 sb-g-col-lg-4">
-      <div class="sbtoc-container pr-8 mt-20">
-        <div class="sbaccordion__panel-content p-16 mb-8 sb-dock-skeleton-bx">
-          <div class="sbchapter__item" *ngFor="let number of [].constructor(4)">
-            <lib-skeleton-loader [width]="'90%'" [height]="'12px'" class="sb-dock-flex-auto"></lib-skeleton-loader>
-            <div>
-              <lib-skeleton-loader [width]="'30%'" [height]="'12px'" class="sb-dock-flex-auto"></lib-skeleton-loader>
+<div class="result-no-found">
+  <div class="ui container" *ngIf="showLoader">
+    <div class="sb-g add-to-library__toc-player ml-30">
+      <!-- Left Sidebar for cards -->
+      <section class="sb-g-col-xs-12 sb-g-col-md-4 sb-g-col-lg-4">
+        <div class="sbtoc-container pr-8 mt-20">
+          <div class="sbaccordion__panel-content p-16 mb-8 sb-dock-skeleton-bx">
+            <div class="sbchapter__item" *ngFor="let number of [].constructor(4)">
+              <lib-skeleton-loader [width]="'90%'" [height]="'12px'" class="sb-dock-flex-auto"></lib-skeleton-loader>
+              <div>
+                <lib-skeleton-loader [width]="'30%'" [height]="'12px'" class="sb-dock-flex-auto"></lib-skeleton-loader>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
-   </div>
+      </section>
+    </div>
+  </div>
 </div>
-
 <div *ngIf="showSelectResourceModal">
   <lib-resource-reorder [prevUnitSelect]= "selectedUnit" [collectionUnits]="collectionHierarchy" [selectedContentDetails]="selectedContent" [collectionId]="collectionId" (moveEvent)="showResourceTemplate($event)"></lib-resource-reorder>
 </div>
 
 <!--empty result -->
-<div class="ui container" *ngIf="!showLoader && !contentList?.length">
-  <div class="add-to-library__no-result">
-    <h5 class="font-weight-bold">{{labelMessages?.lbl?.noMatchingContent}}</h5>
-    <img alt="No Content available" class="mt-16" src="assets/images/emptyResult.svg">
-    <h6 class="sb-color-gray-300 font-weight-normal mt-8">{{labelMessages?.lbl?.changeFilterMessage}}</h6>
-    <button class="sb-btn sb-btn-secondary sb-btn-normal mt-16" libTelemetryInteract
-    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('change_filter','click','launch', telemetryService?.telemetryPageId)" (click)="openFilter();">{{labelMessages?.lbl?.changeFilter}}</button>
+<div class="result-no-found">
+  <div class="ui container" *ngIf="!showLoader && !contentList?.length">
+    <div class="add-to-library__no-result">
+      <h5 class="font-weight-bold">{{labelMessages?.lbl?.noMatchingContent}}</h5>
+      <img alt="No Content available" class="mt-16" src="assets/images/emptyResult.svg">
+      <h6 class="sb-color-gray-300 font-weight-normal mt-8">{{labelMessages?.lbl?.changeFilterMessage}}</h6>
+      <button class="sb-btn sb-btn-secondary sb-btn-normal mt-16" libTelemetryInteract
+      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('change_filter','click','launch', telemetryService?.telemetryPageId)" (click)="openFilter();">{{labelMessages?.lbl?.changeFilter}}</button>
+    </div>
   </div>
 </div>

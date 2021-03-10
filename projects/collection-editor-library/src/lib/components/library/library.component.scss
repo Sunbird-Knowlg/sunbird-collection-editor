@@ -3,6 +3,15 @@
       height: 55px;
       line-height: 50px;
     }
+    &__no-result {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 5.5rem 0 0 0;
+      width: 20rem;
+      text-align: center;
+      margin: 0 auto;
+    }
 }
 .sb-dock-skeleton-bx{
   border-top: .0625rem solid #e0e0e0;
@@ -116,5 +125,31 @@
     &--active {
       background: var(--primary-100);
     }
+  }
+}
+.sb-btn-dark-green{
+  background: var(--green);
+  border:solid 1px green !important;
+  color: var(--white);
+}
+.b-none{
+  border: none !important;
+}
+
+.fs-0785{
+  font-size: 0.785rem;
+}
+
+.bg-white{
+  background :#fff;
+}
+
+.result-no-found{
+  background: #fff !important;
+  position: relative;
+  z-index: 9999 !important;
+  .ui.container{
+    width: 100% !important;
+    height: 100vh;
   }
 }

@@ -1,8 +1,8 @@
 <div class="add-to-library mb-10" *ngIf="!showLibraryPage">
   <lib-editor-header [labelConfigData]="toolbarConfig" (toolbarEmitter)="toolbarEventListener($event)"> </lib-editor-header> <!--// TODO::  *ngIf="treeService.getTreeObject()" -->
-  <div class="h-100vh">
+  <div class="h-100vh sb-bg-white">
     <div class="ui">
-      <div class="ui twelve column grid m-0 sb-bg-white">
+      <div class="ui twelve column grid m-0 ">
         <!-- Left Sidebar for cards -->
         <div class="three wide column p-0 h-100vh">
           <lib-fancy-tree  *ngIf="collectionTreeNodes && collectionTreeNodes.data"
