@@ -16,6 +16,7 @@ import { NgForm } from '@angular/forms';
 export class EditorHeaderComponent implements OnDestroy, OnInit {
   // tslint:disable-next-line:no-input-rename
   @Input() labelConfigData: any;
+  @Input() buttonLoaders: any;
   @Output() toolbarEmitter = new EventEmitter<any>();
   @ViewChild('FormControl', {static: false}) FormControl: NgForm;
   private onComponentDestroy$ = new Subject<any>();

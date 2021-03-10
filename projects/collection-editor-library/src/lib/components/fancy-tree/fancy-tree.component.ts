@@ -26,6 +26,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('fancyTree', { static: false }) public tree: ElementRef;
   @Input() public nodes: any;
   @Input() public options: any;
+  @Input( ) buttonLoaders: any;
   @Output() public treeEventEmitter: EventEmitter<any> = new EventEmitter();
   public config: any;
   public showTree: boolean;
