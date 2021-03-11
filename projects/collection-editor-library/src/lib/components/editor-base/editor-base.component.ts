@@ -40,6 +40,10 @@ export class EditorBaseComponent implements OnInit, OnDestroy, AfterViewInit {
   public isCurrentNodeRoot: boolean;
   public submitFormStatus = true;
   toolbarConfig: any;
+  public buttonLoaders = {
+    saveAsDraftButtonLoader: false,
+    addFromLibraryButtonLoader: false
+  };
   constructor(public treeService: TreeService, private editorService: EditorService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
               private toasterService: ToasterService,
@@ -115,9 +119,12 @@ export class EditorBaseComponent implements OnInit, OnDestroy, AfterViewInit {
   toolbarEventListener(event) {
     switch (event.button) {
       case 'saveContent':
+        this.buttonLoaders.saveAsDraftButtonLoader = true;
         this.saveContent().then((message: string) => {
+          this.buttonLoaders.saveAsDraftButtonLoader = false;
           this.toasterService.success(message);
         }).catch(((error: string) => {
+          this.buttonLoaders.saveAsDraftButtonLoader = false;
           this.toasterService.error(error);
         }));
         break;
@@ -165,10 +172,15 @@ export class EditorBaseComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   showLibraryComponentPage() {
+    this.buttonLoaders.addFromLibraryButtonLoader = true;
     this.saveContent().then(res => {
       this.libraryComponentInput.collectionId = this.collectionId;
+      this.buttonLoaders.addFromLibraryButtonLoader = false;
       this.showLibraryPage = true;
-    }).catch(err => this.toasterService.error(err));
+    }).catch(err => {
+      this.toasterService.error(err)
+      this.buttonLoaders.addFromLibraryButtonLoader = false;
+    });
   }
 
   libraryEventListener(event: any) {
