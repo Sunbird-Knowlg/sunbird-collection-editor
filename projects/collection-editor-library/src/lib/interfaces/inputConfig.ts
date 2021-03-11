@@ -26,7 +26,7 @@ export interface Context {
     defaultLicense: any;
     framework: string;
     targetFWIds: string[];
-    aws_s3_urls: string[];
+    cloudStorageUrls: string[];
 }
 export interface User {
     id: string;

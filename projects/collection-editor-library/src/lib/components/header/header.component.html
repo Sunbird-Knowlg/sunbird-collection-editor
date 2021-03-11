@@ -1,0 +1,147 @@
+<!-- Blue Header -->
+<div class="sb-bg-color-primary">
+  <div class="ui container py-15">
+    <div class="d-flex flex-ai-center sb-color-white">
+      <button class="sb-btn sb-btn-primary sb-btn-xs back-btn px-0 hover-none fs-0-92 font-weight-bold"
+      (click)="buttonEmitter({type: 'backContent'})" libTelemetryInteract
+      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('back','click','launch', telemetryService.telemetryPageId)">
+        <i class="arrow left icon"></i> Back
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="sb-bg-lightBlue">
+<div class="d-flex flex-jc-space-between flex-ai-center py-20 ui container">
+  <div class="practical-header__title font-weight-bold pl-20 fs-0-92">
+    {{ labelConfigData.title }}
+  </div>
+  <div class="d-flex flex-ai-center" *ngIf="pageId === 'collection_editor' && labelConfigData">
+    <!-- <button *ngFor="let button of labelConfigData.buttons" class="{{ button.style }}"
+      (click)="buttonEmitter($event, button)">
+      <i *ngIf="button.slot" class="{{ button.slot }}"></i> {{ button.name }}
+    </button> -->
+
+    <button *ngIf="visibility && visibility?.saveContent" class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10" (click)="buttonEmitter({type:'saveContent'})" libTelemetryInteract
+    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('save_as_draft','click','submit', telemetryService.telemetryPageId)"
+    >
+      <i class="{{labelConfigData.save_collection_btn_icon}}"></i> 
+      {{labelConfigData.save_collection_btn_label}}
+    </button>
+
+    <button *ngIf="visibility && visibility?.submitContent && labelConfigData?.showSubmitBtn" class="sb-btn sb-btn-normal sb-btn-primary mr-10" (click)="buttonEmitter({type:'submitContent'})" libTelemetryInteract
+    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('submit','click','submit', telemetryService.telemetryPageId)"
+    >
+      <i class="{{labelConfigData.submit_collection_btn_icon}}"></i> 
+      {{labelConfigData.submit_collection_btn_label}}
+    </button>
+
+    <button *ngIf="visibility && visibility?.rejectContent" class="sb-btn sb-btn-outline-error sb-btn-normal ripple mr-10" (click)="showRequestChangesPopup = true" libTelemetryInteract
+    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('reject','click','submit', telemetryService.telemetryPageId)">
+      <i class="{{labelConfigData.reject_collection_btn_icon}}"></i> 
+      {{labelConfigData.reject_collection_btn_label}}
+    </button>
+
+    <button *ngIf="visibility && visibility?.publishContent" class="sb-btn sb-btn-secondary sb-btn-normal ripple" (click)="showPublishCollectionPopup = true" libTelemetryInteract
+    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('publish','click','submit', telemetryService.telemetryPageId)">
+      <i class="{{labelConfigData.publish_collection_btn_icon}}"></i> 
+      {{labelConfigData.publish_collection_btn_label}}
+    </button>
+  </div>
+  <div class="d-flex flex-ai-center" *ngIf="pageId === 'question' && labelConfigData">
+    <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10" *ngIf="labelConfigData.showPreview"
+      (click)="buttonEmitter({type: 'editContent'})" libTelemetryInteract
+      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('edit','click','launch', telemetryService.telemetryPageId)">
+      <i *ngIf="labelConfigData.edit_question_btn_icon" class="{{labelConfigData.edit_question_btn_icon}}"></i>
+      {{ labelConfigData.edit_question_btn_label}}
+    </button>
+    <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10" *ngIf="!labelConfigData.showPreview"
+      (click)="buttonEmitter({type: 'previewContent'})" libTelemetryInteract
+      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('preview','click','launch', telemetryService.telemetryPageId)">
+      <i *ngIf="labelConfigData.preview_question_btn_icon" class="{{labelConfigData.preview_question_btn_icon}}"></i>
+      {{ labelConfigData.preview_question_btn_label}}
+    </button>
+    <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10"
+      (click)="buttonEmitter({type: 'cancelContent'})" libTelemetryInteract
+      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('cancel','click','launch', telemetryService.telemetryPageId)">
+      <i *ngIf="labelConfigData.cancel_question_btn_icon" class="{{labelConfigData.cancel_question_btn_icon}}"></i>
+      {{ labelConfigData.cancel_question_btn_label}}
+    </button>
+    <button class="sb-btn sb-btn-normal sb-btn-primary" (click)="buttonEmitter({type: 'saveContent'})"
+      libTelemetryInteract
+      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('save','click','submit', telemetryService.telemetryPageId)">
+      <i *ngIf="labelConfigData.save_question_btn_icon" class="{{labelConfigData.save_question_btn_icon}}"></i>
+      {{ labelConfigData.save_question_btn_label}}
+    </button>
+  </div> 
+</div>
+</div>
+
+<sui-modal *ngIf="showRequestChangesPopup" [mustScroll]="true" [isClosable]="false" [transitionDuration]="0"
+  [size]="'normal'" class="sb-modal bx-none overflow-modal" appBodyScroll #modal (dismissed)="showRequestChangesPopup = false;">
+  <div class="sb-modal-header">
+      Add Review Comments
+  </div>
+  <form #FormControl="ngForm" class="ui form">
+  <div class="sb-modal-content">
+      <div class="sb-field-group">
+          <label>Enter your comments</label>
+          <div class="sb-field relative">
+
+              <textarea type="text" class="wmd-input width-100 sb-form-control" id="wmd-input" [(ngModel)]="rejectComment" placeholder="Add comment" name="rejectComment" required></textarea>
+              <label class="ui basic red error label pt-1 mt-5 width-100"
+                  *ngIf="FormControl.form.controls.rejectComment?.touched && !FormControl.form.valid">Fill comments </label>
+
+              <!-- <textarea rows="4" name="moretext" class="sb-form-control" placeholder="Type here..."></textarea>
+              <span class="characters-left">1000 Characters left</span> -->
+          </div>
+      </div>
+  </div>
+  <div class="sb-modal-actions">
+    <button id="submitReview" type="submit" class="sb-btn sb-btn-normal" [ngClass]="{'sb-btn-primary': FormControl.form.valid, 'sb-btn-disabled': !FormControl.form.valid}" (click)="buttonEmitter({type: 'rejectContent', comment: rejectComment}); showRequestChangesPopup = false;" libTelemetryInteract
+    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('submit_review','click','submit', telemetryService.telemetryPageId)"
+    > Submit Review </button>
+    <button class="sb-btn sb-btn-normal sb-btn-outline-primary" (click)="modal.deny('denied')"
+    libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('cancel','click','launch', telemetryService.telemetryPageId)">Cancel</button>
+  </div>
+</form>
+</sui-modal>
+
+<sui-modal *ngIf="showReviewModal" [mustScroll]="true" [isClosable]="true" [transitionDuration]="0"
+  [size]="'normal'" class="sb-modal bx-none overflow-modal" appBodyScroll
+  (dismissed)="showReviewModal = !showReviewModal" #modal>
+  <div class="sb-modal-header">
+      Review Comments
+  </div>
+  <div class="sb-modal-content">
+      <div class="sb-publish-content">
+        <div class="review-modal-list">
+          {{ contentComment }}
+      </div>
+      </div>
+  </div>
+  <div class="sb-modal-actions">
+    <button type="button" class="sb-btn sb-btn-normal sb-btn-primary" (click)="showReviewModal=false"
+    libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('continue','click','launch', telemetryService.telemetryPageId)"
+    > Continue </button>
+  </div>
+</sui-modal>
+
+<sui-modal *ngIf="showPublishCollectionPopup" [mustScroll]="true" [isClosable]="true" [transitionDuration]="0"
+      [size]="'small'" class="sb-modal bx-none overflow-modal" appBodyScroll
+      (dismissed)="showPublishCollectionPopup = !showPublishCollectionPopup" #modal>
+      <div class="sb-modal-header">
+        Publish Collection
+      </div>
+      <div class="sb-modal-content">
+        Are you sure you want to publish this collection?
+      </div>
+      <div class="sb-modal-actions">
+        <button class="sb-btn sb-btn-normal sb-btn-primary" (click)="buttonEmitter({type: 'publishContent'});showPublishCollectionPopup = false;">
+          Yes
+        </button>
+        <button class="sb-btn sb-btn-normal sb-btn-outline-primary" (click)="showPublishCollectionPopup = !showPublishCollectionPopup">
+          No
+        </button>
+      </div>
+    </sui-modal>

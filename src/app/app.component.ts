@@ -7,9 +7,9 @@ import { questionEditorConfig, collectionEditorConfig } from './data';
 })
 export class AppComponent {
   title = 'sunbird-collection-editor';
-  editor: any = 'collection';
+  editor: any = localStorage.getItem('contentType') || 'question';
   showEditor = true;
-  editorConfig: any = collectionEditorConfig;
+  editorConfig: any = this.editor === 'question' ? questionEditorConfig : collectionEditorConfig;
   editorEventListener(event) {
     this.showEditor = false;
     console.log(event);
@@ -17,10 +17,10 @@ export class AppComponent {
 
   setType(contentType) {
     if (contentType === 'question') {
-      this.editorConfig = questionEditorConfig;
+      localStorage.setItem('contentType', 'question');
     } else {
-      this.editorConfig = collectionEditorConfig;
+      localStorage.setItem('contentType', 'collection');
     }
-    this.editor = contentType;
+    window.location.reload();
   }
 }

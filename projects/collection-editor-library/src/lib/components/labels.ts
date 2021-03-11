@@ -8,6 +8,7 @@ export const labelMessages = {
         reset: 'Reset',
         apply: 'apply',
         filterText: 'Change Filters',
+        Questiondetails: 'Question details',
         selectContent: 'Select content',
         noMatchingContent: 'Sorry there is no matching content',
         changeFilterMessage: 'Changing filter helps you find more content',

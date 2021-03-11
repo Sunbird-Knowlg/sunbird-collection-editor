@@ -54,12 +54,11 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
               public telemetryService: EditorTelemetryService, private helperService: HelperService,
               private toasterService: ToasterService) { }
   private onComponentDestroy$ = new Subject<any>();
-  public showDeleteConfirmationPopUp: boolean;
 
   ngOnInit() {
     this.config = _.cloneDeep(this.editorService.editorConfig.config);
     this.config.mode =  _.get(this.config, 'mode').toLowerCase();
-    if (!_.get(this.config, 'maxDepth')) {
+    if (!_.has(this.config, 'maxDepth')) { // TODO:: rethink this
       this.config.maxDepth = 4;
     }
     this.initialize();
@@ -67,7 +66,6 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.renderTree(this.getTreeConfig());
-    this.resourceAddition();
   }
 
   private initialize() {
@@ -98,13 +96,16 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         id: child.identifier || UUID.UUID(),
         title: child.name,
         tooltip: child.name,
-        objectType: child.visibility === 'Parent' ? _.get(this.config, `hierarchy.level${data.level}.contentType`) : 'Content',
+        objectType: child.objectType,
+        // objectType: child.visibility === 'Parent' ? _.get(this.config, `hierarchy.level${data.level}.contentType`) : 'Content',
         metadata: _.omit(child, ['children', 'collections']),
-        folder: child.visibility === 'Parent' ? true : false,
+        // folder: child.visibility === 'Parent' ? true : false,
+        folder: false,
         children: childTree,
         root: false,
         // tslint:disable-next-line:max-line-length
-        icon: child.visibility === 'Parent' ? (_.get(this.config, `hierarchy.level.${data.level}.iconClass`) || 'fa fa-folder-o') : 'fa fa-file-o'
+        // icon: child.visibility === 'Parent' ? (_.get(this.config, `hierarchy.level.${data.level}.iconClass`) || 'fa fa-folder-o') : 'fa fa-file-o'
+        icon : 'fa fa-file-o'
       });
       if (child.visibility === 'Parent') {
         this.buildTree(child, childTree, data.level);
@@ -130,14 +131,6 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.eachNodeActionButton(rootNode);
     });
     this.showTree = true;
-  }
-
-  resourceAddition() {
-    this.editorService.resourceAddition$.pipe(takeUntil(this.onComponentDestroy$)).subscribe(resources => {
-      resources.forEach(resource => {
-        this.addChild(resource);
-      });
-    });
   }
 
   getTreeConfig() {
@@ -323,7 +316,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       });
 
       $($nodeSpan[0]).find(`#removeNodeIcon`).on('click', (ev) => {
-        this.showDeleteConfirmationPopUp = true;
+        this.removeNode();
       });
     }
 
@@ -400,7 +393,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       case 'edit':
         break;
       case 'delete':
-        this.showDeleteConfirmationPopUp = true;
+        this.removeNode();
         break;
       case 'addsibling':
         this.addSibling();
@@ -433,6 +426,10 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         values: [_.get(this.getActiveNode(), 'data')]
       }
     };
+  }
+
+  createNewContent() {
+    this.treeEventEmitter.emit({ type: 'createNewContent' });
   }
 
   ngOnDestroy() {

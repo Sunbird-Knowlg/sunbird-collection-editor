@@ -1,8 +1,7 @@
 import { Component, ElementRef, Input, OnInit, ViewChild, OnChanges, ViewEncapsulation} from '@angular/core';
 import * as _ from 'lodash-es';
 import { EditorService} from '../../services/editor/editor.service';
-import { HelperService } from '../../services/helper/helper.service';
-import { TreeService } from '../../services/tree/tree.service';
+import { PlayerService } from '../../services/player/player.service';
 import { PLAYER_CONFIG } from '../../editor.config';
 declare var $: any;
 
@@ -20,12 +19,9 @@ export class ContentplayerPageComponent implements OnInit, OnChanges {
   public content: any;
   public playerType: string;
   public contentId: string;
-  public editorConfig;
-  constructor(private editorService: EditorService, private helperService: HelperService, private treeService: TreeService) { }
+  constructor(private editorService: EditorService, private playerService: PlayerService) { }
 
-  ngOnInit() {
-    this.editorConfig = _.cloneDeep(this.editorService.editorConfig);
-  }
+  ngOnInit() {}
 
   ngOnChanges() {
     this.contentMetadata = _.get(this.contentMetadata, 'data.metadata') || this.contentMetadata;
@@ -41,7 +37,7 @@ export class ContentplayerPageComponent implements OnInit, OnChanges {
         contentId : this.contentId,
         contentData: _.get(res, 'result.content')
       };
-      this.playerConfig = this.helperService.getPlayerConfig(this.contentDetails);
+      this.playerConfig = this.playerService.getPlayerConfig(this.contentDetails);
       this.setPlayerType();
       this.playerType === 'default-player' ? this.loadDefaultPlayer() : this.playerConfig.config = {};
     });
