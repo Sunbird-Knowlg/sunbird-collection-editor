@@ -3,7 +3,7 @@ import { Observable, Subject } from 'rxjs';
 import * as _ from 'lodash-es';
 import { TreeService } from '../tree/tree.service';
 import { PublicDataService } from '../public-data/public-data.service';
-import { EditorConfig } from '../../interfaces/inputConfig';
+import { IEditorConfig } from '../../interfaces/editor';
 import { labelConfig} from '../../editor.config';
 import { ConfigService } from '../config/config.service';
 import { ToasterService} from '../../services/toaster/toaster.service';
@@ -20,7 +20,7 @@ export class EditorService {
   data: any;
   private _selectedChildren: SelectedChildren = {};
   public questionStream$ = new Subject<any>();
-  private _editorConfig: EditorConfig;
+  private _editorConfig: IEditorConfig;
   private _editorMode = 'edit';
   public showLibraryPage: EventEmitter<number> = new EventEmitter();
 
@@ -28,7 +28,7 @@ export class EditorService {
               public configService: ConfigService, private telemetryService: EditorTelemetryService,
               private publicDataService: PublicDataService) { }
 
-  public initialize(config: EditorConfig) {
+  public initialize(config: IEditorConfig) {
     this._editorConfig = config;
     this._editorMode = _.get(this._editorConfig, 'config.mode').toLowerCase();
   }
@@ -49,7 +49,7 @@ export class EditorService {
     return this._selectedChildren;
   }
 
-  public get editorConfig(): EditorConfig {
+  public get editorConfig(): IEditorConfig {
     return this._editorConfig;
   }
 
@@ -185,7 +185,6 @@ export class EditorService {
     if (data && data.data) {
       instance.data[data.data.id] = {
         name: data.title,
-        contentType: data.data.objectType,
         children: _.map(data.children, (child) => {
           return child.data.id;
         }),

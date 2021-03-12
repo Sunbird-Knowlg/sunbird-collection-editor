@@ -3,7 +3,7 @@ import 'jquery.fancytree';
 import { UUID } from 'angular2-uuid';
 declare var $: any;
 import * as _ from 'lodash-es';
-import { EditorConfig } from '../../interfaces/inputConfig';
+import { IEditorConfig } from '../../interfaces/editor';
 import { ToasterService } from '../toaster/toaster.service';
 
 @Injectable({
@@ -19,7 +19,7 @@ export class TreeService {
 
   constructor(private toasterService: ToasterService) {}
 
-  public initialize(editorConfig: EditorConfig) {
+  public initialize(editorConfig: IEditorConfig) {
     this.config = editorConfig.config;
   }
 
@@ -32,12 +32,13 @@ export class TreeService {
     this.updateTreeNodeMetadata(metadata);
   }
 
-  updateTreeNodeMetadata(newData) {
+  updateTreeNodeMetadata(newData: any) {
     const activeNode = this.getActiveNode();
     const nodeId = activeNode.data.id;
     activeNode.data.metadata = {...activeNode.data.metadata, ...newData};
     activeNode.title = newData.name;
     newData = _.pickBy(newData, _.identity);
+    newData = _.merge({}, newData, _.pick(activeNode.data.metadata, ['objectType', 'contentType', 'primaryCategory']));
     const attributions = newData.attributions;
     if (attributions && _.isString(attributions)) {
       newData.attributions = attributions.split(',');
@@ -45,32 +46,32 @@ export class TreeService {
     this.setTreeCache(nodeId, newData, activeNode.data);
   }
 
-  addNode(data, createType) {
+  addNode(createType) {
     let newNode;
-    data = data || {};
     const selectedNode = this.getActiveNode();
-    const node: any = {};
     // tslint:disable-next-line:max-line-length
     const nodeConfig = (createType === 'sibling') ? this.config.hierarchy[`level${selectedNode.getLevel() - 1}`] : this.config.hierarchy[`level${selectedNode.getLevel()}`];
-    node.title = data.name ? (data.name) : _.get(nodeConfig, 'name');
-    node.tooltip = node.tiltle;
-    node.objectType = (data.visibility && data.visibility === 'Default') ? data.contentType : nodeConfig.contentType;
-    node.id = data.identifier ? data.identifier : UUID.UUID();
-    node.root = false;
-    node.folder = (data.visibility && data.visibility === 'Default') ? false : true;
-    node.icon = (data.visibility && data.visibility === 'Default') ? 'fa fa-file-o' : _.get(nodeConfig, 'iconClass');
-    node.metadata = data;
-    if (node.folder) {
-      newNode = (createType === 'sibling') ? selectedNode.appendSibling(node) : selectedNode.addChildren(node);
-      if (_.isEmpty(newNode.data.metadata)) {
-        newNode.data.metadata = { mimeType: _.get(nodeConfig, 'mimeType'), code: node.id, name: node.title };
+    const uniqueId = UUID.UUID();
+    const nodeTitle = _.get(nodeConfig, 'name');
+    const node: any = {
+      id: uniqueId,
+      title: nodeTitle,
+      tooltip : nodeTitle,
+      ...(nodeConfig.contentType && {contentType: nodeConfig.contentType}),
+      primaryCategory: _.get(nodeConfig, 'primaryCategory'),
+      objectType: _.get(this.config, 'objectType'),
+      root : false,
+      folder : true,
+      icon: _.get(nodeConfig, 'iconClass'),
+      metadata: {
+        mimeType: _.get(nodeConfig, 'mimeType'),
+        code: uniqueId,
+        name: nodeTitle
       }
-      // tslint:disable-next-line:max-line-length
-      const metadata = { mimeType: _.get(nodeConfig, 'mimeType'), code: node.id, name: node.title, contentType: _.get(nodeConfig, 'contentType') };
-      this.setTreeCache(node.id, metadata);
-    } else {
-      newNode = (createType === 'sibling') ? selectedNode.appendSibling(node) : selectedNode.addChildren(node);
-    }
+    };
+    node.metadata = _.merge({}, node.metadata, _.pick(node, ['contentType', 'objectType', 'primaryCategory']));
+    newNode = (createType === 'sibling') ? selectedNode.appendSibling(node) : selectedNode.addChildren(node);
+    this.setTreeCache(node.id, node.metadata);
     newNode.setActive();
     selectedNode.setExpanded();
     $('span.fancytree-title').attr('style', 'width:11em;text-overflow:ellipsis;white-space:nowrap;overflow:hidden');
@@ -126,13 +127,16 @@ export class TreeService {
     });
   }
 
-  setTreeCache(nodeId, data, activeNode?) {
+  setTreeCache(nodeId, metadata, activeNode?) {
     if (this.treeCache.nodesModified[nodeId]) {
       // tslint:disable-next-line:max-line-length
-      this.treeCache.nodesModified[nodeId].metadata = activeNode && activeNode.root === false ? _.assign(this.treeCache.nodesModified[nodeId].metadata, data) : data; // TODO:: rethink this
+      this.treeCache.nodesModified[nodeId].metadata = activeNode && activeNode.root === false ? _.assign(this.treeCache.nodesModified[nodeId].metadata, _.omit(metadata, 'objectType')) : metadata; // TODO:: rethink this
     } else {
-      // tslint:disable-next-line:max-line-length
-      this.treeCache.nodesModified[nodeId] = {root: activeNode && activeNode.root ? true : false, metadata: {...data}, ...(nodeId.includes('do_') ? {isNew: false} : {isNew: true})};
+      this.treeCache.nodesModified[nodeId] = {
+        root: activeNode && activeNode.root ? true : false,
+        objectType: metadata.objectType,
+        metadata: {..._.omit(metadata, ['objectType'])},
+        ...(nodeId.includes('do_') ? {isNew: false} : {isNew: true})};
       this.treeCache.nodes.push(nodeId); // To track sequence of modifiation
     }
   }

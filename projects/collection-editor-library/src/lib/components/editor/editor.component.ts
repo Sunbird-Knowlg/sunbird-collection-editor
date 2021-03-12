@@ -6,7 +6,7 @@ import { FrameworkService } from '../../services/framework/framework.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
 import { HelperService } from '../../services/helper/helper.service';
-import { IEditorConfig } from '../../interfaces/editor.config';
+import { IEditorConfig } from '../../interfaces/editor';
 import { Router } from '@angular/router';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';

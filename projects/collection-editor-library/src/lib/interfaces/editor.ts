@@ -8,9 +8,6 @@ export interface Context {
     uid: string;
     channel: string;
     pdata: Pdata;
-    primaryCategory: string;
-    additionalCategories: any;
-    objectType: string;
     contextRollup: ContextRollup;
     tags: string[];
     cdata?: Cdata[];
@@ -23,10 +20,16 @@ export interface Context {
         lastName: string;
     };
     env: string;
-    defaultLicense: any;
+    defaultLicense?: any;
+    board?: any;
+    medium?: any;
+    gradeLevel?: any;
+    subject?: any;
+    topic?: any;
     framework: string;
-    targetFWIds: string[];
     cloudStorageUrls: string[];
+    additionalCategories: any[];
+    labels?: any;
 }
 export interface User {
     id: string;
@@ -58,8 +61,9 @@ export interface ObjectRollup {
     l4?: string;
 }
 
-export interface EditorConfig {
+export interface IEditorConfig {
     context: Context;
     config: any;
-    playerConfig?: any;
+    metadata?: any;
+    data?: any;
 }
