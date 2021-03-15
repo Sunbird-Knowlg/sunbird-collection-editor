@@ -2,7 +2,7 @@ import { Component, ElementRef, Input, OnInit, ViewChild, OnChanges, ViewEncapsu
 import * as _ from 'lodash-es';
 import { EditorService} from '../../services/editor/editor.service';
 import { PlayerService } from '../../services/player/player.service';
-import { PLAYER_CONFIG } from '../../editor.config';
+import { ConfigService } from '../../services/config/config.service';
 declare var $: any;
 
 @Component({
@@ -19,7 +19,8 @@ export class ContentplayerPageComponent implements OnInit, OnChanges {
   public content: any;
   public playerType: string;
   public contentId: string;
-  constructor(private editorService: EditorService, private playerService: PlayerService) { }
+  constructor(private editorService: EditorService, private playerService: PlayerService,
+              public configService: ConfigService) { }
 
   ngOnInit() {}
 
@@ -44,7 +45,7 @@ export class ContentplayerPageComponent implements OnInit, OnChanges {
   }
 
   setPlayerType() {
-    const playerType = _.get(PLAYER_CONFIG, 'playerType');
+    const playerType = _.get(this.configService.playerConfig, 'playerType');
     _.forIn(playerType, (value, key) => {
       if (value.length) {
         if (_.includes(value, _.get(this.contentDetails, 'contentData.mimeType'))) {

@@ -28,28 +28,9 @@ export class QuestionService {
     return this.publicDataService.get(option);
   }
 
-  updateHierarchyQuestionCreate(questionSetId, metadata, questionSetHierarchy): Observable<ServerResponse> {
-    const uniqueId = UUID.UUID();
-    let hierarchyChildren: Array<string>;
-    hierarchyChildren = questionSetHierarchy.childNodes || [];
-    hierarchyChildren.push(uniqueId);
+  updateHierarchyQuestionCreate(hierarchyBody): Observable<ServerResponse> {
     const requestObj = {
-      data: {
-          nodesModified: {
-            [uniqueId]: {
-                  metadata,
-                  objectType: 'Question',
-                  root: false,
-                  isNew: true
-              }
-          },
-          hierarchy: {
-          }
-      }
-    };
-    requestObj.data.hierarchy[questionSetId] = {
-      children: hierarchyChildren,
-      root: true
+      data: hierarchyBody
     };
     const req = {
       url: 'questionset/v1/hierarchy/update',
@@ -60,24 +41,9 @@ export class QuestionService {
     return this.publicDataService.patch(req);
   }
 
-  updateHierarchyQuestionUpdate(questionSetId, questionId, metadata, questionSetHierarchy): Observable<ServerResponse> {
+  updateHierarchyQuestionUpdate(hierarchyBody): Observable<ServerResponse> {
     const requestObj = {
-      data: {
-          nodesModified: {
-          },
-          hierarchy: {
-          }
-      }
-    };
-    requestObj.data.hierarchy[questionSetId] = {
-      children: questionSetHierarchy.childNodes,
-      root: true
-    };
-    requestObj.data.nodesModified[questionId] = {
-      metadata,
-      objectType: 'Question',
-      root: false,
-      isNew: false
+      data: hierarchyBody
     };
     const req = {
       url: 'questionset/v1/hierarchy/update',

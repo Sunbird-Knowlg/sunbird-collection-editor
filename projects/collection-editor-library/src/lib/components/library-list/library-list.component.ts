@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewEncapsulation} from '@angular/core';
-import {labelMessages} from '../labels';
+import { ConfigService } from '../../services/config/config.service';
 import { EditorService } from '../../services/editor/editor.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 
@@ -15,9 +15,9 @@ export class LibraryListComponent implements OnInit {
 @Output() contentChangeEvent = new EventEmitter<any>();
 @Output() moveEvent = new EventEmitter<any>();
 @Input() selectedContent: any;
-labelMessages = labelMessages;
 public sortContent = false;
-  constructor(public editorService: EditorService, public telemetryService: EditorTelemetryService ) { }
+  constructor(public editorService: EditorService, public telemetryService: EditorTelemetryService,
+              public configService: ConfigService ) { }
 
   ngOnInit() {
   }
@@ -43,7 +43,7 @@ public sortContent = false;
     this.moveEvent.emit({
       action: 'sortContentList',
       status: this.sortContent
-    });  
+    });
   }
   addToLibrary() {
     this.moveEvent.emit({

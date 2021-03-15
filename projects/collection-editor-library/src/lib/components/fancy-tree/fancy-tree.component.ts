@@ -112,7 +112,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   isFolder(child: any) {
-    if (this.isQuestion(child)) {
+    if (this.isContent(child)) {
       return false;
     } else {
       return child.visibility === 'Parent' ? true : false;
@@ -120,7 +120,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getIconClass(child: any, level: number) {
-    if (this.isQuestion(child)) {
+    if (this.isContent(child)) {
       return 'fa fa-file-o';
     } else if (child.visibility === 'Parent') {
         return _.get(this.config, `hierarchy.level.${level}.iconClass`) || 'fa fa-folder-o';
@@ -129,8 +129,9 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  isQuestion(child: any) {
+  isContent(child: any) {
     return _.get(this.config, 'objectType') === 'QuestionSet' && child.objectType === 'Question';
+    // return _.includes(['Collection', 'QuestionSet'], this.config.objectType) && _.includes(['Question', 'Content'], child.objectType);
   }
 
   renderTree(options) {

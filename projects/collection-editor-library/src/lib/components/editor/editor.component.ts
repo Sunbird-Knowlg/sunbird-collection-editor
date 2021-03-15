@@ -259,17 +259,31 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.selectedNodeData = _.cloneDeep(event.data);
         this.isCurrentNodeFolder = _.get(this.selectedNodeData, 'folder');
         this.isCurrentNodeRoot = _.get(this.selectedNodeData, 'data.root');
-        this.isQumlPlayer = _.get(this.selectedNodeData, 'data.metadata.mimeType') === 'application/vnd.sunbird.question';
+        // TODO: rethink below line code
+        this.isQumlPlayer = _.get(this.selectedNodeData, 'data.metadata.mimeType') === 'application/vnd.sunbird.question'; 
+        this.setTemplateList();
         this.changeDetectionRef.detectChanges();
         break;
       case 'deleteNode':
         this.showDeleteConfirmationPopUp = true;
         break;
       case 'createNewContent':
-        this.showQuestionTemplatePopup = true;
+        this.saveContent().then((message: string) => {
+          this.showQuestionTemplatePopup = true;
+        }).catch(((error: string) => {
+          this.toasterService.error(error);
+        }));
         break;
       default:
         break;
+    }
+  }
+
+  setTemplateList() {
+    if (!this.isCurrentNodeRoot) {
+      this.templateList = _.flatMap(
+        _.get(this.editorService.editorConfig.config, `hierarchy.level${this.selectedNodeData.getLevel() - 1}.children`)
+      );
     }
   }
 

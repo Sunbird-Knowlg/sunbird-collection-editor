@@ -9,7 +9,7 @@
     </div>
   </div>
   <button *ngIf="config.objectType !== 'QuestionSet'" (click)="addFromLibrary();" [ngClass]="!this.showLibraryButton ? 'disabled' : ''" class="sb-btn sb-btn-outline-primary sb-btn-normal mt-10 mr-30"><i class="icon plus"></i> Add from library</button>
-  <button *ngIf="config.objectType === 'QuestionSet'" type="button" class="sb-btn sb-btn-normal sb-btn-primary mt-10 mr-30" (click)="createNewContent()"
+  <button *ngIf="config.objectType === 'QuestionSet'" [ngClass]="!this.showLibraryButton ? 'disabled' : ''" type="button" class="sb-btn sb-btn-normal sb-btn-primary mt-10 mr-30" (click)="createNewContent()"
           libTelemetryInteract
           [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('create_new','click','launch', telemetryService.telemetryPageId)">
             <i class="icon plus"></i> Create New

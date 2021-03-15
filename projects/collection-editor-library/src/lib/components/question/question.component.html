@@ -102,7 +102,7 @@
           <hr>
           <div *ngIf="leafFormConfig">
             <div class="pl-5 py-10 font-weight-bold fs-0-92">
-              {{labelMessages?.lbl?.Questiondetails}}
+              {{configService.labelConfig?.lbl?.Questiondetails}}
             </div>
             <div class="form-container   px-30">
               <sb-dynamic-form [config]="leafFormConfig" (initialize)="output($event)"

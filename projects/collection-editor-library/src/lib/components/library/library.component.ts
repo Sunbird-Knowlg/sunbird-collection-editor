@@ -4,7 +4,7 @@ import { TreeService } from '../../services/tree/tree.service';
 import { EditorService } from '../../services/editor/editor.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
-import { labelMessages } from '../labels';
+import { ConfigService } from '../../services/config/config.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -14,7 +14,6 @@ import { Router } from '@angular/router';
   encapsulation: ViewEncapsulation.None,
 })
 export class LibraryComponent implements OnInit, AfterViewInit {
-  labelMessages = labelMessages;
   @Input() libraryInput: any;
   @Output() libraryEmitter = new EventEmitter<any>();
   public searchFormConfig: any;
@@ -37,7 +36,7 @@ export class LibraryComponent implements OnInit, AfterViewInit {
               private editorService: EditorService,
               private router: Router,
               private treeService: TreeService,
-              private toasterService: ToasterService) {
+              private toasterService: ToasterService, public configService: ConfigService) {
               this.pageStartTime = Date.now();
               }
 
@@ -54,7 +53,7 @@ export class LibraryComponent implements OnInit, AfterViewInit {
       this.telemetryService.telemetryPageId = this.pageId;
       this.childNodes = _.get(this.collectionhierarcyData, 'childNodes');
     }, err => {
-      this.toasterService.error(this.labelMessages.err.somethingWentWrong);
+      this.toasterService.error(this.configService.labelConfig.err.somethingWentWrong);
     });
   }
 

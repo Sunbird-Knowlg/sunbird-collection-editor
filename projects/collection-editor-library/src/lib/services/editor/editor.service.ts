@@ -4,7 +4,6 @@ import * as _ from 'lodash-es';
 import { TreeService } from '../tree/tree.service';
 import { PublicDataService } from '../public-data/public-data.service';
 import { IEditorConfig } from '../../interfaces/editor';
-import { labelConfig} from '../../editor.config';
 import { ConfigService } from '../config/config.service';
 import { ToasterService} from '../../services/toaster/toaster.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
@@ -17,7 +16,7 @@ interface SelectedChildren {
 @Injectable({ providedIn: 'root' })
 
 export class EditorService {
-  data: any;
+  data: any = {};
   private _selectedChildren: SelectedChildren = {};
   public questionStream$ = new Subject<any>();
   private _editorConfig: IEditorConfig;
@@ -58,7 +57,7 @@ export class EditorService {
   }
 
   getToolbarConfig() {
-    return _.cloneDeep(_.merge(labelConfig, _.get(this.editorConfig, 'context.labels')));
+    return _.cloneDeep(_.merge(this.configService.labelConfig.button_labels, _.get(this.editorConfig, 'context.labels')));
   }
 
   emitshowLibraryPageEvent(page) {
@@ -180,7 +179,7 @@ export class EditorService {
     };
   }
 
-  _toFlatObj(data) {
+  _toFlatObj(data, questionId?, selectUnitId?) {
     const instance = this;
     if (data && data.data) {
       instance.data[data.data.id] = {
@@ -190,12 +189,16 @@ export class EditorService {
         }),
         root: data.data.root
       };
-
+      if (questionId && selectUnitId && selectUnitId === data.data.id) {
+          instance.data[data.data.id].children.push(questionId);
+      }
+      if (questionId && selectUnitId && data.folder === false) {
+          delete instance.data[data.data.id];
+      }
       _.forEach(data.children, (collection) => {
-        instance._toFlatObj(collection);
+        instance._toFlatObj(collection, questionId, selectUnitId);
       });
     }
-
     return instance.data;
   }
 

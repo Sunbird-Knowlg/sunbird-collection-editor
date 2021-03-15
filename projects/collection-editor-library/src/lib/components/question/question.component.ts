@@ -10,8 +10,9 @@ import { EditorService } from '../../services/editor/editor.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
 import { throwError, Subject } from 'rxjs';
 import { Router } from '@angular/router';
-import {labelMessages} from '.././labels';
+import { ConfigService } from '../../services/config/config.service';
 import { FrameworkService } from '../../services/framework/framework.service';
+import { TreeService } from '../../services/tree/tree.service';
 import { filter, take, takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'lib-question',
@@ -25,7 +26,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
   @Input() leafFormConfig: any;
   public initialLeafFormConfig: any;
   public childFormData: any;
-  public labelMessages = labelMessages;
   @Output() questionEmitter = new EventEmitter<any>();
   private onComponentDestroy$ = new Subject<any>();
   toolbarConfig: any;
@@ -67,8 +67,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
   public frameworkDetails: any = {};
   constructor(
     private questionService: QuestionService, private editorService: EditorService, public telemetryService: EditorTelemetryService,
-    public playerService: PlayerService, private toasterService: ToasterService,
-    private frameworkService: FrameworkService, private router: Router ) {
+    public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,
+    private frameworkService: FrameworkService, private router: Router, public configService: ConfigService ) {
       const { primaryCategory } = this.editorService.selectedChildren;
       this.questionPrimaryCategory = primaryCategory;
       this.pageStartTime = Date.now();
@@ -387,7 +387,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
     return solutionObj;
   }
 
-  prepareRequestBody() {
+  getQuestionMetadata() {
     let metadata: any = {
       mimeType: 'application/vnd.sunbird.question',
       media: this.mediaArr,
@@ -437,9 +437,27 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
     ), key => _.isEmpty(key));
   }
 
+  prepareRequestBody() {
+    const questionId = this.questionId ? this.questionId : UUID.UUID();
+    const data = this.treeService.getFirstChild();
+    const activeNode = this.treeService.getActiveNode();
+    const selectedUnitId = _.get(activeNode, 'data.id');
+    return {
+      nodesModified: {
+        [questionId]: {
+              metadata: this.getQuestionMetadata(),
+              objectType: 'Question',
+              root: false,
+              isNew: this.questionId ? false : true
+          }
+      },
+      hierarchy: this.editorService._toFlatObj(data, questionId, selectedUnitId)
+    };
+  }
+
   createQuestion() {
-    const metadata = this.prepareRequestBody();
-    this.questionService.updateHierarchyQuestionCreate(this.questionSetId, metadata, this.questionSetHierarchy).
+    const requestBody = this.prepareRequestBody();
+    this.questionService.updateHierarchyQuestionCreate(requestBody).
       subscribe((response: ServerResponse) => {
           if (response.result) {
             this.toasterService.success('Question is created sucessfully');
@@ -455,8 +473,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
   }
 
   updateQuestion(questionId) {
-    const metadata = this.prepareRequestBody();
-    this.questionService.updateHierarchyQuestionUpdate(this.questionSetId, questionId, metadata, this.questionSetHierarchy).
+    const requestBody = this.prepareRequestBody();
+    this.questionService.updateHierarchyQuestionUpdate(requestBody).
       subscribe((response: ServerResponse) => {
           if (response.result) {
             this.toasterService.success('Question is updated sucessfully');

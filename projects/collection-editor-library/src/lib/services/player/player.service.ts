@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as _ from 'lodash-es';
-import { PLAYER_CONFIG } from '../../editor.config';
+import { ConfigService } from '../../services/config/config.service';
 import { EditorService } from '../../services/editor/editor.service';
 
 interface PlayerConfig {
@@ -15,7 +15,7 @@ interface PlayerConfig {
 })
 export class PlayerService {
 
-  constructor(private editorService: EditorService) { }
+  constructor(private editorService: EditorService, private configService: ConfigService) { }
 
   /**
    * returns player config details.
@@ -32,7 +32,7 @@ export class PlayerService {
    * returns player config details.
    */
    getPlayerConfig(contentDetails): PlayerConfig {
-    const configuration: any = _.cloneDeep(_.get(PLAYER_CONFIG, 'playerConfig'));
+    const configuration: any = _.cloneDeep(_.get(this.configService.playerConfig, 'playerConfig'));
     configuration.context.contentId = contentDetails.contentId;
     configuration.context.sid = _.get(this.editorService.editorConfig, 'context.sid');
     configuration.context.uid = _.get(this.editorService.editorConfig, 'context.uid');
@@ -78,7 +78,7 @@ export class PlayerService {
     }
     configuration.context.pdata.id = _.get(this.editorService.editorConfig, 'context.pdata.id');
     configuration.metadata = contentDetails.contentData;
-    configuration.data = contentDetails.contentData.mimeType !== PLAYER_CONFIG.MIME_TYPE.ecmlContent ?
+    configuration.data = contentDetails.contentData.mimeType !== this.configService.playerConfig.MIME_TYPE.ecmlContent ?
       {} : contentDetails.contentData.body;
     configuration.config.enableTelemetryValidation = false,
     // environment.enableTelemetryValidation; // telemetry validation

@@ -6,7 +6,7 @@ import { TreeService } from '../../services/tree/tree.service';
 import { EditorService } from '../../services/editor/editor.service';
 import { FrameworkService } from '../../services/framework/framework.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
-import { labelMessages } from '../labels';
+import { ConfigService } from '../../services/config/config.service';
 
 
 @Component({
@@ -21,8 +21,6 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
   @Input() filterOpenStatus: boolean;
   @Input() searchFormConfig: any;
   @Output() filterChangeEvent: EventEmitter<any> = new EventEmitter();
-
-  labelMessages = labelMessages;
   public filterConfig: any;
   public isFilterShow = false;
   public filterFields: any;
@@ -35,7 +33,7 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
   constructor(private frameworkService: FrameworkService,
               public editorService: EditorService,
               public telemetryService: EditorTelemetryService,
-              public treeService: TreeService) { }
+              public treeService: TreeService, public configService: ConfigService) { }
 
   ngOnInit() {
     this.filterFields = this.searchFormConfig;
