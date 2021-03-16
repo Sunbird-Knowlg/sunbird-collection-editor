@@ -27,7 +27,6 @@
     (click)="buttonEmitter({type:'saveContent'})" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('save_as_draft','click','submit', telemetryService.telemetryPageId)"
     >
-      <i class="{{labelConfigData.save_collection_btn_icon}}"></i> 
       <i class="{{labelConfigData.save_collection_btn_icon}}" *ngIf="!buttonLoaders?.saveAsDraftButtonLoader"></i>
       <div class="sb-loading-spinner" *ngIf="buttonLoaders?.saveAsDraftButtonLoader" role="status" aria-hidden="true"></div>
       {{labelConfigData.save_collection_btn_label}}
