@@ -3,8 +3,6 @@ import * as urlConfig from './url.config.json';
 import * as categoryConfig from './category.config.json';
 import * as labelConfig from './label.config.json';
 import * as playerConfig from './player.config.json';
-
-
 @Injectable({
   providedIn: 'root'
 })
@@ -14,6 +12,7 @@ export class ConfigService {
   categoryConfig = (categoryConfig as any);
   labelConfig = (labelConfig as any);
   playerConfig = (playerConfig as any);
-
+  public sessionContext: Array<string> =  ['board', 'medium', 'gradeLevel', 'subject',
+       'topic', 'author', 'channel', 'framework', 'copyright', 'attributions', 'audience',  'license' ];
   constructor() { }
 }

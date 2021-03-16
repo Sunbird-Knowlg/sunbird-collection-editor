@@ -189,7 +189,7 @@ export const questionEditorConfig = {
     medium: ['English'],
     gradeLevel: ['Class 1'],
     subject: ['Environmental Studies'],
-    topic: ['Hello'],
+    topic: ['Forest'],
     additionalCategories: [
       {
         value: 'Classroom Teaching Video',
@@ -277,7 +277,9 @@ export const questionEditorConfig = {
         primaryCategory: 'Practice Question Set',
         iconClass: 'fa fa-folder-o',
         children: {
-          Question: []
+          Question: [
+            'Multiple Choice Question'
+          ]
         }
       }
     }

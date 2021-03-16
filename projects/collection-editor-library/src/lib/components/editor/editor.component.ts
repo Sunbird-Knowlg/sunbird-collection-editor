@@ -67,7 +67,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       (response) => {
         const collection = _.get(response, `result.${this.configService.categoryConfig[this.editorConfig.config.objectType]}`);
         this.toolbarConfig.title = collection.name;
-        this.templateList = _.flatMap(_.get(this.editorConfig, 'config.children'));
         const organisationFramework = _.get(this.editorConfig, 'context.framework') || _.get(collection, 'framework');
         const targetFramework = _.get(this.editorConfig, 'context.targetFWIds') || _.get(collection, 'targetFWIds');
         if (organisationFramework) {
@@ -280,7 +279,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   setTemplateList() {
-    if (!this.isCurrentNodeRoot) {
+    if (this.isCurrentNodeRoot) {
+      this.templateList = _.flatMap(_.get(this.editorConfig, 'config.children'));
+    } else {
       this.templateList = _.flatMap(
         _.get(this.editorService.editorConfig.config, `hierarchy.level${this.selectedNodeData.getLevel() - 1}.children`)
       );

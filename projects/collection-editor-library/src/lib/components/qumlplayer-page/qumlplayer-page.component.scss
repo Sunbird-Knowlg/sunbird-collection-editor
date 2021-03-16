@@ -6,8 +6,8 @@
     border: solid 1px #cccccc;
 }
 .quml-container{
-    overflow-y: auto;
-    height: 30rem;
+    overflow-y: auto !important;
+    height: 30rem !important;
 }
 .quml-option-card{
     figure{
@@ -41,6 +41,18 @@ quml-mcq-solutions{
     }
     .sb-quml-player{
         height: 846px;
+    }
+    .carousel-inner{
+        padding-left: 30px !important;
+    }
+    .quml-option-card {
+        .option-border{
+            width: 23rem !important;
+            margin-top: 10px;
+        }
+    }
+    img{
+        max-width: 100% !important;
     }
 }
 .btn-none{

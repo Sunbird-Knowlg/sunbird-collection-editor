@@ -130,8 +130,8 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   isContent(child: any) {
-    return _.get(this.config, 'objectType') === 'QuestionSet' && child.objectType === 'Question';
-    // return _.includes(['Collection', 'QuestionSet'], this.config.objectType) && _.includes(['Question', 'Content'], child.objectType);
+    // tslint:disable-next-line:max-line-length
+    return (_.get(this.config, 'objectType') === 'QuestionSet' && child.objectType === 'Question');
   }
 
   renderTree(options) {

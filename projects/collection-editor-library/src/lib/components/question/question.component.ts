@@ -91,9 +91,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
         const frameworkData = frameworkDetails.frameworkdata[this.framework].categories;
         this.frameworkDetails.frameworkData = frameworkData;
         this.frameworkDetails.topicList = _.get(_.find(frameworkData, { code: 'topic' }), 'terms');
+        this.populateFrameworkData();
       }
     });
-    this.populateFrameworkData();
   }
   fetchFrameWorkDetails() {
     return this.frameworkService.frameworkData$.pipe(takeUntil(this.onComponentDestroy$),
@@ -409,7 +409,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
     if (_.isEmpty(this.editorState.solutions)) {
       metadata.solutions = [];
     }
-    metadata = _.merge(metadata, this.getDefaultFrameworkValues());
+    metadata = _.merge(metadata, this.getDefaultSessionContext());
     metadata = _.merge(metadata, this.childFormData);
     return _.omit(metadata, ['question', 'numberOfOptions', 'options']);
   }
@@ -425,14 +425,14 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
     return questionBody;
   }
 
-  getDefaultFrameworkValues() {
+  getDefaultSessionContext() {
     return _.omitBy(_.merge(
       {
         author: _.get(this.editorService.editorConfig, 'context.user.name'),
         ..._.pick(_.get(this.editorService.editorConfig, 'context'), ['board', 'medium', 'gradeLevel', 'subject', 'topic'])
       },
       {
-      ..._.pick(this.questionSetHierarchy, ['board', 'medium', 'gradeLevel', 'subject', 'topic', 'author', 'framework'])
+      ..._.pick(this.questionSetHierarchy, this.configService.sessionContext)
       }
     ), key => _.isEmpty(key));
   }
@@ -442,6 +442,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
     const data = this.treeService.getFirstChild();
     const activeNode = this.treeService.getActiveNode();
     const selectedUnitId = _.get(activeNode, 'data.id');
+    this.editorService.data = {};
     return {
       nodesModified: {
         [questionId]: {
@@ -506,7 +507,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
     this.QumlPlayerConfig.data.maxQuestions = this.QumlPlayerConfig.data.maxQuestions || this.QumlPlayerConfig.data.totalQuestions;
     this.QumlPlayerConfig.data.maxScore = this.QumlPlayerConfig.data.maxQuestions;
     this.QumlPlayerConfig.data.children = [];
-    const questionMetadata = this.prepareRequestBody();
+    const questionMetadata = this.getQuestionMetadata();
     this.QumlPlayerConfig.data.children.push(questionMetadata);
   }
 
@@ -573,8 +574,11 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
         this.childFormData[formFieldCategory.code] = this.questionMetaData[formFieldCategory.code];
       }
     } else {
-      const formDefaultValue = _.get(this.questionSetHierarchy, formFieldCategory.code);
-      formFieldCategory.default = formDefaultValue ? formDefaultValue : '';
+      // tslint:disable-next-line:max-line-length
+      const questionSetDefaultValue = _.get(this.questionSetHierarchy, formFieldCategory.code) ? _.get(this.questionSetHierarchy, formFieldCategory.code) : '';
+      const defaultEditStatus = _.find(this.initialLeafFormConfig, {code: formFieldCategory.code}).editable === true ? true : false;
+      formFieldCategory.default = defaultEditStatus ? '' : questionSetDefaultValue ;
+      this.childFormData[formFieldCategory.code] = formFieldCategory.default;
     }
     });
   }

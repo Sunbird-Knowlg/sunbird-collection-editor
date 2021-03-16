@@ -118,8 +118,8 @@ sui-select {
 }
 
 .quml-container{
-  overflow-y: auto;
-  height: 30rem;
+  overflow-y: auto  !important;
+  height: 30rem !important;
 }
 .quml-option-card{
   figure{
