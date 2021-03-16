@@ -45,6 +45,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public showQuestionTemplatePopup = false;
   public showDeleteConfirmationPopUp = false;
   toolbarConfig: any;
+  public buttonLoaders = {
+    saveAsDraftButtonLoader: false,
+    addFromLibraryButtonLoader: false
+  };
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
               private toasterService: ToasterService,
@@ -122,9 +126,12 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   toolbarEventListener(event) {
     switch (event.button) {
       case 'saveContent':
+        this.buttonLoaders.saveAsDraftButtonLoader = true;
         this.saveContent().then((message: string) => {
+          this.buttonLoaders.saveAsDraftButtonLoader = false;
           this.toasterService.success(message);
         }).catch(((error: string) => {
+          this.buttonLoaders.saveAsDraftButtonLoader = false;
           this.toasterService.error(error);
         }));
         break;
@@ -175,10 +182,15 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   showLibraryComponentPage() {
+    this.buttonLoaders.addFromLibraryButtonLoader = true;
     this.saveContent().then(res => {
       this.libraryComponentInput.collectionId = this.collectionId;
+      this.buttonLoaders.addFromLibraryButtonLoader = false;
       this.pageId = 'library';
-    }).catch(err => this.toasterService.error(err));
+    }).catch(err => {
+      this.toasterService.error(err);
+      this.buttonLoaders.addFromLibraryButtonLoader = false;
+    });
   }
 
   libraryEventListener(event: any) {
@@ -267,10 +279,13 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.showDeleteConfirmationPopUp = true;
         break;
       case 'createNewContent':
+        this.buttonLoaders.addFromLibraryButtonLoader = true;
         this.saveContent().then((message: string) => {
+          this.buttonLoaders.addFromLibraryButtonLoader = false;
           this.showQuestionTemplatePopup = true;
         }).catch(((error: string) => {
           this.toasterService.error(error);
+          this.buttonLoaders.addFromLibraryButtonLoader = false;
         }));
         break;
       default:

@@ -1,14 +1,14 @@
 <ng-container [ngSwitch]="pageId">
   <ng-container *ngSwitchCase="'collection_editor'">
     <div class="add-to-library mb-10">
-      <lib-header  [pageId]="pageId" [labelConfigData]="toolbarConfig" (toolbarEmitter)="toolbarEventListener($event)"> </lib-header> <!--// TODO::  *ngIf="treeService.getTreeObject()" -->
+      <lib-header  [pageId]="pageId" [labelConfigData]="toolbarConfig" [buttonLoaders]="buttonLoaders" (toolbarEmitter)="toolbarEventListener($event)"> </lib-header> <!--// TODO::  *ngIf="treeService.getTreeObject()" -->
       <div class="h-100vh sb-bg-white">
         <div class="ui">
           <div class="ui twelve column grid m-0 ">
             <!-- Left Sidebar for cards -->
             <div class="three wide column p-0 h-100vh">
               <lib-fancy-tree  *ngIf="collectionTreeNodes && collectionTreeNodes.data"
-              [nodes]="collectionTreeNodes" [options]="{ showConnectors: true }"
+              [nodes]="collectionTreeNodes" [options]="{ showConnectors: true }" [buttonLoaders]="buttonLoaders"
               (treeEventEmitter)="treeEventListener($event)" class="sb-collectionTree-fancyTree sb-collectionTree-fancyTreelist">
               </lib-fancy-tree>
             </div>
