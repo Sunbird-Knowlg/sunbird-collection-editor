@@ -1,8 +1,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import * as _ from 'lodash-es';
 import { CsTelemetryModule } from '@project-sunbird/client-services/telemetry';
-import { IEditorConfig } from '../../interfaces/editor.config';
-import { Context } from '../../interfaces/inputConfig';
+import { IEditorConfig, Context } from '../../interfaces/editor';
 import { HelperService } from '../helper/helper.service';
 @Injectable({
   providedIn: 'root'

@@ -51,6 +51,7 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
 
   attachDefaultValues() {
     const metaDataFields = _.get(this.nodeMetadata, 'data.metadata');
+    // if (_.isEmpty(metaDataFields)) { return; }
     const categoryMasterList = this.frameworkDetails.frameworkData;
     let formConfig: any = (metaDataFields.visibility === 'Default') ? _.cloneDeep(this.rootFormConfig) : _.cloneDeep(this.unitFormConfig);
     formConfig = formConfig && _.has(_.first(formConfig), 'fields') ? formConfig : [{name: '', fields: formConfig}];
@@ -77,7 +78,7 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         const frameworkCategory = _.find(categoryMasterList, category => {
-          return category.code === field.sourceCategory && !_.includes(field.code, 'target');
+          return (category.code === field.sourceCategory || category.code === field.code) && !_.includes(field.code, 'target');
         });
         if (!_.isEmpty(frameworkCategory)) {
           field.terms = frameworkCategory.terms;

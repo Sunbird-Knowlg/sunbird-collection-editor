@@ -1,7 +1,7 @@
 <sui-modal [mustScroll]="true" [isClosable]="true" [transitionDuration]="0"
 [size]="'normal'" class="sb-modal" appBodyScroll (dismissed)="closePopup()" #modal>
 <div class="sb-modal-header">
-  {{labelMessages?.lbl?.whereDoYouWantToAddThisContent}}
+  {{configService.labelConfig?.lbl?.whereDoYouWantToAddThisContent}}
 </div>
 <!-- Selection of Layout in modal -->
 <div class="sb-modal-content sb-chapterlist-modal scrolling content sb-dock-accordion py-20">
@@ -60,7 +60,7 @@
     libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('add_content','click','submit', telemetryService?.telemetryPageId, {key:'dialog_id',value:'add_to'})"
     >
-    {{labelMessages?.lbl?.addContent}}
+    {{configService.labelConfig?.lbl?.addContent}}
     </button>
   </div>
 </div>

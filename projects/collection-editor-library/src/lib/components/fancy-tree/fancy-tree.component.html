@@ -8,23 +8,10 @@
       <button [ngClass]="!this.showAddChildButton ? 'disabled' : ''" (click)="addChild();"  class="sb-btn sb-btn-outline-primary sb-btn-normal sb-btn-radius b-none p-0"><i class="icon plus"></i> Add Child</button>
     </div>
   </div>
-  <button (click)="addFromLibrary();" [ngClass]="!this.showLibraryButton ? 'disabled' : ''" class="sb-btn sb-btn-outline-primary sb-btn-normal mt-10 mr-30"><i class="icon plus"></i> Add from library</button>
+  <button *ngIf="config.objectType !== 'QuestionSet'" (click)="addFromLibrary();" [ngClass]="!this.showLibraryButton ? 'disabled' : ''" class="sb-btn sb-btn-outline-primary sb-btn-normal mt-10 mr-30"><i class="icon plus"></i> Add from library</button>
+  <button *ngIf="config.objectType === 'QuestionSet'" [ngClass]="!this.showLibraryButton ? 'disabled' : ''" type="button" class="sb-btn sb-btn-normal sb-btn-primary mt-10 mr-30" (click)="createNewContent()"
+          libTelemetryInteract
+          [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('create_new','click','launch', telemetryService.telemetryPageId)">
+            <i class="icon plus"></i> Create New
+          </button>
 </div>
-<sui-modal *ngIf="showDeleteConfirmationPopUp" [mustScroll]="true" [isClosable]="true" [transitionDuration]="0"
-  [size]="'normal'" class="sb-modal bx-none overflow-modal" appBodyScroll
-  (dismissed)="showDeleteConfirmationPopUp = !showDeleteConfirmationPopUp" #modal>
-  <div class="sb-modal-header">
-      Confirm
-  </div>
-  <div class="sb-modal-content">
-      <!-- <div class="sb-publish-content">
-        <div class="review-modal-list">
-          {{ contentComment }}
-      </div> -->
-      <div> Are you sure want to delete the selected Node?</div>
-  </div>
-  <div class="sb-modal-actions">
-    <button type="button" class="sb-btn sb-btn-normal sb-btn-primary mr-8" (click)="showDeleteConfirmationPopUp = !showDeleteConfirmationPopUp"> No </button>
-    <button type="button" class="sb-btn sb-btn-secondary sb-btn-normal " (click)="removeNode(); showDeleteConfirmationPopUp = !showDeleteConfirmationPopUp"> Yes </button>
-  </div>
-</sui-modal>
