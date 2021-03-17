@@ -6,14 +6,14 @@
     <div>
       <small class="sb-color-gray-200 d-block pb-10">{{configService.labelConfig?.lbl?.selectContentToAdd}}</small>
       <sui-checkbox class="toggle" libTelemetryInteract
-      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('Show_content_added_to_collection','click','launch', telemetryService?.telemetryPageId, {showAddedContent: !showAddedContent})"
+      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('show_content_added_to_collection','click','launch', telemetryService?.telemetryPageId, {showAddedContent: !showAddedContent})"
        [(ngModel)]="showAddedContent" (checkChange)="onShowAddedContentChange();"></sui-checkbox>
         <small class="d-block mt-5 fs-0785"> {{configService.labelConfig?.lbl?.showContentAddedToCollection}}</small>
     </div>
     <div class="sb-w-75">
       <label class="d-block font-weight-normal fs-0785">{{configService.labelConfig?.lbl?.sortBy}}</label>
       <div (click)="sortContentList();" libTelemetryInteract
-      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('Sort_By','click','launch', telemetryService?.telemetryPageId, {sortContent: !sortContent})"
+      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('sort_by','click','launch', telemetryService?.telemetryPageId, {sortContent: !sortContent})"
        [ngClass]="{'sb-btn-outline-primary': sortContent}" class="sb-btn sb-btn-outline-gray sb-btn-normal ripple">{{configService.labelConfig?.lbl?.sortlabel}}</div>
 </div>
   </div>

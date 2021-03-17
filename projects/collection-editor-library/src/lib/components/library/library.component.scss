@@ -147,9 +147,12 @@
 .result-no-found{
   background: #fff !important;
   position: relative;
-  z-index: 9999 !important;
+  z-index: 99;
   .ui.container{
     width: 100% !important;
     height: 100vh;
   }
+}
+lib-chat-window,.chat_bot{
+  display: none;
 }

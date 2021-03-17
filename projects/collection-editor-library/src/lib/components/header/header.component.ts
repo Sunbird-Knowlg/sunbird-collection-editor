@@ -13,6 +13,7 @@ import { NgForm } from '@angular/forms';
 export class HeaderComponent implements OnDestroy, OnInit {
   @Input() pageId: any;
   @Input() labelConfigData: any;
+  @Input() buttonLoaders: any;
   @Output() toolbarEmitter = new EventEmitter<any>();
   @ViewChild('FormControl', {static: false}) FormControl: NgForm;
   public visibility: any;

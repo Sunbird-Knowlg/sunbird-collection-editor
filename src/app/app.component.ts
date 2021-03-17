@@ -7,19 +7,20 @@ import { questionEditorConfig, collectionEditorConfig } from './data';
 })
 export class AppComponent {
   title = 'sunbird-collection-editor';
-  editor: any = localStorage.getItem('contentType') || 'question';
-  showEditor = true;
+  editor: any = localStorage.getItem('editorType') || '';
   editorConfig: any = this.editor === 'question' ? questionEditorConfig : collectionEditorConfig;
+
   editorEventListener(event) {
-    this.showEditor = false;
+    this.editor = undefined;
+    localStorage.removeItem('editorType');
     console.log(event);
   }
 
-  setType(contentType) {
-    if (contentType === 'question') {
-      localStorage.setItem('contentType', 'question');
+  setType(editorType) {
+    if (editorType === 'question') {
+      localStorage.setItem('editorType', 'question');
     } else {
-      localStorage.setItem('contentType', 'collection');
+      localStorage.setItem('editorType', 'collection');
     }
     window.location.reload();
   }

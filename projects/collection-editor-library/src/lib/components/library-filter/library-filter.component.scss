@@ -10,10 +10,15 @@
     }
     sb-dynamic-dropdown{
         .sb-dropdown-select{
-            margin-top: 0.3rem;
-            padding: 0.6rem !important;
+            margin-top: 0.1rem;
+            padding: 14px 8px !important;
         }
     } 
+    .ui{
+      &.modals{
+        z-index: 9999 !important;
+      }
+    }
 }
 .sb-search-box .sb-search-input{
     padding: 0 3.5rem 0 2rem !important;
@@ -113,5 +118,10 @@
     ul{
       position: static !important;
     }
+  }
+}
+.ui{
+  &.modals{
+    z-index: 9999 !important;
   }
 }
