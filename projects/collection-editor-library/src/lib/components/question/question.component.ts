@@ -216,7 +216,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
         break;
       case 'previewContent':
         this.previewContent();
-        this.previewFormData(false);
         break;
       case 'editContent':
         this.previewFormData(true);
@@ -493,6 +492,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
  async previewContent() {
   await this.validateQuestionData();
   if (this.showFormError === false) {
+    this.previewFormData(false);
     await this.setQumlPlayerData();
     this.showPreview = true;
     this.toolbarConfig.showPreview = true;
