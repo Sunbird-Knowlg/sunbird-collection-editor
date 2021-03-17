@@ -102,10 +102,10 @@
   </div>
   <div class="sb-modal-actions">
     <button id="submitReview" type="submit" class="sb-btn sb-btn-normal" [ngClass]="{'sb-btn-primary': FormControl.form.valid, 'sb-btn-disabled': !FormControl.form.valid}" (click)="buttonEmitter({type: 'rejectContent', comment: rejectComment}); showRequestChangesPopup = false;" libTelemetryInteract
-    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('submit_review','click','submit', telemetryService.telemetryPageId)"
+    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('submit_review','click','submit', telemetryService.telemetryPageId, {key: 'dialog_id', value: 'add_review_comments'})"
     > Submit Review </button>
     <button class="sb-btn sb-btn-normal sb-btn-outline-primary" (click)="modal.deny('denied')"
-    libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('cancel','click','launch', telemetryService.telemetryPageId)">Cancel</button>
+    libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('cancel','click','cancel', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'add_review_comments'})">Cancel</button>
   </div>
 </form>
 </sui-modal>
@@ -140,10 +140,12 @@
         Are you sure you want to publish this collection?
       </div>
       <div class="sb-modal-actions">
-        <button class="sb-btn sb-btn-normal sb-btn-primary" (click)="buttonEmitter({type: 'publishContent'});showPublishCollectionPopup = false;">
+        <button class="sb-btn sb-btn-normal sb-btn-primary" (click)="buttonEmitter({type: 'publishContent'});showPublishCollectionPopup = false;"
+        libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('yes','click','submit', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'publish_collection'})">
           Yes
         </button>
-        <button class="sb-btn sb-btn-normal sb-btn-outline-primary" (click)="showPublishCollectionPopup = !showPublishCollectionPopup">
+        <button class="sb-btn sb-btn-normal sb-btn-outline-primary" (click)="showPublishCollectionPopup = !showPublishCollectionPopup"
+        libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('no','click','cancel', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'add_review_comments'})">
           No
         </button>
       </div>

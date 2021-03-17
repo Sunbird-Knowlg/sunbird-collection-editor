@@ -44,6 +44,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public submitFormStatus = true;
   public showQuestionTemplatePopup = false;
   public showDeleteConfirmationPopUp = false;
+  public actionType: string;
   toolbarConfig: any;
   public buttonLoaders = {
     saveAsDraftButtonLoader: false,
@@ -124,6 +125,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   toolbarEventListener(event) {
+    this.actionType = event.button;
     switch (event.button) {
       case 'saveContent':
         this.buttonLoaders.saveAsDraftButtonLoader = true;
@@ -169,7 +171,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   redirectToChapterListTab() {
-    this.editorEmitter.emit({close: true, library: 'collection_editor'});
+    this.editorEmitter.emit({close: true, library: 'collection_editor', action: this.actionType, identifier: this.collectionId});
   }
 
   updateToolbarTitle(data: any) {
@@ -264,6 +266,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   treeEventListener(event: any) {
+    this.actionType = event.type;
     switch (event.type) {
       case 'nodeSelect':
         this.updateSubmitBtnVisibility();

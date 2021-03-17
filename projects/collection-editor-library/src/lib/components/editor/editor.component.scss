@@ -88,3 +88,7 @@
   cursor: default;
   font-weight: 400;
 }
+
+lib-chat-window, .chat_bot{
+  display: none  !important;
+}

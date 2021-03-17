@@ -33,7 +33,7 @@
         [size]="'normal'" class="sb-modal bx-none overflow-modal" appBodyScroll
         (dismissed)="showDeleteConfirmationPopUp = !showDeleteConfirmationPopUp" #modal>
         <div class="sb-modal-header">
-            Confirm
+            Confirm Delete Content
         </div>
         <div class="sb-modal-content">
             <!-- <div class="sb-publish-content">
@@ -43,8 +43,12 @@
             <div> Are you sure want to delete the selected Node?</div>
         </div>
         <div class="sb-modal-actions">
-          <button type="button" class="sb-btn sb-btn-normal sb-btn-primary mr-8" (click)="showDeleteConfirmationPopUp = !showDeleteConfirmationPopUp"> No </button>
-          <button type="button" class="sb-btn sb-btn-secondary sb-btn-normal " (click)="deleteNode();"> Yes </button>
+          <button type="button" class="sb-btn sb-btn-normal sb-btn-primary mr-8" (click)="showDeleteConfirmationPopUp = !showDeleteConfirmationPopUp"
+          libTelemetryInteract
+          [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('no','click','cancel', this.telemetryService.telemetryPageId,{key: 'dialog_id', value: 'confirm_delete_content','identifier' : selectedNodeData?.data?.id})"> No </button>
+          <button type="button" class="sb-btn sb-btn-secondary sb-btn-normal " (click)="deleteNode();"
+          libTelemetryInteract
+          [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('yes','click','submit', this.telemetryService.telemetryPageId,{key: 'dialog_id', value: 'confirm_delete_content','identifier' : selectedNodeData?.data?.id})"> Yes </button>
         </div>
       </sui-modal>
       <sui-modal *ngIf='showConfirmPopup' [mustScroll]="false" [isClosable]="true" [transitionDuration]="0" [size]="'normal'"
