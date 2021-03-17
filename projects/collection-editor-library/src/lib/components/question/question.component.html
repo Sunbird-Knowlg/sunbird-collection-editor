@@ -4,7 +4,7 @@
 
   <div class="sb-bg-white py-20">
     <div class="ui container">
-      <div class="ui twelve column wide h-100vh">
+      <div class="ui twelve column wide h-100">
         <div class="px-16">
           <div *ngIf="showPreview && !showLoader" class="sb-quml-player br-4 b-1-100">
             <quml-player [QumlPlayerConfig]="QumlPlayerConfig" (playerEvent)="getPlayerEvents($event)"
