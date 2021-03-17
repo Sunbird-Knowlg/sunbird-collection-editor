@@ -65,6 +65,13 @@ sui-select {
   border-radius: 4px;
   margin-bottom: -4px;
 }
+
+.ckeditor-tool__solution .menu {
+  .item {
+    font-size: 0.785rem !important;
+  }
+}
+
 .solution_video{
   .ckeditor-tool__option{
     border:0;
@@ -145,7 +152,7 @@ quml-mcq-solutions{
       }
   }
 }
-b-1-100 {
+.b-1-100 {
   border: solid 1px #cccccc;
 }
 
@@ -186,6 +193,9 @@ b-1-100 {
 .sb-editor-container {
   position: relative;
   z-index: 999 !important;
+    .container {
+      width: 95% !important;
+    }
     .dynamic-form {
       label {
         font-size: 12px !important;
