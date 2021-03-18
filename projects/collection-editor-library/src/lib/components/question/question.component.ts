@@ -409,7 +409,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
       metadata.solutions = [];
     }
     metadata = _.merge(metadata, this.getDefaultSessionContext());
-    metadata = _.merge(metadata, this.childFormData);
+    metadata = _.merge(metadata, _.pickBy(this.childFormData, _.identity));
     return _.omit(metadata, ['question', 'numberOfOptions', 'options']);
   }
 

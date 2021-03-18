@@ -39,7 +39,7 @@
       {{labelConfigData.submit_collection_btn_label}}
     </button>
 
-    <button *ngIf="visibility && visibility?.rejectContent" class="sb-btn sb-btn-outline-error sb-btn-normal ripple mr-10" (click)="showRequestChangesPopup = true" libTelemetryInteract
+    <button *ngIf="visibility && visibility?.rejectContent" class="sb-btn sb-btn-outline-error sb-btn-normal ripple mr-10" (click)="openRequestChangePopup('rejectContent')" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('reject','click','submit', telemetryService.telemetryPageId)">
       <i class="{{labelConfigData.reject_collection_btn_icon}}"></i> 
       {{labelConfigData.reject_collection_btn_label}}
@@ -50,6 +50,25 @@
       <i class="{{labelConfigData.publish_collection_btn_icon}}"></i> 
       {{labelConfigData.publish_collection_btn_label}}
     </button>
+
+    <button *ngIf="visibility && visibility?.sendForCorrectionsContent" class="sb-btn sb-btn-outline-primary sb-btn-normal ripple mr-10" (click)="openRequestChangePopup('sendForCorrections')" libTelemetryInteract
+    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('send_back_for_correction','click','submit', telemetryService.telemetryPageId)">
+      <i class="{{labelConfigData.send_back_for_correction_collection_btn_icon}}"></i> 
+      {{labelConfigData.send_back_for_correction_collection_btn_label}}
+    </button>
+
+    <button *ngIf="visibility && visibility?.sourcingApproveContent" class="sb-btn sb-btn-secondary sb-btn-normal ripple mr-10" (click)="buttonEmitter({type:'sourcingApprove'})" libTelemetryInteract
+    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('approve','click','submit', telemetryService.telemetryPageId)">
+      <i class="{{labelConfigData.sourcing_approve_collection_btn_icon}}"></i> 
+      {{labelConfigData.sourcing_approve_collection_btn_label}}
+    </button>
+
+    <button *ngIf="visibility && visibility?.sourcingRejectContent" class="sb-btn sb-btn-error sb-btn-normal ripple" (click)="openRequestChangePopup('sourcingReject')" libTelemetryInteract
+    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('reject','click','submit', telemetryService.telemetryPageId)">
+      <i class="{{labelConfigData.sourcing_reject_collection_btn_icon}}"></i> 
+      {{labelConfigData.sourcing_reject_collection_btn_label}}
+    </button>
+
   </div>
   <div class="d-flex flex-ai-center" *ngIf="pageId === 'question' && labelConfigData">
     <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10" *ngIf="labelConfigData.showPreview"
@@ -101,7 +120,7 @@
       </div>
   </div>
   <div class="sb-modal-actions">
-    <button id="submitReview" type="submit" class="sb-btn sb-btn-normal" [ngClass]="{'sb-btn-primary': FormControl.form.valid, 'sb-btn-disabled': !FormControl.form.valid}" (click)="buttonEmitter({type: 'rejectContent', comment: rejectComment}); showRequestChangesPopup = false;" libTelemetryInteract
+    <button id="submitReview" type="submit" class="sb-btn sb-btn-normal" [ngClass]="{'sb-btn-primary': FormControl.form.valid, 'sb-btn-disabled': !FormControl.form.valid}" (click)="buttonEmitter({type: actionType, comment: rejectComment}); showRequestChangesPopup = false;" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('submit_review','click','submit', telemetryService.telemetryPageId, {key: 'dialog_id', value: 'add_review_comments'})"
     > Submit Review </button>
     <button class="sb-btn sb-btn-normal sb-btn-outline-primary" (click)="modal.deny('denied')"
