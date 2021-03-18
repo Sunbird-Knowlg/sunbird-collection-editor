@@ -165,13 +165,25 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       case 'backContent':
         this.redirectToChapterListTab();
         break;
+      case 'sendForCorrections':
+        this.redirectToChapterListTab({comment: event.comment});
+        break;
+      case 'sourcingApprove':
+        this.redirectToChapterListTab();
+        break;
+      case 'sourcingReject':
+        this.redirectToChapterListTab({comment: event.comment});
+        break;
       default:
         break;
     }
   }
 
-  redirectToChapterListTab() {
-    this.editorEmitter.emit({close: true, library: 'collection_editor', action: this.actionType, identifier: this.collectionId});
+  redirectToChapterListTab(data?: any) {
+    this.editorEmitter.emit({
+      close: true, library: 'collection_editor', action: this.actionType, identifier: this.collectionId,
+      ...data
+    });
   }
 
   updateToolbarTitle(data: any) {

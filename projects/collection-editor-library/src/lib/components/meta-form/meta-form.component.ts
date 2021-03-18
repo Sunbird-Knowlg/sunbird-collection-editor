@@ -133,7 +133,7 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
           });
         }
 
-        if (this.editorService.editorMode === 'review' || this.editorService.editorMode === 'read') {
+        if (_.includes(['review', 'read', 'sourcingreview' ], this.editorService.editorMode)) {
           _.set(field, 'editable', false);
         }
 

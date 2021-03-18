@@ -16,12 +16,14 @@ export class HeaderComponent implements OnDestroy, OnInit {
   @Input() buttonLoaders: any;
   @Output() toolbarEmitter = new EventEmitter<any>();
   @ViewChild('FormControl', {static: false}) FormControl: NgForm;
+  @ViewChild('modal', {static: false}) public modal;
   public visibility: any;
   public showReviewModal: boolean;
   public showRequestChangesPopup: boolean;
   public showPublishCollectionPopup: boolean;
   public rejectComment: string;
   public contentComment: string;
+  public actionType: string;
   constructor(private editorService: EditorService, public telemetryService: EditorTelemetryService) { }
 
   ngOnInit() {
@@ -34,11 +36,23 @@ export class HeaderComponent implements OnDestroy, OnInit {
     this.visibility.submitContent = this.editorService.editorMode === 'edit';
     this.visibility.rejectContent = this.editorService.editorMode === 'review';
     this.visibility.publishContent = this.editorService.editorMode === 'review';
+    this.visibility.sendForCorrectionsContent = this.editorService.editorMode === 'sourcingreview';
+    this.visibility.sourcingApproveContent = this.editorService.editorMode === 'sourcingreview';
+    this.visibility.sourcingRejectContent = this.editorService.editorMode === 'sourcingreview';
+  }
+
+  openRequestChangePopup(action: string) {
+    this.actionType = action;
+    this.showRequestChangesPopup = true;
   }
 
   buttonEmitter(action) {
     this.toolbarEmitter.emit({button: action.type, ...(action.comment && {comment: this.rejectComment})});
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+    if (this.modal && this.modal.deny) {
+      this.modal.deny();
+    }
+  }
 }

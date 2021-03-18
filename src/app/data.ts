@@ -5,9 +5,9 @@ export const collectionEditorConfig = {
       name: 'Vaibahv Bhuva',
       orgIds: ['01309282781705830427']
     },
-    identifier: 'do_113233672484421632192',
+    identifier: 'do_113238060337512448160', // CC: do_113238058876813312153 PDC: do_113238060337512448160
     channel: '01307938306521497658',
-    framework: 'nit_k-12', // added temp use this : TPD targetFWIds: ['tn_k-12'], // TODO::
+    framework: 'nit_k-12',
     targetFWIds: ['nit_k-12'],
     authToken: ' ',
     sid: 'iYO2K6dOSdA0rwq7NeT1TDzS-dbqduvV',
@@ -78,10 +78,10 @@ export const collectionEditorConfig = {
       'https://dockstorage.blob.core.windows.net/sunbird-content-dock/']
   },
   config: {
-    mode: 'Edit',
+    mode: 'sourcingReview', // edit / review / read / sourcingReview
     maxDepth: 2,
     objectType: 'Collection',
-    primaryCategory: 'Curriculum Course',
+    primaryCategory: 'Professional Development Course', // Professional Development Course, Curriculum Course
     isRoot: true,
     iconClass: 'fa fa-book',
     children: {},
@@ -123,7 +123,7 @@ export const questionEditorConfig = {
       name: 'Vaibahv Bhuva',
       orgIds: ['01309282781705830427']
     },
-    identifier: 'do_1132345541010227201100', // do_1132345541010227201100 //do_113233674223435776152
+    identifier: 'do_1132380891325480961343',
     authToken: ' ',
     sid: 'iYO2K6dOSdA0rwq7NeT1TDzS-dbqduvV',
     did: '7e85b4967aebd6704ba1f604f20056b6',
@@ -249,18 +249,13 @@ export const questionEditorConfig = {
     }
   },
   config: {
-    mode: 'edit', // edit / review / read
+    mode: 'sourcingReview', // edit / review / read / sourcingReview
     maxDepth: 2,
     objectType: 'QuestionSet',
     primaryCategory: 'Practice Question Set',
     isRoot: true,
     iconClass: 'fa fa-book',
-    children: {
-      Question: [
-        'Multiple Choice Question',
-        'Subjective Question'
-      ]
-    },
+    children: {},
     hierarchy: {
       level1: {
         name: 'Section',
@@ -278,7 +273,8 @@ export const questionEditorConfig = {
         iconClass: 'fa fa-folder-o',
         children: {
           Question: [
-            'Multiple Choice Question'
+            'Multiple Choice Question',
+            'Subjective Question'
           ]
         }
       }
