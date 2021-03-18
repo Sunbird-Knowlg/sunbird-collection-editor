@@ -159,7 +159,6 @@ quml-mcq-solutions{
 .two-column-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: 1fr 1fr;
   column-gap: 0.5rem;
   border-bottom: solid 1px var(--gray-100);
   &:last-child{
@@ -272,6 +271,7 @@ quml-mcq-solutions{
     .sb-textarea-container{
       .sb-textarea{
         height: 2.7rem;
+        padding-top: 0.5rem !important;
       }
       label{
         padding: 0;
@@ -299,3 +299,10 @@ quml-mcq-solutions{
   .h-100{
     height: 100% !important;
   } 
+
+  .sb-required {
+    color:#ff4558;
+    padding-left: 2px;
+    position: relative;
+    top: -5px;
+  }

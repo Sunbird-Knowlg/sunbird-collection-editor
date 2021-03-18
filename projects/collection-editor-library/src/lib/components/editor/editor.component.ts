@@ -226,7 +226,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
             this.treeService.replaceNodeId(response.identifiers);
           }
           this.treeService.clearTreeCache();
-          resolve('Hierarchy is Sucessfuly Updated');
+          resolve('Hierarchy is Successfully Updated');
         }, err => {
           reject('Something went wrong, Please try later');
         });
