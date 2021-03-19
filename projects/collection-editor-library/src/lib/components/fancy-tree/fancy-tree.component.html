@@ -14,7 +14,7 @@
     <div class="sb-loading-spinner" *ngIf="buttonLoaders?.addFromLibraryButtonLoader" role="status" aria-hidden="true"></div>
     Add from library
   </button>
-  <button *ngIf="config.objectType === 'QuestionSet'" [disabled]="!this.showLibraryButton" [disabled]="!this.showLibraryButton" [ngClass]="[!this.showLibraryButton ? 'sb-btn-outline-disabled' : '', (showLibraryButton && buttonLoaders?.addFromLibraryButtonLoader) ? 'sb-btn-loading-spinner sb-btn-outline-disabled': '']" type="button" class="sb-btn sb-btn-normal sb-btn-primary mt-10 mr-30" (click)="createNewContent()"
+  <button *ngIf="config.objectType === 'QuestionSet'" [disabled]="!this.showLibraryButton" [ngClass]="[!this.showLibraryButton ? 'sb-btn-outline-disabled' : '', (showLibraryButton && buttonLoaders?.addFromLibraryButtonLoader) ? 'sb-btn-loading-spinner sb-btn-outline-disabled': '']" type="button" class="sb-btn sb-btn-normal sb-btn-primary mt-10 mr-30" (click)="createNewContent()"
           libTelemetryInteract
           [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('create_new','click','launch', telemetryService.telemetryPageId)">
           <i class="icon plus" *ngIf="!buttonLoaders?.addFromLibraryButtonLoader"></i>
