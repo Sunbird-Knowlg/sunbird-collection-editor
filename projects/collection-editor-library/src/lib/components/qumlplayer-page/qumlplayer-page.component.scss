@@ -7,7 +7,14 @@
 }
 .quml-container{
     overflow-y: auto !important;
-    height: 30rem !important;
+}
+.qumlImageOption{
+    .wrapper{
+        display: block !important;
+    }
+    .quml-mcq-option-card{
+        margin-bottom: 1rem !important;
+    }
 }
 .quml-option-card{
     figure{
