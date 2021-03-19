@@ -8,13 +8,13 @@
       <button [ngClass]="!this.showAddChildButton ? 'disabled' : ''" (click)="addChild();"  class="sb-btn sb-btn-outline-primary sb-btn-normal sb-btn-radius b-none p-0"><i class="icon plus"></i> Add Child</button>
     </div>
   </div>
-  <button *ngIf="config.objectType !== 'QuestionSet'" (click)="addFromLibrary();" [ngClass]="[!this.showLibraryButton ? 'disabled' : '', (showLibraryButton && buttonLoaders?.addFromLibraryButtonLoader) ? 'sb-btn-loading-spinner sb-btn-outline-disabled': '']" class="sb-btn sb-btn-outline-primary sb-btn-normal mt-10 mr-30"
+  <button *ngIf="config.objectType !== 'QuestionSet'" (click)="addFromLibrary();" [disabled]="!this.showLibraryButton" [ngClass]="[!this.showLibraryButton ? 'sb-btn-outline-disabled' : '', (showLibraryButton && buttonLoaders?.addFromLibraryButtonLoader) ? 'sb-btn-loading-spinner sb-btn-outline-disabled': '']" class="sb-btn sb-btn-outline-primary sb-btn-normal mt-10 mr-30"
   libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('add_from_library','click','launch', telemetryService.telemetryPageId)">
     <i class="icon plus" *ngIf="!buttonLoaders?.addFromLibraryButtonLoader"></i>
     <div class="sb-loading-spinner" *ngIf="buttonLoaders?.addFromLibraryButtonLoader" role="status" aria-hidden="true"></div>
     Add from library
   </button>
-  <button *ngIf="config.objectType === 'QuestionSet'" [ngClass]="[!this.showLibraryButton ? 'disabled' : '', (showLibraryButton && buttonLoaders?.addFromLibraryButtonLoader) ? 'sb-btn-loading-spinner sb-btn-outline-disabled': '']" type="button" class="sb-btn sb-btn-normal sb-btn-primary mt-10 mr-30" (click)="createNewContent()"
+  <button *ngIf="config.objectType === 'QuestionSet'" [disabled]="!this.showLibraryButton" [disabled]="!this.showLibraryButton" [ngClass]="[!this.showLibraryButton ? 'sb-btn-outline-disabled' : '', (showLibraryButton && buttonLoaders?.addFromLibraryButtonLoader) ? 'sb-btn-loading-spinner sb-btn-outline-disabled': '']" type="button" class="sb-btn sb-btn-normal sb-btn-primary mt-10 mr-30" (click)="createNewContent()"
           libTelemetryInteract
           [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('create_new','click','launch', telemetryService.telemetryPageId)">
           <i class="icon plus" *ngIf="!buttonLoaders?.addFromLibraryButtonLoader"></i>
