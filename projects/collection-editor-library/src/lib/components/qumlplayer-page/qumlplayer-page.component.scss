@@ -43,11 +43,12 @@ quml-mcq-solutions{
 .potrait-mode{
     margin: auto;
     width: 480px;
-    .startpage{
+    .startpage,.imageqa-wrapper{
         display: block !important;
     }
     .sb-quml-player{
         height: 846px;
+        overflow-y: scroll;
     }
     .carousel-inner{
         padding-left: 30px !important;
@@ -58,13 +59,23 @@ quml-mcq-solutions{
             margin-top: 10px;
         }
     }
-    img{
-        max-width: 100% !important;
-    }
 }
 .btn-none{
     background: none !important;
     border: none !important;
     padding: 0 !important;
     cursor: pointer;
+}
+.qumlImageOption{
+    .wrapper{
+        display: block !important;
+    }
+}
+.quml-mcq{
+    .imageqa-wrapper{
+        display: block !important;
+    }
+}
+img{
+    max-width: 100% !important;
 }
