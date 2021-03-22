@@ -5,6 +5,7 @@ declare var $: any;
 import * as _ from 'lodash-es';
 import { IEditorConfig } from '../../interfaces/editor';
 import { ToasterService } from '../toaster/toaster.service';
+import { HelperService } from '../helper/helper.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,7 @@ export class TreeService {
   };
   treeNativeElement: any;
 
-  constructor(private toasterService: ToasterService) {}
+  constructor(private toasterService: ToasterService, private helperService: HelperService) {}
 
   public initialize(editorConfig: IEditorConfig) {
     this.config = editorConfig.config;
@@ -43,6 +44,17 @@ export class TreeService {
     if (attributions && _.isString(attributions)) {
       newData.attributions = attributions.split(',');
     }
+    const { maxTime, warningTime } = newData;
+    const timeLimits: any = {};
+    if (maxTime) {
+      timeLimits.maxTime = this.helperService.hmsToSeconds(maxTime);
+    }
+    if (warningTime) {
+      timeLimits.warningTime = this.helperService.hmsToSeconds(warningTime);
+    }
+    newData.timeLimits = timeLimits;
+    delete newData.maxTime;
+    delete newData.warningTime;
     this.setTreeCache(nodeId, newData, activeNode.data);
   }
 
