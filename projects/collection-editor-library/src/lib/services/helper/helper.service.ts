@@ -66,4 +66,26 @@ export class HelperService {
     };
   }
 
+  hmsToSeconds(str) {
+    const p = str.split(':');
+    let s = 0; let m = 1;
+
+    while (p.length > 0) {
+        s += m * parseInt(p.pop(), 10);
+        m *= 60;
+    }
+    return _.toString(s);
+}
+
+  getTimerFormat(field) {
+    const validationObj = _.find(_.get(field, 'validations'), {type: 'time'});
+    if (!_.isEmpty(validationObj)) {
+      return validationObj.value;
+    } else {
+      return 'HH:mm:ss';
+    }
+  }
+
+
+
 }

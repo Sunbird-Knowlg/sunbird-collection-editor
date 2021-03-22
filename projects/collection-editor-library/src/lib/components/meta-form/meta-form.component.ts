@@ -1,11 +1,14 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
-import { Subject } from 'rxjs';
+import { merge, of, Subject } from 'rxjs';
 import * as _ from 'lodash-es';
-import { takeUntil, filter } from 'rxjs/operators';
+import { takeUntil, filter, switchMap } from 'rxjs/operators';
 import { TreeService } from '../../services/tree/tree.service';
 import { EditorService } from '../../services/editor/editor.service';
 import { FrameworkService } from '../../services/framework/framework.service';
 import { HelperService } from '../../services/helper/helper.service';
+import { FormControl, FormGroup } from '@angular/forms';
+import * as moment from 'moment';
+
 @Component({
   selector: 'lib-meta-form',
   templateUrl: './meta-form.component.html',
@@ -73,8 +76,14 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
     _.forEach(formConfig, (section) => {
       _.forEach(section.fields, field => {
 
-        if (metaDataFields && _.has(metaDataFields, field.code)) {
-          field.default = _.get(metaDataFields, field.code);
+        if (metaDataFields) {
+          if (_.has(metaDataFields, field.code)) {
+            field.default = _.get(metaDataFields, field.code);
+          } else if (_.includes(['maxTime', 'warningTime'], field.code)) {
+            const value = _.get(metaDataFields, `timeLimits.${field.code}`);
+            field.default = !_.isEmpty(value) ?
+            moment.utc(moment.duration(value, 'seconds').asMilliseconds()).format(this.helperService.getTimerFormat(field)) : '';
+          }
         }
 
         const frameworkCategory = _.find(categoryMasterList, category => {
@@ -103,6 +112,10 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
           if (rootFirstChildNode && rootFirstChildNode.children) {
             field.range = _.times(_.size(rootFirstChildNode.children), index => index + 1);
           }
+        }
+
+        if (field.code === 'showTimer') {
+          field.options = this.showTimer;
         }
 
         if ((_.isEmpty(field.range) || _.isEmpty(field.terms)) &&
@@ -154,6 +167,21 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
     console.log(event);
     this.toolbarEmitter.emit({ button: 'onFormValueChange', event });
     this.treeService.updateNode(event);
+  }
+
+  showTimer(control, depends: FormControl[], formGroup: FormGroup, loading, loaded) {
+    const oldValue = {};
+    const response = merge(..._.map(depends, depend => depend.valueChanges)).pipe(
+      switchMap((value: any) => {
+        const isDependsInvalid = _.includes(_.map(depends, depend => depend.invalid), true);
+        if (!isDependsInvalid) {
+          return of(true);
+        } else {
+          return of(false);
+        }
+      })
+    );
+    return response;
   }
 
   ngOnDestroy() {
