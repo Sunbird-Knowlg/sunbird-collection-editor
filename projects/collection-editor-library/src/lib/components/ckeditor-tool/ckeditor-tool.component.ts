@@ -366,8 +366,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
 
   addImageInEditor(imageUrl, imageId) {
     const src = this.getMediaOriginURL(imageUrl);
-    const baseUrl = (document.getElementById('portalBaseUrl') as HTMLInputElement)
-      ? (document.getElementById('portalBaseUrl') as HTMLInputElement).value : 'https://dock.sunbirded.org'; // TODO
+    const baseUrl = _.get(this.editorService.editorConfig, 'context.host');
     this.mediaobj = {
       id: imageId,
       type: 'image',
