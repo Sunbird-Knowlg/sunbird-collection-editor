@@ -13,9 +13,6 @@
       "CONTENT_REVIEW" : "content/v3/review/",
       "CONTENT_REJECT" : "content/v3/reject/",
       "CONTENT_PUBLISH" : "content/v3/publish/"
-    },
-    "dataDrivenForms": {
-      "READ": "data/v1/form/read"
-    }
+    }   
   }
 }
