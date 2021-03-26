@@ -1,13 +1,14 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { merge, of, Subject } from 'rxjs';
 import * as _ from 'lodash-es';
-import { takeUntil, filter, switchMap } from 'rxjs/operators';
+import { takeUntil, filter, switchMap, map } from 'rxjs/operators';
 import { TreeService } from '../../services/tree/tree.service';
 import { EditorService } from '../../services/editor/editor.service';
 import { FrameworkService } from '../../services/framework/framework.service';
 import { HelperService } from '../../services/helper/helper.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import * as moment from 'moment';
+let framworkServiceTemp;
 
 @Component({
   selector: 'lib-meta-form',
@@ -24,7 +25,9 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   public frameworkDetails: any = {};
   public formFieldProperties: any;
   constructor(private editorService: EditorService, private treeService: TreeService,
-              private frameworkService: FrameworkService, private helperService: HelperService) { }
+              private frameworkService: FrameworkService, private helperService: HelperService) {
+                framworkServiceTemp = frameworkService;
+               }
 
   ngOnChanges() {
     this.fetchFrameWorkDetails();
@@ -91,6 +94,11 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
         });
         if (!_.isEmpty(frameworkCategory)) {
           field.terms = frameworkCategory.terms;
+        }
+
+        if (field.code === 'framework') {
+          field.range = this.frameworkService.frameworkValues;
+          field.options = this.getFramework;
         }
 
         if (field.code === 'license' && this.helperService.getAvailableLicenses()) {
@@ -179,6 +187,18 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
         } else {
           return of(false);
         }
+      })
+    );
+    return response;
+  }
+
+  getFramework(control, depends: FormControl[], formGroup: FormGroup, loading, loaded, instance) {
+    const response =  control.valueChanges.pipe(
+      switchMap((value: any) => {
+        return framworkServiceTemp.getFrameworkCategories(value).pipe(map(res => {
+          console.log('framework::', _.get(res, 'result.framework'));
+          _.get(res, 'result.framework');
+        }));
       })
     );
     return response;

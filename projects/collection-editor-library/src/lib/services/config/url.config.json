@@ -13,6 +13,9 @@
       "CONTENT_REVIEW" : "content/v3/review/",
       "CONTENT_REJECT" : "content/v3/reject/",
       "CONTENT_PUBLISH" : "content/v3/publish/"
-    }
+    },
+    "COMPOSITE": {
+      "SEARCH": "composite/v3/search"
+    } 
   }
 }
