@@ -89,12 +89,12 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
           }
         }
 
-        const frameworkCategory = _.find(categoryMasterList, category => {
-          return (category.code === field.sourceCategory || category.code === field.code) && !_.includes(field.code, 'target');
-        });
-        if (!_.isEmpty(frameworkCategory)) {
-          field.terms = frameworkCategory.terms;
-        }
+        // const frameworkCategory = _.find(categoryMasterList, category => {
+        //   return (category.code === field.sourceCategory || category.code === field.code) && !_.includes(field.code, 'target');
+        // // });
+        // if (!_.isEmpty(frameworkCategory)) {
+        //   field.terms = frameworkCategory.terms;
+        // }
 
         if (field.code === 'framework') {
           field.range = this.frameworkService.frameworkValues;
@@ -192,12 +192,14 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
     return response;
   }
 
-  getFramework(control, depends: FormControl[], formGroup: FormGroup, loading, loaded, instance) {
+  getFramework(control, depends: FormControl[], formGroup: FormGroup, loading, loaded) {
     const response =  control.valueChanges.pipe(
       switchMap((value: any) => {
         return framworkServiceTemp.getFrameworkCategories(value).pipe(map(res => {
-          console.log('framework::', _.get(res, 'result.framework'));
-          _.get(res, 'result.framework');
+          const result = _.get(res, 'result.framework');
+          control.termsForDependantFields = [];
+          control.termsForDependantFields.push(result);
+          return result;
         }));
       })
     );
