@@ -34,6 +34,7 @@ app.use([
     '/action/questionset/v1/*',
     '/action/question/v1/*',
     '/action/object/category/definition/v1/*',
+    '/action/data/v1/*'
     ], proxy(host, {
     https: true,
     proxyReqPathResolver: function (req) {

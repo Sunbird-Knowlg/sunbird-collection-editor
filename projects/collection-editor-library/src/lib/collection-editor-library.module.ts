@@ -26,16 +26,27 @@ import { CkeditorToolComponent } from './components/ckeditor-tool/ckeditor-tool.
 import { QuestionComponent } from './components/question/question.component';
 import {SunbirdPdfPlayerModule} from '@project-sunbird/sunbird-pdf-player-v8';
 import { SunbirdVideoPlayerModule } from '@project-sunbird/sunbird-video-player-v8';
-import { QumlLibraryModule } from '@project-sunbird/sunbird-quml-player';
+import { QumlLibraryModule, QuestionCursor } from '@project-sunbird/sunbird-quml-player';
 import {CarouselModule} from 'ngx-bootstrap/carousel';
 import { TelemetryInteractDirective } from './directives/telemetry-interact/telemetry-interact.directive';
+import { CacheService } from 'ng2-cache-service';
+import { CacheStorageAbstract } from 'ng2-cache-service/dist/src/services/storage/cache-storage-abstract.service';
+import { CacheSessionStorage } from 'ng2-cache-service/dist/src/services/storage/session-storage/cache-session-storage.service';
+import { QumlPlayerService } from './services/quml-player/quml-player.service';
+import { QumlPlayerComponent } from './components/quml-player/quml-player.component';
 @NgModule({
   declarations: [CollectionEditorLibraryComponent, ContentplayerPageComponent, EditorComponent, QumlplayerPageComponent,
     HeaderComponent, FancyTreeComponent, MetaFormComponent, LibraryComponent, LibraryFilterComponent, LibraryListComponent,
     QuestionComponent, OptionsComponent, AnswerComponent, CkeditorToolComponent,
-    LibraryPlayerComponent, ResourceReorderComponent, SkeletonLoaderComponent, TemplateComponent, TelemetryInteractDirective],
+    LibraryPlayerComponent, ResourceReorderComponent, SkeletonLoaderComponent, TemplateComponent, TelemetryInteractDirective, QumlPlayerComponent],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule.forChild([]), CommonFormElementsModule, InfiniteScrollModule,
   HttpClientModule, SuiModule, SunbirdPdfPlayerModule, SunbirdVideoPlayerModule, QumlLibraryModule, CarouselModule],
+  providers: [
+    CacheService,
+    { provide: CacheStorageAbstract, useClass: CacheSessionStorage },
+    { provide: QuestionCursor, useClass: QumlPlayerService
+    }
+  ],
   exports: [EditorComponent]
 })
 export class CollectionEditorLibraryModule { }

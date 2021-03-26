@@ -78,9 +78,11 @@
       {{ labelConfigData.edit_question_btn_label}}
     </button>
     <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10" *ngIf="!labelConfigData.showPreview"
+      [ngClass]="!buttonLoaders?.previewButtonLoader ? '': 'sb-btn-loading-spinner sb-btn-outline-disabled'"
       (click)="buttonEmitter({type: 'previewContent'})" libTelemetryInteract
       [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('preview','click','launch', telemetryService.telemetryPageId)">
-      <i *ngIf="labelConfigData.preview_question_btn_icon" class="{{labelConfigData.preview_question_btn_icon}}"></i>
+      <div class="sb-loading-spinner" *ngIf="buttonLoaders?.previewButtonLoader" role="status" aria-hidden="true"></div>
+      <i *ngIf="labelConfigData.preview_question_btn_icon && !buttonLoaders?.previewButtonLoader" class="{{labelConfigData.preview_question_btn_icon}}"></i>
       {{ labelConfigData.preview_question_btn_label}}
     </button>
     <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10"
@@ -90,9 +92,11 @@
       {{ labelConfigData.cancel_question_btn_label}}
     </button>
     <button class="sb-btn sb-btn-normal sb-btn-primary" (click)="buttonEmitter({type: 'saveContent'})"
+      [ngClass]="!buttonLoaders?.saveButtonLoader ? '': 'sb-btn-loading-spinner sb-btn-outline-disabled'"
       libTelemetryInteract
       [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('save','click','submit', telemetryService.telemetryPageId)">
-      <i *ngIf="labelConfigData.save_question_btn_icon" class="{{labelConfigData.save_question_btn_icon}}"></i>
+      <div class="sb-loading-spinner" *ngIf="buttonLoaders?.saveButtonLoader" role="status" aria-hidden="true"></div>
+      <i *ngIf="labelConfigData.save_question_btn_icon && !buttonLoaders?.saveButtonLoader" class="{{labelConfigData.save_question_btn_icon}}"></i>
       {{ labelConfigData.save_question_btn_label}}
     </button>
   </div> 
