@@ -196,10 +196,7 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
     const response =  control.valueChanges.pipe(
       switchMap((value: any) => {
         return framworkServiceTemp.getFrameworkCategories(value).pipe(map(res => {
-          const result = _.get(res, 'result.framework');
-          control.termsForDependantFields = [];
-          control.termsForDependantFields.push(result);
-          return result;
+          return _.get(res, 'result');
         }));
       })
     );
