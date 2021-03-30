@@ -113,13 +113,14 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     if (_.isEmpty(orgFWIdentifiers)) {
       orgFWType = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.config.frameworkMetadata.orgFWType');
       frameworkReq.push(this.frameworkService.getFrameworkData(this.editorConfig.context.channel, orgFWType));
-    } else {
+      frameworkReq.push(this.frameworkService.getFrameworkData(undefined, orgFWType));
+    }  else {
       frameworkReq.push(this.frameworkService.getFrameworkData(this.editorConfig.context.channel, undefined, orgFWIdentifiers));
+      frameworkReq.push(this.frameworkService.getFrameworkData(undefined, undefined, orgFWIdentifiers));
     }
     if (!_.isEmpty(frameworkReq)) {
       // tslint:disable-next-line:max-line-length
-      this.frameworkService.checkChannelOrSystem(this.frameworkService.getFrameworkData(this.editorConfig.context.channel, undefined, orgFWIdentifiers),
-      this.frameworkService.getFrameworkData(undefined, undefined, orgFWIdentifiers))
+      this.frameworkService.checkChannelOrSystem(frameworkReq[0], frameworkReq[1])
       .subscribe(
         (response) => {
           const configuredFrameworks = _.map(_.get(response, 'result.Framework'), (framework) => {

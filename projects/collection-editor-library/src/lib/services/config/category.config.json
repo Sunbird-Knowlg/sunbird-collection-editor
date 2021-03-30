@@ -1,4 +1,8 @@
 {
   "QuestionSet": "questionSet",
-  "Collection": "content"
+  "Collection": "content",
+  "additionalCategories": {
+    "QuestionSet": "contentAdditionalCategories",
+    "Collection": "collectionAdditionalCategories"
+  }
 }

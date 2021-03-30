@@ -7,6 +7,7 @@ import { EditorService } from '../../services/editor/editor.service';
 import { FrameworkService } from '../../services/framework/framework.service';
 import { HelperService } from '../../services/helper/helper.service';
 import { FormControl, FormGroup } from '@angular/forms';
+import { ConfigService } from '../../services/config/config.service';
 import * as moment from 'moment';
 let framworkServiceTemp;
 
@@ -25,34 +26,56 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   public frameworkDetails: any = {};
   public formFieldProperties: any;
   constructor(private editorService: EditorService, private treeService: TreeService,
-              private frameworkService: FrameworkService, private helperService: HelperService) {
+              private frameworkService: FrameworkService, private helperService: HelperService,
+              private configService: ConfigService) {
                 framworkServiceTemp = frameworkService;
                }
 
   ngOnChanges() {
-    this.fetchFrameWorkDetails();
+      this.fetchFrameWorkDetails();
   }
 
   ngOnInit() {
   }
 
   fetchFrameWorkDetails() {
-    this.frameworkService.frameworkData$.pipe(
-      takeUntil(this.onComponentDestroy$),
-      filter(data => _.get(data, `frameworkdata.${this.frameworkService.organisationFramework}`))
-    ).subscribe((frameworkDetails: any) => {
-      if (frameworkDetails && !frameworkDetails.err) {
-        const frameworkData = frameworkDetails.frameworkdata[this.frameworkService.organisationFramework].categories;
-        this.frameworkDetails.frameworkData = frameworkData;
-        this.frameworkDetails.topicList = _.get(_.find(frameworkData, {
-          code: 'topic'
-        }), 'terms');
-        this.frameworkDetails.targetFrameworks = _.filter(frameworkDetails.frameworkdata, (value, key) => {
-          return _.includes(this.frameworkService.targetFrameworkIds, key);
+    if (this.frameworkService.organisationFramework) {
+      this.frameworkService.frameworkData$.pipe(
+        takeUntil(this.onComponentDestroy$),
+        filter(data => _.get(data, `frameworkdata.${this.frameworkService.organisationFramework}`))
+      ).subscribe((frameworkDetails: any) => {
+        if (frameworkDetails && !frameworkDetails.err) {
+          const frameworkData = frameworkDetails.frameworkdata[this.frameworkService.organisationFramework].categories;
+          this.frameworkDetails.frameworkData = frameworkData;
+          this.frameworkDetails.topicList = _.get(_.find(frameworkData, {
+            code: 'topic'
+          }), 'terms');
+          this.frameworkDetails.targetFrameworks = _.filter(frameworkDetails.frameworkdata, (value, key) => {
+            return _.includes(this.frameworkService.targetFrameworkIds, key);
+          });
+          this.attachDefaultValues();
+        }
+      });
+    } else {
+      if (this.frameworkService.targetFrameworkIds) {
+        this.frameworkService.frameworkData$.pipe(
+          takeUntil(this.onComponentDestroy$),
+          filter(data => _.get(data, `frameworkdata.${this.frameworkService.targetFrameworkIds}`))
+        ).subscribe((frameworkDetails: any) => {
+          if (frameworkDetails && !frameworkDetails.err) {
+            // const frameworkData = frameworkDetails.frameworkdata[this.frameworkService.targetFrameworkIds].categories;
+            // this.frameworkDetails.frameworkData = frameworkData;
+            // this.frameworkDetails.topicList = _.get(_.find(frameworkData, {
+            //   code: 'topic'
+            // }), 'terms');
+            this.frameworkDetails.targetFrameworks = _.filter(frameworkDetails.frameworkdata, (value, key) => {
+              return _.includes(this.frameworkService.targetFrameworkIds, key);
+            });
+            this.attachDefaultValues();
+          }
         });
-        this.attachDefaultValues();
       }
-    });
+    }
   }
 
   attachDefaultValues() {
@@ -101,6 +124,15 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
           field.options = this.getFramework;
         }
 
+        if (!_.includes(field.depends, 'framework')) {
+          const frameworkCategory = _.find(categoryMasterList, category => {
+              return (category.code === field.sourceCategory || category.code === field.code);
+          });
+          if (!_.isEmpty(frameworkCategory)) {
+              field.terms = frameworkCategory.terms;
+          }
+        }
+
         if (field.code === 'license' && this.helperService.getAvailableLicenses()) {
           const licenses = this.helperService.getAvailableLicenses();
           if (licenses && licenses.length) {
@@ -109,10 +141,18 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         if (field.code === 'additionalCategories') {
-          const additionalCategories = _.get(this.editorService.editorConfig, 'context.additionalCategories');
+          const channelInfo = this.helperService.channelInfo;
+          const additionalCategories = _.get(channelInfo,
+            `${this.configService.categoryConfig.additionalCategories[this.editorService.editorConfig.config.objectType]}`) ||
+           _.get(this.editorService.editorConfig, 'context.additionalCategories');
           if (!_.isEmpty(additionalCategories)) {
             field.range = additionalCategories;
           }
+        }
+
+        if (field.code  === 'copyright') {
+          const channelData = this.helperService.channelInfo;
+          field.default = channelData && channelData.name;
         }
 
         if (field.code === 'maxQuestions') {
@@ -195,9 +235,13 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   getFramework(control, depends: FormControl[], formGroup: FormGroup, loading, loaded) {
     const response =  control.valueChanges.pipe(
       switchMap((value: any) => {
-        return framworkServiceTemp.getFrameworkCategories(value).pipe(map(res => {
-          return _.get(res, 'result');
-        }));
+        if (!_.isEmpty(value)) {
+          return framworkServiceTemp.getFrameworkCategories(value).pipe(map(res => {
+            return _.get(res, 'result');
+          }));
+        } else {
+          return of(null);
+        }
       })
     );
     return response;
