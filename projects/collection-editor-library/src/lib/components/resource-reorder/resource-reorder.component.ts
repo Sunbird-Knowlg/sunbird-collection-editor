@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ViewEncapsulation} from '@angular/core';
 import * as _ from 'lodash-es';
-import {labelMessages} from '../labels';
+import { ConfigService } from '../../services/config/config.service';
 import { EditorService } from '../../services/editor/editor.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
@@ -13,7 +13,6 @@ import { ToasterService } from '../../services/toaster/toaster.service';
   encapsulation: ViewEncapsulation.None,
 })
 export class ResourceReorderComponent implements OnInit {
-  labelMessages = labelMessages;
   unitSelected: string;
   @Input() selectedContentDetails;
   @Input() collectionId;
@@ -24,7 +23,7 @@ export class ResourceReorderComponent implements OnInit {
   @ViewChild('modal', {static: true}) modal;
   @Output() moveEvent = new EventEmitter<any>();
   collectionUnitsBreadcrumb: any = [];
-  constructor(private editorService: EditorService,
+  constructor(private editorService: EditorService, public configService: ConfigService,
               public telemetryService: EditorTelemetryService, private toasterService: ToasterService) {
                }
 

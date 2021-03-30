@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import {labelMessages} from '../labels';
+import { ConfigService } from '../../services/config/config.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 @Component({
   selector: 'lib-library-player',
@@ -9,8 +9,7 @@ import { EditorTelemetryService } from '../../services/telemetry/telemetry.servi
 export class LibraryPlayerComponent implements OnInit {
 @Input() contentListDetails;
 @Output() moveEvent = new EventEmitter<any>();
-labelMessages = labelMessages;
-  constructor(public telemetryService: EditorTelemetryService) { }
+  constructor(public telemetryService: EditorTelemetryService, public configService: ConfigService) { }
 
   ngOnInit() {
   }

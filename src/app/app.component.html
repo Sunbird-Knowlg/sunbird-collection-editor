@@ -1,1 +1,14 @@
-<lib-editor-base [editorConfig]="editorConfig" ></lib-editor-base>
+<ng-container [ngSwitch]="editor">
+    <ng-container *ngSwitchCase="'question'">
+        <lib-editor *ngIf="editor === 'question'" [editorConfig]="editorConfig" (editorEmitter)="editorEventListener($event)"></lib-editor>
+    </ng-container>
+    <ng-container *ngSwitchCase="'collection'">
+        <lib-editor *ngIf="editor === 'collection'" [editorConfig]="editorConfig" (editorEmitter)="editorEventListener($event)"></lib-editor>
+    </ng-container>
+    <ng-container *ngSwitchDefault>
+        <div class="ui container d-flex flex-jc-center flex-ai-center p-20">
+            <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10 font-weight-bold fs-1" (click)="setType('question')" >Question Set Editor</button>
+            <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10 font-weight-bold fs-1" (click)="setType('collection')">Collection Editor</button>
+        </div>
+    </ng-container>
+</ng-container>

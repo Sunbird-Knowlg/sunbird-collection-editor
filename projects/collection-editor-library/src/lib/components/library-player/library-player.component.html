@@ -11,7 +11,7 @@
     <button type="button" class="sb-btn sb-btn-normal sb-btn-dark-green font-weight-bold"
     libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('select_content','click','launch', telemetryService?.telemetryPageId)"
-      ><i class="plus square icon"></i>{{labelMessages?.lbl?.selectContent}}</button>
+      ><i class="plus square icon"></i>{{configService.labelConfig?.lbl?.selectContent}}</button>
   </div>
 </div>
 <lib-contentplayer-page [contentMetadata]="contentListDetails"></lib-contentplayer-page>

@@ -2,7 +2,6 @@ import {
   Component, AfterViewInit, Input, ViewChild, ElementRef, Output, EventEmitter,
   OnDestroy, OnInit, ViewEncapsulation
 } from '@angular/core';
-import { takeUntil } from 'rxjs/operators';
 import 'jquery.fancytree';
 import * as _ from 'lodash-es';
 import { TreeService } from '../../services/tree/tree.service';
@@ -55,12 +54,11 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
               public telemetryService: EditorTelemetryService, private helperService: HelperService,
               private toasterService: ToasterService) { }
   private onComponentDestroy$ = new Subject<any>();
-  public showDeleteConfirmationPopUp: boolean;
 
   ngOnInit() {
     this.config = _.cloneDeep(this.editorService.editorConfig.config);
     this.config.mode =  _.get(this.config, 'mode').toLowerCase();
-    if (!_.get(this.config, 'maxDepth')) {
+    if (!_.has(this.config, 'maxDepth')) { // TODO:: rethink this
       this.config.maxDepth = 4;
     }
     this.initialize();
@@ -68,7 +66,6 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.renderTree(this.getTreeConfig());
-    this.resourceAddition();
   }
 
   private initialize() {
@@ -78,7 +75,9 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       id: data.identifier || UUID.UUID(),
       title: data.name,
       tooltip: data.name,
-      objectType: data.contentType,
+      ...(data.contentType && {contentType: data.contentType}),
+      primaryCategory: data.primaryCategory,
+      objectType: data.objectType,
       metadata: _.omit(data, ['children', 'collections']),
       folder: true,
       children: treeData,
@@ -92,27 +91,48 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     if (data.children) { data.children = _.sortBy(data.children, ['index']); }
     data.level = level ? (level + 1) : 1;
     _.forEach(data.children, (child) => {
-      // const objectType = this.getObjectType(child.contentType);
       const childTree = [];
-      // if (objectType) {
       tree.push({
         id: child.identifier || UUID.UUID(),
         title: child.name,
         tooltip: child.name,
-        objectType: child.visibility === 'Parent' ? _.get(this.config, `hierarchy.level${data.level}.contentType`) : 'Content',
+        ...(child.contentType && {contentType: child.contentType}),
+        primaryCategory: child.primaryCategory,
+        objectType: child.objectType,
         metadata: _.omit(child, ['children', 'collections']),
-        folder: child.visibility === 'Parent' ? true : false,
+        folder: this.isFolder(child),
         children: childTree,
         root: false,
-        // tslint:disable-next-line:max-line-length
-        icon: child.visibility === 'Parent' ? (_.get(this.config, `hierarchy.level.${data.level}.iconClass`) || 'fa fa-folder-o') : 'fa fa-file-o'
+        icon: this.getIconClass(child, data.level)
       });
       if (child.visibility === 'Parent') {
         this.buildTree(child, childTree, data.level);
       }
-      // }
     });
     return tree;
+  }
+
+  isFolder(child: any) {
+    if (this.isContent(child)) {
+      return false;
+    } else {
+      return child.visibility === 'Parent' ? true : false;
+    }
+  }
+
+  getIconClass(child: any, level: number) {
+    if (this.isContent(child)) {
+      return 'fa fa-file-o';
+    } else if (child.visibility === 'Parent') {
+        return _.get(this.config, `hierarchy.level.${level}.iconClass`) || 'fa fa-folder-o';
+    } else {
+      return 'fa fa-file-o';
+    }
+  }
+
+  isContent(child: any) {
+    // tslint:disable-next-line:max-line-length
+    return (_.get(this.config, 'objectType') === 'QuestionSet' && child.objectType === 'Question');
   }
 
   renderTree(options) {
@@ -131,14 +151,6 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.eachNodeActionButton(rootNode);
     });
     this.showTree = true;
-  }
-
-  resourceAddition() {
-    this.editorService.resourceAddition$.pipe(takeUntil(this.onComponentDestroy$)).subscribe(resources => {
-      resources.forEach(resource => {
-        this.addChild(resource);
-      });
-    });
   }
 
   getTreeConfig() {
@@ -238,7 +250,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.showAddSiblingButton = ((node.folder === true) && (!node.data.root) && !((node.getLevel() - 1) > this.config.maxDepth)) ? true : false;
   }
 
-  addChild(resource?) {
+  addChild() {
     this.telemetryService.interact({ edata: this.getTelemetryInteractEdata('add_child') });
     const tree = $(this.tree.nativeElement).fancytree('getTree');
     const nodeConfig = this.config.hierarchy[tree.getActiveNode().getLevel()];
@@ -246,15 +258,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     if ((((tree.getActiveNode().getLevel() - 1) >= this.config.maxDepth))) {
       return this.toasterService.error('Sorry, this operation is not allowed...');
     }
-    if (resource) {
-      if (_.includes(childrenTypes, resource.primaryCategory)) {
-        this.treeService.addNode(resource, 'child');
-      } else {
-        this.toasterService.error('Invalida Content Type ....');
-      }
-    } else {
-      this.treeService.addNode({}, 'child');
-    }
+    this.treeService.addNode('child');
   }
 
   addSibling() {
@@ -263,7 +267,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const node = tree.getActiveNode();
     if (!node.data.root) {
-      this.treeService.addNode({}, 'sibling');
+      this.treeService.addNode('sibling');
     } else {
       this.toasterService.error('Sorry, this operation is not allowed.');
     }
@@ -278,7 +282,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
     const $nodeSpan = $(node.span);
-    // tslint:disable-next-line:max-line-length   // TODO:: (node.data.objectType === 'CourseUnit') check this condition
+    // tslint:disable-next-line:max-line-length   // TODO:: (node.data.contentType === 'CourseUnit') check this condition
     const menuTemplate = node.data.root === true ? this.rootMenuTemplate : (node.data.root === false && node.folder === true  ? this.folderMenuTemplate : this.contentMenuTemplate);
     const iconsButton = $(menuTemplate);
     if ((node.getLevel() - 1) >= this.config.maxDepth) {
@@ -324,7 +328,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       });
 
       $($nodeSpan[0]).find(`#removeNodeIcon`).on('click', (ev) => {
-        this.showDeleteConfirmationPopUp = true;
+        this.removeNode();
       });
     }
 
@@ -332,10 +336,10 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   dropNode(node, data) {
     // tslint:disable-next-line:max-line-length
-    if (data.otherNode.data.objectType !== 'Content' && (this.maxTreeDepth(data.otherNode) + (node.getLevel() - 1)) > _.get(this.config, 'maxDepth')) {
+    if (data.otherNode.folder === true && (this.maxTreeDepth(data.otherNode) + (node.getLevel() - 1)) > _.get(this.config, 'maxDepth')) {
       return this.dropNotAllowed();
     }
-    if (_.get(data, 'otherNode.data.objectType') === 'Content' && !this.checkContentAddition(node, data.otherNode)) {
+    if (data.otherNode.folder === false && !this.checkContentAddition(node, data.otherNode)) {
       return this.dropNotAllowed();
     }
     data.otherNode.moveTo(node, data.hitMode);
@@ -375,7 +379,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   checkContentAddition(targetNode, contentNode): boolean {
-    if (targetNode.data.objectType === 'Content') {
+    if (targetNode.folder === false) {
       return false;
     }
     const nodeConfig = this.config.hierarchy[`level${targetNode.getLevel() - 1}`];
@@ -383,10 +387,6 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!_.isEmpty(contentPrimaryCategories)) {
       return _.includes(contentPrimaryCategories, _.get(contentNode, 'data.metadata.primaryCategory')) ? true : false;
     }
-    // tslint:disable-next-line:max-line-length
-    // if (_.get(this.helperService.getChannelData, 'contentPrimaryCategories') && _.includes(_.get(this.helperService.getChannelData, 'contentPrimaryCategories'), _.get(contentNode, 'data.metadata.primaryCategory'))) {
-    //   return true;
-    // } // TODO : check this
     return false;
   }
 
@@ -401,7 +401,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       case 'edit':
         break;
       case 'delete':
-        this.showDeleteConfirmationPopUp = true;
+        this.removeNode();
         break;
       case 'addsibling':
         this.addSibling();
@@ -434,6 +434,10 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         values: [_.get(this.getActiveNode(), 'data')]
       }
     };
+  }
+
+  createNewContent() {
+    this.treeEventEmitter.emit({ type: 'createNewContent' });
   }
 
   ngOnDestroy() {

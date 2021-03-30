@@ -1,36 +1,54 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import * as _ from 'lodash-es';
-import { skipWhile } from 'rxjs/operators';
 import { TreeService } from '../tree/tree.service';
-import { DataService } from '../data/data.service';
 import { PublicDataService } from '../public-data/public-data.service';
-import { EditorConfig } from '../../interfaces/inputConfig';
-import { labelConfig} from '../../editor.config';
+import { IEditorConfig } from '../../interfaces/editor';
+import { ConfigService } from '../config/config.service';
+import { ToasterService} from '../../services/toaster/toaster.service';
+import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
+
+interface SelectedChildren {
+  primaryCategory?: string;
+  mimeType?: string;
+  interactionType?: string;
+}
 @Injectable({ providedIn: 'root' })
 
 export class EditorService {
-  data: any;
-  private _editorConfig: EditorConfig;
+  data: any = {};
+  private _selectedChildren: SelectedChildren = {};
   public questionStream$ = new Subject<any>();
+  private _editorConfig: IEditorConfig;
   private _editorMode = 'edit';
-
-  // tslint:disable-next-line:variable-name
-  public _resourceAddition$ = new Subject<any>();
   public showLibraryPage: EventEmitter<number> = new EventEmitter();
-  public readonly resourceAddition$: Observable<any> = this._resourceAddition$
-    .asObservable().pipe(skipWhile(data => data === undefined || data === null));
 
-  constructor(public treeService: TreeService,
-              private dataService: DataService,
+  constructor(public treeService: TreeService, private toasterService: ToasterService,
+              public configService: ConfigService, private telemetryService: EditorTelemetryService,
               private publicDataService: PublicDataService) { }
 
-  public initialize(config: EditorConfig) {
+  public initialize(config: IEditorConfig) {
     this._editorConfig = config;
     this._editorMode = _.get(this._editorConfig, 'config.mode').toLowerCase();
   }
 
-  public get editorConfig(): EditorConfig {
+  set selectedChildren(value: SelectedChildren) {
+    if (value.mimeType) {
+      this._selectedChildren.mimeType = value.mimeType;
+    }
+    if (value.primaryCategory) {
+      this._selectedChildren.primaryCategory = value.primaryCategory;
+    }
+    if (value.interactionType) {
+      this._selectedChildren.interactionType = value.interactionType;
+    }
+  }
+
+  get selectedChildren() {
+    return this._selectedChildren;
+  }
+
+  public get editorConfig(): IEditorConfig {
     return this._editorConfig;
   }
 
@@ -39,11 +57,7 @@ export class EditorService {
   }
 
   getToolbarConfig() {
-    return _.cloneDeep(_.merge(labelConfig, _.get(this.editorConfig, 'context.labels')));
-  }
-
-  emitResourceAddition(data) {
-    this._resourceAddition$.next(data);
+    return _.cloneDeep(_.merge(this.configService.labelConfig.button_labels, _.get(this.editorConfig, 'context.labels')));
   }
 
   emitshowLibraryPageEvent(page) {
@@ -53,7 +67,8 @@ export class EditorService {
     return this.showLibraryPage;
   }
   fetchCollectionHierarchy(collectionId): Observable<any> {
-    const hierarchyUrl = 'content/v3/hierarchy/' + collectionId;
+    const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
+    const hierarchyUrl = `${url.HIERARCHY_READ}/${collectionId}`;
     const req = {
       url: hierarchyUrl,
       param: { mode: 'edit' }
@@ -69,18 +84,67 @@ export class EditorService {
   }
 
   updateHierarchy(): Observable<any> {
+    const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
     const req = {
-      url: 'content/v3/hierarchy/update',
+      url: url.HIERARCHY_UPDATE,
       data: {
         request: {
           data: {
             ...this.getCollectionHierarchy(),
-            ...{lastUpdatedBy: 'b8d50233-5a4d-4a8c-9686-9c8bccd2c448'} // TODO:
+            ...{lastUpdatedBy: _.get(this.editorConfig, 'context.user.id')}
           }
         }
       }
     };
     return this.publicDataService.patch(req);
+  }
+
+  reviewContent(contentId): Observable<any> {
+    const objType = this.configService.categoryConfig[this.editorConfig.config.objectType];
+    const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
+    const option = {
+      url: url.CONTENT_REVIEW + contentId,
+      data: {
+        request: {
+          [objType]: {}
+        }
+      }
+    };
+    return this.publicDataService.post(option);
+  }
+
+  submitRequestChanges(contentId, comment) {
+    const objType = this.configService.categoryConfig[this.editorConfig.config.objectType];
+    const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
+    const requestBody = {
+      request: {
+        [objType]: {
+          rejectComment: _.trim(comment)
+        }
+      }
+    };
+    const option = {
+      url: `${url.CONTENT_REJECT}${contentId}`,
+      data: requestBody
+    };
+    return this.publicDataService.post(option);
+  }
+
+  publishContent(contentId) {
+    const objType = this.configService.categoryConfig[this.editorConfig.config.objectType];
+    const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
+    const requestBody = {
+      request: {
+        [objType]: {
+          lastPublishedBy: this.editorConfig.context.user.id
+        }
+      }
+    };
+    const option = {
+      url: `${url.CONTENT_PUBLISH}${contentId}`,
+      data: requestBody
+    };
+    return this.publicDataService.post(option);
   }
 
   addResourceToHierarchy(collection, unitIdentifier, contentId): Observable<any> {
@@ -115,23 +179,26 @@ export class EditorService {
     };
   }
 
-  _toFlatObj(data) {
+  _toFlatObj(data, questionId?, selectUnitId?) {
     const instance = this;
     if (data && data.data) {
       instance.data[data.data.id] = {
         name: data.title,
-        contentType: data.data.objectType,
         children: _.map(data.children, (child) => {
           return child.data.id;
         }),
         root: data.data.root
       };
-
+      if (questionId && selectUnitId && selectUnitId === data.data.id) {
+          instance.data[data.data.id].children.push(questionId);
+      }
+      if (questionId && selectUnitId && data.folder === false) {
+          delete instance.data[data.data.id];
+      }
       _.forEach(data.children, (collection) => {
-        instance._toFlatObj(collection);
+        instance._toFlatObj(collection, questionId, selectUnitId);
       });
     }
-
     return instance.data;
   }
 
@@ -179,4 +246,19 @@ export class EditorService {
     }
     return true;
    }
+
+   apiErrorHandling(err, errorInfo) {
+    if (_.get(err, 'error.params.errmsg') || errorInfo.errorMsg) {
+      this.toasterService.error(_.get(err, 'error.params.errmsg') || errorInfo.errorMsg);
+    }
+    const telemetryErrorData = {
+        err: _.toString(err.status),
+        errtype: 'SYSTEM',
+        stacktrace: JSON.stringify({response: _.pick(err, ['error', 'url']), request: _.get(errorInfo, 'request')}) || errorInfo.errorMsg,
+        pageid: this.telemetryService.telemetryPageId
+    };
+    this.telemetryService.error(telemetryErrorData);
+  }
+
+
 }

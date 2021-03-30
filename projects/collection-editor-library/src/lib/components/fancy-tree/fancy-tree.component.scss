@@ -26,7 +26,7 @@
   
         .fancytree {
           &-ico-c{
-            padding-left: 26px !important;
+            padding-left: 5px !important;
           }
           // &-ico-cf{
           //   padding-left: 25px !important;
@@ -39,11 +39,11 @@
             border: 1px solid transparent;
             background-color: #fff;
           }
-  
           &-active {
             border: 1px solid #d0e0f3;
             background-color: var(--primary-0);
             padding: 15px 33px;
+            border-top: none;
           }
         }
   
