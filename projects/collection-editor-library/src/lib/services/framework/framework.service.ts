@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { skipWhile } from 'rxjs/operators';
+import { Observable, BehaviorSubject, of } from 'rxjs';
+import { mergeMap, skipWhile } from 'rxjs/operators';
 import * as _ from 'lodash-es';
 import { ServerResponse } from '../../interfaces/serverResponse';
 import { Framework } from '../../interfaces/framework';
 import { FrameworkData } from '../../interfaces/framework';
 import { DataService } from '../data/data.service';
+import { ConfigService } from '../config/config.service';
+import { PublicDataService } from '../public-data/public-data.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +17,13 @@ export class FrameworkService {
   private _targetFrameworkIds: Array<any> =  [];
   private _frameworkData: FrameworkData = {};
   private _frameworkData$ = new BehaviorSubject<Framework>(undefined);
+  public frameworkValues: any;
   public readonly frameworkData$: Observable<Framework> = this._frameworkData$
     .asObservable().pipe(skipWhile(data => data === undefined || data === null));
 
-  constructor(private dataService: DataService) { }
+    constructor(private dataService: DataService,
+                private configService: ConfigService,
+                private publicDataService: PublicDataService) { }
 
   public initialize(framework: string) {
     if (framework && _.get(this._frameworkData, framework)) {
@@ -77,6 +82,33 @@ export class FrameworkService {
 
   public set organisationFramework(framework: string) {
     this._organisationFramework = framework;
+  }
+
+  getFrameworkData(channel?, type?, identifer?) {
+    const option = {
+      url: `${this.configService.urlConFig.URLS.COMPOSITE.SEARCH}`,
+      data: {
+        request: {
+            filters: {
+                objectType: 'Framework',
+                status: ['Live'],
+                ...(type && {type}),
+                ...(identifer && {identifer}),
+                ...(channel && {channel})
+            }
+        }
+    }
+      };
+    return this.publicDataService.post(option);
+  }
+
+  checkChannelOrSystem(channelObservable, systemObservable) {
+    return channelObservable.pipe(mergeMap(
+      (data) => {
+        if (_.get(data, 'result.count') > 0) { return of(data); }
+        return systemObservable;
+      }
+    ));
   }
 
 

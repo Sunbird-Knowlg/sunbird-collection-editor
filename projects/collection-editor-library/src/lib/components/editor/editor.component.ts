@@ -87,10 +87,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       this.editorConfig.context.channel, this.editorConfig.config.objectType)
       .subscribe(
         (response) => {
-          this.unitFormConfig = _.get(response, 'result.objectCategoryDefinition.forms.unitMetadata.properties');
-          this.rootFormConfig = _.get(response, 'result.objectCategoryDefinition.forms.create.properties');
-          this.libraryComponentInput.searchFormConfig = _.get(response, 'result.objectCategoryDefinition.forms.search.properties');
-          this.leafFormConfig = _.get(response, 'result.objectCategoryDefinition.forms.childMetadata.properties');
+          this.getFrameworkDetails(response);
         },
         (error) => {
           console.log(error);
@@ -102,6 +99,44 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.telemetryService.start({ type: 'editor', pageid: this.telemetryService.telemetryPageId });
     this.editorService.getshowLibraryPageEmitter()
       .subscribe(item => this.showLibraryComponentPage());
+  }
+
+  getFrameworkDetails(categoryDefinitionData) {
+    let orgFWIdentifiers: any;
+    let orgFWType: any;
+    let targetFWType: any;
+    orgFWIdentifiers = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.framework.default');
+    if (_.isEmpty(_.get(this.editorConfig, 'context.targetFWIds'))) {
+      targetFWType = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.targetFWIds.default');
+    }
+    const frameworkReq = [];
+    if (_.isEmpty(orgFWIdentifiers)) {
+      orgFWType = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.config.frameworkMetadata.orgFWType');
+      frameworkReq.push(this.frameworkService.getFrameworkData(this.editorConfig.context.channel, orgFWType));
+      frameworkReq.push(this.frameworkService.getFrameworkData(undefined, orgFWType));
+    }  else {
+      frameworkReq.push(this.frameworkService.getFrameworkData(this.editorConfig.context.channel, undefined, orgFWIdentifiers));
+      frameworkReq.push(this.frameworkService.getFrameworkData(undefined, undefined, orgFWIdentifiers));
+    }
+    if (!_.isEmpty(frameworkReq)) {
+      // tslint:disable-next-line:max-line-length
+      this.frameworkService.checkChannelOrSystem(frameworkReq[0], frameworkReq[1])
+      .subscribe(
+        (response) => {
+          const configuredFrameworks = _.map(_.get(response, 'result.Framework'), (framework) => {
+            return { label: framework.name, identifier: framework.identifier };
+          });
+          this.frameworkService.frameworkValues = configuredFrameworks;
+          this.unitFormConfig =  _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.unitMetadata.properties');
+          // tslint:disable-next-line:max-line-length
+          this.rootFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.create.properties');
+          // tslint:disable-next-line:max-line-length
+          this.libraryComponentInput.searchFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.search.properties');
+          this.leafFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.childMetadata.properties');
+        }
+      );
+      // forkJoin(frameworkReq).subscribe(console.log);
+    }
   }
 
   ngAfterViewInit() {

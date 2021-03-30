@@ -24,6 +24,12 @@ export class HelperService {
     this.getChannelData(channelId).subscribe(data => this._channelData = data);
   }
 
+
+  public get channelInfo(): any {
+    return this._channelData;
+  }
+
+
   getLicenses(): Observable<any> {
     const req = {
       url: `composite/v3/search`,

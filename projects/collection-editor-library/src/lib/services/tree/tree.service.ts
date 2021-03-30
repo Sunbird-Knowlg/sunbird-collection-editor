@@ -44,7 +44,11 @@ export class TreeService {
     if (attributions && _.isString(attributions)) {
       newData.attributions = attributions.split(',');
     }
-    const { maxTime, warningTime } = newData;
+    const { maxTime, warningTime, copyrightYear} = newData;
+
+    if (copyrightYear) {
+      newData.copyrightYear = _.toNumber(copyrightYear);
+    }
     const timeLimits: any = {};
     if (maxTime) {
       timeLimits.maxTime = this.helperService.hmsToSeconds(maxTime);
