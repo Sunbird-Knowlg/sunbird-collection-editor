@@ -14,7 +14,7 @@
             </div>
             <!-- Right Player Sections -->
             <div class="eight wide column bg-white pl-40 mb-10 w-73">
-              <ng-container *ngIf="isCurrentNodeFolder === true || isCurrentNodeRoot === true">
+              <ng-container *ngIf="(isCurrentNodeFolder === true || isCurrentNodeRoot === true) && unitFormConfig">
                 <lib-meta-form [rootFormConfig]="rootFormConfig" [nodeMetadata]="selectedNodeData" [unitFormConfig]="unitFormConfig"
                 (toolbarEmitter)="toolbarEventListener($event)"></lib-meta-form>
               </ng-container>

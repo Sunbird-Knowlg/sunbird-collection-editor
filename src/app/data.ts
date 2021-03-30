@@ -5,9 +5,9 @@ export const collectionEditorConfig = {
       name: 'Vaibahv Bhuva',
       orgIds: ['01309282781705830427']
     },
-    identifier: 'do_113238060337512448160', // CC: do_113238058876813312153 PDC: do_113238060337512448160
+    identifier: 'do_113246527029993472129',  // 'do_113246469716238336124', // 'do_11324452252916121611', // CC: do_113238058876813312153 PDC: do_113238060337512448160
     channel: '01307938306521497658',
-    framework: 'nit_k-12',
+    // framework: 'nit_k-12',
     targetFWIds: ['nit_k-12'],
     authToken: ' ',
     sid: 'iYO2K6dOSdA0rwq7NeT1TDzS-dbqduvV',
@@ -78,10 +78,10 @@ export const collectionEditorConfig = {
       'https://dockstorage.blob.core.windows.net/sunbird-content-dock/']
   },
   config: {
-    mode: 'sourcingReview', // edit / review / read / sourcingReview
+    mode: 'edit', // edit / review / read / sourcingReview
     maxDepth: 2,
     objectType: 'Collection',
-    primaryCategory: 'Professional Development Course', // Professional Development Course, Curriculum Course
+    primaryCategory: 'Course', // Professional Development Course, Curriculum Course
     isRoot: true,
     iconClass: 'fa fa-book',
     children: {},
@@ -182,7 +182,7 @@ export const questionEditorConfig = {
       lastName: 'Bhuva',
     },
     env: 'questionSetLibrary',
-    framework: 'ekstep_ncert_k-12',
+    // framework: 'ekstep_ncert_k-12',
     cloudStorageUrls: ['https://s3.ap-south-1.amazonaws.com/ekstep-public-qa/', 'https://ekstep-public-qa.s3-ap-south-1.amazonaws.com/',
       'https://dockstorage.blob.core.windows.net/sunbird-content-dock/'],
     board: 'CBSE',
