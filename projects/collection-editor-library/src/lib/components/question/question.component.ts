@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 import { ConfigService } from '../../services/config/config.service';
 import { FrameworkService } from '../../services/framework/framework.service';
 import { TreeService } from '../../services/tree/tree.service';
-import { filter, take, takeUntil } from 'rxjs/operators';
+import { filter, finalize, take, takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'lib-question',
   templateUrl: './question.component.html',
@@ -65,14 +65,20 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
   pageStartTime: any;
   public framework;
   public frameworkDetails: any = {};
+  public actionType: string;
+  public questionIds: string[];
+  public buttonLoaders = {
+    saveButtonLoader: false,
+    previewButtonLoader: false
+  };
   constructor(
     private questionService: QuestionService, private editorService: EditorService, public telemetryService: EditorTelemetryService,
     public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,
-    private frameworkService: FrameworkService, private router: Router, public configService: ConfigService ) {
-      const { primaryCategory } = this.editorService.selectedChildren;
-      this.questionPrimaryCategory = primaryCategory;
-      this.pageStartTime = Date.now();
-   }
+    private frameworkService: FrameworkService, private router: Router, public configService: ConfigService) {
+    const { primaryCategory } = this.editorService.selectedChildren;
+    this.questionPrimaryCategory = primaryCategory;
+    this.pageStartTime = Date.now();
+  }
 
   ngOnInit() {
     const { questionSetId, questionId, type } = this.questionInput;
@@ -97,7 +103,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
   }
   fetchFrameWorkDetails() {
     return this.frameworkService.frameworkData$.pipe(takeUntil(this.onComponentDestroy$),
-    filter(data => _.get(data, `frameworkdata.${this.framework}`)), take(1));
+      filter(data => _.get(data, `frameworkdata.${this.framework}`)), take(1));
   }
   populateFrameworkData() {
     const categoryMasterList = this.frameworkDetails.frameworkData;
@@ -115,95 +121,95 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
       duration: (Date.now() - this.pageStartTime) / 1000
     });
   }
- ngOnChanges() {
-  // this.populateFormData();
- }
+  ngOnChanges() {
+    // this.populateFormData();
+  }
   initialize() {
     this.editorService.fetchCollectionHierarchy(this.questionSetId).subscribe((response) => {
-        this.questionSetHierarchy = _.get(response, 'result.questionSet');
-        const leafFormConfigfields = _.join(_.map(this.leafFormConfig, value => (value.code)), ',');
-        if (!_.isUndefined(this.questionId)) {
-          this.questionService.readQuestion(this.questionId, leafFormConfigfields)
-            .subscribe((res) => {
-              if (res.result) {
-                this.questionMetaData = res.result.question;
-                this.populateFormData();
-                if (_.isUndefined(this.questionPrimaryCategory)) {
-                  this.questionPrimaryCategory = this.questionMetaData.primaryCategory;
-                }
-                // tslint:disable-next-line:max-line-length
-                this.questionInteractionType = this.questionMetaData.interactionTypes ? this.questionMetaData.interactionTypes[0] : 'default';
-                if (this.questionInteractionType === 'default') {
-                  if (this.questionMetaData.editorState) {
-                    this.editorState = this.questionMetaData.editorState;
-                  }
-                }
-
-                if (this.questionInteractionType === 'choice') {
-                  const responseDeclaration = this.questionMetaData.responseDeclaration;
-                  const templateId = this.questionMetaData.templateId;
-                  this.questionMetaData.editorState = this.questionMetaData.editorState;
-                  const numberOfOptions = this.questionMetaData.editorState.options.length;
-                  const options = _.map(this.questionMetaData.editorState.options, option => ({ body: option.value.body }));
-                  const question = this.questionMetaData.editorState.question;
-                  this.editorState = new McqForm({
-                    question, options, answer: _.get(responseDeclaration, 'response1.correctResponse.value')
-                  }, { templateId, numberOfOptions });
-                  this.editorState.solutions = this.questionMetaData.editorState.solutions;
-                }
-                const hierarchyChildNodes = this.questionSetHierarchy.childNodes ? this.questionSetHierarchy.childNodes : [];
-                this.setQuestionTitle(hierarchyChildNodes, this.questionId);
-
-                if (!_.isEmpty(this.editorState.solutions)) {
-                  this.selectedSolutionType = this.editorState.solutions[0].type;
-                  this.solutionUUID = this.editorState.solutions[0].id;
-                  this.showSolutionDropDown = false;
-                  this.showSolution = true;
-                  if (this.selectedSolutionType === 'video') {
-                    const index = _.findIndex(this.questionMetaData.media, (o) => {
-                      return o.type === 'video' && o.id === this.editorState.solutions[0].value;
-                    });
-                    this.videoSolutionName = this.questionMetaData.media[index].name;
-                    this.videoThumbnail = this.questionMetaData.media[index].thumbnail;
-                  }
-                  if (this.selectedSolutionType === 'html') {
-                    this.editorState.solutions = this.editorState.solutions[0].value;
-                  }
-                }
-                if (this.questionMetaData.media) {
-                  this.mediaArr = this.questionMetaData.media;
-                }
-                this.showLoader = false;
+      this.questionSetHierarchy = _.get(response, 'result.questionSet');
+      const leafFormConfigfields = _.join(_.map(this.leafFormConfig, value => (value.code)), ',');
+      if (!_.isUndefined(this.questionId)) {
+        this.questionService.readQuestion(this.questionId, leafFormConfigfields)
+          .subscribe((res) => {
+            if (res.result) {
+              this.questionMetaData = res.result.question;
+              this.populateFormData();
+              if (_.isUndefined(this.questionPrimaryCategory)) {
+                this.questionPrimaryCategory = this.questionMetaData.primaryCategory;
               }
-            }, (err: ServerResponse) => {
-              const errInfo = {
-                errorMsg: 'Fetching question details failed. Please try again...',
-              };
-              return throwError(this.editorService.apiErrorHandling(err, errInfo));
-            });
+              // tslint:disable-next-line:max-line-length
+              this.questionInteractionType = this.questionMetaData.interactionTypes ? this.questionMetaData.interactionTypes[0] : 'default';
+              if (this.questionInteractionType === 'default') {
+                if (this.questionMetaData.editorState) {
+                  this.editorState = this.questionMetaData.editorState;
+                }
+              }
+
+              if (this.questionInteractionType === 'choice') {
+                const responseDeclaration = this.questionMetaData.responseDeclaration;
+                const templateId = this.questionMetaData.templateId;
+                this.questionMetaData.editorState = this.questionMetaData.editorState;
+                const numberOfOptions = this.questionMetaData.editorState.options.length;
+                const options = _.map(this.questionMetaData.editorState.options, option => ({ body: option.value.body }));
+                const question = this.questionMetaData.editorState.question;
+                this.editorState = new McqForm({
+                  question, options, answer: _.get(responseDeclaration, 'response1.correctResponse.value')
+                }, { templateId, numberOfOptions });
+                this.editorState.solutions = this.questionMetaData.editorState.solutions;
+              }
+              const hierarchyChildNodes = this.questionSetHierarchy.childNodes ? this.questionSetHierarchy.childNodes : [];
+              this.setQuestionTitle(hierarchyChildNodes, this.questionId);
+
+              if (!_.isEmpty(this.editorState.solutions)) {
+                this.selectedSolutionType = this.editorState.solutions[0].type;
+                this.solutionUUID = this.editorState.solutions[0].id;
+                this.showSolutionDropDown = false;
+                this.showSolution = true;
+                if (this.selectedSolutionType === 'video') {
+                  const index = _.findIndex(this.questionMetaData.media, (o) => {
+                    return o.type === 'video' && o.id === this.editorState.solutions[0].value;
+                  });
+                  this.videoSolutionName = this.questionMetaData.media[index].name;
+                  this.videoThumbnail = this.questionMetaData.media[index].thumbnail;
+                }
+                if (this.selectedSolutionType === 'html') {
+                  this.editorState.solutions = this.editorState.solutions[0].value;
+                }
+              }
+              if (this.questionMetaData.media) {
+                this.mediaArr = this.questionMetaData.media;
+              }
+              this.showLoader = false;
+            }
+          }, (err: ServerResponse) => {
+            const errInfo = {
+              errorMsg: 'Fetching question details failed. Please try again...',
+            };
+            return throwError(this.editorService.apiErrorHandling(err, errInfo));
+          });
+      }
+      if (_.isUndefined(this.questionId)) {
+        this.populateFormData();
+        const hierarchyChildNodes = this.questionSetHierarchy.childNodes ? this.questionSetHierarchy.childNodes : [];
+        this.setQuestionTitle(hierarchyChildNodes);
+        if (this.questionInteractionType === 'default') {
+          this.editorState = { question: '', answer: '', solutions: '' };
         }
-        if (_.isUndefined(this.questionId)) {
-          this.populateFormData();
-          const hierarchyChildNodes = this.questionSetHierarchy.childNodes ? this.questionSetHierarchy.childNodes : [];
-          this.setQuestionTitle(hierarchyChildNodes);
-          if (this.questionInteractionType === 'default') {
-            this.editorState = { question: '', answer: '', solutions: '' };
-            this.showLoader = false;
-          }
-          if (this.questionInteractionType === 'choice') {
-            this.editorState = new McqForm({ question: '', options: [] }, {});
-            this.showLoader = false;
-          }
+        if (this.questionInteractionType === 'choice') {
+          this.editorState = new McqForm({ question: '', options: [] }, {});
         }
-      }, (err: ServerResponse) => {
-        const errInfo = {
-          errorMsg: 'Fetching question set details failed. Please try again...',
-        };
-        this.editorService.apiErrorHandling(err, errInfo);
+        this.showLoader = false;
+      }
+    }, (err: ServerResponse) => {
+      const errInfo = {
+        errorMsg: 'Fetching question set details failed. Please try again...',
+      };
+      this.editorService.apiErrorHandling(err, errInfo);
     });
   }
 
   toolbarEventListener(event) {
+    this.actionType = event.button;
     switch (event.button) {
       case 'saveContent':
         this.saveContent();
@@ -215,13 +221,12 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
         this.handleRedirectToQuestionset();
         break;
       case 'previewContent':
-        this.previewContent();
+        this.saveContent();
         break;
       case 'editContent':
         this.previewFormData(true);
         this.showPreview = false;
         this.toolbarConfig.showPreview = false;
-        this.showLoader = false;
         break;
       default:
         break;
@@ -236,7 +241,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
     }
   }
 
-   saveContent() {
+  saveContent() {
     this.validateQuestionData();
     this.validateFormFields();
     if (this.showFormError === false) {
@@ -277,7 +282,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
   redirectToQuestionset() {
     this.showConfirmPopup = false;
     setTimeout(() => {
-      this.questionEmitter.emit({status : false});
+      this.questionEmitter.emit({ status: false });
     }, 100);
   }
 
@@ -312,7 +317,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
       this.createQuestion();
     }
     if (!_.isUndefined(this.questionId)) {
-      this.updateQuestion(this.questionId);
+      this.updateQuestion();
     }
   }
 
@@ -431,7 +436,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
         ..._.pick(_.get(this.editorService.editorConfig, 'context'), ['board', 'medium', 'gradeLevel', 'subject', 'topic'])
       },
       {
-      ..._.pick(this.questionSetHierarchy, this.configService.sessionContext)
+        ..._.pick(this.questionSetHierarchy, this.configService.sessionContext)
       }
     ), key => _.isEmpty(key));
   }
@@ -445,11 +450,11 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
     return {
       nodesModified: {
         [questionId]: {
-              metadata: this.getQuestionMetadata(),
-              objectType: 'Question',
-              root: false,
-              isNew: this.questionId ? false : true
-          }
+          metadata: this.getQuestionMetadata(),
+          objectType: 'Question',
+          root: false,
+          isNew: this.questionId ? false : true
+        }
       },
       hierarchy: this.editorService._toFlatObj(data, questionId, selectedUnitId)
     };
@@ -457,14 +462,19 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
 
   createQuestion() {
     const requestBody = this.prepareRequestBody();
-    this.questionService.updateHierarchyQuestionCreate(requestBody).
-      subscribe((response: ServerResponse) => {
-          if (response.result) {
-            this.toasterService.success('Question is created sucessfully');
-            this.redirectToQuestionset();
-          }
-        },
-        (err: ServerResponse) => {
+    this.showHideSpinnerLoader(true);
+    this.questionService.updateHierarchyQuestionCreate(requestBody).pipe(
+      finalize(() => {
+        this.showHideSpinnerLoader(false);
+      })).subscribe((response: ServerResponse) => {
+        this.toasterService.success('Question is created sucessfully');
+        if (this.actionType === 'previewContent') {
+          this.questionId = _.first(_.values(_.get(response, 'result.identifiers')));
+          this.previewContent();
+        } else {
+          this.redirectToQuestionset();
+        }
+      }, (err: ServerResponse) => {
           const errInfo = {
             errorMsg: 'Question creating failed. Please try again...',
           };
@@ -472,43 +482,40 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
         });
   }
 
-  updateQuestion(questionId) {
+  updateQuestion() {
     const requestBody = this.prepareRequestBody();
-    this.questionService.updateHierarchyQuestionUpdate(requestBody).
-      subscribe((response: ServerResponse) => {
-          if (response.result) {
-            this.toasterService.success('Question is updated sucessfully');
-            this.redirectToQuestionset();
-          }
-        },
-        (err: ServerResponse) => {
-          const errInfo = {
-            errorMsg: 'Question updating failed. Please try again...',
-          };
-          this.editorService.apiErrorHandling(err, errInfo);
-        });
+    this.showHideSpinnerLoader(true);
+    this.questionService.updateHierarchyQuestionUpdate(requestBody).pipe(
+      finalize(() => {
+        this.showHideSpinnerLoader(false);
+      })).subscribe((response: ServerResponse) => {
+        this.toasterService.success('Question is updated sucessfully');
+        if (this.actionType === 'previewContent') {
+          this.previewContent();
+        } else {
+          this.redirectToQuestionset();
+        }
+      }, (err: ServerResponse) => {
+        const errInfo = {
+          errorMsg: 'Question updating failed. Please try again...',
+        };
+        this.editorService.apiErrorHandling(err, errInfo);
+      });
   }
 
- async previewContent() {
-  await this.validateQuestionData();
-  if (this.showFormError === false) {
+  showHideSpinnerLoader(status: boolean) {
+    if (this.actionType === 'previewContent') {
+      this.buttonLoaders.previewButtonLoader = status;
+    } else {
+      this.buttonLoaders.saveButtonLoader = status;
+    }
+  }
+
+  previewContent() {
     this.previewFormData(false);
-    await this.setQumlPlayerData();
+    this.questionIds = [this.questionId];
     this.showPreview = true;
     this.toolbarConfig.showPreview = true;
-   }
-  }
-
-  setQumlPlayerData() {
-    const playerConfig = _.cloneDeep(this.playerService.getQumlPlayerConfig());
-    this.QumlPlayerConfig = playerConfig;
-    this.QumlPlayerConfig.data = _.cloneDeep(this.questionSetHierarchy);
-    this.QumlPlayerConfig.data.totalQuestions = 1;
-    this.QumlPlayerConfig.data.maxQuestions = this.QumlPlayerConfig.data.maxQuestions || this.QumlPlayerConfig.data.totalQuestions;
-    this.QumlPlayerConfig.data.maxScore = this.QumlPlayerConfig.data.maxQuestions;
-    this.QumlPlayerConfig.data.children = [];
-    const questionMetadata = this.getQuestionMetadata();
-    this.QumlPlayerConfig.data.children.push(questionMetadata);
   }
 
   getPlayerEvents(event) {
@@ -523,7 +530,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
     let index;
     if (!_.isUndefined(questionId)) {
       // tslint:disable-next-line:only-arrow-functions
-      index = _.findIndex(hierarchyChildNodes, function(el) {
+      index = _.findIndex(hierarchyChildNodes, function (el) {
         return el === questionId;
       });
     } else {
@@ -536,7 +543,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
     }
     this.toolbarConfig.title = questionTitle;
   }
-  output(event) {}
+  output(event) { }
 
   onStatusChanges(event) {
   }
@@ -547,9 +554,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
   validateFormFields() {
     _.forEach(this.leafFormConfig, (formFieldCategory) => {
       if (formFieldCategory.required && !this.childFormData[formFieldCategory.code]) {
-          this.showFormError = true;
-          this.toasterService.error('Please fill the required fields');
-          return false;
+        this.showFormError = true;
+        this.toasterService.error('Please fill the required fields');
+        return false;
       }
     });
     return true;
@@ -559,8 +566,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
     this.leafFormConfig = null;
     _.forEach(formvalue, (formFieldCategory) => {
       if (_.has(formFieldCategory, 'editable')) {
-      formFieldCategory.editable = status ? _.find(this.initialLeafFormConfig, {code: formFieldCategory.code}).editable : status;
-      formFieldCategory.default = this.childFormData[formFieldCategory.code];
+        formFieldCategory.editable = status ? _.find(this.initialLeafFormConfig, { code: formFieldCategory.code }).editable : status;
+        formFieldCategory.default = this.childFormData[formFieldCategory.code];
       }
     });
     this.leafFormConfig = formvalue;
@@ -569,17 +576,17 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
     this.childFormData = {};
     _.forEach(this.leafFormConfig, (formFieldCategory) => {
       if (!_.isUndefined(this.questionId)) {
-      if (this.questionMetaData && _.has(this.questionMetaData, formFieldCategory.code)) {
-        formFieldCategory.default = this.questionMetaData[formFieldCategory.code];
-        this.childFormData[formFieldCategory.code] = this.questionMetaData[formFieldCategory.code];
+        if (this.questionMetaData && _.has(this.questionMetaData, formFieldCategory.code)) {
+          formFieldCategory.default = this.questionMetaData[formFieldCategory.code];
+          this.childFormData[formFieldCategory.code] = this.questionMetaData[formFieldCategory.code];
+        }
+      } else {
+        // tslint:disable-next-line:max-line-length
+        const questionSetDefaultValue = _.get(this.questionSetHierarchy, formFieldCategory.code) ? _.get(this.questionSetHierarchy, formFieldCategory.code) : '';
+        const defaultEditStatus = _.find(this.initialLeafFormConfig, { code: formFieldCategory.code }).editable === true ? true : false;
+        formFieldCategory.default = defaultEditStatus ? '' : questionSetDefaultValue;
+        this.childFormData[formFieldCategory.code] = formFieldCategory.default;
       }
-    } else {
-      // tslint:disable-next-line:max-line-length
-      const questionSetDefaultValue = _.get(this.questionSetHierarchy, formFieldCategory.code) ? _.get(this.questionSetHierarchy, formFieldCategory.code) : '';
-      const defaultEditStatus = _.find(this.initialLeafFormConfig, {code: formFieldCategory.code}).editable === true ? true : false;
-      formFieldCategory.default = defaultEditStatus ? '' : questionSetDefaultValue ;
-      this.childFormData[formFieldCategory.code] = formFieldCategory.default;
-    }
     });
   }
   ngOnDestroy() {
