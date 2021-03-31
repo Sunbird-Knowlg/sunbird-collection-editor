@@ -44,11 +44,14 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public submitFormStatus = true;
   public showQuestionTemplatePopup = false;
   public showDeleteConfirmationPopUp = false;
+  public showPreview = false;
   public actionType: string;
+  public questionIds: string[];
   toolbarConfig: any;
   public buttonLoaders = {
     saveAsDraftButtonLoader: false,
-    addFromLibraryButtonLoader: false
+    addFromLibraryButtonLoader: false,
+    previewButtonLoader: false
   };
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
@@ -172,6 +175,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           this.toasterService.error(error);
         }));
         break;
+      case 'previewContent':
+        this.previewContent();
+        break;
       case 'addFromLibrary':
         this.showLibraryComponentPage();
         break;
@@ -281,6 +287,19 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       return false;
     }
     return true;
+  }
+
+  previewContent() {
+    this.buttonLoaders.previewButtonLoader = true;
+    this.saveContent().then(res => {
+      this.questionIds = ['do_1132394589601710081620', 'do_1132393652988723201567', 'do_1132393693797089281573',
+      'do_1132393640721285121563'];
+      this.buttonLoaders.previewButtonLoader = false;
+      this.showPreview = true;
+    }).catch(err => {
+      this.toasterService.error(err);
+      this.buttonLoaders.previewButtonLoader = false;
+    });
   }
 
   sendForReview() {

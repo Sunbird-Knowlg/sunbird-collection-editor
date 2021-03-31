@@ -84,6 +84,21 @@
             </button>
           </div>
       </sui-modal>
+      <sui-modal *ngIf='showPreview' [mustScroll]="false" [isClosable]="true" [transitionDuration]="0" [size]="'normal'"
+          class="sb-modal overflow-modal" appBodyScroll (dismissed)="showPreview = !showPreview;" #modal>
+          <div class="sb-modal-header">
+            Preview
+          </div>
+          <div class="sb-modal-content">
+            <div class="ui grid">
+              <div class="twelve wide column sb-checkbox-tnc mt-10">
+                <div class="sb-quml-player br-4 b-1-100">
+                  <lib-quml-player [questionSetHierarchy]="collectionTreeNodes?.data" [questionIds]="questionIds"></lib-quml-player>
+                </div>
+              </div>
+            </div>
+          </div>
+      </sui-modal>
       <lib-template *ngIf='showQuestionTemplatePopup' [templateList]="templateList"
       (templateSelection)="handleTemplateSelection($event)">
       </lib-template>

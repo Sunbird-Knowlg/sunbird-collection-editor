@@ -39,6 +39,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
     this.visibility.sendForCorrectionsContent = this.editorService.editorMode === 'sourcingreview';
     this.visibility.sourcingApproveContent = this.editorService.editorMode === 'sourcingreview';
     this.visibility.sourcingRejectContent = this.editorService.editorMode === 'sourcingreview';
+    this.visibility.previewContent = _.get(this.editorService, 'editorConfig.config.objectType') === 'QuestionSet';
   }
 
   openRequestChangePopup(action: string) {

@@ -1,5 +1,7 @@
 {
     "button_labels":{
+       "preview_collection_btn_label": "Preview",
+       "preview_collection_btn_icon": "icon eye",
        "save_collection_btn_label":"Save as Daft",
        "save_collection_btn_icon":"",
        "submit_collection_btn_label":"Submit",
