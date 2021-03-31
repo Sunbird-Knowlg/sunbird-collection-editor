@@ -20,7 +20,7 @@
         <div class="item d-flex flex-ai-center cursor-pointer w-100">
           <label for="{{child?.identifier}}" class="sb-color-primary font-weight-bold">{{child?.name}}</label>
         </div>
-        <div class="sb-radio-btn-checkbox sb-radio-btn-primary" [ngClass]="{'disabled': child?.showButton}">
+        <div class="sb-radio-btn-checkbox sb-radio-btn-primary" [ngClass]="{'sb-disabled': child?.showButton}">
           <input type="radio" disabled="{{child?.showButton}}" id="{{child?.identifier}}" value="{{child?.identifier}}"
             name="mainUnit" [(ngModel)]="prevUnitSelect" (change)="setCollectionUnitBreadcrumb();" libTelemetryInteract
             [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata(child?.identifier,'select','radio_button', telemetryService?.telemetryPageId, {key:'dialog_id',value:'add_to'})">
