@@ -2,10 +2,10 @@
 <div class="sb-fixed-with-whitebg pr-20 d-flex flex-jc-space-between" *ngIf="config && config.mode === 'edit'">
   <div class="d-flex w-25">
     <div class="sb-btn-cover">
-      <button [ngClass]="!this.showAddSiblingButton ? 'disabled' : ''"  (click)="addSibling();" class="sb-btn sb-btn-outline-primary sb-btn-normal sb-btn-radius p-0 b-none"><i class="icon plus"></i>Add Sibling</button>
+      <button [ngClass]="!this.showAddSiblingButton ? 'sb-disabled' : ''"  (click)="addSibling();" class="sb-btn sb-btn-outline-primary sb-btn-normal sb-btn-radius p-0 b-none"><i class="icon plus"></i>Add Sibling</button>
     </div>
     <div class="sb-btn-cover">
-      <button [ngClass]="!this.showAddChildButton ? 'disabled' : ''" (click)="addChild();"  class="sb-btn sb-btn-outline-primary sb-btn-normal sb-btn-radius b-none p-0"><i class="icon plus"></i> Add Child</button>
+      <button [ngClass]="!this.showAddChildButton ? 'sb-disabled' : ''" (click)="addChild();"  class="sb-btn sb-btn-outline-primary sb-btn-normal sb-btn-radius b-none p-0"><i class="icon plus"></i> Add Child</button>
     </div>
   </div>
   <button *ngIf="config.objectType !== 'QuestionSet'" (click)="addFromLibrary();" [disabled]="!this.showLibraryButton" [ngClass]="[!this.showLibraryButton ? 'sb-btn-outline-disabled' : '', (showLibraryButton && buttonLoaders?.addFromLibraryButtonLoader) ? 'sb-btn-loading-spinner sb-btn-outline-disabled': '']" class="sb-btn sb-btn-outline-primary sb-btn-normal mt-10 mr-30"

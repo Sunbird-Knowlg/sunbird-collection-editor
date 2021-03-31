@@ -17,11 +17,11 @@
         <div class="three wide column p-0 text-right">
             <span>
                 <button type="button" (click)="switchToLandscapeMode();" class="btn-none">
-                    <i class="tv icon sb-color-primary fs-1-143" [ngClass]="{'disabled': showPotrait}"></i>
+                    <i class="tv icon sb-color-primary fs-1-143" [ngClass]="{'sb-disabled': showPotrait}"></i>
                 </button>
                 <span class="fs-1-16 font-weight-normal sb-color-gray-100">|</span>
                 <button type="button" (click)="switchToPotraitMode();" class="w-10 btn-none">
-                    <i class="mobile alternate icon sb-color-primary fs-1-3" [ngClass]="{'disabled': !showPotrait}"></i>
+                    <i class="mobile alternate icon sb-color-primary fs-1-3" [ngClass]="{'sb-disabled': !showPotrait}"></i>
                 </button>
             </span>
         </div>
