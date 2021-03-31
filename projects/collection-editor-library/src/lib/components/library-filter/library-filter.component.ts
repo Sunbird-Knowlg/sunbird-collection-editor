@@ -7,7 +7,7 @@ import { EditorService } from '../../services/editor/editor.service';
 import { FrameworkService } from '../../services/framework/framework.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { ConfigService } from '../../services/config/config.service';
-
+import { HelperService } from '../../services/helper/helper.service';
 
 @Component({
   selector: 'lib-library-filter',
@@ -34,15 +34,24 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
   constructor(private frameworkService: FrameworkService,
               public editorService: EditorService,
               public telemetryService: EditorTelemetryService,
-              public treeService: TreeService, public configService: ConfigService) { }
+              public treeService: TreeService,
+              public configService: ConfigService,
+              private helperService: HelperService) { }
 
   ngOnInit() {
     this.filterFields = this.searchFormConfig;
     const selectedNode = this.treeService.getActiveNode();
-    const contentTypes = _.flatten(
+    let contentTypes = _.flatten(
       _.map(_.get(this.editorService.editorConfig.config, `hierarchy.level${selectedNode.getLevel() - 1}.children`), (val) => {
       return val;
     }));
+
+    if (_.isEmpty(contentTypes)) {
+      const channelInfo = this.helperService.channelInfo;
+      if (!_.isUndefined(channelInfo) && _.has(channelInfo, 'contentPrimaryCategories')) {
+        contentTypes = _.get(channelInfo, 'contentPrimaryCategories');
+      }
+    }
 
     this.currentFilters = {
       primaryCategory: contentTypes,
