@@ -146,13 +146,13 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
             `${this.configService.categoryConfig.additionalCategories[this.editorService.editorConfig.config.objectType]}`) ||
            _.get(this.editorService.editorConfig, 'context.additionalCategories'));
           if (!_.isEmpty(additionalCategories)) {
-            field.range = additionalCategories;
+            field.range = _.uniq(additionalCategories);
           }
         }
 
         if (field.code  === 'copyright') {
           const channelData = this.helperService.channelInfo;
-          field.default = channelData && channelData.name;
+          field.default = _.get(metaDataFields, field.code) || (channelData && channelData.name);
         }
 
         if (field.code === 'maxQuestions') {
