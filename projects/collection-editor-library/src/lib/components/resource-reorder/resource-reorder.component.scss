@@ -1,6 +1,7 @@
 @import "./../../../../../../src/assets/styles/variables";
 //select content modal UI
 .sb-chapterlist-accordion { 
+  box-shadow: 0 1px 2px 0 rgba(34,36,38,.15), 0 0 0 1px rgba(34,36,38,.15) !important;
     &.ui.styled.accordion { 
       padding: 0.6rem 0.76rem;
       background: inherit;  
@@ -52,7 +53,7 @@
           border-top: 1px solid $gray-100;  
         } 
         .content {  
-          border: none; 
+          border: none !important; 
         } 
         .chevron-icon { 
           border-top-right-radius: 0px; 
@@ -60,6 +61,7 @@
       } 
       .content {  
         // border: 1px solid $primary-200; 
+        border: none !important; 
         border-top: none; 
         border-bottom-left-radius: 4px; 
         border-bottom-right-radius: 4px;  
