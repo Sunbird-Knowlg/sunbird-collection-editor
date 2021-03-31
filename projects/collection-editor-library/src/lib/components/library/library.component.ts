@@ -6,6 +6,7 @@ import { ToasterService } from '../../services/toaster/toaster.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { ConfigService } from '../../services/config/config.service';
 import { Router } from '@angular/router';
+import { HelperService } from '../../services/helper/helper.service';
 
 @Component({
   selector: 'lib-library',
@@ -37,7 +38,9 @@ export class LibraryComponent implements OnInit, AfterViewInit {
               private editorService: EditorService,
               private router: Router,
               private treeService: TreeService,
-              private toasterService: ToasterService, public configService: ConfigService) {
+              private toasterService: ToasterService,
+              public configService: ConfigService,
+              private helperService: HelperService) {
               this.pageStartTime = Date.now();
               }
 
@@ -83,10 +86,17 @@ export class LibraryComponent implements OnInit, AfterViewInit {
 
   setDefaultFilters() {
     const selectedNode = this.treeService.getActiveNode();
-    const contentTypes = _.flatten(
+    let contentTypes = _.flatten(
       _.map(_.get(this.editorService.editorConfig.config, `hierarchy.level${selectedNode.getLevel() - 1}.children`), (val) => {
       return val;
     }));
+
+    if (_.isEmpty(contentTypes)) {
+      const channelInfo = this.helperService.channelInfo;
+      if (!_.isUndefined(channelInfo) && _.has(channelInfo, 'contentPrimaryCategories')) {
+        contentTypes = _.get(channelInfo, 'contentPrimaryCategories');
+      }
+    }
 
     this.defaultFilters = _.pickBy({
       primaryCategory: contentTypes,
