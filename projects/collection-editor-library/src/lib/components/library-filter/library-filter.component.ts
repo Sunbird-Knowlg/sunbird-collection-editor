@@ -20,6 +20,7 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
   @Input() filterValues: any;
   @Input() filterOpenStatus: boolean;
   @Input() searchFormConfig: any;
+  @Input() targetFrameworkId: any;
   @Output() filterChangeEvent: EventEmitter<any> = new EventEmitter();
   public filterConfig: any;
   public isFilterShow = false;
@@ -72,11 +73,11 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
   fetchFrameWorkDetails() {
     this.frameworkService.frameworkData$.pipe(
       takeUntil(this.onComponentDestroy$),
-      filter(data => _.get(data, `frameworkdata.${this.frameworkService.organisationFramework}`)),
+      filter(data => _.get(data, `frameworkdata.${this.targetFrameworkId}`)),
       take(1)
     ).subscribe((frameworkDetails: any) => {
       if (frameworkDetails && !frameworkDetails.err) {
-        const frameworkData = frameworkDetails.frameworkdata[this.frameworkService.organisationFramework].categories;
+        const frameworkData = frameworkDetails.frameworkdata[this.targetFrameworkId].categories;
         this.frameworkDetails.frameworkData = frameworkData;
         this.frameworkDetails.topicList = _.get(_.find(frameworkData, {
           code: 'topic'
@@ -84,12 +85,10 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
         this.frameworkDetails.targetFrameworks = _.filter(frameworkDetails.frameworkdata, (value, key) => {
           return _.includes(this.frameworkService.targetFrameworkIds, key);
         });
-
         this.populateFilters();
       }
     });
   }
-
   /**
    * Get the association data for B M G S
    */
