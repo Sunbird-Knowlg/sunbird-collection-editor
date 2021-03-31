@@ -142,9 +142,9 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
 
         if (field.code === 'additionalCategories') {
           const channelInfo = this.helperService.channelInfo;
-          const additionalCategories = _.get(channelInfo,
+          const additionalCategories = _.uniq(_.get(channelInfo,
             `${this.configService.categoryConfig.additionalCategories[this.editorService.editorConfig.config.objectType]}`) ||
-           _.get(this.editorService.editorConfig, 'context.additionalCategories');
+           _.get(this.editorService.editorConfig, 'context.additionalCategories'));
           if (!_.isEmpty(additionalCategories)) {
             field.range = additionalCategories;
           }

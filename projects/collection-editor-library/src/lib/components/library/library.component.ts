@@ -32,6 +32,7 @@ export class LibraryComponent implements OnInit, AfterViewInit {
   public defaultFilters: any;
   pageStartTime: any;
   selectedUnit: string;
+  public targetFrameworkId: any;
   constructor(public telemetryService: EditorTelemetryService,
               private editorService: EditorService,
               private router: Router,
@@ -48,6 +49,7 @@ export class LibraryComponent implements OnInit, AfterViewInit {
     this.editorService.fetchCollectionHierarchy(this.collectionId).subscribe((response: any) => {
       this.collectionhierarcyData = response.result.content;
       this.collectionHierarchy = this.getUnitWithChildren(this.collectionhierarcyData, this.collectionId);
+      this.targetFrameworkId = this.collectionhierarcyData.targetFWIds[0];
       this.setDefaultFilters();
       this.fetchContentList();
       this.telemetryService.telemetryPageId = this.pageId;
