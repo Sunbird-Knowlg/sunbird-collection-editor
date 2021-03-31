@@ -146,7 +146,7 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
             `${this.configService.categoryConfig.additionalCategories[this.editorService.editorConfig.config.objectType]}`) ||
            _.get(this.editorService.editorConfig, 'context.additionalCategories'));
           if (!_.isEmpty(additionalCategories)) {
-            field.range = additionalCategories;
+            field.range = _.uniq(additionalCategories);
           }
         }
 
