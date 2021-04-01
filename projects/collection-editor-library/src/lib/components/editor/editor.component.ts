@@ -292,8 +292,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   previewContent() {
     this.buttonLoaders.previewButtonLoader = true;
     this.saveContent().then(res => {
-      this.questionIds = ['do_1132394589601710081620', 'do_1132393652988723201567', 'do_1132393693797089281573',
-      'do_1132393640721285121563'];
+      this.questionIds = this.getQuestionIds();
       this.buttonLoaders.previewButtonLoader = false;
       this.showPreview = true;
     }).catch(err => {
@@ -447,6 +446,17 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       this.pageId = 'collection_editor';
       this.telemetryService.telemetryPageId = this.pageId;
     });
+  }
+
+  getQuestionIds() {
+    const treeObj = this.treeService.getTreeObject();
+    const identifiers = [];
+    treeObj.visit((node) => {
+      if (node.folder === false) {
+        identifiers.push(node.data.id);
+      }
+    });
+    return identifiers;
   }
 
   ngOnDestroy() {
