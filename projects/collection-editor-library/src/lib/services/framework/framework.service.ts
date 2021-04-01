@@ -14,6 +14,7 @@ import { PublicDataService } from '../public-data/public-data.service';
 })
 export class FrameworkService {
   private _organisationFramework: string;
+  private _selectedOrganisationFramework: string;
   private _targetFrameworkIds: Array<any> =  [];
   private _frameworkData: FrameworkData = {};
   private _frameworkData$ = new BehaviorSubject<Framework>(undefined);
@@ -83,6 +84,16 @@ export class FrameworkService {
   public set organisationFramework(framework: string) {
     this._organisationFramework = framework;
   }
+
+  public get selectedOrganisationFramework(): string {
+    return this._selectedOrganisationFramework;
+  }
+
+
+  public set selectedOrganisationFramework(framework: string) {
+    this._selectedOrganisationFramework = framework;
+  }
+
 
   getFrameworkData(channel?, type?, identifer?) {
     const option = {
