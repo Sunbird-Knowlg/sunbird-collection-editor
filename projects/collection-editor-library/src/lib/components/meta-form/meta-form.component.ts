@@ -81,7 +81,10 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   attachDefaultValues() {
     const metaDataFields = _.get(this.nodeMetadata, 'data.metadata');
     // if (_.isEmpty(metaDataFields)) { return; }
-    const categoryMasterList = this.frameworkDetails.frameworkData;
+    const isRoot = _.get(metaDataFields, 'data.root');
+    const categoryMasterList = this.frameworkDetails.frameworkData ||
+    !isRoot && this.frameworkService.selectedOrganisationFramework &&
+     _.get(this.frameworkService.selectedOrganisationFramework, 'framework.categories');
     let formConfig: any = (metaDataFields.visibility === 'Default') ? _.cloneDeep(this.rootFormConfig) : _.cloneDeep(this.unitFormConfig);
     formConfig = formConfig && _.has(_.first(formConfig), 'fields') ? formConfig : [{name: '', fields: formConfig}];
     if (!_.isEmpty(this.frameworkDetails.targetFrameworks)) {
@@ -171,7 +174,6 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
           if (_.has(field, 'terms')) {
             field.terms = [];
             if (_.isArray(field.default)) {
-              field.terms = field.default;
               field.terms = field.default || [];
             } else {
               field.terms.push(field.default);
@@ -238,7 +240,9 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
       switchMap((value: any) => {
         if (!_.isEmpty(value)) {
           return framworkServiceTemp.getFrameworkCategories(value).pipe(map(res => {
-            return _.get(res, 'result');
+            const frameworkResponse = _.get(res, 'result');
+            framworkServiceTemp.selectedOrganisationFramework = frameworkResponse;
+            return frameworkResponse;
           }));
         } else {
           return of(null);
