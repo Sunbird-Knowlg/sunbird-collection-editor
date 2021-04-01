@@ -81,7 +81,10 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   attachDefaultValues() {
     const metaDataFields = _.get(this.nodeMetadata, 'data.metadata');
     // if (_.isEmpty(metaDataFields)) { return; }
-    const categoryMasterList = this.frameworkDetails.frameworkData;
+    const isRoot = _.get(metaDataFields, 'data.root');
+    const categoryMasterList = this.frameworkDetails.frameworkData ||
+    !isRoot && this.frameworkService.selectedOrganisationFramework &&
+     _.get(this.frameworkService.selectedOrganisationFramework, 'framework.categories');
     let formConfig: any = (metaDataFields.visibility === 'Default') ? _.cloneDeep(this.rootFormConfig) : _.cloneDeep(this.unitFormConfig);
     formConfig = formConfig && _.has(_.first(formConfig), 'fields') ? formConfig : [{name: '', fields: formConfig}];
     if (!_.isEmpty(this.frameworkDetails.targetFrameworks)) {
@@ -142,17 +145,17 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
 
         if (field.code === 'additionalCategories') {
           const channelInfo = this.helperService.channelInfo;
-          const additionalCategories = _.get(channelInfo,
+          const additionalCategories = _.uniq(_.get(channelInfo,
             `${this.configService.categoryConfig.additionalCategories[this.editorService.editorConfig.config.objectType]}`) ||
-           _.get(this.editorService.editorConfig, 'context.additionalCategories');
+           _.get(this.editorService.editorConfig, 'context.additionalCategories'));
           if (!_.isEmpty(additionalCategories)) {
-            field.range = additionalCategories;
+            field.range = _.uniq(additionalCategories);
           }
         }
 
         if (field.code  === 'copyright') {
           const channelData = this.helperService.channelInfo;
-          field.default = channelData && channelData.name;
+          field.default = _.get(metaDataFields, field.code) || (channelData && channelData.name);
         }
 
         if (field.code === 'maxQuestions') {
@@ -171,7 +174,7 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
           if (_.has(field, 'terms')) {
             field.terms = [];
             if (_.isArray(field.default)) {
-              field.terms = field.default;
+              field.terms = field.default || [];
             } else {
               field.terms.push(field.default);
             }
@@ -237,7 +240,9 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
       switchMap((value: any) => {
         if (!_.isEmpty(value)) {
           return framworkServiceTemp.getFrameworkCategories(value).pipe(map(res => {
-            return _.get(res, 'result');
+            const frameworkResponse = _.get(res, 'result');
+            framworkServiceTemp.selectedOrganisationFramework = frameworkResponse;
+            return frameworkResponse;
           }));
         } else {
           return of(null);
