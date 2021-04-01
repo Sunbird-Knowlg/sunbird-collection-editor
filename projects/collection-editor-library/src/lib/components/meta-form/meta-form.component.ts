@@ -172,6 +172,7 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
             field.terms = [];
             if (_.isArray(field.default)) {
               field.terms = field.default;
+              field.terms = field.default || [];
             } else {
               field.terms.push(field.default);
             }
