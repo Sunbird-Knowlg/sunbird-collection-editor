@@ -1,7 +1,6 @@
 <div [ngClass]="{'potrait-mode': showPotrait}">
     <div class="sb-quml-player b-1-100 br-4 mt-5" *ngIf="showPlayerPreview">
-        <quml-player [QumlPlayerConfig]="QumlPlayerConfig" (playerEvent)="getPlayerEvents($event)"
-            (telemetryEvent)="getTelemetryEvents($event)"></quml-player>
+        <lib-quml-player [questionSetHierarchy]="questionSetHierarchy" [questionIds]="questionIds"></lib-quml-player>
     </div>
 <div class="ui mt-20" *ngIf="(editorService.editorMode === 'edit')">
     <div class="ui twelve column grid m-0">
@@ -27,68 +26,67 @@
         </div>
     </div>
 </div>
-</div>
 
 <hr class="my-20">
 <div class="ui grid text-font">
-<div class="six wide column">
-    <div class="sb-field-group">
-        <label class="sb-color-gray-100">Name</label>
-        <div class="fs-0-92 text-capitalize">{{questionMetaData?.name}}</div>
+    <div class="six wide column">
+        <div class="sb-field-group">
+            <label class="sb-color-gray-100">Name</label>
+            <div class="fs-0-92 text-capitalize">{{questionMetaData?.name}}</div>
+        </div>
     </div>
-</div>
-<div class="four wide column">
-    <div class="sb-field-group">
-        <label class="sb-color-gray-100">Board</label>
-        <div class="fs-0-92 text-capitalize">{{questionMetaData?.board}}</div>
+    <div class="four wide column">
+        <div class="sb-field-group">
+            <label class="sb-color-gray-100">Board</label>
+            <div class="fs-0-92 text-capitalize">{{questionMetaData?.board}}</div>
+        </div>
     </div>
-</div>
-<div class="two wide column">
-    <div class="sb-field-group">
-        <label class="sb-color-gray-100">Medium</label>
-        <div class="fs-0-92 text-capitalize">{{questionMetaData?.medium}}</div>
+    <div class="two wide column">
+        <div class="sb-field-group">
+            <label class="sb-color-gray-100">Medium</label>
+            <div class="fs-0-92 text-capitalize">{{questionMetaData?.medium}}</div>
+        </div>
     </div>
-</div>
-<div class="six wide column">
-    <div class="sb-field-group">
-        <label class="sb-color-gray-100">Grade</label>
-        <div class="fs-0-92 text-capitalize">{{questionMetaData?.gradeLevel}}</div>
+    <div class="six wide column">
+        <div class="sb-field-group">
+            <label class="sb-color-gray-100">Grade</label>
+            <div class="fs-0-92 text-capitalize">{{questionMetaData?.gradeLevel}}</div>
+        </div>
     </div>
-</div>
-<div class="four wide column">
-    <div class="sb-field-group">
-        <label class="sb-color-gray-100">Subject</label>
-        <div class="fs-0-92 text-capitalize">{{questionMetaData?.subject}}</div>
+    <div class="four wide column">
+        <div class="sb-field-group">
+            <label class="sb-color-gray-100">Subject</label>
+            <div class="fs-0-92 text-capitalize">{{questionMetaData?.subject}}</div>
+        </div>
     </div>
-</div>
-<div class="two wide column" >
-    <div class="sb-field-group">
-        <label class="sb-color-gray-100">Attributions</label>
-        <div class="fs-0-92 text-capitalize">{{questionMetaData?.attributions}}</div>
+    <div class="two wide column">
+        <div class="sb-field-group">
+            <label class="sb-color-gray-100">Attributions</label>
+            <div class="fs-0-92 text-capitalize">{{questionMetaData?.attributions}}</div>
+        </div>
     </div>
-</div>
-<div class="six wide column" >
-    <div class="sb-field-group">
-        <label class="sb-color-gray-100">Author</label>
-        <div class="fs-0-92 text-capitalize">{{questionMetaData?.author}}</div>
+    <div class="six wide column">
+        <div class="sb-field-group">
+            <label class="sb-color-gray-100">Author</label>
+            <div class="fs-0-92 text-capitalize">{{questionMetaData?.author}}</div>
+        </div>
     </div>
-</div>
-<div class="four wide column">
-    <div class="sb-field-group">
-        <label class="sb-color-gray-100">Audience</label>
-        <div class="fs-0-92 text-capitalize">{{questionMetaData?.audience}}</div>
+    <div class="four wide column">
+        <div class="sb-field-group">
+            <label class="sb-color-gray-100">Audience</label>
+            <div class="fs-0-92 text-capitalize">{{questionMetaData?.audience}}</div>
+        </div>
     </div>
-</div>
-<div class="two wide column">
-    <div class="sb-field-group">
-        <label class="sb-color-gray-100">Copyright</label>
-        <div class="fs-0-92 text-capitalize">{{questionMetaData?.copyright}}</div>
+    <div class="two wide column">
+        <div class="sb-field-group">
+            <label class="sb-color-gray-100">Copyright</label>
+            <div class="fs-0-92 text-capitalize">{{questionMetaData?.copyright}}</div>
+        </div>
     </div>
-</div>
-<div class="six wide column" >
-    <div class="sb-field-group">
-        <label class="sb-color-gray-100">Licensed by</label>
-        <div class="fs-0-92 text-capitalize">{{questionMetaData?.license}}</div>
+    <div class="six wide column">
+        <div class="sb-field-group">
+            <label class="sb-color-gray-100">Licensed by</label>
+            <div class="fs-0-92 text-capitalize">{{questionMetaData?.license}}</div>
+        </div>
     </div>
-</div>
 </div>

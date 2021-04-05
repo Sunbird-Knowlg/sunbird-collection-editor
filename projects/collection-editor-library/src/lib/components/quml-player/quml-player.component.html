@@ -1,0 +1,2 @@
+<quml-player *ngIf="showPreview" [QumlPlayerConfig]="qumlPlayerConfig" (playerEvent)="getPlayerEvents($event)"
+    (telemetryEvent)="getTelemetryEvents($event)" [questionIds]="questionIds"></quml-player>
