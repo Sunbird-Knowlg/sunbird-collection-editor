@@ -158,6 +158,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       extensions: ['glyph', 'dnd5'],
       clickFolderMode: 3,
       source: this.rootNode,
+      escapeTitles: true,
       glyph: {
         preset: 'awesome4',
         map: {

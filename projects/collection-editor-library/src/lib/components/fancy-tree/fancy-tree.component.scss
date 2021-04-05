@@ -18,6 +18,12 @@
           font-weight: 700 !important;
           padding-left: 5px;
         }
+        .highlightNode {
+          color: red !important;
+          &::before {
+            color: red !important;
+          }
+        }
       }
   
       li {
