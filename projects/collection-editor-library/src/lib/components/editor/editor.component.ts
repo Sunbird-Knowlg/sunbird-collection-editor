@@ -363,10 +363,14 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   deleteNode() {
-    const selectedNode = this.treeService.getActiveNode();
-    if (selectedNode) {
-      delete this.formStatusMapper[selectedNode.data.id];
-    }
+    const activeNode = this.treeService.getActiveNode();
+    delete this.formStatusMapper[activeNode.data.id];
+    const children = this.treeService.getChildren();
+    _.forEach(children, (node) => {
+      if (_.has(this.formStatusMapper, node.data.id)) {
+        delete this.formStatusMapper[node.data.id];
+      }
+    });
     this.treeService.removeNode();
     this.updateSubmitBtnVisibility();
     this.showDeleteConfirmationPopUp = false;

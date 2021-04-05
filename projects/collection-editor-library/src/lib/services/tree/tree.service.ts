@@ -152,6 +152,15 @@ export class TreeService {
     return _node;
   }
 
+  // Generate a flat list of node children and sub children
+  getChildren() {
+    const nodes = [];
+    this.getActiveNode().visit((node) => {
+      nodes.push(node);
+    });
+    return nodes;
+  }
+
   highlightNode(nodeId: string, action: string) {
     const nodeElem = this.getNodeById(nodeId);
     if (!nodeElem) { return; }
