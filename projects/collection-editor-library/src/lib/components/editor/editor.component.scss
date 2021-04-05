@@ -201,3 +201,15 @@ lib-chat-window,
 .chat_bot {
   display: none !important;
 }
+
+.preview-modal{
+  .ui.modal{
+    margin : 1rem auto  !important
+  }
+  .sb-checkbox-tnc{
+    padding: 0 16px !important;
+  }
+  .sb-modal-content{
+    height: calc(100vh - 110px) !important;
+  }
+}

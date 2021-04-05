@@ -84,10 +84,10 @@
             </button>
           </div>
       </sui-modal>
-      <sui-modal *ngIf='showPreview' [mustScroll]="false" [isClosable]="true" [transitionDuration]="0" [size]="'normal'"
-          class="sb-modal overflow-modal" appBodyScroll (dismissed)="showPreview = !showPreview;" #modal>
+      <sui-modal *ngIf='showPreview' [mustScroll]="false" [isClosable]="true" [transitionDuration]="0" [size]="'large'"
+          class="sb-modal overflow-modal preview-modal" appBodyScroll (dismissed)="showPreview = !showPreview;" #modal>
           <div class="sb-modal-header">
-            Preview
+            Question Set Preview
           </div>
           <div class="sb-modal-content">
             <div class="ui grid">
