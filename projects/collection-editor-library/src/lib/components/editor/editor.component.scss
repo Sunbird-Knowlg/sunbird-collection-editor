@@ -216,7 +216,11 @@ lib-chat-window,
     height: 30rem;
     overflow-y: auto !important;
   }
-  .quml-header-container{
-    width: 98% !important;
+  .sb-quml-player {
+    width: 100%;
+    min-height: 300px;
+    position: relative;
+    overflow: hidden;
+    border: solid 1px #cccccc;
   }
 }
