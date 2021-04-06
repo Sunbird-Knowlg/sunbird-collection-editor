@@ -68,7 +68,7 @@
   </div>
   <div class="sb-modal-actions">
     <button (click)="addImageInEditor('one', 'two');"
-      class="sb-btn sb-btn-primary sb-btn-normal"
+      class="sb-btn sb-btn-primary sb-btn-normal" disabled="!showAddButton"
       [ngClass]="{'sb-btn-primary': showAddButton, 'sb-btn-disabled': !showAddButton}">Add</button>
   </div>
 </sui-modal>

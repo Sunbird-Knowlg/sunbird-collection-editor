@@ -3,7 +3,7 @@ import * as _ from 'lodash-es';
 import { catchError, map } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
 import { EditorService } from '../../services/editor/editor.service';
-import { ToasterService } from '../../services/toaster/toaster.service';
+import { QuestionService } from '../../services/question/question.service';
 
 @Component({
   selector: 'lib-asset-browser',
@@ -15,7 +15,8 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
   @Output() assetBrowserEmitter = new EventEmitter<any>();
   @Output() modalDismissEmitter = new EventEmitter<any>();
   @ViewChild('modal', {static: false}) private modal;
-  constructor(private editorService: EditorService, private toasterService: ToasterService) { }
+  constructor(private editorService: EditorService,
+              private questionService: QuestionService) { }
   assetConfig: any = {
     image: {
       size: '50',
@@ -72,7 +73,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
       offset
     };
 
-    this.editorService.getAssetMedia(req).pipe(catchError(err => {
+    this.questionService.getAssetMedia(req).pipe(catchError(err => {
       const errInfo = { errorMsg: 'Image search failed' };
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     })).subscribe((res) => {
@@ -101,7 +102,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
       offset
     };
 
-    this.editorService.getAssetMedia(req).pipe(catchError(err => {
+    this.questionService.getAssetMedia(req).pipe(catchError(err => {
       const errInfo = { errorMsg: 'Image search failed' };
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     }))
@@ -153,7 +154,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
       this.imageUploadLoader = true;
       // reader.onload = (uploadEvent: any) => {
       const req = this.generateAssetCreateRequest(fileName, fileType, 'image');
-      this.editorService.createMediaAsset(req).pipe(catchError(err => {
+      this.questionService.createMediaAsset(req).pipe(catchError(err => {
           this.imageUploadLoader = false;
           const errInfo = { errorMsg: 'Image upload failed' };
           return throwError(this.editorService.apiErrorHandling(err, errInfo));
@@ -162,7 +163,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
           const request = {
             data: formData
           };
-          this.editorService.uploadMedia(request, imgId).pipe(catchError(err => {
+          this.questionService.uploadMedia(request, imgId).pipe(catchError(err => {
             this.imageUploadLoader = false;
             const errInfo = { errorMsg: 'Image upload failed' };
             return throwError(this.editorService.apiErrorHandling(err, errInfo));
@@ -191,7 +192,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
   }
 
   uploadToBlob(signedURL, file, config): Observable<any> {
-    return this.editorService.http.put(signedURL, file, config).pipe(catchError(err => {
+    return this.questionService.http.put(signedURL, file, config).pipe(catchError(err => {
       const errInfo = { errorMsg: 'Unable to upload to Blob and Content Creation Failed, Please Try Again' };
       this.isClosable = true;
       this.loading = false;
