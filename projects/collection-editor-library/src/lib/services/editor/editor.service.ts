@@ -7,6 +7,7 @@ import { IEditorConfig } from '../../interfaces/editor';
 import { ConfigService } from '../config/config.service';
 import { ToasterService} from '../../services/toaster/toaster.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
+
 interface SelectedChildren {
   primaryCategory?: string;
   mimeType?: string;
