@@ -7,9 +7,6 @@ import { IEditorConfig } from '../../interfaces/editor';
 import { ConfigService } from '../config/config.service';
 import { ToasterService} from '../../services/toaster/toaster.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
-import { HttpClient } from '@angular/common/http';
-import { UUID } from 'angular2-uuid';
-
 interface SelectedChildren {
   primaryCategory?: string;
   mimeType?: string;
@@ -24,7 +21,6 @@ export class EditorService {
   private _editorConfig: IEditorConfig;
   private _editorMode = 'edit';
   public showLibraryPage: EventEmitter<number> = new EventEmitter();
-  public http: HttpClient;
 
   constructor(public treeService: TreeService, private toasterService: ToasterService,
               public configService: ConfigService, private telemetryService: EditorTelemetryService,
@@ -262,5 +258,6 @@ export class EditorService {
     };
     this.telemetryService.error(telemetryErrorData);
   }
+
 
 }
