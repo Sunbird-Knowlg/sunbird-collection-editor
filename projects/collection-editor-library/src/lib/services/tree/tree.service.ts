@@ -33,6 +33,13 @@ export class TreeService {
     this.updateTreeNodeMetadata(metadata);
   }
 
+  updateAppIcon(appIconUrl) {
+    const activeNode = this.getActiveNode();
+    const nodeId = activeNode.data.id;
+    activeNode.data.metadata = {...activeNode.data.metadata, appIcon : appIconUrl};
+    this.setTreeCache(nodeId, {appIcon : appIconUrl}, activeNode.data);
+  }
+
   updateTreeNodeMetadata(newData: any) {
     const activeNode = this.getActiveNode();
     const nodeId = activeNode.data.id;

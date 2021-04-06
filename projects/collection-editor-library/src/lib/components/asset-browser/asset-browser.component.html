@@ -1,0 +1,105 @@
+<sui-modal [isClosable]="true" class="sb-modal overflow-modal" [isInverted]="false" (dismissed)="dismissImagePicker()"
+  *ngIf="showImagePicker" [size]="'normal'" [isFullScreen]="false" [mustScroll]="true" #modal>
+  <div class="sb-modal-header">Select Image</div>
+  <div class="sb-modal-content p-0">
+    <sui-tabset>
+      <div class="sb-tabset-menu">
+        <a class="sb-item" suiTabHeader="1">Upload</a>
+        <a class="sb-item" (activate)="getMyImages(0)" suiTabHeader="2">My Images</a>
+        <a class="sb-item" (activate)="getAllImages(0)" suiTabHeader="3">All Image</a>
+      </div>
+
+
+
+      <div class="ui segment sb-tabset-segment m-0 pt-15" suiTabContent="1">
+        <div class="content">
+          <div class="upload-image-modal-section d-flex flex-ai-center flex-jc-center flex-dc">
+            <ng-container *ngIf="imageUploadLoader">
+              <div class="flex-as-center text-center">
+                <img src="assets/images/loader.gif" width="34" class="process-icon pb-10">
+                <div class="sb-color-primary fsmall mt-8">Upload in progress...</div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="!imageUploadLoader">
+              <button class="upload-input-button sb-btn sb-btn-success sb-btn-normal">
+                Upload from Computer
+                <input (change)="uploadImage($event)" type="file" [accept]="acceptImageType" name="assetfile">
+              </button>
+              <span class="fsmall mt-16">Upload {{assetConfig.image.accepted}} (Max File size:
+                {{assetConfig.image.size}}MB)</span>
+              <div *ngIf="showErrorMsg" class="sb-color-error fsmall mt-8">
+                <p>{{errorMsg}}</p>
+              </div>
+            </ng-container>
+          </div>
+          <p class="fsmall mt-8 terms-and-condition">I understand and confirm that all resources and assets created
+            through the content editor or uploaded on the platform shall be available for free and public use without
+            limitations on the platform (web portal, applications and any other end user interface that the platform
+            would enable) and will be licensed under terms & conditions and policy guidelines of the platform. In doing
+            so, the copyright and license of the original author is not infringed.</p>
+
+        </div>
+      </div>
+
+      <div class="ui segment sb-tabset-segment m-0 pt-15" infiniteScroll [infiniteScrollDistance]="2"
+        [infiniteScrollThrottle]="500" [scrollWindow]="false" (scrolled)="lazyloadMyImages()" suiTabContent="2">
+        <div class="sb-grid-layout image">
+          <div class="sb-video-content" *ngFor="let data of myAssets">
+            <div class="sb-image-section relative position">
+              <img (click)="addImageInEditor(data.downloadUrl, data.identifier)" [src]="data.downloadUrl">
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="ui segment sb-tabset-segment m-0 pt-15" infiniteScroll [infiniteScrollDistance]="2"
+        [infiniteScrollThrottle]="500" [scrollWindow]="false" (scrolled)="lazyloadAllImages()" suiTabContent="3">
+        <div class="sb-grid-layout image">
+          <div class="sb-video-content" *ngFor="let data of allImages">
+            <div class="sb-image-section">
+              <img (click)="addImageInEditor(data.downloadUrl, data.identifier)" [src]="data.downloadUrl">
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </sui-tabset>
+  </div>
+  <div class="sb-modal-actions">
+    <button (click)="addImageInEditor('one', 'two');"
+      class="sb-btn sb-btn-primary sb-btn-normal"
+      [ngClass]="{'sb-btn-primary': showAddButton, 'sb-btn-disabled': !showAddButton}">Add</button>
+  </div>
+</sui-modal>
+
+<sui-modal [isClosable]="true" [isInverted]="false" (dismissed)="dismissImageUploadModal()" *ngIf="showImageUploadModal"
+  [size]="'normal'" [isFullScreen]="false" [mustScroll]="true" #modal3>
+  <div class="header">Upload and Use</div>
+  <div class="content">
+    <div class="ui grid">
+      <div class="one wide column"></div>
+      <div class="ten wide column">
+        <div>
+          <input (change)="uploadImage($event)" type="file" accept="image/jpeg, image/jpg, image/png" name="assetfile">
+        </div>
+        <div class="ui info message">
+          <p>Allowed file types are: jpeg, jpg, png</p>
+          <p>Maximum allowed file size: {{assetConfig.image.size}} MB</p>
+        </div>
+        <div *ngIf="showErrorMsg" class="ui error message">
+          <p>{{errorMsg}}</p>
+        </div>
+      </div>
+      <div class="one wide column"></div>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui left floated buttons">
+      <button (click)="dismissImageUploadModal();" class="ui primary button">Back</button>
+    </div>
+    <div class="ui buttons">
+      <button (click)="dismissImageUploadModal();" class="ui button">Cancel</button>
+    </div>
+  </div>
+</sui-modal>
