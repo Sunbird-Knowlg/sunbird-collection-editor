@@ -1,5 +1,7 @@
-import { Component, HostListener, Input, OnDestroy, OnInit, ChangeDetectorRef,
-  EventEmitter, Output, ViewEncapsulation, AfterViewInit, ViewChild } from '@angular/core';
+import {
+  Component, HostListener, Input, OnDestroy, OnInit, ChangeDetectorRef,
+  EventEmitter, Output, ViewEncapsulation, AfterViewInit, ViewChild
+} from '@angular/core';
 import { EditorService } from '../../services/editor/editor.service';
 import { TreeService } from '../../services/tree/tree.service';
 import { FrameworkService } from '../../services/framework/framework.service';
@@ -22,7 +24,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() editorConfig: IEditorConfig | undefined;
   @Output() editorEmitter = new EventEmitter<any>();
-  @ViewChild('modal', {static: false}) private modal;
+  @ViewChild('modal', { static: false }) private modal;
   public questionComponentInput: any = {};
   public collectionTreeNodes: any;
   public selectedNodeData: any = {};
@@ -41,11 +43,11 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public isCurrentNodeFolder: boolean;
   public isCurrentNodeRoot: boolean;
   public isQumlPlayer: boolean;
-  public submitFormStatus = true;
   public showQuestionTemplatePopup = false;
   public showDeleteConfirmationPopUp = false;
   public showPreview = false;
   public actionType: string;
+  private formStatusMapper: { [key: string]: boolean } = {};
   public questionIds: string[];
   toolbarConfig: any;
   public buttonLoaders = {
@@ -117,27 +119,27 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       orgFWType = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.config.frameworkMetadata.orgFWType');
       frameworkReq.push(this.frameworkService.getFrameworkData(this.editorConfig.context.channel, orgFWType));
       frameworkReq.push(this.frameworkService.getFrameworkData(undefined, orgFWType));
-    }  else {
+    } else {
       frameworkReq.push(this.frameworkService.getFrameworkData(this.editorConfig.context.channel, undefined, orgFWIdentifiers));
       frameworkReq.push(this.frameworkService.getFrameworkData(undefined, undefined, orgFWIdentifiers));
     }
     if (!_.isEmpty(frameworkReq)) {
       // tslint:disable-next-line:max-line-length
       this.frameworkService.checkChannelOrSystem(frameworkReq[0], frameworkReq[1])
-      .subscribe(
-        (response) => {
-          const configuredFrameworks = _.map(_.get(response, 'result.Framework'), (framework) => {
-            return { label: framework.name, identifier: framework.identifier };
-          });
-          this.frameworkService.frameworkValues = configuredFrameworks;
-          this.unitFormConfig =  _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.unitMetadata.properties');
-          // tslint:disable-next-line:max-line-length
-          this.rootFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.create.properties');
-          // tslint:disable-next-line:max-line-length
-          this.libraryComponentInput.searchFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.search.properties');
-          this.leafFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.childMetadata.properties');
-        }
-      );
+        .subscribe(
+          (response) => {
+            const configuredFrameworks = _.map(_.get(response, 'result.Framework'), (framework) => {
+              return { label: framework.name, identifier: framework.identifier };
+            });
+            this.frameworkService.frameworkValues = configuredFrameworks;
+            this.unitFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.unitMetadata.properties');
+            // tslint:disable-next-line:max-line-length
+            this.rootFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.create.properties');
+            // tslint:disable-next-line:max-line-length
+            this.libraryComponentInput.searchFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.search.properties');
+            this.leafFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.childMetadata.properties');
+          }
+        );
       // forkJoin(frameworkReq).subscribe(console.log);
     }
   }
@@ -198,7 +200,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         break;
       case 'onFormStatusChange':
         const selectedNode = this.treeService.getActiveNode();
-        if (selectedNode && selectedNode.data.root) { this.submitFormStatus = event.event.isValid; }
+        if (selectedNode && selectedNode.data.id) {
+          this.formStatusMapper[selectedNode.data.id] = event.event.isValid;
+        }
         break;
       case 'onFormValueChange':
         this.updateToolbarTitle(event);
@@ -207,13 +211,13 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.redirectToChapterListTab();
         break;
       case 'sendForCorrections':
-        this.redirectToChapterListTab({comment: event.comment});
+        this.redirectToChapterListTab({ comment: event.comment });
         break;
       case 'sourcingApprove':
         this.redirectToChapterListTab();
         break;
       case 'sourcingReject':
-        this.redirectToChapterListTab({comment: event.comment});
+        this.redirectToChapterListTab({ comment: event.comment });
         break;
       default:
         break;
@@ -233,7 +237,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       this.toolbarConfig.title = data.event.name;
     } else if (_.isEmpty(data.event.name) && selectedNode.data.root) {
       this.toolbarConfig.title = 'Untitled';
-    } else {}
+    } else { }
   }
 
   showLibraryComponentPage() {
@@ -257,8 +261,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   saveContent() {
     return new Promise((resolve, reject) => {
-      if (!this.submitFormStatus) {
-        this.treeService.setActiveNode();
+      if (!this.validateFormStatus()) {
         return reject('Please fill the required metadata');
       }
       this.editorService.updateHierarchy()
@@ -275,18 +278,24 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   submitHandler() {
-    if (this.validateFormStatus()) {
-      this.showConfirmPopup = true;
+    if (!this.validateFormStatus()) {
+      this.toasterService.error('Please fill the required metadata');
+      return;
     }
+    this.showConfirmPopup = true;
   }
 
   validateFormStatus() {
-    if (!this.submitFormStatus) {
-      this.toasterService.error('Please fill the required metadata');
-      this.treeService.setActiveNode();
-      return false;
-    }
-    return true;
+    const isValid = _.every(this.formStatusMapper, Boolean);
+    if (isValid) { return true; }
+    _.forIn(this.formStatusMapper, (value, key) => {
+        if (value) {
+          this.treeService.highlightNode(key, 'remove');
+        } else {
+          this.treeService.highlightNode(key, 'add');
+        }
+    });
+    return false;
   }
 
   previewContent() {
@@ -339,7 +348,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.isCurrentNodeFolder = _.get(this.selectedNodeData, 'folder');
         this.isCurrentNodeRoot = _.get(this.selectedNodeData, 'data.root');
         // TODO: rethink below line code
-        this.isQumlPlayer = _.get(this.selectedNodeData, 'data.metadata.mimeType') === 'application/vnd.sunbird.question'; 
+        this.isQumlPlayer = _.get(this.selectedNodeData, 'data.metadata.mimeType') === 'application/vnd.sunbird.question';
         this.setTemplateList();
         this.changeDetectionRef.detectChanges();
         break;
@@ -372,6 +381,14 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   deleteNode() {
+    const activeNode = this.treeService.getActiveNode();
+    delete this.formStatusMapper[activeNode.data.id];
+    const children = this.treeService.getChildren();
+    _.forEach(children, (node) => {
+      if (_.has(this.formStatusMapper, node.data.id)) {
+        delete this.formStatusMapper[node.data.id];
+      }
+    });
     this.treeService.removeNode();
     this.updateSubmitBtnVisibility();
     this.showDeleteConfirmationPopUp = false;
@@ -412,13 +429,13 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       const selectedtemplateDetails = res.result.objectCategoryDefinition;
       const catMetaData = selectedtemplateDetails.objectMetadata;
       if (_.isEmpty(_.get(catMetaData, 'schema.properties.interactionTypes.items.enum'))) {
-          // this.toasterService.error(this.resourceService.messages.emsg.m0026);
-          this.editorService.selectedChildren = {
-            primaryCategory: selectedQuestionType,
-            mimeType: catMetaData.schema.properties.mimeType.enum[0],
-            interactionType: null
-          };
-          this.redirectToQuestionTab(undefined, 'default');
+        // this.toasterService.error(this.resourceService.messages.emsg.m0026);
+        this.editorService.selectedChildren = {
+          primaryCategory: selectedQuestionType,
+          mimeType: catMetaData.schema.properties.mimeType.enum[0],
+          interactionType: null
+        };
+        this.redirectToQuestionTab(undefined, 'default');
       } else {
         const interactionTypes = catMetaData.schema.properties.interactionTypes.items.enum;
         this.editorService.selectedChildren = {

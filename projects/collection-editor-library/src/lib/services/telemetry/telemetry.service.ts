@@ -31,6 +31,7 @@ export class EditorTelemetryService {
     this.sid =  this.context.sid;
     this.uid =  this.context.uid;
     this.env =  this.context.env;
+    this.pdata = `${this.context.pdata.pid}.${this.env}`;
     this.rollup = this.context.contextRollup;
     if (!CsTelemetryModule.instance.isInitialised) {
       CsTelemetryModule.instance.init({});

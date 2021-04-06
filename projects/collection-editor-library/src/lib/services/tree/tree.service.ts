@@ -18,7 +18,7 @@ export class TreeService {
   };
   treeNativeElement: any;
 
-  constructor(private toasterService: ToasterService, private helperService: HelperService) {}
+  constructor(private toasterService: ToasterService, private helperService: HelperService) { }
 
   public initialize(editorConfig: IEditorConfig) {
     this.config = editorConfig.config;
@@ -33,10 +33,17 @@ export class TreeService {
     this.updateTreeNodeMetadata(metadata);
   }
 
+  updateAppIcon(appIconUrl) {
+    const activeNode = this.getActiveNode();
+    const nodeId = activeNode.data.id;
+    activeNode.data.metadata = {...activeNode.data.metadata, appIcon : appIconUrl};
+    this.setTreeCache(nodeId, {appIcon : appIconUrl}, activeNode.data);
+  }
+
   updateTreeNodeMetadata(newData: any) {
     const activeNode = this.getActiveNode();
     const nodeId = activeNode.data.id;
-    activeNode.data.metadata = {...activeNode.data.metadata, ...newData};
+    activeNode.data.metadata = { ...activeNode.data.metadata, ...newData };
     activeNode.title = newData.name;
     newData = _.pickBy(newData, _.identity);
     newData = _.merge({}, newData, _.pick(activeNode.data.metadata, ['objectType', 'contentType', 'primaryCategory']));
@@ -44,7 +51,7 @@ export class TreeService {
     if (attributions && _.isString(attributions)) {
       newData.attributions = attributions.split(',');
     }
-    const { maxTime, warningTime, copyrightYear} = newData;
+    const { maxTime, warningTime, copyrightYear } = newData;
 
     if (copyrightYear) {
       newData.copyrightYear = _.toNumber(copyrightYear);
@@ -72,12 +79,12 @@ export class TreeService {
     const node: any = {
       id: uniqueId,
       title: nodeTitle,
-      tooltip : nodeTitle,
-      ...(nodeConfig.contentType && {contentType: nodeConfig.contentType}),
+      tooltip: nodeTitle,
+      ...(nodeConfig.contentType && { contentType: nodeConfig.contentType }),
       primaryCategory: _.get(nodeConfig, 'primaryCategory'),
       objectType: _.get(this.config, 'objectType'),
-      root : false,
-      folder : true,
+      root: false,
+      folder: true,
       icon: _.get(nodeConfig, 'iconClass'),
       metadata: {
         mimeType: _.get(nodeConfig, 'mimeType'),
@@ -143,6 +150,36 @@ export class TreeService {
     });
   }
 
+  getNodeById(id) {
+    // tslint:disable-next-line:variable-name
+    let _node: any;
+    this.getTreeObject().visit((node) => {
+      if (node.data.id === id) { _node = node; }
+    });
+    return _node;
+  }
+
+  // Generate a flat list of node children and sub children
+  getChildren() {
+    const nodes = [];
+    this.getActiveNode().visit((node) => {
+      nodes.push(node);
+    });
+    return nodes;
+  }
+
+  highlightNode(nodeId: string, action: string) {
+    const nodeElem = this.getNodeById(nodeId);
+    if (!nodeElem) { return; }
+    if (action === 'add') {
+      nodeElem.span.childNodes[1].classList.add('highlightNode');
+      nodeElem.span.childNodes[2].classList.add('highlightNode');
+    } else if (action === 'remove') {
+      nodeElem.span.childNodes[1].classList.remove('highlightNode');
+      nodeElem.span.childNodes[2].classList.remove('highlightNode');
+    } else {}
+  }
+
   setTreeCache(nodeId, metadata, activeNode?) {
     if (this.treeCache.nodesModified[nodeId]) {
       // tslint:disable-next-line:max-line-length
@@ -151,8 +188,9 @@ export class TreeService {
       this.treeCache.nodesModified[nodeId] = {
         root: activeNode && activeNode.root ? true : false,
         objectType: metadata.objectType,
-        metadata: {..._.omit(metadata, ['objectType'])},
-        ...(nodeId.includes('do_') ? {isNew: false} : {isNew: true})};
+        metadata: { ..._.omit(metadata, ['objectType']) },
+        ...(nodeId.includes('do_') ? { isNew: false } : { isNew: true })
+      };
       this.treeCache.nodes.push(nodeId); // To track sequence of modifiation
     }
   }
@@ -172,7 +210,7 @@ export class TreeService {
       title = 'Untitled';
     }
     title = this.removeSpecialChars(title);
-    this.getActiveNode().applyPatch({ title }).done((a, b) => {});
+    this.getActiveNode().applyPatch({ title }).done((a, b) => { });
     $('span.fancytree-title').attr('style', 'width:11em;text-overflow:ellipsis;white-space:nowrap;overflow:hidden');
   }
 
@@ -182,7 +220,7 @@ export class TreeService {
       const iChars = "!`~@#$^*+=[]\\\'{}|\"<>%/";
       for (let i = 0; i < text.length; i++) {
         if (iChars.indexOf(text.charAt(i)) !== -1) {
-         this.toasterService.error('Special character "' + text.charAt(i) + '" is not allowed');
+          this.toasterService.error('Special character "' + text.charAt(i) + '" is not allowed');
         }
       }
       // tslint:disable-next-line:max-line-length

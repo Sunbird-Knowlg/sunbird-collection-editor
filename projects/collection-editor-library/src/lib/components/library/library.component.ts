@@ -224,7 +224,11 @@ sortContentList(status) {
       }
     });
     if (!isContentAdded) {
-      const selectedContentIndex = this.showAddedContent ? 0 : _.findIndex(this.contentList, { isAdded: false });
+      let selectedContentIndex = this.showAddedContent ? 0 : _.findIndex(this.contentList, { isAdded: false });
+      if (this.contentList.length === 1 && this.contentList[0]['isAdded'] === true) {
+        this.showAddedContent = true;
+        selectedContentIndex = 0;
+      }
       this.selectedContent = this.contentList[selectedContentIndex];
     }
   }
