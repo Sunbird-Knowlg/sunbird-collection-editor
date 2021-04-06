@@ -145,7 +145,7 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
           field.options = this.getFramework;
         }
 
-        if (!_.includes(field.depends, 'framework')) {
+        if (!_.includes(field.depends, 'framework') && !_.includes(field.code, 'target')) {
           const frameworkCategory = _.find(categoryMasterList, category => {
               return (category.code === field.sourceCategory || category.code === field.code);
           });
