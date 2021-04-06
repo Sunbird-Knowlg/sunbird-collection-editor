@@ -45,12 +45,15 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public isQumlPlayer: boolean;
   public showQuestionTemplatePopup = false;
   public showDeleteConfirmationPopUp = false;
+  public showPreview = false;
   public actionType: string;
   private formStatusMapper: { [key: string]: boolean } = {};
+  public questionIds: string[];
   toolbarConfig: any;
   public buttonLoaders = {
     saveAsDraftButtonLoader: false,
-    addFromLibraryButtonLoader: false
+    addFromLibraryButtonLoader: false,
+    previewButtonLoader: false
   };
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
@@ -174,6 +177,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           this.toasterService.error(error);
         }));
         break;
+      case 'previewContent':
+        this.previewContent();
+        break;
       case 'addFromLibrary':
         this.showLibraryComponentPage();
         break;
@@ -290,6 +296,18 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     });
     return false;
+  }
+
+  previewContent() {
+    this.buttonLoaders.previewButtonLoader = true;
+    this.saveContent().then(res => {
+      this.questionIds = this.getQuestionIds();
+      this.buttonLoaders.previewButtonLoader = false;
+      this.showPreview = true;
+    }).catch(err => {
+      this.toasterService.error(err);
+      this.buttonLoaders.previewButtonLoader = false;
+    });
   }
 
   sendForReview() {
@@ -445,6 +463,17 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       this.pageId = 'collection_editor';
       this.telemetryService.telemetryPageId = this.pageId;
     });
+  }
+
+  getQuestionIds() {
+    const treeObj = this.treeService.getTreeObject();
+    const identifiers = [];
+    treeObj.visit((node) => {
+      if (node.folder === false) {
+        identifiers.push(node.data.id);
+      }
+    });
+    return identifiers;
   }
 
   ngOnDestroy() {
