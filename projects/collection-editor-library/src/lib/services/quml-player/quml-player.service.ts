@@ -1,5 +1,5 @@
 
-import { QuestionCursor } from '@project-sunbird/sunbird-quml-player';
+import { QuestionCursor } from '@project-sunbird/sunbird-quml-player-v8';
 import { Observable, of} from 'rxjs';
 import * as _ from 'lodash-es';
 import { QuestionService } from '../question/question.service';
