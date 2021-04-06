@@ -14,8 +14,6 @@ export class CollectionIconComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    console.log('appIconConfig', this.appIconConfig);
-    
   }
 
   initializeImagePicker() {
