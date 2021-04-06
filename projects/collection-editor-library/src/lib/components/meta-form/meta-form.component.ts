@@ -25,6 +25,9 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   private onComponentDestroy$ = new Subject<any>();
   public frameworkDetails: any = {};
   public formFieldProperties: any;
+  public showAppIcon = false;
+  public appIconConfig: any;
+  public appIcon: any;
   constructor(private editorService: EditorService, private treeService: TreeService,
               private frameworkService: FrameworkService, private helperService: HelperService,
               private configService: ConfigService) {
@@ -32,10 +35,25 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
                }
 
   ngOnChanges() {
-      this.fetchFrameWorkDetails();
+    this.fetchFrameWorkDetails();
+    this.setAppIconData();
   }
 
   ngOnInit() {
+  }
+
+  setAppIconData() {
+    const selectedNode = _.get(this.nodeMetadata, 'data.metadata');
+    const isCurrentNodeRoot = _.get(this.nodeMetadata, 'data.root');
+    const isRootNode = isCurrentNodeRoot ? true : false;
+
+    this.appIconConfig = _.find(_.flatten(_.map(this.rootFormConfig, 'fields')), {'code': 'appIcon'});
+    if (!_.isUndefined(this.appIconConfig) && isRootNode === true) {
+      this.showAppIcon = true;
+    } else {
+      this.showAppIcon = false;
+    }
+    this.appIcon = selectedNode.appIcon;
   }
 
   fetchFrameWorkDetails() {
@@ -216,8 +234,16 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
 
   valueChanges(event: any) {
     console.log(event);
+    if (!_.isEmpty(this.appIcon) && this.showAppIcon) {
+      event.appIcon = this.appIcon;
+    }
     this.toolbarEmitter.emit({ button: 'onFormValueChange', event });
     this.treeService.updateNode(event);
+  }
+
+  appIconDataHandler(event) {
+    this.appIcon = event.url;
+    this.treeService.updateAppIcon(event.url);
   }
 
   showTimer(control, depends: FormControl[], formGroup: FormGroup, loading, loaded) {
