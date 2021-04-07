@@ -5,7 +5,7 @@ export const collectionEditorConfig = {
       name: 'Vaibahv Bhuva',
       orgIds: ['01309282781705830427']
     },
-    identifier: 'do_113246527029993472129',  // 'do_113246469716238336124', // 'do_11324452252916121611', // CC: do_113238058876813312153 PDC: do_113238060337512448160
+    identifier: 'do_113246527029993472129',
     channel: '01307938306521497658',
     // framework: 'nit_k-12',
     targetFWIds: ['nit_k-12'],
@@ -79,7 +79,7 @@ export const collectionEditorConfig = {
   },
   config: {
     mode: 'edit', // edit / review / read / sourcingReview
-    maxDepth: 2,
+    maxDepth: 3,
     objectType: 'Collection',
     primaryCategory: 'Course', // Professional Development Course, Curriculum Course
     isRoot: true,
@@ -111,8 +111,26 @@ export const collectionEditorConfig = {
             'Course Assessment'
           ]
         }
+      },
+      level3: {
+        name: 'Sub-Sub-Module',
+        type: 'Unit',
+        mimeType: 'application/vnd.ekstep.content-collection',
+        contentType: 'CourseUnit',
+        primaryCategory: 'Course Unit',
+        iconClass: 'fa fa-folder-o',
+        children: {
+          Content: [
+            'Explanation Content',
+            'Learning Resource',
+            'eTextbook',
+            'Teacher Resource',
+            'Course Assessment'
+          ]
+        }
       }
-    }
+    },
+    contentPolicyUrl: '/term-of-use.html'
   }
 };
 
@@ -123,7 +141,7 @@ export const questionEditorConfig = {
       name: 'Vaibahv Bhuva',
       orgIds: ['01309282781705830427']
     },
-    identifier: 'do_1132380891325480961343',
+    identifier: 'do_1132393548335759361558', // do_1132393548335759361558
     authToken: ' ',
     sid: 'iYO2K6dOSdA0rwq7NeT1TDzS-dbqduvV',
     did: '7e85b4967aebd6704ba1f604f20056b6',
@@ -157,7 +175,7 @@ export const questionEditorConfig = {
       l1: 'do_113140468925825024117',
       l2: 'do_113140468926914560125'
     },
-    host: '',
+    host: 'https://dev.sunbirded.org',
     defaultLicense: [
       {
         identifier: 'cc-by-4.0',
@@ -245,17 +263,18 @@ export const questionEditorConfig = {
       }
     ],
     labels: {
-      save_collection_btn_label: 'Save as Daft',
+      save_collection_btn_label: 'Save as Draft',
     }
   },
   config: {
-    mode: 'sourcingReview', // edit / review / read / sourcingReview
-    maxDepth: 2,
+    mode: 'edit', // edit / review / read / sourcingReview
+    maxDepth: 3,
     objectType: 'QuestionSet',
     primaryCategory: 'Practice Question Set',
     isRoot: true,
     iconClass: 'fa fa-book',
-    children: {},
+    children: {
+    },
     hierarchy: {
       level1: {
         name: 'Section',
@@ -263,7 +282,12 @@ export const questionEditorConfig = {
         mimeType: 'application/vnd.sunbird.questionset',
         primaryCategory: 'Practice Question Set',
         iconClass: 'fa fa-folder-o',
-        children: {}
+        children: {
+          Question: [
+            'Multiple Choice Question',
+            'Subjective Question'
+          ]
+        }
       },
       level2: {
         name: 'Sub Section',
@@ -277,7 +301,20 @@ export const questionEditorConfig = {
             'Subjective Question'
           ]
         }
+      },
+      level3: {
+        name: 'Sub Section',
+        type: 'Unit',
+        mimeType: 'application/vnd.sunbird.questionset',
+        primaryCategory: 'Practice Question Set',
+        iconClass: 'fa fa-folder-o',
+        children: {
+          Question: [
+            'Subjective Question'
+          ]
+        }
       }
-    }
+    },
+    contentPolicyUrl: '/term-of-use.html'
   }
 };

@@ -510,6 +510,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     return identifiers;
   }
 
+  get contentPolicyUrl() {
+    return this.editorService.contentPolicyUrl;
+  }
+
   ngOnDestroy() {
     this.generateTelemetryEndEvent();
     this.treeService.clearTreeCache();
