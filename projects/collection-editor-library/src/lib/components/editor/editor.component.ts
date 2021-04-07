@@ -49,6 +49,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public actionType: string;
   private formStatusMapper: { [key: string]: boolean } = {};
   public questionIds: string[];
+  public targetFramework;
   toolbarConfig: any;
   public buttonLoaders = {
     saveAsDraftButtonLoader: false,
@@ -78,12 +79,12 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         const collection = _.get(response, `result.${this.configService.categoryConfig[this.editorConfig.config.objectType]}`);
         this.toolbarConfig.title = collection.name;
         const organisationFramework = _.get(this.editorConfig, 'context.framework') || _.get(collection, 'framework');
-        const targetFramework = _.get(this.editorConfig, 'context.targetFWIds') || _.get(collection, 'targetFWIds');
+        this.targetFramework = _.get(this.editorConfig, 'context.targetFWIds') || _.get(collection, 'targetFWIds');
         if (organisationFramework) {
           this.frameworkService.initialize(organisationFramework);
         }
-        if (!_.isEmpty(targetFramework)) {
-          this.frameworkService.getTargetFrameworkCategories(targetFramework);
+        if (!_.isEmpty(this.targetFramework)) {
+          this.frameworkService.getTargetFrameworkCategories(this.targetFramework);
         }
         const channel = _.get(collection, 'channel') || _.get(this.editorConfig, 'context.channel');
         this.helperService.initialize(channel, _.get(this.editorConfig, 'context.defaultLicense'));
@@ -108,13 +109,27 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   getFrameworkDetails(categoryDefinitionData) {
     let orgFWIdentifiers: any;
+    let targetFWIdentifiers: any;
     let orgFWType: any;
     let targetFWType: any;
-    orgFWIdentifiers = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.framework.default');
-    if (_.isEmpty(_.get(this.editorConfig, 'context.targetFWIds'))) {
-      targetFWType = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.targetFWIds.default');
+    orgFWIdentifiers = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.framework.enum') ||
+    _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.framework.default');
+    const targetFrameworkReq = [];
+    if (_.isEmpty(this.targetFramework || _.get(this.editorConfig, 'context.targetFWIds'))) {
+      // tslint:disable-next-line:max-line-length
+      targetFWIdentifiers = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.targetFWIds.default');
+      if (_.isEmpty(targetFWIdentifiers) ) {
+        // tslint:disable-next-line:max-line-length
+        targetFWType = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.config.frameworkMetadata.targetFWType');
+        targetFrameworkReq.push(this.frameworkService.getFrameworkData(this.editorConfig.context.channel, targetFWType));
+        targetFrameworkReq.push(this.frameworkService.getFrameworkData(undefined, targetFWType));
+      } else {
+        targetFrameworkReq.push(this.frameworkService.getFrameworkData(this.editorConfig.context.channel, undefined, targetFWIdentifiers));
+        targetFrameworkReq.push(this.frameworkService.getFrameworkData(undefined, undefined, targetFWIdentifiers));
+      }
     }
     const frameworkReq = [];
+
     if (_.isEmpty(orgFWIdentifiers)) {
       orgFWType = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.config.frameworkMetadata.orgFWType');
       frameworkReq.push(this.frameworkService.getFrameworkData(this.editorConfig.context.channel, orgFWType));
@@ -125,23 +140,42 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     if (!_.isEmpty(frameworkReq)) {
       // tslint:disable-next-line:max-line-length
-      this.frameworkService.checkChannelOrSystem(frameworkReq[0], frameworkReq[1])
+      this.frameworkService.checkChannelOrSystem(frameworkReq[0], frameworkReq[1], orgFWType, orgFWIdentifiers)
         .subscribe(
           (response) => {
-            const configuredFrameworks = _.map(_.get(response, 'result.Framework'), (framework) => {
-              return { label: framework.name, identifier: framework.identifier };
-            });
-            this.frameworkService.frameworkValues = configuredFrameworks;
-            this.unitFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.unitMetadata.properties');
-            // tslint:disable-next-line:max-line-length
-            this.rootFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.create.properties');
-            // tslint:disable-next-line:max-line-length
-            this.libraryComponentInput.searchFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.search.properties');
-            this.leafFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.childMetadata.properties');
+
+            if (!_.isEmpty(targetFrameworkReq)) {
+              this.frameworkService.checkChannelOrSystem(targetFrameworkReq[0], targetFrameworkReq[1], targetFWType, targetFWIdentifiers)
+                .subscribe(
+                  (targetResponse) => {
+                    this.targetFramework =  _.get(_.first(_.get(targetResponse, 'result.Framework')), 'identifier');
+                    if (!_.isEmpty(this.targetFramework)) {
+                      this.treeService.updateMetaDataProperty('targetFWIds', _.castArray(this.targetFramework));
+                      this.frameworkService.getTargetFrameworkCategories(this.targetFramework);
+                    }
+                    this.setOrganisationFramework(response, categoryDefinitionData);
+                  }
+                );
+            } else {
+              this.setOrganisationFramework(response, categoryDefinitionData);
+            }
           }
         );
       // forkJoin(frameworkReq).subscribe(console.log);
     }
+  }
+
+  setOrganisationFramework(response, categoryDefinitionData) {
+    const configuredFrameworks = _.map(_.get(response, 'result.Framework'), (framework) => {
+      return { label: framework.name, identifier: framework.identifier };
+    });
+    this.frameworkService.frameworkValues = configuredFrameworks;
+    this.unitFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.unitMetadata.properties');
+    // tslint:disable-next-line:max-line-length
+    this.rootFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.create.properties');
+    // tslint:disable-next-line:max-line-length
+    this.libraryComponentInput.searchFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.search.properties');
+    this.leafFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.childMetadata.properties');
   }
 
   ngAfterViewInit() {
