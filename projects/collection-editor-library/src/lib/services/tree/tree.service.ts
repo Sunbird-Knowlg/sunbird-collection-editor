@@ -183,7 +183,7 @@ export class TreeService {
   setTreeCache(nodeId, metadata, activeNode?) {
     if (this.treeCache.nodesModified[nodeId]) {
       // tslint:disable-next-line:max-line-length
-      this.treeCache.nodesModified[nodeId].metadata = activeNode && activeNode.root === false ? _.assign(this.treeCache.nodesModified[nodeId].metadata, _.omit(metadata, 'objectType')) : metadata; // TODO:: rethink this
+      this.treeCache.nodesModified[nodeId].metadata = _.assign(this.treeCache.nodesModified[nodeId].metadata, _.omit(metadata, 'objectType'));
     } else {
       this.treeCache.nodesModified[nodeId] = {
         root: activeNode && activeNode.root ? true : false,

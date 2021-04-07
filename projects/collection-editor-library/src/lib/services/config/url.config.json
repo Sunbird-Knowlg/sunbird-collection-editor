@@ -16,6 +16,7 @@
     },
     "COMPOSITE": {
       "SEARCH": "composite/v3/search"
-    } 
+    },
+    "ContentPolicyUrl" : "/term-of-use.html" 
   }
 }

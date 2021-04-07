@@ -43,17 +43,14 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   setAppIconData() {
-    const selectedNode = _.get(this.nodeMetadata, 'data.metadata');
-    const isCurrentNodeRoot = _.get(this.nodeMetadata, 'data.root');
-    const isRootNode = isCurrentNodeRoot ? true : false;
-
-    this.appIconConfig = _.find(_.flatten(_.map(this.rootFormConfig, 'fields')), {'code': 'appIcon'});
+    const isRootNode = _.get(this.nodeMetadata, 'data.root');
+    this.appIconConfig = _.find(_.flatten(_.map(this.rootFormConfig, 'fields')), {code: 'appIcon'});
     if (!_.isUndefined(this.appIconConfig) && isRootNode === true) {
       this.showAppIcon = true;
     } else {
       this.showAppIcon = false;
     }
-    this.appIcon = selectedNode.appIcon;
+    this.appIcon = _.get(this.nodeMetadata, 'data.metadata.appIcon');
   }
 
   fetchFrameWorkDetails() {
