@@ -99,11 +99,11 @@ export class LibraryComponent implements OnInit, AfterViewInit {
     }
 
     this.defaultFilters = _.pickBy({
-      primaryCategory: contentTypes,
-      board: [_.get(this.collectionhierarcyData, 'board')] || _.get(this.collectionhierarcyData, 'boardIds'),
-      gradeLevel: _.get(this.collectionhierarcyData, 'gradeLevel') || _.get(this.collectionhierarcyData, 'gradeLevelIds'),
-      medium: _.get(this.collectionhierarcyData, 'medium') || _.get(this.collectionhierarcyData, 'mediumIds'),
-      subject: _.get(this.collectionhierarcyData, 'subject') || _.get(this.collectionhierarcyData, 'subjectIds'),
+      primaryCategory: contentTypes
+      // board: [_.get(this.collectionhierarcyData, 'board')] || _.get(this.collectionhierarcyData, 'boardIds'),
+      // gradeLevel: _.get(this.collectionhierarcyData, 'gradeLevel') || _.get(this.collectionhierarcyData, 'gradeLevelIds'),
+      // medium: _.get(this.collectionhierarcyData, 'medium') || _.get(this.collectionhierarcyData, 'mediumIds'),
+      // subject: _.get(this.collectionhierarcyData, 'subject') || _.get(this.collectionhierarcyData, 'subjectIds'),
     });
   }
 
