@@ -1,6 +1,6 @@
 <div [ngClass]="{'potrait-mode': showPotrait}">
     <div class="sb-quml-player b-1-100 br-4 mt-5" *ngIf="showPlayerPreview">
-        <lib-quml-player [questionSetHierarchy]="questionSetHierarchy" [questionIds]="questionIds"></lib-quml-player>
+        <lib-quml-player [questionSetHierarchy]="questionSetHierarchy"></lib-quml-player>
     </div>
 <div class="ui mt-20" *ngIf="(editorService.editorMode === 'edit')">
     <div class="ui twelve column grid m-0">

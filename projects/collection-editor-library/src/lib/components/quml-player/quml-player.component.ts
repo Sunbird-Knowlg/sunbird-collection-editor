@@ -11,7 +11,6 @@ import { PlayerService } from '../../services/player/player.service';
 export class QumlPlayerComponent implements OnInit {
   qumlPlayerConfig: any;
   @Input() questionSetHierarchy: any;
-  @Input() questionIds: any;
   showPreview = false;
   constructor(private configService: ConfigService, private playerService: PlayerService ) { }
 
@@ -29,11 +28,10 @@ export class QumlPlayerComponent implements OnInit {
     this.qumlPlayerConfig = playerConfig;
     this.qumlPlayerConfig.metadata = _.cloneDeep(this.questionSetHierarchy);
     this.qumlPlayerConfig.metadata.threshold = _.get(this.configService, 'playerConfig.threshold');
-    this.qumlPlayerConfig.metadata.totalQuestions = 1;
+    this.qumlPlayerConfig.metadata.totalQuestions = this.qumlPlayerConfig.metadata.childNodes.length;
     // tslint:disable-next-line:max-line-length
     this.qumlPlayerConfig.metadata.maxQuestions = this.qumlPlayerConfig.metadata.maxQuestions || this.qumlPlayerConfig.metadata.totalQuestions;
     this.qumlPlayerConfig.metadata.maxScore = this.qumlPlayerConfig.metadata.maxQuestions;
-    delete this.qumlPlayerConfig.metadata.children;
     console.log('qumlPlayerConfig:: ', this.qumlPlayerConfig);
   }
 

@@ -66,7 +66,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
   public framework;
   public frameworkDetails: any = {};
   public actionType: string;
-  public questionIds: string[];
   public buttonLoaders = {
     saveButtonLoader: false,
     previewButtonLoader: false
@@ -513,7 +512,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
 
   previewContent() {
     this.previewFormData(false);
-    this.questionIds = [this.questionId];
     this.showPreview = true;
     this.toolbarConfig.showPreview = true;
   }

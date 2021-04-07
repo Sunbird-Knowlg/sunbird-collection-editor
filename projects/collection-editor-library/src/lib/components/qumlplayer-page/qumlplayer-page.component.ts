@@ -14,7 +14,6 @@ export class QumlplayerPageComponent implements OnChanges {
   @Input() questionSetHierarchy: any;
   @Output() public toolbarEmitter: EventEmitter<any> = new EventEmitter();
   prevQuestionId: string;
-  questionIds: string[];
   showPlayerPreview = false;
   showPotrait = false;
 
@@ -30,7 +29,6 @@ export class QumlplayerPageComponent implements OnChanges {
     const newQuestionId = _.get(this.questionMetaData, 'identifier');
     if (newQuestionId && this.prevQuestionId !== newQuestionId) {
       this.prevQuestionId = newQuestionId;
-      this.questionIds = [newQuestionId];
       setTimeout(() => {
         this.showPlayerPreview = true;
       }, 0);
