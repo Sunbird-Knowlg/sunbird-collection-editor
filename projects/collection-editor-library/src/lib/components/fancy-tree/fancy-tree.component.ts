@@ -226,7 +226,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.treeEventEmitter.emit({ type: 'nodeSelect', data: data.node });
         setTimeout(() => {
           this.attachContextMenu(data.node, true);
-          this.addFromLibraryButton(data.node.getLevel() - 1);
+          this.addFromLibraryButton(data.node);
           this.eachNodeActionButton(data.node);
         }, 10);
       },
@@ -414,12 +414,13 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         break;
     }
   }
-  addFromLibraryButton(nodeLevel) {
-    if (nodeLevel === 0) {
+  addFromLibraryButton(node) {
+    if (node === 0) {
       this.showLibraryButton = _.isEmpty(_.get(this.config, 'children')) ? false : true;
     } else {
+      const nodeLevel = node.getLevel() - 1;
       const hierarchylevelData = this.config.hierarchy[`level${nodeLevel}`];
-      this.showLibraryButton = _.isEmpty(_.get(hierarchylevelData, 'children')) ? false : true;
+      this.showLibraryButton = ((node.folder === false) || _.isEmpty(_.get(hierarchylevelData, 'children'))) ? false : true;
     }
   }
   addFromLibrary() {
