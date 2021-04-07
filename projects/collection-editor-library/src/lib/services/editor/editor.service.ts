@@ -56,6 +56,11 @@ export class EditorService {
     return this._editorMode;
   }
 
+  get contentPolicyUrl() {
+    const url = _.get(this.editorConfig, 'config.contentPolicyUrl');
+    return url ? url : this.configService.urlConFig.ContentPolicyUrl;
+  }
+
   getToolbarConfig() {
     return _.cloneDeep(_.merge(this.configService.labelConfig.button_labels, _.get(this.editorConfig, 'context.labels')));
   }
