@@ -19,7 +19,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
               private questionService: QuestionService) { }
   assetConfig: any = {
     image: {
-      size: '50',
+      size: '1',
       accepted: 'png, jpeg'
     }
   };
