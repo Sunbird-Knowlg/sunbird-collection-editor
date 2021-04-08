@@ -52,24 +52,7 @@ export const collectionEditorConfig = {
       l2: 'do_113140468926914560125'
     },
     host: '',
-    defaultLicense: [
-      {
-        identifier: 'cc-by-4.0',
-        lastStatusChangedOn: '2020-03-22T16:03:38.003+0000',
-        consumerId: '9f1bd4a1-c617-422b-8d5a-d24c7d3ade2e',
-        description: 'For details see below:',
-        graph_id: 'domain',
-        nodeType: 'DATA_NODE',
-        createdOn: '2020-03-22T16:03:38.003+0000',
-        url: 'https://creativecommons.org/licenses/by/4.0/legalcode',
-        versionKey: '1584893018003',
-        objectType: 'License',
-        name: 'CC BY 4.0',
-        lastUpdatedOn: '2020-03-22T16:03:38.003+0000',
-        status: 'Live',
-        node_id: 60
-      }
-    ],
+    defaultLicense: 'CC BY 4.0',
     endpoint: '/data/v3/telemetry',
     env: 'question_set',
     cloudStorageUrls: [
@@ -176,24 +159,7 @@ export const questionEditorConfig = {
       l2: 'do_113140468926914560125'
     },
     host: 'https://dev.sunbirded.org',
-    defaultLicense: [
-      {
-        identifier: 'cc-by-4.0',
-        lastStatusChangedOn: '2020-03-22T16:03:38.003+0000',
-        consumerId: '9f1bd4a1-c617-422b-8d5a-d24c7d3ade2e',
-        description: 'For details see below:',
-        graph_id: 'domain',
-        nodeType: 'DATA_NODE',
-        createdOn: '2020-03-22T16:03:38.003+0000',
-        url: 'https://creativecommons.org/licenses/by/4.0/legalcode',
-        versionKey: '1584893018003',
-        objectType: 'License',
-        name: 'CC BY 4.0',
-        lastUpdatedOn: '2020-03-22T16:03:38.003+0000',
-        status: 'Live',
-        node_id: 60
-      }
-    ],
+    defaultLicense: 'CC BY 4.0',
     endpoint: '/data/v3/telemetry',
     userData: {
       firstName: 'Vaibhav',
@@ -274,46 +240,50 @@ export const questionEditorConfig = {
     isRoot: true,
     iconClass: 'fa fa-book',
     children: {
+      Question: [
+        'Multiple Choice Question',
+        'Subjective Question'
+      ]
     },
     hierarchy: {
-      level1: {
-        name: 'Section',
-        type: 'Unit',
-        mimeType: 'application/vnd.sunbird.questionset',
-        primaryCategory: 'Practice Question Set',
-        iconClass: 'fa fa-folder-o',
-        children: {
-          Question: [
-            'Multiple Choice Question',
-            'Subjective Question'
-          ]
-        }
-      },
-      level2: {
-        name: 'Sub Section',
-        type: 'Unit',
-        mimeType: 'application/vnd.sunbird.questionset',
-        primaryCategory: 'Practice Question Set',
-        iconClass: 'fa fa-folder-o',
-        children: {
-          Question: [
-            'Multiple Choice Question',
-            'Subjective Question'
-          ]
-        }
-      },
-      level3: {
-        name: 'Sub Section',
-        type: 'Unit',
-        mimeType: 'application/vnd.sunbird.questionset',
-        primaryCategory: 'Practice Question Set',
-        iconClass: 'fa fa-folder-o',
-        children: {
-          Question: [
-            'Subjective Question'
-          ]
-        }
-      }
+      // level1: {
+      //   name: 'Section',
+      //   type: 'Unit',
+      //   mimeType: 'application/vnd.sunbird.questionset',
+      //   primaryCategory: 'Practice Question Set',
+      //   iconClass: 'fa fa-folder-o',
+      //   children: {
+      //     Question: [
+      //       'Multiple Choice Question',
+      //       'Subjective Question'
+      //     ]
+      //   }
+      // },
+      // level2: {
+      //   name: 'Sub Section',
+      //   type: 'Unit',
+      //   mimeType: 'application/vnd.sunbird.questionset',
+      //   primaryCategory: 'Practice Question Set',
+      //   iconClass: 'fa fa-folder-o',
+      //   children: {
+      //     Question: [
+      //       'Multiple Choice Question',
+      //       'Subjective Question'
+      //     ]
+      //   }
+      // },
+      // level3: {
+      //   name: 'Sub Section',
+      //   type: 'Unit',
+      //   mimeType: 'application/vnd.sunbird.questionset',
+      //   primaryCategory: 'Practice Question Set',
+      //   iconClass: 'fa fa-folder-o',
+      //   children: {
+      //     Question: [
+      //       'Subjective Question'
+      //     ]
+      //   }
+      // }
     },
     contentPolicyUrl: '/term-of-use.html'
   }
