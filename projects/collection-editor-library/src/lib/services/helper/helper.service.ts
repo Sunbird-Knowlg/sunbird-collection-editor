@@ -29,6 +29,9 @@ export class HelperService {
     return this._channelData;
   }
 
+  public get contentPrimaryCategories() : any {
+    return _.get(this.channelInfo, 'contentPrimaryCategories') || [] ;
+  }
 
   getLicenses(): Observable<any> {
     const req = {
