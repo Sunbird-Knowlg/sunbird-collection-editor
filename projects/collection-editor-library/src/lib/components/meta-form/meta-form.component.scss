@@ -42,19 +42,22 @@
   }
 }
 .multi-select-section-app {
+  margin: 0.7rem 0 !important;
   label {
     margin-bottom: 0.3rem !important;
     z-index: inherit;
   }
 }
 .list-border {
-  height: 2.8rem !important;
+  height: inherit !important;
+  min-height: 45px !important;
   ul {
-    padding: 0 !important;
-    padding-right: 15px !important;
+    padding: 0 22px 0 0 !important;
+    position: inherit !important;
     span {
       font-weight: 500 !important;
       font-size: 0.785rem;
+      padding: 1.4rem 0 !important;
     }
   }
 }
