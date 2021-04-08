@@ -15,15 +15,10 @@ export class HelperService {
   private _channelData: any;
   constructor(private publicDataService: PublicDataService, private dataService: DataService) { }
 
-  initialize(channelId, defaultLicense?: any) {
-    if (defaultLicense) {
-      this._availableLicenses = defaultLicense;
-    } else {
-      this.getLicenses().subscribe();
-    }
+  initialize(channelId) {
+    this.getLicenses().subscribe((data: any) => this._availableLicenses = _.get(data, 'license'));
     this.getChannelData(channelId).subscribe(data => this._channelData = data);
   }
-
 
   public get channelInfo(): any {
     return this._channelData;
@@ -47,7 +42,7 @@ export class HelperService {
     };
     return this.publicDataService.post(req).pipe(map((res: any) => {
       return res.result;
-    }), tap((data: any) => this._availableLicenses = _.get(data, 'license')), catchError(err => {
+    }), catchError(err => {
       const errInfo = { errorMsg: 'search failed' };
       return throwError(errInfo);
     }));

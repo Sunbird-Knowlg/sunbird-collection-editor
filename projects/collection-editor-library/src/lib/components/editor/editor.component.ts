@@ -87,7 +87,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           this.frameworkService.getTargetFrameworkCategories(this.targetFramework);
         }
         const channel = _.get(collection, 'channel') || _.get(this.editorConfig, 'context.channel');
-        this.helperService.initialize(channel, _.get(this.editorConfig, 'context.defaultLicense'));
+        this.helperService.initialize(channel);
       });
     this.editorService.getCategoryDefinition(this.editorConfig.config.primaryCategory,
       this.editorConfig.context.channel, this.editorConfig.config.objectType)
