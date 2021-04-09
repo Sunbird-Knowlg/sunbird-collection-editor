@@ -95,7 +95,7 @@ export class FrameworkService {
   }
 
 
-  getFrameworkData(channel?, type?, identifier?) {
+  getFrameworkData(channel?, type?, identifier?, systemDefault?) {
     const option = {
       url: `${this.configService.urlConFig.URLS.COMPOSITE.SEARCH}`,
       data: {
@@ -105,7 +105,8 @@ export class FrameworkService {
                 status: ['Live'],
                 ...(type && {type}),
                 ...(identifier && {identifier}),
-                ...(channel && {channel})
+                ...(channel && {channel}),
+                ...(systemDefault && {systemDefault})
             }
         }
     }
