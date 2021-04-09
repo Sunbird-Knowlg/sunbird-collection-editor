@@ -47,10 +47,7 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
     }));
 
     if (_.isEmpty(contentTypes)) {
-      const channelInfo = this.helperService.channelInfo;
-      if (!_.isUndefined(channelInfo) && _.has(channelInfo, 'contentPrimaryCategories')) {
-        contentTypes = _.get(channelInfo, 'contentPrimaryCategories');
-      }
+      contentTypes = this.helperService.contentPrimaryCategories;
     }
 
     this.currentFilters = {
@@ -187,7 +184,9 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
   }
 
   resetFilter() {
-    this.filterValues = {};
+    this.filterValues = {
+      primaryCategory: this.helperService.contentPrimaryCategories
+    };
     this.searchQuery = '';
     _.forEach(this.filterFields, (field) => {
       field.default = '';

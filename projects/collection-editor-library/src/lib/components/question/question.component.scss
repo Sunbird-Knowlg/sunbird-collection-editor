@@ -1,3 +1,4 @@
+
 .sb-w-85{
   width: 85%;
 }
@@ -180,7 +181,7 @@ quml-mcq-solutions{
   }
 }
 .list-border{
-  height: 2.8rem !important;
+  height: inherit !important;
   ul{
       padding: 0 !important;
       span{
@@ -189,6 +190,7 @@ quml-mcq-solutions{
       }
   }
 }
+
 .sb-editor-container {
   position: relative;
   z-index: 999 !important;

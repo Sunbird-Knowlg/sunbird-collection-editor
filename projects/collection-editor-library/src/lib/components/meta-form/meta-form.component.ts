@@ -151,11 +151,11 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
           }
         }
 
-        if (field.code === 'license' && this.helperService.getAvailableLicenses()) {
+        if (field.code === 'license') {
+          const defaultLicense = _.get(metaDataFields, field.code);
+          field.default = !_.isEmpty(defaultLicense) ? defaultLicense : this.editorService.editorConfig.context.defaultLicense;
           const licenses = this.helperService.getAvailableLicenses();
-          if (licenses && licenses.length) {
-            field.range = _.isArray(licenses) ? _.map(licenses, 'name') : [licenses];
-          }
+          field.range = licenses ? _.map(licenses, 'name') : [];
         }
 
         if (field.code === 'additionalCategories') {
