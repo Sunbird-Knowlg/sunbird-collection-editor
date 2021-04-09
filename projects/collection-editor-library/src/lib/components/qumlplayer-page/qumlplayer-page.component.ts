@@ -28,6 +28,7 @@ export class QumlplayerPageComponent implements OnChanges {
     this.questionMetaData = _.get(this.questionMetaData, 'data.metadata');
     const newQuestionId = _.get(this.questionMetaData, 'identifier');
     if (newQuestionId && this.prevQuestionId !== newQuestionId) {
+      this.questionSetHierarchy.childNodes = [newQuestionId];
       this.prevQuestionId = newQuestionId;
       setTimeout(() => {
         this.showPlayerPreview = true;

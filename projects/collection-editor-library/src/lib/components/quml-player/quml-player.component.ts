@@ -11,6 +11,7 @@ import { PlayerService } from '../../services/player/player.service';
 export class QumlPlayerComponent implements OnInit {
   qumlPlayerConfig: any;
   @Input() questionSetHierarchy: any;
+  @Input() isSingleQuestionPreview = false;
   showPreview = false;
   constructor(private configService: ConfigService, private playerService: PlayerService ) { }
 
@@ -32,6 +33,9 @@ export class QumlPlayerComponent implements OnInit {
     // tslint:disable-next-line:max-line-length
     this.qumlPlayerConfig.metadata.maxQuestions = this.qumlPlayerConfig.metadata.maxQuestions || this.qumlPlayerConfig.metadata.totalQuestions;
     this.qumlPlayerConfig.metadata.maxScore = this.qumlPlayerConfig.metadata.maxQuestions;
+    if (this.isSingleQuestionPreview) {
+      this.qumlPlayerConfig.metadata.showTimer = 'No';
+    }
     console.log('qumlPlayerConfig:: ', this.qumlPlayerConfig);
   }
 

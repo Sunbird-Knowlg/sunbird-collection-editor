@@ -512,6 +512,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
 
   previewContent() {
     this.previewFormData(false);
+    this.questionSetHierarchy.childNodes = [this.questionId];
     this.showPreview = true;
     this.toolbarConfig.showPreview = true;
   }
@@ -528,7 +529,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
     let index;
     if (!_.isUndefined(questionId)) {
       // tslint:disable-next-line:only-arrow-functions
-      index = _.findIndex(hierarchyChildNodes, function (el) {
+      index = _.findIndex(hierarchyChildNodes, function(el) {
         return el === questionId;
       });
     } else {
