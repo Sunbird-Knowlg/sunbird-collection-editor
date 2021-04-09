@@ -19,6 +19,14 @@ body {
   .back-btn {
     min-width: auto;
   }
+  .dynamic-form{
+    .multi-select-section-app {
+      label {
+        margin-bottom: 0.3rem !important;
+        z-index: inherit;
+      }
+    }
+  }
   .dynamic-form {
     label {
       font-size: 12px !important;
@@ -41,6 +49,10 @@ body {
 
     .multi-select-container {
       .list-border {
+        .placeholder{
+          color: var(--gray-100) !important;
+          font-weight: 600  !important;
+        }
         ul {
           @extend label;
           color: #333;
@@ -95,7 +107,7 @@ body {
     }
     .sb-textarea-container {
       .sb-textarea {
-        height: 2.7rem;
+        height: 2.9rem;
         padding-top: 0.5rem !important;
       }
       label {
@@ -223,4 +235,15 @@ lib-chat-window,
     overflow: hidden;
     border: solid 1px #cccccc;
   }
+}
+.sb-dropdown-select{
+  color: var(--gray-100);
+  font-weight: 600  !important;
+}
+.optionsArrayMap{
+  color: #000;
+}
+.sb-textbox::-webkit-input-placeholder {
+  color: var(--gray-100) !important;
+  font-weight: 600  !important;
 }
