@@ -175,6 +175,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
       if (orgFWType && channelFrameworksType && _.isEmpty(difference)) {
         this.frameworkService.frameworkValues = orgFrameworkList;
+        this.setEditorForms(categoryDefinitionData);
       } else if (orgFWType && channelFrameworksType && !_.isEmpty(difference) || _.isEmpty(channelFrameworksType)) {
         this.frameworkService.getFrameworkData(undefined, difference, undefined, 'Yes').subscribe(
           (response) => {
