@@ -92,18 +92,15 @@ export class LibraryComponent implements OnInit, AfterViewInit {
     }));
 
     if (_.isEmpty(contentTypes)) {
-      const channelInfo = this.helperService.channelInfo;
-      if (!_.isUndefined(channelInfo) && _.has(channelInfo, 'contentPrimaryCategories')) {
-        contentTypes = _.get(channelInfo, 'contentPrimaryCategories');
-      }
+      contentTypes = this.helperService.contentPrimaryCategories;
     }
 
     this.defaultFilters = _.pickBy({
-      primaryCategory: contentTypes,
-      board: [_.get(this.collectionhierarcyData, 'board')] || _.get(this.collectionhierarcyData, 'boardIds'),
-      gradeLevel: _.get(this.collectionhierarcyData, 'gradeLevel') || _.get(this.collectionhierarcyData, 'gradeLevelIds'),
-      medium: _.get(this.collectionhierarcyData, 'medium') || _.get(this.collectionhierarcyData, 'mediumIds'),
-      subject: _.get(this.collectionhierarcyData, 'subject') || _.get(this.collectionhierarcyData, 'subjectIds'),
+      primaryCategory: contentTypes
+      // board: [_.get(this.collectionhierarcyData, 'board')] || _.get(this.collectionhierarcyData, 'boardIds'),
+      // gradeLevel: _.get(this.collectionhierarcyData, 'gradeLevel') || _.get(this.collectionhierarcyData, 'gradeLevelIds'),
+      // medium: _.get(this.collectionhierarcyData, 'medium') || _.get(this.collectionhierarcyData, 'mediumIds'),
+      // subject: _.get(this.collectionhierarcyData, 'subject') || _.get(this.collectionhierarcyData, 'subjectIds'),
     });
   }
 
@@ -114,7 +111,7 @@ export class LibraryComponent implements OnInit, AfterViewInit {
       data: {
         request: {
           query: query || '',
-          filters: _.pickBy({ ...filters, ...{ status: ['Live'], mimeType: {'!=': 'application/vnd.ekstep.content-collection'} } }),
+          filters: _.pickBy({ ...filters, ...{ status: ['Live'] }}),
           sort_by: {
             lastUpdatedOn: 'desc'
           }

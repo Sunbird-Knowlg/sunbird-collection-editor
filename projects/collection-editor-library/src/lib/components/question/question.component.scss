@@ -180,7 +180,7 @@ quml-mcq-solutions{
   }
 }
 .list-border{
-  height: 2.8rem !important;
+  height: inherit !important;
   ul{
       padding: 0 !important;
       span{
@@ -189,6 +189,7 @@ quml-mcq-solutions{
       }
   }
 }
+
 .sb-editor-container {
   position: relative;
   z-index: 999 !important;
@@ -196,6 +197,9 @@ quml-mcq-solutions{
       width: 95% !important;
     }
     .dynamic-form {
+      .sb-dropdown-select{
+        padding: 16px 8px !important;
+      }
       label {
         font-size: 12px !important;
         margin-bottom: 0.5rem !important;
@@ -270,7 +274,7 @@ quml-mcq-solutions{
     }
     .sb-textarea-container{
       .sb-textarea{
-        height: 2.7rem;
+        height: 2.9rem;
         padding-top: 0.5rem !important;
       }
       label{

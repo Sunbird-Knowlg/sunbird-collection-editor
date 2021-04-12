@@ -43,17 +43,14 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   setAppIconData() {
-    const selectedNode = _.get(this.nodeMetadata, 'data.metadata');
-    const isCurrentNodeRoot = _.get(this.nodeMetadata, 'data.root');
-    const isRootNode = isCurrentNodeRoot ? true : false;
-
-    this.appIconConfig = _.find(_.flatten(_.map(this.rootFormConfig, 'fields')), {'code': 'appIcon'});
+    const isRootNode = _.get(this.nodeMetadata, 'data.root');
+    this.appIconConfig = _.find(_.flatten(_.map(this.rootFormConfig, 'fields')), {code: 'appIcon'});
     if (!_.isUndefined(this.appIconConfig) && isRootNode === true) {
       this.showAppIcon = true;
     } else {
       this.showAppIcon = false;
     }
-    this.appIcon = selectedNode.appIcon;
+    this.appIcon = _.get(this.nodeMetadata, 'data.metadata.appIcon');
   }
 
   fetchFrameWorkDetails() {
@@ -145,7 +142,7 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
           field.options = this.getFramework;
         }
 
-        if (!_.includes(field.depends, 'framework')) {
+        if (!_.includes(field.depends, 'framework') && !_.includes(field.code, 'target')) {
           const frameworkCategory = _.find(categoryMasterList, category => {
               return (category.code === field.sourceCategory || category.code === field.code);
           });
@@ -154,11 +151,11 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
           }
         }
 
-        if (field.code === 'license' && this.helperService.getAvailableLicenses()) {
+        if (field.code === 'license') {
+          const defaultLicense = _.get(metaDataFields, field.code);
+          field.default = !_.isEmpty(defaultLicense) ? defaultLicense : this.editorService.editorConfig.context.defaultLicense;
           const licenses = this.helperService.getAvailableLicenses();
-          if (licenses && licenses.length) {
-            field.range = _.isArray(licenses) ? _.map(licenses, 'name') : [licenses];
-          }
+          field.range = licenses ? _.map(licenses, 'name') : [];
         }
 
         if (field.code === 'additionalCategories') {
