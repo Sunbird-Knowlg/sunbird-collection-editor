@@ -1,3 +1,11 @@
+.dynamic-form{
+  .sb-dropdown-select{
+    padding: 16px 8px !important;
+  }
+  .list-border{
+    margin-top: 2px !important;
+  }
+}
 .sb-w-85{
   width: 85%;
 }
@@ -196,6 +204,9 @@ quml-mcq-solutions{
       width: 95% !important;
     }
     .dynamic-form {
+      .sb-dropdown-select{
+        padding: 16px 8px !important;
+      }
       label {
         font-size: 12px !important;
         margin-bottom: 0.5rem !important;

@@ -1,3 +1,11 @@
+.dynamic-form{
+  .sb-dropdown-select{
+    padding: 16px 8px !important;
+  }
+  .list-border{
+    margin-top: 2px !important;
+  }
+}
 body {
   background: #fff !important;
 }
@@ -20,6 +28,7 @@ body {
     min-width: auto;
   }
   .dynamic-form{
+    
     .multi-select-section-app {
       label {
         margin-bottom: 0.3rem !important;
@@ -45,6 +54,14 @@ body {
       font-size: 0.785rem !important;
       font-weight: 500;
       // text-transform: capitalize;
+    }
+    select{
+      padding: 14px 8px !important;
+    }
+    .list-border{
+      margin-top: 0 !important;
+      min-height: 46px !important;
+      height: inherit !important;
     }
 
     .multi-select-container {
