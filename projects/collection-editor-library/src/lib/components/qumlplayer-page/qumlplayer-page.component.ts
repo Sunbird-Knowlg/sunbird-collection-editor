@@ -16,6 +16,7 @@ export class QumlplayerPageComponent implements OnChanges {
   prevQuestionId: string;
   showPlayerPreview = false;
   showPotrait = false;
+  hierarchy: any;
 
   constructor(public telemetryService: EditorTelemetryService, public editorService: EditorService) { }
 
@@ -28,7 +29,8 @@ export class QumlplayerPageComponent implements OnChanges {
     this.questionMetaData = _.get(this.questionMetaData, 'data.metadata');
     const newQuestionId = _.get(this.questionMetaData, 'identifier');
     if (newQuestionId && this.prevQuestionId !== newQuestionId) {
-      this.questionSetHierarchy.childNodes = [newQuestionId];
+      this.hierarchy = _.cloneDeep(this.questionSetHierarchy);
+      this.hierarchy.childNodes = [newQuestionId];
       this.prevQuestionId = newQuestionId;
       setTimeout(() => {
         this.showPlayerPreview = true;
