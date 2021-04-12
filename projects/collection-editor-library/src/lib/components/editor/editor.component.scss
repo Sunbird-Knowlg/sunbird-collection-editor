@@ -1,3 +1,7 @@
+.optionsArrayMap,.optionsLast,.optionsArray{
+  color: #000 !important;
+}
+
 .dynamic-form{
   .sb-dropdown-select{
     padding: 16px 8px !important;
@@ -258,9 +262,7 @@ lib-chat-window,
   color: var(--gray-100) !important;
   font-weight: 600  !important;
 }
-.optionsArrayMap{
-  color: #000;
-}
+
 .sb-textbox::-webkit-input-placeholder {
   color: var(--gray-100) !important;
   font-weight: 600  !important;
