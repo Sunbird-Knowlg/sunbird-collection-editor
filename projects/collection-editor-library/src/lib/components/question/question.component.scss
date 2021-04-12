@@ -1,11 +1,3 @@
-.dynamic-form{
-  .sb-dropdown-select{
-    padding: 16px 8px !important;
-  }
-  .list-border{
-    margin-top: 2px !important;
-  }
-}
 .sb-w-85{
   width: 85%;
 }
@@ -188,7 +180,7 @@ quml-mcq-solutions{
   }
 }
 .list-border{
-  height: 2.8rem !important;
+  height: inherit !important;
   ul{
       padding: 0 !important;
       span{
@@ -197,6 +189,7 @@ quml-mcq-solutions{
       }
   }
 }
+
 .sb-editor-container {
   position: relative;
   z-index: 999 !important;

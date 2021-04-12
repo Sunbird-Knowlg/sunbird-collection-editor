@@ -56,10 +56,10 @@ body {
       // text-transform: capitalize;
     }
     select{
-      padding: 14px 8px !important;
+      padding: 17px 8px !important;
     }
     .list-border{
-      margin-top: 0 !important;
+      margin-top: 4px !important;
       min-height: 46px !important;
       height: inherit !important;
     }
@@ -77,6 +77,7 @@ body {
           margin: 0 !important;
           opacity: 1 !important;
           font-weight: 500 !important;
+          position: inherit !important;
         }
       }
     }

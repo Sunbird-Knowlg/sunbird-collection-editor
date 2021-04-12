@@ -1,6 +1,6 @@
 import {
   Component, AfterViewInit, Input, ViewChild, ElementRef, Output, EventEmitter,
-  OnDestroy, OnInit, ViewEncapsulation
+  OnDestroy, OnInit, ViewEncapsulation, ChangeDetectorRef
 } from '@angular/core';
 import 'jquery.fancytree';
 import * as _ from 'lodash-es';
@@ -29,6 +29,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() public treeEventEmitter: EventEmitter<any> = new EventEmitter();
   public config: any;
   public showTree: boolean;
+  public visibility: any;
   public showAddChildButton: boolean;
   public showAddSiblingButton: boolean;
   public rootNode: any;
@@ -52,7 +53,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   public contentMenuTemplate = `<span id="contextMenu"><span id= "removeNodeIcon"> <i class="fa fa-trash-o" type="button"></i> </span></span>`;
   constructor(public treeService: TreeService, private editorService: EditorService,
               public telemetryService: EditorTelemetryService, private helperService: HelperService,
-              private toasterService: ToasterService) { }
+              private toasterService: ToasterService, private cdr: ChangeDetectorRef) { }
   private onComponentDestroy$ = new Subject<any>();
 
   ngOnInit() {
@@ -147,7 +148,6 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.treeService.setActiveNode();
       const rootNode = this.treeService.getFirstChild();
       rootNode.setExpanded(true);
-      this.addFromLibraryButton(0);
       this.eachNodeActionButton(rootNode);
     });
     this.showTree = true;
@@ -226,7 +226,6 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.treeEventEmitter.emit({ type: 'nodeSelect', data: data.node });
         setTimeout(() => {
           this.attachContextMenu(data.node, true);
-          this.addFromLibraryButton(data.node.getLevel() - 1);
           this.eachNodeActionButton(data.node);
         }, 10);
       },
@@ -246,9 +245,20 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   eachNodeActionButton(node) {
-    this.showAddChildButton = ((node.folder === false) || ((node.getLevel() - 1) >= this.config.maxDepth)) ? false : true;
+    this.visibility = {};
+    const nodeLevel = node.getLevel() - 1;
+    this.visibility.addChild = ((node.folder === false) || (nodeLevel >= this.config.maxDepth)) ? false : true;
     // tslint:disable-next-line:max-line-length
-    this.showAddSiblingButton = ((node.folder === true) && (!node.data.root) && !((node.getLevel() - 1) > this.config.maxDepth)) ? true : false;
+    this.visibility.addSibling = ((node.folder === true) && (!node.data.root) && !((node.getLevel() - 1) > this.config.maxDepth)) ? true : false;
+    if (nodeLevel === 0) {
+      this.visibility.addFromLibrary = _.isEmpty(_.get(this.config, 'children')) ? false : true;
+      this.visibility.createNew = _.isEmpty(_.get(this.config, 'children')) ? false : true;
+    } else {
+      const hierarchylevelData = this.config.hierarchy[`level${nodeLevel}`];
+      this.visibility.addFromLibrary = ((node.folder === false) || _.isEmpty(_.get(hierarchylevelData, 'children'))) ? false : true;
+      this.visibility.createNew = ((node.folder === false) || _.isEmpty(_.get(hierarchylevelData, 'children'))) ? false : true;
+    }
+    this.cdr.detectChanges();
   }
 
   addChild() {
@@ -414,14 +424,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         break;
     }
   }
-  addFromLibraryButton(nodeLevel) {
-    if (nodeLevel === 0) {
-      this.showLibraryButton = _.isEmpty(_.get(this.config, 'children')) ? false : true;
-    } else {
-      const hierarchylevelData = this.config.hierarchy[`level${nodeLevel}`];
-      this.showLibraryButton = _.isEmpty(_.get(hierarchylevelData, 'children')) ? false : true;
-    }
-  }
+
   addFromLibrary() {
     this.editorService.emitshowLibraryPageEvent('showLibraryPage');
   }

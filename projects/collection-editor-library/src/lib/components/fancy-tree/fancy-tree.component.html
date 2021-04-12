@@ -2,23 +2,34 @@
 <div class="sb-fixed-with-whitebg pr-20 d-flex flex-jc-space-between" *ngIf="config && config.mode === 'edit'">
   <div class="d-flex w-25">
     <div class="sb-btn-cover">
-      <button [ngClass]="!this.showAddSiblingButton ? 'sb-disabled' : ''"  (click)="addSibling();" class="sb-btn sb-btn-outline-primary sb-btn-normal sb-btn-radius p-0 b-none"><i class="icon plus"></i>Add Sibling</button>
+      <button [ngClass]="visibility?.addSibling ? '' : 'sb-disabled'" (click)="addSibling();"
+        class="sb-btn sb-btn-outline-primary sb-btn-normal sb-btn-radius p-0 b-none"><i class="icon plus"></i>Add
+        Sibling</button>
     </div>
     <div class="sb-btn-cover">
-      <button [ngClass]="!this.showAddChildButton ? 'sb-disabled' : ''" (click)="addChild();"  class="sb-btn sb-btn-outline-primary sb-btn-normal sb-btn-radius b-none p-0"><i class="icon plus"></i> Add Child</button>
+      <button [ngClass]="visibility?.addChild ? '' : 'sb-disabled'" (click)="addChild();"
+        class="sb-btn sb-btn-outline-primary sb-btn-normal sb-btn-radius b-none p-0"><i class="icon plus"></i> Add
+        Child</button>
     </div>
   </div>
-  <button *ngIf="config.objectType !== 'QuestionSet'" (click)="addFromLibrary();" [disabled]="!this.showLibraryButton" [ngClass]="[!this.showLibraryButton ? 'sb-btn-outline-disabled' : '', (showLibraryButton && buttonLoaders?.addFromLibraryButtonLoader) ? 'sb-btn-loading-spinner sb-btn-outline-disabled': '']" class="sb-btn sb-btn-outline-primary sb-btn-normal mt-10 mr-30"
-  libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('add_from_library','click','launch', telemetryService.telemetryPageId)">
+  <button *ngIf="config.objectType !== 'QuestionSet'" (click)="addFromLibrary();"
+    [disabled]="!visibility?.addFromLibrary"
+    [ngClass]="[!visibility?.addFromLibrary ? 'sb-btn-outline-disabled' : '', (visibility?.addFromLibrary && buttonLoaders?.addFromLibraryButtonLoader) ? 'sb-btn-loading-spinner sb-btn-outline-disabled': '']"
+    class="sb-btn sb-btn-outline-primary sb-btn-normal mt-10 mr-30" libTelemetryInteract
+    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('add_from_library','click','launch', telemetryService.telemetryPageId)">
     <i class="icon plus" *ngIf="!buttonLoaders?.addFromLibraryButtonLoader"></i>
-    <div class="sb-loading-spinner" *ngIf="buttonLoaders?.addFromLibraryButtonLoader" role="status" aria-hidden="true"></div>
+    <div class="sb-loading-spinner" *ngIf="buttonLoaders?.addFromLibraryButtonLoader" role="status" aria-hidden="true">
+    </div>
     Add from library
   </button>
-  <button *ngIf="config.objectType === 'QuestionSet'" [disabled]="!this.showLibraryButton" [ngClass]="[!this.showLibraryButton ? 'sb-btn-outline-disabled' : '', (showLibraryButton && buttonLoaders?.addFromLibraryButtonLoader) ? 'sb-btn-loading-spinner sb-btn-outline-disabled': '']" type="button" class="sb-btn sb-btn-normal sb-btn-primary mt-10 mr-30" (click)="createNewContent()"
-          libTelemetryInteract
-          [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('create_new','click','launch', telemetryService.telemetryPageId)">
-          <i class="icon plus" *ngIf="!buttonLoaders?.addFromLibraryButtonLoader"></i>
-          <div class="sb-loading-spinner" *ngIf="buttonLoaders?.addFromLibraryButtonLoader" role="status" aria-hidden="true"></div>
-            Create New
-          </button>
+  <button *ngIf="config.objectType === 'QuestionSet'" [disabled]="!visibility?.createNew"
+    [ngClass]="[!visibility?.createNew ? 'sb-btn-outline-disabled' : '', (visibility?.createNew && buttonLoaders?.addFromLibraryButtonLoader) ? 'sb-btn-loading-spinner sb-btn-outline-disabled': '']"
+    type="button" class="sb-btn sb-btn-normal sb-btn-primary mt-10 mr-30" (click)="createNewContent()"
+    libTelemetryInteract
+    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('create_new','click','launch', telemetryService.telemetryPageId)">
+    <i class="icon plus" *ngIf="!buttonLoaders?.addFromLibraryButtonLoader"></i>
+    <div class="sb-loading-spinner" *ngIf="buttonLoaders?.addFromLibraryButtonLoader" role="status" aria-hidden="true">
+    </div>
+    Create New
+  </button>
 </div>

@@ -40,6 +40,13 @@ export class TreeService {
     this.setTreeCache(nodeId, {appIcon : appIconUrl}, activeNode.data);
   }
 
+  updateMetaDataProperty(key, value) {
+    const node = this.getFirstChild();
+    const nodeId = node.data.id;
+    node.data.metadata = {...node.data.metadata, [key] : value};
+    this.setTreeCache(nodeId, _.merge({}, {[key] : value}, _.pick(node.data.metadata, ['objectType'])));
+  }
+
   updateTreeNodeMetadata(newData: any) {
     const activeNode = this.getActiveNode();
     const nodeId = activeNode.data.id;
@@ -183,7 +190,7 @@ export class TreeService {
   setTreeCache(nodeId, metadata, activeNode?) {
     if (this.treeCache.nodesModified[nodeId]) {
       // tslint:disable-next-line:max-line-length
-      this.treeCache.nodesModified[nodeId].metadata = activeNode && activeNode.root === false ? _.assign(this.treeCache.nodesModified[nodeId].metadata, _.omit(metadata, 'objectType')) : metadata; // TODO:: rethink this
+      this.treeCache.nodesModified[nodeId].metadata = _.assign(this.treeCache.nodesModified[nodeId].metadata, _.omit(metadata, 'objectType'));
     } else {
       this.treeCache.nodesModified[nodeId] = {
         root: activeNode && activeNode.root ? true : false,

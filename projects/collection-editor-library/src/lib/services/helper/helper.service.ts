@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
-import { catchError, map, tap} from 'rxjs/operators';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
+import { catchError, map, skipWhile, tap} from 'rxjs/operators';
 import * as _ from 'lodash-es';
 import { PublicDataService} from '../public-data/public-data.service';
 import { DataService} from '../data/data.service';
@@ -13,22 +13,29 @@ export class HelperService {
   private _availableLicenses: Array<any>;
   // tslint:disable-next-line:variable-name
   private _channelData: any;
+  // tslint:disable-next-line:variable-name
+  private _channelData$ = new BehaviorSubject<any>(undefined);
+
+  public readonly channelData$: Observable<any> = this._channelData$
+  .asObservable().pipe(skipWhile(data => data === undefined || data === null));
+
   constructor(private publicDataService: PublicDataService, private dataService: DataService) { }
 
-  initialize(channelId, defaultLicense?: any) {
-    if (defaultLicense) {
-      this._availableLicenses = defaultLicense;
-    } else {
-      this.getLicenses().subscribe();
-    }
-    this.getChannelData(channelId).subscribe(data => this._channelData = data);
+  initialize(channelId) {
+    this.getLicenses().subscribe((data: any) => this._availableLicenses = _.get(data, 'license'));
+    this.getChannelData(channelId).subscribe(data => {
+      this._channelData = data;
+      this._channelData$.next({ err: null, channelData: this._channelData });
+    });
   }
-
 
   public get channelInfo(): any {
     return this._channelData;
   }
 
+  public get contentPrimaryCategories() : any {
+    return _.get(this.channelInfo, 'contentPrimaryCategories') || [] ;
+  }
 
   getLicenses(): Observable<any> {
     const req = {
@@ -44,7 +51,7 @@ export class HelperService {
     };
     return this.publicDataService.post(req).pipe(map((res: any) => {
       return res.result;
-    }), tap((data: any) => this._availableLicenses = _.get(data, 'license')), catchError(err => {
+    }), catchError(err => {
       const errInfo = { errorMsg: 'search failed' };
       return throwError(errInfo);
     }));

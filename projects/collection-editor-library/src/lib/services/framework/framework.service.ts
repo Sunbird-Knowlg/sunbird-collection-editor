@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, of } from 'rxjs';
-import { mergeMap, skipWhile } from 'rxjs/operators';
+import { mergeMap, skipWhile, tap } from 'rxjs/operators';
 import * as _ from 'lodash-es';
 import { ServerResponse } from '../../interfaces/serverResponse';
 import { Framework } from '../../interfaces/framework';
@@ -95,7 +95,7 @@ export class FrameworkService {
   }
 
 
-  getFrameworkData(channel?, type?, identifer?) {
+  getFrameworkData(channel?, type?, identifier?, systemDefault?) {
     const option = {
       url: `${this.configService.urlConFig.URLS.COMPOSITE.SEARCH}`,
       data: {
@@ -104,8 +104,9 @@ export class FrameworkService {
                 objectType: 'Framework',
                 status: ['Live'],
                 ...(type && {type}),
-                ...(identifer && {identifer}),
-                ...(channel && {channel})
+                ...(identifier && {identifier}),
+                ...(channel && {channel}),
+                ...(systemDefault && {systemDefault})
             }
         }
     }
@@ -113,14 +114,43 @@ export class FrameworkService {
     return this.publicDataService.post(option);
   }
 
-  checkChannelOrSystem(channelObservable, systemObservable) {
+  checkChannelOrSystem(channelObservable, systemObservable, type?, identifiers?) {
+
     return channelObservable.pipe(mergeMap(
       (data) => {
-        if (_.get(data, 'result.count') > 0) { return of(data); }
+        const firstResultCount = _.get(data, 'result.count');
+        const firstResultFramework = _.get(data, 'result.Framework');
+        const isTypeEmpty = _.isEmpty(type);
+        const isIdentifiersEmpty = _.isEmpty(identifiers);
+        if (firstResultCount > 0 && !isTypeEmpty && firstResultFramework) {
+          const FrameworkTypes = _.uniq(_.map(firstResultFramework, 'type'));
+          const difference = _.difference(_.sortBy(type), _.sortBy(FrameworkTypes));
+          if (_.isEmpty(difference)) {
+            return of(data);
+          } else {
+            return this.getFrameworkData(undefined, difference, undefined).pipe(
+              mergeMap(
+                (response) => {
+                  return of({ result: {
+                      Framework: _.concat(firstResultFramework, _.get(response, 'result.Framework'))
+                    }
+                  });
+                }
+              )
+            );
+          }
+        } else if (firstResultCount > 0 && !isIdentifiersEmpty && firstResultFramework) {
+          const FrameworkIdentifiers = _.uniq(_.map(firstResultFramework, 'identifier'));
+          const difference = _.difference(_.sortBy(type), _.sortBy(FrameworkIdentifiers));
+          if (_.isEmpty(difference)) {
+            return of(data);
+          } else {
+            return this.getFrameworkData(undefined, undefined, difference);
+          }
+        }
         return systemObservable;
       }
     ));
   }
-
 
 }
