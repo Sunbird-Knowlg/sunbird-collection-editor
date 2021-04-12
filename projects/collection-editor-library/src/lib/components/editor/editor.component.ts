@@ -50,6 +50,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   private formStatusMapper: { [key: string]: boolean } = {};
   public questionIds: string[];
   public targetFramework;
+  public organisationFramework;
   toolbarConfig: any;
   public buttonLoaders = {
     saveAsDraftButtonLoader: false,
@@ -78,10 +79,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       (response) => {
         const collection = _.get(response, `result.${this.configService.categoryConfig[this.editorConfig.config.objectType]}`);
         this.toolbarConfig.title = collection.name;
-        const organisationFramework = _.get(collection, 'framework') || _.get(this.editorConfig, 'context.framework');
+        this.organisationFramework = _.get(collection, 'framework') || _.get(this.editorConfig, 'context.framework');
         this.targetFramework = _.get(collection, 'targetFWIds') ||  _.get(this.editorConfig, 'context.targetFWIds');
-        if (organisationFramework) {
-          this.frameworkService.initialize(organisationFramework);
+        if (this.organisationFramework) {
+          this.frameworkService.initialize(this.organisationFramework);
         }
         if (!_.isEmpty(this.targetFramework)) {
           this.frameworkService.getTargetFrameworkCategories(this.targetFramework);
@@ -118,7 +119,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     let targetFWType: any;
     orgFWIdentifiers = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.framework.enum') ||
     _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.framework.default');
-    const targetFrameworkReq = [];
     if (_.isEmpty(this.targetFramework || _.get(this.editorConfig, 'context.targetFWIds'))) {
       // tslint:disable-next-line:max-line-length
       targetFWIdentifiers = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.targetFWIds.default');
@@ -130,11 +130,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         const difference =  _.difference(targetFWType, _.uniq(channelFrameworksType));
 
         if (targetFWType && channelFrameworksType && _.isEmpty(difference)) {
-          if (channelFrameworksType.length > 1) {
-            this.targetFramework = _.first(channelFrameworksIdentifiers);
-          } else {
-            this.targetFramework = channelFrameworksIdentifiers;
-          }
+          this.targetFramework =  _.get(_.first(_.filter(channelFrameworksType, framework => {
+            return framework.type === _.first(targetFWType);
+          })), 'identifier');
           this.treeService.updateMetaDataProperty('targetFWIds', _.castArray(this.targetFramework));
           this.frameworkService.getTargetFrameworkCategories(_.castArray(this.targetFramework));
         } else if ((targetFWType && channelFrameworksType && !_.isEmpty(difference))  || _.isEmpty(channelFrameworksType)) {
@@ -165,9 +163,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       let orgFrameworkList = [];
       orgFWType = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.config.frameworkMetadata.orgFWType');
       const channelFrameworksType = _.map(_.get(this.helperService.channelInfo, 'frameworks'), 'type');
-      const channelFrameworksIdentifiers = _.map(_.get(this.helperService.channelInfo, 'frameworks'), 'identifier');
       const difference =  _.difference(orgFWType, _.uniq(channelFrameworksType));
-      if(channelFrameworksType) {
+      if (channelFrameworksType) {
         orgFrameworkList = _.map(_.get(this.helperService.channelInfo, 'frameworks'), (framework) => {
           return { label: framework.name, identifier: framework.identifier };
         });
@@ -187,6 +184,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
             console.log('error', error);
           }
         );
+      } else if (this.organisationFramework) {
+        this.setEditorForms(categoryDefinitionData);
       }
     } else {
       this.frameworkService.getFrameworkData(undefined, undefined, orgFWIdentifiers).subscribe(
@@ -203,7 +202,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   setEditorForms(categoryDefinitionData) {
-
     this.unitFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.unitMetadata.properties');
     // tslint:disable-next-line:max-line-length
     this.rootFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.create.properties');
