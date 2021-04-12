@@ -130,11 +130,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         const difference =  _.difference(targetFWType, _.uniq(channelFrameworksType));
 
         if (targetFWType && channelFrameworksType && _.isEmpty(difference)) {
-          if (channelFrameworksType.length > 1) {
-            this.targetFramework = _.first(channelFrameworksIdentifiers);
-          } else {
-            this.targetFramework = channelFrameworksIdentifiers;
-          }
+          this.targetFramework =  _.get(_.first(_.filter(channelFrameworksType, framework => {
+            return framework.type === _.first(targetFWType);
+          })), 'identifier');
           this.treeService.updateMetaDataProperty('targetFWIds', _.castArray(this.targetFramework));
           this.frameworkService.getTargetFrameworkCategories(_.castArray(this.targetFramework));
         } else if ((targetFWType && channelFrameworksType && !_.isEmpty(difference))  || _.isEmpty(channelFrameworksType)) {
