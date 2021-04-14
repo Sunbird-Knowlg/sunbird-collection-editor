@@ -24,6 +24,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
   public rejectComment: string;
   public contentComment: string;
   public actionType: string;
+  showQRCodePopup =false;
   constructor(private editorService: EditorService, public telemetryService: EditorTelemetryService) { }
 
   ngOnInit() {

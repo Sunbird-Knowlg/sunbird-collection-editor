@@ -25,7 +25,21 @@
       <i *ngIf="labelConfigData.preview_collection_btn_icon && !buttonLoaders?.previewButtonLoader" class="{{labelConfigData.preview_collection_btn_icon}}"></i>
       {{ labelConfigData.preview_collection_btn_label}}
     </button> -->
-
+    <a class="fs-0-785 sb-color-primary font-weight-bold"><i class="icon qrcode"></i>QR Code </a>
+    <a class="profile-avtar computer only p-0 pr-10"
+    tabindex="0">
+    <div suiDropdown class="ui dropdown right top pointing" id="dropdown-menu-list-header">
+      <i class="icon caret down"></i>
+        <div class="menu" suiDropdownMenu>
+            <a class="item fs-0-785" (click)="showQRCodePopup = true">
+              <i class="icon qrcode"></i> Generate QR Codes
+            </a>
+            <div class="ui divider"></div>
+            <a class="item fs-0-785 sb-disabled"><i class="icon download"></i> Download QR Codes</a>
+       </div>
+    </div>
+    </a>
+    <div class="seperator pr-20"></div>
     <button *ngIf="visibility && visibility?.saveContent" class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10"
     [ngClass]="!buttonLoaders?.saveAsDraftButtonLoader ? '': 'sb-btn-loading-spinner sb-btn-outline-disabled'"
     (click)="buttonEmitter({type:'saveContent'})" libTelemetryInteract
@@ -177,3 +191,23 @@
         </button>
       </div>
     </sui-modal>
+
+<sui-modal *ngIf="showQRCodePopup" [mustScroll]="true" [isClosable]="true" [transitionDuration]="0"
+[size]="'small'" class="sb-modal bx-none overflow-modal" appBodyScroll
+(dismissed)="showQRCodePopup = !showQRCodePopup" #modal>
+<div class="sb-modal-header">
+  Request for QR Codes
+</div>
+<div class="sb-modal-content">
+  <div class="d-flex flex-jc-space-between p-20">
+    <div class="sb-field-group">
+      <div class="sb-field">
+          <input class="sb-form-control is-invalid">
+      </div>
+      <small class="sb-color-error pt-10 d-block">Enter valid text</small>
+      </div>
+    <button type="button" class="sb-btn sb-btn-normal sb-btn-primary">Request</button>
+  </div>
+</div>
+
+</sui-modal>
