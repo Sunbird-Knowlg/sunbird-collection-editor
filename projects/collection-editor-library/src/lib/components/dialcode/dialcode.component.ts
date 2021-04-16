@@ -31,16 +31,20 @@ export class DialcodeComponent implements OnInit {
 
   ngOnInit() {
     this.dialcodeControl = new FormControl('', [Validators.max(250), this.customDialcodeValidator()]);
-    this.contentId = _.get(this.contentMetadata, 'identifier');
+    this.treeStatusListener();
+  }
+
+  treeStatusListener() {
     this.treeService.treeStatus$.subscribe((status) => {
       if (status === 'loaded') {
         this.resolveQRDownloadBtn();
         this.doQRCodeCount();
-      } else if ( status === 'saved') {
+        this.contentId = _.get(this.contentMetadata, 'identifier');
+      } else if (status === 'saved') {
         this.doQRCodeCount();
         this.disableQRGenerateBtn = true;
       } else {
-        this.disableQRGenerateBtn = false;
+        this.disableQRGenerateBtn = false; // TODO:: Rethink this
       }
     });
   }
