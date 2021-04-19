@@ -8,6 +8,7 @@ import { QuestionService } from '../../services/question/question.service';
 import { EditorService } from '../../services/editor/editor.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
 import MathText from '../../../../../../src/assets/libs/mathEquation/plugin/mathTextPlugin.js';
+import { ConfigService } from '../../services/config/config.service';
 @Component({
   selector: 'lib-ckeditor-tool',
   templateUrl: './ckeditor-tool.component.html',
@@ -35,7 +36,8 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
   initialized = false;
   public assetProxyUrl = '/assets/public/';
   public lastImgResizeWidth;
-  constructor(private questionService: QuestionService, private editorService: EditorService, private toasterService: ToasterService) { }
+  constructor(private questionService: QuestionService, private editorService: EditorService,
+              private toasterService: ToasterService, public configService: ConfigService) { }
   assetConfig: any = {
     image: {
       size: '50',
@@ -167,7 +169,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
 
   uploadContent() {
     if (this.uploader.getFile(0) == null) {
-      this.toasterService.error('File is required to upload');
+      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.009'));
       this.uploader.reset();
       return;
     }
@@ -322,7 +324,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       const regex = new RegExp(urlMatch);
       const getUrl = dataTransfer.getData('text/html').match(regex);
       if (getUrl && getUrl.length > 0) {
-        this.toasterService.error('No external link allowed');
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.010'));
         evt.stop();
       }
     });
@@ -654,14 +656,14 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
 
   getUploadVideo(videoId) {
       this.questionService.getVideo(videoId).pipe(map((data: any) => data.result.content), catchError(err => {
-        const errInfo = { errorMsg: 'Unable to read the Video, Please Try Again' };
+        const errInfo = { errorMsg: _.get(this.configService, 'labelConfig.messages.error.011') };
         this.loading = false;
         this.isClosable = true;
         this.loading = false;
         this.isClosable = true;
         return throwError(this.editorService.apiErrorHandling(err, errInfo));
     })).subscribe(res => {
-        this.toasterService.success('Asset Successfully Uploaded...');
+        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.006'));
         this.selectedVideo = res;
         this.showAddButton = true;
         this.loading = false;
