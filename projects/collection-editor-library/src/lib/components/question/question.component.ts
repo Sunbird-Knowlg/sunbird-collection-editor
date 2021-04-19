@@ -467,7 +467,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
       finalize(() => {
         this.showHideSpinnerLoader(false);
       })).subscribe((response: ServerResponse) => {
-        this.toasterService.success('Question is created sucessfully');
+        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.007'));
         if (this.actionType === 'previewContent') {
           this.questionId = _.first(_.values(_.get(response, 'result.identifiers')));
           this.previewContent();
@@ -489,7 +489,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
       finalize(() => {
         this.showHideSpinnerLoader(false);
       })).subscribe((response: ServerResponse) => {
-        this.toasterService.success('Question is updated sucessfully');
+        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.008'));
         if (this.actionType === 'previewContent') {
           this.previewContent();
         } else {
@@ -555,7 +555,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
     _.forEach(this.leafFormConfig, (formFieldCategory) => {
       if (formFieldCategory.required && !this.childFormData[formFieldCategory.code]) {
         this.showFormError = true;
-        this.toasterService.error('Please fill the required fields');
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.008'));
         return false;
       }
     });

@@ -52,5 +52,30 @@
     },
     "err":{
        "somethingWentWrong":"Something went wrong"
+    },
+    "messages": {
+      "error": {
+         "001": "Something went wrong, Please try later",
+         "002": "Sending for review failed. Please try again...",
+         "003": "Rejecting failed. Please try again...",
+         "004": "Publishing failed. Please try again...",
+         "005": "Please fill the required metadata",
+         "006": "Fetch question set template failed. Please try again...",
+         "007": "Sorry, this operation is not allowed...",
+         "008": "Please fill the required fields",
+         "009": "File is required to upload",
+         "010": "No external link allowed",
+         "011": "Unable to read the Video, Please Try Again"
+      }, 
+      "success": {
+         "001": "Hierarchy is Successfully Updated",
+         "002": "Successfully sent for review",
+         "003": "Content is sent back for correction",
+         "004": "Successfully published",
+         "005": "Content is added to hierarchy...",
+         "006": "Asset Successfully Uploaded...",
+         "007": "Question is created sucessfully",
+         "008": "Question is updated sucessfully"
+      }
     }
  }

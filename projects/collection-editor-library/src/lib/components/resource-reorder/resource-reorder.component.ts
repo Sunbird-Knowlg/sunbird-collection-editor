@@ -39,9 +39,9 @@ export class ResourceReorderComponent implements OnInit {
         action: 'contentAdded',
         data: this.selectedContentDetails
       });
-      this.toasterService.success('Content is added to hierarchy...');
+      this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.005'));
     }, err => {
-      this.toasterService.error('Something went wrong...');
+      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.001'));
     });
   }
 
