@@ -106,10 +106,8 @@ export class DialcodeComponent implements OnInit {
 
 
   downloadQRCodes(): void {
-    const meta = { medium: 'hindi', gradeLevel: ['Class 1, Class 2'], subject: 'Social Science' };
-    if (meta.medium && meta.gradeLevel && meta.subject) {
-      this.qrCodeProcessId = _.get(this.contentMetadata, 'qrCodeProcessId');
-      this.dialcodeService.downloadQRCode(this.qrCodeProcessId).subscribe((res) =>  {
+    this.qrCodeProcessId = _.get(this.contentMetadata, 'qrCodeProcessId');
+    this.dialcodeService.downloadQRCode(this.qrCodeProcessId).subscribe((res) =>  {
         const response = res.result;
         if (response && response.hasOwnProperty('status')) {
           if (response.status === 'in-process') {
@@ -118,7 +116,8 @@ export class DialcodeComponent implements OnInit {
             const filepath = response.url;
             const pattern = new RegExp('([0-9])+(?=.[.zip])');
             const timeStamp = filepath.match(pattern);
-            const categoryName = ((meta.medium + '_' + meta.gradeLevel.join('_') + '_' + meta.subject).split(' ')).join('_').toLowerCase();
+            const contentName = _.get(this.contentMetadata, 'name');
+            const categoryName = (contentName.split(' ')).join('_').toLowerCase();
             const filename = `${this.contentId}_${categoryName}_${timeStamp[0]}.zip`;
             this.downloadFile(filepath, filename);
           }
@@ -126,9 +125,6 @@ export class DialcodeComponent implements OnInit {
       }, (err) => {
         this.toasterService.error(err.error.params.errmsg);
       });
-    } else {
-      this.toasterService.error('Please ensure Medium, Class and Subject value are added to the Textbook');
-    }
   }
 
   get contentMetadata() {
