@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { ConfigService } from '../../services/config/config.service';
 import { FrameworkService } from '../../services/framework/framework.service';
 import { TreeService } from '../../services/tree/tree.service';
+import { QumlPlayerService } from '../../services/quml-player/quml-player.service';
 import { filter, finalize, take, takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'lib-question',
@@ -54,6 +55,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
   questionMetaData: any;
   questionInteractionType;
   questionId;
+  tempQuestionId;
   questionSetId;
   public setCharacterLimit = 160;
   public showLoader = true;
@@ -65,15 +67,14 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
   pageStartTime: any;
   public framework;
   public frameworkDetails: any = {};
-  public actionType: string;
   public buttonLoaders = {
-    saveButtonLoader: false,
-    previewButtonLoader: false
+    saveButtonLoader: false
   };
   constructor(
     private questionService: QuestionService, private editorService: EditorService, public telemetryService: EditorTelemetryService,
     public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,
-    private frameworkService: FrameworkService, private router: Router, public configService: ConfigService) {
+    private frameworkService: FrameworkService, private router: Router, public configService: ConfigService, 
+    private qumlPlayerService: QumlPlayerService) {
     const { primaryCategory } = this.editorService.selectedChildren;
     this.questionPrimaryCategory = primaryCategory;
     this.pageStartTime = Date.now();
@@ -188,6 +189,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
           });
       }
       if (_.isUndefined(this.questionId)) {
+        this.tempQuestionId = UUID.UUID();
         this.populateFormData();
         const hierarchyChildNodes = this.questionSetHierarchy.childNodes ? this.questionSetHierarchy.childNodes : [];
         this.setQuestionTitle(hierarchyChildNodes);
@@ -208,7 +210,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
   }
 
   toolbarEventListener(event) {
-    this.actionType = event.button;
     switch (event.button) {
       case 'saveContent':
         this.saveContent();
@@ -220,7 +221,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
         this.handleRedirectToQuestionset();
         break;
       case 'previewContent':
-        this.saveContent();
+        this.previewContent();
         break;
       case 'editContent':
         this.previewFormData(true);
@@ -467,12 +468,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
         this.showHideSpinnerLoader(false);
       })).subscribe((response: ServerResponse) => {
         this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.007'));
-        if (this.actionType === 'previewContent') {
-          this.questionId = _.first(_.values(_.get(response, 'result.identifiers')));
-          this.previewContent();
-        } else {
-          this.redirectToQuestionset();
-        }
+        this.redirectToQuestionset();
       }, (err: ServerResponse) => {
           const errInfo = {
             errorMsg: 'Question creating failed. Please try again...',
@@ -489,11 +485,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
         this.showHideSpinnerLoader(false);
       })).subscribe((response: ServerResponse) => {
         this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.008'));
-        if (this.actionType === 'previewContent') {
-          this.previewContent();
-        } else {
-          this.redirectToQuestionset();
-        }
+        this.redirectToQuestionset();
       }, (err: ServerResponse) => {
         const errInfo = {
           errorMsg: 'Question updating failed. Please try again...',
@@ -503,18 +495,27 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
   }
 
   showHideSpinnerLoader(status: boolean) {
-    if (this.actionType === 'previewContent') {
-      this.buttonLoaders.previewButtonLoader = status;
-    } else {
-      this.buttonLoaders.saveButtonLoader = status;
-    }
+    this.buttonLoaders.saveButtonLoader = status;
   }
 
   previewContent() {
-    this.previewFormData(false);
-    this.questionSetHierarchy.childNodes = [this.questionId];
-    this.showPreview = true;
-    this.toolbarConfig.showPreview = true;
+    this.validateQuestionData();
+    this.validateFormFields();
+    if (this.showFormError === false) {
+      this.previewFormData(false);
+      const questionId = _.isUndefined(this.questionId) ? this.tempQuestionId : this.questionId;
+      this.questionSetHierarchy.childNodes = [questionId];
+      this.setQumlPlayerData(questionId);
+      this.showPreview = true;
+      this.toolbarConfig.showPreview = true;
+    }
+  }
+
+  setQumlPlayerData(questionId: string) {
+    const questionMetadata: any = this.getQuestionMetadata();
+    questionMetadata.identifier = questionId;
+    this.questionSetHierarchy.children = [questionMetadata];
+    this.qumlPlayerService.setQuestionMap(questionId, questionMetadata);
   }
 
   getPlayerEvents(event) {
@@ -591,6 +592,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
   ngOnDestroy() {
     this.onComponentDestroy$.next();
     this.onComponentDestroy$.complete();
+    this.qumlPlayerService.clearQuestionMap();
   }
 }
 

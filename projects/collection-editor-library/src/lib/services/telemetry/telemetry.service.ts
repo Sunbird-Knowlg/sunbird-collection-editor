@@ -46,7 +46,7 @@ export class EditorTelemetryService {
             sid: config.context.sid,
             batchsize: 20,
             mode: config.context.mode,
-            host: config.context.host || '',
+            host: config.context.host || document.location.origin,
             endpoint: config.context.endpoint || '/data/v3/telemetry',
             tags: config.context.tags,
             cdata: this.context.cdata || []

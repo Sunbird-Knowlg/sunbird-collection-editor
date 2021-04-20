@@ -27,13 +27,15 @@ export class QumlPlayerComponent implements OnInit {
   setQumlPlayerData() {
     const playerConfig = _.cloneDeep(this.playerService.getQumlPlayerConfig());
     this.qumlPlayerConfig = playerConfig;
+    this.qumlPlayerConfig.context.threshold = _.get(this.configService, 'playerConfig.threshold');
     this.qumlPlayerConfig.metadata = _.cloneDeep(this.questionSetHierarchy);
-    this.qumlPlayerConfig.metadata.threshold = _.get(this.configService, 'playerConfig.threshold');
     this.qumlPlayerConfig.metadata.totalQuestions = this.qumlPlayerConfig.metadata.childNodes.length;
     // tslint:disable-next-line:max-line-length
     this.qumlPlayerConfig.metadata.maxQuestions = this.qumlPlayerConfig.metadata.maxQuestions || this.qumlPlayerConfig.metadata.totalQuestions;
     this.qumlPlayerConfig.metadata.maxScore = this.qumlPlayerConfig.metadata.maxQuestions;
     if (this.isSingleQuestionPreview) {
+      this.qumlPlayerConfig.context.threshold = 1;
+      this.qumlPlayerConfig.metadata.showStartPage = 'No';
       this.qumlPlayerConfig.metadata.showTimer = 'No';
     }
     console.log('qumlPlayerConfig:: ', this.qumlPlayerConfig);
