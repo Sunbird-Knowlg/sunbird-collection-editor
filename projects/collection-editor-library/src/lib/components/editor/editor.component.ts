@@ -337,16 +337,16 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           }
           this.treeService.clearTreeCache();
           this.treeService.nextTreeStatus('saved');
-          resolve('Hierarchy is Successfully Updated');
+          resolve(_.get(this.configService, 'labelConfig.messages.success.001'));
         }, err => {
-          reject('Something went wrong, Please try later');
+          reject(_.get(this.configService, 'labelConfig.messages.error.001'));
         });
     });
   }
 
   submitHandler() {
     if (!this.validateFormStatus()) {
-      this.toasterService.error('Please fill the required metadata');
+      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.005'));
       return;
     }
     this.showConfirmPopup = true;
@@ -380,29 +380,29 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   sendForReview() {
     this.saveContent().then(messg => {
       this.editorService.reviewContent(this.collectionId).subscribe(data => {
-        this.toasterService.success('Successfully sent for review');
+        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.002'));
         this.redirectToChapterListTab();
       }, err => {
-        this.toasterService.error('Sending for review failed. Please try again...');
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.002'));
       });
     }).catch(err => this.toasterService.error(err));
   }
 
   rejectContent(comment) {
     this.editorService.submitRequestChanges(this.collectionId, comment).subscribe(res => {
-      this.toasterService.success('Content is sent back for correction');
+      this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.003'));
       this.redirectToChapterListTab();
     }, err => {
-      this.toasterService.error('Rejecting failed. Please try again...');
+      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.003'));
     });
   }
 
   publishContent() {
     this.editorService.publishContent(this.collectionId).subscribe(res => {
-      this.toasterService.success('Successfully published');
+      this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.004'));
       this.redirectToChapterListTab();
     }, err => {
-      this.toasterService.error('Publishing failed. Please try again...');
+      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.004'));
     });
   }
 
@@ -489,7 +489,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     // tslint:disable-next-line:max-line-length
     this.editorService.getCategoryDefinition(selectedQuestionType, null, 'Question').pipe(catchError(error => {
       const errInfo = {
-        errorMsg: 'Fetch question set template failed. Please try again...',
+        errorMsg: _.get(this.configService, 'labelConfig.messages.error.006'),
       };
       return throwError(this.editorService.apiErrorHandling(error, errInfo));
     })).subscribe((res) => {

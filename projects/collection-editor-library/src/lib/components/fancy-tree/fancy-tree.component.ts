@@ -9,6 +9,7 @@ import { EditorService } from '../../services/editor/editor.service';
 import { HelperService } from '../../services/helper/helper.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
+import { ConfigService } from '../../services/config/config.service';
 
 
 import { Subject } from 'rxjs';
@@ -53,7 +54,8 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   public contentMenuTemplate = `<span id="contextMenu"><span id= "removeNodeIcon"> <i class="fa fa-trash-o" type="button"></i> </span></span>`;
   constructor(public treeService: TreeService, private editorService: EditorService,
               public telemetryService: EditorTelemetryService, private helperService: HelperService,
-              private toasterService: ToasterService, private cdr: ChangeDetectorRef) { }
+              private toasterService: ToasterService, private cdr: ChangeDetectorRef,
+              public configService: ConfigService) { }
   private onComponentDestroy$ = new Subject<any>();
 
   ngOnInit() {
@@ -268,7 +270,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     const nodeConfig = this.config.hierarchy[tree.getActiveNode().getLevel()];
     const childrenTypes = _.get(nodeConfig, 'children.Content');
     if ((((tree.getActiveNode().getLevel() - 1) >= this.config.maxDepth))) {
-      return this.toasterService.error('Sorry, this operation is not allowed...');
+      return this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.007'));
     }
     this.treeService.addNode('child');
   }
@@ -281,7 +283,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!node.data.root) {
       this.treeService.addNode('sibling');
     } else {
-      this.toasterService.error('Sorry, this operation is not allowed.');
+      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.007'));
     }
   }
 
@@ -369,7 +371,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   dropNotAllowed() {
-    this.toasterService.error('This operation is not allowed!');
+    this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.007'));
     return false;
   }
 
