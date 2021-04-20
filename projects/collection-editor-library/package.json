@@ -4,7 +4,7 @@
   "peerDependencies": {
     "@angular/common": "^7.2.0",
     "@angular/core": "^7.2.0",
-    "common-form-elements": "^3.9.3",
+    "common-form-elements": "^3.9.4",
     "ng2-semantic-ui": "github:venkateshwarans/ng2-semantic-ui#sourcing-circle"
   }
 }
