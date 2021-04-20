@@ -58,7 +58,7 @@ export class TreeService {
     if (attributions && _.isString(attributions)) {
       newData.attributions = attributions.split(',');
     }
-    const { maxTime, warningTime, copyrightYear } = newData;
+    const { maxTime, warningTime, copyrightYear, instruction } = newData;
 
     if (copyrightYear) {
       newData.copyrightYear = _.toNumber(copyrightYear);
@@ -70,9 +70,15 @@ export class TreeService {
     if (warningTime) {
       timeLimits.warningTime = this.helperService.hmsToSeconds(warningTime);
     }
+    const instructions: any = {};
+    if (instruction) {
+       instructions.instruction = instruction;
+    }
     newData.timeLimits = timeLimits;
+    newData.instructions = instructions;
     delete newData.maxTime;
     delete newData.warningTime;
+    delete newData.instruction;
     this.setTreeCache(nodeId, newData, activeNode.data);
   }
 
