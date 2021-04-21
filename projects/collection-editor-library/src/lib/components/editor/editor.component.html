@@ -1,7 +1,7 @@
 <ng-container [ngSwitch]="pageId">
   <ng-container *ngSwitchCase="'collection_editor'">
     <div class="add-to-library mb-10">
-      <lib-header  [pageId]="pageId" [labelConfigData]="toolbarConfig" [buttonLoaders]="buttonLoaders" (toolbarEmitter)="toolbarEventListener($event)"> </lib-header> <!--// TODO::  *ngIf="treeService.getTreeObject()" -->
+      <lib-header  [pageId]="pageId" [labelConfigData]="toolbarConfig" [buttonLoaders]="buttonLoaders" (toolbarEmitter)="toolbarEventListener($event)"> </lib-header>
       <div class="h-100vh sb-bg-white">
         <div class="ui">
           <div class="ui twelve column grid m-0 ">
@@ -87,7 +87,7 @@
           </div>
           <div class="sb-modal-content">
             <div class="sb-quml-player br-4 b-1-100">
-              <lib-quml-player [questionSetHierarchy]="collectionTreeNodes?.data" [questionIds]="questionIds"></lib-quml-player>
+              <lib-quml-player [questionSetHierarchy]="collectionTreeNodes?.data"></lib-quml-player>
             </div>
           </div>
       </sui-modal>
