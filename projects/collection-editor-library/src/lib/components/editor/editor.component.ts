@@ -336,6 +336,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
             this.treeService.replaceNodeId(response.identifiers);
           }
           this.treeService.clearTreeCache();
+          this.treeService.nextTreeStatus('saved');
           resolve(_.get(this.configService, 'labelConfig.messages.success.001'));
         }, err => {
           reject(_.get(this.configService, 'labelConfig.messages.error.001'));

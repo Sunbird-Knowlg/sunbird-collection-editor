@@ -12,8 +12,17 @@ import { map } from 'rxjs/operators';
 })
 export class QuestionService {
   public http: HttpClient;
+  public questionMap =  {};
   constructor(public dataService: DataService, http: HttpClient, private publicDataService: PublicDataService) {
     this.http = http;
+  }
+
+  setQuestionMap(key, value) {
+    this.questionMap[key] = value;
+  }
+
+  clearQuestionMap() {
+    this.questionMap = {};
   }
 
   readQuestion(questionId, leafFormConfigfields? ) {

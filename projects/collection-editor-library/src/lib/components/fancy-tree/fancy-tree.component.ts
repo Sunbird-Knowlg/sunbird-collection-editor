@@ -152,6 +152,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       rootNode.setExpanded(true);
       this.eachNodeActionButton(rootNode);
     });
+    this.treeService.nextTreeStatus('loaded');
     this.showTree = true;
   }
 
@@ -356,6 +357,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       return this.dropNotAllowed();
     }
     data.otherNode.moveTo(node, data.hitMode);
+    this.treeService.nextTreeStatus('reorder');
     return true;
   }
 

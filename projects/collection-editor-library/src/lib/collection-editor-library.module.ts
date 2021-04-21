@@ -26,7 +26,7 @@ import { CkeditorToolComponent } from './components/ckeditor-tool/ckeditor-tool.
 import { QuestionComponent } from './components/question/question.component';
 import {SunbirdPdfPlayerModule} from '@project-sunbird/sunbird-pdf-player-v8';
 import { SunbirdVideoPlayerModule } from '@project-sunbird/sunbird-video-player-v8';
-import { QumlLibraryModule, QuestionCursor } from '@project-sunbird/sunbird-quml-player';
+import { QumlLibraryModule, QuestionCursor } from '@project-sunbird/sunbird-quml-player-v8';
 import {CarouselModule} from 'ngx-bootstrap/carousel';
 import { TelemetryInteractDirective } from './directives/telemetry-interact/telemetry-interact.directive';
 import { AssetBrowserComponent } from './components/asset-browser/asset-browser.component';
@@ -36,12 +36,13 @@ import { CacheStorageAbstract } from 'ng2-cache-service/dist/src/services/storag
 import { CacheSessionStorage } from 'ng2-cache-service/dist/src/services/storage/session-storage/cache-session-storage.service';
 import { QumlPlayerService } from './services/quml-player/quml-player.service';
 import { QumlPlayerComponent } from './components/quml-player/quml-player.component';
+import { DialcodeComponent } from './components/dialcode/dialcode.component';
 @NgModule({
   declarations: [CollectionEditorLibraryComponent, ContentplayerPageComponent, EditorComponent, QumlplayerPageComponent,
     HeaderComponent, FancyTreeComponent, MetaFormComponent, LibraryComponent, LibraryFilterComponent, LibraryListComponent,
     QuestionComponent, OptionsComponent, AnswerComponent, CkeditorToolComponent,
-    LibraryPlayerComponent, ResourceReorderComponent, SkeletonLoaderComponent, TemplateComponent, TelemetryInteractDirective, AssetBrowserComponent, 
-    CollectionIconComponent, QumlPlayerComponent],
+    LibraryPlayerComponent, ResourceReorderComponent, SkeletonLoaderComponent, TemplateComponent, TelemetryInteractDirective, 
+    AssetBrowserComponent, CollectionIconComponent, QumlPlayerComponent, DialcodeComponent],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule.forChild([]), CommonFormElementsModule, InfiniteScrollModule,
   HttpClientModule, SuiModule, SunbirdPdfPlayerModule, SunbirdVideoPlayerModule, QumlLibraryModule, CarouselModule],
   providers: [
