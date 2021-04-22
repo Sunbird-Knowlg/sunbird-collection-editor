@@ -3,6 +3,9 @@
 }
 
 .dynamic-form{
+  sb-dynamic-checkbox{
+    margin-top: 3.5rem;
+  }
   .sb-dropdown-select{
     padding: 16px 8px !important;
   }
@@ -138,8 +141,8 @@ body {
       }
     }
     .sb-checkbox {
-      padding: 1.5rem 0;
-      margin-top: 2rem;
+      padding: 0;
+      margin-top: 0;
     }
     sb-icon-dropdown {
       top: 10px !important;
