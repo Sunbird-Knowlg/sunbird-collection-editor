@@ -166,7 +166,7 @@ export const questionEditorConfig = {
       lastName: 'Bhuva',
     },
     env: 'questionSetLibrary',
-    // framework: 'ekstep_ncert_k-12',
+    framework: 'ekstep_ncert_k-12',
     cloudStorageUrls: ['https://s3.ap-south-1.amazonaws.com/ekstep-public-qa/', 'https://ekstep-public-qa.s3-ap-south-1.amazonaws.com/',
       'https://dockstorage.blob.core.windows.net/sunbird-content-dock/'],
     board: 'CBSE',
