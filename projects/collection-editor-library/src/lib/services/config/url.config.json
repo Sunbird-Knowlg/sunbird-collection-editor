@@ -6,7 +6,8 @@
       "HIERARCHY_UPDATE": "questionset/v1/hierarchy/update",
       "CONTENT_REVIEW" : "questionset/v1/review/",
       "CONTENT_REJECT" : "questionset/v1/reject/",
-      "CONTENT_PUBLISH" : "questionset/v1/publish/"
+      "CONTENT_PUBLISH" : "questionset/v1/publish/",
+      "DEFAULT_PARAMS_FIELDS": "instructions"
     },
     "Collection": {
       "HIERARCHY_READ": "content/v3/hierarchy",

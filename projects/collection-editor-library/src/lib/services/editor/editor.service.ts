@@ -82,10 +82,11 @@ export class EditorService {
   }
   readQuestionSet(collectionId): Observable<any> {
     const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
+    const param = { fields: url.DEFAULT_PARAMS_FIELDS };
     const hierarchyUrl = `${url.READ}/${collectionId}`;
     const req = {
       url: hierarchyUrl,
-      param: { fields: 'instructions' }
+      param: {...param }
     };
     return this.publicDataService.get(req);
   }

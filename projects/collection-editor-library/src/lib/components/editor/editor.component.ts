@@ -75,7 +75,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.treeService.initialize(this.editorConfig);
     this.collectionId = _.get(this.editorConfig, 'context.identifier');
     this.toolbarConfig = this.editorService.getToolbarConfig();
-    this.mergeQuestionSetData();
+    this.mergeCollectionExternalProperties();
     // this.fetchCollectionHierarchy().subscribe(
     //   (response) => {
     //     const collection = _.get(response, `result.${this.configService.categoryConfig[this.editorConfig.config.objectType]}`);
@@ -232,16 +232,16 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     }));
   }
 
-  mergeQuestionSetData() {
-  const arrayOfRequest = [];
+  mergeCollectionExternalProperties() {
+  const requests = [];
   const objectType = this.configService.categoryConfig[this.editorConfig.config.objectType];
-  arrayOfRequest.push(this.editorService.fetchCollectionHierarchy(this.collectionId));
+  requests.push(this.editorService.fetchCollectionHierarchy(this.collectionId));
   if (objectType === 'questionSet') {
-    arrayOfRequest.push(this.editorService.readQuestionSet(this.collectionId));
+    requests.push(this.editorService.readQuestionSet(this.collectionId));
    }
-  forkJoin(arrayOfRequest).subscribe(
-    (arrayOfResponse) => {
-      const hierarchyResponse = _.first(arrayOfResponse);
+  forkJoin(requests).subscribe(
+    (responseList) => {
+      const hierarchyResponse = _.first(responseList);
       this.collectionTreeNodes = {
         data: _.get(hierarchyResponse, `result.${objectType}`)
       };
@@ -264,9 +264,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       this.helperService.initialize(channel);
 
       if (objectType === 'questionSet') {
-      const questionSetResponse = _.last(arrayOfResponse);
-      const data = _.get(questionSetResponse, _.toLower(`result.${objectType}`));
-      this.collectionTreeNodes.data.instructions = data.instructions;
+        const questionSetResponse = _.last(responseList);
+        const data = _.get(questionSetResponse, _.toLower(`result.${objectType}`));
+        this.collectionTreeNodes.data.instructions = data.instructions ? data.instructions : '';
       }
     }
   );
