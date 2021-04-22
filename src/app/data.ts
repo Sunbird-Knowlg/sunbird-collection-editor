@@ -5,7 +5,7 @@ export const collectionEditorConfig = {
       name: 'Vaibahv Bhuva',
       orgIds: ['01309282781705830427']
     },
-    identifier: 'do_113246527029993472129',
+    identifier: 'do_1132591625173893121151',
     channel: '01307938306521497658',
     // framework: 'nit_k-12',
     targetFWIds: ['nit_k-12'],
@@ -166,7 +166,7 @@ export const questionEditorConfig = {
       lastName: 'Bhuva',
     },
     env: 'questionSetLibrary',
-    // framework: 'ekstep_ncert_k-12',
+    framework: 'ekstep_ncert_k-12',
     cloudStorageUrls: ['https://s3.ap-south-1.amazonaws.com/ekstep-public-qa/', 'https://ekstep-public-qa.s3-ap-south-1.amazonaws.com/',
       'https://dockstorage.blob.core.windows.net/sunbird-content-dock/'],
     board: 'CBSE',

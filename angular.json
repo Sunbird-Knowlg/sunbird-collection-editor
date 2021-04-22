@@ -28,7 +28,7 @@
               "src/favicon.ico",
               {
                 "glob": "**/*",
-                "input": "./node_modules/@project-sunbird/sunbird-pdf-player-v8/lib/assets/",
+                "input": "node_modules/@project-sunbird/sunbird-pdf-player-v8/lib/assets/",
                 "output": "/assets/"
               },
               {
@@ -39,6 +39,11 @@
               {
                 "glob": "**/*",
                 "input": "projects/collection-editor-library/src/lib/assets",
+                "output": "/assets/"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@project-sunbird/sunbird-quml-player-v8/lib/assets/",
                 "output": "/assets/"
               }
             ],

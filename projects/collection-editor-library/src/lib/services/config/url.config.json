@@ -19,7 +19,8 @@
     },
     "DIALCODE": {
       "RESERVE" : "dialcode/v1/reserve/",
-      "PROCESS" : "dialcode/v1/process/status/"
+      "PROCESS" : "dialcode/v1/process/status/",
+      "SEARCH"  : "dialcode/v3/search"
     },
     "ContentPolicyUrl" : "/term-of-use.html" 
   }
