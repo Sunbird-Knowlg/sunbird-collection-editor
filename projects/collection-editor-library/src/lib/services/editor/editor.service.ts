@@ -80,13 +80,13 @@ export class EditorService {
     };
     return this.publicDataService.get(req);
   }
-  readQuestionSet(questionSetId): Observable<any> {
+  readQuestionSet(questionSetId, option: any = { params: {} }): Observable<any> {
     const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
     const param = { fields: url.DEFAULT_PARAMS_FIELDS };
     const hierarchyUrl = `${url.READ}/${questionSetId}`;
     const req = {
       url: hierarchyUrl,
-      param: {...param }
+      param: { ...param, ...option.params }
     };
     return this.publicDataService.get(req);
   }
