@@ -3,6 +3,9 @@
 }
 
 .dynamic-form{
+  sb-dynamic-checkbox{
+    margin-top: 3.5rem;
+  }
   .sb-dropdown-select{
     padding: 16px 8px !important;
   }
@@ -60,12 +63,13 @@ body {
       // text-transform: capitalize;
     }
     select{
-      padding: 17px 8px !important;
+      padding: 12px 8px !important;
     }
     .list-border{
-      margin-top: 4px !important;
-      min-height: 46px !important;
+      margin-top: 14px !important;
+      min-height: 43px !important;
       height: inherit !important;
+      padding: 5px 8px !important;
     }
 
     .multi-select-container {
@@ -137,8 +141,8 @@ body {
       }
     }
     .sb-checkbox {
-      padding: 1.5rem 0;
-      margin-top: 2rem;
+      padding: 0;
+      margin-top: 0;
     }
     sb-icon-dropdown {
       top: 10px !important;
@@ -266,4 +270,7 @@ lib-chat-window,
 .sb-textbox::-webkit-input-placeholder {
   color: var(--gray-100) !important;
   font-weight: 600  !important;
+}
+.treepicker-parent{
+  margin: 0.6rem 0 !important;
 }
