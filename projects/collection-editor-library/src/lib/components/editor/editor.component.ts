@@ -11,7 +11,7 @@ import { HelperService } from '../../services/helper/helper.service';
 import { IEditorConfig } from '../../interfaces/editor';
 import { Router } from '@angular/router';
 import { catchError, map, tap } from 'rxjs/operators';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, forkJoin } from 'rxjs';
 import * as _ from 'lodash-es';
 import { ConfigService } from '../../services/config/config.service';
 @Component({
@@ -75,21 +75,22 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.treeService.initialize(this.editorConfig);
     this.collectionId = _.get(this.editorConfig, 'context.identifier');
     this.toolbarConfig = this.editorService.getToolbarConfig();
-    this.fetchCollectionHierarchy().subscribe(
-      (response) => {
-        const collection = _.get(response, `result.${this.configService.categoryConfig[this.editorConfig.config.objectType]}`);
-        this.toolbarConfig.title = collection.name;
-        this.organisationFramework = _.get(collection, 'framework') || _.get(this.editorConfig, 'context.framework');
-        this.targetFramework = _.get(collection, 'targetFWIds') ||  _.get(this.editorConfig, 'context.targetFWIds');
-        if (this.organisationFramework) {
-          this.frameworkService.initialize(this.organisationFramework);
-        }
-        if (!_.isEmpty(this.targetFramework)) {
-          this.frameworkService.getTargetFrameworkCategories(this.targetFramework);
-        }
-        const channel = _.get(collection, 'channel') || _.get(this.editorConfig, 'context.channel');
-        this.helperService.initialize(channel);
-      });
+    this.mergeQuestionSetData();
+    // this.fetchCollectionHierarchy().subscribe(
+    //   (response) => {
+    //     const collection = _.get(response, `result.${this.configService.categoryConfig[this.editorConfig.config.objectType]}`);
+    //     this.toolbarConfig.title = collection.name;
+    //     this.organisationFramework = _.get(collection, 'framework') || _.get(this.editorConfig, 'context.framework');
+    //     this.targetFramework = _.get(collection, 'targetFWIds') ||  _.get(this.editorConfig, 'context.targetFWIds');
+    //     if (this.organisationFramework) {
+    //       this.frameworkService.initialize(this.organisationFramework);
+    //     }
+    //     if (!_.isEmpty(this.targetFramework)) {
+    //       this.frameworkService.getTargetFrameworkCategories(this.targetFramework);
+    //     }
+    //     const channel = _.get(collection, 'channel') || _.get(this.editorConfig, 'context.channel');
+    //     this.helperService.initialize(channel);
+    //   });
     this.editorService.getCategoryDefinition(this.editorConfig.config.primaryCategory,
       this.editorConfig.context.channel, this.editorConfig.config.objectType)
       .subscribe(
@@ -228,6 +229,46 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.toolbarConfig.showSubmitBtn = true;
       }
     }));
+  }
+
+  mergeQuestionSetData() {
+  const arrayOfRequest = [];
+  const objectType = this.configService.categoryConfig[this.editorConfig.config.objectType];
+  arrayOfRequest.push(this.editorService.fetchCollectionHierarchy(this.collectionId));
+  if (objectType === 'questionSet') {
+    arrayOfRequest.push(this.editorService.readQuestionSet(this.collectionId));
+   }
+  forkJoin(arrayOfRequest).subscribe(
+    (arrayOfResponse) => {
+      const hierarchyResponse = _.first(arrayOfResponse);
+      this.collectionTreeNodes = {
+        data: _.get(hierarchyResponse, `result.${objectType}`)
+      };
+      if (_.isEmpty(this.collectionTreeNodes.data.children)) {
+        this.toolbarConfig.showSubmitBtn = false;
+      } else {
+        this.toolbarConfig.showSubmitBtn = true;
+      }
+      const collection = _.get(hierarchyResponse, `result.${objectType}`);
+      this.toolbarConfig.title = collection.name;
+      this.organisationFramework = _.get(collection, 'framework') || _.get(this.editorConfig, 'context.framework');
+      this.targetFramework = _.get(collection, 'targetFWIds') ||  _.get(this.editorConfig, 'context.targetFWIds');
+      if (this.organisationFramework) {
+        this.frameworkService.initialize(this.organisationFramework);
+      }
+      if (!_.isEmpty(this.targetFramework)) {
+        this.frameworkService.getTargetFrameworkCategories(this.targetFramework);
+      }
+      const channel = _.get(collection, 'channel') || _.get(this.editorConfig, 'context.channel');
+      this.helperService.initialize(channel);
+
+      if (objectType === 'questionSet') {
+      const questionSetResponse = _.last(arrayOfResponse);
+      const data = _.get(questionSetResponse, _.toLower(`result.${objectType}`));
+      this.collectionTreeNodes.data.instructions = data.instructions;
+      }
+    }
+  );
   }
 
   toolbarEventListener(event) {

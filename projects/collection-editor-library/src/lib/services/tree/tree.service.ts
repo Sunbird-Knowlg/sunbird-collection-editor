@@ -50,6 +50,10 @@ export class TreeService {
   updateTreeNodeMetadata(newData: any) {
     const activeNode = this.getActiveNode();
     const nodeId = activeNode.data.id;
+    if (newData.instruction) {
+      newData.instructions = { default: newData.instruction };
+      delete newData.instruction;
+     }
     activeNode.data.metadata = { ...activeNode.data.metadata, ...newData };
     activeNode.title = newData.name;
     newData = _.pickBy(newData, _.identity);
@@ -58,7 +62,7 @@ export class TreeService {
     if (attributions && _.isString(attributions)) {
       newData.attributions = attributions.split(',');
     }
-    const { maxTime, warningTime, copyrightYear, instruction } = newData;
+    const { maxTime, warningTime, copyrightYear } = newData;
 
     if (copyrightYear) {
       newData.copyrightYear = _.toNumber(copyrightYear);
@@ -70,15 +74,10 @@ export class TreeService {
     if (warningTime) {
       timeLimits.warningTime = this.helperService.hmsToSeconds(warningTime);
     }
-    const instructions: any = {};
-    if (instruction) {
-       instructions.instruction = instruction;
-    }
+
     newData.timeLimits = timeLimits;
-    newData.instructions = instructions;
     delete newData.maxTime;
     delete newData.warningTime;
-    delete newData.instruction;
     this.setTreeCache(nodeId, newData, activeNode.data);
   }
 
