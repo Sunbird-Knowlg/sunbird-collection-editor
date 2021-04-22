@@ -74,7 +74,7 @@ export class FrameworkService {
   }
 
   public set targetFrameworkIds(id: any) {
-    _.compact(this._targetFrameworkIds.push(id));
+    _.uniq(_.compact(this._targetFrameworkIds.push(id)));
   }
 
   public get organisationFramework(): string {
