@@ -467,7 +467,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
       finalize(() => {
         this.showHideSpinnerLoader(false);
       })).subscribe((response: ServerResponse) => {
-        this.toasterService.success('Question is created sucessfully');
+        this.toasterService.success('Question is created successfully');
         if (this.actionType === 'previewContent') {
           this.questionId = _.first(_.values(_.get(response, 'result.identifiers')));
           this.previewContent();
@@ -489,7 +489,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
       finalize(() => {
         this.showHideSpinnerLoader(false);
       })).subscribe((response: ServerResponse) => {
-        this.toasterService.success('Question is updated sucessfully');
+        this.toasterService.success('Question is updated successfully');
         if (this.actionType === 'previewContent') {
           this.previewContent();
         } else {
