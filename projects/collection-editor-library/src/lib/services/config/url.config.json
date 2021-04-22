@@ -18,6 +18,10 @@
     "COMPOSITE": {
       "SEARCH": "composite/v3/search"
     },
+    "DIALCODE": {
+      "RESERVE" : "dialcode/v1/reserve/",
+      "PROCESS" : "dialcode/v1/process/status/"
+    },
     "ContentPolicyUrl" : "/term-of-use.html" 
   }
 }

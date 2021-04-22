@@ -126,12 +126,13 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       if (_.isEmpty(targetFWIdentifiers) ) {
         // tslint:disable-next-line:max-line-length
         targetFWType = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.config.frameworkMetadata.targetFWType');
-        const channelFrameworksType = _.map(_.get(this.helperService.channelInfo, 'frameworks'), 'type');
+        const channelFrameworks = _.get(this.helperService.channelInfo, 'frameworks');
+        const channelFrameworksType = _.map(channelFrameworks, 'type');
         const channelFrameworksIdentifiers = _.map(_.get(this.helperService.channelInfo, 'frameworks'), 'identifier');
         const difference =  _.difference(targetFWType, _.uniq(channelFrameworksType));
 
         if (targetFWType && channelFrameworksType && _.isEmpty(difference)) {
-          this.targetFramework =  _.get(_.first(_.filter(channelFrameworksType, framework => {
+          this.targetFramework =  _.get(_.first(_.filter(channelFrameworks, framework => {
             return framework.type === _.first(targetFWType);
           })), 'identifier');
           this.treeService.updateMetaDataProperty('targetFWIds', _.castArray(this.targetFramework));
@@ -377,6 +378,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
             this.treeService.replaceNodeId(response.identifiers);
           }
           this.treeService.clearTreeCache();
+          this.treeService.nextTreeStatus('saved');
           resolve(_.get(this.configService, 'labelConfig.messages.success.001'));
         }, err => {
           reject(_.get(this.configService, 'labelConfig.messages.error.001'));

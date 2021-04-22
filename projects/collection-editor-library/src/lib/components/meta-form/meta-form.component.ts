@@ -75,7 +75,7 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
       if (this.frameworkService.targetFrameworkIds) {
         this.frameworkService.frameworkData$.pipe(
           takeUntil(this.onComponentDestroy$),
-          filter(data => _.get(data, `frameworkdata.${this.frameworkService.targetFrameworkIds}`))
+          filter(data => _.get(data, `frameworkdata.${_.first(this.frameworkService.targetFrameworkIds)}`))
         ).subscribe((frameworkDetails: any) => {
           if (frameworkDetails && !frameworkDetails.err) {
             // const frameworkData = frameworkDetails.frameworkdata[this.frameworkService.targetFrameworkIds].categories;

@@ -193,12 +193,15 @@ quml-mcq-solutions{
 .sb-editor-container {
   position: relative;
   z-index: 999 !important;
+  .sb-input:first-child{
+    margin: 1rem 0 !important;
+  }
     .container {
       width: 95% !important;
     }
     .dynamic-form {
       .sb-dropdown-select{
-        padding: 16px 8px !important;
+        padding: 11px 8px !important;
       }
       label {
         font-size: 12px !important;
@@ -212,7 +215,7 @@ quml-mcq-solutions{
       .sb-textarea,
       .list-border {
         border: 1px solid rgba(34, 36, 38, 0.15) !important;
-        padding: 0.85rem 0.5rem !important;
+        padding: 12px 8px !important;
         border-radius: 0.28571429rem;
         font-size: 0.785rem !important;
         font-weight: 500;
@@ -282,8 +285,8 @@ quml-mcq-solutions{
       }
     }
     .sb-checkbox{
-      padding: 1.5rem 0;
-      margin-top: 2rem;
+      padding: 0;
+      margin-top: 0;
     }
       sb-icon-dropdown{
         top: 10px !important;

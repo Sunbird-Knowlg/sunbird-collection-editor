@@ -17,14 +17,15 @@
     {{ labelConfigData.title }}
   </div>
   <div class="d-flex flex-ai-center" *ngIf="pageId === 'collection_editor' && labelConfigData">
-    <!-- <button *ngIf="visibility && visibility?.previewContent" class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10"
+    <lib-dialcode *ngIf="visibility && visibility?.dialcode" class="d-flex flex-ai-center"></lib-dialcode>
+    <button *ngIf="visibility && visibility?.previewContent" class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10"
       [ngClass]="!buttonLoaders?.previewButtonLoader ? '': 'sb-btn-loading-spinner sb-btn-outline-disabled'"
       (click)="buttonEmitter({type: 'previewContent'})" libTelemetryInteract
       [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('preview','click','launch', telemetryService.telemetryPageId)">
       <div class="sb-loading-spinner" *ngIf="buttonLoaders?.previewButtonLoader" role="status" aria-hidden="true"></div>
       <i *ngIf="labelConfigData.preview_collection_btn_icon && !buttonLoaders?.previewButtonLoader" class="{{labelConfigData.preview_collection_btn_icon}}"></i>
       {{ labelConfigData.preview_collection_btn_label}}
-    </button> -->
+    </button>
 
     <button *ngIf="visibility && visibility?.saveContent" class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10"
     [ngClass]="!buttonLoaders?.saveAsDraftButtonLoader ? '': 'sb-btn-loading-spinner sb-btn-outline-disabled'"

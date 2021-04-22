@@ -6,6 +6,8 @@ import * as _ from 'lodash-es';
 import { IEditorConfig } from '../../interfaces/editor';
 import { ToasterService } from '../toaster/toaster.service';
 import { HelperService } from '../helper/helper.service';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { skipWhile } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -17,11 +19,19 @@ export class TreeService {
     nodes: []
   };
   treeNativeElement: any;
+  // tslint:disable-next-line:variable-name
+  private _treeStatus$ = new BehaviorSubject<any>(undefined);
+  public readonly treeStatus$: Observable<any> = this._treeStatus$
+  .asObservable().pipe(skipWhile(status => status === undefined || status === null));
 
   constructor(private toasterService: ToasterService, private helperService: HelperService) { }
 
   public initialize(editorConfig: IEditorConfig) {
     this.config = editorConfig.config;
+  }
+
+  nextTreeStatus(status) {
+    this._treeStatus$.next(status);
   }
 
   setTreeElement(el) {
@@ -112,6 +122,7 @@ export class TreeService {
     $('span.fancytree-title').attr('style', 'width:11em;text-overflow:ellipsis;white-space:nowrap;overflow:hidden');
     $(this.treeNativeElement).scrollLeft($('.fancytree-lastsib').width());
     $(this.treeNativeElement).scrollTop($('.fancytree-lastsib').height());
+    this.nextTreeStatus('added');
   }
 
   removeNode() {
@@ -123,6 +134,7 @@ export class TreeService {
     $('span.fancytree-title').attr('style', 'width:11em;text-overflow:ellipsis;white-space:nowrap;overflow:hidden');
     $(this.treeNativeElement).scrollLeft($('.fancytree-lastsib').width());
     $(this.treeNativeElement).scrollTop($('.fancytree-lastsib').height());
+    this.nextTreeStatus('removed');
   }
 
   getTreeObject() {
