@@ -183,6 +183,9 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
         if (field.code === 'showTimer') {
           field.options = this.showTimer;
         }
+        if (field.code === 'instruction') {
+          field.default = _.get(metaDataFields, 'instructions.default') || '' ;
+        }
 
         if ((_.isEmpty(field.range) || _.isEmpty(field.terms)) &&
           !field.editable && !_.isEmpty(field.default)) {
