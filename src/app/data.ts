@@ -5,7 +5,7 @@ export const collectionEditorConfig = {
       name: 'Vaibahv Bhuva',
       orgIds: ['01309282781705830427']
     },
-    identifier: 'do_113246527029993472129',
+    identifier: 'do_1132591625173893121151',
     channel: '01307938306521497658',
     // framework: 'nit_k-12',
     targetFWIds: ['nit_k-12'],
