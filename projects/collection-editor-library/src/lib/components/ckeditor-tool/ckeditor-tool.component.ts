@@ -7,7 +7,6 @@ import { throwError, Observable } from 'rxjs';
 import { QuestionService } from '../../services/question/question.service';
 import { EditorService } from '../../services/editor/editor.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
-import MathText from '../../../../../../src/assets/libs/mathEquation/plugin/mathTextPlugin.js';
 import { ConfigService } from '../../services/config/config.service';
 @Component({
   selector: 'lib-ckeditor-tool',
@@ -274,7 +273,6 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
 
   initializeEditors() {
     ClassicEditor.create(this.editorRef.nativeElement, {
-      extraPlugins: ['Font', MathText], // TODO: this.customImageResizer
       toolbar: this.editorConfig.toolbar,
       fontSize: this.editorConfig.fontSize,
       image: this.editorConfig.image,
