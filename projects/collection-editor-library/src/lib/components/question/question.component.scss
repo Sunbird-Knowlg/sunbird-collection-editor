@@ -116,45 +116,45 @@ sui-select {
   }
 }
 
-.sb-quml-player {
-  width: 100%;
-  min-height: 300px;
-  position: relative;
-  overflow: hidden;
-  border: solid 1px #cccccc;
-}
+// .sb-quml-player {
+//   width: 100%;
+//   min-height: 300px;
+//   position: relative;
+//   overflow: hidden;
+//   border: solid 1px #cccccc;
+// }
 
-.quml-container{
-  overflow-y: auto  !important;
-  height: 30rem !important;
-}
-.quml-option-card{
-  figure{
-      img{
-          max-width: 100% !important;
-      }
-  }
-  .option-border{
-      width: 50rem;
-  }
-  .checkmark{
-      &:after{
-          position: relative !important;
-      }
-  }
-}
-quml-mcq-solutions{
-  .solution-options{
-      figure{
-          img{
-              max-width: 100%;
-          }
-      }
-  }
-}
-.b-1-100 {
-  border: solid 1px #cccccc;
-}
+// .quml-container{
+//   overflow-y: auto  !important;
+//   height: 30rem !important;
+// }
+// .quml-option-card{
+//   figure{
+//       img{
+//           max-width: 100% !important;
+//       }
+//   }
+//   .option-border{
+//       width: 50rem;
+//   }
+//   .checkmark{
+//       &:after{
+//           position: relative !important;
+//       }
+//   }
+// }
+// quml-mcq-solutions{
+//   .solution-options{
+//       figure{
+//           img{
+//               max-width: 100%;
+//           }
+//       }
+//   }
+// }
+// .b-1-100 {
+//   border: solid 1px #cccccc;
+// }
 
 .two-column-grid {
   display: grid;
