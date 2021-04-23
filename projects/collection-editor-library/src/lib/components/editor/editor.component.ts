@@ -75,22 +75,22 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.treeService.initialize(this.editorConfig);
     this.collectionId = _.get(this.editorConfig, 'context.identifier');
     this.toolbarConfig = this.editorService.getToolbarConfig();
-    this.mergeCollectionExternalProperties();
-    // this.fetchCollectionHierarchy().subscribe(
-    //   (response) => {
-    //     const collection = _.get(response, `result.${this.configService.categoryConfig[this.editorConfig.config.objectType]}`);
-    //     this.toolbarConfig.title = collection.name;
-    //     this.organisationFramework = _.get(collection, 'framework') || _.get(this.editorConfig, 'context.framework');
-    //     this.targetFramework = _.get(collection, 'targetFWIds') ||  _.get(this.editorConfig, 'context.targetFWIds');
-    //     if (this.organisationFramework) {
-    //       this.frameworkService.initialize(this.organisationFramework);
-    //     }
-    //     if (!_.isEmpty(this.targetFramework)) {
-    //       this.frameworkService.getTargetFrameworkCategories(this.targetFramework);
-    //     }
-    //     const channel = _.get(collection, 'channel') || _.get(this.editorConfig, 'context.channel');
-    //     this.helperService.initialize(channel);
-    //   });
+    this.mergeCollectionExternalProperties().subscribe(
+      (response) => {
+        const hierarchyResponse = _.first(response);
+        const collection = _.get(hierarchyResponse, `result.${this.configService.categoryConfig[this.editorConfig.config.objectType]}`);
+        this.toolbarConfig.title = collection.name;
+        this.organisationFramework = _.get(collection, 'framework') || _.get(this.editorConfig, 'context.framework');
+        this.targetFramework = _.get(collection, 'targetFWIds') ||  _.get(this.editorConfig, 'context.targetFWIds');
+        if (this.organisationFramework) {
+          this.frameworkService.initialize(this.organisationFramework);
+        }
+        if (!_.isEmpty(this.targetFramework)) {
+          this.frameworkService.getTargetFrameworkCategories(this.targetFramework);
+        }
+        const channel = _.get(collection, 'channel') || _.get(this.editorConfig, 'context.channel');
+        this.helperService.initialize(channel);
+      });
     this.editorService.getCategoryDefinition(this.editorConfig.config.primaryCategory,
       this.editorConfig.context.channel, this.editorConfig.config.objectType)
       .subscribe(
@@ -219,28 +219,27 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  fetchCollectionHierarchy(): Observable<any> {
-    return this.editorService.fetchCollectionHierarchy(this.collectionId).pipe(tap(data => {
-      this.collectionTreeNodes = {
-        data: _.get(data, `result.${this.configService.categoryConfig[this.editorConfig.config.objectType]}`)
-      };
-      if (_.isEmpty(this.collectionTreeNodes.data.children)) {
-        this.toolbarConfig.showSubmitBtn = false;
-      } else {
-        this.toolbarConfig.showSubmitBtn = true;
-      }
-    }));
-  }
+  // fetchCollectionHierarchy(): Observable<any> {
+  //   return this.editorService.fetchCollectionHierarchy(this.collectionId).pipe(tap(data => {
+  //     this.collectionTreeNodes = {
+  //       data: _.get(data, `result.${this.configService.categoryConfig[this.editorConfig.config.objectType]}`)
+  //     };
+  //     if (_.isEmpty(this.collectionTreeNodes.data.children)) {
+  //       this.toolbarConfig.showSubmitBtn = false;
+  //     } else {
+  //       this.toolbarConfig.showSubmitBtn = true;
+  //     }
+  //   }));
+  // }
 
-  mergeCollectionExternalProperties() {
+  mergeCollectionExternalProperties(): Observable<any> {
   const requests = [];
   const objectType = this.configService.categoryConfig[this.editorConfig.config.objectType];
   requests.push(this.editorService.fetchCollectionHierarchy(this.collectionId));
   if (objectType === 'questionSet') {
     requests.push(this.editorService.readQuestionSet(this.collectionId));
    }
-  forkJoin(requests).subscribe(
-    (responseList) => {
+  return forkJoin(requests).pipe(tap(responseList => {
       const hierarchyResponse = _.first(responseList);
       this.collectionTreeNodes = {
         data: _.get(hierarchyResponse, `result.${objectType}`)
@@ -250,18 +249,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       } else {
         this.toolbarConfig.showSubmitBtn = true;
       }
-      const collection = _.get(hierarchyResponse, `result.${objectType}`);
-      this.toolbarConfig.title = collection.name;
-      this.organisationFramework = _.get(collection, 'framework') || _.get(this.editorConfig, 'context.framework');
-      this.targetFramework = _.get(collection, 'targetFWIds') ||  _.get(this.editorConfig, 'context.targetFWIds');
-      if (this.organisationFramework) {
-        this.frameworkService.initialize(this.organisationFramework);
-      }
-      if (!_.isEmpty(this.targetFramework)) {
-        this.frameworkService.getTargetFrameworkCategories(this.targetFramework);
-      }
-      const channel = _.get(collection, 'channel') || _.get(this.editorConfig, 'context.channel');
-      this.helperService.initialize(channel);
 
       if (objectType === 'questionSet') {
         const questionSetResponse = _.last(responseList);
@@ -269,7 +256,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.collectionTreeNodes.data.instructions = data.instructions ? data.instructions : '';
       }
     }
-  );
+  ));
   }
 
   toolbarEventListener(event) {
@@ -361,7 +348,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   libraryEventListener(event: any) {
-    this.fetchCollectionHierarchy().subscribe((res: any) => {
+    this.mergeCollectionExternalProperties().subscribe((res: any) => {
       this.pageId = 'collection_editor';
       this.telemetryService.telemetryPageId = this.pageId;
     });
@@ -568,7 +555,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   questionEventListener(event: any) {
     this.selectedNodeData = undefined;
-    this.fetchCollectionHierarchy().subscribe((res: any) => {
+    this.mergeCollectionExternalProperties().subscribe((res: any) => {
       this.pageId = 'collection_editor';
       this.telemetryService.telemetryPageId = this.pageId;
     });
