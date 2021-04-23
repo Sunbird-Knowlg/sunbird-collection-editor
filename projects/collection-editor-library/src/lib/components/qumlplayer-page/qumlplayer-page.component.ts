@@ -45,6 +45,7 @@ export class QumlplayerPageComponent implements OnChanges {
   switchToLandscapeMode() {
     this.showPotrait = false;
   }
+  
   removeQuestion() {
     this.toolbarEmitter.emit({button: 'removeContent'});
   }
