@@ -60,9 +60,9 @@ export class TreeService {
   updateTreeNodeMetadata(newData: any) {
     const activeNode = this.getActiveNode();
     const nodeId = activeNode.data.id;
-    if (newData.instruction) {
-      newData.instructions = { default: newData.instruction };
-      delete newData.instruction;
+    if (newData.instructions) {
+      newData.instructions = { default: newData.instructions };
+      delete newData.instructions;
      }
     activeNode.data.metadata = { ...activeNode.data.metadata, ...newData };
     activeNode.title = newData.name;
