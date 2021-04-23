@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, Output, Input, EventEmitter, OnChanges, ViewChild, ElementRef } from '@angular/core';
-import ClassicEditor from '@project-sunbird/ckeditor-build-font';
+import ClassicEditor from '@project-sunbird/ckeditor-build-classic';
 import { FineUploader } from 'fine-uploader';
 import * as _ from 'lodash-es';
 import { catchError, map } from 'rxjs/operators';
@@ -71,7 +71,8 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     this.initialized = true;
     this.editorConfig = {
       toolbar: ['bold', '|', 'italic', '|', 'underline',
-        '|', 'numberedList', '|', 'fontSize', '|', 'subscript', '|', 'superscript', '|', 'MathText', '|'
+        '|', 'numberedList', '|', 'fontSize', '|', 'subscript', '|', 'superscript', '|', 'MathText', '|',
+        'specialCharacters', '|'
       ],
       fontSize: {
         options: [
@@ -87,30 +88,33 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
         ]
       },
       image: {
-        resizeEnabled: false,
-        resizeOptions: [
-          {
-            name: 'imageResize:original',
-            label: 'Original',
-            value: null
-          },
-          {
-            name: 'imageResize:25',
-            label: '25%',
-            value: '25'
-          },
-          {
-            name: 'imageResize:50',
-            label: '50%',
-            value: '50'
-          },
-          {
-            name: 'imageResize:75',
-            label: '75%',
-            value: '75'
-          }
-        ],
-        toolbar: ['imageStyle:alignLeft', 'imageStyle:full', 'imageStyle:alignRight'],
+        resizeUnit: '%',
+        resizeOptions: [ {
+          name: 'resizeImage:original',
+          value: null,
+          icon: 'original',
+          className: 'resize-100'
+        },
+        {
+          name: 'resizeImage:25',
+          value: '25',
+          icon: 'small',
+          className: 'resize-25'
+        },
+        {
+          name: 'resizeImage:50',
+          value: '50',
+          icon: 'medium',
+          className: 'resize-50'
+        },
+        {
+          name: 'resizeImage:75',
+          value: '75',
+          icon: 'large',
+          className: 'resize-75'
+        } ],
+        toolbar: ['imageStyle:alignLeft', 'imageStyle:full',
+        'imageStyle:alignRight', 'resizeImage:25', 'resizeImage:50', 'resizeImage:75', 'resizeImage:original'],
         styles: ['full', 'alignLeft', 'alignRight', 'alignCenter']
       },
       isReadOnly: false,
