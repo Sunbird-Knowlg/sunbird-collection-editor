@@ -2,7 +2,9 @@ export const collectionEditorConfig = {
   context: {
     user: {
       id: '5a587cc1-e018-4859-a0a8-e842650b9d64',
-      name: 'Vaibahv Bhuva',
+      fullName: 'Vaibahv Bhuva',
+      firstName: 'Vaibhav',
+      lastName: 'Bhuva',
       orgIds: ['01309282781705830427']
     },
     identifier: 'do_1132591625173893121151',
@@ -121,10 +123,12 @@ export const questionEditorConfig = {
   context: {
     user: {
       id: '5a587cc1-e018-4859-a0a8-e842650b9d64',
-      name: 'Vaibahv Bhuva',
+      fullName: 'Vaibahv Bhuva',
+      firstName: 'Vaibhav',
+      lastName: 'Bhuva',
       orgIds: ['01309282781705830427']
     },
-    identifier: 'do_1132393548335759361558', // do_1132393548335759361558
+    identifier: 'do_113263678834016256111', // do_1132393548335759361558
     authToken: ' ',
     sid: 'iYO2K6dOSdA0rwq7NeT1TDzS-dbqduvV',
     did: '7e85b4967aebd6704ba1f604f20056b6',
@@ -161,10 +165,6 @@ export const questionEditorConfig = {
     host: 'https://dev.sunbirded.org',
     defaultLicense: 'CC BY 4.0',
     endpoint: '/data/v3/telemetry',
-    userData: {
-      firstName: 'Vaibhav',
-      lastName: 'Bhuva',
-    },
     env: 'questionSetLibrary',
     framework: 'ekstep_ncert_k-12',
     cloudStorageUrls: ['https://s3.ap-south-1.amazonaws.com/ekstep-public-qa/', 'https://ekstep-public-qa.s3-ap-south-1.amazonaws.com/',

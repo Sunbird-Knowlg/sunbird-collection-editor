@@ -185,7 +185,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
         mediaType,
         mimeType: fileType,
         createdBy: _.get(this.editorService.editorConfig, 'context.user.id'),
-        creator: _.get(this.editorService.editorConfig, 'context.user.name'),
+        creator: _.get(this.editorService.editorConfig, 'context.user.fullName'),
         channel: _.get(this.editorService.editorConfig, 'context.channel')
       }
     };

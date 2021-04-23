@@ -432,7 +432,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
   getDefaultSessionContext() {
     return _.omitBy(_.merge(
       {
-        author: _.get(this.editorService.editorConfig, 'context.user.name'),
+        author: _.get(this.editorService.editorConfig, 'context.user.fullName'),
         ..._.pick(_.get(this.editorService.editorConfig, 'context'), ['board', 'medium', 'gradeLevel', 'subject', 'topic'])
       },
       {
