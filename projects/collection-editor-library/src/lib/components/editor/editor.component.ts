@@ -207,32 +207,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.unitFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.unitMetadata.properties');
     // tslint:disable-next-line:max-line-length
     this.rootFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.create.properties');
-    this.rootFormConfig.push({
-      'code': 'instruction',
-      'dataType': 'text',
-      'description': 'Name of the Instruction',
-      'editable': true,
-      'inputType': 'richText',
-      'label': 'Instructions',
-      'name': 'Instruction',
-      'placeholder': 'Enter instructions',
-      'renderingHints': {
-        'class': 'sb-g-col-lg-2 required'
-      },
-      'validations': [
-        {
-          'type': 'maxLength',
-          'value': '100',
-          'message': 'Input is Exceeded'
-        },
-        {
-          'type': 'required',
-          'message': 'Instruction is required'
-        }
-      ],
-      'required': true,
-      'visible': true,
-    });
     // tslint:disable-next-line:max-line-length
     this.libraryComponentInput.searchFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.search.properties');
     this.leafFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.childMetadata.properties');
