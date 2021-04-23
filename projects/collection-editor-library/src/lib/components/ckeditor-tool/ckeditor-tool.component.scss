@@ -40,7 +40,7 @@
 .insert-image-btn {
   position: absolute;
   z-index: 1;
-  left: 315px;
+  left: 360px;
   background-color: transparent;
   padding: 12px 14px !important;
   margin-left: 6px;
@@ -163,9 +163,29 @@
     border-bottom: 1px solid #c4c4c4;
     border-radius: 0;
   }
-  
+
   .ck-rounded-corners .ck.ck-editor__main>.ck-editor__editable, .ck.ck-editor__main>.ck-editor__editable.ck-rounded-corners {
     border: none;
+  }
+
+
+  figure.image.ck-widget {
+    width: auto;
+    height: auto;
+    overflow: visible;
+  }
+
+  figure.image.image_resized.resize-25 {
+    width: 25%;
+    height: auto;
+  }
+  figure.image.image_resized.resize-50 {
+    width: 50%;
+    height: auto;
+  }
+  figure.image.image_resized.resize-75 {
+    width: 75%;
+    height: auto;
   }
 }
 
