@@ -62,7 +62,6 @@ export class TreeService {
     const nodeId = activeNode.data.id;
     if (newData.instructions) {
       newData.instructions = { default: newData.instructions };
-      delete newData.instructions;
      }
     activeNode.data.metadata = { ...activeNode.data.metadata, ...newData };
     activeNode.title = newData.name;
