@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit , ViewEncapsulation} from '@angular/core';
 import * as _ from 'lodash-es';
 import { ConfigService } from '../../services/config/config.service';
 import { PlayerService } from '../../services/player/player.service';
@@ -6,7 +6,8 @@ import { PlayerService } from '../../services/player/player.service';
 @Component({
   selector: 'lib-quml-player',
   templateUrl: './quml-player.component.html',
-  styleUrls: ['./quml-player.component.css']
+  styleUrls: ['./quml-player.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class QumlPlayerComponent implements OnInit {
   qumlPlayerConfig: any;
@@ -41,6 +42,8 @@ export class QumlPlayerComponent implements OnInit {
     }
     console.log('qumlPlayerConfig:: ', this.qumlPlayerConfig);
   }
+
+  
 
   getPlayerEvents(event) {
     console.log('get player events', JSON.stringify(event));
