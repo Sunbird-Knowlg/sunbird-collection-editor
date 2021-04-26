@@ -34,7 +34,7 @@ describe('LibraryComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('#fetchCollectionHierarchy should call after ngOnInit', fakeAsync(() => {
+  xit('#fetchCollectionHierarchy should call after ngOnInit', fakeAsync(() => {
     const treeService = TestBed.get(TreeService);
     const editorService = TestBed.get(EditorService);
     spyOn(treeService, 'getActiveNode').and.callFake(() => {
