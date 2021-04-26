@@ -397,6 +397,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   previewContent() {
     this.buttonLoaders.previewButtonLoader = true;
     this.saveContent().then(res => {
+      this.updateTreeNodeData();
       this.questionIds = this.getQuestionIds();
       this.buttonLoaders.previewButtonLoader = false;
       this.showPreview = true;
@@ -434,9 +435,13 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.004'));
     });
   }
-
+  updateTreeNodeData() {
+      const treeNodeData =  _.get(this.treeService.getFirstChild(), 'data.metadata');
+      this.collectionTreeNodes.data =  _.merge(this.collectionTreeNodes.data, treeNodeData );
+  }
   treeEventListener(event: any) {
     this.actionType = event.type;
+    this.updateTreeNodeData();
     switch (event.type) {
       case 'nodeSelect':
         this.updateSubmitBtnVisibility();

@@ -254,4 +254,24 @@ lib-chat-window,
 }
 .ck-content ul {
   list-style-type: disc !important;
+  li {
+   margin-bottom: 0px !important; 
+  }
+}
+sb-dynamic-richtext .ck-rounded-corners .ck.ck-editor__top .ck-sticky-panel .ck-toolbar{
+  border-left: 1px solid #c4c4c4 !important;
+  border-right: 1px solid #c4c4c4 !important;
+  border-bottom-left-radius :0 !important;
+  border-bottom-right-radius:0 !important;
+}
+sb-dynamic-richtext .ck-rounded-corners .ck.ck-editor__main>.ck-editor__editable,sb-dynamic-richtext .ck.ck-editor__main>.ck-editor__editable.ck-rounded-corners{
+  border: 1px solid #c4c4c4 !important;
+  border-color: var(--ck-color-base-border) !important;
+}
+sb-dynamic-richtext .ck-rounded-corners .ck.ck-editor__top .ck-sticky-panel .ck-toolbar{
+  border-bottom: 0 !important;
+}
+
+sb-dynamic-richtext .ck-content .table{
+  margin : 0.8rem 0 !important;
 }
