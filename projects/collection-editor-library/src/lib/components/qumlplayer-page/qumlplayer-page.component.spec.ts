@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { QumlplayerPageComponent } from './qumlplayer-page.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('QumlplayerPageComponent', () => {
   let component: QumlplayerPageComponent;
@@ -8,7 +10,9 @@ describe('QumlplayerPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ QumlplayerPageComponent ]
+      imports: [ HttpClientTestingModule ],
+      declarations: [ QumlplayerPageComponent, TelemetryInteractDirective ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     })
     .compileComponents();
   }));

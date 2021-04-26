@@ -1,5 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ContentplayerPageComponent } from './contentplayer-page.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ContentplayerPageComponent', () => {
   let component: ContentplayerPageComponent;
@@ -7,7 +9,9 @@ describe('ContentplayerPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ContentplayerPageComponent ]
+      imports: [ HttpClientTestingModule ],
+      declarations: [ ContentplayerPageComponent ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();
   }));

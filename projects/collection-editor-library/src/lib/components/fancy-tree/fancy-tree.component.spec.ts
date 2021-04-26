@@ -41,21 +41,6 @@ describe('FancyTreeComponent', () => {
     component.addFromLibrary();
     expect(editorService.emitshowLibraryPageEvent).toHaveBeenCalledWith('showLibraryPage');
   });
-  it('should call addFromLibraryButton for checking enable/disable for root level node', () => {
-    component.config = mockData.config;
-    component.addFromLibraryButton(0);
-    expect(component.showLibraryButton).toBeFalsy;
-  });
-  it('should call addFromLibraryButton for checking enable/disable for level1 node', () => {
-    component.config = mockData.config;
-    component.addFromLibraryButton(1);
-    expect(component.showLibraryButton).toBeFalsy;
-  });
-  it('should call addFromLibraryButton for checking enable/disable for level2 node', () => {
-    component.config = mockData.config;
-    component.addFromLibraryButton(2);
-    expect(component.showLibraryButton).toBeTruthy;
-  });
 });
 
 

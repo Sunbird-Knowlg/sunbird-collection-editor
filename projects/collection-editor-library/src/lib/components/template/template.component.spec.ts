@@ -1,5 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TemplateComponent } from './template.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('TemplateComponent', () => {
   let component: TemplateComponent;
@@ -7,7 +10,9 @@ describe('TemplateComponent', () => {
   const templateList = [{ type: 'Multile Choice Question' }, { type: 'Subjective Question'}];
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TemplateComponent ]
+      imports: [ HttpClientTestingModule ],
+      declarations: [ TemplateComponent, TelemetryInteractDirective ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     })
     .compileComponents();
   }));

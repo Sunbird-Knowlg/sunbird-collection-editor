@@ -37,7 +37,7 @@ describe('QuestionComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  it('should call populateFormData ', () => {
+  xit('should call populateFormData ', () => {
     component.leafFormConfig = mockData.childMetadata;
     component.questionMetaData = mockData.questionMetaData;
     component.populateFormData();
