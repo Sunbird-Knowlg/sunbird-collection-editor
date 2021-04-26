@@ -52,7 +52,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public targetFramework;
   public organisationFramework;
   toolbarConfig: any;
-  public isOnFormValueChange: boolean;
   public buttonLoaders = {
     saveAsDraftButtonLoader: false,
     addFromLibraryButtonLoader: false,
