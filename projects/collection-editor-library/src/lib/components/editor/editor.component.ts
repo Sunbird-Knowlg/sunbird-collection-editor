@@ -52,6 +52,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public targetFramework;
   public organisationFramework;
   toolbarConfig: any;
+  public isOnFormValueChange: boolean;
   public buttonLoaders = {
     saveAsDraftButtonLoader: false,
     addFromLibraryButtonLoader: false,
@@ -441,13 +442,13 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   treeEventListener(event: any) {
     this.actionType = event.type;
+    this.updateTreeNodeData();
     switch (event.type) {
       case 'nodeSelect':
         this.updateSubmitBtnVisibility();
         this.selectedNodeData = _.cloneDeep(event.data);
         this.isCurrentNodeFolder = _.get(this.selectedNodeData, 'folder');
         this.isCurrentNodeRoot = _.get(this.selectedNodeData, 'data.root');
-        this.updateTreeNodeData();
         // TODO: rethink below line code
         this.isQumlPlayer = _.get(this.selectedNodeData, 'data.metadata.mimeType') === 'application/vnd.sunbird.question';
         this.setTemplateList();
