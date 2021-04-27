@@ -55,7 +55,7 @@ export class DialcodeComponent implements OnInit {
 
   doQRCodeCount() {
     this.qrCodeCount.request = 0;
-    const rootNode = this.treeService.getFirstChild();
+    const rootNode = this.treeService.getTreeObject();
     this.qrCodeCount.reserve = (this.contentMetadata.reservedDialcodes) ? _.size(this.contentMetadata.reservedDialcodes) : 0;
     rootNode.visit((node) => {
       if (node.data.metadata.dialcodeRequired === 'Yes') {

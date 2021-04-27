@@ -39,11 +39,10 @@ export class QumlPlayerComponent implements OnInit {
       this.qumlPlayerConfig.metadata.showStartPage = 'No';
       this.qumlPlayerConfig.metadata.showTimer = 'No';
       this.qumlPlayerConfig.metadata.maxQuestions = 1;
+      this.qumlPlayerConfig.metadata.requiresSubmit = 'No';
     }
     console.log('qumlPlayerConfig:: ', this.qumlPlayerConfig);
   }
-
-  
 
   getPlayerEvents(event) {
     console.log('get player events', JSON.stringify(event));
