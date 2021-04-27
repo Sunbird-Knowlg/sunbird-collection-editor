@@ -48,6 +48,13 @@ describe('TemplateComponent', () => {
     component.next();
     expect(component.templateSelection.emit).toHaveBeenCalledWith(templateList[0]);
   });
-
-
+  it('should call onClosePopup', () => {
+    component.modal = {
+      deny: jasmine.createSpy('deny')
+    };
+    spyOn(component.templateSelection, 'emit');
+    component.onClosePopup();
+    expect(component.modal.deny).toHaveBeenCalled();
+    expect(component.templateSelection.emit).toHaveBeenCalledWith({ type: 'close' });
+  });
 });
