@@ -8,15 +8,16 @@ import { Inject, Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class QumlPlayerService implements QuestionCursor {
+  public questionMap =  new Map();
   constructor(private questionService: QuestionService) {}
 
   getQuestion(questionId: string): Observable<any> {
     if (_.isEmpty(questionId)) { return of({}); }
     const question = this.getQuestionData(questionId);
     if (question) {
-        return of({questions : [question]});
+        return of({questions : _.castArray(question)});
     } else {
-      return this.questionService.getQuestionList([questionId]);
+      return this.questionService.getQuestionList(_.castArray(questionId));
     }
   }
 
@@ -25,15 +26,15 @@ export class QumlPlayerService implements QuestionCursor {
   }
 
   getQuestionData(questionId) {
-    return this.questionService.questionMap[_.first(questionId)] || undefined;
+    return this.questionMap.get(_.first(_.castArray(questionId))) || undefined;
   }
 
   setQuestionMap(key, value) {
-    this.questionService.setQuestionMap(key, value);
+    this.questionMap.set(key, value);
   }
 
   clearQuestionMap() {
-    this.questionService.clearQuestionMap();
+    this.questionMap.clear();
   }
 
 }
