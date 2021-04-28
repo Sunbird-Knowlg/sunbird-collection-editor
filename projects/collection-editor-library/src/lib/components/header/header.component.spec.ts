@@ -11,11 +11,11 @@ describe('HeaderComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, HttpClientTestingModule ],
-      declarations: [ HeaderComponent, TelemetryInteractDirective ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA ]
+      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
+      declarations: [HeaderComponent, TelemetryInteractDirective],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
@@ -26,5 +26,34 @@ describe('HeaderComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+  it('should call ngOnInit', () => {
+    spyOn(component, 'handleActionButtons');
+    component.ngOnInit();
+    expect(component.handleActionButtons).toHaveBeenCalled();
+  });
+  it('should call handleActionButtons', () => {
+    spyOn(component, 'editorService');
+    component.handleActionButtons();
+    expect(component.visibility).toBeDefined();
+  });
+  it('should create call openRequestChangePopup', () => {
+    component.openRequestChangePopup('sendForCorrections');
+    expect(component.showRequestChangesPopup).toBeTruthy();
+    expect(component.actionType).toBe('sendForCorrections');
+  });
+  it('should call buttonEmitter', () => {
+    const data = { type: 'previewContent' };
+    spyOn(component.toolbarEmitter, 'emit');
+    spyOn(component, 'buttonEmitter').and.returnValue(data);
+    component.buttonEmitter(data);
+    expect(component.buttonEmitter).toHaveBeenCalledWith(data);
+  });
+  it('should call ngOnDestroy', () => {
+    component.modal = {
+      deny: jasmine.createSpy('deny')
+    };
+    component.ngOnDestroy();
+    expect(component.modal.deny).toHaveBeenCalled();
   });
 });

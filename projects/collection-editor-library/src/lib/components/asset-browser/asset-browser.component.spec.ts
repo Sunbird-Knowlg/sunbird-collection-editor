@@ -72,4 +72,29 @@ describe('AssetBrowserComponent', () => {
     component.dismissImageUploadModal();
     expect(component.showImageUploadModal).toBeFalsy();
   });
+  it('should call lazyloadMyImages', () => {
+    spyOn(component, 'getMyImages');
+    component.lazyloadMyImages();
+    expect(component.getMyImages).toHaveBeenCalledWith(0);
+  });
+  it('should call dismissImagePicker', () => {
+    component.showImagePicker = true;
+    spyOn(component, 'getMyImages');
+    spyOn(component.modalDismissEmitter, 'emit');
+    component.dismissImagePicker();
+    expect(component.showImagePicker).toBeFalsy();
+    expect(component.modalDismissEmitter.emit).toHaveBeenCalledWith({});
+  });
+  it('should call ngOnDestroy', () => {
+    component.modal = {
+      deny: jasmine.createSpy('deny')
+    };
+    component.ngOnDestroy();
+    expect(component.modal.deny).toHaveBeenCalled();
+  });
+  it('should call getMediaOriginURL', () => {
+    component.assetProxyUrl = '/assets/public/';
+    const url = 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png'
+    component.getMediaOriginURL(url);
+  });
 });
