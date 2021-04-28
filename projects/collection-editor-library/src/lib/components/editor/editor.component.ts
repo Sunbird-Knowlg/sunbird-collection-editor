@@ -219,19 +219,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  // fetchCollectionHierarchy(): Observable<any> {
-  //   return this.editorService.fetchCollectionHierarchy(this.collectionId).pipe(tap(data => {
-  //     this.collectionTreeNodes = {
-  //       data: _.get(data, `result.${this.configService.categoryConfig[this.editorConfig.config.objectType]}`)
-  //     };
-  //     if (_.isEmpty(this.collectionTreeNodes.data.children)) {
-  //       this.toolbarConfig.showSubmitBtn = false;
-  //     } else {
-  //       this.toolbarConfig.showSubmitBtn = true;
-  //     }
-  //   }));
-  // }
-
   mergeCollectionExternalProperties(): Observable<any> {
   const requests = [];
   const objectType = this.configService.categoryConfig[this.editorConfig.config.objectType];
@@ -245,9 +232,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         data: _.get(hierarchyResponse, `result.${objectType}`)
       };
       if (_.isEmpty(this.collectionTreeNodes.data.children)) {
-        this.toolbarConfig.showSubmitBtn = false;
+        this.toolbarConfig.hasChildren = false;
       } else {
-        this.toolbarConfig.showSubmitBtn = true;
+        this.toolbarConfig.hasChildren = true;
       }
 
       if (objectType === 'questionSet') {
@@ -498,9 +485,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   updateSubmitBtnVisibility() {
     const rootFirstChildNode = this.treeService.getFirstChild();
     if (rootFirstChildNode && !rootFirstChildNode.children) {
-      this.toolbarConfig.showSubmitBtn = false;
+      this.toolbarConfig.hasChildren = false;
     } else {
-      this.toolbarConfig.showSubmitBtn = true;
+      this.toolbarConfig.hasChildren = true;
     }
   }
 
