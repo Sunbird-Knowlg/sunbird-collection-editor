@@ -7,7 +7,7 @@ export const collectionEditorConfig = {
       lastName: 'Bhuva',
       orgIds: ['01309282781705830427']
     },
-    identifier: 'do_1132591625173893121151',
+    identifier: 'do_1132670934201221121153',
     channel: '01307938306521497658',
     // framework: 'nit_k-12',
     targetFWIds: ['nit_k-12'],
@@ -64,7 +64,7 @@ export const collectionEditorConfig = {
   },
   config: {
     mode: 'edit', // edit / review / read / sourcingReview
-    maxDepth: 3,
+    maxDepth: 0,
     objectType: 'Collection',
     primaryCategory: 'Course', // Professional Development Course, Curriculum Course
     isRoot: true,
