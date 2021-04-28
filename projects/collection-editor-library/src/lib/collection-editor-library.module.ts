@@ -48,7 +48,7 @@ import { DialcodeComponent } from './components/dialcode/dialcode.component';
   providers: [
     CacheService,
     { provide: CacheStorageAbstract, useClass: CacheSessionStorage },
-    { provide: QuestionCursor, useClass: QumlPlayerService
+    { provide: QuestionCursor, useExisting: QumlPlayerService
     }
   ],
   exports: [EditorComponent]

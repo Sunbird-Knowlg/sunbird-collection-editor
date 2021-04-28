@@ -64,7 +64,7 @@ export const collectionEditorConfig = {
   },
   config: {
     mode: 'edit', // edit / review / read / sourcingReview
-    maxDepth: 3,
+    maxDepth: 0,
     objectType: 'Collection',
     primaryCategory: 'Course', // Professional Development Course, Curriculum Course
     isRoot: true,
