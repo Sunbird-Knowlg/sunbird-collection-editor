@@ -65,7 +65,7 @@ export class TreeService {
      }
     activeNode.data.metadata = { ...activeNode.data.metadata, ...newData };
     activeNode.title = newData.name;
-    newData = _.pickBy(newData, _.identity);
+    newData = _.omitBy(newData, _.isNil);
     newData = _.merge({}, newData, _.pick(activeNode.data.metadata, ['objectType', 'contentType', 'primaryCategory']));
     const attributions = newData.attributions;
     if (attributions && _.isString(attributions)) {
