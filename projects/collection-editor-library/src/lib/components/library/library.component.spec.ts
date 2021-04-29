@@ -95,4 +95,73 @@ describe('LibraryComponent', () => {
     component.sortContentList(true);
     expect(component.contentList).toEqual(mockData.secondContentList);
   });
+  it('should call back', () => {
+    spyOn(component.libraryEmitter, 'emit');
+    component.back();
+    expect(component.libraryEmitter.emit).toHaveBeenCalledWith({});
+  });
+  it('should call onFilterChange for filterStatusChange', () => {
+    const data = {filterStatus: false, action: 'filterStatusChange'};
+    component.onFilterChange(data);
+    expect(component.isFilterOpen).toBeFalsy();
+  });
+  it('should call onFilterChange for filterDataChange', () => {
+    const data = {query: '', action: 'filterDataChange', filters: ''};
+    spyOn(component, 'fetchContentList');
+    component.onFilterChange(data);
+    expect(component.fetchContentList).toHaveBeenCalledWith(data.query, data.filters);
+  });
+  it('should call showResourceTemplate for showFilter', () => {
+    const data = {action: 'showFilter'};
+    spyOn(component, 'openFilter');
+    component.showResourceTemplate(data);
+    expect(component.openFilter).toHaveBeenCalledWith();
+  });
+  it('should call showResourceTemplate for openHierarchyPopup', () => {
+    const data = {action: 'openHierarchyPopup'};
+    component.showResourceTemplate(data);
+    expect(component.showSelectResourceModal).toBeTruthy();
+  });
+  it('should call showResourceTemplate for closeHierarchyPopup', () => {
+    const data = {action: 'closeHierarchyPopup'};
+    component.showResourceTemplate(data);
+    expect(component.showSelectResourceModal).toBeFalsy();
+  });
+  it('should call showResourceTemplate for showAddedContent', () => {
+    const data = {action: 'showAddedContent', status: true};
+    spyOn(component, 'filterContentList');
+    component.showResourceTemplate(data);
+    expect(component.showAddedContent).toBeTruthy();
+    expect(component.filterContentList).toHaveBeenCalled();
+  });
+  it('should call showResourceTemplate for contentAdded', () => {
+    component.childNodes = [];
+    const data = {action: 'contentAdded', data: {identifier: 'do_11309894061376307219743'}};
+    spyOn(component, 'filterContentList');
+    component.showResourceTemplate(data);
+    expect(component.filterContentList).toHaveBeenCalledWith(true);
+  });
+  it('should call showResourceTemplate for sortContentList', () => {
+    const data = {action: 'sortContentList', status: true};
+    spyOn(component, 'sortContentList');
+    component.showResourceTemplate(data);
+    expect(component.sortContentList).toHaveBeenCalledWith(true);
+  });
+  it('should call showResourceTemplate for sortContentList', () => {
+    const data = {action: ''};
+    spyOn(component, 'showResourceTemplate');
+    component.showResourceTemplate(data);
+    expect(component.showResourceTemplate).toHaveBeenCalledWith(data);
+  });
+  it('should call ngAfterViewInit', () => {
+    const data = {type: 'edit', pageid: undefined , uri: undefined, duration: '0'};
+    spyOn(component.telemetryService, 'impression');
+    component.ngAfterViewInit();
+    expect(component.telemetryService.impression).toHaveBeenCalledWith(data);
+  });
+  it('should call fetchContentList', () => {
+    spyOn(component, 'fetchContentList');
+    component.fetchContentList();
+    expect(component.fetchContentList).toHaveBeenCalled();
+  });
 });

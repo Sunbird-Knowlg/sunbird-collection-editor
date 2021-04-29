@@ -39,7 +39,8 @@ describe('LibraryFilterComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      providers: [EditorTelemetryService, { provide: Router, useClass: RouterStub }, TreeService, { provide: EditorService, useValue: mockEditorService }],
+      providers: [EditorTelemetryService, { provide: Router, useClass: RouterStub }, TreeService,
+         { provide: EditorService, useValue: mockEditorService }],
       declarations: [LibraryFilterComponent, TelemetryInteractDirective],
       imports: [FormsModule, CommonFormElementsModule, HttpClientTestingModule, SuiModule]
     }).compileComponents();
@@ -119,8 +120,24 @@ describe('LibraryFilterComponent', () => {
     expect(component.emitApplyFilter).toHaveBeenCalled();
   });
 
-  it('#valueChanges should set value in #filterValues', ()=> {
+  it('#valueChanges should set value in #filterValues', () => {
     component.valueChanges({});
     expect(component.filterValues).toBeDefined();
+  });
+  it('should call ngOnChanges', () => {
+    component.isFilterShow = false;
+    component.filterOpenStatus  = true;
+    component.ngOnChanges();
+    expect(component.isFilterShow).toBeTruthy();
+  });
+  it('should call outputData', () => {
+    spyOn(component, 'outputData');
+    component.outputData('');
+    expect(component.outputData).toHaveBeenCalled();
+  });
+  it('should call onStatusChanges', () => {
+    spyOn(component, 'onStatusChanges');
+    component.onStatusChanges('');
+    expect(component.onStatusChanges).toHaveBeenCalled();
   });
 });
