@@ -19,6 +19,7 @@ export class TreeService {
     nodes: []
   };
   treeNativeElement: any;
+  omitFalseyProps = ['topic'];
   // tslint:disable-next-line:variable-name
   private _treeStatus$ = new BehaviorSubject<any>(undefined);
   public readonly treeStatus$: Observable<any> = this._treeStatus$
@@ -65,7 +66,7 @@ export class TreeService {
      }
     activeNode.data.metadata = { ...activeNode.data.metadata, ...newData };
     activeNode.title = newData.name;
-    newData = _.omitBy(newData, _.isNil);
+    newData = _.omitBy(newData, (v, key ) => _.isUndefined(v) || _.isNull(v) || (v === '' && _.includes(this.omitFalseyProps, key)));
     newData = _.merge({}, newData, _.pick(activeNode.data.metadata, ['objectType', 'contentType', 'primaryCategory']));
     const attributions = newData.attributions;
     if (attributions && _.isString(attributions)) {
