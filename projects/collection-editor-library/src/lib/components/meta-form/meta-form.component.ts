@@ -28,8 +28,8 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   public showAppIcon = false;
   public appIconConfig: any;
   public appIcon: any;
-  constructor(private editorService: EditorService, private treeService: TreeService,
-              private frameworkService: FrameworkService, private helperService: HelperService,
+  constructor(private editorService: EditorService, public treeService: TreeService,
+              public frameworkService: FrameworkService, private helperService: HelperService,
               private configService: ConfigService) {
                 framworkServiceTemp = frameworkService;
                }
