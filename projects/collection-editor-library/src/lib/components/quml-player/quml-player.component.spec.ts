@@ -45,26 +45,26 @@ describe('QumlPlayerComponent', () => {
   it('should call setQumlPlayerData and isSingleQuestionPreview is false', () => {
     const playerService = TestBed.get(PlayerService);
     component.qumlPlayerConfig = mockData.qumlPlayerConfig;
-    component.qumlPlayerConfig.mockData = mockData.qumlPlayerConfig.metadata;
+    component.questionSetHierarchy = mockData.qumlPlayerConfig.metadata;
+    component.qumlPlayerConfig.metadata = mockData.qumlPlayerConfig.metadata;
     component.isSingleQuestionPreview = false;
     spyOn(playerService, 'getQumlPlayerConfig').and.returnValue(mockData.qumlPlayerConfig);
     component.setQumlPlayerData();
-    expect(component.qumlPlayerConfig.mockData).toEqual(mockData.qumlPlayerConfig.metadata);
-    expect(component.qumlPlayerConfig.mockData.totalQuestions).toEqual(mockData.qumlPlayerConfig.metadata.childNodes.length);
-    expect(component.qumlPlayerConfig.mockData.maxQuestions).toEqual(mockData.qumlPlayerConfig.metadata.maxQuestions);
-    expect(component.qumlPlayerConfig.mockData.maxScore).toEqual(mockData.qumlPlayerConfig.metadata.maxScore);
+    expect(component.qumlPlayerConfig.metadata).toEqual(mockData.qumlPlayerConfig.metadata);
+    expect(component.qumlPlayerConfig.metadata.totalQuestions).toEqual(mockData.qumlPlayerConfig.metadata.childNodes.length);
+    expect(component.qumlPlayerConfig.metadata.maxQuestions).toEqual(mockData.qumlPlayerConfig.metadata.maxQuestions);
+    expect(component.qumlPlayerConfig.metadata.maxScore).toEqual(mockData.qumlPlayerConfig.metadata.maxScore);
   });
   it('should call setQumlPlayerData and isSingleQuestionPreview is true', () => {
     const playerService = TestBed.get(PlayerService);
     spyOn(playerService, 'getQumlPlayerConfig').and.returnValue(mockData.qumlPlayerConfig);
     component.qumlPlayerConfig = mockData.qumlPlayerConfig;
-    component.qumlPlayerConfig.mockData = mockData.qumlPlayerConfig.metadata;
+    component.questionSetHierarchy = mockData.qumlPlayerConfig.metadata;
+    component.qumlPlayerConfig.metadata = mockData.qumlPlayerConfig.metadata;
     component.isSingleQuestionPreview = true;
     component.setQumlPlayerData();
+    expect(component.isSingleQuestionPreview).toBeTruthy();
     expect(component.qumlPlayerConfig).toBeDefined();
-    expect(component.qumlPlayerConfig.mockData.showStartPage).toEqual(mockData.qumlPlayerConfig.metadata.showStartPage);
-    expect(component.qumlPlayerConfig.mockData.showTimer).toEqual(mockData.qumlPlayerConfig.metadata.showTimer);
-    expect(component.qumlPlayerConfig.mockData.maxQuestions).toEqual(mockData.qumlPlayerConfig.metadata.maxQuestions);
   });
   it('should call getPlayerEvents', () => {
     spyOn(component, 'getPlayerEvents').and.returnValue(mockData.playerEvent);
