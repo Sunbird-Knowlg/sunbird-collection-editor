@@ -157,6 +157,23 @@ export const mockData = {
                 ]
             },
             {
+                "code": "board",
+                "default": "",
+                "visible": true,
+                "depends": [],
+                "editable": true,
+                "dataType": "text",
+                "renderingHints": {
+                    "class": "sb-g-col-lg-1"
+                },
+                "description": "Board",
+                "label": "Board/Syllabus",
+                "required": false,
+                "name": "Board/Syllabus",
+                "inputType": "select",
+                "placeholder": "Select Board/Syllabus"
+            },
+            {
                 code: 'keywords',
                 visible: true,
                 editable: false,
@@ -183,5 +200,84 @@ export const mockData = {
         description: 'description',
         keywords: ['keyword'],
         name: ''
+    },
+    frameWorkDetails: {
+        frameworkData: [
+            {
+                "identifier": "ekstep_ncert_k-12_board",
+                "code": "board",
+                "terms": [
+                    {
+                        "associations": [
+                            {
+                                "identifier": "ekstep_ncert_k-12_learningoutcome_9686a2a712bdfdb43408555865cda57f2367699a",
+                                "code": "9686a2a712bdfdb43408555865cda57f2367699a",
+                                "translations": null,
+                                "name": "Inequalities in a triangle.",
+                                "description": "Inequalities in a triangle.",
+                                "index": 0,
+                                "category": "learningoutcome",
+                                "status": "Live"
+                            },
+                            {
+                                "identifier": "ekstep_ncert_k-12_topic_08859db5d07d93b99c12b3e5bceb975c582d31b7",
+                                "code": "08859db5d07d93b99c12b3e5bceb975c582d31b7",
+                                "translations": null,
+                                "name": "Nature around the kids",
+                                "description": "Nature around the kids",
+                                "index": 0,
+                                "category": "topic",
+                                "status": "Live"
+                            }],
+                        "identifier": "ekstep_ncert_k-12_board_cbse",
+                        "code": "cbse",
+                        "translations": null,
+                        "name": "CBSE",
+                        "description": "CBSE",
+                        "index": 10,
+                        "category": "board",
+                        "status": "Live"
+                    }
+                ],
+                "translations": null,
+                "name": "Board",
+                "description": "Board",
+                "index": 1,
+                "status": "Live"
+            }
+        ],
+        topicList: [
+            {
+                "identifier": "ekstep_ncert_k-12_topic_08859db5d07d93b99c12b3e5bceb975c582d31b7",
+                "code": "08859db5d07d93b99c12b3e5bceb975c582d31b7",
+                "translations": null,
+                "name": "Nature around the kids",
+                "description": "Nature around the kids",
+                "index": 10,
+                "category": "topic",
+                "status": "Live"
+            }
+        ]
+    },
+    editorState: {
+        body: {
+            "answer": '</p> Yes</p>',
+            "question": "<p>Hi how are you ?</p>",
+            "editorState": {
+                "answer": '</p> Yes</p>'
+            },
+            "name": "Subjective Question",
+            "qType": "SA",
+            "primaryCategory": "Subjective Question"
+        },
+        mediaobj: {}
+    },
+    eventData: {
+        body: { answer: "<p>dad</p>" },
+        editorState: { answer: "<p>dad</p>" },
+        name: "Subjective Question",
+        qType: "SA",
+        primaryCategory: "Subjective Question",
+        mediaobj: undefined
     }
 };
