@@ -31,6 +31,6 @@ describe('LibraryPlayerComponent', () => {
   it('should call addToLibrary', () => {
     spyOn(component.moveEvent, 'emit').and.returnValue(mockData);
     component.addToLibrary();
-    expect(component.moveEvent.emit).toHaveBeenCalledWith(mockData); 
+    expect(component.moveEvent.emit).toHaveBeenCalledWith(mockData);
   });
 });
