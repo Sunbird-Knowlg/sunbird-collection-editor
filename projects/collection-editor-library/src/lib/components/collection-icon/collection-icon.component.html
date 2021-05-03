@@ -1,6 +1,6 @@
 <ng-container>
     <div (click)="initializeImagePicker()" class="mb-20 w-15">
-        <div class="app-icon-label">{{appIconConfig?.label}}</div>
+        <div class="app-icon-label" [attr.data-title]="appIconConfig?.description ? appIconConfig?.description : null">{{appIconConfig?.label}}</div>
         <div *ngIf='!appIcon' class="sb-centericon">
             <div>
                 <i id="icon_appIcon" name="icon_appIcon" class="icon image outline" ></i>
