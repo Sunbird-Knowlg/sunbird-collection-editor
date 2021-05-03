@@ -27,13 +27,13 @@ describe('AnswerComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  it('should call editorDataHandler on ngOnInit', () => {
+  it('#ngOnInit() should call editorDataHandler on ngOnInit', () => {
     component.editorState = eventData;
     spyOn(component, 'editorDataHandler');
     component.ngOnInit();
     expect(component.editorDataHandler).toHaveBeenCalled();
   });
-  it('should call editorDataHandler and emit propfer question metadata', () => {
+  it('#editorDataHandler() should call editorDataHandler and emit propfer question metadata', () => {
     spyOn(component.editorDataOutput, 'emit');
     const data = {
       answer: "<p>Yes</p>",
@@ -46,7 +46,7 @@ describe('AnswerComponent', () => {
     component.editorDataHandler(data);
     expect(component.editorDataOutput.emit).toHaveBeenCalledWith({ body: metaData, mediaobj: undefined });
   });
-  it('should call prepareAnwserData and prepare profer answer data', () => {
+  it('#prepareAnwserData() should call prepareAnwserData and prepare profer answer data', () => {
     const questionBody = {
       answer: "<p>Yes</p>",
       editorState: { answer: "<p>Yes</p>" },
