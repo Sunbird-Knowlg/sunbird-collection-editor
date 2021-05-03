@@ -29,33 +29,33 @@ describe('QumlplayerPageComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  it('should call ngOnChanges', () => {
+  it('#ngOnChanges() should call initQumlPlayer', () => {
     spyOn(component, 'initQumlPlayer');
     component.ngOnChanges();
     expect(component.initQumlPlayer).toHaveBeenCalled();
   });
-  it('should call initQumlPlayer', () => {
+  it('#initQumlPlayer() should set prevQuestionId', () => {
     component.showPlayerPreview = false;
     component.prevQuestionId = 'do_11326368076523929623';
     component.initQumlPlayer();
     expect(component.prevQuestionId).not.toBe(mockData.questionMetaData.identifier);
   });
-  it('should call switchToPotraitMode', () => {
+  it('#switchToPotraitMode() should set  showPotrait to true', () => {
     component.showPotrait = false;
     component.switchToPotraitMode();
     expect(component.showPotrait).toBeTruthy();
   });
-  it('should call switchToLandscapeMode', () => {
+  it('#switchToLandscapeMode() should set showPotrait to false', () => {
     component.showPotrait = true;
     component.switchToLandscapeMode();
     expect(component.showPotrait).toBeFalsy();
   });
-  it('should call removeQuestion', () => {
+  it('#removeQuestion() should emit  toolbarEmitter with removeContent', () => {
     spyOn(component.toolbarEmitter, 'emit');
     component.removeQuestion();
     expect(component.toolbarEmitter.emit).toHaveBeenCalledWith({button: 'removeContent'});
   });
-  it('should call editQuestion', () => {
+  it('#editQuestion() should emit  toolbarEmitter with editContent', () => {
     spyOn(component.toolbarEmitter, 'emit');
     component.editQuestion();
     expect(component.toolbarEmitter.emit).toHaveBeenCalledWith({button: 'editContent'});

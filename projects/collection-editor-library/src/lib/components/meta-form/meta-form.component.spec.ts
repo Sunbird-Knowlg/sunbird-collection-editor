@@ -25,7 +25,7 @@ describe('MetaFormComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  it('should call ngOnChanges', () => {
+  it('#ngOnChanges() should call setAppIconData', () => {
     spyOn(component, 'fetchFrameWorkDetails');
     spyOn(component, 'setAppIconData');
     component.ngOnChanges();
@@ -33,13 +33,13 @@ describe('MetaFormComponent', () => {
     expect(component.setAppIconData).toHaveBeenCalled();
   });
 
-  it('should call onStatusChanges', () => {
+  it('#onStatusChanges() should emit toolbarEmitter event', () => {
     const data = { button: 'onFormStatusChange', event: '' };
     spyOn(component.toolbarEmitter, 'emit');
     component.onStatusChanges(data.event);
     expect(component.toolbarEmitter.emit).toHaveBeenCalledWith(data);
   });
-  it('should call appIconDataHandler', () => {
+  it('#appIconDataHandler() should call updateAppIcon method', () => {
     // tslint:disable-next-line:max-line-length
     const data = { url: 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png' };
     component.appIcon = data.url;
@@ -47,7 +47,7 @@ describe('MetaFormComponent', () => {
     component.appIconDataHandler(data);
     expect(component.treeService.updateAppIcon).toHaveBeenCalledWith(data.url);
   });
-  it('should call setAppIconData', () => {
+  it('#setAppIconData() should set appIcon', () => {
     const data = {
       data: {
         // tslint:disable-next-line:max-line-length
@@ -59,7 +59,7 @@ describe('MetaFormComponent', () => {
     component.setAppIconData();
     expect(component.appIcon).toBeDefined();
   });
-  it('should call valueChanges', () => {
+  it('#valueChanges() should call updateNode and emit toolbarEmitter', () => {
     const data = {
       // tslint:disable-next-line:max-line-length
       appIcon: 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png'
@@ -70,7 +70,7 @@ describe('MetaFormComponent', () => {
     expect(component.toolbarEmitter.emit).toHaveBeenCalledWith({ button: 'onFormValueChange', event: data });
     expect(component.treeService.updateNode).toHaveBeenCalledWith(data);
   });
-  it('should call attachDefaultValues', () => {
+  it('#attachDefaultValues() should set formFieldProperties', () => {
     component.rootFormConfig = mockData.rootFormConfig;
     component.nodeMetadata = mockData.nodeMetaData;
     component.frameworkDetails = mockData.frameWorkDetails;
@@ -79,7 +79,7 @@ describe('MetaFormComponent', () => {
     component.attachDefaultValues();
     expect(component.formFieldProperties).toBeDefined();
   });
-  it('should call fetchFrameWorkDetails and for targetFrameworkIds', () => {
+  it('#fetchFrameWorkDetails() should set fetchFrameWorkDetails and for targetFrameworkIds', () => {
     component.frameworkService.organisationFramework = 'ekstep_ncert_k-12';
     component.frameworkService.targetFrameworkIds = 'ekstep_ncert_k-12';
     component.frameworkDetails = mockData.frameWorkDetails;
@@ -87,7 +87,7 @@ describe('MetaFormComponent', () => {
     component.fetchFrameWorkDetails();
     expect(component.frameworkDetails).toBeDefined();
   });
-  it('should call fetchFrameWorkDetails and for empty organisationFramework', () => {
+  it('#fetchFrameWorkDetails() should set fetchFrameWorkDetails and for empty organisationFramework', () => {
     component.frameworkDetails = mockData.frameWorkDetails;
     component.frameworkService.organisationFramework = '';
     component.frameworkService.targetFrameworkIds = 'ekstep_ncert_k-12';

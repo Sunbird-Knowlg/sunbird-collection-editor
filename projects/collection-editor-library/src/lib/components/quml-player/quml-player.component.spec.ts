@@ -28,21 +28,21 @@ describe('QumlPlayerComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  it('should call ngOnInit', () => {
+  it('#ngOnInit() should call initialize', () => {
     component.qumlPlayerConfig = mockData.qumlPlayerConfig;
     component.qumlPlayerConfig.mockData = mockData.qumlPlayerConfig.metadata;
     spyOn(component, 'initialize');
     component.ngOnInit();
     expect(component.initialize).toHaveBeenCalled();
   });
-  it('should call initialize', () => {
+  it('#initialize() should set showPreview', () => {
     component.showPreview = false;
     component.qumlPlayerConfig = mockData.qumlPlayerConfig;
     spyOn(component, 'setQumlPlayerData');
     component.initialize();
     expect(component.showPreview).toBeTruthy();
   });
-  it('should call setQumlPlayerData and isSingleQuestionPreview is false', () => {
+  it('#setQumlPlayerData() should call setQumlPlayerData and isSingleQuestionPreview is false', () => {
     const playerService = TestBed.get(PlayerService);
     component.qumlPlayerConfig = mockData.qumlPlayerConfig;
     component.questionSetHierarchy = mockData.qumlPlayerConfig.metadata;
@@ -55,7 +55,7 @@ describe('QumlPlayerComponent', () => {
     expect(component.qumlPlayerConfig.metadata.maxQuestions).toEqual(mockData.qumlPlayerConfig.metadata.maxQuestions);
     expect(component.qumlPlayerConfig.metadata.maxScore).toEqual(mockData.qumlPlayerConfig.metadata.maxScore);
   });
-  it('should call setQumlPlayerData and isSingleQuestionPreview is true', () => {
+  it('#setQumlPlayerData() should call setQumlPlayerData and isSingleQuestionPreview is true', () => {
     const playerService = TestBed.get(PlayerService);
     spyOn(playerService, 'getQumlPlayerConfig').and.returnValue(mockData.qumlPlayerConfig);
     component.qumlPlayerConfig = mockData.qumlPlayerConfig;
@@ -66,12 +66,12 @@ describe('QumlPlayerComponent', () => {
     expect(component.isSingleQuestionPreview).toBeTruthy();
     expect(component.qumlPlayerConfig).toBeDefined();
   });
-  it('should call getPlayerEvents', () => {
+  it('#getPlayerEvents() should call getPlayerEvents', () => {
     spyOn(component, 'getPlayerEvents').and.returnValue(mockData.playerEvent);
     component.getPlayerEvents(mockData.playerEvent);
     expect(component.getPlayerEvents).toHaveBeenCalled();
   });
-  it('should call getTelemetryEvents', () => {
+  it('#getTelemetryEvents() should call getTelemetryEvents', () => {
     spyOn(component, 'getTelemetryEvents').and.returnValue(mockData.telemetryEvent);
     component.getTelemetryEvents(mockData.telemetryEvent);
     expect(component.getTelemetryEvents).toHaveBeenCalled();

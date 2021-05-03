@@ -4,6 +4,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
+import { EditorService } from '../../services/editor/editor.service';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -12,6 +13,7 @@ describe('HeaderComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
+      providers: [EditorService],
       declarations: [HeaderComponent, TelemetryInteractDirective],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
@@ -27,29 +29,30 @@ describe('HeaderComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  it('should call ngOnInit', () => {
+  it('#ngOnInit() should call handleActionButtons on ngoninit', () => {
     spyOn(component, 'handleActionButtons');
     component.ngOnInit();
     expect(component.handleActionButtons).toHaveBeenCalled();
   });
-  it('should call handleActionButtons', () => {
-    spyOn(component, 'editorService');
+  it('#handleActionButtons() visibility should be defined ', () => {
+    const editorservice = TestBed.get(EditorService);
+    spyOn(editorservice, 'editorMode');
     component.handleActionButtons();
     expect(component.visibility).toBeDefined();
   });
-  it('should create call openRequestChangePopup', () => {
+  it('#openRequestChangePopup() should actionType defined', () => {
     component.openRequestChangePopup('sendForCorrections');
     expect(component.showRequestChangesPopup).toBeTruthy();
     expect(component.actionType).toBe('sendForCorrections');
   });
-  it('should call buttonEmitter', () => {
+  it('#buttonEmitter() should call buttonEmitter', () => {
     const data = { type: 'previewContent' };
     spyOn(component.toolbarEmitter, 'emit');
     spyOn(component, 'buttonEmitter').and.returnValue(data);
     component.buttonEmitter(data);
     expect(component.buttonEmitter).toHaveBeenCalledWith(data);
   });
-  it('should call ngOnDestroy', () => {
+  it('#ngOnDestroy() should call modal deny method', () => {
     component.modal = {
       deny: jasmine.createSpy('deny')
     };

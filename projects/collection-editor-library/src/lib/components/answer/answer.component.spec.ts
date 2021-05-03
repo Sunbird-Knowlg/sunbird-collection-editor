@@ -27,14 +27,14 @@ describe('AnswerComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  it('should call ngOnInit', () => {
+  it('should call editorDataHandler on ngOnInit', () => {
     component.editorState = eventData;
     spyOn(component, 'editorDataHandler');
     component.ngOnInit();
     expect(component.editorDataHandler).toHaveBeenCalled();
   });
-  it('should call editorDataHandler ', () => {
-    spyOn(component, 'prepareAnwserData');
+  it('should call editorDataHandler and emit propfer question metadata', () => {
+    spyOn(component.editorDataOutput, 'emit');
     const data = {
       answer: "<p>Yes</p>",
       editorState: { answer: "<p>Yes</p>" },
@@ -42,13 +42,19 @@ describe('AnswerComponent', () => {
       primaryCategory: "Subjective Question",
       qType: "SA",
     };
-    spyOn(component.editorDataOutput, 'emit').and.returnValue(data);
-    component.editorDataHandler({ body: data.answer });
-    expect(component.editorDataOutput.emit).toHaveBeenCalledWith({ body: undefined, mediaobj: undefined });
+    const metaData =  component.prepareAnwserData(data);
+    component.editorDataHandler(data);
+    expect(component.editorDataOutput.emit).toHaveBeenCalledWith({ body: metaData, mediaobj: undefined });
   });
-  it('should call prepareAnwserData', () => {
-    spyOn(component, 'prepareAnwserData');
-    component.prepareAnwserData({body: eventData});
-    expect(component.prepareAnwserData).toHaveBeenCalled();
+  it('should call prepareAnwserData and prepare profer answer data', () => {
+    const questionBody = {
+      answer: "<p>Yes</p>",
+      editorState: { answer: "<p>Yes</p>" },
+      name: "Subjective Question",
+      primaryCategory: "Subjective Question",
+      qType: "SA",
+    };
+    const data = component.prepareAnwserData({body: eventData.answer});
+    expect(data).toEqual(questionBody);
   });
 });

@@ -55,12 +55,12 @@ describe('LibraryComponent', () => {
     expect(collectionHierarchy).toEqual(mockData.collectionHierarchy);
   }));
 
-  it('should call openFilter', () => {
+  it('#openFilter() should set openFilter value', () => {
     component.openFilter();
-    expect(component.isFilterOpen).toBeTruthy;
+    expect(component.isFilterOpen).toBeTruthy();
   });
 
-  it('should call filterContentList and child nodes are empty', () => {
+  it('#filterContentList() should call filterContentList and child nodes are empty', () => {
     component.childNodes = [];
     component.contentList = mockData.initialContentList;
     component.showAddedContent = false;
@@ -69,7 +69,7 @@ describe('LibraryComponent', () => {
     expect(component.selectedContent).toEqual(mockData.initialContentList[0]); 
   });
 
-  it('should call filterContentList and child nodes are not empty and show added content is disabled', () => {
+  it('#filterContentList() should call filterContentList and child nodes are not empty and show added content is disabled', () => {
     component.childNodes = ['do_11309885724445900818860'];
     component.contentList = mockData.initialContentList;
     component.showAddedContent = false;
@@ -78,7 +78,7 @@ describe('LibraryComponent', () => {
     expect(component.selectedContent).toEqual(mockData.initialContentList[1]); 
   });
 
-  it('should call filterContentList and child nodes are not empty and show added content is enabled', () => {
+  it('#filterContentList() should call filterContentList and child nodes are not empty and show added content is enabled', () => {
     component.childNodes = ['do_11309885724445900818860'];
     component.contentList = mockData.secondContentList;
     component.showAddedContent = true;
@@ -86,7 +86,7 @@ describe('LibraryComponent', () => {
     expect(component.selectedContent).toEqual(mockData.secondContentList[0]);
   });
 
-  it('should call onContentChangeEvent ', () => {
+  it('#onContentChangeEvent() should call onContentChangeEvent and call selected content method ', () => {
     component.onContentChangeEvent(mockData.selectedContent);
     expect(component.selectedContent).toEqual(mockData.selectedContent.content);
   });
@@ -95,71 +95,71 @@ describe('LibraryComponent', () => {
     component.sortContentList(true);
     expect(component.contentList).toEqual(mockData.secondContentList);
   });
-  it('should call back', () => {
+  it('#back() should call back method and emit libraryEmitter', () => {
     spyOn(component.libraryEmitter, 'emit');
     component.back();
     expect(component.libraryEmitter.emit).toHaveBeenCalledWith({});
   });
-  it('should call onFilterChange for filterStatusChange', () => {
+  it('#onFilterChange should call onFilterChange for filterStatusChange', () => {
     const data = {filterStatus: false, action: 'filterStatusChange'};
     component.onFilterChange(data);
     expect(component.isFilterOpen).toBeFalsy();
   });
-  it('should call onFilterChange for filterDataChange', () => {
+  it('#onFilterChange should call onFilterChange for filterDataChange', () => {
     const data = {query: '', action: 'filterDataChange', filters: ''};
     spyOn(component, 'fetchContentList');
     component.onFilterChange(data);
     expect(component.fetchContentList).toHaveBeenCalledWith(data.query, data.filters);
   });
-  it('should call showResourceTemplate for showFilter', () => {
+  it('#showResourceTemplate() should call showResourceTemplate for showFilter', () => {
     const data = {action: 'showFilter'};
     spyOn(component, 'openFilter');
     component.showResourceTemplate(data);
     expect(component.openFilter).toHaveBeenCalledWith();
   });
-  it('should call showResourceTemplate for openHierarchyPopup', () => {
+  it('#showResourceTemplate() should call showResourceTemplate for openHierarchyPopup', () => {
     const data = {action: 'openHierarchyPopup'};
     component.showResourceTemplate(data);
     expect(component.showSelectResourceModal).toBeTruthy();
   });
-  it('should call showResourceTemplate for closeHierarchyPopup', () => {
+  it('#showResourceTemplate() should call showResourceTemplate for closeHierarchyPopup', () => {
     const data = {action: 'closeHierarchyPopup'};
     component.showResourceTemplate(data);
     expect(component.showSelectResourceModal).toBeFalsy();
   });
-  it('should call showResourceTemplate for showAddedContent', () => {
+  it('#showResourceTemplate() should call showResourceTemplate for showAddedContent', () => {
     const data = {action: 'showAddedContent', status: true};
     spyOn(component, 'filterContentList');
     component.showResourceTemplate(data);
     expect(component.showAddedContent).toBeTruthy();
     expect(component.filterContentList).toHaveBeenCalled();
   });
-  it('should call showResourceTemplate for contentAdded', () => {
+  it('#showResourceTemplate() should call showResourceTemplate for contentAdded', () => {
     component.childNodes = [];
     const data = {action: 'contentAdded', data: {identifier: 'do_11309894061376307219743'}};
     spyOn(component, 'filterContentList');
     component.showResourceTemplate(data);
     expect(component.filterContentList).toHaveBeenCalledWith(true);
   });
-  it('should call showResourceTemplate for sortContentList', () => {
+  it('#showResourceTemplate() should call showResourceTemplate for sortContentList', () => {
     const data = {action: 'sortContentList', status: true};
     spyOn(component, 'sortContentList');
     component.showResourceTemplate(data);
     expect(component.sortContentList).toHaveBeenCalledWith(true);
   });
-  it('should call showResourceTemplate for sortContentList', () => {
+  it('#showResourceTemplate() should call showResourceTemplate for sortContentList', () => {
     const data = {action: ''};
     spyOn(component, 'showResourceTemplate');
     component.showResourceTemplate(data);
     expect(component.showResourceTemplate).toHaveBeenCalledWith(data);
   });
-  it('should call ngAfterViewInit', () => {
+  it('#ngAfterViewInit() should call telemetry impression event', () => {
     const data = {type: 'edit', pageid: undefined , uri: undefined, duration: '0'};
     spyOn(component.telemetryService, 'impression');
     component.ngAfterViewInit();
     expect(component.telemetryService.impression).toHaveBeenCalled();
   });
-  it('should call fetchContentList', () => {
+  it('#fetchContentList() should call fetchContentList', () => {
     spyOn(component, 'fetchContentList');
     component.fetchContentList();
     expect(component.fetchContentList).toHaveBeenCalled();

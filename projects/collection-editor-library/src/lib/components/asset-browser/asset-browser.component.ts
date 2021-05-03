@@ -14,7 +14,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
   @Input() showImagePicker;
   @Output() assetBrowserEmitter = new EventEmitter<any>();
   @Output() modalDismissEmitter = new EventEmitter<any>();
-  @ViewChild('modal', {static: false}) public modal;
+  @ViewChild('modal', {static: false}) private modal;
   constructor(private editorService: EditorService,
               private questionService: QuestionService) { }
   assetConfig: any = {

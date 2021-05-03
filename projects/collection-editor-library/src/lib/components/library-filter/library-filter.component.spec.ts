@@ -124,18 +124,18 @@ describe('LibraryFilterComponent', () => {
     component.valueChanges({});
     expect(component.filterValues).toBeDefined();
   });
-  it('should call ngOnChanges', () => {
+  it('#ngOnChanges() should set isFilterShow value', () => {
     component.isFilterShow = false;
     component.filterOpenStatus  = true;
     component.ngOnChanges();
     expect(component.isFilterShow).toBeTruthy();
   });
-  it('should call outputData', () => {
+  it('#outputData() should call outputData', () => {
     spyOn(component, 'outputData');
     component.outputData('');
     expect(component.outputData).toHaveBeenCalled();
   });
-  it('should call onStatusChanges', () => {
+  it('#onStatusChanges() should call on form value changes', () => {
     spyOn(component, 'onStatusChanges');
     component.onStatusChanges('');
     expect(component.onStatusChanges).toHaveBeenCalled();

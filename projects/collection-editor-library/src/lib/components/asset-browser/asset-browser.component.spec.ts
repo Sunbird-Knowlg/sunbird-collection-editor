@@ -72,17 +72,17 @@ describe('AssetBrowserComponent', () => {
     component.dismissImageUploadModal();
     expect(component.showImageUploadModal).toBeFalsy();
   });
-  it('should call lazyloadMyImages', () => {
+  it('#lazyloadMyImages() should get my images ', () => {
     spyOn(component, 'getMyImages');
     component.lazyloadMyImages();
     expect(component.getMyImages).toHaveBeenCalledWith(0);
   });
-  it('should call lazyloadMyImages', () => {
+  it('#lazyloadMyImages() should get all images', () => {
     spyOn(component, 'getAllImages');
     component.lazyloadAllImages();
     expect(component.getAllImages).toHaveBeenCalledWith(0);
   });
-  it('should call dismissImagePicker', () => {
+  it('#dismissImagePicker() should emit modalDismissEmitter  ', () => {
     component.showImagePicker = true;
     spyOn(component, 'getMyImages');
     spyOn(component.modalDismissEmitter, 'emit');
@@ -90,14 +90,14 @@ describe('AssetBrowserComponent', () => {
     expect(component.showImagePicker).toBeFalsy();
     expect(component.modalDismissEmitter.emit).toHaveBeenCalledWith({});
   });
-  it('should call ngOnDestroy', () => {
-    component.modal = {
+  it('#ngOnDestroy() should call modal deny ', () => {
+    component['modal'] = {
       deny: jasmine.createSpy('deny')
     };
     component.ngOnDestroy();
-    expect(component.modal.deny).toHaveBeenCalled();
+    expect(component['modal'].deny).toHaveBeenCalled();
   });
-  it('should call getMediaOriginURL', () => {
+  it('#getMediaOriginURL() should get MediaOriginURL', () => {
     component.assetProxyUrl = '/assets/public/';
     const url = 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png';
     component.getMediaOriginURL(url);
