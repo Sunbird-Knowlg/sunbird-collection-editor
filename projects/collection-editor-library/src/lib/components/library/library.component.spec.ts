@@ -157,7 +157,7 @@ describe('LibraryComponent', () => {
     const data = {type: 'edit', pageid: undefined , uri: undefined, duration: '0'};
     spyOn(component.telemetryService, 'impression');
     component.ngAfterViewInit();
-    expect(component.telemetryService.impression).toHaveBeenCalledWith(data);
+    expect(component.telemetryService.impression).toHaveBeenCalled();
   });
   it('should call fetchContentList', () => {
     spyOn(component, 'fetchContentList');
