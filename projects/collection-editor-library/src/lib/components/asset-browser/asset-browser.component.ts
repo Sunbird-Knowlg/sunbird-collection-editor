@@ -37,6 +37,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
   public mediaobj;
   public assetProxyUrl = '/assets/public/';
   public editorInstance: any;
+  public assetsCount: any;
   showAddButton: boolean;
   appIcon;
 
@@ -61,7 +62,8 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     console.log(JSON.stringify(event));
   }
 
-  getMyImages(offset) {
+  getMyImages(offset, query?) {
+    this.assetsCount = '';
     if (offset === 0) {
       this.myAssets.length = 0;
     }
@@ -72,17 +74,21 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
       },
       offset
     };
-
-    this.questionService.getAssetMedia(req).pipe(catchError(err => {
-      const errInfo = { errorMsg: 'Image search failed' };
-      return throwError(this.editorService.apiErrorHandling(err, errInfo));
-    })).subscribe((res) => {
+    if (query) {
+      req['query'] = query;
+    }
+    this.questionService.getAssetMedia(req).subscribe((res) => {
+        this.assetsCount = res.result.count;
         _.map(res.result.content, (item) => {
           if (item.downloadUrl) {
             this.myAssets.push(item);
           }
         });
-      });
+      },
+      (err => {
+        const errInfo = { errorMsg: 'Image search failed' };
+        return throwError(this.editorService.apiErrorHandling(err, errInfo));
+      }));
   }
 
   addImageInEditor(imageUrl, imageId) {
@@ -91,7 +97,8 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     this.assetBrowserEmitter.emit({type: 'image', url: this.appIcon});
   }
 
-  getAllImages(offset) {
+  getAllImages(offset, query?) {
+    this.assetsCount = '';
     if (offset === 0) {
       this.allImages.length = 0;
     }
@@ -101,23 +108,26 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
       },
       offset
     };
-
-    this.questionService.getAssetMedia(req).pipe(catchError(err => {
-      const errInfo = { errorMsg: 'Image search failed' };
-      return throwError(this.editorService.apiErrorHandling(err, errInfo));
-    }))
-      .subscribe((res) => {
+    if (query) {
+      req['query'] = query;
+    }
+    this.questionService.getAssetMedia(req).subscribe((res) => {
+        this.assetsCount = res.result.count;
         _.map(res.result.content, (item) => {
           if (item.downloadUrl) {
             this.allImages.push(item);
           }
         });
-      });
+      },
+      (err => {
+        const errInfo = { errorMsg: 'Image search failed' };
+        return throwError(this.editorService.apiErrorHandling(err, errInfo));
+      }));
   }
 
   lazyloadMyImages() {
     const offset = this.myAssets.length;
-    this.getMyImages(offset);
+    this.getMyImages(offset, this.query);
   }
 
   /**
@@ -125,7 +135,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
    */
   lazyloadAllImages() {
     const offset = this.allImages.length;
-    this.getAllImages(offset);
+    this.getAllImages(offset, this.query);
   }
 
   uploadImage(event) {
@@ -220,7 +230,22 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     this.showImagePicker = false;
     this.modalDismissEmitter.emit({})
   }
-
+  searchMyImages(event) {
+    this.query = event.target.value;
+    this.getMyImages(0, this.query);
+  }
+  clearSearchMyImages() {
+    this.query = '';
+    this.getMyImages(0, this.query);
+  }
+  searchAllImages(event) {
+    this.query = event.target.value;
+    this.getAllImages(0, this.query);
+  }
+  clearSearchAllImages() {
+    this.query = '';
+    this.getAllImages(0, this.query);
+  }
   ngOnDestroy() {
     if (this.modal && this.modal.deny) {
       this.modal.deny();
