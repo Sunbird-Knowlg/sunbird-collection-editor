@@ -270,6 +270,10 @@ sui-select {
   .sb-required {
     color:#ff4558;
     padding-left: 2px;
-    position: relative;
+    position: relative; 
     top: -5px;
+  }
+  select[disabled]{
+    opacity: 0.8 !important;
+    font-weight: 500 !important;
   }
