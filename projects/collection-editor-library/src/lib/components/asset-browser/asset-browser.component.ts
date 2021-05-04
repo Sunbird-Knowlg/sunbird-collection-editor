@@ -81,18 +81,17 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     if (query) {
       req['query'] = query;
     }
-    this.questionService.getAssetMedia(req).subscribe((res) => {
+    this.questionService.getAssetMedia(req).pipe(catchError(err => {
+      const errInfo = { errorMsg: 'Image search failed' };
+      return throwError(this.editorService.apiErrorHandling(err, errInfo));
+    })).subscribe((res) => {
         this.assetsCount = res.result.count;
         _.map(res.result.content, (item) => {
           if (item.downloadUrl) {
             this.myAssets.push(item);
           }
         });
-      },
-      (err => {
-        const errInfo = { errorMsg: 'Image search failed' };
-        return throwError(this.editorService.apiErrorHandling(err, errInfo));
-      }));
+      });
   }
 
   addImageInEditor(imageUrl, imageId) {
@@ -118,18 +117,18 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     if (query) {
       req['query'] = query;
     }
-    this.questionService.getAssetMedia(req).subscribe((res) => {
+    this.questionService.getAssetMedia(req).pipe(catchError(err => {
+      const errInfo = { errorMsg: 'Image search failed' };
+      return throwError(this.editorService.apiErrorHandling(err, errInfo));
+    }))
+      .subscribe((res) => {
         this.assetsCount = res.result.count;
         _.map(res.result.content, (item) => {
           if (item.downloadUrl) {
             this.allImages.push(item);
           }
         });
-      },
-      (err => {
-        const errInfo = { errorMsg: 'Image search failed' };
-        return throwError(this.editorService.apiErrorHandling(err, errInfo));
-      }));
+      });
   }
 
   lazyloadMyImages() {
