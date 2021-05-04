@@ -4,7 +4,6 @@ import { catchError, map } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
 import { EditorService } from '../../services/editor/editor.service';
 import { QuestionService } from '../../services/question/question.service';
-
 @Component({
   selector: 'lib-asset-browser',
   templateUrl: './asset-browser.component.html',
@@ -38,6 +37,8 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
   public assetProxyUrl = '/assets/public/';
   public editorInstance: any;
   public assetsCount: any;
+  public searchMyInput: any;
+  public searchAllInput: any;
   showAddButton: boolean;
   appIcon;
 
@@ -62,8 +63,11 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     console.log(JSON.stringify(event));
   }
 
-  getMyImages(offset, query?) {
-    this.assetsCount = '';
+  getMyImages(offset, query?, search?) {
+    this.assetsCount = 0;
+    if (!search) {
+      this.searchMyInput = '';
+    }
     if (offset === 0) {
       this.myAssets.length = 0;
     }
@@ -97,8 +101,11 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     this.assetBrowserEmitter.emit({type: 'image', url: this.appIcon});
   }
 
-  getAllImages(offset, query?) {
-    this.assetsCount = '';
+  getAllImages(offset, query?, search?) {
+    this.assetsCount = 0;
+    if (!search) {
+      this.searchAllInput = '';
+    }
     if (offset === 0) {
       this.allImages.length = 0;
     }
@@ -127,7 +134,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
 
   lazyloadMyImages() {
     const offset = this.myAssets.length;
-    this.getMyImages(offset, this.query);
+    this.getMyImages(offset, this.query, true);
   }
 
   /**
@@ -135,7 +142,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
    */
   lazyloadAllImages() {
     const offset = this.allImages.length;
-    this.getAllImages(offset, this.query);
+    this.getAllImages(offset, this.query, true);
   }
 
   uploadImage(event) {
@@ -231,21 +238,24 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     this.modalDismissEmitter.emit({})
   }
   searchMyImages(event) {
-    this.query = event.target.value;
-    this.getMyImages(0, this.query);
-  }
-  clearSearchMyImages() {
-    this.query = '';
-    this.getMyImages(0, this.query);
+    if (event === 'clearInput') {
+      this.query = '';
+      this.searchMyInput = '';
+    } else {
+      this.query = event.target.value;
+    }
+    this.getMyImages(0, this.query, true);
   }
   searchAllImages(event) {
-    this.query = event.target.value;
-    this.getAllImages(0, this.query);
+    if (event === 'clearInput') {
+      this.query = '';
+      this.searchAllInput = '';
+    } else {
+      this.query = event.target.value;
+    }
+    this.getAllImages(0, this.query, true);
   }
-  clearSearchAllImages() {
-    this.query = '';
-    this.getAllImages(0, this.query);
-  }
+
   ngOnDestroy() {
     if (this.modal && this.modal.deny) {
       this.modal.deny();
