@@ -1,7 +1,7 @@
 <ng-container [ngSwitch]="pageId">
   <ng-container *ngSwitchCase="'collection_editor'">
     <div class="add-to-library mb-10">
-      <lib-header *ngIf="collectionTreeNodes && collectionTreeNodes.data" [pageId]="pageId" [labelConfigData]="toolbarConfig" [collectionTreeNodes]="collectionTreeNodes" [buttonLoaders]="buttonLoaders" (toolbarEmitter)="toolbarEventListener($event)"> </lib-header>
+      <lib-header [pageId]="pageId" [labelConfigData]="toolbarConfig" [showComment]="showComment" [buttonLoaders]="buttonLoaders" (toolbarEmitter)="toolbarEventListener($event)"> </lib-header>
       <div class="h-100vh sb-bg-white">
         <div class="ui">
           <div class="ui twelve column grid m-0 ">
@@ -105,8 +105,19 @@
     </lib-question>
   </ng-container>
 </ng-container>
-
-
-
-
-
+<sui-modal *ngIf="showReviewModal" [mustScroll]="true" [isClosable]="true" [transitionDuration]="0"
+  [size]="'normal'" class="sb-modal bx-none overflow-modal" appBodyScroll #modal (dismissed)="showReviewModal = false;">
+  <div class="sb-modal-header">
+    Review Comments
+  </div>
+  <div class="sb-modal-content">
+      <div class="sb-field disabled">
+          <label>Comments</label>
+            <textarea disabled="disabled" type="text" class="wmd-input width-100 sb-form-control" id="wmd-input" [(ngModel)]="contentComment" name="rejectedComment"></textarea>
+      </div>
+  </div>
+  <div class="sb-modal-actions">
+    <button class="sb-btn sb-btn-normal sb-btn-outline-primary" (click)="modal.deny('denied')"
+    libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('close','click','cancel', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'review_comments'})">Close</button>
+  </div>
+</sui-modal>

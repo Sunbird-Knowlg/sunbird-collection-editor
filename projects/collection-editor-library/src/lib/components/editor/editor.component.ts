@@ -57,6 +57,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     addFromLibraryButtonLoader: false,
     previewButtonLoader: false
   };
+  public contentComment: string;
+  public showComment: boolean;
+  public showReviewModal: boolean;
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
               private toasterService: ToasterService,
@@ -231,6 +234,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       this.collectionTreeNodes = {
         data: _.get(hierarchyResponse, `result.${objectType}`)
       };
+      this.showComment = this.showCommentAddedAgainstContent();
       if (_.isEmpty(this.collectionTreeNodes.data.children)) {
         this.toolbarConfig.hasChildren = false;
       } else {
@@ -300,6 +304,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         break;
       case 'sourcingReject':
         this.redirectToChapterListTab({ comment: event.comment });
+        break;
+      case 'showReviewcomments':
+        this.showReviewModal = ! this.showReviewModal;
         break;
       default:
         break;
@@ -572,6 +579,14 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   get contentPolicyUrl() {
     return this.editorService.contentPolicyUrl;
+  }
+
+  showCommentAddedAgainstContent() {
+    if (this.collectionTreeNodes.data.status === "Draft" && _.has(this.collectionTreeNodes.data, 'rejectComment')) {
+      this.contentComment = _.get(this.collectionTreeNodes.data, 'rejectComment');
+      return true;
+    }
+    return false;
   }
 
   ngOnDestroy() {
