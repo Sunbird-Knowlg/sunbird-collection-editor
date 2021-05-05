@@ -55,7 +55,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public buttonLoaders = {
     saveAsDraftButtonLoader: false,
     addFromLibraryButtonLoader: false,
-    previewButtonLoader: false
+    previewButtonLoader: false,
+    showReviewComment: false
   };
   public contentComment: string;
   public showComment: boolean;
@@ -234,7 +235,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       this.collectionTreeNodes = {
         data: _.get(hierarchyResponse, `result.${objectType}`)
       };
-      this.showComment = this.showCommentAddedAgainstContent();
+      this.buttonLoaders.showReviewComment = this.showCommentAddedAgainstContent();
       if (_.isEmpty(this.collectionTreeNodes.data.children)) {
         this.toolbarConfig.hasChildren = false;
       } else {
