@@ -48,8 +48,8 @@
         <div class="sb-search-box small no-btn">
           <div class="input-div relative">
             <i class="search icon"></i>
-            <input (change)="searchMyImages($event)" class="sb-search-input" [(ngModel)]="searchMyInput" type="text" placeholder="Search..." />
-            <i class="close icon"  (click)="searchMyImages('clearInput')"></i>
+            <input (change)="searchImages($event, 'myImages')" class="sb-search-input" [(ngModel)]="searchMyInput" type="text" placeholder="Search..." />
+            <i class="close icon"  (click)="searchImages('clearInput', 'myImages')"></i>
           </div>
           <button class="sb-btn sb-btn-normal">Search</button>
         </div>
@@ -73,8 +73,8 @@
         <div class="sb-search-box small no-btn">
           <div class="input-div relative">
             <i class="search icon"></i>
-            <input (change)="searchAllImages($event)" class="sb-search-input" [(ngModel)]="searchAllInput" type="text" placeholder="Search..." />
-            <i class="close icon" (click)="searchAllImages('clearInput')"></i>
+            <input (change)="searchImages($event, 'allImages')" class="sb-search-input" [(ngModel)]="searchAllInput" type="text" placeholder="Search..." />
+            <i class="close icon" (click)="searchImages('clearInput', 'allImages')"></i>
           </div>
           <button class="sb-btn sb-btn-normal">Search</button>
         </div>

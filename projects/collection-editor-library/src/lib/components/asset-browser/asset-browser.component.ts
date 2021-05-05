@@ -226,25 +226,22 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     this.showImagePicker = false;
     this.modalDismissEmitter.emit({})
   }
-  searchMyImages(event) {
-    if (event === 'clearInput') {
+  searchImages(event, type) {
+    if (event === 'clearInput' && type === 'myImages') {
       this.query = '';
       this.searchMyInput = '';
-    } else {
-      this.query = event.target.value;
-    }
-    this.getMyImages(0, this.query, true);
-  }
-  searchAllImages(event) {
-    if (event === 'clearInput') {
+    } else if (event === 'clearInput' && type === 'allImages') {
       this.query = '';
       this.searchAllInput = '';
     } else {
       this.query = event.target.value;
     }
-    this.getAllImages(0, this.query, true);
+    if (type === 'myImages' ) {
+        this.getMyImages(0, this.query, true);
+    } else {
+        this.getAllImages(0, this.query, true);
+    }
   }
-
   ngOnDestroy() {
     if (this.modal && this.modal.deny) {
       this.modal.deny();
