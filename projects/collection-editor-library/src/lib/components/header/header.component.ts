@@ -44,7 +44,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
     this.visibility.sourcingRejectContent = this.editorService.editorMode === 'sourcingreview';
     this.visibility.previewContent = _.get(this.editorService, 'editorConfig.config.objectType') === 'QuestionSet';
     // tslint:disable-next-line:max-line-length
-    this.visibility.dialcode = this.editorService.editorMode === 'edit' && _.get(this.editorService, 'editorConfig.config.objectType') !== 'QuestionSet';
+    this.visibility.dialcode = this.editorService.editorMode === 'edit' && _.get(this.editorService, 'editorConfig.config.qrCode.show');
   }
 
   openRequestChangePopup(action: string) {

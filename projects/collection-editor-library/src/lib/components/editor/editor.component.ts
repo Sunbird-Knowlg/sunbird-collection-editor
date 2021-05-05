@@ -14,6 +14,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { Observable, throwError, forkJoin } from 'rxjs';
 import * as _ from 'lodash-es';
 import { ConfigService } from '../../services/config/config.service';
+import { DialcodeService } from '../../services/dialcode/dialcode.service';
 @Component({
   selector: 'lib-editor',
   templateUrl: './editor.component.html',
@@ -59,9 +60,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   };
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
-              private toasterService: ToasterService,
-              public configService: ConfigService,
-              private changeDetectionRef: ChangeDetectorRef) {
+              private toasterService: ToasterService, private dialcodeService: DialcodeService,
+              public configService: ConfigService, private changeDetectionRef: ChangeDetectorRef) {
   }
 
   @HostListener('window:unload', ['$event'])
@@ -346,8 +346,13 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       if (!this.validateFormStatus()) {
         return reject('Please fill the required metadata');
       }
+      const nodesModified =  _.get(this.editorService.getCollectionHierarchy(), 'nodesModified');
       this.editorService.updateHierarchy()
         .pipe(map(data => _.get(data, 'result'))).subscribe(response => {
+          const objectType = this.editorConfig.config.objectType;
+          if (objectType === 'Collection') {
+            this.dialcodeService.highlightNodeForInvalidDialCode(response, nodesModified, this.collectionId);
+          }
           if (!_.isEmpty(response.identifiers)) {
             this.treeService.replaceNodeId(response.identifiers);
           }
@@ -361,11 +366,19 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   submitHandler() {
+    const objectType = this.editorConfig.config.objectType;
     if (!this.validateFormStatus()) {
       this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.005'));
       return;
+    } else if (objectType === 'Collection') {
+      if (this.dialcodeService.validateUnitsDialcodes()) {
+        this.showConfirmPopup = true;
+      } else {
+        this.toasterService.warning(_.get(this.configService, 'labelConfig.messages.warning.001'));
+      }
+    } else {
+      this.showConfirmPopup = true;
     }
-    this.showConfirmPopup = true;
   }
 
   validateFormStatus() {

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { CommonFormElementsModule } from 'common-form-elements';
+import { CommonFormElementsModule, DialcodeCursor } from 'common-form-elements';
 import { SuiModule } from 'ng2-semantic-ui/dist';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { HttpClientModule } from '@angular/common/http';
@@ -37,6 +37,7 @@ import { CacheSessionStorage } from 'ng2-cache-service/dist/src/services/storage
 import { QumlPlayerService } from './services/quml-player/quml-player.service';
 import { QumlPlayerComponent } from './components/quml-player/quml-player.component';
 import { DialcodeComponent } from './components/dialcode/dialcode.component';
+import { DialcodeService } from './services/dialcode/dialcode.service';
 @NgModule({
   declarations: [CollectionEditorLibraryComponent, ContentplayerPageComponent, EditorComponent, QumlplayerPageComponent,
     HeaderComponent, FancyTreeComponent, MetaFormComponent, LibraryComponent, LibraryFilterComponent, LibraryListComponent,
@@ -48,8 +49,8 @@ import { DialcodeComponent } from './components/dialcode/dialcode.component';
   providers: [
     CacheService,
     { provide: CacheStorageAbstract, useClass: CacheSessionStorage },
-    { provide: QuestionCursor, useExisting: QumlPlayerService
-    }
+    { provide: QuestionCursor, useExisting: QumlPlayerService },
+    { provide: DialcodeCursor, useExisting: DialcodeService }
   ],
   exports: [EditorComponent]
 })

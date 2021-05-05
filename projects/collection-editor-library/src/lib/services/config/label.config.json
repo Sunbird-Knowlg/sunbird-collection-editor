@@ -65,7 +65,11 @@
          "008": "Please fill the required fields",
          "009": "File is required to upload",
          "010": "No external link allowed",
-         "011": "Unable to read the Video, Please Try Again"
+         "011": "Unable to read the Video, Please Try Again",
+         "012": "QR code(s) updating failed!",
+         "013": "No new QR Codes have been generated!",
+         "014": "The number should be at least {number}",
+         "015": "The number should be greater than {number}"
       }, 
       "success": {
          "001": "Content is saved",
@@ -75,7 +79,17 @@
          "005": "Content is added to the folder",
          "006": "Asset Successfully Uploaded...",
          "007": "Question is created sucessfully",
-         "008": "Question is updated sucessfully"
+         "008": "Question is updated sucessfully",
+         "009": "QR code(s) updated successfully",
+         "010": "QR code generated.",
+         "011": "QR codes downloaded" 
+      },
+      "warning" : {
+         "001" : "Errors found in linked QR Codes. Please check and correct.",
+         "002" : "Unable to update some of the QR codes."
+      },
+      "info" : {
+         "001" : "QR code image generation is in progress. Please try downloading after sometime"
       }
     }
  }

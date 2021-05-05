@@ -7,7 +7,7 @@ export const collectionEditorConfig = {
       lastName: 'Bhuva',
       orgIds: ['01309282781705830427']
     },
-    identifier: 'do_1132670934201221121153',
+    identifier: 'do_113272105912459264145',  // do_1132591625173893121151
     channel: '01307938306521497658',
     // framework: 'nit_k-12',
     targetFWIds: ['nit_k-12'],
@@ -64,10 +64,15 @@ export const collectionEditorConfig = {
   },
   config: {
     mode: 'edit', // edit / review / read / sourcingReview
-    maxDepth: 0,
+    maxDepth: 2,
     objectType: 'Collection',
     primaryCategory: 'Course', // Professional Development Course, Curriculum Course
     isRoot: true,
+    qrCode: {
+      show: true,
+      minLength: 3,
+      maxLength: 25
+    },
     iconClass: 'fa fa-book',
     children: {},
     hierarchy: {
@@ -133,7 +138,7 @@ export const questionEditorConfig = {
     sid: 'iYO2K6dOSdA0rwq7NeT1TDzS-dbqduvV',
     did: '7e85b4967aebd6704ba1f604f20056b6',
     uid: 'bf020396-0d7b-436f-ae9f-869c6780fc45',
-    channel: '01307938306521497658',
+    channel: '01309282781705830427',
     pdata: {
       id: 'dev.dock.portal',
       ver: '2.8.0',
@@ -234,7 +239,7 @@ export const questionEditorConfig = {
   },
   config: {
     mode: 'edit', // edit / review / read / sourcingReview
-    maxDepth: 3,
+    maxDepth: 0,
     objectType: 'QuestionSet',
     primaryCategory: 'Practice Question Set',
     isRoot: true,
