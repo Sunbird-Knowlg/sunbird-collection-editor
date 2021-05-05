@@ -20,7 +20,7 @@
     <!-- <lib-dialcode *ngIf="visibility && visibility?.dialcode" class="d-flex flex-ai-center"></lib-dialcode> -->
     <div  data-title="View review comments" (click)="buttonEmitter({type: 'showReviewcomments'})" *ngIf="buttonLoaders?.showReviewComment" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('view_comments','click','launch', telemetryService.telemetryPageId)">
-      <i class="icon comment flex-as-baseline sb-color-gray-400 pr-5"></i>
+      <i class="icon comment flex-as-baseline sb-color-gray-400 mr-20"></i>
     </div>
     <button *ngIf="visibility && visibility?.previewContent  && labelConfigData?.hasChildren" class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10"
       [ngClass]="!buttonLoaders?.previewButtonLoader ? '': 'sb-btn-loading-spinner sb-btn-outline-disabled'"
