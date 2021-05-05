@@ -72,4 +72,30 @@ describe('AssetBrowserComponent', () => {
     component.dismissImageUploadModal();
     expect(component.showImageUploadModal).toBeFalsy();
   });
+  it('#lazyloadMyImages() should get my images ', () => {
+    spyOn(component, 'getMyImages');
+    component.lazyloadMyImages();
+    expect(component.getMyImages).toHaveBeenCalledWith(0);
+  });
+  it('#lazyloadMyImages() should get all images', () => {
+    spyOn(component, 'getAllImages');
+    component.lazyloadAllImages();
+    expect(component.getAllImages).toHaveBeenCalledWith(0);
+  });
+  it('#dismissImagePicker() should emit modalDismissEmitter  ', () => {
+    component.showImagePicker = true;
+    spyOn(component, 'getMyImages');
+    spyOn(component.modalDismissEmitter, 'emit');
+    component.dismissImagePicker();
+    expect(component.showImagePicker).toBeFalsy();
+    expect(component.modalDismissEmitter.emit).toHaveBeenCalledWith({});
+  });
+  it('#ngOnDestroy() should call modal deny ', () => {
+    component['modal'] = {
+      deny: jasmine.createSpy('deny')
+    };
+    component.ngOnDestroy();
+    expect(component['modal'].deny).toHaveBeenCalled();
+  });
+
 });
