@@ -4,6 +4,7 @@ import { AssetBrowserComponent } from './asset-browser.component';
 import {InfiniteScrollModule} from 'ngx-infinite-scroll';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {mockData} from './asset-browser.component.spec.data';
+import { FormsModule } from '@angular/forms';
 
 describe('AssetBrowserComponent', () => {
   let component: AssetBrowserComponent;
@@ -11,7 +12,7 @@ describe('AssetBrowserComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ InfiniteScrollModule, HttpClientTestingModule ],
+      imports: [ InfiniteScrollModule, HttpClientTestingModule, FormsModule ],
       declarations: [ AssetBrowserComponent ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     })
@@ -21,7 +22,7 @@ describe('AssetBrowserComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(AssetBrowserComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    // fixture.detectChanges();
   });
 
   it('should create', () => {
@@ -75,12 +76,12 @@ describe('AssetBrowserComponent', () => {
   it('#lazyloadMyImages() should get my images ', () => {
     spyOn(component, 'getMyImages');
     component.lazyloadMyImages();
-    expect(component.getMyImages).toHaveBeenCalledWith(0);
+    expect(component.getMyImages).toHaveBeenCalledWith(0, undefined, true);
   });
   it('#lazyloadMyImages() should get all images', () => {
     spyOn(component, 'getAllImages');
     component.lazyloadAllImages();
-    expect(component.getAllImages).toHaveBeenCalledWith(0);
+    expect(component.getAllImages).toHaveBeenCalledWith(0, undefined, true);
   });
   it('#dismissImagePicker() should emit modalDismissEmitter  ', () => {
     component.showImagePicker = true;
@@ -97,5 +98,18 @@ describe('AssetBrowserComponent', () => {
     component.ngOnDestroy();
     expect(component['modal'].deny).toHaveBeenCalled();
   });
-
+  it('#searchImages() should call  getMyImages for my images', () => {
+    spyOn(component, 'getMyImages');
+    component.searchImages('clearInput', 'myImages');
+    expect(component.query).toEqual('');
+    expect(component.searchMyInput).toEqual('');
+    expect(component.getMyImages).toHaveBeenCalledWith(0, '', true );
+  });
+  it('#searchImages() should call allImages for all images ', () => {
+    spyOn(component, 'getAllImages');
+    component.searchImages('clearInput', 'allImages');
+    expect(component.query).toEqual('');
+    expect(component.searchAllInput).toEqual('');
+    expect(component.getAllImages).toHaveBeenCalledWith(0, '', true );
+  });
 });

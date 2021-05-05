@@ -43,6 +43,19 @@
 
       <div class="ui segment sb-tabset-segment m-0 pt-15" infiniteScroll [infiniteScrollDistance]="2"
         [infiniteScrollThrottle]="500" [scrollWindow]="false" (scrolled)="lazyloadMyImages()" suiTabContent="2">
+      
+        <div class="ui  pb-16 d-flex pl-0">
+        <div class="sb-search-box small no-btn">
+          <div class="input-div relative">
+            <i class="search icon"></i>
+            <input (change)="searchImages($event, 'myImages')" class="sb-search-input" [(ngModel)]="searchMyInput" type="text" placeholder="Search..." />
+            <i class="close icon"  (click)="searchImages('clearInput', 'myImages')"></i>
+          </div>
+          <button class="sb-btn sb-btn-normal">Search</button>
+        </div>
+        <p class="fs-0-986 ml-auto" style="color: #666;">{{assetsCount}}</p>
+        </div>
+
         <div class="sb-grid-layout image">
           <div class="sb-video-content" *ngFor="let data of myAssets">
             <div class="sb-image-section relative position">
@@ -55,7 +68,20 @@
 
       <div class="ui segment sb-tabset-segment m-0 pt-15" infiniteScroll [infiniteScrollDistance]="2"
         [infiniteScrollThrottle]="500" [scrollWindow]="false" (scrolled)="lazyloadAllImages()" suiTabContent="3">
-        <div class="sb-grid-layout image">
+       
+        <div class="ui  pb-16 d-flex pl-0">
+        <div class="sb-search-box small no-btn">
+          <div class="input-div relative">
+            <i class="search icon"></i>
+            <input (change)="searchImages($event, 'allImages')" class="sb-search-input" [(ngModel)]="searchAllInput" type="text" placeholder="Search..." />
+            <i class="close icon" (click)="searchImages('clearInput', 'allImages')"></i>
+          </div>
+          <button class="sb-btn sb-btn-normal">Search</button>
+        </div>
+        <p class="fs-0-986 ml-auto" style="color: #666;">{{assetsCount}}</p>
+        </div>
+
+         <div class="sb-grid-layout image">
           <div class="sb-video-content" *ngFor="let data of allImages">
             <div class="sb-image-section">
               <img (click)="addImageInEditor(data.downloadUrl, data.identifier)" [src]="data.downloadUrl">

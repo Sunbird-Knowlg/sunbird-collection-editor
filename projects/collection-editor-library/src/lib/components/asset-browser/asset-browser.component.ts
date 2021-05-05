@@ -4,7 +4,6 @@ import { catchError, map } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
 import { EditorService } from '../../services/editor/editor.service';
 import { QuestionService } from '../../services/question/question.service';
-
 @Component({
   selector: 'lib-asset-browser',
   templateUrl: './asset-browser.component.html',
@@ -37,6 +36,9 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
   public mediaobj;
   public assetProxyUrl = '/assets/public/';
   public editorInstance: any;
+  public assetsCount: any;
+  public searchMyInput: any;
+  public searchAllInput: any;
   showAddButton: boolean;
   appIcon;
 
@@ -61,7 +63,11 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     console.log(JSON.stringify(event));
   }
 
-  getMyImages(offset) {
+  getMyImages(offset, query?, search?) {
+    this.assetsCount = 0;
+    if (!search) {
+      this.searchMyInput = '';
+    }
     if (offset === 0) {
       this.myAssets.length = 0;
     }
@@ -72,11 +78,14 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
       },
       offset
     };
-
+    if (query) {
+      req['query'] = query;
+    }
     this.questionService.getAssetMedia(req).pipe(catchError(err => {
       const errInfo = { errorMsg: 'Image search failed' };
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     })).subscribe((res) => {
+        this.assetsCount = res.result.count;
         _.map(res.result.content, (item) => {
           if (item.downloadUrl) {
             this.myAssets.push(item);
@@ -91,7 +100,11 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     this.assetBrowserEmitter.emit({type: 'image', url: this.appIcon});
   }
 
-  getAllImages(offset) {
+  getAllImages(offset, query?, search?) {
+    this.assetsCount = 0;
+    if (!search) {
+      this.searchAllInput = '';
+    }
     if (offset === 0) {
       this.allImages.length = 0;
     }
@@ -101,12 +114,15 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
       },
       offset
     };
-
+    if (query) {
+      req['query'] = query;
+    }
     this.questionService.getAssetMedia(req).pipe(catchError(err => {
       const errInfo = { errorMsg: 'Image search failed' };
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     }))
       .subscribe((res) => {
+        this.assetsCount = res.result.count;
         _.map(res.result.content, (item) => {
           if (item.downloadUrl) {
             this.allImages.push(item);
@@ -117,7 +133,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
 
   lazyloadMyImages() {
     const offset = this.myAssets.length;
-    this.getMyImages(offset);
+    this.getMyImages(offset, this.query, true);
   }
 
   /**
@@ -125,7 +141,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
    */
   lazyloadAllImages() {
     const offset = this.allImages.length;
-    this.getAllImages(offset);
+    this.getAllImages(offset, this.query, true);
   }
 
   uploadImage(event) {
@@ -210,7 +226,22 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     this.showImagePicker = false;
     this.modalDismissEmitter.emit({})
   }
-
+  searchImages(event, type) {
+    if (event === 'clearInput' && type === 'myImages') {
+      this.query = '';
+      this.searchMyInput = '';
+    } else if (event === 'clearInput' && type === 'allImages') {
+      this.query = '';
+      this.searchAllInput = '';
+    } else {
+      this.query = event.target.value;
+    }
+    if (type === 'myImages' ) {
+        this.getMyImages(0, this.query, true);
+    } else {
+        this.getAllImages(0, this.query, true);
+    }
+  }
   ngOnDestroy() {
     if (this.modal && this.modal.deny) {
       this.modal.deny();

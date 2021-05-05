@@ -17,8 +17,9 @@
     {{ labelConfigData.title }}
   </div>
   <div class="d-flex flex-ai-center" *ngIf="pageId === 'collection_editor' && labelConfigData">
-    <div  data-title="View comments" (click)="showReviewModal=!showReviewModal" *ngIf="showComment">
-      <i class="icon comment flex-as-baseline sb-color-gray-400 pr-5"></i>
+    <div  data-title="View review comments" (click)="buttonEmitter({type: 'showReviewcomments'})" *ngIf="buttonLoaders?.showReviewComment" libTelemetryInteract
+    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('view_comments','click','launch', telemetryService.telemetryPageId)">
+      <i class="icon comment flex-as-baseline sb-color-gray-400 mr-20"></i>
     </div>
     <lib-dialcode *ngIf="visibility && visibility?.dialcode" class="d-flex flex-ai-center"></lib-dialcode>
     <button *ngIf="visibility && visibility?.previewContent  && labelConfigData?.hasChildren" class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10"
@@ -139,23 +140,6 @@
     libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('cancel','click','cancel', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'add_review_comments'})">Cancel</button>
   </div>
 </form>
-</sui-modal>
-
-<sui-modal *ngIf="showReviewModal" [mustScroll]="true" [isClosable]="true" [transitionDuration]="0"
-  [size]="'normal'" class="sb-modal bx-none overflow-modal" appBodyScroll #modal (dismissed)="showReviewModal = false;">
-  <div class="sb-modal-header">
-    Review Comments
-  </div>
-  <div class="sb-modal-content">
-      <div class="sb-field disabled">
-          <label>Comments</label>
-            <textarea disabled="disabled" type="text" class="wmd-input width-100 sb-form-control" id="wmd-input" [(ngModel)]="contentComment" name="rejectedComment"></textarea>
-      </div>
-  </div>
-  <div class="sb-modal-actions">
-    <button class="sb-btn sb-btn-normal sb-btn-outline-primary" (click)="modal.deny('denied')"
-    libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('close','click','cancel', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'review_comments'})">Close</button>
-  </div>
 </sui-modal>
 
 <sui-modal *ngIf="showPublishCollectionPopup" [mustScroll]="true" [isClosable]="true" [transitionDuration]="0"
