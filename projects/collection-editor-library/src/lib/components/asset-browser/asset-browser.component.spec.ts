@@ -97,9 +97,5 @@ describe('AssetBrowserComponent', () => {
     component.ngOnDestroy();
     expect(component['modal'].deny).toHaveBeenCalled();
   });
-  it('#getMediaOriginURL() should get MediaOriginURL', () => {
-    component.assetProxyUrl = '/assets/public/';
-    const url = 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png';
-    component.getMediaOriginURL(url);
-  });
+
 });

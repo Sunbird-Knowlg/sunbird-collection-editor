@@ -147,7 +147,7 @@ describe('LibraryComponent', () => {
     component.showResourceTemplate(data);
     expect(component.sortContentList).toHaveBeenCalledWith(true);
   });
-  it('#showResourceTemplate() should call showResourceTemplate for sortContentList', () => {
+  it('#showResourceTemplate() should call showResourceTemplate for empty/default action', () => {
     const data = {action: ''};
     spyOn(component, 'showResourceTemplate');
     component.showResourceTemplate(data);
