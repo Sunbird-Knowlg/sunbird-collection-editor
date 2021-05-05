@@ -36,3 +36,10 @@
   .flex-as-baseline {
     align-self: baseline !important;
  }
+
+ div[data-title]:before{
+  position: absolute;
+  right: 30%;
+  top: 85%;
+  height: 25px;
+}
