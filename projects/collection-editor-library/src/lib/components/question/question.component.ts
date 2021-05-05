@@ -21,7 +21,7 @@ import { filter, finalize, take, takeUntil } from 'rxjs/operators';
   styleUrls: ['./question.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
+export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   QumlPlayerConfig: any = {};
   @Input() questionInput: any;
   @Input() leafFormConfig: any;
@@ -29,7 +29,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
   public childFormData: any;
   @Output() questionEmitter = new EventEmitter<any>();
   private onComponentDestroy$ = new Subject<any>();
-  toolbarConfig: any;
+  toolbarConfig: any = {};
   public editorState: any = {};
   public showPreview = false;
   public mediaArr: any = [];
@@ -121,9 +121,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnChanges, OnDe
       duration: (Date.now() - this.pageStartTime) / 1000
     });
   }
-  ngOnChanges() {
-    // this.populateFormData();
-  }
+
   initialize() {
     this.editorService.fetchCollectionHierarchy(this.questionSetId).subscribe((response) => {
       this.questionSetHierarchy = _.get(response, 'result.questionSet');

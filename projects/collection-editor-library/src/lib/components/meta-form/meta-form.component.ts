@@ -28,8 +28,8 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   public showAppIcon = false;
   public appIconConfig: any;
   public appIcon: any;
-  constructor(private editorService: EditorService, private treeService: TreeService,
-              private frameworkService: FrameworkService, private helperService: HelperService,
+  constructor(private editorService: EditorService, public treeService: TreeService,
+              public frameworkService: FrameworkService, private helperService: HelperService,
               private configService: ConfigService) {
                 framworkServiceTemp = frameworkService;
                }
@@ -251,7 +251,14 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
     const response = merge(..._.map(depends, depend => depend.valueChanges)).pipe(
       switchMap((value: any) => {
         const isDependsInvalid = _.includes(_.map(depends, depend => depend.invalid), true);
+        const dependsKeyValue = _.map(depends, (depend, key) => {
+          return { [key]: depend.value };
+        });
         if (!isDependsInvalid) {
+          const maxTimeValue = _.find(dependsKeyValue, 'maxTime');
+          if ( maxTimeValue && maxTimeValue.maxTime === '00:00:00') {
+            return of(false);
+          }
           return of(true);
         } else {
           return of(false);

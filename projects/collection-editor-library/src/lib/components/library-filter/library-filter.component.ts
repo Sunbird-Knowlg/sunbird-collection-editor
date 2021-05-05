@@ -73,8 +73,6 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
     this.isFilterShow = this.filterOpenStatus;
   }
 
-  initializeForm() {
-  }
 
   fetchFrameWorkDetails() {
     this.frameworkService.frameworkData$.pipe(

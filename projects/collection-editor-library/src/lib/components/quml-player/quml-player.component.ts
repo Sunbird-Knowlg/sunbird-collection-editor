@@ -30,17 +30,19 @@ export class QumlPlayerComponent implements OnInit {
     this.qumlPlayerConfig = playerConfig;
     this.qumlPlayerConfig.context.threshold = _.get(this.configService, 'playerConfig.threshold');
     this.qumlPlayerConfig.metadata = _.cloneDeep(this.questionSetHierarchy);
-    this.qumlPlayerConfig.metadata.totalQuestions = this.qumlPlayerConfig.metadata.childNodes.length;
-    // tslint:disable-next-line:max-line-length
-    this.qumlPlayerConfig.metadata.maxQuestions = this.qumlPlayerConfig.metadata.maxQuestions || this.qumlPlayerConfig.metadata.totalQuestions;
-    this.qumlPlayerConfig.metadata.maxScore = this.qumlPlayerConfig.metadata.maxQuestions;
-    if (this.isSingleQuestionPreview) {
+    if (this.qumlPlayerConfig.metadata) {
+      this.qumlPlayerConfig.metadata.totalQuestions = this.qumlPlayerConfig.metadata.childNodes.length;
+      // tslint:disable-next-line:max-line-length
+      this.qumlPlayerConfig.metadata.maxQuestions = this.qumlPlayerConfig.metadata.maxQuestions || this.qumlPlayerConfig.metadata.totalQuestions;
+      this.qumlPlayerConfig.metadata.maxScore = this.qumlPlayerConfig.metadata.maxQuestions;
+      if (this.isSingleQuestionPreview) {
       this.qumlPlayerConfig.context.threshold = 1;
       this.qumlPlayerConfig.metadata.showStartPage = 'No';
       this.qumlPlayerConfig.metadata.showTimer = 'No';
       this.qumlPlayerConfig.metadata.maxQuestions = 1;
       this.qumlPlayerConfig.metadata.requiresSubmit = 'No';
     }
+  }
     console.log('qumlPlayerConfig:: ', this.qumlPlayerConfig);
   }
 

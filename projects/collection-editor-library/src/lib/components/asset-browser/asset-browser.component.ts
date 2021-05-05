@@ -216,16 +216,6 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     }), map(data => data));
   }
 
-  getMediaOriginURL(src) {
-    const replaceText = this.assetProxyUrl;
-    const cloudStorageUrls = _.get(this.editorService.editorConfig, 'context.cloudStorageUrls') || [];
-    _.forEach(cloudStorageUrls, url => {
-      if (src.indexOf(url) !== -1) {
-        src = src.replace(url, replaceText);
-      }
-    });
-    return src;
-  }
 
   dismissImageUploadModal() {
     this.showImagePicker = true;
