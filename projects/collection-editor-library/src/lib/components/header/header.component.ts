@@ -14,6 +14,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
   @Input() pageId: any;
   @Input() labelConfigData: any;
   @Input() buttonLoaders: any;
+  @Input() collectionTreeNodes: any;
   @Output() toolbarEmitter = new EventEmitter<any>();
   @ViewChild('FormControl', {static: false}) FormControl: NgForm;
   @ViewChild('modal', {static: false}) public modal;
@@ -24,9 +25,11 @@ export class HeaderComponent implements OnDestroy, OnInit {
   public rejectComment: string;
   public contentComment: string;
   public actionType: string;
+  public showComment: boolean;
   constructor(private editorService: EditorService, public telemetryService: EditorTelemetryService) { }
 
   ngOnInit() {
+    this.showComment = this.showCommentAddedAgainstContent();
     this.handleActionButtons();
   }
 
@@ -51,6 +54,14 @@ export class HeaderComponent implements OnDestroy, OnInit {
 
   buttonEmitter(action) {
     this.toolbarEmitter.emit({button: action.type, ...(action.comment && {comment: this.rejectComment})});
+  }
+
+  showCommentAddedAgainstContent() {
+    if (this.collectionTreeNodes.data.status === "Draft" && this.collectionTreeNodes.data.prevStatus  === "Review") {
+      this.contentComment = _.get(this.collectionTreeNodes.data, 'rejectComment');
+      return true;
+    }
+    return false;
   }
 
   ngOnDestroy() {
