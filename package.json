@@ -9,7 +9,8 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "build-lib": "ng build collection-editor-library && node assets-copy.js",
-    "build-lib:prod": " ng build collection-editor-library --prod=true && node assets-copy.js"
+    "build-lib:prod": " ng build collection-editor-library --prod=true && node assets-copy.js",
+    "test-coverage": "ng test collection-editor-library --code-coverage=true --watch=false --sourceMap=false"
   },
   "private": true,
   "dependencies": {
