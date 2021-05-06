@@ -76,6 +76,7 @@ body {
       .list-border {
         .placeholder{
           font-weight: 500  !important;
+          color: #333 !important;
         }
         ul {
           @extend label;
