@@ -424,6 +424,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   updateTreeNodeData() {
       const treeNodeData =  _.get(this.treeService.getFirstChild(), 'data.metadata');
+      if (!treeNodeData.timeLimits) {
+        treeNodeData.timeLimits = {};
+      }
       if (treeNodeData.maxTime) {
         treeNodeData.timeLimits.maxTime = this.helperService.hmsToSeconds(treeNodeData.maxTime);
       }
