@@ -6,5 +6,9 @@
     "@angular/core": "^7.2.0",
     "common-form-elements": "^3.9.10",
     "ng2-semantic-ui": "github:venkateshwarans/ng2-semantic-ui#sourcing-circle"
+  },
+  "dependencies": {
+    "karma-jasmine-html-reporter": "^0.2.2",
+    "karma-mocha-reporter": "^2.2.5"
   }
 }
