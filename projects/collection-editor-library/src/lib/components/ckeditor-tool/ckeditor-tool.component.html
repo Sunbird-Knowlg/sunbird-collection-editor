@@ -99,74 +99,111 @@
       </div>
       <div class="ui segment sb-tabset-segment m-0 pt-15" infiniteScroll [infiniteScrollDistance]="2"
         [infiniteScrollThrottle]="500" [scrollWindow]="false" suiTabContent="1">
-        <div class="content">
-          <div type="text/template" id="qq-template-validation" #fineUploaderUI>
-            <div class="qq-uploader-selector qq-uploader custom-qq-uploader">
-              <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
-                <span class="qq-upload-drop-area-text-selector"></span>
-              </div>
-              <span class="qq-drop-processing-selector qq-drop-processing">
-                <span>Processing dropped files...</span>
-                <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
-              </span>
-              <ul class="qq-upload-list-selector qq-upload-list custom-qq-upload-list" aria-live="polite"
-                aria-relevant="additions removals">
-                <li>
-                  <div class="qq-progress-bar-container-selector">
-                    <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
-                      class="qq-progress-bar-selector qq-progress-bar"></div>
+        <div class="d-flex">
+          <div class="w-50">
+            <div class="content">
+              <h6 class="mb-8 fs-normal">Choose or drag and drop your image here<span class="red">*</span></h6>
+              <div type="text/template" id="qq-template-validation" #fineUploaderUI>
+                <div class="qq-uploader-selector qq-uploader custom-qq-uploader">
+                  <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
+                    <span class="qq-upload-drop-area-text-selector"></span>
                   </div>
-                  <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
-                  <img class="qq-thumbnail-selector" qq-max-size="100" qq-server-scale>
-                  <span class="qq-upload-file-selector qq-upload-file custom-qq-upload-file"></span>
-                  <span class="qq-upload-size-selector qq-upload-size"></span>
-                  <button type="button" class="qq-btn qq-upload-retry-selector qq-upload-retry">Retry</button>
-                  <button type="button" class="qq-btn qq-upload-delete-selector qq-upload-delete">Delete</button>
-                  <span role="status" class="qq-upload-status-text-selector qq-upload-status-text"></span>
-                </li>
-              </ul>
-              <div id="qq-upload-actions" class="upload-file-description d-flex flex-ai-center flex-dc">
-                <h5 class="mb-8">Drag and Drop Files here</h5>
-                <span class="fs-0-92 mb-8">Or</span>
-                <div class="qq-upload-button-selector qq-upload-button sb-btn sb-btn-normal sb-btn-success">
-                  <div>Select Files</div>
+                  <span class="qq-drop-processing-selector qq-drop-processing">
+                    <span>Processing dropped files...</span>
+                    <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
+                  </span>
+                  <ul class="qq-upload-list-selector qq-upload-list custom-qq-upload-list" aria-live="polite"
+                    aria-relevant="additions removals">
+                    <li>
+                      <div class="qq-progress-bar-container-selector">
+                        <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                          class="qq-progress-bar-selector qq-progress-bar"></div>
+                      </div>
+                      <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
+                      <img class="qq-thumbnail-selector" qq-max-size="100" qq-server-scale>
+                      <span class="qq-upload-file-selector qq-upload-file custom-qq-upload-file"></span>
+                      <span class="qq-upload-size-selector qq-upload-size"></span>
+                      <button type="button" class="qq-btn qq-upload-retry-selector qq-upload-retry">Retry</button>
+                      <button type="button" class="qq-btn qq-upload-delete-selector qq-upload-delete">Delete</button>
+                      <span role="status" class="qq-upload-status-text-selector qq-upload-status-text"></span>
+                    </li>
+                  </ul>
+                  <div id="qq-upload-actions" class="upload-file-description d-flex flex-ai-center flex-dc">
+                    <div class="qq-upload-button-selector qq-upload-button sb-btn sb-btn-normal sb-btn-success">
+                      <div>Select Files</div>
+                    </div>
+                    <!-- <p class="mt-8">Upload {{assetConfig.video.accepted}} files ( Max size {{assetConfig.video.size}} MB )
+                    </p> -->
+                  </div>
+                  <dialog class="qq-confirm-dialog-selector">
+                    <div class="qq-dialog-message-selector"></div>
+                    <div class="qq-dialog-buttons">
+                      <button type="button" class="qq-cancel-button-selector">No</button>
+                      <button type="button" class="qq-ok-button-selector">Yes</button>
+                    </div>
+                  </dialog>
+                  <dialog class="qq-prompt-dialog-selector">
+                    <div class="qq-dialog-message-selector"></div>
+                    <input type="text">
+                    <div class="qq-dialog-buttons">
+                      <button type="button" class="qq-cancel-button-selector">Cancel</button>
+                      <button type="button" class="qq-ok-button-selector">Ok</button>
+                    </div>
+                  </dialog>
                 </div>
-                <p class="mt-8">Upload {{assetConfig.video.accepted}} files ( Max size {{assetConfig.video.size}} MB )
-                </p>
               </div>
-              <dialog class="qq-confirm-dialog-selector">
-                <div class="qq-dialog-message-selector"></div>
-                <div class="qq-dialog-buttons">
-                  <button type="button" class="qq-cancel-button-selector">No</button>
-                  <button type="button" class="qq-ok-button-selector">Yes</button>
+              <div *ngIf="!loading">
+                <div id="upload-video-div" class="upload-file-section sb-custom-upload"></div>
+              </div>
+              <div *ngIf='loading' class="uploading-files">
+                <div class='d-flex flex-dc flex-jc-center flex-ai-center icon'>
+                  <img src="assets/images/Spin.gif" class='process-icon'>
                 </div>
-              </dialog>
-              <dialog class="qq-prompt-dialog-selector">
-                <div class="qq-dialog-message-selector"></div>
-                <input type="text">
-                <div class="qq-dialog-buttons">
-                  <button type="button" class="qq-cancel-button-selector">Cancel</button>
-                  <button type="button" class="qq-ok-button-selector">Ok</button>
-                </div>
-              </dialog>
+              </div>
+              <div class="ui info message sb-info-bx">
+                <ul class="list">
+                  <li class="fs-0665">Allowed file types are: jpeg,jpg,png</li>
+                  <li class="fs-0665">Maximum allowed file size: 1MB</li>
+                </ul>
+              </div>
+              <h6 class="fs-0785">Copyright & License<span class="red">*</span></h6>
+              <p class="fsmall mt-8 terms-and-condition">I understand and confirm that all resources and assets created
+                through the content editor or uploaded on the platform shall be available for free and public use without
+                limitations on the platform (web portal, applications and any other end user interface that the platform
+                would enable) and will be licensed under terms & conditions and policy guidelines of the platform. In doing
+                so, the copyright and license of the original author is not infringed.</p>
             </div>
           </div>
-          <div *ngIf="!loading">
-            <div id="upload-video-div" class="upload-file-section"></div>
-          </div>
-          <div *ngIf='loading' class="uploading-files">
-            <div class='d-flex flex-dc flex-jc-center flex-ai-center icon'>
-              <img src="assets/images/Spin.gif" class='process-icon'>
+          <div class="w-50 pl-10 ml-10 b-bl">
+            <div class="ui info message sb-info-bx">
+              <ul class="list">
+                <li class="fs-0665 font-weight-bold">
+                  <i class="icon info circle"></i>
+                  Drop or choose file to upload before entering the details</li>
+              </ul>
             </div>
+            <div class="sb-form-fields">
+                <div class="sb-field-group">
+                  <label>Asset caption field</label>
+                  <div class="sb-field">
+                  <input class="sb-form-control required" required>
+                  </div>
+                </div>
+                <div class="sb-field-group">
+                  <label>Tags</label>
+                  <div class="sb-field">
+                  <input class="sb-form-control required" required>
+                  </div>
+                </div>
+                <div class="sb-field-group">
+                  <label>Creator</label>
+                  <div class="sb-field">
+                  <input class="sb-form-control required" required>
+                  </div>
+                </div>  
+           </div>  
           </div>
-          <p class="fsmall mt-8 terms-and-condition">I understand and confirm that all resources and assets created
-            through the content editor or uploaded on the platform shall be available for free and public use without
-            limitations on the platform (web portal, applications and any other end user interface that the platform
-            would enable) and will be licensed under terms & conditions and policy guidelines of the platform. In doing
-            so, the copyright and license of the original author is not infringed.</p>
-        </div>
-
-
+       </div>
       </div>
 
       <div class="ui segment sb-tabset-segment m-0 pt-15" infiniteScroll [infiniteScrollDistance]="2"
