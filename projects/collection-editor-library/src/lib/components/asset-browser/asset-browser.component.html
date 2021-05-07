@@ -12,32 +12,74 @@
 
 
       <div class="ui segment sb-tabset-segment m-0 pt-15" suiTabContent="1">
-        <div class="content">
-          <div class="upload-image-modal-section d-flex flex-ai-center flex-jc-center flex-dc">
-            <ng-container *ngIf="imageUploadLoader">
-              <div class="flex-as-center text-center">
-                <img src="assets/images/loader.gif" width="34" class="process-icon pb-10">
-                <div class="sb-color-primary fsmall mt-8">Upload in progress...</div>
+        <div class="d-flex">
+          <div class="w-50">
+            <div class="content">
+              <h6 class="mb-8 fs-normal">Choose or drag and drop your image here<span class="red">*</span></h6>
+              <div class="upload-image-modal-section d-flex flex-ai-center flex-jc-center flex-dc">
+                <ng-container *ngIf="imageUploadLoader">
+                  <div class="flex-as-center text-center">
+                    <img src="assets/images/loader.gif" width="34" class="process-icon pb-10">
+                    <div class="sb-color-primary fsmall mt-8">Upload in progress...</div>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="!imageUploadLoader">
+                  <button class="upload-input-button sb-btn sb-btn-success sb-btn-normal">
+                    Upload from Computer
+                    <input (change)="uploadImage($event)" type="file" [accept]="acceptImageType" name="assetfile">
+                  </button>
+                  <span class="fsmall mt-16">Upload {{assetConfig.image.accepted}} (Max File size:
+                    {{assetConfig.image.size}}MB)</span>
+                  <div *ngIf="showErrorMsg" class="sb-color-error fsmall mt-8">
+                    <p>{{errorMsg}}</p>
+                  </div>
+                </ng-container>
               </div>
-            </ng-container>
-            <ng-container *ngIf="!imageUploadLoader">
-              <button class="upload-input-button sb-btn sb-btn-success sb-btn-normal">
-                Upload from Computer
-                <input (change)="uploadImage($event)" type="file" [accept]="acceptImageType" name="assetfile">
-              </button>
-              <span class="fsmall mt-16">Upload {{assetConfig.image.accepted}} (Max File size:
-                {{assetConfig.image.size}}MB)</span>
-              <div *ngIf="showErrorMsg" class="sb-color-error fsmall mt-8">
-                <p>{{errorMsg}}</p>
+              <div class="ui info message sb-info-bx">
+                <ul class="list">
+                  <li class="fs-0665">Allowed file types are: jpeg,jpg,png</li>
+                  <li class="fs-0665">Maximum allowed file size: 1MB</li>
+                </ul>
               </div>
-            </ng-container>
+              <h6 class="fs-0785">Copyright & License<span class="red">*</span></h6>
+              <p class="fsmall mt-8 terms-and-condition">I understand and confirm that all resources and assets created
+                through the content editor or uploaded on the platform shall be available for free and public use without
+                limitations on the platform (web portal, applications and any other end user interface that the platform
+                would enable) and will be licensed under terms & conditions and policy guidelines of the platform. In doing
+                so, the copyright and license of the original author is not infringed.</p>
+            </div>
           </div>
-          <p class="fsmall mt-8 terms-and-condition">I understand and confirm that all resources and assets created
-            through the content editor or uploaded on the platform shall be available for free and public use without
-            limitations on the platform (web portal, applications and any other end user interface that the platform
-            would enable) and will be licensed under terms & conditions and policy guidelines of the platform. In doing
-            so, the copyright and license of the original author is not infringed.</p>
-
+          <div class="w-50 pl-10 ml-10 b-bl">
+            <div class="ui info message sb-info-bx">
+              <ul class="list">
+                <li class="fs-0665 font-weight-bold">
+                  <i class="icon info circle"></i>
+                  Drop or choose file to upload before entering the details</li>
+              </ul>
+            </div>
+            <div class="sb-form-fields">
+              <form [formGroup]="uploadImageFormGroup" >
+                <div class="sb-field-group">
+                  <label>Asset caption field</label>
+                  <div class="sb-field">
+                  <input class="sb-form-control required" formControlName="name" required>
+                  </div>
+                </div>
+                <div class="sb-field-group">
+                  <label>Tags</label>
+                  <div class="sb-field">
+                  <input class="sb-form-control required"  formControlName="keywords" required>
+                  </div>
+                </div>
+                <div class="sb-field-group">
+                  <label>Creator</label>
+                  <div class="sb-field">
+                  <input class="sb-form-control required" formControlName="creator" required>
+                  </div>
+                </div> 
+                </form> 
+           </div>  
+          </div>
         </div>
       </div>
 
