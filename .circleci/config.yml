@@ -1,13 +1,45 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine. See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
-# Use a package of configuration called an orb.
-orbs:
-  # Declare a dependency on the welcome-orb
-  welcome: circleci/welcome-orb@0.4.1
-# Orchestrate or schedule a set of jobs
+jobs:
+  build:
+    machine:
+      image: circleci/classic:latest
+    steps:
+      - checkout
+      - run:
+          name: run build file
+          command: /bin/bash -x build.sh ${CIRCLE_SHA1} test
+  test-cases:
+    working_directory: ~/sunbird-collection-editor
+    docker:
+      - image: sunbird/build:player_v1.1
+    steps:
+      - checkout:
+          path: ~/sunbird-collection-editor
+      - run:
+          name: Installing angular cli
+          command: 'npm install -g @angular/cli@6.0.8 --no-progress'
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Installing npm deps
+          command: 'npm install --no-progress'
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths: ./node_modules
+      - run:
+          name: ng lint and building
+          command: 'mkdir -p /tmp/logs && ng build --prod --optimization=false --buildOptimizer=false | tee /tmp/logs/build.log'
+      - run:
+          name: Executing test cases
+          command: 'npm run test-coverage | tee /tmp/logs/test_cases.log'
+      - run:
+          name: Install sonar scanner
+          command: npm install -g sonarqube-scanner
+      - run:
+         name: Run sonar scanner
+         command: 'cd ~/sunbird-collection-editor && sonar-scanner'
 workflows:
-  # Name the workflow "welcome"
-  welcome:
-    # Run the welcome/run job in its own container
+  version: 2
+  build_and_test:
     jobs:
-      - welcome/run
+      - test-cases
