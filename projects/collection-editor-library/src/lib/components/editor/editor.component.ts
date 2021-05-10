@@ -360,8 +360,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       const nodesModified =  _.get(this.editorService.getCollectionHierarchy(), 'nodesModified');
       this.editorService.updateHierarchy()
         .pipe(map(data => _.get(data, 'result'))).subscribe(response => {
-          const objectType = this.editorConfig.config.objectType;
-          if (objectType === 'Collection') {
+          if (this.toolbarConfig.showDialcode === 'yes') {
             this.dialcodeService.highlightNodeForInvalidDialCode(response, nodesModified, this.collectionId);
           }
           if (!_.isEmpty(response.identifiers)) {
@@ -377,11 +376,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   submitHandler() {
-    const objectType = this.editorConfig.config.objectType;
     if (!this.validateFormStatus()) {
       this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.005'));
       return;
-    } else if (objectType === 'Collection') {
+    } else if (this.toolbarConfig.showDialcode === 'yes') {
       if (this.dialcodeService.validateUnitsDialcodes()) {
         this.showConfirmPopup = true;
       } else {
