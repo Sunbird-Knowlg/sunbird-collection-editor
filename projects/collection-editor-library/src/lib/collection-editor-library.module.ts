@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { CommonFormElementsModule } from 'common-form-elements';
+import { CommonFormElementsModule, DialcodeCursor } from 'common-form-elements';
 import { SuiModule } from 'ng2-semantic-ui/dist';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { HttpClientModule } from '@angular/common/http';
@@ -26,7 +26,7 @@ import { CkeditorToolComponent } from './components/ckeditor-tool/ckeditor-tool.
 import { QuestionComponent } from './components/question/question.component';
 import {SunbirdPdfPlayerModule} from '@project-sunbird/sunbird-pdf-player-v8';
 import { SunbirdVideoPlayerModule } from '@project-sunbird/sunbird-video-player-v8';
-import { QumlLibraryModule, QuestionCursor } from '@project-sunbird/sunbird-quml-player-v8';
+import { QumlLibraryModule } from '@project-sunbird/sunbird-quml-player-v8';
 import {CarouselModule} from 'ngx-bootstrap/carousel';
 import { TelemetryInteractDirective } from './directives/telemetry-interact/telemetry-interact.directive';
 import { AssetBrowserComponent } from './components/asset-browser/asset-browser.component';
@@ -34,9 +34,9 @@ import { CollectionIconComponent } from './components/collection-icon/collection
 import { CacheService } from 'ng2-cache-service';
 import { CacheStorageAbstract } from 'ng2-cache-service/dist/src/services/storage/cache-storage-abstract.service';
 import { CacheSessionStorage } from 'ng2-cache-service/dist/src/services/storage/session-storage/cache-session-storage.service';
-import { QumlPlayerService } from './services/quml-player/quml-player.service';
 import { QumlPlayerComponent } from './components/quml-player/quml-player.component';
 import { DialcodeComponent } from './components/dialcode/dialcode.component';
+import { DialcodeService } from './services/dialcode/dialcode.service';
 @NgModule({
   declarations: [CollectionEditorLibraryComponent, ContentplayerPageComponent, EditorComponent, QumlplayerPageComponent,
     HeaderComponent, FancyTreeComponent, MetaFormComponent, LibraryComponent, LibraryFilterComponent, LibraryListComponent,
@@ -48,8 +48,7 @@ import { DialcodeComponent } from './components/dialcode/dialcode.component';
   providers: [
     CacheService,
     { provide: CacheStorageAbstract, useClass: CacheSessionStorage },
-    { provide: QuestionCursor, useExisting: QumlPlayerService
-    }
+    { provide: DialcodeCursor, useExisting: DialcodeService }
   ],
   exports: [EditorComponent]
 })
