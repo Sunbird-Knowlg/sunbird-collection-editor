@@ -332,11 +332,13 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       videoMedia.assetId = event.identifier;
       videoMedia.name = event.name;
       videoMedia.thumbnail = this.videoThumbnail;
+      videoMedia.baseUrl = _.get(this.editorService.editorConfig, 'context.host') || document.location.origin;
       if (videoMedia.thumbnail) {
         const thumbnailMedia: any = {};
         thumbnailMedia.src = this.videoThumbnail;
         thumbnailMedia.type = 'image';
         thumbnailMedia.id = `video_${event.identifier}`;
+        thumbnailMedia.baseUrl = _.get(this.editorService.editorConfig, 'context.host') || document.location.origin;
         this.mediaArr.push(thumbnailMedia);
       }
       this.mediaArr.push(videoMedia);
