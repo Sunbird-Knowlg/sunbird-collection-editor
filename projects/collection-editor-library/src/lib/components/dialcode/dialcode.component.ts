@@ -11,7 +11,7 @@ import { ConfigService } from '../../services/config/config.service';
 @Component({
   selector: 'lib-dialcode',
   templateUrl: './dialcode.component.html',
-  styleUrls: ['./dialcode.component.css']
+  styleUrls: ['./dialcode.component.scss']
 })
 export class DialcodeComponent implements OnInit {
   public minQRCode = 2;
@@ -37,11 +37,11 @@ export class DialcodeComponent implements OnInit {
   }
 
   setQRCodeCriteria() {
-    if (_.has(this.treeService.config, 'qrCode.minLength')) {
-      this.minQRCode = _.get(this.treeService.config, 'qrCode.minLength');
+    if (_.has(this.treeService.config, 'dialcodeMinLength')) {
+      this.minQRCode = _.get(this.treeService.config, 'dialcodeMinLength');
     }
-    if (_.has(this.treeService.config, 'qrCode.maxLength')) {
-      this.maxQRCode = _.get(this.treeService.config, 'qrCode.maxLength');
+    if (_.has(this.treeService.config, 'dialcodeMaxLength')) {
+      this.maxQRCode = _.get(this.treeService.config, 'dialcodeMaxLength');
     }
     this.dialcodeControl = new FormControl('', [Validators.required, Validators.max(this.maxQRCode), this.customDialcodeValidator()]);
   }

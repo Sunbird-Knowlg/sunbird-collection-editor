@@ -7,7 +7,7 @@ export const collectionEditorConfig = {
       lastName: 'Bhuva',
       orgIds: ['01309282781705830427']
     },
-    identifier: 'do_113272105912459264145',  // do_1132591625173893121151
+    identifier: 'do_113274017771085824116',
     channel: '01307938306521497658',
     // framework: 'nit_k-12',
     targetFWIds: ['nit_k-12'],
@@ -68,11 +68,8 @@ export const collectionEditorConfig = {
     objectType: 'Collection',
     primaryCategory: 'Course', // Professional Development Course, Curriculum Course
     isRoot: true,
-    qrCode: {
-      show: true,
-      minLength: 3,
-      maxLength: 25
-    },
+    dialcodeMinLength: 2,
+    dialcodeMaxLength: 250,
     iconClass: 'fa fa-book',
     children: {},
     hierarchy: {

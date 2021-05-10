@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 import { ConfigService } from '../../services/config/config.service';
 import { FrameworkService } from '../../services/framework/framework.service';
 import { TreeService } from '../../services/tree/tree.service';
-import { QumlPlayerService } from '../../services/quml-player/quml-player.service';
+import { EditorCursor } from '../../collection-editor-cursor.service';
 import { filter, finalize, take, takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'lib-question',
@@ -74,7 +74,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     private questionService: QuestionService, private editorService: EditorService, public telemetryService: EditorTelemetryService,
     public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,
     private frameworkService: FrameworkService, private router: Router, public configService: ConfigService, 
-    private qumlPlayerService: QumlPlayerService) {
+    private editorCursor: EditorCursor) {
     const { primaryCategory } = this.editorService.selectedChildren;
     this.questionPrimaryCategory = primaryCategory;
     this.pageStartTime = Date.now();
@@ -513,7 +513,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     const questionMetadata: any = this.getQuestionMetadata();
     questionMetadata.identifier = questionId;
     this.questionSetHierarchy.children = [questionMetadata];
-    this.qumlPlayerService.setQuestionMap(questionId, questionMetadata);
+    this.editorCursor.setQuestionMap(questionId, questionMetadata);
   }
 
   getPlayerEvents(event) {
@@ -590,7 +590,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy() {
     this.onComponentDestroy$.next();
     this.onComponentDestroy$.complete();
-    this.qumlPlayerService.clearQuestionMap();
+    this.editorCursor.clearQuestionMap();
   }
 }
 

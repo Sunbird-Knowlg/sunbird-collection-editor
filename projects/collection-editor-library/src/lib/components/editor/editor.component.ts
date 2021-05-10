@@ -99,6 +99,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       this.editorConfig.context.channel, this.editorConfig.config.objectType)
       .subscribe(
         (response) => {
+          // tslint:disable-next-line:max-line-length
+          const dialcode = _.get(response, 'result.objectCategoryDefinition.objectMetadata.schema.properties.generateDIALCodes.default');
+          this.toolbarConfig.showDialcode = dialcode ? dialcode.toLowerCase() : 'no';
           this.helperService.channelData$.subscribe(
             (channelResponse) => {
               this.getFrameworkDetails(response);
