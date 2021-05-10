@@ -10,16 +10,19 @@ jobs:
           command: /bin/bash -x build.sh ${CIRCLE_SHA1} test
   test-cases:
     working_directory: ~/sunbird-collection-editor
-    docker:
-      - image: sunbird/build:player_v1.1
+    machine:
+      image: ubuntu-1604:202101-01
     steps:
       - checkout:
           path: ~/sunbird-collection-editor
       - run:
+          name: Node version
+          command: 'node --version'
+      - run:
           name: Installing angular cli
           command: 'npm install -g @angular/cli@6.0.8 --no-progress'
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+      #~ - restore_cache:
+          #~ key: dependency-cache-{{ checksum "package.json" }}
       - run:
           name: Installing npm deps
           command: 'npm install --no-progress'
@@ -28,7 +31,7 @@ jobs:
           paths: ./node_modules
       - run:
           name: ng lint and building
-          command: 'mkdir -p /tmp/logs && ng build --prod --optimization=false --buildOptimizer=false | tee /tmp/logs/build.log'
+          command: 'mkdir -p /tmp/logs && npm run build-lib:prod | tee /tmp/logs/build.log'
       - run:
           name: Executing test cases
           command: 'npm run test-coverage | tee /tmp/logs/test_cases.log'
