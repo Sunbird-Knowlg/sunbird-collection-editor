@@ -10,8 +10,8 @@ jobs:
           command: /bin/bash -x build.sh ${CIRCLE_SHA1} test
   test-cases:
     working_directory: ~/sunbird-collection-editor
-    docker:
-      - image: circleci/classic:latest
+    machine:
+      image: ubuntu-1604:202101-01
     steps:
       - checkout:
           path: ~/sunbird-collection-editor
