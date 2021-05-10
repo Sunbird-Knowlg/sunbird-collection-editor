@@ -16,6 +16,9 @@ jobs:
       - checkout:
           path: ~/sunbird-collection-editor
       - run:
+          name: Node version
+          command: 'node --version'
+      - run:
           name: Installing angular cli
           command: 'npm install -g @angular/cli@6.0.8 --no-progress'
       - restore_cache:
