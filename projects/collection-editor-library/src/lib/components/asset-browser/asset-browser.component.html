@@ -31,8 +31,8 @@
               </div>
               <div class="ui info message sb-info-bx">
                 <ul class="list">
-                  <li class="fs-0665">Allowed file types are: jpeg,jpg,png</li>
-                  <li class="fs-0665">Maximum allowed file size: 1MB</li>
+                  <li class="fs-0785">Allowed file types are: jpeg,jpg,png</li>
+                  <li class="fs-0785">Maximum allowed file size: 1MB</li>
                 </ul>
               </div>
               <h6 class="fs-0785">Copyright & License<span class="red">*</span></h6>
@@ -46,7 +46,7 @@
           <div class="w-50 pl-10 ml-10 b-bl">
             <div class="ui info message sb-info-bx">
               <ul class="list">
-                <li class="fs-0665 font-weight-bold">
+                <li class="fs-0785 font-weight-bold">
                   <i class="icon info circle"></i>
                   Drop or choose file to upload before entering the details</li>
               </ul>
@@ -111,6 +111,9 @@
 
       </div>
     </sui-tabset>
+  </div>
+  <div class="sb-modal-actions" *ngIf="!isUploadTab">
+    <button class="sb-btn sb-btn-disabled sb-btn-normal" >Upload and Use</button>
   </div>
   <div class="sb-modal-actions" *ngIf="isUploadTab">
     <button (click)="uploadAndUseImage();"
