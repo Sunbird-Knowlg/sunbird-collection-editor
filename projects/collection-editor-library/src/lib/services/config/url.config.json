@@ -22,7 +22,8 @@
     "DIALCODE": {
       "RESERVE" : "dialcode/v1/reserve/",
       "PROCESS" : "dialcode/v1/process/status/",
-      "SEARCH"  : "dialcode/v3/search"
+      "SEARCH"  : "dialcode/v3/search",
+      "LINK" : "collection/v3/dialcode/link/"
     },
     "ContentPolicyUrl" : "/term-of-use.html" 
   }

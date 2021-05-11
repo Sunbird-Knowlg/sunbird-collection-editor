@@ -14,15 +14,21 @@ interface PlayerConfig {
   providedIn: 'root'
 })
 export class PlayerService {
-
+  qumlPlayerSideMenuConfig = {
+    showShare: true,
+    showDownload: true,
+    showReplay: true,
+    showExit: false,
+  };
   constructor(private editorService: EditorService, private configService: ConfigService) { }
 
   /**
-   * returns player config details.
+   * returns QUML player config details.
    */
   getQumlPlayerConfig() {
     const configuration: any = _.cloneDeep(this.editorService.editorConfig);
     configuration.context.userData = { firstName: configuration.context.user.firstName, lastName: configuration.context.user.lastName },
+    configuration.config = {...configuration.config, sideMenu : this.qumlPlayerSideMenuConfig };
     configuration.context.mode = 'play';
     configuration.metadata = {};
     configuration.data = {};

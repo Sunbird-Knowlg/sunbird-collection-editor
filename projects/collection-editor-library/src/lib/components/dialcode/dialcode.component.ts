@@ -6,14 +6,16 @@ import { EditorTelemetryService } from '../../services/telemetry/telemetry.servi
 import { TreeService } from '../../services/tree/tree.service';
 import { DialcodeService } from '../../services/dialcode/dialcode.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
+import { ConfigService } from '../../services/config/config.service';
 
 @Component({
   selector: 'lib-dialcode',
   templateUrl: './dialcode.component.html',
-  styleUrls: ['./dialcode.component.css']
+  styleUrls: ['./dialcode.component.scss']
 })
 export class DialcodeComponent implements OnInit {
-
+  public minQRCode = 2;
+  public maxQRCode = 250;
   public qrCodeCount: { [key: string]: number; } = {
     request: 0,
     reserve: 0
@@ -27,11 +29,21 @@ export class DialcodeComponent implements OnInit {
   public contentId: string;
   constructor(public telemetryService: EditorTelemetryService, private treeService: TreeService,
               private dialcodeService: DialcodeService, private toasterService: ToasterService,
-              private httpClient: HttpClient) { }
+              private httpClient: HttpClient, private configService: ConfigService) { }
 
   ngOnInit() {
-    this.dialcodeControl = new FormControl('', [Validators.max(250), this.customDialcodeValidator()]);
+    this.setQRCodeCriteria();
     this.treeStatusListener();
+  }
+
+  setQRCodeCriteria() {
+    if (_.has(this.treeService.config, 'dialcodeMinLength')) {
+      this.minQRCode = _.get(this.treeService.config, 'dialcodeMinLength');
+    }
+    if (_.has(this.treeService.config, 'dialcodeMaxLength')) {
+      this.maxQRCode = _.get(this.treeService.config, 'dialcodeMaxLength');
+    }
+    this.dialcodeControl = new FormControl('', [Validators.required, Validators.max(this.maxQRCode), this.customDialcodeValidator()]);
   }
 
   treeStatusListener() {
@@ -44,7 +56,7 @@ export class DialcodeComponent implements OnInit {
         this.doQRCodeCount();
         this.disableQRGenerateBtn = true;
       } else {
-        this.disableQRGenerateBtn = false; // TODO:: Rethink this
+        this.disableQRGenerateBtn = false;
       }
     });
   }
@@ -90,13 +102,13 @@ export class DialcodeComponent implements OnInit {
       this.isGeneratingQRCodes = false;
       this.doQRCodeCount();
       this.resolveQRDownloadBtn();
-      this.toasterService.success('QR code generated.');
+      this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.010'));
     }, (err) => {
       this.isGeneratingQRCodes = false;
       const errResponse = (err.error.result) ? err.error.result : undefined;
       if (!_.isEmpty(errResponse) && errResponse.hasOwnProperty('count')) {
         if (errResponse.count >= this.qrCodeCount.request) {
-          this.toasterService.error('No new QR Codes have been generated!');
+          this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.013'));
         }
       } else {
         this.toasterService.error(err.error.params.errmsg);
@@ -111,7 +123,7 @@ export class DialcodeComponent implements OnInit {
         const response = res.result;
         if (response && response.hasOwnProperty('status')) {
           if (response.status === 'in-process') {
-            this.toasterService.info('QR code image generation is in progress. Please try downloading after sometime');
+            this.toasterService.info(_.get(this.configService, 'labelConfig.messages.info.001'));
           } else if (response.status === 'completed') {
             const filepath = response.url;
             const pattern = new RegExp('([0-9])+(?=.[.zip])');
@@ -144,7 +156,7 @@ export class DialcodeComponent implements OnInit {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(objectUrl);
-        this.toasterService.success('QR codes downloaded');
+        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.011'));
       }, (error) => {
         console.error('failed to convert url to blob ' + error);
       });
@@ -166,11 +178,11 @@ export class DialcodeComponent implements OnInit {
     return (control: AbstractControl): ValidationErrors => {
       if (control.value === null || control.value === '') { return null; }
       const inputValue: number = +control.value;
-      if (this.qrCodeCount.reserve === 0 && inputValue < 2) {
-        return { minErr: 'The number should be at least 2 ' };
+      if (this.qrCodeCount.reserve === 0 && inputValue < this.minQRCode) {
+        return { minErr: _.replace(_.get(this.configService, 'labelConfig.messages.error.014'), '{number}', this.minQRCode) };
       }
       if (this.qrCodeCount.reserve > 0 && inputValue <= this.qrCodeCount.reserve) {
-        return { gteErr: `The number should be greater than ${this.qrCodeCount.reserve}` };
+        return { gteErr: _.replace(_.get(this.configService, 'labelConfig.messages.error.015'), '{number}', this.qrCodeCount.reserve) };
       }
       return null;
     };
