@@ -112,4 +112,51 @@ describe('AssetBrowserComponent', () => {
     expect(component.searchAllInput).toEqual('');
     expect(component.getAllImages).toHaveBeenCalledWith(0, '', true );
   });
+  it('#ngOnInit() should call ngOnInit and define formConfig', () => {
+    component.ngOnInit();
+    expect(component.formConfig).toBeDefined();
+  });
+  it('#uploadImageTab() should call uploadImageTab and define isUploadTab ', () => {
+    component.uploadImageTab();
+    expect(component.isUploadTab).toBeTruthy();
+  });
+  it('#onStatusChanges() should call onStatusChanges and imageUploadLoader is false', () => {
+    component.imageUploadLoader = false;
+    const data = {controls: [],
+      isDirty: true,
+      isInvalid: false,
+      isPristine: false,
+      isValid: true};
+    component.onStatusChanges(data);
+    expect(component.imageFormValid).toBeFalsy();
+  });
+  it('#onStatusChanges() should call onStatusChanges and imageUploadLoader is true and is form valid false', () => {
+    component.imageUploadLoader = true;
+    const data = {controls: [],
+      isDirty: true,
+      isInvalid: false,
+      isPristine: false,
+      isValid: false};
+    component.onStatusChanges(data);
+    expect(component.imageFormValid).toBeFalsy();
+  });
+  it('#onStatusChanges() should call onStatusChanges and imageUploadLoader is true and is form valid true', () => {
+    component.imageUploadLoader = true;
+    const data = {controls: [],
+      isDirty: true,
+      isInvalid: false,
+      isPristine: false,
+      isValid: true};
+    component.onStatusChanges(data);
+    expect(component.imageFormValid).toBeTruthy();
+  });
+  it('#valueChanges() should define assestRequestBody ', () => {
+    component.imageUploadLoader = true;
+    component.assestRequestBody = mockData.formData;
+    const data = {  creator: "Vaibahv Bhuva",
+    keywords: undefined,
+    name: "logo"};
+    component.valueChanges(data);
+    expect(component.assestRequestBody).toBeDefined();
+  });
 });
