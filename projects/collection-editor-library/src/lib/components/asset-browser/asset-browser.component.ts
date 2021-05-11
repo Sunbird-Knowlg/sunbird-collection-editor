@@ -4,8 +4,8 @@ import { catchError, map } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
 import { EditorService } from '../../services/editor/editor.service';
 import { QuestionService } from '../../services/question/question.service';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-
+import { ToasterService } from '../../services/toaster/toaster.service';
+import {config} from './asset-browser.data';
 @Component({
   selector: 'lib-asset-browser',
   templateUrl: './asset-browser.component.html',
@@ -15,9 +15,9 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
   @Input() showImagePicker;
   @Output() assetBrowserEmitter = new EventEmitter<any>();
   @Output() modalDismissEmitter = new EventEmitter<any>();
-  @ViewChild('modal', {static: false}) private modal;
-  constructor(private editorService: EditorService, private formBuilder: FormBuilder,
-              private questionService: QuestionService) { }
+  @ViewChild('modal', { static: false }) private modal;
+  constructor(private editorService: EditorService,
+              private questionService: QuestionService, private toasterService: ToasterService) { }
   assetConfig: any = {
     image: {
       size: '1',
@@ -43,24 +43,14 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
   public searchAllInput: any;
   showAddButton: boolean;
   appIcon;
-  formData: any;
-  uploadAndUseImageRequestBody =  {};
-  uploadImageFormGroup: FormGroup;
+  public formData: any;
+  public assestRequestBody = {};
+  public formConfig: any;
+  public isUploadTab = true;
+  public imageFormValid: any;
   ngOnInit() {
+    this.formConfig =  _.get(config, 'uploadIconFormConfig');
     this.acceptImageType = this.getAcceptType(this.assetConfig.image.accepted, 'image');
-    this.createForm();
-  }
-  createForm() {
-    this.uploadImageFormGroup = this.formBuilder.group({
-      creator: ['', Validators.required],
-      name: ['', Validators.required],
-      mediaType: ['', Validators.required],
-      mimeType: ['', [Validators.required]],
-      createdBy: ['', [Validators.required]],
-      channel: ['', Validators.required],
-      fileType: [false, Validators.required],
-      keywords: ['', Validators.required],
-    });
   }
 
   getAcceptType(typeList, type) {
@@ -82,6 +72,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
 
   getMyImages(offset, query?, search?) {
     this.assetsCount = 0;
+    this.isUploadTab = false;
     if (!search) {
       this.searchMyInput = '';
     }
@@ -119,6 +110,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
 
   getAllImages(offset, query?, search?) {
     this.assetsCount = 0;
+    this.isUploadTab = false;
     if (!search) {
       this.searchAllInput = '';
     }
@@ -160,16 +152,16 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     const offset = this.allImages.length;
     this.getAllImages(offset, this.query, true);
   }
-
+  uploadImageTab() {
+    this.isUploadTab = true;
+  }
   uploadImage(event) {
     const file = event.target.files[0];
-    console.log(file, 'file');
-    console.log( _.get(this.editorService.editorConfig, 'context.user.fullName'), 'creator');
     const reader = new FileReader();
     this.formData = new FormData();
     this.formData.append('file', file);
     const fileType = file.type;
-    const fileName = file.name;
+    const fileName = file.name.split('.').slice(0, -1).join('.');
     const fileSize = file.size / 1024 / 1024;
     if (fileType.split('/')[0] === 'image') {
       this.showErrorMsg = false;
@@ -187,35 +179,44 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     }
     if (!this.showErrorMsg) {
       this.imageUploadLoader = true;
-      // reader.onload = (uploadEvent: any) => {
-      this.uploadAndUseImageRequestBody = this.generateAssetCreateRequest(fileName, fileType, 'image');
-      this.uploadImageFormGroup.patchValue(this.uploadAndUseImageRequestBody);
-      console.log(this.uploadAndUseImageRequestBody, 'uploadAndUseImageRequestBody');
+      this.assestRequestBody = this.generateAssetCreateRequest(fileName, fileType, 'image');
+      this.populatePatchValue(this.assestRequestBody);
     }
   }
-uploadAndUseImage() {
-  this.questionService.createMediaAsset(this.uploadAndUseImageRequestBody).pipe(catchError(err => {
-    this.imageUploadLoader = false;
-    const errInfo = { errorMsg: 'Image upload failed' };
-    return throwError(this.editorService.apiErrorHandling(err, errInfo));
-  })).subscribe((res) => {
-    const imgId = res.result.node_id;
-    const request = {
-      data: this.formData
-    };
-    this.questionService.uploadMedia(request, imgId).pipe(catchError(err => {
-      this.imageUploadLoader = false;
+  populatePatchValue(formData) {
+    const formvalue = _.cloneDeep(this.formConfig);
+    this.formConfig = null;
+    _.forEach(formvalue, (formFieldCategory) => {
+        formFieldCategory.default = formData[formFieldCategory.code];
+    });
+    this.formConfig = formvalue;
+  }
+  uploadAndUseImage() {
+    if (!this.imageUploadLoader) {
+      this.toasterService.error('Please upload image');
+      return ;
+    } else if (!this.imageFormValid) {
+      this.toasterService.error('Please fill required fields');
+      return ;
+    }
+    this.questionService.createMediaAsset({ content: this.assestRequestBody }).pipe(catchError(err => {
       const errInfo = { errorMsg: 'Image upload failed' };
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
-    })).subscribe((response) => {
-      this.imageUploadLoader = false;
-      this.addImageInEditor(response.result.content_url, response.result.node_id);
-      this.showImagePicker = false;
-      this.showImageUploadModal = false;
+    })).subscribe((res) => {
+      const imgId = res.result.node_id;
+      const request = {
+        data: this.formData
+      };
+      this.questionService.uploadMedia(request, imgId).pipe(catchError(err => {
+        const errInfo = { errorMsg: 'Image upload failed' };
+        return throwError(this.editorService.apiErrorHandling(err, errInfo));
+      })).subscribe((response) => {
+        this.addImageInEditor(response.result.content_url, response.result.node_id);
+        this.showImagePicker = false;
+        this.showImageUploadModal = false;
+      });
     });
-});
-// reader.onerror = (error: any) => { };
-}
+  }
   generateAssetCreateRequest(fileName, fileType, mediaType) {
     return {
         name: fileName,
@@ -261,6 +262,18 @@ uploadAndUseImage() {
     } else {
         this.getAllImages(0, this.query, true);
     }
+  }
+  onStatusChanges(event) {
+    if (event.isValid && this.imageUploadLoader) {
+      this.imageFormValid = true;
+    } else {
+      this.imageFormValid = false;
+    }
+  }
+  valueChanges(event) {
+    this.assestRequestBody = _.merge({}, this.assestRequestBody, event);
+  }
+  output(event) {
   }
   ngOnDestroy() {
     if (this.modal && this.modal.deny) {

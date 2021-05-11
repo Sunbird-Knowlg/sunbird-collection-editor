@@ -4,7 +4,7 @@
   <div class="sb-modal-content p-0">
     <sui-tabset>
       <div class="sb-tabset-menu">
-        <a class="sb-item" suiTabHeader="1">Upload</a>
+        <a class="sb-item" (activate)="uploadImageTab()" suiTabHeader="1">Upload</a>
         <a class="sb-item" (activate)="getMyImages(0)" suiTabHeader="2">My Images</a>
         <a class="sb-item" (activate)="getAllImages(0)" suiTabHeader="3">All Image</a>
       </div>
@@ -17,13 +17,7 @@
             <div class="content">
               <h6 class="mb-8 fs-normal">Choose or drag and drop your image here<span class="red">*</span></h6>
               <div class="upload-image-modal-section d-flex flex-ai-center flex-jc-center flex-dc">
-                <ng-container *ngIf="imageUploadLoader">
-                  <div class="flex-as-center text-center">
-                    <img src="assets/images/loader.gif" width="34" class="process-icon pb-10">
-                    <div class="sb-color-primary fsmall mt-8">Upload in progress...</div>
-                  </div>
-                </ng-container>
-                <ng-container *ngIf="!imageUploadLoader">
+                <ng-container>
                   <button class="upload-input-button sb-btn sb-btn-success sb-btn-normal">
                     Upload from Computer
                     <input (change)="uploadImage($event)" type="file" [accept]="acceptImageType" name="assetfile">
@@ -58,26 +52,10 @@
               </ul>
             </div>
             <div class="sb-form-fields">
-              <form [formGroup]="uploadImageFormGroup" >
-                <div class="sb-field-group">
-                  <label>Asset caption field</label>
-                  <div class="sb-field">
-                  <input class="sb-form-control required" formControlName="name" required>
-                  </div>
+                <div class="form-container">
+                  <sb-dynamic-form [config]="formConfig" (initialize)="output($event)"
+                    (statusChanges)="onStatusChanges($event)" (valueChanges)="valueChanges($event)"></sb-dynamic-form>
                 </div>
-                <div class="sb-field-group">
-                  <label>Tags</label>
-                  <div class="sb-field">
-                  <input class="sb-form-control required"  formControlName="keywords" required>
-                  </div>
-                </div>
-                <div class="sb-field-group">
-                  <label>Creator</label>
-                  <div class="sb-field">
-                  <input class="sb-form-control required" formControlName="creator" required>
-                  </div>
-                </div> 
-                </form> 
            </div>  
           </div>
         </div>
@@ -134,10 +112,9 @@
       </div>
     </sui-tabset>
   </div>
-  <div class="sb-modal-actions">
-    <button (click)="addImageInEditor('one', 'two');"
-      class="sb-btn sb-btn-primary sb-btn-normal" disabled="!showAddButton"
-      [ngClass]="{'sb-btn-primary': showAddButton, 'sb-btn-disabled': !showAddButton}">Add</button>
+  <div class="sb-modal-actions" *ngIf="isUploadTab">
+    <button (click)="uploadAndUseImage();"
+      class="sb-btn sb-btn-primary sb-btn-normal" >Upload and Use</button>
   </div>
 </sui-modal>
 
