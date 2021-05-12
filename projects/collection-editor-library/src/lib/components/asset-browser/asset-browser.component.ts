@@ -177,10 +177,10 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
       this.imageUploadLoader = true;
       this.imageFormValid = true;
       this.assestData = this.generateAssetCreateRequest(fileName, fileType, 'image');
-      this.populateFormdata(this.assestData);
+      this.populateFormData(this.assestData);
     }
   }
-  populateFormdata(formData) {
+  populateFormData(formData) {
     const formvalue = _.cloneDeep(this.formConfig);
     this.formConfig = null;
     _.forEach(formvalue, (formFieldCategory) => {
