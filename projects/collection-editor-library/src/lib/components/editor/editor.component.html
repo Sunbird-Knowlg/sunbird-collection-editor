@@ -7,6 +7,29 @@
           <div class="ui twelve column grid m-0 ">
             <!-- Left Sidebar for cards -->
             <div class="three wide column p-0 h-100vh">
+              <div class="py-10 text-center">Folders
+                <a class="profile-avtar computer only p-0 pr-10" tabindex="0">
+                <div suiDropdown class="ui dropdown right top pointing" id="dropdown-menu-list-header">
+                    <i class="icon ellipsis vertical"></i>
+                    <div class="menu" suiDropdownMenu>
+                        <a class="item fs-0-785" (click)="showCreateCSV = true">
+                            <i class="icon folder outline"></i>
+                            <span  class="text">Create Hierarchy using CSV </span> 
+                        </a>
+                        <div class="ui divider"></div>
+                        <a class="item fs-0-785" >
+                            <i class="icon download"></i> 
+                            Download Folders in CSV
+                        </a>
+                        <div class="ui divider"></div>
+                        <a class="item fs-0-785" >
+                            <i class="icon upload"></i> 
+                            Upload & Update Folders via CSV 
+                        </a>
+                    </div>
+                </div>
+                </a>
+              </div>
               <lib-fancy-tree  *ngIf="collectionTreeNodes && collectionTreeNodes.data"
               [nodes]="collectionTreeNodes" [options]="{ showConnectors: true }" [buttonLoaders]="buttonLoaders"
               (treeEventEmitter)="treeEventListener($event)" class="sb-collectionTree-fancyTree sb-collectionTree-fancyTreelist">
@@ -14,6 +37,7 @@
             </div>
             <!-- Right Player Sections -->
             <div class="eight wide column bg-white pl-40 mb-10 w-73">
+              <div>Sample Book</div>
               <ng-container *ngIf="(isCurrentNodeFolder === true || isCurrentNodeRoot === true) && unitFormConfig">
                 <lib-meta-form [rootFormConfig]="rootFormConfig" [nodeMetadata]="selectedNodeData" [unitFormConfig]="unitFormConfig"
                 (toolbarEmitter)="toolbarEventListener($event)"></lib-meta-form>
@@ -120,4 +144,167 @@
     <button class="sb-btn sb-btn-normal sb-btn-outline-primary" (click)="modal.deny('denied')"
     libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('close','click','cancel', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'review_comments'})">Close</button>
   </div>
+</sui-modal>
+
+<sui-modal *ngIf="showCreateCSV" [mustScroll]="true" [isClosable]="true" [transitionDuration]="0" [size]="'normal'"
+    class="sb-modal bx-none overflow-modal" appBodyScroll (dismissed)="showCreateCSV = !showCreateCSV" #modal>
+    <div class="sb-modal-header">
+        Create Hierarcy using CSV
+    </div>
+    <div class="sb-modal-content">
+      <div class="sb-bg-color-primary-0">
+        <div class="d-flex sb-bg-color-primary-0">
+          
+          <div class="pl-20 pt-20 d-block w-50">
+            <p>Download sample hierarchy CSV file and create a hierarchy using this format</p>
+            <div class="sb-color-gray-200 pt-20 fs-0-785">Make sure your file : </div>
+            <ul class="ui ordered list sb-dock-ordered-list mt-15">
+              <li class="item">All columns are available as shown in format.</li>
+              <li class="item">Has all mandatory columns filled, as marked in the format</li>
+              <li class="item">There are no duplicate rows</li>
+            </ul>
+            <a target="_blank"
+              class="sb-btn sb-btn-normal sb-btn-outline-primary my-20 text-decor-none sb-color-primary"><i
+                class="fa fa-download pr-10"></i>Download sample hierarchy CSV</a>
+          </div>
+          <div class="p-10 sb-bulk-upload w-60 text-center">
+            <img src="../../assets/images/bulkuploadfile.png" alt="" class="w-20 pb-10">
+            <div id="qq-upload-actions" class="upload-file-description d-flex flex-ai-center flex-dc">
+              <h5 class="mb-8 sb-color-gray-400">
+                Drag and Drop files to upload <br />
+              </h5>
+              <h6 class="mb-8 sb-color-gray-400">Or</h6>
+              <div class="qq-upload-button-selector sb-btn sb-btn-normal sb-btn-success my-20">
+                <div><i class="icon upload"></i>Select file to upload</div>
+              </div>
+              <p class="sb-color-gray-200 fs-0-785">Upload .csv,.xl upto 300 entries</p>
+            </div>
+            </div>
+          <!-- Progress bar -->
+          <!-- <div class="progress-circle progress-circle--xxl mr-8 mt-20">
+            <svg class="progress-circle__svg" viewport="0 0 2000 2000">
+              <circle class="progress-circle__stroke" r="50%" cx="50%" cy="50%"></circle>
+              <circle class="progress-circle__stroke" r="50%" cx="50%" cy="50%"></circle>
+              <text x="40%" y="50%" font-size="1.5em">%</text>
+            </svg>
+          </div> -->
+        </div>
+  
+        <!-- Upload data bulkUploadState = 1 -->
+        
+  
+        <!-- <div class="content p-10 d-block w-70 flex-as-center text-center">
+          <div type="text/template" id="qq-template-validation">
+            <div class="qq-uploader-selector qq-uploader custom-qq-uploader">
+              <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
+                <span class="qq-upload-drop-area-text-selector"></span>
+              </div>
+              <span class="qq-drop-processing-selector qq-drop-processing">
+                <span>Processing dropped files...</span>
+                <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
+              </span>
+              <ul class="qq-upload-list-selector qq-upload-list custom-qq-upload-list" aria-live="polite"
+                aria-relevant="additions removals">
+                <li>
+                  <div class="qq-progress-bar-container-selector">
+                    <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                      class="qq-progress-bar-selector qq-progress-bar"></div>
+                  </div>
+                  <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
+                  <img class="qq-thumbnail-selector" qq-max-size="100" qq-server-scale>
+                  <span class="qq-upload-file-selector qq-upload-file custom-qq-upload-file"></span>
+                  <span class="qq-upload-size-selector qq-upload-size"></span>
+                  <button type="button"
+                    class="qq-btn qq-upload-retry-selector qq-upload-retry">Retry</button>
+                  <button type="button"
+                    class="qq-btn qq-upload-delete-selector qq-upload-delete">Retry</button>
+                  <span role="status" class="qq-upload-status-text-selector qq-upload-status-text"></span>
+                </li>
+              </ul>
+              <div id="qq-upload-actions" class="upload-file-description d-flex flex-ai-center flex-dc">
+                <h5 class="mb-8 sb-color-gray-400">
+                  Drag and Drop <br />
+                  Or
+                </h5>
+                <div class="qq-upload-button-selector qq-upload-button sb-btn sb-btn-normal sb-btn-success my-20">
+                  <div>Select file</div>
+                </div>
+                <p class="mt-8 sb-color-gray-200 fs-0-785">Upload csv upto 300 entries</p>
+              </div>
+              <dialog class="qq-confirm-dialog-selector">
+                <div class="qq-dialog-message-selector"></div>
+                <div class="qq-dialog-buttons">
+                  <button type="button" class="qq-cancel-button-selector">No</button>
+                  <button type="button" class="qq-ok-button-selector">Yes</button>
+                </div>
+              </dialog>
+              <dialog class="qq-prompt-dialog-selector">
+                <div class="qq-dialog-message-selector"></div>
+                <input type="text">
+                <div class="qq-dialog-buttons">
+                  <button type="button"
+                    class="qq-cancel-button-selector">Cancel</button>
+                  <button type="button" class="qq-ok-button-selector">Ok</button>
+                </div>
+              </dialog>
+            </div>
+          </div>
+          <div>
+            <div id="upload-document-div" class="upload-file-section"></div>
+          </div>
+          <div class="uploading-files">
+            <div class='d-flex flex-dc flex-jc-center flex-ai-center icon'>
+              <img src="assets/images/Spin.gif" class='process-icon'>
+            </div>
+          </div>
+        </div> -->
+  
+        <!-- Validation bulkUploadState = 3 -->
+        <div class="d-flex">
+          <div class="w-50 text-center">
+            <img src="../../assets/images/bulkuploadfile.png" alt="" class="w-50">
+          </div>
+        <div class="w-50">
+          <div class="sb-color-gray-400 pos-relative">
+            <span class="sb-loader sb-success-loader"></span>
+            <div class="font-weight-bold">
+              Please wait
+            </div>
+            Validating CSV file</div>
+        </div>
+      </div>
+  
+        <!-- Validation failed bulkUploadState = 4 -->
+        <div class="d-flex">
+          <div class="w-50 text-center">
+            <img src="../../assets/images/bulkuploadfile.png" alt="" class="w-50">
+          </div>
+        <div class="w-50">
+          <i class="fa fa-exclamation-triangle pr-5 sb-color-error pr-10"></i>Hierarchy Validation Error
+         <div class="sb-color-gray-200 pt-20 fs-0-785">The file has following errors. Please check</div>
+          <ul class="mt-15 sb-circle-ul">
+            <li class="item">Mapped topics are not found in the Topics master list</li>
+            <li class="item">Error in parsing keywords. Please ensure the keywords are seperated by commas and there are no empty keywords</li>
+            <li class="item">QR code is incorrect. Please ensure this QR code is generated for this collection.</li>
+          </ul>
+          <div class="qq-upload-button-selector sb-btn sb-btn-normal sb-btn-success my-20">
+            <div><i class="icon refresh"></i>Re-upload CSV</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex sb-bg-color-success-0 p-10">
+        <div class="w-50 text-center">
+          <img src="../../assets/images/bulkuploadfile.png" alt="" class="w-50">
+        </div>
+      <div class="w-50 flex-ai-center">
+        <i class="fa fa-exclamation-triangle pr-5 sb-color-error pr-10"></i>Hierarchy Validation 
+        <small class="font-weight-bold pt-10 d-block">Successful !</small>
+       <div class="sb-color-gray-200 pt-20 fs-0-785">Hierarchy has been added to editor.</div>
+      </div>
+    </div>
+       
+      </div>
+
+    </div>
 </sui-modal>

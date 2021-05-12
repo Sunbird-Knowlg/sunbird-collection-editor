@@ -62,6 +62,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public contentComment: string;
   public showComment: boolean;
   public showReviewModal: boolean;
+  public showCreateCSV = false;
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
               private toasterService: ToasterService, private dialcodeService: DialcodeService,
