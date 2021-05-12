@@ -7,6 +7,7 @@ import { PlayerService } from '../../services/player/player.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { EditorService } from '../../services/editor/editor.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
+import { EditorCursor } from '../../collection-editor-cursor.service';
 import { SuiModule } from 'ng2-semantic-ui/dist';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
@@ -22,7 +23,7 @@ describe('QuestionComponent', () => {
       declarations: [ QuestionComponent, TelemetryInteractDirective ],
       imports: [HttpClientTestingModule, SuiModule],
       providers: [EditorTelemetryService, QuestionService, ToasterService,
-         PlayerService, EditorService, { provide: Router, useClass: RouterStub }],
+         PlayerService, EditorService, { provide: Router, useClass: RouterStub }, EditorCursor],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();
