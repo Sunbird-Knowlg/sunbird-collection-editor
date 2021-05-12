@@ -19,7 +19,7 @@
   <div class="d-flex flex-ai-center" *ngIf="pageId === 'collection_editor' && labelConfigData">
     <div  data-title="View review comments" (click)="buttonEmitter({type: 'showReviewcomments'})" *ngIf="buttonLoaders?.showReviewComment" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('view_comments','click','launch', telemetryService.telemetryPageId)">
-      <i class="icon comment flex-as-baseline sb-color-gray-400 mr-20"></i>
+      <i class="icon comment flex-as-baseline sb-color-gray-400 mr-15"></i>
     </div>
     <lib-dialcode *ngIf="visibility && visibility?.dialcode && labelConfigData?.showDialcode === 'yes'" class="d-flex flex-ai-center"></lib-dialcode>
     <button *ngIf="visibility && visibility?.previewContent  && labelConfigData?.hasChildren" class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10"
@@ -123,7 +123,7 @@
           <label>Enter your comments</label>
           <div class="sb-field relative">
 
-              <textarea type="text" class="wmd-input width-100 sb-form-control" id="wmd-input" [(ngModel)]="rejectComment" placeholder="Add comment" name="rejectComment" required></textarea>
+              <textarea type="text" class="wmd-input width-100 sb-form-control" id="wmd-input" [(ngModel)]="rejectComment" placeholder="Add comment" name="rejectComment" required maxlength="{{configService?.editorConfig?.reviewCommentsMaxLength}}"></textarea>
               <label class="ui basic red error label pt-1 mt-5 width-100"
                   *ngIf="FormControl.form.controls.rejectComment?.touched && !FormControl.form.valid">Fill comments </label>
 
