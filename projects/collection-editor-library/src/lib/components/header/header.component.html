@@ -19,8 +19,7 @@
   <div class="d-flex flex-ai-center" *ngIf="pageId === 'collection_editor' && labelConfigData">
     <div  data-title="View review comments" (click)="buttonEmitter({type: 'showReviewcomments'})" *ngIf="buttonLoaders?.showReviewComment" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('view_comments','click','launch', telemetryService.telemetryPageId)">
-      <!-- Noncompliant -->
-      <i class="icon comment flex-as-baseline sb-color-gray-400 mr-15"></i>
+      <i class="icon comment flex-as-baseline sb-color-gray-400 mr-15" aria-hidden="true"></i>
     </div>
     <lib-dialcode *ngIf="visibility && visibility?.dialcode && labelConfigData?.showDialcode === 'yes'" class="d-flex flex-ai-center"></lib-dialcode>
     <button *ngIf="visibility && visibility?.previewContent  && labelConfigData?.hasChildren" class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10"
