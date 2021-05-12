@@ -236,15 +236,7 @@
       }
     }
   }
-  .sb-custom-upload{
-    &.upload-file-section{
-      height: inherit !important;
-    }
-    .qq-uploader-selector{
-      width: inherit !important;
-      height: inherit !important;
-    }
-  }
+
   .red{
     color: red;
   }
@@ -268,11 +260,3 @@
     }
   }
 
-  .test .sb-modal-content {overflow-y:none !important}
-  .test .sb-tabset-segment{max-height:274px !important}
-  .test .sb-tabset-segment:first-child{max-height:inherit !important}
-
-  .overflow-none {
-    overflow-y:none !important 
-  }
-  .sb-modal .ui.modal .sb-modal-content{overflow-y:none !important}

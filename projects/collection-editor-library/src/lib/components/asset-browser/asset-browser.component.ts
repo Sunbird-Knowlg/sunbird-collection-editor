@@ -44,7 +44,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
   showAddButton: boolean;
   appIcon;
   public formData: any;
-  public assestRequestBody = {};
+  public assestData = {};
   public formConfig: any;
   public initialFormConfig: any;
   public imageFormValid: any;
@@ -176,11 +176,11 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     if (!this.showErrorMsg) {
       this.imageUploadLoader = true;
       this.imageFormValid = true;
-      this.assestRequestBody = this.generateAssetCreateRequest(fileName, fileType, 'image');
-      this.populatePatchValue(this.assestRequestBody);
+      this.assestData = this.generateAssetCreateRequest(fileName, fileType, 'image');
+      this.populateFormdata(this.assestData);
     }
   }
-  populatePatchValue(formData) {
+  populateFormdata(formData) {
     const formvalue = _.cloneDeep(this.formConfig);
     this.formConfig = null;
     _.forEach(formvalue, (formFieldCategory) => {
@@ -193,7 +193,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
       this.toasterService.error('Please fill required fields');
       return ;
     }
-    this.questionService.createMediaAsset({ content: this.assestRequestBody }).pipe(catchError(err => {
+    this.questionService.createMediaAsset({ content: this.assestData }).pipe(catchError(err => {
       const errInfo = { errorMsg: 'Image upload failed' };
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     })).subscribe((res) => {
@@ -275,7 +275,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     }
   }
   valueChanges(event) {
-    this.assestRequestBody = _.merge({}, this.assestRequestBody, event);
+    this.assestData = _.merge({}, this.assestData, event);
   }
   output(event) {
   }

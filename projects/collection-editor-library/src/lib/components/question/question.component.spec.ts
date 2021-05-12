@@ -12,7 +12,6 @@ import { SuiModule } from 'ng2-semantic-ui/dist';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
 import {mockData} from './question.component.spec.data';
-
 describe('QuestionComponent', () => {
   let component: QuestionComponent;
   let fixture: ComponentFixture<QuestionComponent>;

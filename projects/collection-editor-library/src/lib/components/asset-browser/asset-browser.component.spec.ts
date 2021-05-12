@@ -148,12 +148,12 @@ describe('AssetBrowserComponent', () => {
   });
   it('#valueChanges() should define assestRequestBody ', () => {
     component.imageUploadLoader = true;
-    component.assestRequestBody = mockData.formData;
+    component.assestData = mockData.formData;
     const data = {  creator: "Vaibahv Bhuva",
     keywords: undefined,
     name: "logo"};
     component.valueChanges(data);
-    expect(component.assestRequestBody).toBeDefined();
+    expect(component.assestData).toBeDefined();
   });
   it('#openImageUploadModal() should reset upload image form  ', () => {
     component.openImageUploadModal();
