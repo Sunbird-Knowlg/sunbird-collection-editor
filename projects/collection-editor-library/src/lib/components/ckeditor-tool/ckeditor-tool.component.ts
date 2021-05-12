@@ -117,7 +117,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
         styles: ['full', 'alignLeft', 'alignRight', 'alignCenter']
       },
       isReadOnly: false,
-      removePlugins: ['ImageCaption', 'mathtype', 'ChemType']
+      removePlugins: ['ImageCaption', 'mathtype', 'ChemType', 'ImageResizeHandles']
     };
 
     this.acceptVideoType = this.getAcceptType(this.assetConfig.video.accepted, 'video');
