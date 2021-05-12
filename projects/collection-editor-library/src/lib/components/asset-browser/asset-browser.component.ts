@@ -47,7 +47,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
   public assestRequestBody = {};
   public formConfig: any;
   public isUploadTab = true;
-  public imageFormValid: any;
+  public imageFormValid = false;
   ngOnInit() {
     this.formConfig =  _.get(config, 'uploadIconFormConfig');
     this.acceptImageType = this.getAcceptType(this.assetConfig.image.accepted, 'image');
@@ -192,10 +192,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     this.formConfig = formvalue;
   }
   uploadAndUseImage() {
-    if (!this.imageUploadLoader) {
-      this.toasterService.error('Please upload image');
-      return ;
-    } else if (!this.imageFormValid) {
+    if (!this.imageFormValid) {
       this.toasterService.error('Please fill required fields');
       return ;
     }
@@ -242,7 +239,9 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     this.showImagePicker = true;
     this.showImageUploadModal = false;
   }
-
+  openImageUploadModal() {
+    this.showImageUploadModal = true;
+  }
   dismissImagePicker() {
     this.showImagePicker = false;
     this.modalDismissEmitter.emit({})
