@@ -12,10 +12,10 @@
         <div class="ui  pb-16 d-flex pl-0">
           <div class="sb-search-box small no-btn">
             <div class="input-div relative">
-              <i class="search icon"></i>
+              <i class="search icon" aria-hidden="true"></i>
               <input (change)="searchImages($event, 'myImages')" class="sb-search-input" [(ngModel)]="searchMyInput"
                 type="text" placeholder="Search..." />
-              <i class="close icon" (click)="searchImages('clearInput', 'myImages')"></i>
+              <i class="close icon" aria-hidden="true" (click)="searchImages('clearInput', 'myImages')"></i>
             </div>
             <button class="sb-btn sb-btn-normal">Search</button>
           </div>
@@ -34,10 +34,10 @@
         <div class="ui  pb-16 d-flex pl-0">
           <div class="sb-search-box small no-btn">
             <div class="input-div relative">
-              <i class="search icon"></i>
+              <i class="search icon" aria-hidden="true"></i>
               <input (change)="searchImages($event, 'allImages')" class="sb-search-input" [(ngModel)]="searchAllInput"
                 type="text" placeholder="Search..." />
-              <i class="close icon" (click)="searchImages('clearInput', 'allImages')"></i>
+              <i class="close icon" aria-hidden="true" (click)="searchImages('clearInput', 'allImages')"></i>
             </div>
             <button class="sb-btn sb-btn-normal">Search</button>
           </div>
@@ -97,7 +97,7 @@
         <div class="ui info message sb-info-bx mb-0">
           <ul class="list">
             <li class="fs-0785 font-weight-bold">
-              <i class="icon info circle"></i>
+              <i class="icon info circle" aria-hidden="true"></i>
               Drop or choose file to upload before entering the details</li>
           </ul>
         </div>
