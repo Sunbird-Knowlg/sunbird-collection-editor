@@ -11,7 +11,7 @@ import { SuiModule } from 'ng2-semantic-ui/dist';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
 import {mockData} from './question.component.spec.data';
-import { EditorCursor } from '../../collection-editor-cursor.service';
+
 describe('QuestionComponent', () => {
   let component: QuestionComponent;
   let fixture: ComponentFixture<QuestionComponent>;
@@ -22,7 +22,7 @@ describe('QuestionComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ QuestionComponent, TelemetryInteractDirective ],
       imports: [HttpClientTestingModule, SuiModule],
-      providers: [EditorTelemetryService, QuestionService, ToasterService, EditorCursor,
+      providers: [EditorTelemetryService, QuestionService, ToasterService,
          PlayerService, EditorService, { provide: Router, useClass: RouterStub }],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })

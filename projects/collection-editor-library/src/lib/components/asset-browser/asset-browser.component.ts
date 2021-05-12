@@ -46,9 +46,10 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
   public formData: any;
   public assestRequestBody = {};
   public formConfig: any;
-  public isUploadTab = true;
-  public imageFormValid = false;
+  public initialFormConfig: any;
+  public imageFormValid: any;
   ngOnInit() {
+    this.initialFormConfig =  _.get(config, 'uploadIconFormConfig');
     this.formConfig =  _.get(config, 'uploadIconFormConfig');
     this.acceptImageType = this.getAcceptType(this.assetConfig.image.accepted, 'image');
   }
@@ -72,7 +73,6 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
 
   getMyImages(offset, query?, search?) {
     this.assetsCount = 0;
-    this.isUploadTab = false;
     if (!search) {
       this.searchMyInput = '';
     }
@@ -110,7 +110,6 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
 
   getAllImages(offset, query?, search?) {
     this.assetsCount = 0;
-    this.isUploadTab = false;
     if (!search) {
       this.searchAllInput = '';
     }
@@ -152,9 +151,6 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     const offset = this.allImages.length;
     this.getAllImages(offset, this.query, true);
   }
-  uploadImageTab() {
-    this.isUploadTab = true;
-  }
   uploadImage(event) {
     const file = event.target.files[0];
     const reader = new FileReader();
@@ -179,6 +175,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     }
     if (!this.showErrorMsg) {
       this.imageUploadLoader = true;
+      this.imageFormValid = true;
       this.assestRequestBody = this.generateAssetCreateRequest(fileName, fileType, 'image');
       this.populatePatchValue(this.assestRequestBody);
     }
@@ -241,6 +238,14 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
   }
   openImageUploadModal() {
     this.showImageUploadModal = true;
+    this.formData = null;
+    this.formConfig = this.initialFormConfig;
+    this.imageUploadLoader = false;
+    this.imageFormValid = false;
+  }
+  dismissPops(modal) {
+    this.dismissImagePicker();
+    modal.deny();
   }
   dismissImagePicker() {
     this.showImagePicker = false;

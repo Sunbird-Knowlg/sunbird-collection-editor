@@ -116,10 +116,6 @@ describe('AssetBrowserComponent', () => {
     component.ngOnInit();
     expect(component.formConfig).toBeDefined();
   });
-  it('#uploadImageTab() should call uploadImageTab and define isUploadTab ', () => {
-    component.uploadImageTab();
-    expect(component.isUploadTab).toBeTruthy();
-  });
   it('#onStatusChanges() should call onStatusChanges and imageUploadLoader is false', () => {
     component.imageUploadLoader = false;
     const data = {controls: [],
@@ -158,5 +154,22 @@ describe('AssetBrowserComponent', () => {
     name: "logo"};
     component.valueChanges(data);
     expect(component.assestRequestBody).toBeDefined();
+  });
+  it('#openImageUploadModal() should reset upload image form  ', () => {
+    component.openImageUploadModal();
+    expect(component.imageUploadLoader).toBeFalsy();
+    expect(component.imageFormValid).toBeFalsy();
+    expect(component.showImageUploadModal).toBeTruthy();
+    expect(component.formData).toBeNull();
+  });
+  it('#dismissPops() should close both pops  ', () => {
+    spyOn(component, 'dismissImagePicker');
+    const modal = {
+      deny: jasmine.createSpy('deny')
+    };
+    component.dismissPops(modal);
+    expect(component.dismissImagePicker).toHaveBeenCalled();
+    expect(modal.deny).toHaveBeenCalled();
+
   });
 });
