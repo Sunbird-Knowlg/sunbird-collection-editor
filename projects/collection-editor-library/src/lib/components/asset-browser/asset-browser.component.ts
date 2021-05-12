@@ -39,7 +39,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
   public assetProxyUrl = '/assets/public/';
   public editorInstance: any;
   public assetsCount: any;
-  public searchMyInput: any;
+  public searchMyInput = '';
   public searchAllInput: any;
   showAddButton: boolean;
   appIcon;
@@ -277,8 +277,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
   valueChanges(event) {
     this.assestData = _.merge({}, this.assestData, event);
   }
-  output(event) {
-  }
+
   ngOnDestroy() {
     if (this.modal && this.modal.deny) {
       this.modal.deny();

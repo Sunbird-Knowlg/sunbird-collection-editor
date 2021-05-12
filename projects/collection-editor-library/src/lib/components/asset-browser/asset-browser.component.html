@@ -24,7 +24,7 @@
         <div class="sb-grid-layout image">
           <div class="sb-video-content" *ngFor="let data of myAssets">
             <div class="sb-image-section relative position">
-              <img (click)="addImageInEditor(data.downloadUrl, data.identifier)" [src]="data.downloadUrl">
+              <img (click)="addImageInEditor(data.downloadUrl, data.identifier)" alt="" [src]="data.downloadUrl">
             </div>
           </div>
         </div>
@@ -46,7 +46,7 @@
         <div class="sb-grid-layout image">
           <div class="sb-video-content" *ngFor="let data of allImages">
             <div class="sb-image-section">
-              <img (click)="addImageInEditor(data.downloadUrl, data.identifier)" [src]="data.downloadUrl">
+              <img (click)="addImageInEditor(data.downloadUrl, data.identifier)" alt="" [src]="data.downloadUrl">
             </div>
           </div>
         </div>
@@ -103,7 +103,7 @@
         </div>
         <div class="sb-form-fields">
           <div class="form-container upload-form">
-            <sb-dynamic-form [config]="formConfig" (initialize)="output($event)"
+            <sb-dynamic-form [config]="formConfig" 
               (statusChanges)="onStatusChanges($event)" (valueChanges)="valueChanges($event)"></sb-dynamic-form>
           </div>
         </div>
