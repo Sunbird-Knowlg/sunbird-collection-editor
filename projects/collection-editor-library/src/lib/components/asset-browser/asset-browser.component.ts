@@ -189,10 +189,6 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     this.formConfig = formvalue;
   }
   uploadAndUseImage() {
-    if (!this.imageFormValid) {
-      this.toasterService.error('Please fill required fields');
-      return ;
-    }
     this.questionService.createMediaAsset({ content: this.assestData }).pipe(catchError(err => {
       const errInfo = { errorMsg: 'Image upload failed' };
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
