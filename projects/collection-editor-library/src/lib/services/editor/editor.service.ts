@@ -7,6 +7,7 @@ import { IEditorConfig } from '../../interfaces/editor';
 import { ConfigService } from '../config/config.service';
 import { ToasterService} from '../../services/toaster/toaster.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
+import { map } from 'rxjs/operators';
 
 interface SelectedChildren {
   primaryCategory?: string;
@@ -71,6 +72,21 @@ export class EditorService {
   getshowLibraryPageEmitter() {
     return this.showLibraryPage;
   }
+
+  getQuestionList(questionIds: string[]): Observable<any> {
+    const option = {
+      url: 'question/v1/list',
+      data: {
+        request: {
+          search: {
+            identifier: questionIds
+          }
+        }
+      }
+    };
+    return this.publicDataService.post(option).pipe(map(data => _.get(data, 'result')));
+  }
+
   fetchCollectionHierarchy(collectionId): Observable<any> {
     const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
     const hierarchyUrl = `${url.HIERARCHY_READ}/${collectionId}`;
@@ -80,6 +96,7 @@ export class EditorService {
     };
     return this.publicDataService.get(req);
   }
+
   readQuestionSet(questionSetId, option: any = { params: {} }): Observable<any> {
     const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
     const param = { fields: url.DEFAULT_PARAMS_FIELDS };
@@ -90,6 +107,7 @@ export class EditorService {
     };
     return this.publicDataService.get(req);
   }
+
   fetchContentDetails(contentId) {
     const req = {
       url: 'content/v3/read/' + contentId
@@ -181,6 +199,29 @@ export class EditorService {
 
   public publish(value: any) {
     this.questionStream$.next(value);
+  }
+
+  async getMaxScore() {
+    const rootNode = this.treeService.getFirstChild();
+    const metadata = _.get(rootNode, 'data.metadata');
+    if (metadata.shuffle) {
+      const childrens = _.map(rootNode.getChildren(), (child) =>  child.data.id);
+      if (metadata.maxQuestions && !_.isEmpty(childrens) ) {
+        const { questions } =  await this.getQuestionList(_.take(childrens, metadata.maxQuestions)).toPromise();
+        const maxScore = this.calculateMaxScore(questions);
+        return maxScore;
+      } else {
+        return rootNode.countChildren();
+      }
+    } else {
+      return metadata.maxQuestions ? metadata.maxQuestions :  rootNode.countChildren();
+    }
+  }
+
+  calculateMaxScore(questions: Array<any>) {
+   return _.reduce(questions, (sum, question) => {
+      return sum + (question.responseDeclaration ? _.get(question, 'responseDeclaration.response1.maxScore') : 1);
+    }, 0);
   }
 
   getCollectionHierarchy() {
