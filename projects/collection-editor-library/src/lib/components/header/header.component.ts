@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { EditorService } from '../../services/editor/editor.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
+import { ConfigService } from '../../services/config/config.service';
 import * as _ from 'lodash-es';
 import { NgForm } from '@angular/forms';
 
@@ -24,7 +25,9 @@ export class HeaderComponent implements OnDestroy, OnInit {
   public showPublishCollectionPopup: boolean;
   public rejectComment: string;
   public actionType: string;
-  constructor(private editorService: EditorService, public telemetryService: EditorTelemetryService) { }
+  constructor(private editorService: EditorService,
+              public telemetryService: EditorTelemetryService,
+              public configService: ConfigService) {}
 
   ngOnInit() {
     this.handleActionButtons();
