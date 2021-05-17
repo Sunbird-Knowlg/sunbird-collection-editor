@@ -170,6 +170,17 @@ describe('AssetBrowserComponent', () => {
     component.dismissPops(modal);
     expect(component.dismissImagePicker).toHaveBeenCalled();
     expect(modal.deny).toHaveBeenCalled();
-
+  });
+  it('#dismissImagePicker() should emit modalDismissEmitter event  ', () => {
+    spyOn(component, 'dismissImagePicker');
+    component.dismissImagePicker();
+    expect(component.dismissImagePicker).toHaveBeenCalled();
+    expect(component.showImagePicker).toBeFalsy();
+  });
+  it('#uploadAndUseImage() should call uploadAndUseImage save image  ', () => {
+    component.imageFormValid = false;
+    spyOn(component.toasterService, 'error');
+    component.uploadAndUseImage();
+    expect(component.toasterService.error).toHaveBeenCalledWith('Please fill required fields');
   });
 });
