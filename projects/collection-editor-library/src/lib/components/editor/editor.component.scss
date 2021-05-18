@@ -328,7 +328,7 @@ sb-dynamic-richtext .ck-content .table{
   position: absolute !important;
   position: absolute !important;
   top: 46% !important;
-  left: 50% !important;
+  left: -12% !important;
   transform: translate(-46%, -50%) !important;
   &:after{
     width: 1.2rem !important;
@@ -353,4 +353,25 @@ sb-dynamic-richtext .ck-content .table{
 }
 .flex-ai-center {
   align-self: center !important;
+}
+.sb-br-primary{
+  border: 1px dashed #aedbfd !important;
+}
+
+.sb-min-h-250{
+  min-height: 250px;
+}
+.z-index-9{
+  .menu{
+    z-index: 99999 !important;
+  }
+}
+.p-50{
+  padding: 10px 0 10px 50px;
+}
+.h-1{
+  height: 1.1em !important;
+}
+.mn-15{
+margin: -15px !important;
 }

@@ -7,23 +7,23 @@
           <div class="ui twelve column grid m-0 ">
             <!-- Left Sidebar for cards -->
             <div class="three wide column p-0 h-100vh">
-              <div class="py-10 text-center">Folders
+              <div class="p-50">Folders
                 <a class="profile-avtar computer only p-0 pr-10" tabindex="0">
-                <div suiDropdown class="ui dropdown right top pointing" id="dropdown-menu-list-header">
-                    <i class="icon ellipsis vertical"></i>
+                <div suiDropdown class="ui dropdown left top pointing z-index-9" id="dropdown-menu-list-header">
+                    <i class="icon ellipsis vertical h-1"></i>
                     <div class="menu" suiDropdownMenu>
                         <a class="item fs-0-785" (click)="showCreateCSV = true">
-                            <i class="icon folder outline"></i>
+                            <i class="icon folder outline sb-color-primary"></i>
                             <span  class="text">Create Hierarchy using CSV </span> 
                         </a>
                         <div class="ui divider"></div>
                         <a class="item fs-0-785" >
-                            <i class="icon download"></i> 
+                            <i class="icon download sb-color-primary"></i> 
                             Download Folders in CSV
                         </a>
                         <div class="ui divider"></div>
                         <a class="item fs-0-785" >
-                            <i class="icon upload"></i> 
+                            <i class="icon upload sb-color-primary"></i> 
                             Upload & Update Folders via CSV 
                         </a>
                     </div>
@@ -152,12 +152,12 @@
         Create Hierarcy using CSV
     </div>
     <div class="sb-modal-content">
-      <div class="sb-bg-color-primary-0">
-        <div class="d-flex sb-bg-color-primary-0">
+      <div>
+        <div class="d-flex">
           
           <div class="pl-20 pt-20 d-block w-50">
             <p>Download sample hierarchy CSV file and create a hierarchy using this format</p>
-            <div class="sb-color-gray-200 pt-20 fs-0-785">Make sure your file : </div>
+            <div class="sb-color-gray-200 fs-0-785">Make sure your file : </div>
             <ul class="ui ordered list sb-dock-ordered-list mt-15">
               <li class="item">All columns are available as shown in format.</li>
               <li class="item">Has all mandatory columns filled, as marked in the format</li>
@@ -167,14 +167,14 @@
               class="sb-btn sb-btn-normal sb-btn-outline-primary my-20 text-decor-none sb-color-primary"><i
                 class="fa fa-download pr-10"></i>Download sample hierarchy CSV</a>
           </div>
-          <div class="p-10 sb-bulk-upload w-60 text-center">
+          <div class="p-10 sb-bulk-upload w-60 text-center sb-bg-color-primary-0 sb-br-priamry">
             <img src="../../assets/images/bulkuploadfile.png" alt="" class="w-20 pb-10">
             <div id="qq-upload-actions" class="upload-file-description d-flex flex-ai-center flex-dc">
               <h5 class="mb-8 sb-color-gray-400">
                 Drag and Drop files to upload <br />
               </h5>
-              <h6 class="mb-8 sb-color-gray-400">Or</h6>
-              <div class="qq-upload-button-selector sb-btn sb-btn-normal sb-btn-success my-20">
+              <h6 class="mb-8 sb-color-gray-400 mt-10">Or</h6>
+              <div class="qq-upload-button-selector sb-btn sb-btn-normal sb-btn-success my-10">
                 <div><i class="icon upload"></i>Select file to upload</div>
               </div>
               <p class="sb-color-gray-200 fs-0-785">Upload .csv,.xl upto 300 entries</p>
@@ -260,24 +260,25 @@
         </div> -->
   
         <!-- Validation bulkUploadState = 3 -->
-        <div class="d-flex">
+        <div class="d-flex sb-min-h-250 flex-ai-center mn-15 sb-bg-color-primary-0">
           <div class="w-50 text-center">
-            <img src="../../assets/images/bulkuploadfile.png" alt="" class="w-50">
+            <img src="../../assets/images/bulkuploadfile.png" alt="" class="w-30">
           </div>
         <div class="w-50">
-          <div class="sb-color-gray-400 pos-relative">
+          <div class="pos-relative">
             <span class="sb-loader sb-success-loader"></span>
-            <div class="font-weight-bold">
+            <div class="font-weight-bold mb-10">
               Please wait
             </div>
-            Validating CSV file</div>
+            <span class="sb-color-gray-400 ">Validating CSV file</span>
+          </div>
         </div>
       </div>
   
         <!-- Validation failed bulkUploadState = 4 -->
-        <div class="d-flex">
+        <div class="d-flex sb-min-h-250 flex-ai-center">
           <div class="w-50 text-center">
-            <img src="../../assets/images/bulkuploadfile.png" alt="" class="w-50">
+            <img src="../../assets/images/bulkuploadfile.png" alt="" class="w-30">
           </div>
         <div class="w-50">
           <i class="fa fa-exclamation-triangle pr-5 sb-color-error pr-10"></i>Hierarchy Validation Error
@@ -293,18 +294,26 @@
         </div>
       </div>
 
-      <div class="d-flex sb-bg-color-success-0 p-10">
+      <div class="d-flex sb-bg-color-success-0 p-10 sb-min-h-250 mn-15">
         <div class="w-50 text-center">
-          <img src="../../assets/images/bulkuploadfile.png" alt="" class="w-50">
+          <img src="../../assets/images/bulkuploadfile.png" alt="" class="w-30">
         </div>
       <div class="w-50 flex-ai-center">
-        <i class="fa fa-exclamation-triangle pr-5 sb-color-error pr-10"></i>Hierarchy Validation 
-        <small class="font-weight-bold pt-10 d-block">Successful !</small>
+        <div class="d-flex">
+          <i class="icon check circle outline sb-color-success"></i>
+          <div>
+            Hierarchy Validation 
+            <small class="font-weight-bold pt-10 d-block">Successful !</small>
+          </div>
+      </div>
        <div class="sb-color-gray-200 pt-20 fs-0-785">Hierarchy has been added to editor.</div>
       </div>
     </div>
-       
       </div>
-
+    </div>
+    <div class="sb-modal-actions">
+      <button class="sb-btn sb-btn-normal sb-btn-primary">
+        Next
+      </button>
     </div>
 </sui-modal>
