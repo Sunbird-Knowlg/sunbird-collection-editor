@@ -29,20 +29,6 @@ export class QuestionService {
     return this.publicDataService.get(option);
   }
 
-  getQuestionList(questionIds: string[]) {
-    const option = {
-      url: 'question/v1/list',
-      data: {
-        request: {
-          search: {
-            identifier: questionIds
-          }
-        }
-      }
-    };
-    return this.publicDataService.post(option).pipe(map(data => _.get(data, 'result')));
-  }
-
   updateHierarchyQuestionCreate(hierarchyBody): Observable<ServerResponse> {
     const requestObj = {
       data: hierarchyBody
