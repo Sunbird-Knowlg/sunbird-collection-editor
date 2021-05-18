@@ -4,7 +4,6 @@ import { catchError, map } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
 import { EditorService } from '../../services/editor/editor.service';
 import { QuestionService } from '../../services/question/question.service';
-import { ToasterService } from '../../services/toaster/toaster.service';
 import {config} from './asset-browser.data';
 @Component({
   selector: 'lib-asset-browser',
@@ -17,7 +16,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
   @Output() modalDismissEmitter = new EventEmitter<any>();
   @ViewChild('modal', { static: false }) private modal;
   constructor(private editorService: EditorService,
-              private questionService: QuestionService, public toasterService: ToasterService) { }
+              private questionService: QuestionService) { }
   assetConfig: any = {
     image: {
       size: '1',
