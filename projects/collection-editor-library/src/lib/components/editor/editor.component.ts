@@ -49,7 +49,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public showPreview = false;
   public actionType: string;
   private formStatusMapper: { [key: string]: boolean } = {};
-  public questionIds: string[];
   public targetFramework;
   public organisationFramework;
   toolbarConfig: any;
@@ -354,11 +353,16 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   saveContent() {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       if (!this.validateFormStatus()) {
         return reject('Please fill the required metadata');
       }
       const nodesModified =  _.get(this.editorService.getCollectionHierarchy(), 'nodesModified');
+      const objectType = this.configService.categoryConfig[this.editorConfig.config.objectType];
+      if (objectType === 'questionSet') {
+        const maxScore = await this.editorService.getMaxScore();
+        this.treeService.updateMetaDataProperty('maxScore', maxScore);
+      }
       this.editorService.updateHierarchy()
         .pipe(map(data => _.get(data, 'result'))).subscribe(response => {
           if (this.toolbarConfig.showDialcode === 'yes') {
@@ -408,7 +412,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.buttonLoaders.previewButtonLoader = true;
     this.saveContent().then(res => {
       this.updateTreeNodeData();
-      this.questionIds = this.getQuestionIds();
       this.buttonLoaders.previewButtonLoader = false;
       this.showPreview = true;
     }).catch(err => {
@@ -585,23 +588,12 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  getQuestionIds() {
-    const treeObj = this.treeService.getTreeObject();
-    const identifiers = [];
-    treeObj.visit((node) => {
-      if (node.folder === false) {
-        identifiers.push(node.data.id);
-      }
-    });
-    return identifiers;
-  }
-
   get contentPolicyUrl() {
     return this.editorService.contentPolicyUrl;
   }
 
   showCommentAddedAgainstContent() {
-    if (this.collectionTreeNodes.data.status === "Draft" && _.has(this.collectionTreeNodes.data, 'rejectComment')) {
+    if (this.collectionTreeNodes.data.status === 'Draft' && _.has(this.collectionTreeNodes.data, 'rejectComment')) {
       this.contentComment = _.get(this.collectionTreeNodes.data, 'rejectComment');
       return true;
     }
