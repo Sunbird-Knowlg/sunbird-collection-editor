@@ -170,7 +170,10 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
 
         if (field.code  === 'copyright') {
           const channelData = this.helperService.channelInfo;
-          field.default = _.get(metaDataFields, field.code) || (channelData && channelData.name);
+          field.default = _.get(metaDataFields, field.code);
+          if (_.isEmpty(field.default) && this.editorService.editorConfig.config.setDefaultCopyRight) {
+            field.default = channelData && channelData.name;
+          }
         }
 
         if (field.code === 'maxQuestions') {

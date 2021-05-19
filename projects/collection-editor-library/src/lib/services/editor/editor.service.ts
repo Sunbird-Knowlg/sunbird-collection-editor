@@ -30,6 +30,9 @@ export class EditorService {
 
   public initialize(config: IEditorConfig) {
     this._editorConfig = config;
+    if (this.configService.editorConfig && this.configService.editorConfig.default) {
+      this._editorConfig.config = _.assign(this.configService.editorConfig.default, this._editorConfig.config);
+    }
     this._editorMode = _.get(this._editorConfig, 'config.mode').toLowerCase();
   }
 

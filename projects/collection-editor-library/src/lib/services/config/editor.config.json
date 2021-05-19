@@ -1,3 +1,4 @@
 {
-    "rejectCommentsMaxLength": 500
+    "rejectCommentsMaxLength": 500,
+    "setDefaultCopyRight": true
 }
