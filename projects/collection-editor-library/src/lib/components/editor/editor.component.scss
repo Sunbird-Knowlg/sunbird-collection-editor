@@ -286,3 +286,10 @@ sb-dynamic-richtext .ck-content .table{
     }
   }
 }
+
+.sb-disabled-textarea{
+  background: var(--gray-0);
+  border: .0625rem solid var(--gray-100);
+  opacity: .45;
+  pointer-events: none;
+}
