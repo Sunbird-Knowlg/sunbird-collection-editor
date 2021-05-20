@@ -8,6 +8,7 @@ import { QuestionService } from '../../services/question/question.service';
 import { EditorService } from '../../services/editor/editor.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
 import { ConfigService } from '../../services/config/config.service';
+import {config} from '../asset-browser/asset-browser.data';
 @Component({
   selector: 'lib-ckeditor-tool',
   templateUrl: './ckeditor-tool.component.html',
@@ -39,7 +40,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
               private toasterService: ToasterService, public configService: ConfigService) { }
   assetConfig: any = {
     image: {
-      size: '50',
+      size: '1',
       accepted: 'png, jpeg'
     },
     video: {
@@ -55,7 +56,6 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
   isClosable = true;
   selectedVideoId: string;
   showAddButton: boolean;
-  assetsCount = Number;
   showImagePicker: boolean;
   showVideoPicker = false;
   showImageUploadModal: boolean;
@@ -65,8 +65,17 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
   showErrorMsg: boolean;
   errorMsg: string;
   query: string;
-
+  public assetsCount: any;
+  public searchMyInput = '';
+  public searchAllInput: any;
+  public formData: any;
+  public assestData = {};
+  public formConfig: any;
+  public initialFormConfig: any;
+  public imageFormValid: any;
   ngOnInit() {
+    this.initialFormConfig =  _.get(config, 'uploadIconFormConfig');
+    this.formConfig =  _.get(config, 'uploadIconFormConfig');
     this.initialized = true;
     this.editorConfig = {
       toolbar: ['bold', '|', 'italic', '|', 'underline',
@@ -202,7 +211,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     this.videoDataOutput.emit(false);
   }
   dismissImageUploadModal() {
-    this.showImagePicker = true;
+    // this.showImagePicker = true;
     this.showImageUploadModal = false;
   }
   initiateImageUploadModal() {
@@ -344,7 +353,11 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
    * function to get images
    * @param offset page no
    */
-  getMyImages(offset) {
+  getMyImages(offset, query?, search?) {
+    this.assetsCount = 0;
+    if (!search) {
+      this.searchMyInput = '';
+    }
     if (offset === 0) {
       this.myAssets.length = 0;
     }
@@ -355,11 +368,14 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       },
       offset
     };
-
+    if (query) {
+      req['query'] = query;
+    }
     this.questionService.getAssetMedia(req).pipe(catchError(err => {
       const errInfo = { errorMsg: 'Image search failed' };
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     })).subscribe((res) => {
+        this.assetsCount = res.result.count;
         _.map(res.result.content, (item) => {
           if (item.downloadUrl) {
             this.myAssets.push(item);
@@ -398,7 +414,11 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
 
-  getAllImages(offset) {
+  getAllImages(offset, query?, search?) {
+    this.assetsCount = 0;
+    if (!search) {
+      this.searchAllInput = '';
+    }
     if (offset === 0) {
       this.allImages.length = 0;
     }
@@ -408,12 +428,15 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       },
       offset
     };
-
+    if (query) {
+      req['query'] = query;
+    }
     this.questionService.getAssetMedia(req).pipe(catchError(err => {
       const errInfo = { errorMsg: 'Image search failed' };
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     }))
       .subscribe((res) => {
+        this.assetsCount = res.result.count;
         _.map(res.result.content, (item) => {
           if (item.downloadUrl) {
             this.allImages.push(item);
@@ -427,6 +450,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
    * @param offset page no
    */
   getMyVideos(offset, query?) {
+    this.assetsCount = 0;
     if (offset === 0) {
       this.myAssets.length = 0;
     }
@@ -456,6 +480,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   getAllVideos(offset, query?) {
+    this.assetsCount = 0;
     if (offset === 0) {
       this.allVideos.length = 0;
     }
@@ -487,7 +512,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
    */
   lazyloadMyImages() {
     const offset = this.myAssets.length;
-    this.getMyImages(offset);
+    this.getMyImages(offset, this.query, true);
   }
 
   /**
@@ -495,7 +520,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
    */
   lazyloadAllImages() {
     const offset = this.allImages.length;
-    this.getAllImages(offset);
+    this.getAllImages(offset, this.query, true);
   }
 
 
@@ -521,7 +546,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     const formData: FormData = new FormData();
     formData.append('file', file);
     const fileType = file.type;
-    const fileName = file.name;
+    const fileName = file.name.split('.').slice(0, -1).join('.');
     const fileSize = file.size / 1024 / 1024;
     if (fileType.split('/')[0] === 'image') {
       this.showErrorMsg = false;
@@ -539,32 +564,77 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     }
     if (!this.showErrorMsg) {
       this.imageUploadLoader = true;
-      // reader.onload = (uploadEvent: any) => {
-      const req = this.generateAssetCreateRequest(fileName, fileType, 'image');
-      this.questionService.createMediaAsset(req).pipe(catchError(err => {
-          this.imageUploadLoader = false;
-          const errInfo = { errorMsg: 'Image upload failed' };
-          return throwError(this.editorService.apiErrorHandling(err, errInfo));
-        })).subscribe((res) => {
-          const imgId = res.result.node_id;
-          const request = {
-            data: formData
-          };
-          this.questionService.uploadMedia(request, imgId).pipe(catchError(err => {
-            this.imageUploadLoader = false;
-            const errInfo = { errorMsg: 'Image upload failed' };
-            return throwError(this.editorService.apiErrorHandling(err, errInfo));
-          })).subscribe((response) => {
-            this.imageUploadLoader = false;
-            this.addImageInEditor(response.result.content_url, response.result.node_id);
-            this.showImagePicker = false;
-            this.showImageUploadModal = false;
-          });
-      });
-      reader.onerror = (error: any) => { };
+      this.imageFormValid = true;
+      this.assestData = this.generateAssetCreateRequest(fileName, fileType, 'image');
+      this.populateFormData(this.assestData);
     }
   }
-
+  populateFormData(formData) {
+    const formvalue = _.cloneDeep(this.formConfig);
+    this.formConfig = null;
+    _.forEach(formvalue, (formFieldCategory) => {
+        formFieldCategory.default = formData[formFieldCategory.code];
+    });
+    this.formConfig = formvalue;
+  }
+  uploadAndUseImage(modal) {
+    this.questionService.createMediaAsset({ content: this.assestData }).pipe(catchError(err => {
+      const errInfo = { errorMsg: 'Image upload failed' };
+      return throwError(this.editorService.apiErrorHandling(err, errInfo));
+    })).subscribe((res) => {
+      const imgId = res.result.node_id;
+      const request = {
+        data: this.formData
+      };
+      this.questionService.uploadMedia(request, imgId).pipe(catchError(err => {
+        const errInfo = { errorMsg: 'Image upload failed' };
+        return throwError(this.editorService.apiErrorHandling(err, errInfo));
+      })).subscribe((response) => {
+        this.addImageInEditor(response.result.content_url, response.result.node_id);
+        this.showImageUploadModal = false;
+        this.dismissPops(modal);
+      });
+    });
+  }
+  openImageUploadModal() {
+    this.showImageUploadModal = true;
+    this.showErrorMsg = false;
+    this.formData = null;
+    this.formConfig = this.initialFormConfig;
+    this.imageUploadLoader = false;
+    this.imageFormValid = false;
+  }
+  dismissPops(modal) {
+    this.dismissImagePicker();
+    modal.deny();
+  }
+  onStatusChanges(event) {
+    if (event.isValid && this.imageUploadLoader) {
+      this.imageFormValid = true;
+    } else {
+      this.imageFormValid = false;
+    }
+  }
+  valueChanges(event) {
+    this.assestData = _.merge({}, this.assestData, event);
+  }
+  // search feature for images
+  searchImages(event, type) {
+    if (event === 'clearInput' && type === 'myImages') {
+      this.query = '';
+      this.searchMyInput = '';
+    } else if (event === 'clearInput' && type === 'allImages') {
+      this.query = '';
+      this.searchAllInput = '';
+    } else {
+      this.query = event.target.value;
+    }
+    if (type === 'myImages' ) {
+        this.getMyImages(0, this.query, true);
+    } else {
+        this.getAllImages(0, this.query, true);
+    }
+  }
   /**
    * function to upload video
    */
@@ -611,14 +681,12 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
 
   generateAssetCreateRequest(fileName, fileType, mediaType) {
     return {
-      content: {
         name: fileName,
         mediaType,
         mimeType: fileType,
         createdBy: _.get(this.editorService.editorConfig, 'context.user.id'),
         creator: _.get(this.editorService.editorConfig, 'context.user.fullName'),
         channel: _.get(this.editorService.editorConfig, 'context.channel')
-      }
     };
   }
 

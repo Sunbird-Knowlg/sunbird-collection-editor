@@ -237,6 +237,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     this.formConfig = this.initialFormConfig;
     this.imageUploadLoader = false;
     this.imageFormValid = false;
+    this.showErrorMsg = false;
   }
   dismissPops(modal) {
     this.dismissImagePicker();
