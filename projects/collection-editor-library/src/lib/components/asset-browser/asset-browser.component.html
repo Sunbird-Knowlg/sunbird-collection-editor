@@ -113,7 +113,7 @@
       <div>
         <button (click)="dismissPops(modal);" class="mr-10 sb-btn sb-btn-primary sb-btn-normal">Cancel</button>
 
-        <button (click)="uploadAndUseImage();" [disabled]="!imageFormValid" 
+        <button (click)="uploadAndUseImage(modal);" [disabled]="!imageFormValid" 
         [ngClass]="{'sb-btn-primary': imageFormValid, 'sb-btn-disabled': !imageFormValid}"
         class="sb-btn  sb-btn-normal text-left">Upload and
           Use</button>

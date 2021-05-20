@@ -187,7 +187,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     });
     this.formConfig = formvalue;
   }
-  uploadAndUseImage() {
+  uploadAndUseImage(modal) {
     this.questionService.createMediaAsset({ content: this.assestData }).pipe(catchError(err => {
       const errInfo = { errorMsg: 'Image upload failed' };
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
@@ -201,8 +201,8 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
         return throwError(this.editorService.apiErrorHandling(err, errInfo));
       })).subscribe((response) => {
         this.addImageInEditor(response.result.content_url, response.result.node_id);
-        this.showImagePicker = false;
         this.showImageUploadModal = false;
+        this.dismissPops(modal);
       });
     });
   }
