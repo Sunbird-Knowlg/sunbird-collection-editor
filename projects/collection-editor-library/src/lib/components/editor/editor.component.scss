@@ -35,7 +35,7 @@ body {
     min-width: auto;
   }
   .dynamic-form{
-    
+
     .multi-select-section-app {
       label {
         margin-bottom: 0.3rem !important;
@@ -250,7 +250,7 @@ lib-chat-window,
 .ck-content ul {
   list-style-type: disc !important;
   li {
-   margin-bottom: 0px !important; 
+   margin-bottom: 0px !important;
   }
 }
 sb-dynamic-richtext .ck-rounded-corners .ck.ck-editor__top .ck-sticky-panel .ck-toolbar{
@@ -273,10 +273,10 @@ sb-dynamic-richtext .ck-content .table{
 
 .sb-textbox,.sb-textarea{
   &::placeholder {
-    color: #333 !important; 
+    color: #333 !important;
     font-weight: 500 !important;
   }
-} 
+}
 
 .multi-select-container {
   .sb-modal-dropdown-web{
@@ -284,10 +284,5 @@ sb-dynamic-richtext .ck-content .table{
       border: 1px solid #d6d4d4 !important;
       box-shadow: 0 0 2px #cecaca !important;
     }
-  }
-}
-.dynamic-form{
-  label{
-    padding: 0 !important;
   }
 }
