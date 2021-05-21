@@ -7,6 +7,7 @@ import { IEditorConfig } from '../../interfaces/editor';
 import { ConfigService } from '../config/config.service';
 import { ToasterService} from '../../services/toaster/toaster.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
+import { DataService } from '../data/data.service';
 import { map } from 'rxjs/operators';
 
 interface SelectedChildren {
@@ -26,7 +27,7 @@ export class EditorService {
 
   constructor(public treeService: TreeService, private toasterService: ToasterService,
               public configService: ConfigService, private telemetryService: EditorTelemetryService,
-              private publicDataService: PublicDataService) { }
+              private publicDataService: PublicDataService, private dataService: DataService) { }
 
   public initialize(config: IEditorConfig) {
     this._editorConfig = config;
@@ -87,7 +88,7 @@ export class EditorService {
         }
       }
     };
-    return this.publicDataService.post(option).pipe(map(data => _.get(data, 'result')));
+    return this.dataService.post(option).pipe(map(data => _.get(data, 'result')));
   }
 
   fetchCollectionHierarchy(collectionId): Observable<any> {

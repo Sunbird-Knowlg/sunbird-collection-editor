@@ -50,7 +50,7 @@ export class EditorCursorImplementationService implements QuestionCursor, Editor
         headers: { 'Content-Type': 'application/json' }
     };
     const requestParam = {
-      url: 'action/question/v1/list',
+      url: 'api/question/v1/list',
       data: {
         request: {
           search: {
