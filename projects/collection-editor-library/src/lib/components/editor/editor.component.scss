@@ -288,8 +288,8 @@ sb-dynamic-richtext .ck-content .table{
 }
 
 .sb-disabled-textarea{
-  background: var(--gray-0);
-  border: .0625rem solid var(--gray-100);
-  opacity: .45;
-  pointer-events: none;
+  background: var(--gray-0) !important;
+  border: .0625rem solid var(--gray-100) !important;
+  opacity: .45 !important;
+  pointer-events: none !important;
 }
