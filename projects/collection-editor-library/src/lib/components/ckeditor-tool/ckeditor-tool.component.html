@@ -222,8 +222,7 @@
 </sui-modal>
 
 <!-- Upload video pop up code here  -->
-<!-- need to add isClosable here while uploading -->
-<sui-modal class="sb-modal overflow-modal" [isClosable]="true" [isInverted]="false"
+<sui-modal class="sb-modal overflow-modal" [isClosable]="isClosable" [isInverted]="false"
   (dismissed)="dismissVideoUploadModal()" *ngIf="showVideoUploadModal" [size]="'large'" [isFullScreen]="false"
   [mustScroll]="true" appBodyScroll #modal>
   <div class="sb-modal-header">Upload and Use</div>
@@ -278,11 +277,13 @@
     <div class="sb-modal-actions flex-jc-space-between p-0">
       <div>
         <button (click)="dismissVideoPops(modal);" class="mr-10 sb-btn sb-btn-primary sb-btn-normal">Cancel</button>
-
-        <button (click)="uploadVideo(modal);" [disabled]="!imageFormValid"
-          [ngClass]="{'sb-btn-primary': imageFormValid, 'sb-btn-disabled': !imageFormValid}"
-          class="sb-btn  sb-btn-normal text-left">Upload and
-          Use</button>
+          <button type="button" class="sb-btn sb-btn-normal text-left sb-btn-loading-spinner sb-btn-primary"
+          [disabled]="!imageFormValid"  (click)="uploadVideo(modal);" 
+          [ngClass]="{'sb-btn-primary': imageFormValid, 'sb-btn-disabled': !imageFormValid}">
+            <div class="sb-loading-spinner"  *ngIf="loading" role="status" aria-hidden="true"></div>
+            Upload and
+          Use
+          </button>
       </div>
       <div>
         <button (click)="dismissVideoUploadModal();" class=" sb-btn sb-btn-primary sb-btn-normal">Back</button>

@@ -160,13 +160,11 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
    * function to hide video picker
    */
   dismissVideoPicker() {
-    this.isClosable = true;
     this.showVideoPicker = false;
     this.videoShow = false;
     this.videoDataOutput.emit(false);
   }
   dismissImageUploadModal() {
-    // this.showImagePicker = true;
     this.showImageUploadModal = false;
   }
   initiateImageUploadModal() {
@@ -175,8 +173,9 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   dismissVideoUploadModal() {
-    // this.showVideoPicker = true;
-    this.showVideoUploadModal = false;
+    if (this.isClosable) {
+      this.showVideoUploadModal = false;
+    }
   }
   initiateVideoUploadModal() {
     this.showVideoPicker = false;
@@ -364,7 +363,6 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     videoData.src = this.getMediaOriginURL(videoData.downloadUrl);
     videoData.thumbnail = (videoData.thumbnail) && this.getMediaOriginURL(videoData.thumbnail);
     this.showVideoPicker = false;
-    // this.showVideoUploadModal = false;
     this.videoDataOutput.emit(videoData);
     if (videoModal) {
       videoModal.deny();
@@ -613,8 +611,10 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     this.resetFormData();
   }
   dismissVideoPops(modal) {
+    if (this.isClosable) {
     this.dismissVideoPicker();
     modal.deny();
+    }
   }
   uploadVideoFromLocal(event) {
     this.videoFile = event.target.files[0];
@@ -649,10 +649,12 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     this.isClosable = false;
     this.loading = true;
     this.showErrorMsg = false;
+    this.imageFormValid = false;
     if (!this.showErrorMsg) {
       this.questionService.createMediaAsset({ content: this.assestData }).pipe(catchError(err => {
         this.loading = false;
         this.isClosable = true;
+        this.imageFormValid = true;
         const errInfo = { errorMsg: ' Unable to create an Asset' };
         return throwError(this.editorService.apiErrorHandling(err, errInfo));
       })).subscribe((res) => {
@@ -666,6 +668,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
           const errInfo = { errorMsg: 'Unable to get pre_signed_url and Content Creation Failed, Please Try Again' };
           this.loading = false;
           this.isClosable = true;
+          this.imageFormValid = true;
           return throwError(this.editorService.apiErrorHandling(err, errInfo));
         })).subscribe((response) => {
           const signedURL = response.result.pre_signed_url;
@@ -701,6 +704,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       const errInfo = { errorMsg: 'Unable to upload to Blob and Content Creation Failed, Please Try Again' };
       this.isClosable = true;
       this.loading = false;
+      this.imageFormValid = true;
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     }), map(data => data));
   }
@@ -723,6 +727,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       const errInfo = { errorMsg: 'Unable to update pre_signed_url with Content Id and Content Creation Failed, Please Try Again' };
       this.isClosable = true;
       this.loading = false;
+      this.imageFormValid = true;
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     })).subscribe(res => {
       // Read upload video data
@@ -735,8 +740,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       const errInfo = { errorMsg: _.get(this.configService, 'labelConfig.messages.error.011') };
       this.loading = false;
       this.isClosable = true;
-      this.loading = false;
-      this.isClosable = true;
+      this.imageFormValid = true;
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     })).subscribe(res => {
       this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.006'));
@@ -744,6 +748,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       this.showAddButton = true;
       this.loading = false;
       this.isClosable = true;
+      this.imageFormValid = true;
       this.addVideoInEditor(videoModal);
     });
   }
