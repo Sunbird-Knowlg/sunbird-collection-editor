@@ -37,7 +37,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
               private toasterService: ToasterService, public configService: ConfigService) { }
   assetConfig: any = {
     image: {
-      size: '1',
+      size: '50',
       accepted: 'png, jpeg'
     },
     video: {
