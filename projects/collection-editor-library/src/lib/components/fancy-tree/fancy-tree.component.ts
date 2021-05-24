@@ -292,7 +292,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   attachContextMenu(node, activeNode?) {
-    if (_.get(this.config, 'mode') !== 'edit') {
+    if (_.get(this.config, 'mode') !== 'edit' || (node.data.root === true && _.isEmpty(this.config.hierarchy) )) {
       return;
     }
     const $nodeSpan = $(node.span);
