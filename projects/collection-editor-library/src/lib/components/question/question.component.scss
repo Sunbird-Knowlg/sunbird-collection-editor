@@ -277,3 +277,11 @@ sui-select {
     opacity: 0.8 !important;
     font-weight: 500 !important;
   }
+
+  .contentViewerIframeShadow{
+    .quml-option{
+      .container{
+        width: inherit !important;
+      }
+    }
+  }
