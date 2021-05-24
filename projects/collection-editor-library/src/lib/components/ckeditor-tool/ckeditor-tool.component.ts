@@ -1,6 +1,5 @@
 import { Component, OnInit, AfterViewInit, Output, Input, EventEmitter, OnChanges, ViewChild, ElementRef } from '@angular/core';
 import ClassicEditor from '@project-sunbird/ckeditor-build-classic';
-import { FineUploader } from 'fine-uploader';
 import * as _ from 'lodash-es';
 import { catchError, map } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
@@ -8,14 +7,14 @@ import { QuestionService } from '../../services/question/question.service';
 import { EditorService } from '../../services/editor/editor.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
 import { ConfigService } from '../../services/config/config.service';
+import { config } from '../asset-browser/asset-browser.data';
 @Component({
   selector: 'lib-ckeditor-tool',
   templateUrl: './ckeditor-tool.component.html',
   styleUrls: ['./ckeditor-tool.component.scss']
 })
 export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
-  @ViewChild('editor', {static: false}) public editorRef: ElementRef;
-  @ViewChild('fineUploaderUI', {static: false}) fineUploaderUI: ElementRef;
+  @ViewChild('editor', { static: false }) public editorRef: ElementRef;
   @Input() editorDataInput: any;
   @Output() editorDataOutput = new EventEmitter<any>();
   @Output() hasError = new EventEmitter<any>();
@@ -31,7 +30,6 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
   public isAssetBrowserReadOnly = false;
   public characterCount;
   public mediaobj;
-  uploader;
   initialized = false;
   public assetProxyUrl = '/assets/public/';
   public lastImgResizeWidth;
@@ -55,7 +53,6 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
   isClosable = true;
   selectedVideoId: string;
   showAddButton: boolean;
-  assetsCount = Number;
   showImagePicker: boolean;
   showVideoPicker = false;
   showImageUploadModal: boolean;
@@ -65,8 +62,18 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
   showErrorMsg: boolean;
   errorMsg: string;
   query: string;
-
+  public assetsCount: any;
+  public searchMyInput = '';
+  public searchAllInput: any;
+  public formData: any;
+  public assestData = {};
+  public formConfig: any;
+  public initialFormConfig: any;
+  public imageFormValid = false;
+  public videoFile: any;
   ngOnInit() {
+    this.initialFormConfig = _.get(config, 'uploadIconFormConfig');
+    this.formConfig = _.get(config, 'uploadIconFormConfig');
     this.initialized = true;
     this.editorConfig = {
       toolbar: ['bold', '|', 'italic', '|', 'underline',
@@ -88,7 +95,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       },
       image: {
         resizeUnit: '%',
-        resizeOptions: [ {
+        resizeOptions: [{
           name: 'resizeImage:original',
           value: null,
           icon: 'original',
@@ -111,9 +118,9 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
           value: '75',
           icon: 'large',
           className: 'resize-75'
-        } ],
+        }],
         toolbar: ['imageStyle:alignLeft', 'imageStyle:full',
-        'imageStyle:alignRight', 'resizeImage:25', 'resizeImage:50', 'resizeImage:75', 'resizeImage:original'],
+          'imageStyle:alignRight', 'resizeImage:25', 'resizeImage:50', 'resizeImage:75', 'resizeImage:original'],
         styles: ['full', 'alignLeft', 'alignRight', 'alignCenter']
       },
       isReadOnly: false,
@@ -126,9 +133,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
   ngOnChanges() {
     if (this.videoShow) {
       this.showVideoPicker = true;
-      return setTimeout(() => {
-        this.initiateUploadModal();
-      }, 0);
+      this.selectVideo(undefined);
     }
   }
 
@@ -136,48 +141,6 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     this.initializeEditors();
   }
 
-  initiateUploadModal() {
-    this.uploader = new FineUploader({
-      element: document.getElementById('upload-video-div'),
-      template: 'qq-template-validation',
-      multiple: false,
-      autoUpload: false,
-      request: {
-        endpoint: '/assets/uploads'
-      },
-      validation: {
-        allowedExtensions: this.assetConfig.video.accepted.split(', '),
-        acceptFiles: this.acceptVideoType,
-        itemLimit: 1,
-        sizeLimit: _.toNumber(this.assetConfig.video.size) * 1024 * 1024  // 52428800  = 50 MB = 50 * 1024 * 1024 bytes
-      },
-      messages: {
-        sizeError: `{file} is too large, maximum file size is ${this.assetConfig.video.size} MB.`,
-        typeError: `Invalid content type (supported type: ${this.assetConfig.video.accepted})`
-      },
-      callbacks: {
-        onStatusChange: () => {
-
-        },
-        onSubmit: () => {
-          this.uploadContent();
-        },
-        onError: () => {
-          this.uploader.reset();
-        }
-      }
-    });
-    this.fineUploaderUI.nativeElement.remove();
-  }
-
-  uploadContent() {
-    if (this.uploader.getFile(0) == null) {
-      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.009'));
-      this.uploader.reset();
-      return;
-    }
-    this.uploadVideo();
-  }
 
   initializeImagePicker(editorType) {
     this.showImagePicker = true;
@@ -202,7 +165,6 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     this.videoDataOutput.emit(false);
   }
   dismissImageUploadModal() {
-    this.showImagePicker = true;
     this.showImageUploadModal = false;
   }
   initiateImageUploadModal() {
@@ -211,8 +173,9 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   dismissVideoUploadModal() {
-    this.showVideoPicker = true;
-    this.showVideoUploadModal = false;
+    if (this.isClosable) {
+      this.showVideoUploadModal = false;
+    }
   }
   initiateVideoUploadModal() {
     this.showVideoPicker = false;
@@ -344,7 +307,11 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
    * function to get images
    * @param offset page no
    */
-  getMyImages(offset) {
+  getMyImages(offset, query?, search?) {
+    this.assetsCount = 0;
+    if (!search) {
+      this.searchMyInput = '';
+    }
     if (offset === 0) {
       this.myAssets.length = 0;
     }
@@ -355,17 +322,20 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       },
       offset
     };
-
+    if (query) {
+      req['query'] = query;
+    }
     this.questionService.getAssetMedia(req).pipe(catchError(err => {
       const errInfo = { errorMsg: 'Image search failed' };
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     })).subscribe((res) => {
-        _.map(res.result.content, (item) => {
-          if (item.downloadUrl) {
-            this.myAssets.push(item);
-          }
-        });
+      this.assetsCount = res.result.count;
+      _.map(res.result.content, (item) => {
+        if (item.downloadUrl) {
+          this.myAssets.push(item);
+        }
       });
+    });
   }
 
   addImageInEditor(imageUrl, imageId) {
@@ -388,17 +358,23 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     this.showImagePicker = false;
   }
 
-  addVideoInEditor() {
+  addVideoInEditor(videoModal?) {
     const videoData: any = _.cloneDeep(this.selectedVideo);
     videoData.src = this.getMediaOriginURL(videoData.downloadUrl);
     videoData.thumbnail = (videoData.thumbnail) && this.getMediaOriginURL(videoData.thumbnail);
     this.showVideoPicker = false;
-    this.showVideoUploadModal = false;
     this.videoDataOutput.emit(videoData);
+    if (videoModal) {
+      videoModal.deny();
+    }
   }
 
 
-  getAllImages(offset) {
+  getAllImages(offset, query?, search?) {
+    this.assetsCount = 0;
+    if (!search) {
+      this.searchAllInput = '';
+    }
     if (offset === 0) {
       this.allImages.length = 0;
     }
@@ -408,12 +384,15 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       },
       offset
     };
-
+    if (query) {
+      req['query'] = query;
+    }
     this.questionService.getAssetMedia(req).pipe(catchError(err => {
       const errInfo = { errorMsg: 'Image search failed' };
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     }))
       .subscribe((res) => {
+        this.assetsCount = res.result.count;
         _.map(res.result.content, (item) => {
           if (item.downloadUrl) {
             this.allImages.push(item);
@@ -426,7 +405,12 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
    * function to get videos
    * @param offset page no
    */
-  getMyVideos(offset, query?) {
+  getMyVideos(offset, query?, search?) {
+    this.assetsCount = 0;
+    if (!search) {
+      this.searchMyInput = '';
+      this.selectVideo(undefined);
+    }
     if (offset === 0) {
       this.myAssets.length = 0;
     }
@@ -446,16 +430,21 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       const errInfo = { errorMsg: 'Video search failed' };
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     })).subscribe((res) => {
-        this.assetsCount = res.result.count;
-        _.map(res.result.content, (item) => {
-          if (item.downloadUrl) {
-            this.myAssets.push(item);
-          }
-        });
+      this.assetsCount = res.result.count;
+      _.map(res.result.content, (item) => {
+        if (item.downloadUrl) {
+          this.myAssets.push(item);
+        }
       });
+    });
   }
 
-  getAllVideos(offset, query?) {
+  getAllVideos(offset, query?, search?) {
+    this.assetsCount = 0;
+    if (!search) {
+      this.searchAllInput = '';
+      this.selectVideo(undefined);
+    }
     if (offset === 0) {
       this.allVideos.length = 0;
     }
@@ -473,13 +462,13 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       const errInfo = { errorMsg: 'Video search failed' };
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     })).subscribe((res) => {
-        this.assetsCount = res.result.count;
-        _.map(res.result.content, (item) => {
-          if (item.downloadUrl) {
-            this.allVideos.push(item);
-          }
-        });
+      this.assetsCount = res.result.count;
+      _.map(res.result.content, (item) => {
+        if (item.downloadUrl) {
+          this.allVideos.push(item);
+        }
       });
+    });
   }
 
   /**
@@ -487,7 +476,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
    */
   lazyloadMyImages() {
     const offset = this.myAssets.length;
-    this.getMyImages(offset);
+    this.getMyImages(offset, this.query, true);
   }
 
   /**
@@ -495,13 +484,13 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
    */
   lazyloadAllImages() {
     const offset = this.allImages.length;
-    this.getAllImages(offset);
+    this.getAllImages(offset, this.query, true);
   }
 
 
   lazyloadMyVideos() {
     const offset = this.myAssets.length;
-    this.getMyVideos(offset, this.query);
+    this.getMyVideos(offset, this.query, true);
   }
 
   /**
@@ -509,7 +498,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
    */
   lazyloadAllVideos() {
     const offset = this.allVideos.length;
-    this.getAllVideos(offset, this.query);
+    this.getAllVideos(offset, this.query, true);
   }
 
   /**
@@ -521,7 +510,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     const formData: FormData = new FormData();
     formData.append('file', file);
     const fileType = file.type;
-    const fileName = file.name;
+    const fileName = file.name.split('.').slice(0, -1).join('.');
     const fileSize = file.size / 1024 / 1024;
     if (fileType.split('/')[0] === 'image') {
       this.showErrorMsg = false;
@@ -539,57 +528,147 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     }
     if (!this.showErrorMsg) {
       this.imageUploadLoader = true;
-      // reader.onload = (uploadEvent: any) => {
-      const req = this.generateAssetCreateRequest(fileName, fileType, 'image');
-      this.questionService.createMediaAsset(req).pipe(catchError(err => {
-          this.imageUploadLoader = false;
-          const errInfo = { errorMsg: 'Image upload failed' };
-          return throwError(this.editorService.apiErrorHandling(err, errInfo));
-        })).subscribe((res) => {
-          const imgId = res.result.node_id;
-          const request = {
-            data: formData
-          };
-          this.questionService.uploadMedia(request, imgId).pipe(catchError(err => {
-            this.imageUploadLoader = false;
-            const errInfo = { errorMsg: 'Image upload failed' };
-            return throwError(this.editorService.apiErrorHandling(err, errInfo));
-          })).subscribe((response) => {
-            this.imageUploadLoader = false;
-            this.addImageInEditor(response.result.content_url, response.result.node_id);
-            this.showImagePicker = false;
-            this.showImageUploadModal = false;
-          });
-      });
-      reader.onerror = (error: any) => { };
+      this.imageFormValid = true;
+      this.assestData = this.generateAssetCreateRequest(fileName, fileType, 'image');
+      this.populateFormData(this.assestData);
     }
   }
-
+  populateFormData(formData) {
+    const formvalue = _.cloneDeep(this.formConfig);
+    this.formConfig = null;
+    _.forEach(formvalue, (formFieldCategory) => {
+      formFieldCategory.default = formData[formFieldCategory.code];
+    });
+    this.formConfig = formvalue;
+  }
+  uploadAndUseImage(modal) {
+    this.questionService.createMediaAsset({ content: this.assestData }).pipe(catchError(err => {
+      const errInfo = { errorMsg: 'Image upload failed' };
+      return throwError(this.editorService.apiErrorHandling(err, errInfo));
+    })).subscribe((res) => {
+      const imgId = res.result.node_id;
+      const request = {
+        data: this.formData
+      };
+      this.questionService.uploadMedia(request, imgId).pipe(catchError(err => {
+        const errInfo = { errorMsg: 'Image upload failed' };
+        return throwError(this.editorService.apiErrorHandling(err, errInfo));
+      })).subscribe((response) => {
+        this.addImageInEditor(response.result.content_url, response.result.node_id);
+        this.showImageUploadModal = false;
+        this.dismissPops(modal);
+      });
+    });
+  }
+  openImageUploadModal() {
+    this.showImageUploadModal = true;
+    this.resetFormData();
+  }
+  dismissPops(modal) {
+    this.dismissImagePicker();
+    modal.deny();
+  }
+  onStatusChanges(event) {
+    if (event.isValid && this.imageUploadLoader) {
+      this.imageFormValid = true;
+    } else {
+      this.imageFormValid = false;
+    }
+  }
+  valueChanges(event) {
+    this.assestData = _.merge({}, this.assestData, event);
+  }
+  // search feature for images
+  searchImages(event, type) {
+    if (event === 'clearInput' && type === 'myImages') {
+      this.query = '';
+      this.searchMyInput = '';
+    } else if (event === 'clearInput' && type === 'allImages') {
+      this.query = '';
+      this.searchAllInput = '';
+    } else {
+      this.query = event.target.value;
+    }
+    if (type === 'myImages') {
+      this.getMyImages(0, this.query, true);
+    } else {
+      this.getAllImages(0, this.query, true);
+    }
+  }
+  // general method
+  resetFormData() {
+    this.showErrorMsg = false;
+    this.formData = null;
+    this.formConfig = this.initialFormConfig;
+    this.imageUploadLoader = false;
+    this.imageFormValid = false;
+  }
   /**
    * function to upload video
    */
-  uploadVideo() {
+  openVideoUploadModal() {
+    this.showVideoUploadModal = true;
+    this.resetFormData();
+  }
+  dismissVideoPops(modal) {
+    if (this.isClosable) {
+    this.dismissVideoPicker();
+    modal.deny();
+    }
+  }
+  uploadVideoFromLocal(event) {
+    this.videoFile = event.target.files[0];
+    const reader = new FileReader();
+    this.formData = new FormData();
+    this.formData.append('file', this.videoFile);
+    const fileType = this.videoFile.type;
+    const fileName = this.videoFile.name.split('.').slice(0, -1).join('.');
+    const fileSize = this.videoFile.size / 1024 / 1024;
+    if (_.includes(fileType.split('/'), 'video')) {
+      this.showErrorMsg = false;
+      if (fileSize > this.assetConfig.video.size) {
+        this.showErrorMsg = true;
+        this.errorMsg = 'Max size allowed is ' + this.assetConfig.video.size + 'MB';
+      } else {
+        this.errorMsg = '';
+        this.showErrorMsg = false;
+        reader.readAsDataURL(this.videoFile);
+      }
+    } else {
+      this.showErrorMsg = true;
+      this.errorMsg = 'Please choose an video file';
+    }
+    if (!this.showErrorMsg) {
+      this.imageUploadLoader = true;
+      this.imageFormValid = true;
+      this.assestData = this.generateAssetCreateRequest(fileName, fileType, 'video');
+      this.populateFormData(this.assestData);
+    }
+  }
+  uploadVideo(videoModal) {
     this.isClosable = false;
     this.loading = true;
     this.showErrorMsg = false;
+    this.imageFormValid = false;
     if (!this.showErrorMsg) {
-      const req = this.generateAssetCreateRequest(this.uploader.getName(0), this.uploader.getFile(0).type, 'video');
-      this.questionService.createMediaAsset(req).pipe(catchError(err => {
+      this.questionService.createMediaAsset({ content: this.assestData }).pipe(catchError(err => {
         this.loading = false;
         this.isClosable = true;
+        this.imageFormValid = true;
         const errInfo = { errorMsg: ' Unable to create an Asset' };
         return throwError(this.editorService.apiErrorHandling(err, errInfo));
       })).subscribe((res) => {
         const contentId = res.result.node_id;
         const request = {
           content: {
-            fileName: this.uploader.getName(0)
+            fileName: this.videoFile.name
           }
         };
         this.questionService.generatePreSignedUrl(request, contentId).pipe(catchError(err => {
           const errInfo = { errorMsg: 'Unable to get pre_signed_url and Content Creation Failed, Please Try Again' };
           this.loading = false;
           this.isClosable = true;
+          this.imageFormValid = true;
           return throwError(this.editorService.apiErrorHandling(err, errInfo));
         })).subscribe((response) => {
           const signedURL = response.result.pre_signed_url;
@@ -600,9 +679,9 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
               'x-ms-blob-type': 'BlockBlob'
             }
           };
-          this.uploadToBlob(signedURL, this.uploader.getFile(0), config).subscribe(() => {
+          this.uploadToBlob(signedURL, this.videoFile, config).subscribe(() => {
             const fileURL = signedURL.split('?')[0];
-            this.updateContentWithURL(fileURL, this.uploader.getFile(0).type, contentId);
+            this.updateContentWithURL(fileURL, this.videoFile.type, contentId, videoModal);
           });
         });
       });
@@ -611,14 +690,12 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
 
   generateAssetCreateRequest(fileName, fileType, mediaType) {
     return {
-      content: {
-        name: fileName,
-        mediaType,
-        mimeType: fileType,
-        createdBy: _.get(this.editorService.editorConfig, 'context.user.id'),
-        creator: _.get(this.editorService.editorConfig, 'context.user.fullName'),
-        channel: _.get(this.editorService.editorConfig, 'context.channel')
-      }
+      name: fileName,
+      mediaType,
+      mimeType: fileType,
+      createdBy: _.get(this.editorService.editorConfig, 'context.user.id'),
+      creator: _.get(this.editorService.editorConfig, 'context.user.fullName'),
+      channel: _.get(this.editorService.editorConfig, 'context.channel')
     };
   }
 
@@ -627,11 +704,12 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       const errInfo = { errorMsg: 'Unable to upload to Blob and Content Creation Failed, Please Try Again' };
       this.isClosable = true;
       this.loading = false;
+      this.imageFormValid = true;
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     }), map(data => data));
   }
 
-  updateContentWithURL(fileURL, mimeType, contentId) {
+  updateContentWithURL(fileURL, mimeType, contentId, videoModal?) {
     const data = new FormData();
     data.append('fileUrl', fileURL);
     data.append('mimeType', mimeType);
@@ -649,29 +727,30 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       const errInfo = { errorMsg: 'Unable to update pre_signed_url with Content Id and Content Creation Failed, Please Try Again' };
       this.isClosable = true;
       this.loading = false;
+      this.imageFormValid = true;
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     })).subscribe(res => {
       // Read upload video data
-      this.getUploadVideo(res.result.node_id);
+      this.getUploadVideo(res.result.node_id, videoModal);
     });
   }
 
-  getUploadVideo(videoId) {
-      this.questionService.getVideo(videoId).pipe(map((data: any) => data.result.content), catchError(err => {
-        const errInfo = { errorMsg: _.get(this.configService, 'labelConfig.messages.error.011') };
-        this.loading = false;
-        this.isClosable = true;
-        this.loading = false;
-        this.isClosable = true;
-        return throwError(this.editorService.apiErrorHandling(err, errInfo));
+  getUploadVideo(videoId, videoModal?) {
+    this.questionService.getVideo(videoId).pipe(map((data: any) => data.result.content), catchError(err => {
+      const errInfo = { errorMsg: _.get(this.configService, 'labelConfig.messages.error.011') };
+      this.loading = false;
+      this.isClosable = true;
+      this.imageFormValid = true;
+      return throwError(this.editorService.apiErrorHandling(err, errInfo));
     })).subscribe(res => {
-        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.006'));
-        this.selectedVideo = res;
-        this.showAddButton = true;
-        this.loading = false;
-        this.isClosable = true;
-        this.addVideoInEditor();
-      });
+      this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.006'));
+      this.selectedVideo = res;
+      this.showAddButton = true;
+      this.loading = false;
+      this.isClosable = true;
+      this.imageFormValid = true;
+      this.addVideoInEditor(videoModal);
+    });
   }
 
   searchMyVideo(event) {
@@ -682,10 +761,34 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     this.query = event.target.value;
     this.getAllVideos(0, this.query);
   }
+  // searchVideo feature
+  searchVideo(event, type) {
+    if (event === 'clearInput' && type === 'myVideos') {
+      this.query = '';
+      this.searchMyInput = '';
+    } else if (event === 'clearInput' && type === 'allVideos') {
+      this.query = '';
+      this.searchAllInput = '';
+    } else {
+      this.query = event.target.value;
+    }
+    if (type === 'myVideos') {
+      this.getMyVideos(0, this.query, true);
+    } else {
+      this.getAllVideos(0, this.query, true);
+    }
+  }
   selectVideo(data) {
-    this.showAddButton = true;
-    this.selectedVideoId = data.identifier;
-    this.selectedVideo = data;
+    if (data) {
+      this.showAddButton = true;
+      this.selectedVideoId = data.identifier;
+      this.selectedVideo = data;
+    } else {
+      this.showAddButton = false;
+      this.selectedVideoId = '';
+      this.selectedVideo = {};
+    }
+
   }
 
   countCharacters(document) {

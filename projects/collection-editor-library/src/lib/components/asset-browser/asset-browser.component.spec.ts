@@ -112,4 +112,69 @@ describe('AssetBrowserComponent', () => {
     expect(component.searchAllInput).toEqual('');
     expect(component.getAllImages).toHaveBeenCalledWith(0, '', true );
   });
+  it('#ngOnInit() should call ngOnInit and define formConfig', () => {
+    component.ngOnInit();
+    expect(component.formConfig).toBeDefined();
+  });
+  it('#onStatusChanges() should call onStatusChanges and imageUploadLoader is false', () => {
+    component.imageUploadLoader = false;
+    const data = {controls: [],
+      isDirty: true,
+      isInvalid: false,
+      isPristine: false,
+      isValid: true};
+    component.onStatusChanges(data);
+    expect(component.imageFormValid).toBeFalsy();
+  });
+  it('#onStatusChanges() should call onStatusChanges and imageUploadLoader is true and is form valid false', () => {
+    component.imageUploadLoader = true;
+    const data = {controls: [],
+      isDirty: true,
+      isInvalid: false,
+      isPristine: false,
+      isValid: false};
+    component.onStatusChanges(data);
+    expect(component.imageFormValid).toBeFalsy();
+  });
+  it('#onStatusChanges() should call onStatusChanges and imageUploadLoader is true and is form valid true', () => {
+    component.imageUploadLoader = true;
+    const data = {controls: [],
+      isDirty: true,
+      isInvalid: false,
+      isPristine: false,
+      isValid: true};
+    component.onStatusChanges(data);
+    expect(component.imageFormValid).toBeTruthy();
+  });
+  it('#valueChanges() should define assestRequestBody ', () => {
+    component.imageUploadLoader = true;
+    component.assestData = mockData.formData;
+    const data = {  creator: "Vaibahv Bhuva",
+    keywords: undefined,
+    name: "logo"};
+    component.valueChanges(data);
+    expect(component.assestData).toBeDefined();
+  });
+  it('#openImageUploadModal() should reset upload image form  ', () => {
+    component.openImageUploadModal();
+    expect(component.imageUploadLoader).toBeFalsy();
+    expect(component.imageFormValid).toBeFalsy();
+    expect(component.showImageUploadModal).toBeTruthy();
+    expect(component.formData).toBeNull();
+  });
+  it('#dismissPops() should close both pops  ', () => {
+    spyOn(component, 'dismissImagePicker');
+    const modal = {
+      deny: jasmine.createSpy('deny')
+    };
+    component.dismissPops(modal);
+    expect(component.dismissImagePicker).toHaveBeenCalled();
+    expect(modal.deny).toHaveBeenCalled();
+  });
+  it('#dismissImagePicker() should emit modalDismissEmitter event  ', () => {
+    spyOn(component, 'dismissImagePicker');
+    component.dismissImagePicker();
+    expect(component.dismissImagePicker).toHaveBeenCalled();
+    expect(component.showImagePicker).toBeFalsy();
+  });
 });

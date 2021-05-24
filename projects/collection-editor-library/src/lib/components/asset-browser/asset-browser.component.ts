@@ -4,6 +4,7 @@ import { catchError, map } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
 import { EditorService } from '../../services/editor/editor.service';
 import { QuestionService } from '../../services/question/question.service';
+import {config} from './asset-browser.data';
 @Component({
   selector: 'lib-asset-browser',
   templateUrl: './asset-browser.component.html',
@@ -13,7 +14,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
   @Input() showImagePicker;
   @Output() assetBrowserEmitter = new EventEmitter<any>();
   @Output() modalDismissEmitter = new EventEmitter<any>();
-  @ViewChild('modal', {static: false}) private modal;
+  @ViewChild('modal', { static: false }) private modal;
   constructor(private editorService: EditorService,
               private questionService: QuestionService) { }
   assetConfig: any = {
@@ -37,12 +38,18 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
   public assetProxyUrl = '/assets/public/';
   public editorInstance: any;
   public assetsCount: any;
-  public searchMyInput: any;
+  public searchMyInput = '';
   public searchAllInput: any;
   showAddButton: boolean;
   appIcon;
-
+  public formData: any;
+  public assestData = {};
+  public formConfig: any;
+  public initialFormConfig: any;
+  public imageFormValid: any;
   ngOnInit() {
+    this.initialFormConfig =  _.get(config, 'uploadIconFormConfig');
+    this.formConfig =  _.get(config, 'uploadIconFormConfig');
     this.acceptImageType = this.getAcceptType(this.assetConfig.image.accepted, 'image');
   }
 
@@ -143,14 +150,13 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     const offset = this.allImages.length;
     this.getAllImages(offset, this.query, true);
   }
-
   uploadImage(event) {
     const file = event.target.files[0];
     const reader = new FileReader();
-    const formData: FormData = new FormData();
-    formData.append('file', file);
+    this.formData = new FormData();
+    this.formData.append('file', file);
     const fileType = file.type;
-    const fileName = file.name;
+    const fileName = file.name.split('.').slice(0, -1).join('.');
     const fileSize = file.size / 1024 / 1024;
     if (fileType.split('/')[0] === 'image') {
       this.showErrorMsg = false;
@@ -168,42 +174,46 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     }
     if (!this.showErrorMsg) {
       this.imageUploadLoader = true;
-      // reader.onload = (uploadEvent: any) => {
-      const req = this.generateAssetCreateRequest(fileName, fileType, 'image');
-      this.questionService.createMediaAsset(req).pipe(catchError(err => {
-          this.imageUploadLoader = false;
-          const errInfo = { errorMsg: 'Image upload failed' };
-          return throwError(this.editorService.apiErrorHandling(err, errInfo));
-        })).subscribe((res) => {
-          const imgId = res.result.node_id;
-          const request = {
-            data: formData
-          };
-          this.questionService.uploadMedia(request, imgId).pipe(catchError(err => {
-            this.imageUploadLoader = false;
-            const errInfo = { errorMsg: 'Image upload failed' };
-            return throwError(this.editorService.apiErrorHandling(err, errInfo));
-          })).subscribe((response) => {
-            this.imageUploadLoader = false;
-            this.addImageInEditor(response.result.content_url, response.result.node_id);
-            this.showImagePicker = false;
-            this.showImageUploadModal = false;
-          });
-      });
-      reader.onerror = (error: any) => { };
+      this.imageFormValid = true;
+      this.assestData = this.generateAssetCreateRequest(fileName, fileType, 'image');
+      this.populateFormData(this.assestData);
     }
   }
-
+  populateFormData(formData) {
+    const formvalue = _.cloneDeep(this.formConfig);
+    this.formConfig = null;
+    _.forEach(formvalue, (formFieldCategory) => {
+        formFieldCategory.default = formData[formFieldCategory.code];
+    });
+    this.formConfig = formvalue;
+  }
+  uploadAndUseImage(modal) {
+    this.questionService.createMediaAsset({ content: this.assestData }).pipe(catchError(err => {
+      const errInfo = { errorMsg: 'Image upload failed' };
+      return throwError(this.editorService.apiErrorHandling(err, errInfo));
+    })).subscribe((res) => {
+      const imgId = res.result.node_id;
+      const request = {
+        data: this.formData
+      };
+      this.questionService.uploadMedia(request, imgId).pipe(catchError(err => {
+        const errInfo = { errorMsg: 'Image upload failed' };
+        return throwError(this.editorService.apiErrorHandling(err, errInfo));
+      })).subscribe((response) => {
+        this.addImageInEditor(response.result.content_url, response.result.node_id);
+        this.showImageUploadModal = false;
+        this.dismissPops(modal);
+      });
+    });
+  }
   generateAssetCreateRequest(fileName, fileType, mediaType) {
     return {
-      content: {
         name: fileName,
         mediaType,
         mimeType: fileType,
         createdBy: _.get(this.editorService.editorConfig, 'context.user.id'),
         creator: _.get(this.editorService.editorConfig, 'context.user.fullName'),
         channel: _.get(this.editorService.editorConfig, 'context.channel')
-      }
     };
   }
 
@@ -221,7 +231,18 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     this.showImagePicker = true;
     this.showImageUploadModal = false;
   }
-
+  openImageUploadModal() {
+    this.showImageUploadModal = true;
+    this.formData = null;
+    this.formConfig = this.initialFormConfig;
+    this.imageUploadLoader = false;
+    this.imageFormValid = false;
+    this.showErrorMsg = false;
+  }
+  dismissPops(modal) {
+    this.dismissImagePicker();
+    modal.deny();
+  }
   dismissImagePicker() {
     this.showImagePicker = false;
     this.modalDismissEmitter.emit({})
@@ -242,6 +263,17 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
         this.getAllImages(0, this.query, true);
     }
   }
+  onStatusChanges(event) {
+    if (event.isValid && this.imageUploadLoader) {
+      this.imageFormValid = true;
+    } else {
+      this.imageFormValid = false;
+    }
+  }
+  valueChanges(event) {
+    this.assestData = _.merge({}, this.assestData, event);
+  }
+
   ngOnDestroy() {
     if (this.modal && this.modal.deny) {
       this.modal.deny();
