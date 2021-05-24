@@ -507,8 +507,8 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
   uploadImage(event) {
     const file = event.target.files[0];
     const reader = new FileReader();
-    const formData: FormData = new FormData();
-    formData.append('file', file);
+    this.formData = new FormData();
+    this.formData.append('file', file);
     const fileType = file.type;
     const fileName = file.name.split('.').slice(0, -1).join('.');
     const fileSize = file.size / 1024 / 1024;
