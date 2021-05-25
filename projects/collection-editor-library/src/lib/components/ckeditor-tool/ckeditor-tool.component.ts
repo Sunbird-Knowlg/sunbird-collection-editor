@@ -555,7 +555,6 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
         return throwError(this.editorService.apiErrorHandling(err, errInfo));
       })).subscribe((response) => {
         this.addImageInEditor(response.result.content_url, response.result.node_id);
-        this.showImageUploadModal = false;
         this.dismissPops(modal);
       });
     });
