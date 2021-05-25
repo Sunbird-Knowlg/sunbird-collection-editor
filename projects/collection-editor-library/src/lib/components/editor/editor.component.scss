@@ -294,3 +294,10 @@ sb-dynamic-richtext .ck-content .table{
   pointer-events: none !important;
   font-size: 1em !important;
 }
+
+.sb-questionset-scroll{
+  ul{
+   height: 1654px;
+   overflow-y: auto;
+  }
+}

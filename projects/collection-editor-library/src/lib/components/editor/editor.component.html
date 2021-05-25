@@ -9,7 +9,7 @@
             <div class="three wide column p-0 h-100vh">
               <lib-fancy-tree  *ngIf="collectionTreeNodes && collectionTreeNodes.data"
               [nodes]="collectionTreeNodes" [options]="{ showConnectors: true }" [buttonLoaders]="buttonLoaders"
-              (treeEventEmitter)="treeEventListener($event)" class="sb-collectionTree-fancyTree sb-collectionTree-fancyTreelist">
+              (treeEventEmitter)="treeEventListener($event)" class="sb-collectionTree-fancyTree sb-collectionTree-fancyTreelist sb-questionset-scroll">
               </lib-fancy-tree>
             </div>
             <!-- Right Player Sections -->
