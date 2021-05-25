@@ -5,7 +5,16 @@ import {InfiniteScrollModule} from 'ngx-infinite-scroll';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {mockData} from './asset-browser.component.spec.data';
 import { FormsModule } from '@angular/forms';
-
+import { EditorService } from '../../services/editor/editor.service';
+const mockEditorService = {
+  editorConfig: {
+    config: {
+      assetConfig: {
+      image: {
+        size: '1',
+        accepted: 'png, jpeg'
+      }
+  }}}};
 describe('AssetBrowserComponent', () => {
   let component: AssetBrowserComponent;
   let fixture: ComponentFixture<AssetBrowserComponent>;
@@ -14,6 +23,7 @@ describe('AssetBrowserComponent', () => {
     TestBed.configureTestingModule({
       imports: [ InfiniteScrollModule, HttpClientTestingModule, FormsModule ],
       declarations: [ AssetBrowserComponent ],
+      providers: [{ provide: EditorService, useValue: mockEditorService }],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     })
     .compileComponents();
@@ -30,11 +40,10 @@ describe('AssetBrowserComponent', () => {
   });
 
   it('#ngOnInit() should call #getAcceptType()', () => {
-    component.assetConfig.image.accepted = 'dummyData';
     spyOn(component, 'ngOnInit').and.callThrough();
     spyOn(component, 'getAcceptType').and.callThrough();
     component.ngOnInit();
-    expect(component.getAcceptType).toHaveBeenCalledWith('dummyData', 'image');
+    expect(component.getAcceptType).toHaveBeenCalledWith(mockEditorService.editorConfig.config.assetConfig.image.accepted, 'image');
   });
 
   it('#initializeImagePicker() should set showImagePicker to true', () => {
