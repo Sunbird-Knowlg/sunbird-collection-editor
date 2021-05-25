@@ -35,16 +35,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
   public lastImgResizeWidth;
   constructor(private questionService: QuestionService, private editorService: EditorService,
               private toasterService: ToasterService, public configService: ConfigService) { }
-  assetConfig: any = {
-    image: {
-      size: '50',
-      accepted: 'png, jpeg'
-    },
-    video: {
-      size: '50',
-      accepted: 'mp4, webm'
-    }
-  };
+  assetConfig: any = {};
   myAssets = [];
   allImages = [];
   allVideos = [];
@@ -71,9 +62,12 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
   public initialFormConfig: any;
   public imageFormValid = false;
   public videoFile: any;
+  public termsAndCondition: any;
   ngOnInit() {
     this.initialFormConfig = _.get(config, 'uploadIconFormConfig');
     this.formConfig = _.get(config, 'uploadIconFormConfig');
+    this.termsAndCondition =  _.get(this.configService.labelConfig, 'termsAndConditions.001');
+    this.assetConfig = this.editorService.editorConfig.config.assetConfig;
     this.initialized = true;
     this.editorConfig = {
       toolbar: ['bold', '|', 'italic', '|', 'underline',
