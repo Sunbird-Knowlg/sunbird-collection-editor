@@ -296,7 +296,7 @@ sb-dynamic-richtext .ck-content .table{
 }
 
 .sb-questionset-scroll{
-  ul{
+  ul[role='group']{
    height: 1654px;
    overflow-y: auto;
   }
