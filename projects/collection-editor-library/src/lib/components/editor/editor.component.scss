@@ -295,9 +295,11 @@ sb-dynamic-richtext .ck-content .table{
   font-size: 1em !important;
 }
 
-.sb-questionset-scroll{
-  ul[role='group']{
-   height: 1654px;
+.overflow-y{
    overflow-y: auto;
   }
-}
+  
+  .sb-collectionTree-fancyTree  div:first-of-type{
+    max-height: 100vh;
+  }
+  
