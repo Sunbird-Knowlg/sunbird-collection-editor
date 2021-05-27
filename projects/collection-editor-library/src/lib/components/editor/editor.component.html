@@ -6,10 +6,10 @@
         <div class="ui">
           <div class="ui twelve column grid m-0 ">
             <!-- Left Sidebar for cards -->
-            <div class="three wide column p-0 h-100vh">
+            <div class="three wide column p-0 overflow-y mb-40">
               <lib-fancy-tree  *ngIf="collectionTreeNodes && collectionTreeNodes.data"
               [nodes]="collectionTreeNodes" [options]="{ showConnectors: true }" [buttonLoaders]="buttonLoaders"
-              (treeEventEmitter)="treeEventListener($event)" class="sb-collectionTree-fancyTree sb-collectionTree-fancyTreelist">
+              (treeEventEmitter)="treeEventListener($event)" class="sb-collectionTree-fancyTree sb-collectionTree-fancyTreelist sb-questionset-scroll">
               </lib-fancy-tree>
             </div>
             <!-- Right Player Sections -->
