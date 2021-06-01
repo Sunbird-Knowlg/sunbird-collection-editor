@@ -22,7 +22,7 @@
     "@angular/platform-browser": "~8.2.14",
     "@angular/platform-browser-dynamic": "~8.2.14",
     "@angular/router": "~8.2.14",
-    "@project-sunbird/ckeditor-build-classic": "0.0.4",
+    "@project-sunbird/ckeditor-build-classic": "^4.0.0",
     "@project-sunbird/client-services": "^3.9.5",
     "@project-sunbird/sb-styles": "0.0.7",
     "@project-sunbird/sunbird-pdf-player-v8": "4.0.3",
