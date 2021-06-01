@@ -1,6 +1,6 @@
 {
   "name": "@project-sunbird/sunbird-collection-editor",
-  "version": "3.9.20",
+  "version": "3.9.21",
   "dependencies" : {
     "@project-sunbird/ckeditor-build-classic": "0.0.4"
   },
