@@ -3,8 +3,5 @@
     "dest": "../../dist/collection-editor-library",
     "lib": {
       "entryFile": "src/public-api.ts"
-    },
-    "whitelistedNonPeerDependencies": [
-      "@project-sunbird/ckeditor-build-classic"
-    ]
+    }
   }
