@@ -1,4 +1,7 @@
 {
     "rejectCommentsMaxLength": 500,
-    "setDefaultCopyRight": true
+    "setDefaultCopyRight": true,
+    "showOriginPreviewUrl": false, 
+    "showSourcingStatus": false, 
+    "showCorrectionComments": false
 }

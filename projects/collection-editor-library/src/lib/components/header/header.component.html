@@ -13,8 +13,24 @@
 
 <div class="sb-bg-lightBlue bb-1">
 <div class="d-flex flex-jc-space-between flex-ai-center py-20 ui container">
-  <div class="practical-header__title font-weight-bold pl-20 fs-0-92">
-    {{ labelConfigData.title }}
+  <div>
+    <div class="practical-header__title font-weight-bold pl-20 fs-0-92">
+      {{ labelConfigData.title }}
+    </div>
+
+    <div class="mt-8 pl-20">
+      <span class="sb-btn sb-btn-normal mr-10" *ngIf="visibility.showSourcingStatus" [ngClass]="sourcingStatusClass">{{ sourcingStatusText }}</span>
+
+      <span data-title="View review comments" (click)="buttonEmitter({type: 'showCorrectioncomments'})" *ngIf="visibility.showCorrectionComments" libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('view_comments','click','launch', telemetryService.telemetryPageId)">
+          <i class="icon comment flex-as-baseline mr-05" aria-hidden="true"></i>View Comments
+      </span>
+
+      <a *ngIf="visibility.showOriginPreviewUrl && originPreviewUrl" class="sb-color-primary mr-8 pl-10 fs-0-785 font-weight-bold"
+      href="{{originPreviewUrl}}" target="_blank">{{configService.labelConfig?.lbl?.viewOnOrigin}}</a>
+      <label *ngIf="visibility.showOriginPreviewUrl && !originPreviewUrl" class="sb-color-error mr-8 pl-10 fs-0-785 font-weight-bold">
+        The content not found of Diksha
+      </label>
+    </div>
   </div>
   <div class="d-flex flex-ai-center" *ngIf="pageId === 'collection_editor' && labelConfigData">
     <div  data-title="View review comments" (click)="buttonEmitter({type: 'showReviewcomments'})" *ngIf="buttonLoaders?.showReviewComment" libTelemetryInteract
