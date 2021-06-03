@@ -82,7 +82,10 @@ export class EditorService {
   }
   readQuestionSet(questionSetId, option: any = { params: {} }): Observable<any> {
     const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
-    const param = { fields: url.DEFAULT_PARAMS_FIELDS };
+    const param = {
+      mode: 'edit',
+      fields: url.DEFAULT_PARAMS_FIELDS
+     };
     const hierarchyUrl = `${url.READ}/${questionSetId}`;
     const req = {
       url: hierarchyUrl,
