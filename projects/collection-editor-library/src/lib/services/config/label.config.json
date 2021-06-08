@@ -49,10 +49,11 @@
        "addContent":"Add content",
        "sortBy":"Sort By",
        "sortlabel":"A - Z",
-       "viewOnOrigin":"View Content on Diksha"
+       "viewOnOrigin":"View Content on consumption"
     },
     "err":{
-       "somethingWentWrong":"Something went wrong"
+       "somethingWentWrong":"Something went wrong",
+       "contentNotFoundonOrigin": "The content not found in consumption"
     },
     "messages": {
       "error": {
@@ -70,8 +71,7 @@
          "012": "QR code(s) updating failed!",
          "013": "No new QR Codes have been generated!",
          "014": "The number should be at least {number}",
-         "015": "The number should be greater than {number}",
-         "016": "The content not found of Diksha"
+         "015": "The number should be greater than {number}"
       }, 
       "success": {
          "001": "Content is saved",

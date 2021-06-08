@@ -28,7 +28,7 @@
       <a *ngIf="visibility.showOriginPreviewUrl && originPreviewUrl" class="sb-color-primary mr-8 pl-10 fs-0-785 font-weight-bold"
       href="{{originPreviewUrl}}" target="_blank">{{configService.labelConfig?.lbl?.viewOnOrigin}}</a>
       <label *ngIf="visibility.showOriginPreviewUrl && !originPreviewUrl" class="sb-color-error mr-8 pl-10 fs-0-785 font-weight-bold">
-        The content not found of Diksha
+        {{configService.labelConfig?.err?.contentNotFoundonOrigin}}
       </label>
     </div>
   </div>
