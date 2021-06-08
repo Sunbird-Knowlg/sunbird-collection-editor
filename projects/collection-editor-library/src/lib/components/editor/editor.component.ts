@@ -311,6 +311,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       case 'showReviewcomments':
         this.showReviewModal = ! this.showReviewModal;
         break;
+      case 'showCorrectioncomments':
+        this.contentComment = _.get(this.editorConfig, 'context.correctionComments')
+        this.showReviewModal = ! this.showReviewModal;
+      break;
       default:
         break;
     }

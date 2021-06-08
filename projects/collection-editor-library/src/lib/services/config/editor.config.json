@@ -1,6 +1,9 @@
 {
     "rejectCommentsMaxLength": 500,
     "setDefaultCopyRight": true,
+    "showOriginPreviewUrl": false, 
+    "showSourcingStatus": false, 
+    "showCorrectionComments": false,
     "assetConfig": {
         "image": {
             "size": "1",
