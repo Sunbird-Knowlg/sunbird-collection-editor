@@ -3,7 +3,7 @@
     "setDefaultCopyRight": true,
     "showOriginPreviewUrl": false, 
     "showSourcingStatus": false, 
-    "showCorrectionComments": false
+    "showCorrectionComments": false,
     "assetConfig": {
         "image": {
             "size": "1",
