@@ -5,6 +5,7 @@ import { throwError, Observable } from 'rxjs';
 import { EditorService } from '../../services/editor/editor.service';
 import { QuestionService } from '../../services/question/question.service';
 import {config} from './asset-browser.data';
+import { ConfigService } from '../../services/config/config.service';
 @Component({
   selector: 'lib-asset-browser',
   templateUrl: './asset-browser.component.html',
@@ -15,14 +16,9 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
   @Output() assetBrowserEmitter = new EventEmitter<any>();
   @Output() modalDismissEmitter = new EventEmitter<any>();
   @ViewChild('modal', { static: false }) private modal;
-  constructor(private editorService: EditorService,
+  constructor(private editorService: EditorService, public configService: ConfigService,
               private questionService: QuestionService) { }
-  assetConfig: any = {
-    image: {
-      size: '1',
-      accepted: 'png, jpeg'
-    }
-  };
+  assetConfig: any = {};
   myAssets = [];
   allImages = [];
   public imageUploadLoader = false;
@@ -47,9 +43,12 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
   public formConfig: any;
   public initialFormConfig: any;
   public imageFormValid: any;
+  public termsAndCondition: any;
   ngOnInit() {
     this.initialFormConfig =  _.get(config, 'uploadIconFormConfig');
     this.formConfig =  _.get(config, 'uploadIconFormConfig');
+    this.assetConfig = this.editorService.editorConfig.config.assetConfig;
+    this.termsAndCondition =  _.get(this.configService.labelConfig, 'termsAndConditions.001');
     this.acceptImageType = this.getAcceptType(this.assetConfig.image.accepted, 'image');
   }
 
