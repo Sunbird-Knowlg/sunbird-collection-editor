@@ -158,9 +158,9 @@ describe('AssetBrowserComponent', () => {
   it('#valueChanges() should define assestRequestBody ', () => {
     component.imageUploadLoader = true;
     component.assestData = mockData.formData;
-    const data = {  creator: "Vaibahv Bhuva",
+    const data = {  creator: 'Vaibahv Bhuva',
     keywords: undefined,
-    name: "logo"};
+    name: 'logo'};
     component.valueChanges(data);
     expect(component.assestData).toBeDefined();
   });

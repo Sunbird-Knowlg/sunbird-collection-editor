@@ -70,7 +70,7 @@ export class DialcodeService implements DialcodeCursor {
     return this.publicDataService.post(req);
   }
 
-  updateDialCode(dialcode) {
+  updateDialCode(dialcode): Observable<any> {
     if (!_.isEmpty(dialcode)) {
       dialcode = _.isArray(dialcode) ? dialcode[0] : dialcode;
       const editFlag = (dialcode && (dialcode.length === this.maxChar)) ? true : false;
@@ -121,7 +121,7 @@ export class DialcodeService implements DialcodeCursor {
     }
   }
 
-  validateDialCode(dialcode) {
+  validateDialCode(dialcode): Observable<any> {
     if (this.checkDuplicateDialCode(dialcode)) {
       return of({ isEditable: true, isValid: false, statusMsg: 'Duplicate QR code' });
     } else if (String(dialcode).match(/^[A-Z0-9]{2,}$/)) {
