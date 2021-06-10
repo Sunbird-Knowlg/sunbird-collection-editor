@@ -1,0 +1,287 @@
+{ "request" : 
+{
+			"type": "content",
+			"subType": "collection",
+			"action": "review",
+			"component": "",
+			"framework": "",
+			"rootOrgId":"",
+			"data": {
+				"templateName": "defaultTemplate",
+				"action": "review",
+				"fields": [{
+						"code": "appicon",
+						"visible": true,
+						"editable": true,
+						"dataType": "url",
+						"renderingHints": {},
+						"name": "App Icon",
+						"description": "App Icon",
+						"index": 0,
+						"inputType": "file",
+						"label": "Icon",
+						"placeholder": "App Icon",
+						"required": true
+					}, {
+						"code": "name",
+						"visible": true,
+						"editable": true,
+						"displayProperty": "Editable",
+						"dataType": "text",
+						"renderingHints": {
+							"width": "twelve"
+						},
+						"description": "Name",
+						"index": 1,
+						"label": "Name",
+						"required": true,
+						"name": "Name",
+						"inputType": "text",
+						"placeholder": "Name",
+						"validation": [{
+							"type": "max",
+							"message": "Input is Exceded",
+							"value": "120"
+						}]
+					}, {
+						"code": "description",
+						"visible": true,
+						"editable": true,
+						"displayProperty": "Editable",
+						"dataType": "textarea",
+						"renderingHints": {
+							"width": "twelve"
+						},
+						"description": "description",
+						"index": 2,
+						"label": "Description",
+						"required": false,
+						"name": "Description",
+						"inputType": "textarea",
+						"placeholder": "Description",
+						"validation": [{
+							"type": "max",
+							"message": "Input is Exceded",
+							"value": "1000"
+						}]
+					}, {
+						"code": "keywords",
+						"visible": true,
+						"editable": true,
+						"dataType": "list",
+						"name": "Keywords",
+						"description": "Keywords for the content",
+						"inputType": "keywordsuggestion",
+						"label": "keywords",
+						"index": 3,
+						"placeholder": "Enter Keywords",
+						"required": false
+					}, {
+						"code": "primaryCategory",
+						"dataType": "text",
+						"description": "Collection Type",
+						"editable": false,
+						"index": 4,
+						"renderingHints": {},
+						"inputType": "text",
+						"label": "Collection Type",
+						"name": "Collection Type",
+						"placeholder": "",
+						"required": true,
+						"visible": true
+					}, {
+						"code": "additionalCategories",
+						"dataType": "list",
+						"description": "Additonal Category of the Content",
+						"editable": true,
+						"index": 5,
+						"inputType": "multiselect",
+						"label": "Additional Category",
+						"name": "Additional Category",
+						"placeholder": "Select Additional Category",
+						"renderingHints": {},
+						"range": ["Textbook", "Lesson Plan"],
+						"required": false,
+						"visible": true
+					},
+					{
+						"code": "board",
+						"dataType": "text",
+						"depends": ["medium", "gradeLevel", "subject", "topic"],
+						"description": "Board",
+						"editable": true,
+						"index": 6,
+						"inputType": "select",
+						"label": "Board",
+						"name": "Board",
+						"placeholder": "Select Board",
+						"renderingHints": {},
+						"required": true,
+						"visible": true
+					}, {
+						"code": "medium",
+						"dataType": "list",
+						"depends": ["gradeLevel", "subject", "topic"],
+						"description": "",
+						"editable": true,
+						"index": 7,
+						"inputType": "select",
+						"label": "Medium of Instruction",
+						"name": "medium",
+						"placeholder": "Select Medium",
+						"renderingHints": {},
+						"required": true,
+						"visible": true
+					}, {
+						"code": "gradeLevel",
+						"dataType": "list",
+						"depends": ["subject", "topic"],
+						"description": "Class",
+						"editable": true,
+						"index": 8,
+						"inputType": "multiselect",
+						"label": "Class",
+						"name": "Class",
+						"placeholder": "Select Class",
+						"renderingHints": {},
+						"required": true,
+						"visible": true
+					}, {
+						"code": "subject",
+						"dataType": "list",
+						"depends": ["topic"],
+						"description": "",
+						"editable": true,
+						"index": 9,
+						"inputType": "multiselect",
+						"label": "Subject",
+						"name": "Subject",
+						"placeholder": "Select Subject",
+						"renderingHints": {},
+						"required": true,
+						"visible": true
+					}, {
+						"code": "topic",
+						"dataType": "list",
+						"description": "Choose Topics",
+						"editable": true,
+						"index": 10,
+						"inputType": "topicselector",
+						"label": "Topics Covered",
+						"name": "Topic",
+						"placeholder": "Choose Topics",
+						"renderingHints": {},
+						"required": false,
+						"visible": true
+					}, {
+						"code": "audience",
+						"visible": true,
+						"editable": false,
+						"dataType": "list",
+						"renderingHints": {},
+						"description": "",
+						"index": 11,
+						"range": ["Administrator", "Parent", "Student", "Teacher"],
+						"label": "Audience",
+						"required": false,
+						"name": "Audience",
+						"inputType": "multiselect",
+						"placeholder": "Select Audience"
+					}, {
+						"code": "author",
+						"visible": true,
+						"editable": true,
+						"dataType": "text",
+						"renderingHints": {},
+						"name": "Author",
+						"description": "Original Author",
+						"index": 12,
+						"inputType": "text",
+						"label": "Original Author",
+						"placeholder": "Author",
+						"required": false
+					}, {
+						"code": "attributions",
+						"visible": true,
+						"editable": true,
+						"dataType": "list",
+						"renderingHints": {},
+						"name": "attribution",
+						"description": "Attributions",
+						"index": 13,
+						"inputType": "text",
+						"label": "Attributions",
+						"placeholder": "Attributions",
+						"required": false
+					}, {
+						"code": "copyright",
+						"visible": true,
+						"editable": true,
+						"dataType": "text",
+						"renderingHints": {},
+						"name": "Copyright",
+						"description": "Copyright",
+						"index": 14,
+						"inputType": "text",
+						"label": "Copyright",
+						"placeholder": "Copyright",
+						"required": false
+					}, {
+						"code": "copyrightYear",
+						"visible": true,
+						"editable": true,
+						"dataType": "list",
+						"renderingHints": {},
+						"description": "Year of Creation",
+						"index": 15,
+						"label": "Year of Creation",
+						"required": true,
+						"name": "Year of Creation",
+						"inputType": "number",
+						"placeholder": "Enter Year of Creation",
+						"validation": [{
+							"type": "min",
+							"message": "Maximum length of the year should be 4",
+							"value": "4"
+						}, {
+							"type": "max",
+							"message": "Minimum length of the year should be 4",
+							"value": "4"
+						}]
+					}, {
+						"code": "license",
+						"visible": true,
+						"editable": true,
+						"dataType": "text",
+						"renderingHints": {},
+						"name": "license",
+						"description": "License of the content",
+						"index": 16,
+						"inputType": "licenses",
+						"label": "license",
+						"placeholder": "license",
+						"required": true
+					}, {
+						"code": "licenseterms",
+						"visible": true,
+						"editable": true,
+						"defaultValue": "By creating any type of content (resources, books, courses etc.) on DIKSHA, you consent to publish it under the Creative Commons License Framework. Please choose the applicable creative commons license you wish to apply to your content.",
+						"dataType": "text",
+						"renderingHints": {
+							"value": {
+								"video/x-youtube": "By linking or uploading YouTube videos on DIKSHA, you consent to publishing it as per the terms of the YouTube video license. DIKSHA accepts only videos with YouTube Standard License or Creative Commons License."
+							},
+							"class": "twelve wide field"
+						},
+						"description": "licenseterms",
+						"index": 17,
+						"label": "License Terms",
+						"required": false,
+						"name": "licenseterms",
+						"inputType": "label",
+						"placeholder": "license"
+					}
+				]
+			}
+		}
+}
