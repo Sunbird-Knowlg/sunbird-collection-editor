@@ -3,6 +3,15 @@
 }
 
 .dynamic-form{
+  .required {
+    .sb-modal-dropdown-web{
+      label{
+        &::after{
+          content:" " !important;
+        }
+      }
+    } 
+  }
   sb-dynamic-checkbox{
     margin-top: 3.5rem;
   }
