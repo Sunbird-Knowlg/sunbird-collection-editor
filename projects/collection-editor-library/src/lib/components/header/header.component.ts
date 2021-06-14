@@ -29,6 +29,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
   public sourcingStatusClass: string;
   public originPreviewUrl: string;
   public correctionComments: string
+  public addCollaborator: boolean;
 
   constructor(private editorService: EditorService,
               public telemetryService: EditorTelemetryService,

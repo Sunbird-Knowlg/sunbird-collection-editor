@@ -17,10 +17,9 @@
     <div class="practical-header__title font-weight-bold pl-20 fs-0-92">
       {{ labelConfigData.title }}
     </div>
+    <span class="sb-btn sb-btn-normal mr-10" *ngIf="visibility.showSourcingStatus" [ngClass]="sourcingStatusClass">{{ sourcingStatusText }}</span>
 
     <div class="mt-8 pl-20">
-      <span class="sb-btn sb-btn-normal mr-10" *ngIf="visibility.showSourcingStatus" [ngClass]="sourcingStatusClass">{{ sourcingStatusText }}</span>
-
       <span data-title="View review comments" (click)="buttonEmitter({type: 'showCorrectioncomments'})" *ngIf="visibility.showCorrectionComments" libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('view_comments','click','launch', telemetryService.telemetryPageId)">
           <i class="icon comment flex-as-baseline mr-05" aria-hidden="true"></i>View Comments
       </span>
@@ -95,7 +94,9 @@
     </button>
 
   </div>
-  <div class="d-flex flex-ai-center" *ngIf="pageId === 'question' && labelConfigData">
+  <!-- <div class="d-flex flex-ai-center" *ngIf="pageId === 'question' && labelConfigData"> -->
+    <div class="d-flex flex-ai-center">
+    <a (click)= "addCollaborator = true" class="cursor-pointer fs-0-785 sb-color-primary mr-20 font-weight-bold"> <i class="icon plus mr-0"></i> Add Collaborator</a>
     <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10" *ngIf="labelConfigData.showPreview"
       (click)="buttonEmitter({type: 'editContent'})" libTelemetryInteract
       [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('edit','click','launch', telemetryService.telemetryPageId)">
@@ -176,5 +177,188 @@
         libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('no','click','cancel', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'add_review_comments'})">
           No
         </button>
+      </div>
+</sui-modal>
+
+<sui-modal *ngIf="addCollaborator" [mustScroll]="true" [isClosable]="true" [transitionDuration]="0"
+      [size]="'fullscreen'" class="sb-modal sb-modal-fullscreen bx-none overflow-modal" appBodyScroll
+      (dismissed)="addCollaborator = !addCollaborator" #modal>
+      <div class="sb-modal-header">
+            Collaborators
+      </div>
+      <div class="sb-modal-content">
+          <div class="sb-search-box small no-btn ml-auto mr-10">
+            <div class="input-div relative">
+                <i class="search icon"></i>
+                <input class="sb-search-input" type="text" placeholder="Search..." />
+                <i class="close icon"></i>
+                <div class="sb-loader"></div>
+            </div>
+            <button class="sb-btn sb-btn-normal">Search</button>
+        </div>
+        <sui-tabset>
+            <div class="ui pointing secondary menu">
+                <a class="item" suiTabHeader="1">Add Collaborators</a>
+                <a class="item" suiTabHeader="2">Manage Collaborators</a>
+            </div>
+            <div class="ui segment p-0 mt-1" suiTabContent="1">
+                <select class="search dropdown py-5 sb-bg-color-white ml-auto d-flex mb-10">
+                  <option>Sort By</option>
+                  <option value="1">Modified on</option>
+                  <option value="2">Created on</option>
+                  </select>
+              <div class="masonry-grid">
+                    <div class="sb-card">
+                      <div class="sb-card-body">
+                        <div class="sb-card-metas">
+                          <div class="sb-card-image mr-16">
+                            C
+                          </div>
+                          <div class="sb-card-meta course">
+                            <div class="sb-card-meta-item mb-16 font-weight-bold">
+                              CBSE Staging
+                            </div>
+                            <div class="sb-color-gray-400 fs-0-92">
+                              CBSE
+                            </div>
+                          </div>
+                          <div class="d-flex flex-align-self-end">
+                          <a class="sb-color-primary d-flex fs-0-785 font-weight-bold"><i class="icon plus"></i>ADD</a>
+                        </div>
+                        </div>
+                      </div> 
+                    </div>
+                    <div class="sb-card">
+                      <div class="sb-card-body">
+                        <div class="sb-card-metas">
+                          <div class="sb-card-image mr-16">
+                           D
+                          </div>
+                          <div class="sb-card-meta course">
+                            <div class="sb-card-meta-item mb-16 font-weight-bold">
+                              CBSE Staging
+                            </div>
+                            <div class="sb-color-gray-400 fs-0-92">
+                              CBSE
+                            </div>
+                          </div>
+                            <div class="d-flex flex-align-self-end">
+                              <a class="sb-color-primary d-flex fs-0-785 font-weight-bold"><i class="icon plus"></i>ADD</a>
+                            </div>
+                        </div>
+                      </div> 
+                    </div>
+                    <div class="sb-card">
+                      <div class="sb-card-body">
+                        <div class="sb-card-metas">
+                          <div class="sb-card-image mr-16">
+                           D
+                          </div>
+                          <div class="sb-card-meta course">
+                            <div class="sb-card-meta-item mb-16 font-weight-bold">
+                              CBSE Staging
+                            </div>
+                            <div class="sb-color-gray-400 fs-0-92">
+                              CBSE
+                            </div>
+                          </div>
+                          <div class="d-flex flex-align-self-end">
+                            <a class="sb-color-primary d-flex fs-0-785 font-weight-bold"><i class="icon plus"></i>ADD</a>
+                          </div>
+                        </div>
+                      </div> 
+                    </div>
+                    <div class="sb-card">
+                      <div class="sb-card-body">
+                        <div class="sb-card-metas">
+                          <div class="sb-card-image mr-16">
+                           D
+                          </div>
+                          <div class="sb-card-meta course">
+                            <div class="sb-card-meta-item mb-16 font-weight-bold">
+                              CBSE Staging
+                            </div>
+                            <div class="sb-color-gray-400 fs-0-92">
+                              CBSE
+                            </div>
+                          </div>
+                          <div class="d-flex flex-align-self-end">
+                            <a class="sb-color-primary d-flex fs-0-785 font-weight-bold"><i class="icon plus"></i>ADD</a>
+                          </div>
+                        </div>
+                      </div> 
+                    </div>
+                    <div class="sb-card">
+                      <div class="sb-card-body">
+                        <div class="sb-card-metas">
+                          <div class="sb-card-image mr-16">
+                           D
+                          </div>
+                          <div class="sb-card-meta course">
+                            <div class="sb-card-meta-item mb-16 font-weight-bold">
+                              CBSE Staging
+                            </div>
+                            <div class="sb-color-gray-400 fs-0-92">
+                              CBSE
+                            </div>
+                          </div>
+                          <div class="d-flex flex-align-self-end">
+                            <a class="sb-color-primary d-flex fs-0-785 font-weight-bold"><i class="icon plus"></i>ADD</a>
+                          </div>
+                        </div>
+                      </div> 
+                    </div>
+                    <div class="sb-card">
+                      <div class="sb-card-body">
+                        <div class="sb-card-metas">
+                          <div class="sb-card-image mr-16">
+                           D
+                          </div>
+                          <div class="sb-card-meta course">
+                            <div class="sb-card-meta-item mb-16 font-weight-bold">
+                              CBSE Staging
+                            </div>
+                            <div class="sb-color-gray-400 fs-0-92">
+                              CBSE
+                            </div>
+                          </div>
+                          <div class="d-flex flex-align-self-end">
+                            <a class="sb-color-primary d-flex fs-0-785 font-weight-bold"><i class="icon plus"></i>ADD</a>
+                          </div>
+                        </div>
+                      </div> 
+                    </div>
+              </div>
+            </div>
+            <div class="ui segment" suiTabContent="2">
+              <div class="masonry-grid">
+                <div class="masonry-item">
+                  <div class="sb-card">
+                    <div class="sb-card-body">
+                      <div class="sb-card-metas">
+                        <div class="sb-card-image mr-16">
+                         D
+                        </div>
+                        <div class="sb-card-meta course">
+                          <div class="sb-card-meta-item mb-16 font-weight-bold">
+                            CBSE Staging
+                          </div>
+                          <div class="sb-color-gray-400 fs-0-92">
+                            CBSE
+                          </div>
+                        </div>
+                        <div class="d-flex flex-align-self-end">
+                          <a class="sb-color-error d-flex fs-0-785 font-weight-bold"><i class="icon close"></i>Remove</a>
+                        </div>
+                      </div>
+                    </div> 
+                  </div>
+                </div>
+              </div>
+            </div>
+        </sui-tabset>
+      </div>
+      <div class="sb-modal-actions">
+        <button class="sb-btn sb-btn-normal sb-btn-primary">Done</button>
       </div>
 </sui-modal>
