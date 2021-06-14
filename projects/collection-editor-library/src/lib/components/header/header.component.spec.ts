@@ -31,8 +31,10 @@ describe('HeaderComponent', () => {
   });
   it('#ngOnInit() should call handleActionButtons on ngoninit', () => {
     spyOn(component, 'handleActionButtons');
+    spyOn(component, 'getSourcingData').and.callFake(() => {});
     component.ngOnInit();
     expect(component.handleActionButtons).toHaveBeenCalled();
+    expect(component.getSourcingData).toHaveBeenCalled();
   });
   it('#handleActionButtons() visibility should be defined ', () => {
     const editorservice = TestBed.get(EditorService);
