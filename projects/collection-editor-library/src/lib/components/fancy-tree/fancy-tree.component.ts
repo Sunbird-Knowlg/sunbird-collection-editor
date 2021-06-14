@@ -23,7 +23,7 @@ declare var $: any;
   encapsulation: ViewEncapsulation.None,
 })
 export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('fancyTree', { static: false }) public tree: ElementRef;
+  @ViewChild('fancyTree') public tree: ElementRef;
   @Input() public nodes: any;
   @Input() public options: any;
   @Input( ) buttonLoaders: any;

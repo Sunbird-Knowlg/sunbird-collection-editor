@@ -17,6 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "aot": true,
             "outputPath": "dist/sunbird-collection-editor",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -92,6 +93,10 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ]
             }
@@ -189,7 +194,8 @@
           "configurations": {
             "production": {
               "project": "projects/collection-editor-library/ng-package.prod.json"
-            }
+            ,              "tsConfig": "projects/collection-editor-library/tsconfig.lib.prod.json"
+}
           }
         },
         "test": {
