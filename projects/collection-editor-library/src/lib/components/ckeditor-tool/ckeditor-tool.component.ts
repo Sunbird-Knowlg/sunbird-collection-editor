@@ -14,7 +14,7 @@ import { config } from '../asset-browser/asset-browser.data';
   styleUrls: ['./ckeditor-tool.component.scss']
 })
 export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
-  @ViewChild('editor', { static: false }) public editorRef: ElementRef;
+  @ViewChild('editor') public editorRef: ElementRef;
   @Input() editorDataInput: any;
   @Output() editorDataOutput = new EventEmitter<any>();
   @Output() hasError = new EventEmitter<any>();

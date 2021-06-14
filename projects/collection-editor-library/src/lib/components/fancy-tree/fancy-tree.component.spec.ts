@@ -7,7 +7,7 @@ import { EditorTelemetryService } from '../../services/telemetry/telemetry.servi
 import {mockData} from './fancy-tree.component.spec.data';
 import { Router } from '@angular/router';
 import { TreeService } from '../../services/tree/tree.service';
-import { SuiModule } from 'ng2-semantic-ui/dist';
+import { SuiModule } from 'ng2-semantic-ui-v9';
 import { EditorService } from '../../services/editor/editor.service';
 describe('FancyTreeComponent', () => {
   let component: FancyTreeComponent;
