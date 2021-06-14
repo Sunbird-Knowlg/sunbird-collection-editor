@@ -68,8 +68,7 @@
               "src/assets/lib/semantic-ui-tree-picker.js",
               "node_modules/@project-sunbird/telemetry-sdk/index.js",
               "node_modules/@project-sunbird/client-services/index.js"
-            ],
-            "es5BrowserSupport": true
+            ]
           },
           "configurations": {
             "production": {
