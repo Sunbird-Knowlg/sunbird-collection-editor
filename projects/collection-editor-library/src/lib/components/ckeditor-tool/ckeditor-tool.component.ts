@@ -508,7 +508,6 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     const fileType = file.type;
     const fileName = file.name.split('.').slice(0, -1).join('.');
     const fileSize = file.size / 1024 / 1024;
-    console.log(fileSize,'fileSizefileSizefileSizefileSizefileSize');
     if (fileType.split('/')[0] === 'image') {
       this.showErrorMsg = false;
       if (fileSize > this.assetConfig.image.size) {
