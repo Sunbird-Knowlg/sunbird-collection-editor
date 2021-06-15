@@ -64,9 +64,11 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
   public videoFile: any;
   public termsAndCondition: any;
   public assetName: any;
+  public emptySearchMessage: any;
   ngOnInit() {
     this.initialFormConfig = _.get(config, 'uploadIconFormConfig');
     this.formConfig = _.get(config, 'uploadIconFormConfig');
+    this.emptySearchMessage =  _.get(this.configService.labelConfig, 'messages.error.016');
     this.termsAndCondition =  _.get(this.configService.labelConfig, 'termsAndConditions.001');
     this.assetConfig = this.editorService.editorConfig.config.assetConfig;
     this.initialized = true;

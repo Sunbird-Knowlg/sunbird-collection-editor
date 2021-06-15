@@ -21,7 +21,7 @@
           </div>
           <p class="fs-0-986 ml-auto sb-color-grey" >{{assetsCount}}</p>
         </div>
-        <div *ngIf="!myAssets?.length && searchMyInput" class="fs-0785 my-10"> No images found, please try searching for something else </div>
+        <div *ngIf="!myAssets?.length && searchMyInput" class="fs-0785 my-10"> {{emptySearchMessage}}  </div>
         <div class="sb-grid-layout image">
           <div class="sb-video-content" *ngFor="let data of myAssets">
             <div class="sb-image-section relative position">
@@ -44,7 +44,7 @@
           </div>
           <p class="fs-0-986 ml-auto sb-color-grey" >{{assetsCount}}</p>
         </div>
-        <div *ngIf="!allImages?.length && searchAllInput" class="fs-0785"> No images found, please try searching for something else </div>
+        <div *ngIf="!allImages?.length && searchAllInput" class="fs-0785"> {{emptySearchMessage}} </div>
         <div class="sb-grid-layout image">
           <div class="sb-video-content" *ngFor="let data of allImages">
             <div class="sb-image-section">

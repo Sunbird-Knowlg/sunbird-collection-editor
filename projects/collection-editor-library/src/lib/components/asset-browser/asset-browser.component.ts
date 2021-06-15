@@ -45,11 +45,13 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
   public imageFormValid: any;
   public termsAndCondition: any;
   public assetName: any;
+  public emptySearchMessage: any;
   ngOnInit() {
     this.initialFormConfig =  _.get(config, 'uploadIconFormConfig');
     this.formConfig =  _.get(config, 'uploadIconFormConfig');
     this.assetConfig = this.editorService.editorConfig.config.assetConfig;
     this.termsAndCondition =  _.get(this.configService.labelConfig, 'termsAndConditions.001');
+    this.emptySearchMessage =  _.get(this.configService.labelConfig, 'messages.error.016');
     this.acceptImageType = this.getAcceptType(this.assetConfig.image.accepted, 'image');
   }
 
