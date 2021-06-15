@@ -110,3 +110,7 @@
 .flex-align-self-end{
   align-self: flex-end;
 }
+
+.sb-modal-fullscreen .modals.dimmer .ui.scrolling.modal{
+  margin: 0 auto !important;
+}
