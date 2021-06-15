@@ -322,5 +322,30 @@ export class EditorService {
     this.telemetryService.error(telemetryErrorData);
   }
 
-
+  getContentChildrens() {
+    const treeObj = this.treeService.getTreeObject();
+    const contents = [];
+    treeObj.visit((node) => {
+      if (node.folder === false) {
+        contents.push(node.data.id);
+      }
+    });
+    return contents;
+  }
+checkContentCount() {
+  const maxContentsLimit =  _.get(this.editorConfig, 'config.maxContentsLimit');
+  const childrenCount = this.getContentChildrens().length;
+  if (childrenCount >= maxContentsLimit) {
+    let errorMessage = '';
+    if (_.get(this.editorConfig, 'config.objectType') === 'QuestionSet') {
+      errorMessage =  _.get(this.configService, 'labelConfig.messages.error.016');
+    } else {
+      errorMessage =  _.get(this.configService, 'labelConfig.messages.error.017');
+    }
+    this.toasterService.error(errorMessage);
+    return false;
+  } else {
+    return true;
+  }
+}
 }

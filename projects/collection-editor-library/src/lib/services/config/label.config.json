@@ -74,7 +74,10 @@
          "012": "QR code(s) updating failed!",
          "013": "No new QR Codes have been generated!",
          "014": "The number should be at least {number}",
-         "015": "The number should be greater than {number}"
+         "015": "The number should be greater than {number}",
+         "016": "Cannot create question. Reached limit of maximum number of questions allowed.",
+         "017": "Cannot add content. Reached limit of maximum number of contents allowed."
+
       }, 
       "success": {
          "001": "Content is saved",

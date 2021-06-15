@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ConfigService } from '../../services/config/config.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
+import { EditorService } from '../../services/editor/editor.service';
 @Component({
   selector: 'lib-library-player',
   templateUrl: './library-player.component.html',
@@ -9,11 +10,16 @@ import { EditorTelemetryService } from '../../services/telemetry/telemetry.servi
 export class LibraryPlayerComponent implements OnInit {
 @Input() contentListDetails;
 @Output() moveEvent = new EventEmitter<any>();
-  constructor(public telemetryService: EditorTelemetryService, public configService: ConfigService) { }
+  constructor(public telemetryService: EditorTelemetryService, public editorService: EditorService,
+              public configService: ConfigService) { }
 
   ngOnInit() {
   }
-
+  checkContentsMaxLimit() {
+    if (this.editorService.checkContentCount()) {
+        this.addToLibrary();
+    }
+  }
   addToLibrary() {
     this.moveEvent.emit({
       action: 'openHierarchyPopup'

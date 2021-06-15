@@ -45,6 +45,11 @@ public sortContent = false;
       status: this.sortContent
     });
   }
+  checkContentsMaxLimit() {
+    if (this.editorService.checkContentCount()) {
+        this.addToLibrary();
+    }
+  }
   addToLibrary() {
     this.moveEvent.emit({
       action: 'openHierarchyPopup'
