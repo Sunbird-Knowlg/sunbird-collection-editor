@@ -35,7 +35,7 @@
           </div>
           <p class="fs-0-986 ml-auto sb-color-grey" >{{assetsCount}}</p>
         </div>
-        <div *ngIf="!myAssets?.length && searchMyInput" class="fs-0785"> {{emptySearchMessage}} </div>
+        <div *ngIf="!myAssets?.length && searchMyInput" class="fs-0785"> {{emptyImageSearchMessage}} </div>
         <div class="sb-grid-layout image">
           <div class="sb-video-content" *ngFor="let data of myAssets">
             <div class="sb-image-section relative position">
@@ -60,7 +60,7 @@
           </div>
           <p class="fs-0-986 ml-auto sb-color-grey">{{assetsCount}}</p>
         </div>
-        <div *ngIf="!allImages?.length && searchAllInput" class="fs-0785"> {{emptySearchMessage}} </div>
+        <div *ngIf="!allImages?.length && searchAllInput" class="fs-0785"> {{emptyImageSearchMessage}} </div>
         <div class="sb-grid-layout image">
           <div class="sb-video-content" *ngFor="let data of allImages">
             <div class="sb-image-section">
@@ -102,7 +102,7 @@
           </div>
           <p class="fs-0-986 ml-auto sb-color-grey" >{{assetsCount}}</p>
         </div>
-        <div *ngIf="!myAssets?.length && searchMyInput" class="fs-0785"> {{emptySearchMessage}} </div>
+        <div *ngIf="!myAssets?.length && searchMyInput" class="fs-0785"> {{emptyVideoSearchMessage}} </div>
         <div class="sb-grid-layout video">
           <div class="sb-video-content" *ngFor="let data of myAssets">
             <div class="sb-image-section relative position" [ngClass]="{'active': selectedVideoId === data.identifier}"
@@ -130,7 +130,7 @@
           </div>
           <p class="fs-0-986 ml-auto sb-color-grey" >{{assetsCount}}</p>
         </div>
-        <div *ngIf="!allVideos?.length && searchAllInput" class="fs-0785"> {{emptySearchMessage}} </div>
+        <div *ngIf="!allVideos?.length && searchAllInput" class="fs-0785"> {{emptyVideoSearchMessage}} </div>
         <div class="sb-grid-layout video">
           <div class="sb-video-content" *ngFor="let data of allVideos">
             <div class="sb-image-section relative position" [ngClass]="{'active': selectedVideoId === data.identifier}"

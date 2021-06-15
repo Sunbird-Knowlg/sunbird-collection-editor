@@ -75,7 +75,8 @@
          "013": "No new QR Codes have been generated!",
          "014": "The number should be at least {number}",
          "015": "The number should be greater than {number}",
-         "016": "No images found, please try searching for something else"
+         "016": "No images found, please try searching for something else",
+         "017": "No videos found, please try searching for something else"
       }, 
       "success": {
          "001": "Content is saved",
