@@ -30,7 +30,7 @@ describe('HeaderComponent', () => {
     expect(component).toBeTruthy();
   });
   it('#ngOnInit() should call handleActionButtons on ngoninit', () => {
-    spyOn(component, 'handleActionButtons');
+    spyOn(component, 'handleActionButtons').and.callThrough();
     component.ngOnInit();
     expect(component.handleActionButtons).toHaveBeenCalled();
   });
