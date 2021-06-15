@@ -26,9 +26,17 @@ describe('CollectionIconComponent', () => {
   });
 
   it('#initializeImagePicker() should set showImagePicker to true', () => {
+    component.appIconConfig  = {isAppIconEditable: true };
     spyOn(component, 'initializeImagePicker').and.callThrough();
     component.initializeImagePicker();
     expect(component.showImagePicker).toBeTruthy();
+  });
+
+  it('#initializeImagePicker() should set showImagePicker to false', () => {
+    component.appIconConfig  = {isAppIconEditable: false };
+    spyOn(component, 'initializeImagePicker').and.callThrough();
+    component.initializeImagePicker();
+    expect(component.showImagePicker).toBeFalsy();
   });
 
   it('#collectionIconHandler() should emit proper event', () => {
