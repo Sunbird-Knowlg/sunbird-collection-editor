@@ -44,6 +44,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
   public initialFormConfig: any;
   public imageFormValid: any;
   public termsAndCondition: any;
+  public assetName: any;
   ngOnInit() {
     this.initialFormConfig =  _.get(config, 'uploadIconFormConfig');
     this.formConfig =  _.get(config, 'uploadIconFormConfig');
@@ -154,6 +155,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     const reader = new FileReader();
     this.formData = new FormData();
     this.formData.append('file', file);
+    this.assetName = file.name;
     const fileType = file.type;
     const fileName = file.name.split('.').slice(0, -1).join('.');
     const fileSize = file.size / 1024 / 1024;
@@ -162,6 +164,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
       if (fileSize > this.assetConfig.image.size) {
         this.showErrorMsg = true;
         this.errorMsg = 'Max size allowed is ' + this.assetConfig.image.size + 'MB';
+        this.resetFormData();
       } else {
         this.errorMsg = '';
         this.showErrorMsg = false;
@@ -178,11 +181,17 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
       this.populateFormData(this.assestData);
     }
   }
+  resetFormData() {
+    this.imageUploadLoader = false;
+    this.imageFormValid = false;
+    this.formConfig = this.initialFormConfig;
+  }
   populateFormData(formData) {
     const formvalue = _.cloneDeep(this.formConfig);
     this.formConfig = null;
     _.forEach(formvalue, (formFieldCategory) => {
         formFieldCategory.default = formData[formFieldCategory.code];
+        formFieldCategory.editable = true;
     });
     this.formConfig = formvalue;
   }

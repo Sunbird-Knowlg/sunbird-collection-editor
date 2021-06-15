@@ -63,6 +63,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
   public imageFormValid = false;
   public videoFile: any;
   public termsAndCondition: any;
+  public assetName: any;
   ngOnInit() {
     this.initialFormConfig = _.get(config, 'uploadIconFormConfig');
     this.formConfig = _.get(config, 'uploadIconFormConfig');
@@ -500,17 +501,20 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
    */
   uploadImage(event) {
     const file = event.target.files[0];
+    this.assetName = file.name;
     const reader = new FileReader();
     this.formData = new FormData();
     this.formData.append('file', file);
     const fileType = file.type;
     const fileName = file.name.split('.').slice(0, -1).join('.');
     const fileSize = file.size / 1024 / 1024;
+    console.log(fileSize,'fileSizefileSizefileSizefileSizefileSize');
     if (fileType.split('/')[0] === 'image') {
       this.showErrorMsg = false;
       if (fileSize > this.assetConfig.image.size) {
         this.showErrorMsg = true;
         this.errorMsg = 'Max size allowed is ' + this.assetConfig.image.size + 'MB';
+        this.resetFormConfig();
       } else {
         this.errorMsg = '';
         this.showErrorMsg = false;
@@ -527,11 +531,17 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       this.populateFormData(this.assestData);
     }
   }
+  resetFormConfig() {
+    this.imageUploadLoader = false;
+    this.imageFormValid = false;
+    this.formConfig = this.initialFormConfig;
+  }
   populateFormData(formData) {
     const formvalue = _.cloneDeep(this.formConfig);
     this.formConfig = null;
     _.forEach(formvalue, (formFieldCategory) => {
       formFieldCategory.default = formData[formFieldCategory.code];
+      formFieldCategory.editable = true;
     });
     this.formConfig = formvalue;
   }
@@ -622,6 +632,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       if (fileSize > this.assetConfig.video.size) {
         this.showErrorMsg = true;
         this.errorMsg = 'Max size allowed is ' + this.assetConfig.video.size + 'MB';
+        this.resetFormConfig();
       } else {
         this.errorMsg = '';
         this.showErrorMsg = false;

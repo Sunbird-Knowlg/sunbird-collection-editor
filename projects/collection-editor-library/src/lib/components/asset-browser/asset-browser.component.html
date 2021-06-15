@@ -21,6 +21,7 @@
           </div>
           <p class="fs-0-986 ml-auto sb-color-grey" >{{assetsCount}}</p>
         </div>
+        <div *ngIf="!myAssets?.length && searchMyInput" class="fs-0785 my-10"> No images found, please try searching for something else </div>
         <div class="sb-grid-layout image">
           <div class="sb-video-content" *ngFor="let data of myAssets">
             <div class="sb-image-section relative position">
@@ -43,6 +44,7 @@
           </div>
           <p class="fs-0-986 ml-auto sb-color-grey" >{{assetsCount}}</p>
         </div>
+        <div *ngIf="!allImages?.length && searchAllInput" class="fs-0785"> No images found, please try searching for something else </div>
         <div class="sb-grid-layout image">
           <div class="sb-video-content" *ngFor="let data of allImages">
             <div class="sb-image-section">
@@ -72,7 +74,8 @@
                 Upload from Computer
                 <input (change)="uploadImage($event)" type="file" [accept]="acceptImageType" name="assetfile">
               </button>
-              <span class="fsmall mt-16">Upload {{assetConfig.image.accepted}} (Max File size:
+              <div class="py-10 fs-0-785 sb-color-primary" *ngIf="imageUploadLoader"> {{assetName}} </div>
+              <span class="fsmall mt-8">Upload {{assetConfig.image.accepted}} (Max File size:
                 {{assetConfig.image.size}}MB)</span>
               <div *ngIf="showErrorMsg" class="sb-color-error fsmall mt-8">
                 <p>{{errorMsg}}</p>
