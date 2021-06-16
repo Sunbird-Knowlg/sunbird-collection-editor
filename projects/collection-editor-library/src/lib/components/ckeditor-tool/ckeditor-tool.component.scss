@@ -347,3 +347,7 @@
   max-height: 288px;
   overflow-y: auto;
 }
+
+input:focus-visible{
+  border: none !important;
+}
