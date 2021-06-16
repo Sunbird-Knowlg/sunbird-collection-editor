@@ -29,7 +29,7 @@ describe('HeaderComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
+  
   it('Should call the component initialization', () => {
     spyOn(component, 'ngOnInit');
     component.ngOnInit();
