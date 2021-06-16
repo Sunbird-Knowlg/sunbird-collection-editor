@@ -29,11 +29,26 @@ describe('HeaderComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  it('#ngOnInit() should call handleActionButtons on ngoninit', () => {
-    spyOn(component, 'handleActionButtons');
+
+  it('Should call the component initialization', () => {
+    spyOn(component, 'ngOnInit');
     component.ngOnInit();
+    expect(component).toBeTruthy();
+    expect(component.ngOnInit).toHaveBeenCalled();
+  })
+
+  it('should call handleActionButtons method', () => {
+    spyOn(component, 'handleActionButtons');
+    component.handleActionButtons();
     expect(component.handleActionButtons).toHaveBeenCalled();
   });
+
+  it('Should call the getSourcingData method', () => {
+    spyOn(component, 'getSourcingData');
+    component.getSourcingData();
+    expect(component.getSourcingData).toHaveBeenCalled();
+  });
+
   it('#handleActionButtons() visibility should be defined ', () => {
     const editorservice = TestBed.get(EditorService);
     spyOn(editorservice, 'editorMode');
