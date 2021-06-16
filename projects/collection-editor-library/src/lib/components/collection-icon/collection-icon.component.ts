@@ -17,7 +17,11 @@ export class CollectionIconComponent implements OnInit {
   }
 
   initializeImagePicker() {
-    this.showImagePicker = true;
+    if (this.appIconConfig.isAppIconEditable) {
+      this.showImagePicker = true;
+    } else {
+      this.showImagePicker = false;
+    }
   }
 
   collectionIconHandler(event) {

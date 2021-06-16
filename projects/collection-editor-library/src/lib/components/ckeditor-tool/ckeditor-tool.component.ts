@@ -63,9 +63,14 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
   public imageFormValid = false;
   public videoFile: any;
   public termsAndCondition: any;
+  public assetName: any;
+  public emptyImageSearchMessage: any;
+  public emptyVideoSearchMessage: any;
   ngOnInit() {
     this.initialFormConfig = _.get(config, 'uploadIconFormConfig');
     this.formConfig = _.get(config, 'uploadIconFormConfig');
+    this.emptyImageSearchMessage =  _.get(this.configService.labelConfig, 'messages.error.016');
+    this.emptyVideoSearchMessage =  _.get(this.configService.labelConfig, 'messages.error.017');
     this.termsAndCondition =  _.get(this.configService.labelConfig, 'termsAndConditions.001');
     this.assetConfig = this.editorService.editorConfig.config.assetConfig;
     this.initialized = true;
@@ -500,6 +505,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
    */
   uploadImage(event) {
     const file = event.target.files[0];
+    this.assetName = file.name;
     const reader = new FileReader();
     this.formData = new FormData();
     this.formData.append('file', file);
@@ -511,6 +517,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       if (fileSize > this.assetConfig.image.size) {
         this.showErrorMsg = true;
         this.errorMsg = 'Max size allowed is ' + this.assetConfig.image.size + 'MB';
+        this.resetFormConfig();
       } else {
         this.errorMsg = '';
         this.showErrorMsg = false;
@@ -527,11 +534,17 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       this.populateFormData(this.assestData);
     }
   }
+  resetFormConfig() {
+    this.imageUploadLoader = false;
+    this.imageFormValid = false;
+    this.formConfig = this.initialFormConfig;
+  }
   populateFormData(formData) {
     const formvalue = _.cloneDeep(this.formConfig);
     this.formConfig = null;
     _.forEach(formvalue, (formFieldCategory) => {
       formFieldCategory.default = formData[formFieldCategory.code];
+      formFieldCategory.editable = true;
     });
     this.formConfig = formvalue;
   }
@@ -622,6 +635,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       if (fileSize > this.assetConfig.video.size) {
         this.showErrorMsg = true;
         this.errorMsg = 'Max size allowed is ' + this.assetConfig.video.size + 'MB';
+        this.resetFormConfig();
       } else {
         this.errorMsg = '';
         this.showErrorMsg = false;
