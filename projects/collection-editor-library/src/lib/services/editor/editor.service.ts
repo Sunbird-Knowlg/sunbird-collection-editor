@@ -136,7 +136,8 @@ export class EditorService {
   }
 
   reviewContent(contentId): Observable<any> {
-    const objType = this.configService.categoryConfig[this.editorConfig.config.objectType];
+    let objType = this.configService.categoryConfig[this.editorConfig.config.objectType];
+    objType = objType.toLowerCase();
     const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
     const option = {
       url: url.CONTENT_REVIEW + contentId,
@@ -150,7 +151,8 @@ export class EditorService {
   }
 
   submitRequestChanges(contentId, comment) {
-    const objType = this.configService.categoryConfig[this.editorConfig.config.objectType];
+    let objType = this.configService.categoryConfig[this.editorConfig.config.objectType];
+    objType = objType.toLowerCase();
     const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
     const requestBody = {
       request: {
@@ -167,7 +169,8 @@ export class EditorService {
   }
 
   publishContent(contentId) {
-    const objType = this.configService.categoryConfig[this.editorConfig.config.objectType];
+    let objType = this.configService.categoryConfig[this.editorConfig.config.objectType];
+    objType = objType.toLowerCase();
     const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
     const requestBody = {
       request: {
