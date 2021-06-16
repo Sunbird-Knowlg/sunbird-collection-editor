@@ -312,3 +312,6 @@ sb-dynamic-richtext .ck-content .table{
     max-height: 100vh;
   }
   
+  input:focus-visible{
+    border: none !important;
+  }
