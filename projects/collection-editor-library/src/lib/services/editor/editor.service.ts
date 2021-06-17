@@ -324,7 +324,7 @@ export class EditorService {
     };
     this.telemetryService.error(telemetryErrorData);
   }
-
+// this method is used to get all the contents in course/question inside every module and sub module
   getContentChildrens() {
     const treeObj = this.treeService.getTreeObject();
     const contents = [];
