@@ -45,15 +45,12 @@ public sortContent = false;
       status: this.sortContent
     });
   }
-  checkContentsMaxLimit() {
-    if (this.editorService.checkContentsAdditionLimit()) {
-        this.addToLibrary();
-    }
-  }
   addToLibrary() {
+    if (this.editorService.checkContentsAdditionLimit()) {
     this.moveEvent.emit({
       action: 'openHierarchyPopup'
     });
+  }
   }
 
 }

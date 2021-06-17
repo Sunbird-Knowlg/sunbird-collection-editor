@@ -15,15 +15,12 @@ export class LibraryPlayerComponent implements OnInit {
 
   ngOnInit() {
   }
-  checkContentsMaxLimit() {
-    if (this.editorService.checkContentsAdditionLimit()) {
-        this.addToLibrary();
-    }
-  }
   addToLibrary() {
+    if (this.editorService.checkContentsAdditionLimit()) {
     this.moveEvent.emit({
       action: 'openHierarchyPopup'
     });
   }
+}
 
 }
