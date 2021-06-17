@@ -66,7 +66,7 @@ export const collectionEditorConfig = {
     mode: 'edit', // edit / review / read / sourcingReview
     maxDepth: 2,
     objectType: 'Collection',
-    maxContentsLimit: 100,
+    maxContentsLimit: 500, // as now it is dummy limit
     primaryCategory: 'Course', // Professional Development Course, Curriculum Course
     isRoot: true,
     dialcodeMinLength: 2,
@@ -238,7 +238,7 @@ export const questionEditorConfig = {
   config: {
     mode: 'edit', // edit / review / read / sourcingReview
     maxDepth: 0,
-    maxContentsLimit: 10,
+    maxContentsLimit: 500, // as now it is dummy limit
     objectType: 'QuestionSet',
     primaryCategory: 'Practice Question Set',
     isRoot: true,

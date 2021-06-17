@@ -24,7 +24,7 @@ export class EditorService {
   private _editorConfig: IEditorConfig;
   private _editorMode = 'edit';
   public showLibraryPage: EventEmitter<number> = new EventEmitter();
-
+  public contentsCount = 0;
   constructor(public treeService: TreeService, private toasterService: ToasterService,
               public configService: ConfigService, private telemetryService: EditorTelemetryService,
               private publicDataService: PublicDataService, private dataService: DataService) { }
@@ -335,15 +335,18 @@ export class EditorService {
     });
     return contents;
   }
+  contentsCountAddedInLibraryPage() {
+    this.contentsCount = this.contentsCount + 1;
+  }
 checkContentCount() {
   const maxContentsLimit =  _.get(this.editorConfig, 'config.maxContentsLimit');
-  const childrenCount = this.getContentChildrens().length;
+  const childrenCount = this.getContentChildrens().length + this.contentsCount;
   if (childrenCount >= maxContentsLimit) {
     let errorMessage = '';
     if (_.get(this.editorConfig, 'config.objectType') === 'QuestionSet') {
-      errorMessage =  _.get(this.configService, 'labelConfig.messages.error.016');
+      errorMessage =  _.get(this.configService, 'labelConfig.messages.error.018');
     } else {
-      errorMessage =  _.get(this.configService, 'labelConfig.messages.error.017');
+      errorMessage =  _.get(this.configService, 'labelConfig.messages.error.019');
     }
     this.toasterService.error(errorMessage);
     return false;

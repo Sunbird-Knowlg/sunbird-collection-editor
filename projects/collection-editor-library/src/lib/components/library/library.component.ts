@@ -188,6 +188,7 @@ export class LibraryComponent implements OnInit, AfterViewInit {
         break;
       case 'contentAdded':
         this.childNodes.push(event.data.identifier);
+        this.editorService.contentsCountAddedInLibraryPage(); // contents count added from library page
         this.filterContentList(true);
         break;
         case 'sortContentList':

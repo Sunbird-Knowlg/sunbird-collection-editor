@@ -75,8 +75,10 @@
          "013": "No new QR Codes have been generated!",
          "014": "The number should be at least {number}",
          "015": "The number should be greater than {number}",
-         "016": "Cannot create question. Reached limit of maximum number of questions allowed.",
-         "017": "Cannot add content. Reached limit of maximum number of contents allowed."
+         "016": "No images found, please try searching for something else",
+         "017": "No videos found, please try searching for something else",
+         "018": "Cannot create question. reached limit of maximum number of questions allowed.",
+         "019": "Cannot add content. reached limit of maximum number of contents allowed."
 
       }, 
       "success": {
