@@ -16,7 +16,7 @@ export class LibraryPlayerComponent implements OnInit {
   ngOnInit() {
   }
   checkContentsMaxLimit() {
-    if (this.editorService.checkContentCount()) {
+    if (this.editorService.checkContentsAdditionLimit()) {
         this.addToLibrary();
     }
   }

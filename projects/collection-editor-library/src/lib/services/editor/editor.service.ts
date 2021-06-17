@@ -338,7 +338,7 @@ export class EditorService {
   contentsCountAddedInLibraryPage() {
     this.contentsCount = this.contentsCount + 1;
   }
-checkContentCount() {
+checkContentsAdditionLimit() {
   const maxContentsLimit =  _.get(this.editorConfig, 'config.maxContentsLimit');
   const childrenCount = this.getContentChildrens().length + this.contentsCount;
   if (childrenCount >= maxContentsLimit) {

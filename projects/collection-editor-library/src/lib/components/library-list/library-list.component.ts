@@ -46,7 +46,7 @@ public sortContent = false;
     });
   }
   checkContentsMaxLimit() {
-    if (this.editorService.checkContentCount()) {
+    if (this.editorService.checkContentsAdditionLimit()) {
         this.addToLibrary();
     }
   }
