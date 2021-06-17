@@ -29,9 +29,16 @@ describe('LibraryListComponent', () => {
     expect(component).toBeTruthy();
   });
   it('#addToLibrary() should call addToLibrary to open the hierarchy popup', () => {
+    spyOn(component.editorService, 'checkContentsAdditionLimit').and.returnValue(true);
     spyOn(component.moveEvent, 'emit').and.returnValue(mockData.openPopUp);
     component.addToLibrary();
     expect(component.moveEvent.emit).toHaveBeenCalledWith(mockData.openPopUp);
+  });
+  it('#addToLibrary() should not call moveEvent when limit reached to max ', () => {
+    spyOn(component.editorService, 'checkContentsAdditionLimit').and.returnValue(false);
+    spyOn(component.moveEvent, 'emit').and.returnValue(mockData);
+    component.addToLibrary();
+    expect(component.moveEvent.emit).not.toHaveBeenCalledWith(mockData);
   });
   it('#onShowAddedContentChange() should call onShowAddedContentChange to show the added content', () => {
     component.showAddedContent = true;
