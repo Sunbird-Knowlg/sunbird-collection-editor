@@ -3,7 +3,7 @@ export const config = {
         [{
             'code': 'name',
             'dataType': 'text',
-            'editable': true,
+            'editable': false,
             'inputType': 'text',
             'label': 'Asset Caption',
             'name': 'Asset Caption',
@@ -23,7 +23,7 @@ export const config = {
         {
             'code': 'keywords',
             'visible': true,
-            'editable': true,
+            'editable': false,
             'dataType': 'list',
             'name': 'Tags',
             'placeholder': 'Add tag',
@@ -39,7 +39,7 @@ export const config = {
         {
             'code': 'creator',
             'dataType': 'text',
-            'editable': true,
+            'editable': false,
             'inputType': 'text',
             'label': 'Creator',
             'name': 'Creator',

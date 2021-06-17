@@ -55,7 +55,9 @@ describe('MetaFormComponent', () => {
       }
     };
     component.nodeMetadata = data;
-    component.appIconConfig = {};
+    component.appIconConfig = {
+      isAppIconEditable: ''
+    };
     component.setAppIconData();
     expect(component.appIcon).toBeDefined();
   });

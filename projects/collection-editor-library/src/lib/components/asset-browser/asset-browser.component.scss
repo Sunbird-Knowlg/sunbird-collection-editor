@@ -154,10 +154,7 @@
     cursor: pointer;
   }
   
-  .sb-tabset-segment {
-    max-height: 264px;
-    overflow-y: auto;
-  }
+
   
   ::ng-deep {
   
@@ -270,4 +267,17 @@
   }
   .ui.info.message{
     color: #276f86 !important;
+  }
+  .sb-textbox[disabled="true"]{
+    opacity: 0.3 !important;
+    font-weight: 500 !important;
+  }
+  .sb-tabset-segment {
+    min-height: 288px;
+    max-height: 288px;
+    overflow-y: auto;
+  }
+
+  input:focus-visible{
+    border: none !important;
   }

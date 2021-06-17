@@ -51,6 +51,11 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
       this.showAppIcon = false;
     }
     this.appIcon = _.get(this.nodeMetadata, 'data.metadata.appIcon');
+    if (this.isReviewMode()) {
+      this.appIconConfig = {...this.appIconConfig , ... {isAppIconEditable: false}};
+    } else {
+      this.appIconConfig = {...this.appIconConfig , ... {isAppIconEditable: true}};
+    }
   }
 
   fetchFrameWorkDetails() {
@@ -218,7 +223,7 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
           });
         }
 
-        if (_.includes(['review', 'read', 'sourcingreview' ], this.editorService.editorMode)) {
+        if (this.isReviewMode()) {
           _.set(field, 'editable', false);
         }
 
@@ -228,7 +233,9 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
     this.formFieldProperties = _.cloneDeep(formConfig);
     console.log(this.formFieldProperties);
   }
-
+ isReviewMode() {
+  return  _.includes(['review', 'read', 'sourcingreview' ], this.editorService.editorMode);
+ }
   outputData(eventData: any) { }
 
   onStatusChanges(event) {
