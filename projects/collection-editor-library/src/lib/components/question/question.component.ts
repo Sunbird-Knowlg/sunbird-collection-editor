@@ -540,7 +540,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         questionTitle = questionTitle + this.questionPrimaryCategory;
       }
     }
-
     this.toolbarConfig.title = questionTitle;
   }
   output(event) { }
