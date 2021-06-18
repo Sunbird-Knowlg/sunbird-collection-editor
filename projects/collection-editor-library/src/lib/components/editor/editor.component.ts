@@ -337,7 +337,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   showLibraryComponentPage() {
-    if (this.editorService.checkContentsAdditionLimit()) {
+    if (this.editorService.checkIfContensCanbeAdded()) {
     this.buttonLoaders.addFromLibraryButtonLoader = true;
     this.saveContent().then(res => {
       this.libraryComponentInput.collectionId = this.collectionId;
@@ -484,7 +484,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.showDeleteConfirmationPopUp = true;
         break;
       case 'createNewContent':
-        if (this.editorService.checkContentsAdditionLimit()) {
+        if (this.editorService.checkIfContensCanbeAdded()) {
         this.buttonLoaders.addFromLibraryButtonLoader = true;
         this.saveContent().then((message: string) => {
           this.buttonLoaders.addFromLibraryButtonLoader = false;

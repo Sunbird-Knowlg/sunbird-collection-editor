@@ -14,4 +14,10 @@ describe('EditorService', () => {
     const service: EditorService = TestBed.get(EditorService);
     expect(service).toBeTruthy();
   });
+  it('#contentsCountAddedInLibraryPage() should set value of contentsCount', () => {
+    const service: EditorService = TestBed.get(EditorService);
+    service.contentsCount = 0;
+    service.contentsCountAddedInLibraryPage();
+    expect(service.contentsCount).toBe(1);
+  });
 });

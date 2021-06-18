@@ -324,7 +324,7 @@ export class EditorService {
     };
     this.telemetryService.error(telemetryErrorData);
   }
-// this method is used to get all the contents in course/question inside every module and sub module
+  // this method is used to get all the contents in course/question inside every module and sub module
   getContentChildrens() {
     const treeObj = this.treeService.getTreeObject();
     const contents = [];
@@ -338,20 +338,20 @@ export class EditorService {
   contentsCountAddedInLibraryPage() {
     this.contentsCount = this.contentsCount + 1;
   }
-checkContentsAdditionLimit() {
-  const maxContentsLimit =  _.get(this.editorConfig, 'config.maxContentsLimit');
-  const childrenCount = this.getContentChildrens().length + this.contentsCount;
-  if (childrenCount >= maxContentsLimit) {
-    let errorMessage = '';
-    if (_.get(this.editorConfig, 'config.objectType') === 'QuestionSet') {
-      errorMessage =  _.get(this.configService, 'labelConfig.messages.error.018');
+  checkIfContensCanbeAdded() {
+    const maxContentsLimit = _.get(this.editorConfig, 'config.maxContentsLimit');
+    const childrenCount = this.getContentChildrens().length + this.contentsCount;
+    if (childrenCount >= maxContentsLimit) {
+      let errorMessage = '';
+      if (_.get(this.editorConfig, 'config.objectType') === 'QuestionSet') {
+        errorMessage = _.get(this.configService, 'labelConfig.messages.error.018');
+      } else {
+        errorMessage = _.get(this.configService, 'labelConfig.messages.error.019');
+      }
+      this.toasterService.error(errorMessage);
+      return false;
     } else {
-      errorMessage =  _.get(this.configService, 'labelConfig.messages.error.019');
+      return true;
     }
-    this.toasterService.error(errorMessage);
-    return false;
-  } else {
-    return true;
   }
-}
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewEncapsulation} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
 import { ConfigService } from '../../services/config/config.service';
 import { EditorService } from '../../services/editor/editor.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
@@ -46,11 +46,11 @@ public sortContent = false;
     });
   }
   addToLibrary() {
-    if (this.editorService.checkContentsAdditionLimit()) {
-    this.moveEvent.emit({
-      action: 'openHierarchyPopup'
-    });
-  }
+    if (this.editorService.checkIfContensCanbeAdded()) {
+      this.moveEvent.emit({
+        action: 'openHierarchyPopup'
+      });
+    }
   }
 
 }

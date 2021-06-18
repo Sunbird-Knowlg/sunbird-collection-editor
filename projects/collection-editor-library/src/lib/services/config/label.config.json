@@ -79,7 +79,6 @@
          "017": "No videos found, please try searching for something else",
          "018": "Cannot create question. reached limit of maximum number of questions allowed.",
          "019": "Cannot add content. reached limit of maximum number of contents allowed."
-
       }, 
       "success": {
          "001": "Content is saved",

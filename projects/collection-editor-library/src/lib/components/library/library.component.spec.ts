@@ -164,4 +164,19 @@ describe('LibraryComponent', () => {
     component.fetchContentList();
     expect(component.fetchContentList).toHaveBeenCalled();
   });
+  it('#showResourceTemplate() should call showResourceTemplate for contentAdded', () => {
+    const event = {
+      action: 'contentAdded',
+      data: {
+        identifier: '200'
+      }
+    };
+    component.childNodes = [{ identifier: '100' }];
+    component.contentList = [{ identifier: '100' }]
+    spyOn(component['editorService'], 'contentsCountAddedInLibraryPage');
+    spyOn(component, 'filterContentList');
+    component.showResourceTemplate(event);
+    expect(component['editorService'].contentsCountAddedInLibraryPage).toHaveBeenCalled();
+    expect(component.filterContentList).toHaveBeenCalledWith(true);
+  });
 });
