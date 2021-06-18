@@ -155,10 +155,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
                 }, { templateId, numberOfOptions });
                 this.editorState.solutions = this.questionMetaData.editorState.solutions;
               }
-            
               const hierarchyChildren = this.questionSetHierarchy.children ? this.questionSetHierarchy.children : [];
               this.setQuestionTitle(hierarchyChildren, this.questionId);
-
               if (!_.isEmpty(this.editorState.solutions)) {
                 this.selectedSolutionType = this.editorState.solutions[0].type;
                 this.solutionUUID = this.editorState.solutions[0].id;
