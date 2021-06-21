@@ -15,9 +15,9 @@
           }
     },
     "questionSet": {
-      "maxQuestionsLimit": 500
+      "maxQuestionsLimit": "500"
     },
     "collection": {
-      "maxContentsLimit": 500
+      "maxContentsLimit": "500"
     }
 }
