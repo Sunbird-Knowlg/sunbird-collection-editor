@@ -97,7 +97,9 @@ describe('LibraryComponent', () => {
   });
   it('#back() should call back method and emit libraryEmitter', () => {
     spyOn(component.libraryEmitter, 'emit');
+    spyOn(component['editorService'], 'contentsCountAddedInLibraryPage');
     component.back();
+    expect(component['editorService'].contentsCountAddedInLibraryPage).toHaveBeenCalledWith(true);
     expect(component.libraryEmitter.emit).toHaveBeenCalledWith({});
   });
   it('#onFilterChange should call onFilterChange for filterStatusChange', () => {
@@ -178,5 +180,10 @@ describe('LibraryComponent', () => {
     component.showResourceTemplate(event);
     expect(component['editorService'].contentsCountAddedInLibraryPage).toHaveBeenCalled();
     expect(component.filterContentList).toHaveBeenCalledWith(true);
+  });
+  it('#ngOnDestroy() should call ngOnDestroy', () => {
+    spyOn(component['editorService'], 'contentsCountAddedInLibraryPage');
+    component.ngOnDestroy();
+    expect(component['editorService'].contentsCountAddedInLibraryPage).toHaveBeenCalledWith(true);
   });
 });

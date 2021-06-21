@@ -335,20 +335,28 @@ export class EditorService {
     });
     return contents;
   }
-  contentsCountAddedInLibraryPage() {
-    this.contentsCount = this.contentsCount + 1;
+  contentsCountAddedInLibraryPage(setToZero?) {
+    if (setToZero) {
+      this.contentsCount = 0;
+    } else {
+      this.contentsCount = this.contentsCount + 1;
+    }
   }
   checkIfContensCanbeAdded() {
-    const maxContentsLimit = _.get(this.editorConfig, 'config.maxContentsLimit');
+    const config = {
+      errorMessage: '',
+      maxLimit: 0
+    };
+    if (_.get(this.editorConfig, 'config.objectType') === 'QuestionSet') {
+      config.errorMessage = _.get(this.configService, 'labelConfig.messages.error.018');
+      config.maxLimit = _.get(this.editorConfig, 'config.questionSet.maxQuestionsLimit');
+    } else {
+      config.errorMessage = _.get(this.configService, 'labelConfig.messages.error.019');
+      config.maxLimit = _.get(this.editorConfig, 'config.collection.maxContentsLimit');
+    }
     const childrenCount = this.getContentChildrens().length + this.contentsCount;
-    if (childrenCount >= maxContentsLimit) {
-      let errorMessage = '';
-      if (_.get(this.editorConfig, 'config.objectType') === 'QuestionSet') {
-        errorMessage = _.get(this.configService, 'labelConfig.messages.error.018');
-      } else {
-        errorMessage = _.get(this.configService, 'labelConfig.messages.error.019');
-      }
-      this.toasterService.error(errorMessage);
+    if (childrenCount >= config.maxLimit) {
+      this.toasterService.error(config.errorMessage);
       return false;
     } else {
       return true;

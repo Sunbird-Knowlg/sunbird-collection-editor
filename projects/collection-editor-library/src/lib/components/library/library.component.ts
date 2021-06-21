@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, AfterViewInit, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, AfterViewInit, ViewEncapsulation, OnDestroy } from '@angular/core';
 import * as _ from 'lodash-es';
 import { TreeService } from '../../services/tree/tree.service';
 import { EditorService } from '../../services/editor/editor.service';
@@ -14,7 +14,7 @@ import { HelperService } from '../../services/helper/helper.service';
   styleUrls: ['./library.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class LibraryComponent implements OnInit, AfterViewInit {
+export class LibraryComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() libraryInput: any;
   @Output() libraryEmitter = new EventEmitter<any>();
   public searchFormConfig: any;
@@ -71,6 +71,7 @@ export class LibraryComponent implements OnInit, AfterViewInit {
 
   back() {
     this.libraryEmitter.emit({});
+    this.editorService.contentsCountAddedInLibraryPage(true); // contents count updated from library page
   }
 
   onFilterChange(event: any) {
@@ -229,5 +230,8 @@ sortContentList(status) {
       }
       this.selectedContent = this.contentList[selectedContentIndex];
     }
+  }
+  ngOnDestroy() {
+    this.editorService.contentsCountAddedInLibraryPage(true); // contents count updated from library page
   }
 }

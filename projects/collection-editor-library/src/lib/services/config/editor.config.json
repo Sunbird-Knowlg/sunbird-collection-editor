@@ -13,5 +13,11 @@
             "size": "50",
             "accepted": "mp4, webm"
           }
+    },
+    "questionSet": {
+      "maxQuestionsLimit": 500
+    },
+    "collection": {
+      "maxContentsLimit": 500
     }
 }
