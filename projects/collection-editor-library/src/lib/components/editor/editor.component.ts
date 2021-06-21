@@ -314,7 +314,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       case 'showCorrectioncomments':
         this.contentComment = _.get(this.editorConfig, 'context.correctionComments')
         this.showReviewModal = ! this.showReviewModal;
-      break;
+        break;
       default:
         break;
     }
@@ -464,7 +464,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       if (treeNodeData.warningTime) {
         treeNodeData.timeLimits.warningTime = this.helperService.hmsToSeconds(treeNodeData.warningTime);
       }
-      this.collectionTreeNodes.data =  _.merge(this.collectionTreeNodes.data, treeNodeData );
+      this.collectionTreeNodes.data =  _.merge(this.collectionTreeNodes.data, _.omit(treeNodeData, ['childNodes']) );
   }
   treeEventListener(event: any) {
     this.actionType = event.type;
@@ -522,6 +522,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.treeService.removeNode();
     this.updateSubmitBtnVisibility();
     this.showDeleteConfirmationPopUp = false;
+    this.collectionTreeNodes.data.childNodes = _.filter(this.collectionTreeNodes.data.childNodes, (key) => {
+      return key !== activeNode.data.id;
+    });
   }
 
   updateSubmitBtnVisibility() {
