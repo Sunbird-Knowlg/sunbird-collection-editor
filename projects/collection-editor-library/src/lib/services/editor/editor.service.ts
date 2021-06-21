@@ -335,9 +335,10 @@ export class EditorService {
     });
     return contents;
   }
+  // this method is used to keep count of contents added from library page
   contentsCountAddedInLibraryPage(setToZero?) {
     if (setToZero) {
-      this.contentsCount = 0;
+      this.contentsCount = 0; // setting this count to zero  while going out from library page
     } else {
       this.contentsCount = this.contentsCount + 1;
     }

@@ -71,7 +71,7 @@ export class LibraryComponent implements OnInit, AfterViewInit, OnDestroy {
 
   back() {
     this.libraryEmitter.emit({});
-    this.editorService.contentsCountAddedInLibraryPage(true); // contents count updated from library page
+    this.editorService.contentsCountAddedInLibraryPage(true); // contents count updated from library page to zero
   }
 
   onFilterChange(event: any) {
@@ -232,6 +232,6 @@ sortContentList(status) {
     }
   }
   ngOnDestroy() {
-    this.editorService.contentsCountAddedInLibraryPage(true); // contents count updated from library page
+    this.editorService.contentsCountAddedInLibraryPage(true); // contents count updated from library page to zero
   }
 }
