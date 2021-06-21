@@ -73,7 +73,6 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
     this.isFilterShow = this.filterOpenStatus;
   }
 
-
   fetchFrameWorkDetails() {
     this.frameworkService.frameworkData$.pipe(
       takeUntil(this.onComponentDestroy$),
@@ -210,13 +209,10 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
       query: this.searchQuery
     });
   }
-
   outputData($event) {
   }
-
   onStatusChanges($event) {
   }
-
   valueChanges($event) {
     this.filterValues = $event;
   }

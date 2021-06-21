@@ -60,6 +60,10 @@ describe('LibraryFilterComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('#isFilterShow should be false by default', () => {
+    expect(component.isFilterShow).toBeFalsy()
+  });
+
   it('#ngOnInit should call method #setFilterDefaultValues', () => {
     spyOn(component, 'setFilterDefaultValues');
     component.ngOnInit();
@@ -112,6 +116,11 @@ describe('LibraryFilterComponent', () => {
     expect(component.onQueryEnter).toHaveBeenCalled();
   });
 
+  it('#onQueryEnter should return false', () => {
+    let result = component.onQueryEnter({});
+    expect(result).toBe(false)
+  });
+
   it('#resetFilter should remove filters values and call method #emitApplyFilter', () => {
     spyOn(component, 'emitApplyFilter');
     component.resetFilter();
@@ -119,7 +128,6 @@ describe('LibraryFilterComponent', () => {
     expect(component.searchQuery).toEqual('');
     expect(component.emitApplyFilter).toHaveBeenCalled();
   });
-
   it('#valueChanges should set value in #filterValues', () => {
     component.valueChanges({});
     expect(component.filterValues).toBeDefined();

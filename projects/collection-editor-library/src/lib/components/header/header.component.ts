@@ -4,6 +4,7 @@ import { EditorTelemetryService } from '../../services/telemetry/telemetry.servi
 import { ConfigService } from '../../services/config/config.service';
 import * as _ from 'lodash-es';
 import { NgForm } from '@angular/forms';
+import { resolve } from 'url';
 
 @Component({
   selector: 'lib-header',
@@ -34,25 +35,25 @@ export class HeaderComponent implements OnDestroy, OnInit {
               public telemetryService: EditorTelemetryService,
               public configService: ConfigService) {}
 
-  ngOnInit() {
-    this.handleActionButtons();
-    this.getSourcingData();
+  async ngOnInit() {
+    await this.handleActionButtons()
+    this.getSourcingData()
   }
 
-  handleActionButtons() {
-    this.visibility = {};
-    this.visibility.saveContent = this.editorService.editorMode === 'edit';
-    this.visibility.submitContent = this.editorService.editorMode === 'edit';
-    this.visibility.rejectContent = this.editorService.editorMode === 'review';
-    this.visibility.publishContent = this.editorService.editorMode === 'review';
-    this.visibility.sendForCorrectionsContent = this.editorService.editorMode === 'sourcingreview';
-    this.visibility.sourcingApproveContent = this.editorService.editorMode === 'sourcingreview';
-    this.visibility.sourcingRejectContent = this.editorService.editorMode === 'sourcingreview';
-    this.visibility.previewContent = _.get(this.editorService, 'editorConfig.config.objectType') === 'QuestionSet';
-    this.visibility.dialcode = this.editorService.editorMode === 'edit';
-    this.visibility.showOriginPreviewUrl =  _.get(this.editorService, 'editorConfig.config.showOriginPreviewUrl');
-    this.visibility.showSourcingStatus =  _.get(this.editorService, 'editorConfig.config.showSourcingStatus');
-    this.visibility.showCorrectionComments =  _.get(this.editorService, 'editorConfig.config.showCorrectionComments');
+  async handleActionButtons() {
+      this.visibility = {};
+      this.visibility.saveContent = this.editorService.editorMode === 'edit';
+      this.visibility.submitContent = this.editorService.editorMode === 'edit';
+      this.visibility.rejectContent = this.editorService.editorMode === 'review';
+      this.visibility.publishContent = this.editorService.editorMode === 'review';
+      this.visibility.sendForCorrectionsContent = this.editorService.editorMode === 'sourcingreview';
+      this.visibility.sourcingApproveContent = this.editorService.editorMode === 'sourcingreview';
+      this.visibility.sourcingRejectContent = this.editorService.editorMode === 'sourcingreview';
+      this.visibility.previewContent = _.get(this.editorService, 'editorConfig.config.objectType') === 'QuestionSet';
+      this.visibility.dialcode = this.editorService.editorMode === 'edit';
+      this.visibility.showOriginPreviewUrl =  _.get(this.editorService, 'editorConfig.config.showOriginPreviewUrl');
+      this.visibility.showSourcingStatus =  _.get(this.editorService, 'editorConfig.config.showSourcingStatus');
+      this.visibility.showCorrectionComments =  _.get(this.editorService, 'editorConfig.config.showCorrectionComments');
   }
 
   getSourcingData() {
