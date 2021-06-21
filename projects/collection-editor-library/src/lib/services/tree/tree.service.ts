@@ -19,7 +19,7 @@ export class TreeService {
     nodes: []
   };
   treeNativeElement: any;
-  omitFalseyProps = ['topic', 'topicsIds', 'targetTopicIds'];
+  omitFalseyProps = ['topic', 'topicsIds', 'targetTopicIds', 'keywords'];
   // tslint:disable-next-line:variable-name
   private _treeStatus$ = new BehaviorSubject<any>(undefined);
   public readonly treeStatus$: Observable<any> = this._treeStatus$
