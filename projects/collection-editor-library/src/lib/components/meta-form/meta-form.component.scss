@@ -167,3 +167,7 @@ sb-icon-dropdown {
     }
   }
 }
+.sb-textbox[disabled="true"]{
+  opacity: 0.3 !important;
+  font-weight: 500 !important;
+}

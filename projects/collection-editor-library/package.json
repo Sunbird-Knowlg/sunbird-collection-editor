@@ -1,10 +1,10 @@
 {
   "name": "@project-sunbird/sunbird-collection-editor",
-  "version": "4.0.15",
+  "version": "4.0.25",
   "peerDependencies": {
     "@angular/common": "^7.2.0",
     "@angular/core": "^7.2.0",
-    "common-form-elements": "4.0.9",
+    "common-form-elements": "4.0.14",
     "@project-sunbird/ckeditor-build-classic": "4.0.0",
     "ng2-semantic-ui": "github:venkateshwarans/ng2-semantic-ui#sourcing-circle"
   }
