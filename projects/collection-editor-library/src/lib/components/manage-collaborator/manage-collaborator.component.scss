@@ -1,0 +1,12 @@
+.sb-custom-toggle{
+  height: 20px;
+  width: 42px;
+  .compact{
+    padding: 0 !important;
+    margin: 0 !important;
+    border: 0 !important;
+  }
+  .checkbox{
+    transform:scale(0.7);
+  }
+}

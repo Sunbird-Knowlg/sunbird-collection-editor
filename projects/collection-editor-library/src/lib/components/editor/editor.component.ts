@@ -61,6 +61,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public contentComment: string;
   public showComment: boolean;
   public showReviewModal: boolean;
+  public addCollaborator: boolean;
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
               private toasterService: ToasterService, private dialcodeService: DialcodeService,
@@ -314,7 +315,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       case 'showCorrectioncomments':
         this.contentComment = _.get(this.editorConfig, 'context.correctionComments')
         this.showReviewModal = ! this.showReviewModal;
-      break;
+        break;
+      case 'addCollaborator':
+        this.addCollaborator = true;
+        break;
       default:
         break;
     }
@@ -601,6 +605,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       return true;
     }
     return false;
+  }
+
+  handleModalDismiss(event) {
+    this.addCollaborator = false;
   }
 
   ngOnDestroy() {

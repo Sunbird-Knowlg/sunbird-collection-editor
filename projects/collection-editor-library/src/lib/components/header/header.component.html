@@ -37,6 +37,10 @@
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('view_comments','click','launch', telemetryService.telemetryPageId)">
       <i class="icon comment flex-as-baseline sb-color-gray-400 mr-15" aria-hidden="true"></i>
     </div>
+    <a data-title="Add collaborator" class="cursor-pointer sb-color-primary mr-20 font-weight-bold"
+    (click)="buttonEmitter({type: 'addCollaborator'})">
+      <i class="icon user plus mr-0"></i>
+    </a>
     <lib-dialcode *ngIf="visibility && visibility?.dialcode && labelConfigData?.showDialcode === 'yes'" class="d-flex flex-ai-center"></lib-dialcode>
     <button *ngIf="visibility && visibility?.previewContent  && labelConfigData?.hasChildren" class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10"
       [ngClass]="!buttonLoaders?.previewButtonLoader ? '': 'sb-btn-loading-spinner sb-btn-outline-disabled'"

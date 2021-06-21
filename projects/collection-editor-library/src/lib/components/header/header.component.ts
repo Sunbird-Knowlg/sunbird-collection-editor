@@ -28,7 +28,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
   public sourcingStatusText: string;
   public sourcingStatusClass: string;
   public originPreviewUrl: string;
-  public correctionComments: string
+  public correctionComments: string;
 
   constructor(private editorService: EditorService,
               public telemetryService: EditorTelemetryService,
@@ -56,10 +56,14 @@ export class HeaderComponent implements OnDestroy, OnInit {
   }
 
   getSourcingData() {
-    this.sourcingStatusText = (this.visibility.showSourcingStatus) ? _.get(this.editorService, 'editorConfig.context.sourcingResourceStatus') : '';
-    this.sourcingStatusClass = (this.visibility.showSourcingStatus) ? _.get(this.editorService, 'editorConfig.context.sourcingResourceStatusClass') : '';
-    this.originPreviewUrl = (this.visibility.showOriginPreviewUrl) ? _.get(this.editorService, 'editorConfig.context.originPreviewUrl') : '';
-    this.correctionComments = (this.visibility.showCorrectionComments) ? _.get(this.editorService, 'editorConfig.context.correctionComments') : '';
+    this.sourcingStatusText = (this.visibility.showSourcingStatus) ?
+    _.get(this.editorService, 'editorConfig.context.sourcingResourceStatus') : '';
+    this.sourcingStatusClass = (this.visibility.showSourcingStatus) ?
+    _.get(this.editorService, 'editorConfig.context.sourcingResourceStatusClass') : '';
+    this.originPreviewUrl = (this.visibility.showOriginPreviewUrl) ?
+    _.get(this.editorService, 'editorConfig.context.originPreviewUrl') : '';
+    this.correctionComments = (this.visibility.showCorrectionComments) ?
+    _.get(this.editorService, 'editorConfig.context.correctionComments') : '';
   }
 
   openRequestChangePopup(action: string) {

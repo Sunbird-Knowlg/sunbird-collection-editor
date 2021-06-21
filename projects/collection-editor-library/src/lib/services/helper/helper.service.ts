@@ -88,7 +88,7 @@ export class HelperService {
         m *= 60;
     }
     return _.toString(s);
-}
+  }
 
   getTimerFormat(field) {
     const validationObj = _.find(_.get(field, 'validations'), {type: 'time'});
@@ -99,6 +99,52 @@ export class HelperService {
     }
   }
 
+  getAllUsers(rootOrgIds, userIds?) {
+    const req = {
+      url: `user/v1/search?fields=orgName`,
+      data: {
+        request: {
+          query: '',
+          filters: {
+              'organisations.roles': [
+                  'CONTENT_CREATOR' //CONTENT_CREATOR
+              ],
+              rootOrgId: rootOrgIds,
+          },
+          fields: [
+              'email',
+              'firstName',
+              'identifier',
+              'lastName',
+              'organisations',
+              'rootOrgName',
+              'phone'
+          ],
+          offset: 0,
+          limit: 200
+        }
+      }
+    };
 
+    if (userIds) {
+      // tslint:disable-next-line:no-string-literal
+      req.data.request.filters['userId'] = userIds;
+    }
 
+    return this.publicDataService.post(req);
+  }
+
+  updateCollaborator(contentId, collaboratorList) {
+    const req = {
+      url: `content/v1/collaborator/update/` + contentId,
+      data: {
+          request: {
+              content: {
+                  collaborators: collaboratorList
+              }
+          }
+      }
+    };
+    return this.publicDataService.patch(req);
+  }
 }
