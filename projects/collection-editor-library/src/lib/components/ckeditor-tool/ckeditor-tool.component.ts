@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, Output, Input, EventEmitter, OnChanges, ViewChild, ElementRef } from '@angular/core';
-import ClassicEditor from 'ckeditor-build-classic-santosh';
+import ClassicEditor from '@project-sunbird/ckeditor-build-classic';
 import * as _ from 'lodash-es';
 import { catchError, map } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
