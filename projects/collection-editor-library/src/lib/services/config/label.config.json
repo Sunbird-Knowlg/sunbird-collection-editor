@@ -81,7 +81,7 @@
       "success": {
          "001": "Content is saved",
          "002": "Content is sent for review",
-         "003": "Content is sent back for corrections",
+         "003": "Content rejected successfully",
          "004": "Content is published",
          "005": "Content is added to the folder",
          "006": "Asset Successfully Uploaded...",
@@ -89,7 +89,7 @@
          "008": "Question is updated sucessfully",
          "009": "QR code(s) updated successfully",
          "010": "QR code generated.",
-         "011": "QR codes downloaded" 
+         "011": "QR codes downloaded",
       },
       "warning" : {
          "001" : "Errors found in linked QR Codes. Please check and correct.",
