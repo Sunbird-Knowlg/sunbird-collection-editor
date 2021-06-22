@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, Output, Input, EventEmitter, OnChanges, ViewChild, ElementRef } from '@angular/core';
-import ClassicEditor from '@project-sunbird/ckeditor-build-classic';
+import ClassicEditor from 'ckeditor-build-classic-santosh';
 import * as _ from 'lodash-es';
 import { catchError, map } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
@@ -75,9 +75,9 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     this.assetConfig = this.editorService.editorConfig.config.assetConfig;
     this.initialized = true;
     this.editorConfig = {
-      toolbar: ['bold', '|', 'italic', '|', 'underline',
-        '|', 'numberedList', '|', 'fontSize', '|', 'subscript', '|', 'superscript', '|', 'MathText', '|',
-        'specialCharacters', '|'
+      toolbar: ['heading', '|', 'bold', '|', 'italic', '|', 'underline', '|', 'BulletedList', '|', 'alignment',
+       '|', 'insertTable', '|', 'numberedList', '|', 'fontSize', '|', 'subscript', '|', 'superscript', '|',
+        'MathText', '|', 'specialCharacters', '|'
       ],
       fontSize: {
         options: [
@@ -235,6 +235,25 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
 
   initializeEditors() {
     ClassicEditor.create(this.editorRef.nativeElement, {
+      alignment: {
+        options: [
+          { name: 'left', className: 'text-left' },
+          { name: 'center', className: 'text-center' },
+          { name: 'right', className: 'text-right' }
+        ]
+      },
+      heading: {
+        options: [
+            { model: 'paragraph', title: 'Paragraph' },
+            { model: 'heading1', view: 'h1', title: 'Heading 1' },
+            { model: 'heading2', view: 'h2', title: 'Heading 2' },
+            { model: 'heading3', view: 'h3', title: 'Heading 3' },
+            { model: 'heading4', view: 'h4', title: 'Heading 4' },
+            { model: 'heading5', view: 'h5', title: 'Heading 5' },
+            { model: 'heading6', view: 'h6', title: 'Heading 6' }
+        ]
+    },
+      extraPlugins: ['Table', 'Heading'],
       toolbar: this.editorConfig.toolbar,
       fontSize: this.editorConfig.fontSize,
       image: this.editorConfig.image,

@@ -40,7 +40,7 @@
 .insert-image-btn {
   position: absolute;
   z-index: 1;
-  left: 360px;
+  left: 653px;
   background-color: transparent;
   padding: 12px 14px !important;
   margin-left: 6px;
@@ -184,6 +184,9 @@
     width: 75%;
     height: auto;
   }
+  .text-center { text-align: center }
+  .text-left { text-align: left }
+  .text-right { text-align: right }
 }
 
 .upload-image-modal-section {
