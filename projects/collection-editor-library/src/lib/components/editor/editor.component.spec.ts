@@ -1,5 +1,5 @@
 import { EditorService } from './../../services/editor/editor.service';
-import { async, ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { EditorComponent } from './editor.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -8,10 +8,11 @@ import { TelemetryInteractDirective } from '../../directives/telemetry-interact/
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TreeService } from '../../services/tree/tree.service';
-import { EventEmitter } from '@angular/core';
+import { editorConfig, configServiceData, nativeElement, getCategoryDefinitionResponse } from './editor.component.spec.data';
+import { ConfigService } from '../../services/config/config.service';
 import { of } from 'rxjs';
-import { delay } from 'rxjs/operators';
-
+import { DialcodeService } from '../../services/dialcode/dialcode.service';
+import { treeData } from './../fancy-tree/fancy-tree.component.spec.data';
 
 const mockEditorService = {
   editorConfig: {
@@ -39,7 +40,9 @@ describe('EditorComponent', () => {
       imports: [ HttpClientTestingModule, FormsModule, ReactiveFormsModule, RouterTestingModule ],
       declarations: [ EditorComponent, TelemetryInteractDirective ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
-      providers: [ EditorTelemetryService, EditorService ]
+      providers: [ EditorTelemetryService, EditorService, DialcodeService,
+        { provide: ConfigService, useValue: configServiceData }
+      ]
     })
     .compileComponents();
   }));
@@ -47,7 +50,14 @@ describe('EditorComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(EditorComponent);
     component = fixture.componentInstance;
-    // fixture.detectChanges();
+    const editorService = TestBed.get(EditorService);
+    component.editorConfig = editorConfig;
+    spyOnProperty(editorService, 'editorConfig', 'get').and.returnValue(editorConfig);
+    const treeService = TestBed.get(TreeService);
+    spyOn(treeService, 'initialize').and.callFake(() => {
+      return true;
+    });
+    fixture.detectChanges();
   });
 
   it('should create', () => {
@@ -78,6 +88,16 @@ describe('EditorComponent', () => {
     expect(component.showPreview).toBeFalsy();
   })
 
+  it('#ngOnInit() should call #editorService.initialize()', () => {
+    const editorService = TestBed.get(EditorService);
+    component.editorConfig = editorConfig;
+    spyOn(editorService, 'initialize');
+    spyOn(editorService, 'getToolbarConfig');
+    component.ngOnInit();
+    expect(editorService.initialize).toHaveBeenCalled();
+    expect(editorService.getToolbarConfig).toHaveBeenCalled();
+  })
+
   it('should call #impression() method after view init', () => {
     const telemetryService = TestBed.get(EditorTelemetryService)
     spyOn(telemetryService, 'impression').and.callFake(() => {
@@ -87,13 +107,10 @@ describe('EditorComponent', () => {
     expect(telemetryService.impression).toHaveBeenCalled();
   });
 
-  xit('#redirectToChapterListTab() should emit #editorEmitter event', () => {
-    let editorEmitter = new EventEmitter<any>()
-    spyOn(editorEmitter, 'emit').and.callFake(() => {
-      return true;
-    });
+  it('#redirectToChapterListTab() should emit #editorEmitter event', () => {
+    spyOn(component.editorEmitter, 'emit');
     component.redirectToChapterListTab();
-    expect(editorEmitter.emit).toHaveBeenCalled();
+    expect(component.editorEmitter.emit).toHaveBeenCalled();
   });
 
   it('#updateToolbarTitle() should call #getActiveNode() method', () => {
@@ -105,25 +122,6 @@ describe('EditorComponent', () => {
     component.updateToolbarTitle({'event': {name: 'test'}});
     expect(treeService.getActiveNode).toHaveBeenCalled();
   });
-
-  xit('#editorService.initialize() should be called on #ngOnInit()', () => {
-    const editorService = TestBed.get(EditorService);
-    spyOn(editorService, 'initialize').and.callFake(() => {
-      return true;
-    });
-
-    const treeService = TestBed.get(TreeService);
-    spyOn(treeService, 'initialize').and.callFake(() => {
-      return true;
-    });
-
-    // spyOn(component.ngOnInit).and.callFake(()=> {
-    //   return true;
-    // })
-
-    // component.ngOnInit();
-    // expect(editorService.initialize).toHaveBeenCalled();
-  })
 
   it('#previewContent() should call #saveContent()', () => {
     spyOn(component, 'saveContent').and.callFake(()=>{
@@ -248,10 +246,49 @@ describe('EditorComponent', () => {
     expect(component.validateFormStatus).toHaveBeenCalled();
   })
 
-  xit('#submitHandler() should call #validateFormStatus()', () => {
+  it('#submitHandler() should call #validateFormStatus()', () => {
     spyOn(component, 'validateFormStatus')
     component.submitHandler();
     expect(component.validateFormStatus).toHaveBeenCalled();
+  })
+
+  it('#submitHandler() should return true', () => {
+    spyOn(component, 'validateFormStatus').and.callFake(()=> {
+      return true;
+    })
+    component.submitHandler();
+    expect(component.showConfirmPopup).toEqual(true);
+  })
+
+  it('#submitHandler() should return true if showDialcode is yes', () => {
+    spyOn(component, 'validateFormStatus').and.callFake(()=> {
+      return true;
+    });
+    component.toolbarConfig = {
+      showDialcode: 'yes'
+    };
+    let dialcodeService = TestBed.get(DialcodeService);
+    spyOn(dialcodeService, 'validateUnitsDialcodes').and.callFake(()=> {
+      return true;
+    });
+    component.submitHandler();
+    expect(component.showConfirmPopup).toEqual(true);
+  })
+
+  it('#submitHandler() should return true if showDialcode is yes', () => {
+    spyOn(component, 'validateFormStatus').and.callFake(()=> {
+      return true;
+    });
+    component.toolbarConfig = {
+      showDialcode: 'yes'
+    };
+    let dialcodeService = TestBed.get(DialcodeService);
+    spyOn(dialcodeService, 'validateUnitsDialcodes').and.callFake(()=> {
+      return true;
+    });
+    component.submitHandler();
+    expect(dialcodeService.validateUnitsDialcodes).toHaveBeenCalled();
+    expect(component.showConfirmPopup).toEqual(true);
   })
 
   it('#sendForReview() should call #saveContent()', () => {
@@ -262,12 +299,122 @@ describe('EditorComponent', () => {
     expect(component.saveContent).toHaveBeenCalled();
   })
 
-  xit('#rejectContent() should call #submitRequestChanges() method', () => {
+  it('#rejectContent() should call #submitRequestChanges() method', async() => {
     let editorService = TestBed.get(EditorService);
-    spyOn(editorService, 'submitRequestChanges').and.callFake(()=>{
-      return Promise.resolve();
-    });
+    component.collectionId = 'do_1234';
+    spyOn(editorService, 'submitRequestChanges').and.returnValue(of({}))
+    spyOn(component, 'redirectToChapterListTab');
+    // fixture.detectChanges();
     component.rejectContent('test');
     expect(editorService.submitRequestChanges).toHaveBeenCalled();
+    expect(component.redirectToChapterListTab).toHaveBeenCalled();
+  })
+
+  it('#libraryEventListener() should set pageId to collection_editor', async()=> {
+    const res = {};
+    spyOn(component, 'libraryEventListener').and.returnValue(of(res));
+    component.libraryEventListener({});
+    expect(component.pageId).toEqual('collection_editor');
+  })
+
+  it('#treeEventListener() should call #updateTreeNodeData()', ()=> {
+    const event = { type: 'test' };
+    spyOn(component, 'updateTreeNodeData');
+    component.treeEventListener(event);
+    expect(component.updateTreeNodeData).toHaveBeenCalled();
+  })
+
+  it('#treeEventListener() should call #updateSubmitBtnVisibility() if event type is nodeSelect', ()=> {
+    const event = {
+      type: 'nodeSelect',
+      data:{
+        getLevel: function(){
+          return 2;
+        }
+      }
+   };
+    const treeService = TestBed.get(TreeService);
+    treeService.nativeElement = nativeElement;
+    spyOn(treeService, 'setTreeElement').and.callFake((el)=> {
+      treeService.nativeElement = nativeElement;
+    });
+    spyOn(treeService, 'getFirstChild').and.callFake(()=> {
+      return {data:{metadata: treeData}};
+    });
+    component.collectionTreeNodes = { data:{}};
+    spyOn(component, 'updateSubmitBtnVisibility');
+    component.treeEventListener(event);
+    expect(component.updateSubmitBtnVisibility).toHaveBeenCalled();
+  })
+
+  it('#treeEventListener() should set #showDeleteConfirmationPopUp=true if event.type is deleteNode', ()=> {
+    const event = {
+      type: 'deleteNode',
+      data:{
+        getLevel: function(){
+          return 2;
+        }
+      }
+   };
+    spyOn(component, 'updateTreeNodeData').and.callFake(()=> {
+      return true;
+    });
+    component.treeEventListener(event);
+    expect(component.showDeleteConfirmationPopUp).toEqual(true);
+  })
+
+  it('#treeEventListener() should set #addFromLibraryButtonLoader=true if event.type is createNewContent', ()=> {
+    const event = {
+      type: 'createNewContent',
+      data:{
+        getLevel: function(){
+          return 2;
+        }
+      }
+   };
+    spyOn(component, 'updateTreeNodeData').and.callFake(()=> {
+      return true;
+    });
+    component.treeEventListener(event);
+    expect(component.buttonLoaders.addFromLibraryButtonLoader).toEqual(true);
+  })
+
+  it('#handleTemplateSelection should set #showQuestionTemplatePopup to false', ()=> {
+    component.handleTemplateSelection({});
+    expect(component.showQuestionTemplatePopup).toEqual(false);
+  })
+
+  it('#handleTemplateSelection should return false', ()=> {
+    const event = { type : 'close' }
+    const result = component.handleTemplateSelection(event);
+    expect(result).toEqual(false);
+  })
+
+  it('#handleTemplateSelection should call #redirectToQuestionTab()', async()=> {
+    const event = "Multiple Choice Question";
+    const editorService = TestBed.get(EditorService);
+    spyOn(editorService, 'getCategoryDefinition').and.returnValue(of(getCategoryDefinitionResponse));
+    spyOn(component, 'redirectToQuestionTab');
+    component.handleTemplateSelection(event);
+    expect(component.redirectToQuestionTab).toHaveBeenCalled();
+  })
+
+  it('call #redirectToQuestionTab() to verify #questionComponentInput data', async()=> {
+    const mode = 'update';
+    const interactionType = 'choice';
+    component.collectionId = 'do_123';
+    component.redirectToQuestionTab(mode, interactionType);
+    expect(component.questionComponentInput).toEqual(
+      {
+        questionSetId: component.collectionId,
+        questionId: undefined,
+        type: interactionType
+      }
+    );
+    expect(component.pageId).toEqual('question')
   })
 });
+
+
+
+

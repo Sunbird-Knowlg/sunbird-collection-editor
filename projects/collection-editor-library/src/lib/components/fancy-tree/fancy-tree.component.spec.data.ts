@@ -4556,7 +4556,6 @@ export const tree = [
     "icon": "fa fa-file-o"
   }]
 
-
 export const editorConfig = {
     config: {
       "rejectCommentsMaxLength": 500,
