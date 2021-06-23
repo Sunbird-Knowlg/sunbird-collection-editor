@@ -1,3 +1,4 @@
+import { resolve } from 'url';
 import { EditorService } from './../../services/editor/editor.service';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { EditorComponent } from './editor.component';
@@ -122,6 +123,11 @@ describe('EditorComponent', () => {
     component.updateToolbarTitle({'event': {name: 'test'}});
     expect(treeService.getActiveNode).toHaveBeenCalled();
   });
+
+  it('#validateFormStatus() should return true', ()=> {
+    const result = component.validateFormStatus();
+    expect(result).toEqual(true);
+  })
 
   it('#previewContent() should call #saveContent()', () => {
     spyOn(component, 'saveContent').and.callFake(()=>{
@@ -310,6 +316,24 @@ describe('EditorComponent', () => {
     expect(component.redirectToChapterListTab).toHaveBeenCalled();
   })
 
+  it('#publishContent should call #redirectToChapterListTab()', ()=> {
+    const editorService = TestBed.get(EditorService);
+    spyOn(editorService, 'publishContent').and.returnValue(of({}));
+    spyOn(component, 'redirectToChapterListTab');
+    component.publishContent();
+    expect(editorService.publishContent).toHaveBeenCalled();
+    expect(component.redirectToChapterListTab).toHaveBeenCalled();
+  })
+
+  it('#showLibraryComponentPage() should set #addFromLibraryButtonLoader to true', ()=> {
+    spyOn(component, 'saveContent').and.callFake(()=>{
+      return Promise.resolve();
+    })
+    component.showLibraryComponentPage();
+    expect(component.buttonLoaders.addFromLibraryButtonLoader).toEqual(true);
+    expect(component.saveContent).toHaveBeenCalled();
+  });
+
   it('#libraryEventListener() should set pageId to collection_editor', async()=> {
     const res = {};
     spyOn(component, 'libraryEventListener').and.returnValue(of(res));
@@ -413,8 +437,63 @@ describe('EditorComponent', () => {
     );
     expect(component.pageId).toEqual('question')
   })
+
+  it('#questionEventListener() should set #pageId to collection_editor', async()=>{
+    spyOn(component, 'mergeCollectionExternalProperties').and.returnValue(of({}));
+    expect(component.pageId).toEqual('collection_editor');
+  })
+
+  it('#showCommentAddedAgainstContent should return false', async()=>{
+    component.collectionTreeNodes = {
+      data:{
+        status: 'Live',
+        rejectComment: 'test'
+      }
+    }
+    const result = component.showCommentAddedAgainstContent();
+    expect(result).toEqual(false);
+  });
+
+  it('#showCommentAddedAgainstContent should return true', ()=>{
+    component.collectionTreeNodes = {
+      data:{
+        status: 'Draft',
+        rejectComment: 'test'
+      }
+    }
+    const result = component.showCommentAddedAgainstContent();
+    expect(result).toEqual(true);
+  })
+
+  it('#deleteNode() should set #showDeleteConfirmationPopUp false', ()=> {
+    component.collectionTreeNodes = {
+      data:{
+        childNodes: []
+      }
+    }
+    const treeService = TestBed.get(TreeService);
+    spyOn(treeService, 'getActiveNode').and.callFake(()=> {
+      return {
+          data: {
+            id: 'do_113264100861919232115'
+        }
+      }
+    });
+    spyOn(treeService, 'getChildren').and.callFake(()=> {
+      return [];
+    })
+    spyOn(treeService, 'removeNode').and.callFake(()=>{
+      return true;
+    });
+    spyOn(treeService, 'getFirstChild').and.callFake(()=> {
+      return {data:{metadata: treeData}};
+    });
+    spyOn(component, 'updateSubmitBtnVisibility');
+    component.deleteNode();
+    expect(treeService.removeNode).toHaveBeenCalled();
+    expect(component.updateSubmitBtnVisibility).toHaveBeenCalled();
+    expect(component.showDeleteConfirmationPopUp).toEqual(false);
+  })
+
+
 });
-
-
-
-
