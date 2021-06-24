@@ -23,7 +23,14 @@
        "sourcing_approve_collection_btn_label":"Approve",
        "sourcing_approve_collection_btn_icon":"",
        "sourcing_reject_collection_btn_label":"Reject",
-       "sourcing_reject_collection_btn_icon":""
+       "sourcing_reject_collection_btn_icon":"",
+       "upload_use_btn_label":"Upload and Use",
+       "cancel_btn_label":"Cancel",
+       "back_btn_label":"Back",
+       "search_btn_label":"search",
+       "add_btn_label":"Add",
+       "upload_from_computer_btn_label":"Upload from Computer"
+
     },
     "lbl":{
        "search":"Search",
@@ -49,7 +56,29 @@
        "addContent":"Add content",
        "sortBy":"Sort By",
        "sortlabel":"A - Z",
-       "viewOnOrigin":"View Content on consumption"
+       "viewOnOrigin":"View Content on consumption",
+       "answers":"Answers",
+       "answersRequired":"Answer is required",
+       "answersPopupText":"Please provide an answer for the question. Check preview to understand how it would look.",
+       "selectImage":"Select Image",
+       "myImages":"My Images",
+       "allImage":"All Image",
+       "uploadAndUse":"Upload and Use",
+       "chooseOrDragImage":"Choose or drag and drop your image here",
+       "chooseOrDragVideo":"Choose or drag and drop your video here",
+       "uploadFromComputer":"Upload from Computer",
+       "upload":"Upload",
+       "maxFileSize":"Max File size:",
+       "allowedFileTypes":"Allowed file types are:",
+       "maximumAllowedFileSize":"Maximum allowed file size:",
+       "copyRightsAndLicense":"Copyright & License",
+       "dropChooseFile":"Drop or choose file to upload before entering the details",
+       "charactersLeft":"Characters left:",
+       "myVideos":"My Video(s)",
+       "allVideos":"All Video(s)",
+       "selectVideo":"Select Video",
+       "searchPlaceholder":"Search...",
+       "addAnImage":"Add an image"
     },
     "err":{
        "somethingWentWrong":"Something went wrong",
@@ -76,7 +105,17 @@
          "014": "The number should be at least {number}",
          "015": "The number should be greater than {number}",
          "016": "No images found, please try searching for something else",
-         "017": "No videos found, please try searching for something else"
+         "017": "No videos found, please try searching for something else",
+         "018": "Unable to upload to Blob and Content Creation Failed, Please Try Again",
+         "019": "Image upload failed",
+         "020": "Please choose an image file",
+         "021": "Max size allowed is ",
+         "022": "Image search failed",
+         "023": "Video search failed",
+         "024": "Please choose an video file",
+         "025": " Unable to create an Asset",
+         "026": "Unable to get pre_signed_url and Content Creation Failed, Please Try Again",
+         "027": "Unable to update pre_signed_url with Content Id and Content Creation Failed, Please Try Again"
       }, 
       "success": {
          "001": "Content is saved",

@@ -25,6 +25,7 @@
       "SEARCH"  : "dialcode/v3/search",
       "LINK" : "collection/v3/dialcode/link/"
     },
-    "ContentPolicyUrl" : "/term-of-use.html" 
+    "ContentPolicyUrl" : "/term-of-use.html",
+    "assetProxyUrl": "/assets/public/"
   }
 }

@@ -7,10 +7,12 @@
     "assetConfig": {
         "image": {
             "size": "1",
+            "sizeType": "MB",
             "accepted": "png, jpeg"
           },
           "video": {
             "size": "50",
+            "sizeType": "MB",
             "accepted": "mp4, webm"
           }
     }

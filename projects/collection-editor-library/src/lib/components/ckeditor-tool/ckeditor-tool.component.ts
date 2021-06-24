@@ -31,7 +31,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
   public characterCount;
   public mediaobj;
   initialized = false;
-  public assetProxyUrl = '/assets/public/';
+  public assetProxyUrl =  _.get(this.configService.urlConFig, 'URLS.assetProxyUrl');
   public lastImgResizeWidth;
   constructor(private questionService: QuestionService, private editorService: EditorService,
               private toasterService: ToasterService, public configService: ConfigService) { }
@@ -325,7 +325,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       req['query'] = query;
     }
     this.questionService.getAssetMedia(req).pipe(catchError(err => {
-      const errInfo = { errorMsg: 'Image search failed' };
+      const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.022') };
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     })).subscribe((res) => {
       this.assetsCount = res.result.count;
@@ -387,7 +387,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       req['query'] = query;
     }
     this.questionService.getAssetMedia(req).pipe(catchError(err => {
-      const errInfo = { errorMsg: 'Image search failed' };
+      const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.022') };
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     }))
       .subscribe((res) => {
@@ -426,7 +426,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
     this.questionService.getAssetMedia(req).pipe(catchError(err => {
-      const errInfo = { errorMsg: 'Video search failed' };
+      const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.023')};
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     })).subscribe((res) => {
       this.assetsCount = res.result.count;
@@ -458,7 +458,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
     this.questionService.getAssetMedia(req).pipe(catchError(err => {
-      const errInfo = { errorMsg: 'Video search failed' };
+      const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.023') };
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     })).subscribe((res) => {
       this.assetsCount = res.result.count;
@@ -516,7 +516,8 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       this.showErrorMsg = false;
       if (fileSize > this.assetConfig.image.size) {
         this.showErrorMsg = true;
-        this.errorMsg = 'Max size allowed is ' + this.assetConfig.image.size + 'MB';
+        this.errorMsg = _.get(this.configService.labelConfig, 'messages.error.021')
+         + this.assetConfig.image.size + this.assetConfig.image.sizeType;
         this.resetFormConfig();
       } else {
         this.errorMsg = '';
@@ -525,7 +526,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       }
     } else {
       this.showErrorMsg = true;
-      this.errorMsg = 'Please choose an image file';
+      this.errorMsg = _.get(this.configService.labelConfig, 'messages.error.020');
     }
     if (!this.showErrorMsg) {
       this.imageUploadLoader = true;
@@ -550,7 +551,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
   }
   uploadAndUseImage(modal) {
     this.questionService.createMediaAsset({ content: this.assestData }).pipe(catchError(err => {
-      const errInfo = { errorMsg: 'Image upload failed' };
+      const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.019') };
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     })).subscribe((res) => {
       const imgId = res.result.node_id;
@@ -558,7 +559,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
         data: this.formData
       };
       this.questionService.uploadMedia(request, imgId).pipe(catchError(err => {
-        const errInfo = { errorMsg: 'Image upload failed' };
+        const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.019') };
         return throwError(this.editorService.apiErrorHandling(err, errInfo));
       })).subscribe((response) => {
         this.addImageInEditor(response.result.content_url, response.result.node_id);
@@ -634,7 +635,8 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       this.showErrorMsg = false;
       if (fileSize > this.assetConfig.video.size) {
         this.showErrorMsg = true;
-        this.errorMsg = 'Max size allowed is ' + this.assetConfig.video.size + 'MB';
+        this.errorMsg = _.get(this.configService.labelConfig, 'messages.error.021') +
+         this.assetConfig.video.size + this.assetConfig.video.sizeType;
         this.resetFormConfig();
       } else {
         this.errorMsg = '';
@@ -643,7 +645,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       }
     } else {
       this.showErrorMsg = true;
-      this.errorMsg = 'Please choose an video file';
+      this.errorMsg = _.get(this.configService.labelConfig, 'messages.error.024');
     }
     if (!this.showErrorMsg) {
       this.imageUploadLoader = true;
@@ -662,7 +664,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
         this.loading = false;
         this.isClosable = true;
         this.imageFormValid = true;
-        const errInfo = { errorMsg: ' Unable to create an Asset' };
+        const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.025') };
         return throwError(this.editorService.apiErrorHandling(err, errInfo));
       })).subscribe((res) => {
         const contentId = res.result.node_id;
@@ -672,7 +674,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
           }
         };
         this.questionService.generatePreSignedUrl(request, contentId).pipe(catchError(err => {
-          const errInfo = { errorMsg: 'Unable to get pre_signed_url and Content Creation Failed, Please Try Again' };
+          const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.026') };
           this.loading = false;
           this.isClosable = true;
           this.imageFormValid = true;
@@ -708,7 +710,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
 
   uploadToBlob(signedURL, file, config): Observable<any> {
     return this.questionService.http.put(signedURL, file, config).pipe(catchError(err => {
-      const errInfo = { errorMsg: 'Unable to upload to Blob and Content Creation Failed, Please Try Again' };
+      const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.018') };
       this.isClosable = true;
       this.loading = false;
       this.imageFormValid = true;
@@ -731,7 +733,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       param: config
     };
     this.questionService.uploadMedia(option, contentId).pipe(catchError(err => {
-      const errInfo = { errorMsg: 'Unable to update pre_signed_url with Content Id and Content Creation Failed, Please Try Again' };
+      const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.027') };
       this.isClosable = true;
       this.loading = false;
       this.imageFormValid = true;
