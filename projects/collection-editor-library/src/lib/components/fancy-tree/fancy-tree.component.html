@@ -17,7 +17,7 @@
     [ngClass]="[!visibility?.addFromLibrary ? 'sb-btn-outline-disabled' : '', (visibility?.addFromLibrary && buttonLoaders?.addFromLibraryButtonLoader) ? 'sb-btn-loading-spinner sb-btn-outline-disabled': '']"
     class="sb-btn sb-btn-outline-primary sb-btn-normal mt-10 mr-30" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('add_from_library','click','launch', telemetryService.telemetryPageId)">
-    <i class="icon plus" *ngIf="!buttonLoaders?.addFromLibraryButtonLoader"></i>
+    <i class="icon plus" aria-hidden="true" *ngIf="!buttonLoaders?.addFromLibraryButtonLoader"></i>
     <div class="sb-loading-spinner" *ngIf="buttonLoaders?.addFromLibraryButtonLoader" role="status" aria-hidden="true">
     </div>
     {{configService.labelConfig?.button_labels?.add_from_library_btn_label}}

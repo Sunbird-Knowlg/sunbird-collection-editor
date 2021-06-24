@@ -1,6 +1,6 @@
 <div class="pt-10 fs-0-92 sb-w-85">
   <label class="fs-0-92">{{configService.labelConfig?.lbl?.options}}<span class="sb-required">*</span></label>
-  <i class="icon info circle ml-8" suiPopup popupDelay="500" popupText={{configService.labelConfig?.lbl?.optionsPopupText}}></i>
+  <i class="icon info circle ml-8" aria-hidden="true" suiPopup popupDelay="500" popupText={{configService.labelConfig?.lbl?.optionsPopupText}}></i>
   <span class="divider mr-8"></span>
   <span> <i class="q-sb-layout-single mr-10 h-7" [ngClass]="{active: 'mcq-vertical' === templateType}" (click)="setTemplete('mcq-vertical')"></i></span>
   <span> <i class="q-sb-layout-two mr-10 h-7" [ngClass]="{active: 'mcq-horizontal' === templateType}" (click)="setTemplete('mcq-horizontal')"></i></span>
@@ -41,7 +41,7 @@
       (click)="editorState.addOptions();editorDataHandler($event);"
       libTelemetryInteract
       [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('add_option','click','submit',telemetryService.telemetryPageId)" >
-      <i class="plus circle icon fs-1-286 pull-left mr-0"></i><span class="sb-line-height-24">{{configService.labelConfig?.lbl?.addOption}}</span>
+      <i class="plus circle icon fs-1-286 pull-left mr-0" aria-hidden="true"></i><span class="sb-line-height-24">{{configService.labelConfig?.lbl?.addOption}}</span>
     </button>
   </div>
 </div>

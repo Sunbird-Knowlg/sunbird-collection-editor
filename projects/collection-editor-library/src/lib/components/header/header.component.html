@@ -5,7 +5,7 @@
       <button class="sb-btn sb-btn-primary sb-btn-xs back-btn px-0 hover-none fs-0-92 font-weight-bold"
       (click)="buttonEmitter({type: 'backContent'})" libTelemetryInteract
       [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('back','click','launch', telemetryService.telemetryPageId)">
-        <i class="arrow left icon"></i> {{configService.labelConfig?.button_labels?.back_btn_label}}
+        <i class="arrow left icon" aria-hidden="true"></i> {{configService.labelConfig?.button_labels?.back_btn_label}}
       </button>
     </div>
   </div>

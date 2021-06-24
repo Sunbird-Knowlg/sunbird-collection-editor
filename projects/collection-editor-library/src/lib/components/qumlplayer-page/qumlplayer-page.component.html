@@ -12,7 +12,7 @@
                 [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('edit','click','launch', telemetryService.telemetryPageId)">
                 <i class="icon edit"></i>Edit</button>
             <button type="button" class="sb-btn sb-btn-normal sb-btn-outline-primary mx-15"
-                (click)="removeQuestion()"><i class="icon trash sb-color-primary" libTelemetryInteract
+                (click)="removeQuestion()"><i class="icon trash sb-color-primary" aria-hidden="true" libTelemetryInteract
                     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('delete','click','launch', telemetryService.telemetryPageId)"></i>{{configService.labelConfig?.button_labels?.delete_btn_label}}</button>
         </div>
         <div class="three wide column p-0 text-right">
