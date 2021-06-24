@@ -79,7 +79,7 @@ export class EditorService {
 
   getQuestionList(questionIds: string[]): Observable<any> {
     const option = {
-      url: 'question/v1/list',
+      url: this.configService.urlConFig.URLS.QUESTION.LIST,
       data: {
         request: {
           search: {
@@ -117,7 +117,7 @@ export class EditorService {
 
   fetchContentDetails(contentId) {
     const req = {
-      url: 'content/v3/read/' + contentId
+      url: this.configService.urlConFig.URLS.CONTENT.READ + contentId
     };
     return this.publicDataService.get(req);
   }
@@ -191,7 +191,7 @@ export class EditorService {
 
   addResourceToHierarchy(collection, unitIdentifier, contentId): Observable<any> {
     const req = {
-      url: 'content/v3/hierarchy/add',
+      url: this.configService.urlConFig.URLS.CONTENT.HIERARCHY_ADD,
       data: {
         request: {
           rootId: collection,
@@ -269,7 +269,7 @@ export class EditorService {
 
   getCategoryDefinition(categoryName, channel, objectType?: any) {
     const req = {
-      url: 'object/category/definition/v1/read?fields=objectMetadata,forms,name',
+      url: this.configService.urlConFig.URLS.getCategoryDefinition,
       data: {
         request: {
           objectCategoryDefinition: {

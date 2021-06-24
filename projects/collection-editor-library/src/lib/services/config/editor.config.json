@@ -15,5 +15,8 @@
             "sizeType": "MB",
             "accepted": "mp4, webm"
           }
-    }
+    },
+    "contentPrimaryCategories": ["Course Assessment", "eTextbook", "Explanation Content", "Learning Resource", "Practice Question Set"],
+    "readQuestionFields": "body,primaryCategory,mimeType,qType,answer,templateId,responseDeclaration,interactionTypes,interactions,name,solutions,editorState,media,",
+    "omitFalseyProperties":["topic", "topicsIds", "targetTopicIds", "keywords"]
 }

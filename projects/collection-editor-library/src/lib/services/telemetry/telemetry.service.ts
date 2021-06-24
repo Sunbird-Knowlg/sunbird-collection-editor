@@ -3,6 +3,7 @@ import * as _ from 'lodash-es';
 import { CsTelemetryModule } from '@project-sunbird/client-services/telemetry';
 import { IEditorConfig, Context } from '../../interfaces/editor';
 import { HelperService } from '../helper/helper.service';
+import { ConfigService } from '../config/config.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -20,7 +21,7 @@ export class EditorTelemetryService {
   // tslint:disable-next-line:variable-name
   private _telemetryPageId: any;
 
-  constructor( public helperService: HelperService ) {}
+  constructor( public helperService: HelperService, public configService: ConfigService ) {}
 
   initializeTelemetry(config: IEditorConfig) {
     this.duration = new Date().getTime();
@@ -47,7 +48,7 @@ export class EditorTelemetryService {
             batchsize: 20,
             mode: config.context.mode,
             host: config.context.host || document.location.origin,
-            endpoint: config.context.endpoint || '/data/v3/telemetry',
+            endpoint: config.context.endpoint || this.configService.urlConFig.URLS.telemetry,
             tags: config.context.tags,
             cdata: this.context.cdata || []
           },

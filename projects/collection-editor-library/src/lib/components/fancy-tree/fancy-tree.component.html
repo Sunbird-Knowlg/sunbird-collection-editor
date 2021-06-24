@@ -3,13 +3,13 @@
   <div class="d-flex w-25">
     <div class="sb-btn-cover">
       <button [ngClass]="visibility?.addSibling ? '' : 'sb-disabled'" (click)="addSibling();"
-        class="sb-btn sb-btn-outline-primary sb-btn-normal sb-btn-radius p-0 b-none"><i class="icon plus"></i>Add
-        Sibling</button>
+        class="sb-btn sb-btn-outline-primary sb-btn-normal sb-btn-radius p-0 b-none"><i class="icon plus"></i>
+        {{configService.labelConfig?.button_labels?.add_sibling_btn_label}} </button>
     </div>
     <div class="sb-btn-cover">
       <button [ngClass]="visibility?.addChild ? '' : 'sb-disabled'" (click)="addChild();"
-        class="sb-btn sb-btn-outline-primary sb-btn-normal sb-btn-radius b-none p-0"><i class="icon plus"></i> Add
-        Child</button>
+        class="sb-btn sb-btn-outline-primary sb-btn-normal sb-btn-radius b-none p-0"><i class="icon plus"></i>
+        {{configService.labelConfig?.button_labels?.add_child_btn_label}} </button>
     </div>
   </div>
   <button *ngIf="config.objectType !== 'QuestionSet'" (click)="addFromLibrary();"
@@ -20,7 +20,7 @@
     <i class="icon plus" *ngIf="!buttonLoaders?.addFromLibraryButtonLoader"></i>
     <div class="sb-loading-spinner" *ngIf="buttonLoaders?.addFromLibraryButtonLoader" role="status" aria-hidden="true">
     </div>
-    Add from library
+    {{configService.labelConfig?.button_labels?.add_from_library_btn_label}}
   </button>
   <button *ngIf="config.objectType === 'QuestionSet'" [disabled]="!visibility?.createNew"
     [ngClass]="[!visibility?.createNew ? 'sb-btn-outline-disabled' : '', (visibility?.createNew && buttonLoaders?.addFromLibraryButtonLoader) ? 'sb-btn-loading-spinner sb-btn-outline-disabled': '']"
@@ -30,6 +30,6 @@
     <i class="icon plus" *ngIf="!buttonLoaders?.addFromLibraryButtonLoader"></i>
     <div class="sb-loading-spinner" *ngIf="buttonLoaders?.addFromLibraryButtonLoader" role="status" aria-hidden="true">
     </div>
-    Create New
+    {{configService.labelConfig?.button_labels?.create_new_btn_label}}
   </button>
 </div>
