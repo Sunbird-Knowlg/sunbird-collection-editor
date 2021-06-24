@@ -3,7 +3,7 @@
   <div class="d-flex w-25">
     <div class="sb-btn-cover">
       <button [ngClass]="visibility?.addSibling ? '' : 'sb-disabled'" (click)="addSibling();"
-        class="sb-btn sb-btn-outline-primary sb-btn-normal sb-btn-radius p-0 b-none"><i class="icon plus"></i>
+        class="sb-btn sb-btn-outline-primary sb-btn-normal sb-btn-radius p-0 b-none"><i aria-hidden="true" class="icon plus"></i>
         {{configService.labelConfig?.button_labels?.add_sibling_btn_label}} </button>
     </div>
     <div class="sb-btn-cover">
