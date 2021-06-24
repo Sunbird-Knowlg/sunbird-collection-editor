@@ -343,7 +343,7 @@ export class EditorService {
       this.contentsCount = this.contentsCount + 1;
     }
   }
-  checkIfContensCanbeAdded() {
+  checkIfContentsCanbeAdded() {
     const config = {
       errorMessage: '',
       maxLimit: 0

@@ -46,7 +46,7 @@ public sortContent = false;
     });
   }
   addToLibrary() {
-    if (this.editorService.checkIfContensCanbeAdded()) {
+    if (this.editorService.checkIfContentsCanbeAdded()) {
       this.moveEvent.emit({
         action: 'openHierarchyPopup'
       });

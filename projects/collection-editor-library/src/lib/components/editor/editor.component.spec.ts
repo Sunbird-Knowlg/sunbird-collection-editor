@@ -31,18 +31,18 @@ describe('EditorComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('#treeEventListener should call treeEventListener for createNewContent and checkIfContensCanbeAdded returns false', () => {
+  it('#treeEventListener should call treeEventListener for createNewContent and checkIfContentsCanbeAdded returns false', () => {
     const event = {
       type: 'createNewContent'
     };
-    spyOn(component['editorService'], 'checkIfContensCanbeAdded').and.returnValue(false);
+    spyOn(component['editorService'], 'checkIfContentsCanbeAdded').and.returnValue(false);
     spyOn(component, 'saveContent');
     spyOn(component, 'updateTreeNodeData').and.returnValue(true);
     component.treeEventListener(event);
     expect(component.saveContent).not.toHaveBeenCalled();
   });
   it('#showLibraryComponentPage should call showLibraryComponentPage', () => {
-    spyOn(component['editorService'], 'checkIfContensCanbeAdded').and.returnValue(false);
+    spyOn(component['editorService'], 'checkIfContentsCanbeAdded').and.returnValue(false);
     spyOn(component, 'saveContent');
     component.showLibraryComponentPage();
     expect(component.saveContent).not.toHaveBeenCalled();
