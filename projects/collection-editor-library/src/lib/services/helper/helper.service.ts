@@ -66,7 +66,7 @@ export class HelperService {
     const channelData = sessionStorage.getItem(channelId);
     if (!channelData) {
       const channelOptions = {
-        url: this.configService.urlConFig.URLS.channelRead + channelId
+        url: _.get(this.configService.urlConFig, 'URLS.channelRead') + channelId
       };
       return this.dataService.get(channelOptions).pipe(map((data: any) => data.result.channel));
     } else {
