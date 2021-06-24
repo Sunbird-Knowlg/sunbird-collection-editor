@@ -1,10 +1,10 @@
 <div class="pt-10 fs-0-92 sb-w-85">
-  <label class="fs-0-92">Options<span class="sb-required">*</span></label>
-  <i class="icon info circle ml-8" suiPopup popupDelay="500" popupText="Please provide options for the question. Select suitable option layout and verify it in preview."></i>
+  <label class="fs-0-92 font-weight-bold">Options<span class="sb-required">*</span></label>
+  <label class="fs-0-92 d-inline-block">Select Layout</label><div class="d-inline-block" data-title="Please Preview to check how layout looks."><i class="icon info circle ml-8"></i></div>
   <span class="divider mr-8"></span>
-  <span> <i class="q-sb-layout-single mr-10 h-7" [ngClass]="{active: 'mcq-vertical' === templateType}" (click)="setTemplete('mcq-vertical')"></i></span>
-  <span> <i class="q-sb-layout-two mr-10 h-7" [ngClass]="{active: 'mcq-horizontal' === templateType}" (click)="setTemplete('mcq-horizontal')"></i></span>
-  <span> <i class="q-sb-layout-three mr-10 h-7 w-20" [ngClass]="{active: 'mcq-grid-split' === templateType}" (click)="setTemplete('mcq-grid-split')"></i></span>
+   <span><button class="sb-btn sb-btn-xs sb-btn-outline-gray mr-5 q-sb-layout-single" [ngClass]="{active: 'mcq-vertical' === templateType}" (click)="setTemplete('mcq-vertical')"><i class="mr-10 h-7"></i> Vertical</button></span>
+   <span><button class="sb-btn sb-btn-xs sb-btn-outline-gray mr-5 q-sb-layout-three" [ngClass]="{active: 'mcq-grid-split' === templateType}" (click)="setTemplete('mcq-grid-split')"><i class="mr-10 h-7 w-20"></i> Grid</button></span>
+   <span><button class="sb-btn sb-btn-xs sb-btn-outline-gray q-sb-layout-two" [ngClass]="{active: 'mcq-horizontal' === templateType}" (click)="setTemplete('mcq-horizontal')"> <i class="mr-10 h-7"></i> Horizontal</button></span>
 </div>
 <label *ngIf="showFormError && !editorState.answer" class="ui basic red error label pt-1 mt-10">Select one correct
   answer</label>

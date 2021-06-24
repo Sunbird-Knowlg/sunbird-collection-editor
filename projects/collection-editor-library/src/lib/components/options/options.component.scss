@@ -5,6 +5,9 @@
   &.active,
   &:hover
   {
+    border-color: var(--primary-400);
+    background-color: #ffffff;
+    color: var(--primary-400);
     &:before{
       content: url("/assets/images/layoutoneicon_blue.svg");
     } 
@@ -17,6 +20,9 @@
   &.active,
   &:hover
   {
+    border-color: var(--primary-400);
+    background-color: #ffffff;
+    color: var(--primary-400);
     &:before{
       content: url("/assets/images/layouttwoicon_blue.svg");
     } 
@@ -31,6 +37,9 @@
   &.active,
   &:hover
   {
+    border-color: var(--primary-400);
+    background-color: #ffffff;
+    color: var(--primary-400);
     &:before{
       content: url("/assets/images/layoutthreeicon_blue.svg");
     } 
@@ -79,6 +88,7 @@
   &.active,
   &:hover
   {
+   
     &:before{
       content: url("/assets/images/rightalignicon_blue.svg");
     } 
@@ -107,4 +117,10 @@
   &:focus {
     background-color: transparent !important;
   }
+}
+
+.sb-w-85 div[data-title]:hover::before{
+  left: 0%;
+  top: -122% !important;
+  width: 256px;
 }
