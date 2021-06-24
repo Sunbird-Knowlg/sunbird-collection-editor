@@ -31,7 +31,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
   public characterCount;
   public mediaobj;
   initialized = false;
-  public assetProxyUrl =  _.get(this.configService.urlConFig, 'URLS.assetProxyUrl');
+  public assetProxyUrl: any;
   public lastImgResizeWidth;
   constructor(private questionService: QuestionService, private editorService: EditorService,
               private toasterService: ToasterService, public configService: ConfigService) { }
@@ -67,6 +67,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
   public emptyImageSearchMessage: any;
   public emptyVideoSearchMessage: any;
   ngOnInit() {
+    this.assetProxyUrl =  _.get(this.configService.urlConFig, 'URLS.assetProxyUrl');
     this.initialFormConfig = _.get(config, 'uploadIconFormConfig');
     this.formConfig = _.get(config, 'uploadIconFormConfig');
     this.emptyImageSearchMessage =  _.get(this.configService.labelConfig, 'messages.error.016');

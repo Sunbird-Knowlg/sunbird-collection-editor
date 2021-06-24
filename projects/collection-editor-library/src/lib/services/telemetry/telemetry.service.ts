@@ -48,7 +48,7 @@ export class EditorTelemetryService {
             batchsize: 20,
             mode: config.context.mode,
             host: config.context.host || document.location.origin,
-            endpoint: config.context.endpoint || this.configService.urlConFig.URLS.telemetry,
+            endpoint: config.context.endpoint || _.get(this.configService.urlConFig, 'URLS.telemetry'),
             tags: config.context.tags,
             cdata: this.context.cdata || []
           },

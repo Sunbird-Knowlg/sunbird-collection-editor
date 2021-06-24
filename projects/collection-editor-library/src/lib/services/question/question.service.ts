@@ -60,7 +60,7 @@ export class QuestionService {
 
   getAssetMedia(req?: object) {
     const reqParam = {
-      url: this.configService.urlConFig.URLS.compositSearch,
+      url: _.get(this.configService.urlConFig, 'URLS.compositSearch'),
       data: {
         request: {
           filters: {
@@ -81,7 +81,7 @@ export class QuestionService {
 
   createMediaAsset(req?: object) {
     const reqParam = {
-      url: this.configService.urlConFig.URLS.CONTENT.CREATE,
+      url: _.get(this.configService.urlConFig, 'URLS.CONTENT.CREATE'),
       data: {
         request: {
           content: {
