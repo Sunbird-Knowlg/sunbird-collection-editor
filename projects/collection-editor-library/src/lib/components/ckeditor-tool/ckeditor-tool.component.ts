@@ -95,12 +95,6 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       image: {
         resizeUnit: '%',
         resizeOptions: [{
-          name: 'resizeImage:original',
-          value: null,
-          icon: 'original',
-          className: 'resize-100'
-        },
-        {
           name: 'resizeImage:25',
           value: '25',
           icon: 'small',
@@ -117,9 +111,21 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
           value: '75',
           icon: 'large',
           className: 'resize-75'
+        },
+        {
+          name: 'resizeImage:100',
+          value: '100',
+          icon: 'full',
+          className: 'resize-100'
+        },
+        {
+          name: 'resizeImage:original',
+          value: null,
+          icon: 'original',
+          className: 'resize-original'
         }],
         toolbar: ['imageStyle:alignLeft', 'imageStyle:full',
-          'imageStyle:alignRight', 'resizeImage:25', 'resizeImage:50', 'resizeImage:75', 'resizeImage:original'],
+          'imageStyle:alignRight', 'resizeImage:25', 'resizeImage:50', 'resizeImage:75',  'resizeImage:100', 'resizeImage:original'],
         styles: ['full', 'alignLeft', 'alignRight', 'alignCenter']
       },
       isReadOnly: false,

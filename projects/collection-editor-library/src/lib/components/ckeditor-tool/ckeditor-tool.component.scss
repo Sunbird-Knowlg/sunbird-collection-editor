@@ -172,16 +172,24 @@
     overflow: visible;
   }
 
-  figure.image.image_resized.resize-25 {
+  figure.image img {
+    width: 100%;
+  }
+
+  figure.image.resize-25 {
     width: 25%;
     height: auto;
   }
-  figure.image.image_resized.resize-50 {
+  figure.image.resize-50 {
     width: 50%;
     height: auto;
   }
-  figure.image.image_resized.resize-75 {
+  figure.image.resize-75 {
     width: 75%;
+    height: auto;
+  }
+  figure.image.resize-100 {
+    width: 100%;
     height: auto;
   }
 }
