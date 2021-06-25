@@ -141,7 +141,10 @@
        "addingTo":"Adding To",
        "selectTemplate":"Select a template to get started",
        "createNew":"Create new",
-       "selectLayout":"Select Layout"
+       "selectLayout":"Select Layout",
+       "vertical":"Vertical",
+       "grid":"Grid",
+       "horizontal":"Horizontal"
       },
     "err":{
        "somethingWentWrong":"Something went wrong",
