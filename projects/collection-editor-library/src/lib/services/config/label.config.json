@@ -180,7 +180,9 @@
          "027": "Unable to update pre_signed_url with Content Id and Content Creation Failed, Please Try Again",
          "028": "This number is too large for the request",
          "029": "Please fill the required metadata",
-         "030": "search failed"
+         "030": "search failed",
+         "031": "Cannot create question. reached limit of maximum number of questions allowed.",
+         "032": "Cannot add content. reached limit of maximum number of contents allowed."
       }, 
       "success": {
          "001": "Content is saved",

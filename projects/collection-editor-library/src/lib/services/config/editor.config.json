@@ -18,5 +18,11 @@
     },
     "contentPrimaryCategories": ["Course Assessment", "eTextbook", "Explanation Content", "Learning Resource", "Practice Question Set"],
     "readQuestionFields": "body,primaryCategory,mimeType,qType,answer,templateId,responseDeclaration,interactionTypes,interactions,name,solutions,editorState,media,",
-    "omitFalseyProperties":["topic", "topicsIds", "targetTopicIds", "keywords"]
+    "omitFalseyProperties":["topic", "topicsIds", "targetTopicIds", "keywords"],
+    "questionSet": {
+      "maxQuestionsLimit": "10"
+    },
+    "collection": {
+      "maxContentsLimit": "10"
+    }
 }
