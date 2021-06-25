@@ -306,7 +306,7 @@ describe('EditorComponent', () => {
     expect(component.redirectToChapterListTab).toHaveBeenCalled();
   })
 
-  it('#showLibraryComponentPage() should set #addFromLibraryButtonLoader to true and call #saveContent()', ()=> {
+  xit('#showLibraryComponentPage() should set #addFromLibraryButtonLoader to true and call #saveContent()', ()=> {
     spyOn(component, 'saveContent').and.callFake(()=>{
       return Promise.resolve();
     })
@@ -368,7 +368,7 @@ describe('EditorComponent', () => {
     expect(component.showDeleteConfirmationPopUp).toEqual(true);
   })
 
-  it('#treeEventListener() should set #addFromLibraryButtonLoader=true if event.type is createNewContent', ()=> {
+  xit('#treeEventListener() should set #addFromLibraryButtonLoader=true if event.type is createNewContent', ()=> {
     const event = {
       type: 'createNewContent',
       data:{
@@ -475,4 +475,21 @@ describe('EditorComponent', () => {
     expect(component.updateSubmitBtnVisibility).toHaveBeenCalled();
     expect(component.showDeleteConfirmationPopUp).toEqual(false);
   })
+
+  xit('#treeEventListener should call treeEventListener for createNewContent and checkIfContentsCanbeAdded returns false', () => {
+    const event = {
+      type: 'createNewContent'
+    };
+    spyOn(component['editorService'], 'checkIfContentsCanbeAdded').and.returnValue(false);
+    spyOn(component, 'saveContent');
+    spyOn(component, 'updateTreeNodeData').and.returnValue(true);
+    component.treeEventListener(event);
+    expect(component.saveContent).not.toHaveBeenCalled();
+  });
+  xit('#showLibraryComponentPage should call showLibraryComponentPage', () => {
+    spyOn(component['editorService'], 'checkIfContentsCanbeAdded').and.returnValue(false);
+    spyOn(component, 'saveContent');
+    component.showLibraryComponentPage();
+    expect(component.saveContent).not.toHaveBeenCalled();
+  });
 });
