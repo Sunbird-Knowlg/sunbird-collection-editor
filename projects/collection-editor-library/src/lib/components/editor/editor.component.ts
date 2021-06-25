@@ -360,7 +360,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   saveContent() {
     return new Promise(async (resolve, reject) => {
       if (!this.validateFormStatus()) {
-        return reject('Please fill the required metadata');
+        return reject(_.get(this.configService, 'labelConfig.messages.error.029'));
       }
       const nodesModified =  _.get(this.editorService.getCollectionHierarchy(), 'nodesModified');
       const objectType = this.configService.categoryConfig[this.editorConfig.config.objectType];

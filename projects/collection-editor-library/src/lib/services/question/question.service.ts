@@ -7,21 +7,24 @@ import * as _ from 'lodash-es';
 import { UUID } from 'angular2-uuid';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
+import { ConfigService } from '../config/config.service';
+import { EditorService } from '../editor/editor.service';
 @Injectable({
   providedIn: 'root'
 })
 export class QuestionService {
   public http: HttpClient;
-  constructor(public dataService: DataService, http: HttpClient, private publicDataService: PublicDataService) {
+  constructor(public dataService: DataService, http: HttpClient, private configService: ConfigService,
+              private publicDataService: PublicDataService, private editorService: EditorService) {
     this.http = http;
   }
 
   readQuestion(questionId, leafFormConfigfields? ) {
     // tslint:disable-next-line:max-line-length
-    let field = 'body,primaryCategory,mimeType,qType,answer,templateId,responseDeclaration,interactionTypes,interactions,name,solutions,editorState,media,';
+    let field = this.configService.editorConfig.readQuestionFields;
     field = leafFormConfigfields ? field + leafFormConfigfields :  field;
     const option = {
-      url: `question/v1/read/${questionId}`,
+      url: `${this.configService.urlConFig.URLS.QUESTION.READ}${questionId}`,
       param: {
         fields: field
       }
@@ -34,7 +37,7 @@ export class QuestionService {
       data: hierarchyBody
     };
     const req = {
-      url: 'questionset/v1/hierarchy/update',
+      url: this.configService.urlConFig.URLS[this.editorService.editorConfig.config.objectType].HIERARCHY_UPDATE,
       data: {
         request: requestObj
       }
@@ -47,7 +50,7 @@ export class QuestionService {
       data: hierarchyBody
     };
     const req = {
-      url: 'questionset/v1/hierarchy/update',
+      url: this.configService.urlConFig.URLS[this.editorService.editorConfig.config.objectType].HIERARCHY_UPDATE,
       data: {
         request: requestObj
       }
@@ -57,7 +60,7 @@ export class QuestionService {
 
   getAssetMedia(req?: object) {
     const reqParam = {
-      url: 'composite/v3/search',
+      url: _.get(this.configService.urlConFig, 'URLS.compositSearch'),
       data: {
         request: {
           filters: {
@@ -78,7 +81,7 @@ export class QuestionService {
 
   createMediaAsset(req?: object) {
     const reqParam = {
-      url: 'content/v3/create',
+      url: _.get(this.configService.urlConFig, 'URLS.CONTENT.CREATE'),
       data: {
         request: {
           content: {
@@ -95,7 +98,7 @@ export class QuestionService {
 
   uploadMedia(req, assetId: any) {
     let reqParam = {
-      url: `content/v3/upload/${assetId}`,
+      url: `${this.configService.urlConFig.URLS.CONTENT.UPLOAD}${assetId}`,
       data: req.data
     };
     reqParam = req ? _.merge({}, reqParam, req) : reqParam;
@@ -104,7 +107,7 @@ export class QuestionService {
 
   generatePreSignedUrl(req, contentId: any) {
     const reqParam = {
-      url: `content/v3/upload/url/${contentId}`,
+      url: `${this.configService.urlConFig.URLS.CONTENT.UPLOAD_URL}${contentId}`,
       data: {
         request: req
       }
@@ -114,7 +117,7 @@ export class QuestionService {
 
   getVideo(videoId) {
     const reqParam = {
-      url: `content/v3/read/${videoId}`
+      url: `${this.configService.urlConFig.URLS.CONTENT.READ}${videoId}`
     };
     return this.publicDataService.get(reqParam);
   }
