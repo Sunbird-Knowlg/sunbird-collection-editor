@@ -5,7 +5,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
-import {mockData, config, treeData, tree, editorConfig} from './fancy-tree.component.spec.data';
+import { config, treeData, tree, editorConfig } from './fancy-tree.component.spec.data';
 import { Router } from '@angular/router';
 import { TreeService } from '../../services/tree/tree.service';
 import { SuiModule } from 'ng2-semantic-ui/dist';
@@ -239,5 +239,3 @@ describe('FancyTreeComponent', () => {
     expect(result.length).toBeGreaterThan(1);
   })
 });
-
-
