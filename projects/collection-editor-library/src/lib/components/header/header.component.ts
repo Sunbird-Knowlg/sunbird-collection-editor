@@ -4,7 +4,6 @@ import { EditorTelemetryService } from '../../services/telemetry/telemetry.servi
 import { ConfigService } from '../../services/config/config.service';
 import * as _ from 'lodash-es';
 import { NgForm } from '@angular/forms';
-import { resolve } from 'url';
 
 @Component({
   selector: 'lib-header',
