@@ -1,4 +1,3 @@
-import { resolve } from 'url';
 import { EditorService } from './../../services/editor/editor.service';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { EditorComponent } from './editor.component';
@@ -14,23 +13,6 @@ import { ConfigService } from '../../services/config/config.service';
 import { of } from 'rxjs';
 import { DialcodeService } from '../../services/dialcode/dialcode.service';
 import { treeData } from './../fancy-tree/fancy-tree.component.spec.data';
-
-const mockEditorService = {
-  editorConfig: {
-    config: {
-      hierarchy: {
-        level1: {
-          name: 'Module',
-          type: 'Unit',
-          mimeType: 'application/vnd.ekstep.content-collection',
-          contentType: 'Course Unit',
-          iconClass: 'fa fa-folder-o',
-          children: {}
-        }
-      }
-    }
-  }
-};
 
 describe('EditorComponent', () => {
   let component: EditorComponent;
@@ -89,7 +71,7 @@ describe('EditorComponent', () => {
     expect(component.showPreview).toBeFalsy();
   })
 
-  it('#ngOnInit() should call #editorService.initialize()', () => {
+  it('#ngOnInit() should call #editorService.initialize() and editorService.getToolbarConfig', () => {
     const editorService = TestBed.get(EditorService);
     component.editorConfig = editorConfig;
     spyOn(editorService, 'initialize');
@@ -99,7 +81,7 @@ describe('EditorComponent', () => {
     expect(editorService.getToolbarConfig).toHaveBeenCalled();
   })
 
-  it('should call #impression() method after view init', () => {
+  it('#ngAfterViewInit() should call #impression()', () => {
     const telemetryService = TestBed.get(EditorTelemetryService)
     spyOn(telemetryService, 'impression').and.callFake(() => {
       return true;
@@ -137,7 +119,7 @@ describe('EditorComponent', () => {
     expect(component.saveContent).toHaveBeenCalled();
   })
 
-  it("#toolbarEventListener() shoudl call #saveContent() if event is saveContent", ()=> {
+  it("#toolbarEventListener() should call #saveContent() if event is saveContent", ()=> {
     spyOn(component, 'saveContent').and.callFake(()=>{
       return Promise.resolve();
     });
@@ -148,7 +130,7 @@ describe('EditorComponent', () => {
     expect(component.saveContent).toHaveBeenCalled();
   })
 
-  it("#toolbarEventListener() shoudl call #previewContent() if event is previewContent", ()=> {
+  it("#toolbarEventListener() should call #previewContent() if event is previewContent", ()=> {
     spyOn(component, 'previewContent');
     let event = {
       button : 'previewContent'
@@ -305,18 +287,17 @@ describe('EditorComponent', () => {
     expect(component.saveContent).toHaveBeenCalled();
   })
 
-  it('#rejectContent() should call #submitRequestChanges() method', async() => {
+  it('#rejectContent() should call #submitRequestChanges() and #redirectToChapterListTab()', async() => {
     let editorService = TestBed.get(EditorService);
     component.collectionId = 'do_1234';
     spyOn(editorService, 'submitRequestChanges').and.returnValue(of({}))
     spyOn(component, 'redirectToChapterListTab');
-    // fixture.detectChanges();
     component.rejectContent('test');
     expect(editorService.submitRequestChanges).toHaveBeenCalled();
     expect(component.redirectToChapterListTab).toHaveBeenCalled();
   })
 
-  it('#publishContent should call #redirectToChapterListTab()', ()=> {
+  it('#publishContent should call #publishContent() and #redirectToChapterListTab()', ()=> {
     const editorService = TestBed.get(EditorService);
     spyOn(editorService, 'publishContent').and.returnValue(of({}));
     spyOn(component, 'redirectToChapterListTab');
@@ -325,7 +306,7 @@ describe('EditorComponent', () => {
     expect(component.redirectToChapterListTab).toHaveBeenCalled();
   })
 
-  it('#showLibraryComponentPage() should set #addFromLibraryButtonLoader to true', ()=> {
+  it('#showLibraryComponentPage() should set #addFromLibraryButtonLoader to true and call #saveContent()', ()=> {
     spyOn(component, 'saveContent').and.callFake(()=>{
       return Promise.resolve();
     })
@@ -494,6 +475,4 @@ describe('EditorComponent', () => {
     expect(component.updateSubmitBtnVisibility).toHaveBeenCalled();
     expect(component.showDeleteConfirmationPopUp).toEqual(false);
   })
-
-
 });
