@@ -124,8 +124,8 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
           icon: 'original',
           className: 'resize-original'
         }],
-        toolbar: ['imageStyle:alignLeft', 'imageStyle:full',
-          'imageStyle:alignRight', 'resizeImage:25', 'resizeImage:50', 'resizeImage:75',  'resizeImage:100', 'resizeImage:original'],
+        toolbar: ['imageStyle:alignLeft', 'imageStyle:alignCenter',
+          'imageStyle:alignRight', '|', 'resizeImage:25', 'resizeImage:50', 'resizeImage:75',  'resizeImage:100', 'resizeImage:original'],
         styles: ['full', 'alignLeft', 'alignRight', 'alignCenter']
       },
       isReadOnly: false,
