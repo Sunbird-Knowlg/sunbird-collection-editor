@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { CollectionEditorLibraryModule, EditorCursor } from 'collection-editor-library';
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
-import { QuestionCursor } from '@project-sunbird/sunbird-quml-player-v8';
+import { QuestionCursor } from '@project-sunbird/sunbird-quml-player-v9';
 import { EditorCursorImplementationService } from './editor-cursor-implementation.service';
 
 @NgModule({

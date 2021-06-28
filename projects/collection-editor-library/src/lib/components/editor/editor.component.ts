@@ -25,7 +25,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() editorConfig: IEditorConfig | undefined;
   @Output() editorEmitter = new EventEmitter<any>();
-  @ViewChild('modal', { static: false }) private modal;
+  @ViewChild('modal') private modal;
   public questionComponentInput: any = {};
   public collectionTreeNodes: any;
   public selectedNodeData: any = {};

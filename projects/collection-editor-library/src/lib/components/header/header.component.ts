@@ -17,8 +17,8 @@ export class HeaderComponent implements OnDestroy, OnInit {
   @Input() buttonLoaders: any;
   @Input() showComment: any;
   @Output() toolbarEmitter = new EventEmitter<any>();
-  @ViewChild('FormControl', {static: false}) FormControl: NgForm;
-  @ViewChild('modal', {static: false}) public modal;
+  @ViewChild('FormControl') FormControl: NgForm;
+  @ViewChild('modal') public modal;
   public visibility: any;
   public showReviewModal: boolean;
   public showRequestChangesPopup: boolean;
