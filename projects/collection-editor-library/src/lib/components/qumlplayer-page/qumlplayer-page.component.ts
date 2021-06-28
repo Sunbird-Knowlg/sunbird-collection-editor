@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewEncapsul
 import * as _ from 'lodash-es';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { EditorService } from '../../services/editor/editor.service';
+import { ConfigService } from '../../services/config/config.service';
 @Component({
   selector: 'lib-qumlplayer-page',
   templateUrl: './qumlplayer-page.component.html',
@@ -18,7 +19,7 @@ export class QumlplayerPageComponent implements OnChanges {
   showPotrait = false;
   hierarchy: any;
 
-  constructor(public telemetryService: EditorTelemetryService, public editorService: EditorService) { }
+  constructor(public telemetryService: EditorTelemetryService, public configService: ConfigService, public editorService: EditorService) { }
 
   ngOnChanges() {
     this.initQumlPlayer();

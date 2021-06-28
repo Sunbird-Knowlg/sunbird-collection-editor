@@ -45,7 +45,7 @@ export class FrameworkService {
 
   public getFrameworkCategories(framework: string) {
     const frameworkOptions = {
-      url: `framework/v1/read/${framework}`
+      url: `${this.configService.urlConFig.URLS.frameworkRead}${framework}`
     };
     return this.dataService.get(frameworkOptions);
   }

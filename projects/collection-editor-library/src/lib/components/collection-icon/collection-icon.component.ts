@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ConfigService } from '../../services/config/config.service';
 
 @Component({
   selector: 'lib-collection-icon',
@@ -11,7 +12,7 @@ export class CollectionIconComponent implements OnInit {
   @Output() iconEmitter = new EventEmitter<any>();
   public showImagePicker = false;
 
-  constructor() { }
+  constructor(public configService: ConfigService) { }
 
   ngOnInit() {
   }

@@ -1,4 +1,5 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { ConfigService } from '../../services/config/config.service';
 @Component({
   selector: 'lib-answer',
   templateUrl: './answer.component.html',
@@ -8,7 +9,7 @@ export class AnswerComponent implements OnInit {
   @Input() editorState;
   @Input() showFormError;
   @Output() editorDataOutput: EventEmitter<any> = new EventEmitter<any>();
-  constructor() { }
+  constructor(public configService: ConfigService) { }
 
   ngOnInit() {
     this.editorDataHandler({body: this.editorState.answer});

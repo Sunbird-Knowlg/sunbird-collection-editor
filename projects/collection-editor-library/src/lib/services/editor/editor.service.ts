@@ -24,7 +24,7 @@ export class EditorService {
   private _editorConfig: IEditorConfig;
   private _editorMode = 'edit';
   public showLibraryPage: EventEmitter<number> = new EventEmitter();
-
+  public contentsCount = 0;
   constructor(public treeService: TreeService, private toasterService: ToasterService,
               public configService: ConfigService, private telemetryService: EditorTelemetryService,
               private publicDataService: PublicDataService, private dataService: DataService) { }
@@ -79,7 +79,7 @@ export class EditorService {
 
   getQuestionList(questionIds: string[]): Observable<any> {
     const option = {
-      url: 'question/v1/list',
+      url: _.get(this.configService.urlConFig, 'URLS.QUESTION.LIST'),
       data: {
         request: {
           search: {
@@ -117,7 +117,7 @@ export class EditorService {
 
   fetchContentDetails(contentId) {
     const req = {
-      url: 'content/v3/read/' + contentId
+      url: _.get(this.configService.urlConFig, 'URLS.CONTENT.READ') + contentId
     };
     return this.publicDataService.get(req);
   }
@@ -191,7 +191,7 @@ export class EditorService {
 
   addResourceToHierarchy(collection, unitIdentifier, contentId): Observable<any> {
     const req = {
-      url: 'content/v3/hierarchy/add',
+      url: _.get(this.configService.urlConFig, 'URLS.CONTENT.HIERARCHY_ADD'),
       data: {
         request: {
           rootId: collection,
@@ -269,7 +269,7 @@ export class EditorService {
 
   getCategoryDefinition(categoryName, channel, objectType?: any) {
     const req = {
-      url: 'object/category/definition/v1/read?fields=objectMetadata,forms,name',
+      url: _.get(this.configService.urlConFig, 'URLS.getCategoryDefinition'),
       data: {
         request: {
           objectCategoryDefinition: {
@@ -324,6 +324,43 @@ export class EditorService {
     };
     this.telemetryService.error(telemetryErrorData);
   }
-
-
+  // this method is used to get all the contents in course/question inside every module and sub module
+  getContentChildrens() {
+    const treeObj = this.treeService.getTreeObject();
+    const contents = [];
+    treeObj.visit((node) => {
+      if (node.folder === false) {
+        contents.push(node.data.id);
+      }
+    });
+    return contents;
+  }
+  // this method is used to keep count of contents added from library page
+  contentsCountAddedInLibraryPage(setToZero?) {
+    if (setToZero) {
+      this.contentsCount = 0; // setting this count to zero  while going out from library page
+    } else {
+      this.contentsCount = this.contentsCount + 1;
+    }
+  }
+  checkIfContentsCanbeAdded() {
+    const config = {
+      errorMessage: '',
+      maxLimit: 0
+    };
+    if (_.get(this.editorConfig, 'config.objectType') === 'QuestionSet') {
+      config.errorMessage = _.get(this.configService, 'labelConfig.messages.error.031');
+      config.maxLimit = _.get(this.editorConfig, 'config.questionSet.maxQuestionsLimit');
+    } else {
+      config.errorMessage = _.get(this.configService, 'labelConfig.messages.error.032');
+      config.maxLimit = _.get(this.editorConfig, 'config.collection.maxContentsLimit');
+    }
+    const childrenCount = this.getContentChildrens().length + this.contentsCount;
+    if (childrenCount >= config.maxLimit) {
+      this.toasterService.error(config.errorMessage);
+      return false;
+    } else {
+      return true;
+    }
+  }
 }
