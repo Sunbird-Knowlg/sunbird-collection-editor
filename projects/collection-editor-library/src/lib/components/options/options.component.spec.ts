@@ -6,7 +6,7 @@ import { OptionsComponent } from './options.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { mockOptionData } from './options.component.spec.data';
 import { ConfigService } from '../../services/config/config.service';
-import { SuiModule } from 'ng2-semantic-ui/dist';
+import { SuiModule } from 'ng2-semantic-ui-v9';
 
 describe('OptionsComponent', () => {
   let component: OptionsComponent;

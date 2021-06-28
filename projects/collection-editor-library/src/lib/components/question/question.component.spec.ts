@@ -8,7 +8,7 @@ import { EditorTelemetryService } from '../../services/telemetry/telemetry.servi
 import { EditorService } from '../../services/editor/editor.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
 import { EditorCursor } from '../../collection-editor-cursor.service';
-import { SuiModule } from 'ng2-semantic-ui/dist';
+import { SuiModule } from 'ng2-semantic-ui-v9';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
 import {mockData} from './question.component.spec.data';

@@ -11,7 +11,7 @@ import { ConfigService } from '../../services/config/config.service';
 export class TemplateComponent implements OnInit, OnDestroy {
 
   @Input() templateList: any;
-  @ViewChild('modal', {static: false}) private modal;
+  @ViewChild('modal') private modal;
   @Output() templateSelection = new EventEmitter<any>();
   public showButton = false;
   public templateSelected;
