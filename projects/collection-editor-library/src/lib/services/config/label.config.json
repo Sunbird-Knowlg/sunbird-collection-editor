@@ -124,7 +124,7 @@
        "fillComments":"Fill comments",
        "searchLibrary":"Search Library",
        "options":"Options",
-       "optionsPopupText":"Please provide options for the question. Select suitable option layout and verify it in preview.",
+       "optionsPopupText":"Please Preview to check how layout looks.",
        "selectOneAns":"Select one correct answer",
        "fillThisOption":"Fill this option",
        "reduceSize":"Please reduce the size",
@@ -140,7 +140,11 @@
        "questionRequired":"Question is required",
        "addingTo":"Adding To",
        "selectTemplate":"Select a template to get started",
-       "createNew":"Create new"
+       "createNew":"Create new",
+       "selectLayout":"Select Layout",
+       "vertical":"Vertical",
+       "grid":"Grid",
+       "horizontal":"Horizontal"
       },
     "err":{
        "somethingWentWrong":"Something went wrong",
