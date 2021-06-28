@@ -5,7 +5,7 @@
       <button class="sb-btn sb-btn-primary sb-btn-xs back-btn px-0 hover-none fs-0-92 font-weight-bold"
       (click)="buttonEmitter({type: 'backContent'})" libTelemetryInteract
       [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('back','click','launch', telemetryService.telemetryPageId)">
-        <i class="arrow left icon"></i> Back
+        <i class="arrow left icon" aria-hidden="true"></i> {{configService.labelConfig?.button_labels?.back_btn_label}}
       </button>
     </div>
   </div>
@@ -22,7 +22,7 @@
       <span class="sb-btn sb-btn-normal mr-10" *ngIf="visibility.showSourcingStatus" [ngClass]="sourcingStatusClass">{{ sourcingStatusText }}</span>
 
       <span data-title="View review comments" (click)="buttonEmitter({type: 'showCorrectioncomments'})" *ngIf="visibility.showCorrectionComments" libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('view_comments','click','launch', telemetryService.telemetryPageId)">
-          <i class="icon comment flex-as-baseline mr-05" aria-hidden="true"></i>View Comments
+          <i class="icon comment flex-as-baseline mr-05" aria-hidden="true"></i>{{configService.labelConfig?.lbl?.viewComments}}
       </span>
 
       <a *ngIf="visibility.showOriginPreviewUrl && originPreviewUrl" class="sb-color-primary mr-8 pl-10 fs-0-785 font-weight-bold"
@@ -135,17 +135,17 @@
 <sui-modal *ngIf="showRequestChangesPopup" [mustScroll]="true" [isClosable]="false" [transitionDuration]="0"
   [size]="'normal'" class="sb-modal bx-none overflow-modal" appBodyScroll #modal (dismissed)="showRequestChangesPopup = false;">
   <div class="sb-modal-header">
-      Add Review Comments
+      {{configService.labelConfig?.lbl?.addReviewComments}}
   </div>
   <form #FormControl="ngForm" class="ui form">
   <div class="sb-modal-content">
       <div class="sb-field-group">
-          <label>Enter your comments</label>
+          <label>{{configService.labelConfig?.lbl?.enterYourComments}}</label>
           <div class="sb-field relative">
 
               <textarea type="text" class="wmd-input width-100 sb-form-control" id="wmd-input" [(ngModel)]="rejectComment" placeholder="Add comment" name="rejectComment" required maxlength="{{configService?.editorConfig?.rejectCommentsMaxLength}}"></textarea>
               <label class="ui basic red error label pt-1 mt-5 width-100"
-                  *ngIf="FormControl.form.controls.rejectComment?.touched && !FormControl.form.valid">Fill comments </label>
+                  *ngIf="FormControl.form.controls.rejectComment?.touched && !FormControl.form.valid">{{configService.labelConfig?.lbl?.fillComments}} </label>
 
               <!-- <textarea rows="4" name="moretext" class="sb-form-control" placeholder="Type here..."></textarea>
               <span class="characters-left">1000 Characters left</span> -->
@@ -156,9 +156,9 @@
     <button id="submitReview" type="submit" class="sb-btn sb-btn-normal" [ngClass]="{'sb-btn-primary': FormControl.form.valid, 'sb-btn-disabled': !FormControl.form.valid}" (click)="buttonEmitter({type: actionType, comment: rejectComment}); showRequestChangesPopup = false;"
     [disabled]="!FormControl.form.valid" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('submit_review','click','submit', telemetryService.telemetryPageId, {key: 'dialog_id', value: 'add_review_comments'})"
-    > Submit Review </button>
+    > {{configService.labelConfig?.button_labels?.submit_review_btn_label}} </button>
     <button class="sb-btn sb-btn-normal sb-btn-outline-primary" (click)="modal.deny('denied')"
-    libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('cancel','click','cancel', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'add_review_comments'})">Cancel</button>
+    libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('cancel','click','cancel', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'add_review_comments'})">{{configService.labelConfig?.button_labels?.cancel_btn_label}}</button>
   </div>
 </form>
 </sui-modal>
@@ -167,19 +167,19 @@
       [size]="'small'" class="sb-modal bx-none overflow-modal" appBodyScroll
       (dismissed)="showPublishCollectionPopup = !showPublishCollectionPopup" #modal>
       <div class="sb-modal-header">
-        Publish Collection
+        {{configService.labelConfig?.lbl?.publishCollection}}
       </div>
       <div class="sb-modal-content">
-        Are you sure you want to publish this collection?
+        {{configService.labelConfig?.lbl?.confirmPublishCollection}}
       </div>
       <div class="sb-modal-actions">
         <button class="sb-btn sb-btn-normal sb-btn-primary" (click)="buttonEmitter({type: 'publishContent'});showPublishCollectionPopup = false;"
         libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('yes','click','submit', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'publish_collection'})">
-          Yes
+          {{configService.labelConfig?.button_labels?.yes_btn_label}}
         </button>
         <button class="sb-btn sb-btn-normal sb-btn-outline-primary" (click)="showPublishCollectionPopup = !showPublishCollectionPopup"
         libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('no','click','cancel', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'add_review_comments'})">
-          No
+          {{configService.labelConfig?.button_labels?.no_btn_label}}
         </button>
       </div>
 </sui-modal>

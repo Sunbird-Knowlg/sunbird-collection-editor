@@ -341,6 +341,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   showLibraryComponentPage() {
+    if (this.editorService.checkIfContentsCanbeAdded()) {
     this.buttonLoaders.addFromLibraryButtonLoader = true;
     this.saveContent().then(res => {
       this.libraryComponentInput.collectionId = this.collectionId;
@@ -350,6 +351,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       this.toasterService.error(err);
       this.buttonLoaders.addFromLibraryButtonLoader = false;
     });
+  }
   }
 
   libraryEventListener(event: any) {
@@ -362,7 +364,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   saveContent() {
     return new Promise(async (resolve, reject) => {
       if (!this.validateFormStatus()) {
-        return reject('Please fill the required metadata');
+        return reject(_.get(this.configService, 'labelConfig.messages.error.029'));
       }
       const nodesModified =  _.get(this.editorService.getCollectionHierarchy(), 'nodesModified');
       const objectType = this.configService.categoryConfig[this.editorConfig.config.objectType];
@@ -486,6 +488,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.showDeleteConfirmationPopUp = true;
         break;
       case 'createNewContent':
+        if (this.editorService.checkIfContentsCanbeAdded()) {
         this.buttonLoaders.addFromLibraryButtonLoader = true;
         this.saveContent().then((message: string) => {
           this.buttonLoaders.addFromLibraryButtonLoader = false;
@@ -494,6 +497,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           this.toasterService.error(error);
           this.buttonLoaders.addFromLibraryButtonLoader = false;
         }));
+      }
         break;
       default:
         break;
