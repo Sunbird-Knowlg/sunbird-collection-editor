@@ -17,6 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "aot": true,
             "outputPath": "dist/sunbird-collection-editor",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -28,12 +29,12 @@
               "src/favicon.ico",
               {
                 "glob": "**/*",
-                "input": "node_modules/@project-sunbird/sunbird-pdf-player-v8/lib/assets/",
+                "input": "node_modules/@project-sunbird/sunbird-pdf-player-v9/lib/assets/",
                 "output": "/assets/"
               },
               {
                 "glob": "**/*",
-                "input": "node_modules/@project-sunbird/sunbird-video-player-v8/lib/assets/",
+                "input": "node_modules/@project-sunbird/sunbird-video-player-v9/lib/assets/",
                 "output": "/assets/"
               },
               {
@@ -43,7 +44,7 @@
               },
               {
                 "glob": "**/*",
-                "input": "node_modules/@project-sunbird/sunbird-quml-player-v8/lib/assets/",
+                "input": "node_modules/@project-sunbird/sunbird-quml-player-v9/lib/assets/",
                 "output": "/assets/"
               }
             ],
@@ -68,8 +69,7 @@
               "src/assets/lib/semantic-ui-tree-picker.js",
               "node_modules/@project-sunbird/telemetry-sdk/index.js",
               "node_modules/@project-sunbird/client-services/index.js"
-            ],
-            "es5BrowserSupport": true
+            ]
           },
           "configurations": {
             "production": {
@@ -93,6 +93,10 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ]
             }
@@ -190,7 +194,8 @@
           "configurations": {
             "production": {
               "project": "projects/collection-editor-library/ng-package.prod.json"
-            }
+            ,              "tsConfig": "projects/collection-editor-library/tsconfig.lib.prod.json"
+}
           }
         },
         "test": {

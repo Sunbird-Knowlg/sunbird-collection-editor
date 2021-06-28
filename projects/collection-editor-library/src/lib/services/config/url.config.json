@@ -31,7 +31,7 @@
     "CONTENT": {
     "HIERARCHY_ADD":"content/v3/hierarchy/add",
     "READ":"content/v3/read/",
-    "CREATE":"content/v3/create/",
+    "CREATE":"content/v3/create",
     "UPLOAD":"content/v3/upload/",
     "UPLOAD_URL":"content/v3/upload/url/"
     },

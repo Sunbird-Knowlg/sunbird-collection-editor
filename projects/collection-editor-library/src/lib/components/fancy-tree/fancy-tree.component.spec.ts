@@ -8,11 +8,9 @@ import { EditorTelemetryService } from '../../services/telemetry/telemetry.servi
 import { config, treeData, tree, editorConfig } from './fancy-tree.component.spec.data';
 import { Router } from '@angular/router';
 import { TreeService } from '../../services/tree/tree.service';
-import { SuiModule } from 'ng2-semantic-ui/dist';
 import { ToasterService } from '../../services/toaster/toaster.service';
 import { ConfigService } from '../../services/config/config.service';
-
-
+import { SuiModule } from 'ng2-semantic-ui-v9';
 describe('FancyTreeComponent', () => {
   let component: FancyTreeComponent;
   let fixture: ComponentFixture<FancyTreeComponent>;
