@@ -7,10 +7,10 @@ export const collectionEditorConfig = {
       lastName: 'Bhuva',
       orgIds: ['01309282781705830427']
     },
-    identifier: 'do_113274017771085824116',
-    channel: '01307938306521497658',
+    identifier: 'do_113301063790198784120',
+    channel: '01309282781705830427',
     // framework: 'nit_k-12',
-    targetFWIds: ['nit_k-12'],
+    // targetFWIds: ['nit_k-12'],
     authToken: ' ',
     sid: 'iYO2K6dOSdA0rwq7NeT1TDzS-dbqduvV',
     did: '7e85b4967aebd6704ba1f604f20056b6',
@@ -56,7 +56,7 @@ export const collectionEditorConfig = {
     host: '',
     defaultLicense: 'CC BY 4.0',
     endpoint: '/data/v3/telemetry',
-    env: 'question_set',
+    env: 'collection_editor',
     cloudStorageUrls: [
       'https://s3.ap-south-1.amazonaws.com/ekstep-public-qa/',
       'https://ekstep-public-qa.s3-ap-south-1.amazonaws.com/',
@@ -130,7 +130,7 @@ export const questionEditorConfig = {
       lastName: 'Bhuva',
       orgIds: ['01309282781705830427']
     },
-    identifier: 'do_113263678834016256111', // do_1132393548335759361558
+    identifier: 'do_11330102570702438417', // do_1132393548335759361558
     authToken: ' ',
     sid: 'iYO2K6dOSdA0rwq7NeT1TDzS-dbqduvV',
     did: '7e85b4967aebd6704ba1f604f20056b6',
@@ -167,7 +167,7 @@ export const questionEditorConfig = {
     host: 'https://dev.sunbirded.org',
     defaultLicense: 'CC BY 4.0',
     endpoint: '/data/v3/telemetry',
-    env: 'questionSetLibrary',
+    env: 'questionset_editor',
     framework: 'ekstep_ncert_k-12',
     cloudStorageUrls: ['https://s3.ap-south-1.amazonaws.com/ekstep-public-qa/', 'https://ekstep-public-qa.s3-ap-south-1.amazonaws.com/',
                       'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/'],
