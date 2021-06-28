@@ -8,13 +8,22 @@ import { TelemetryInteractDirective } from '../../directives/telemetry-interact/
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TreeService } from '../../services/tree/tree.service';
-import { editorConfig, configServiceData, nativeElement, getCategoryDefinitionResponse } from './editor.component.spec.data';
+import { editorConfig, nativeElement, getCategoryDefinitionResponse } from './editor.component.spec.data';
 import { ConfigService } from '../../services/config/config.service';
 import { of } from 'rxjs';
 import { DialcodeService } from '../../services/dialcode/dialcode.service';
 import { treeData } from './../fancy-tree/fancy-tree.component.spec.data';
+import * as urlConfig from '../../services/config/url.config.json';
+import * as labelConfig from '../../services/config/label.config.json';
+import * as categoryConfig from '../../services/config/category.config.json';
 
 describe('EditorComponent', () => {
+  const configStub = {
+    urlConFig: (urlConfig as any).default,
+    labelConfig: (labelConfig as any).default,
+    categoryConfig: (categoryConfig as any).default
+  };
+
   let component: EditorComponent;
   let fixture: ComponentFixture<EditorComponent>;
 
@@ -24,7 +33,7 @@ describe('EditorComponent', () => {
       declarations: [ EditorComponent, TelemetryInteractDirective ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
       providers: [ EditorTelemetryService, EditorService, DialcodeService,
-        { provide: ConfigService, useValue: configServiceData }
+        { provide: ConfigService, useValue: configStub }
       ]
     })
     .compileComponents();
