@@ -83,7 +83,7 @@ export class ManageCollaboratorComponent implements OnInit {
     this.users = _.filter(allUsers, user => {
       return !_.includes(this.creatorAndCollaboratorsIds, user.identifier);
     });
-    // this.users = allUsers; // line to be removed
+    this.users = allUsers; // line to be removed
   }
 
   toggleSelectionUser(userIdentifier) {
