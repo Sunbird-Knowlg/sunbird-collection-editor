@@ -207,6 +207,9 @@
             "scripts": [
               "src/assets/libs/iziToast/iziToast.min.js",
               "node_modules/jquery/dist/jquery.min.js"
+            ],
+            "codeCoverageExclude":[
+              "projects/collection-editor-library/src/lib/interfaces/*/*.ts"
             ]
           }
         },
