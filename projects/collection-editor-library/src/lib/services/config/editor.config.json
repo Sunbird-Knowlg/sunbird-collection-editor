@@ -20,9 +20,9 @@
     "readQuestionFields": "body,primaryCategory,mimeType,qType,answer,templateId,responseDeclaration,interactionTypes,interactions,name,solutions,editorState,media,",
     "omitFalseyProperties":["topic", "topicsIds", "targetTopicIds", "keywords"],
     "questionSet": {
-      "maxQuestionsLimit": "500"
+      "maxQuestionsLimit": "10"
     },
     "collection": {
-      "maxContentsLimit": "500"
+      "maxContentsLimit": "10"
     }
 }
