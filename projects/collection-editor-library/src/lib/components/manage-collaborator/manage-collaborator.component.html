@@ -116,6 +116,7 @@
     <div class="sb-modal-actions">
     <button class="sb-btn sb-btn-normal sb-btn-primary"
     [ngClass]="{'sb-btn-disabled': (selectedUsers.length === 0 && selectedcollaborators.length === 0)}"
+    [disabled]="(selectedUsers.length === 0 && selectedcollaborators.length === 0)"
      (click)="addRemoveCollaboratorToCourse(modal)">Done</button>
     </div>
 </sui-modal>

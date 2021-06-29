@@ -64,11 +64,11 @@ export class ManageCollaboratorComponent implements OnInit {
       this.contentCollaborators = _.get(res.result.content, 'collaborators', []);
       this.contentOwner = [_.get(res.result.content, 'createdBy')];
       this.creatorAndCollaboratorsIds = [...this.contentCollaborators, ...this.contentOwner];
-      this.checkUserRole(res);
+      this.checkUserRole();
     });
   }
 
-  checkUserRole(res) {
+  checkUserRole() {
     if (this.contentOwner[0] === this.currentUser.id) {
       this.isContentOwner = true;
     } else {
