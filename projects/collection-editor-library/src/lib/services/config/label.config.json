@@ -81,7 +81,7 @@
       "success": {
          "001": "Content is saved",
          "002": "Content is sent for review",
-         "003": "Content rejected successfully",
+         "003": "Content is sent back for corrections",
          "004": "Content is published",
          "005": "Content is added to the folder",
          "006": "Asset Successfully Uploaded...",
