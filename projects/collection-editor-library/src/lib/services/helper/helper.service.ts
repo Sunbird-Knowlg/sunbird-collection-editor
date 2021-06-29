@@ -100,37 +100,13 @@ export class HelperService {
     }
   }
 
-  getAllUsers(rootOrgIds, userIds?) {
+  getAllUser(userSearchBody) {
     const req = {
       url: `user/v1/search?fields=orgName`,
       data: {
-        request: {
-          query: '',
-          filters: {
-              'organisations.roles': [
-                  'CONTENT_CREATOR' //CONTENT_CREATOR
-              ],
-              rootOrgId: rootOrgIds,
-          },
-          fields: [
-              'email',
-              'firstName',
-              'identifier',
-              'lastName',
-              'organisations',
-              'rootOrgName',
-              'phone'
-          ],
-          offset: 0,
-          limit: 200
-        }
+        request: userSearchBody.request
       }
     };
-
-    if (userIds) {
-      // tslint:disable-next-line:no-string-literal
-      req.data.request.filters['userId'] = userIds;
-    }
 
     return this.publicDataService.post(req);
   }

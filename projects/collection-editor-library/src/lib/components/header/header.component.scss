@@ -52,10 +52,9 @@
   cursor: pointer;
   overflow: hidden;
   position: relative;
-  margin-top: .1875rem;
   transition: box-shadow .3s ease-out,transform .3s ease-out,opacity .2s ease-out;
   transition-delay: .1s;
-  margin: 0 0.6rem 0.6rem 0;
+  margin: .1875rem 0.6rem 0.6rem 0;
 
   &:hover {
       transform: translate(0,-.1875rem);

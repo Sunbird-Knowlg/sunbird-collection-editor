@@ -17,19 +17,33 @@ export class ManageCollaboratorComponent implements OnInit {
   @Input() addCollaborator;
   @Input() collectionId;
   public showCollaborationPopup: boolean;
-  public collaboratorList: any;
-  public contentCollaborators: any;
-  public contentOwner;
-  public creatorAndCollaboratorsIds;
+  private contentCollaborators: any;
+  private contentOwner;
+  private creatorAndCollaboratorsIds;
   public selectedUsers = [];
   public selectedcollaborators = [];
   public users = [];
-  public rootOrgId;
-  private addCollaboratorTabVisit = 0;
-  private manageCollaboratorTabVisit = 0;
   public collaborators = [];
+  private manageCollaboratorTabVisit = 0;
   public updatedCollaborators = [];
-  public showManageCollaboration = false;
+  public isAddCollaboratorTab: boolean;
+  public searchKeyword = '';
+  public searchRes = { count: 0, content: [], isEmptyResponse: false, errorMessage: '', searchStatus: 'start' };
+  public userSearchBody = {
+    request: {
+        query: '',
+        filters: {
+            'organisations.roles': 'CONTENT_CREATOR',
+            rootOrgId: ''
+        },
+        fields: ['email', 'firstName', 'identifier', 'lastName', 'organisations', 'rootOrgName', 'phone'],
+        offset: 0,
+        limit: 200
+    }
+  };
+  public isContentOwner: boolean;
+  public isRootOrgAdmin: boolean;
+  private currentUser: any;
 
   constructor(
     public helperService: HelperService,
@@ -39,11 +53,10 @@ export class ManageCollaboratorComponent implements OnInit {
     ) { }
 
   ngOnInit() {
-    const currentUser: any = _.get(this.editorService.editorConfig, 'context.user');
-    this.rootOrgId = currentUser.orgIds;
-    this.showCollaborationPopup =  this.addCollaborator;
+    this.currentUser = _.get(this.editorService.editorConfig, 'context.user');
+    this.isRootOrgAdmin = _.has(this.currentUser, 'isRootOrgAdmin') ? this.currentUser.isRootOrgAdmin : false;
+    this.userSearchBody.request.filters.rootOrgId = this.currentUser.orgIds;
     this.getCollbaoratorAndCreator();
-    this.getAllUserList();
   }
 
   getCollbaoratorAndCreator() {
@@ -51,7 +64,23 @@ export class ManageCollaboratorComponent implements OnInit {
       this.contentCollaborators = _.get(res.result.content, 'collaborators', []);
       this.contentOwner = [_.get(res.result.content, 'createdBy')];
       this.creatorAndCollaboratorsIds = [...this.contentCollaborators, ...this.contentOwner];
+      this.checkUserRole(res);
     });
+  }
+
+  checkUserRole(res) {
+    if (this.contentOwner[0] === this.currentUser.id) {
+      this.isContentOwner = true;
+    } else {
+      this.isContentOwner = false;
+    }
+    if (this.isContentOwner || this.isRootOrgAdmin) {
+      this.isAddCollaboratorTab = true;
+      this.getAllUserList();
+    } else {
+      this.getCollaborators();
+    }
+    this.showCollaborationPopup =  this.addCollaborator;
   }
 
   dismissCollaborationPopup() {
@@ -60,7 +89,7 @@ export class ManageCollaboratorComponent implements OnInit {
   }
 
   getAllUserList() {
-    this.helperService.getAllUsers(this.rootOrgId).subscribe((response: any) => {
+    this.helperService.getAllUser(this.userSearchBody).subscribe((response: any) => {
       this.users = [];
       const count = _.get(response, 'result.response.count');
       if (!count) {
@@ -69,7 +98,7 @@ export class ManageCollaboratorComponent implements OnInit {
       } else {
         if (_.has(response, 'result.response.content')) {
           const allUsers = _.get(response, 'result.response.content');
-          this.excludeCreatorAndCollaborators(allUsers);
+          this.users = this.excludeCreatorAndCollaborators(allUsers);
         }
       }
     },
@@ -80,10 +109,11 @@ export class ManageCollaboratorComponent implements OnInit {
   }
 
   excludeCreatorAndCollaborators(allUsers) {
-    this.users = _.filter(allUsers, user => {
+    const users = _.filter(allUsers, user => {
       return !_.includes(this.creatorAndCollaboratorsIds, user.identifier);
     });
-    this.users = allUsers; // line to be removed
+    // return users; // line to be kept
+    return allUsers; // line to be removed
   }
 
   toggleSelectionUser(userIdentifier) {
@@ -124,7 +154,6 @@ export class ManageCollaboratorComponent implements OnInit {
     this.updatedCollaborators = this.contentCollaborators;
     this.updatedCollaborators = _.concat(this.updatedCollaborators, this.selectedUsers);
     this.updatedCollaborators = _.difference(this.updatedCollaborators, this.selectedcollaborators);
-    console.log('updatedCollaborators', this.updatedCollaborators);
     this.helperService.updateCollaborator(this.collectionId, this.updatedCollaborators).subscribe((response: any) => {
       if (response.params.status === 'successful') {
         this.toasterService.success('Collaborators updated successfully');
@@ -141,37 +170,99 @@ export class ManageCollaboratorComponent implements OnInit {
 
   /* to be called when user change tab to add collaborator */
   getAllusers() {
-    this.addCollaboratorTabVisit += 1;
-    console.log('addCollaboratorTabVisit', this.addCollaboratorTabVisit);
+    this.isAddCollaboratorTab = true;
   }
 
   /* to be called when user change tab to manage collaborator */
   getCollaborators() {
+    this.isAddCollaboratorTab = false;
     this.manageCollaboratorTabVisit += 1;
     if (this.manageCollaboratorTabVisit <= 1) {
-      // this.contentCollaborators = this.contentOwner; // line to be removed
+      // tslint:disable-next-line:no-string-literal
+      this.userSearchBody.request.filters['userId'] = this.contentCollaborators;
       if (!_.isEmpty(this.contentCollaborators)) {
-        this.helperService.getAllUsers(this.rootOrgId, this.contentCollaborators).subscribe((response: any) => {
-          // this.collaborators = [];
+        this.helperService.getAllUser(this.userSearchBody).subscribe((response: any) => {
           const count = _.get(response, 'result.response.count');
           if (!count) {
             this.collaborators = [];
-            this.showManageCollaboration = true;
             return;
           } else {
             if (_.has(response, 'result.response.content')) {
               this.collaborators = _.get(response, 'result.response.content');
-              this.showManageCollaboration = true;
             }
           }
         },
         (error) => {
           this.collaborators = [];
-          this.showManageCollaboration = true;
           this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.001'));
           console.log(error);
         });
       }
     }
+  }
+
+  sortUsersList(value) {
+    if (value === 'firstName') {
+      this.users = _.orderBy(this.users, [user => user[value].toLowerCase()]);
+    } else {
+      this.users = _.orderBy(this.users, [user => user.organisations[0].orgName ? user.organisations[0].orgName.toLowerCase() : '']);
+    }
+  }
+
+  searchByKeyword() {
+    const searchRequest = this.userSearchBody;
+    if (this.validateEmail(this.searchKeyword)) {
+      // tslint:disable-next-line:no-string-literal
+      searchRequest.request.filters['email'] = this.searchKeyword;
+    } else if (/^\d+$/.test(this.searchKeyword)) {
+        // tslint:disable-next-line:no-string-literal
+        searchRequest.request.filters['phone'] = this.searchKeyword;
+    } else {
+        searchRequest.request.query = this.searchKeyword;
+    }
+
+    this.helperService.getAllUser(searchRequest).subscribe((response: any) => {
+        this.searchRes.searchStatus = 'end';
+        if (_.has(response, 'result.response.content')) {
+          this.searchRes.content = this.excludeCreatorAndCollaborators(_.get(response, 'result.response.content'));
+          if (this.searchRes.content.length) {
+            this.searchRes.isEmptyResponse = false;
+          } else {
+            this.searchRes.isEmptyResponse = true;
+            this.searchRes.content = [];
+          }
+        }
+    },
+    (error) => {
+      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.001'));
+      console.log(error);
+      this.searchRes.content = [];
+      this.searchRes.isEmptyResponse = true;
+      this.searchRes.errorMessage = 'Oops! Something went wrong. Please try again later.';
+    });
+  }
+
+  resetSearch() {
+    this.searchRes.content = [];
+    this.searchRes.isEmptyResponse = false;
+  }
+
+  refreshSearch() {
+    this.searchKeyword = '';
+    this.searchByKeyword();
+  }
+
+  validateEmail(email) {
+    // tslint:disable-next-line:max-line-length
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  }
+
+  selectUser(user) {
+    this.toggleSelectionUser(user.identifier);
+  }
+
+  viewAllResults() {
+    this.users = this.searchRes.content;
   }
 }

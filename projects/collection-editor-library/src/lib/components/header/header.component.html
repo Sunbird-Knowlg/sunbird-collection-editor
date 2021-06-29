@@ -37,7 +37,7 @@
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('view_comments','click','launch', telemetryService.telemetryPageId)">
       <i class="icon comment flex-as-baseline sb-color-gray-400 mr-15" aria-hidden="true"></i>
     </div>
-    <a data-title="Add collaborator" class="cursor-pointer sb-color-primary mr-20 font-weight-bold"
+    <a *ngIf="visibility && visibility?.addCollaborator" data-title="Add collaborator" class="cursor-pointer sb-color-primary mr-20 font-weight-bold"
     (click)="buttonEmitter({type: 'addCollaborator'})">
       <i class="icon user plus mr-0" aria-hidden="true"></i>
     </a>

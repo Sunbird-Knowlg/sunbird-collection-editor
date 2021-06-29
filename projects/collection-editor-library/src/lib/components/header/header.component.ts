@@ -49,6 +49,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
     this.visibility.sourcingApproveContent = this.editorService.editorMode === 'sourcingreview';
     this.visibility.sourcingRejectContent = this.editorService.editorMode === 'sourcingreview';
     this.visibility.previewContent = _.get(this.editorService, 'editorConfig.config.objectType') === 'QuestionSet';
+    this.visibility.addCollaborator = _.get(this.editorService, 'editorConfig.config.objectType') === 'Collection';
     this.visibility.dialcode = this.editorService.editorMode === 'edit';
     this.visibility.showOriginPreviewUrl =  _.get(this.editorService, 'editorConfig.config.showOriginPreviewUrl');
     this.visibility.showSourcingStatus =  _.get(this.editorService, 'editorConfig.config.showSourcingStatus');
