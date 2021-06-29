@@ -29,7 +29,7 @@ export class DialcodeComponent implements OnInit {
   public contentId: string;
   constructor(public telemetryService: EditorTelemetryService, private treeService: TreeService,
               private dialcodeService: DialcodeService, private toasterService: ToasterService,
-              private httpClient: HttpClient, private configService: ConfigService) { }
+              private httpClient: HttpClient, public configService: ConfigService) { }
 
   ngOnInit() {
     this.setQRCodeCriteria();

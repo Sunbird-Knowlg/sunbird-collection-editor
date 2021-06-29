@@ -11,7 +11,7 @@
           </div>
           <div class="py-20 px-32 sb-bg-color-primary-0 br-4 b-1-100" *ngIf="!showPreview">
             <div class="sb-field-group">
-              <label class="fs-0-92">Question<span class="sb-required">*</span></label>
+              <label class="fs-0-92 font-weight-bold">{{configService.labelConfig?.lbl?.question}}<span class="sb-required">*</span></label>
               <div class="sb-field">
                 <div class="ckeditor-tool__question mb-5">
                   <lib-ckeditor-tool
@@ -22,7 +22,7 @@
                 <label *ngIf="
                     showFormError &&
                     [undefined, ''].includes(editorState.question)
-                  " class="sb-color-error fs-0-785">Question is required</label>
+                  " class="sb-color-error fs-0-785">{{configService.labelConfig?.lbl?.questionRequired}}</label>
               </div>
 
               <lib-answer *ngIf="questionInteractionType === 'default'"
@@ -35,23 +35,23 @@
 
               <div class="d-flex flex-ai-center ckeditor-tool__solution py-10 px-16 mt-15 sb-bg-color-white">
                 <label class="fs-0-92 mb-0 ckeditor-tool__label pb-4">
-                  <span class="sb-color-primary fs-0-785 mr-4">Solution</span>
-                  <span class="sb-color-gray-200 fxsmall font-weight-normal">(Optional)</span>
+                  <span class="sb-color-primary fs-0-785 mr-4">{{configService.labelConfig?.lbl?.solution}}</span>
+                  <span class="sb-color-gray-200 fxsmall font-weight-normal">{{configService.labelConfig?.lbl?.optional}}</span>
                 </label>
                 <div
                   class="ui dropdown sb-btn sb-btn-outline-primary sb-btn-normal sb-right-icon-btn sb-btn-radius ml-auto"
                   suiDropdown autoClose="itemClick" *ngIf="showSolutionDropDown" libTelemetryInteract
                   [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('choose_type','click','single_select', telemetryService.telemetryPageId)">
-                  <div class="text gray-200">Choose type</div>
+                  <div class="text gray-200">{{configService.labelConfig?.lbl?.chooseType}}</div>
                   <i class="dropdown icon mx-8"></i>
                   <div class="menu" suiDropdownMenu>
                     <div class="item" (click)="selectSolutionType('Text+Image')" libTelemetryInteract
                       [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('solution_type','select','single_select', telemetryService.telemetryPageId, {solution_type:'Text+Image'})">
-                      Text+Image
+                      {{configService.labelConfig?.lbl?.textImage}}
                     </div>
                     <div class="item" (click)="selectSolutionType('video')" libTelemetryInteract
                       [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('solution_type','select','single_select', telemetryService.telemetryPageId, {solution_type:'video'})">
-                      Video
+                      {{configService.labelConfig?.lbl?.video}}
                     </div>
                   </div>
                 </div>
@@ -119,15 +119,14 @@
   class="sb-modal bx-none overflow-modal" appBodyScroll (dismissed)="showConfirmPopup = !showConfirmPopup" #modal>
   <div class="sb-modal-header"></div>
   <div class="sb-modal-content">
-    This question will not be saved, are you sure you want to go back to
-    questionset?
+    {{configService.labelConfig?.lbl?.confirmQuestionNotSaved}}
   </div>
   <div class="sb-modal-actions">
     <button class="sb-btn sb-btn-normal sb-btn-primary" (click)="redirectToQuestionset()">
-      Yes
+      {{configService.labelConfig?.button_labels?.yes_btn_label}}
     </button>
     <button class="sb-btn sb-btn-normal sb-btn-outline-primary" (click)="showConfirmPopup = !showConfirmPopup">
-      No
+      {{configService.labelConfig?.button_labels?.no_btn_label}}
     </button>
   </div>
 </sui-modal>
