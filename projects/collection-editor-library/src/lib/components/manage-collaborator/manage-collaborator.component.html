@@ -41,7 +41,7 @@
             <div *ngIf="!users?.length">
                 {{configService.labelConfig?.err?.userNotFound}}
             </div>
-                <select class="search dropdown py-5 sb-bg-color-white d-flex mb-10 my-20" *ngIf="users?.length"
+                <select class="search dropdown py-5 sb-bg-color-white d-flex mb-10 my-20 ml-auto" *ngIf="users?.length"
                 (change)="sortUsersList($event.target.value)">
                     <option value="">--Sort By--</option>
                     <option value="firstName">Name</option>
