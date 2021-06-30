@@ -5,7 +5,7 @@
     </div>
     <div class="sb-modal-content">
         <div class="d-flex flex-jc-space-between py-5 flex-align-item-center h-50">
-            <div class="fs-1 font-weight-bold">Collaborators</div>
+            <div class="fs-1 font-weight-bold">{{configService.labelConfig?.lbl?.collaborators}}</div>
                 <div>
                     <div class="sb-search-box small no-btn mr-10" *ngIf="isAddCollaboratorTab">
                         <div class="input-div relative">
@@ -24,7 +24,7 @@
                             <li class="searchResult font-weight-bold" id="view-all-results" *ngIf="searchRes.content.length >= 5" (click)="viewAllResults()"><span>View All Results</span></li>
                         </ul>
                         <ul *ngIf="searchKeyword.length >= 3 && searchRes.isEmptyResponse">
-                            <li class="searchResultMsg"><strong>No Results Found</strong></li>
+                            <li class="searchResultMsg"><strong>{{configService.labelConfig?.err?.resultNotFound}}</strong></li>
                         </ul>
                         <ul *ngIf="searchRes.errorMessage.length  && (searchKeyword.length >= 3)">
                             <strong class="searchResultMsg">{{searchRes.errorMessage}}</strong>
@@ -34,12 +34,12 @@
     </div>
     <sui-tabset>
         <div class="ui pointing secondary menu">
-            <a class="item" *ngIf="(isContentOwner || isRootOrgAdmin)" (activate)="getAllusers()" suiTabHeader="1">Add Collaborators</a>
-            <a class="item" (activate)="getCollaborators()" suiTabHeader="2">Manage Collaborators</a>
+            <a class="item" *ngIf="(isContentOwner || isRootOrgAdmin)" (activate)="getAllusers()" suiTabHeader="1">{{configService.labelConfig?.lbl?.addCollaborators}}</a>
+            <a class="item" (activate)="getCollaborators()" suiTabHeader="2">{{configService.labelConfig?.lbl?.manageCollaborators}}</a>
         </div>
         <div class="ui segment p-0 mt-1" suiTabContent="1">
             <div *ngIf="!users?.length">
-                No users found
+                {{configService.labelConfig?.err?.userNotFound}}
             </div>
                 <select class="search dropdown py-5 sb-bg-color-white d-flex mb-10 my-20" *ngIf="users?.length"
                 (change)="sortUsersList($event.target.value)">
@@ -65,7 +65,8 @@
                             <div class="d-flex flex-align-self-end sb-custom-toggle">
                                 <a class="sb-color-primary d-flex fs-0-785 font-weight-bold flex-ai-end" 
                                 *ngIf="!user.isSelected" (click)="toggleSelectionUser(user.identifier)">
-                                    <i class="icon plus" aria-hidden="true"></i>ADD
+                                    <i class="icon plus" aria-hidden="true"></i>
+                                    {{configService.labelConfig?.button_labels?.add_btn_label}}
                                 </a>
                                 <div class="ui right floated compact segment" *ngIf="user.isSelected" (click)="toggleSelectionUser(user.identifier)">
                                     <div class="ui mini fitted toggle checkbox">
@@ -80,7 +81,7 @@
         </div>
         <div class="ui segment  p-0 mt-1" suiTabContent="2">
             <div *ngIf="!collaborators?.length">
-                No collaborators found for this content
+                {{configService.labelConfig?.err?.collaboratorsNotFound}}
             </div>
             <div class="masonry-grid mt-50" *ngIf="collaborators?.length">
                 <div *ngFor="let collaborator of collaborators" class="sb-card">
@@ -99,7 +100,9 @@
                             </div>
                             <div class="d-flex flex-align-self-end sb-custom-toggle">
                                 <a class="sb-color-error d-flex fs-0-785 font-weight-bold flex-ai-end" 
-                                *ngIf="!collaborator.isSelected && (isContentOwner || isRootOrgAdmin)" (click)="toggleSelectionCollaborator(collaborator.identifier)">REMOVE</a>
+                                *ngIf="!collaborator.isSelected && (isContentOwner || isRootOrgAdmin)" (click)="toggleSelectionCollaborator(collaborator.identifier)">
+                                {{configService.labelConfig?.button_labels?.remove_btn_label}}
+                                </a>
                                 <div class="ui right floated compact segment" *ngIf="collaborator.isSelected && (isContentOwner || isRootOrgAdmin)" (click)="toggleSelectionCollaborator(collaborator.identifier)">
                                     <div class="ui mini fitted toggle checkbox">
                                         <input type="checkbox" checked><label></label>
@@ -117,6 +120,8 @@
     <button class="sb-btn sb-btn-normal sb-btn-primary"
     [ngClass]="{'sb-btn-disabled': (selectedUsers.length === 0 && selectedcollaborators.length === 0)}"
     [disabled]="(selectedUsers.length === 0 && selectedcollaborators.length === 0)"
-     (click)="addRemoveCollaboratorToCourse(modal)">Done</button>
+     (click)="addRemoveCollaboratorToCourse(modal)">
+     {{configService.labelConfig?.button_labels?.done_btn_label}}
+    </button>
     </div>
 </sui-modal>

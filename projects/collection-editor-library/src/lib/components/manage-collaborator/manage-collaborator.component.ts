@@ -1,11 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ToasterService } from '../../services/toaster/toaster.service';
 import { EditorService } from '../../services/editor/editor.service';
 import { HelperService } from '../../services/helper/helper.service';
 import { ConfigService } from '../../services/config/config.service';
 
 import * as _ from 'lodash-es';
-import { ViewChild } from '@angular/core';
 @Component({
   selector: 'lib-manage-collaborator',
   templateUrl: './manage-collaborator.component.html',
@@ -94,7 +93,6 @@ export class ManageCollaboratorComponent implements OnInit {
       const count = _.get(response, 'result.response.count');
       if (!count) {
         this.users = [];
-        return;
       } else {
         if (_.has(response, 'result.response.content')) {
           const allUsers = _.get(response, 'result.response.content');
@@ -185,7 +183,6 @@ export class ManageCollaboratorComponent implements OnInit {
           const count = _.get(response, 'result.response.count');
           if (!count) {
             this.collaborators = [];
-            return;
           } else {
             if (_.has(response, 'result.response.content')) {
               this.collaborators = _.get(response, 'result.response.content');
