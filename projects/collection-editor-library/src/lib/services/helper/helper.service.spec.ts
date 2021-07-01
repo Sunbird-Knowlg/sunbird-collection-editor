@@ -72,7 +72,7 @@ describe('HelperService', () => {
       }));
     service.getLicenses().subscribe(data => {
       expect(data.license).toBeTruthy();
-    }, error => expect(error.message).toContain('getLicenses 404 error'));
+    });
   });
 
   it('#getAvailableLicenses should be truthy', () => {

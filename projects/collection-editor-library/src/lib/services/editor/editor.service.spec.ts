@@ -59,7 +59,7 @@ describe('EditorService', () => {
     });
   });
 
-  it('it should return #editorConfig should return editor config', ()=> {
+  it('#editorConfig should return editor config', ()=> {
     expect(editorService.editorConfig).toBeTruthy();
   });
 
@@ -71,7 +71,7 @@ describe('EditorService', () => {
     expect(editorService.contentPolicyUrl).toEqual('/term-of-use.html');
   });
 
-  it('#getToolbarConfig ', ()=> {
+  it('#getToolbarConfig should return toolbar config', ()=> {
     const result = editorService.getToolbarConfig();
     expect(result).toBeTruthy();
   });
@@ -96,7 +96,7 @@ describe('EditorService', () => {
     expect(service.contentsCount).toBe(0);
   });
 
-  it('#getshowLibraryPageEmitter() should return #showLibraryPage event emite object', ()=> {
+  it('#getshowLibraryPageEmitter() should return event emitter object', ()=> {
     const result: EventEmitter<number> = editorService.getshowLibraryPageEmitter();
     expect(result).toBeTruthy();
   });
@@ -117,7 +117,7 @@ describe('EditorService', () => {
     }));
     editorService.getQuestionList(questionIds).subscribe(data => {
       expect(data.questions).toBeTruthy();
-    }, error => expect(error.message).toContain('getQuestionList 404 error'));
+    });
   });
 
   it('#fetchCollectionHierarchy() should return collection hierarchy', async()=> {
@@ -126,7 +126,7 @@ describe('EditorService', () => {
     spyOn(publicDataService, 'get').and.returnValue(of({"responseCode": "OK"}));
     editorService.fetchCollectionHierarchy(collectionId).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
-    }, error => expect(error.message).toContain('fetchCollectionHierarchy 404 error'));
+    });
   });
 
   it('#readQuestionSet() should return question set', async()=> {
@@ -135,7 +135,7 @@ describe('EditorService', () => {
     spyOn(publicDataService, 'get').and.returnValue(of({"responseCode": "OK"}));
     editorService.readQuestionSet(questionSetId).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
-    }, error => expect(error.message).toContain('readQuestionSet 404 error'));
+    });
   });
 
   it('#fetchContentDetails() should return content details', async()=> {
@@ -144,7 +144,7 @@ describe('EditorService', () => {
     spyOn(publicDataService, 'get').and.returnValue(of({"responseCode": "OK"}));
     editorService.fetchContentDetails(contentId).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
-    }, error => expect(error.message).toContain('fetchContentDetails 404 error'));
+    });
   });
 
   it('#updateHierarchy() should update hierarchy', async()=> {
@@ -163,7 +163,7 @@ describe('EditorService', () => {
     spyOn(publicDataService, 'patch').and.returnValue(of({"responseCode": "OK"}));
     editorService.updateHierarchy().subscribe(data => {
       expect(data.responseCode).toEqual('OK');
-    }, error => expect(error.message).toContain('updateHierarchy 404 error'));
+    });
   });
 
   it('#reviewContent() should update hierarchy', async()=> {
@@ -172,7 +172,7 @@ describe('EditorService', () => {
     spyOn(publicDataService, 'post').and.returnValue(of({"responseCode": "OK"}));
     editorService.reviewContent(contentId).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
-    }, error => expect(error.message).toContain('reviewContent 404 error'));
+    });
   });
 
   it('#submitRequestChanges() should submit change request', async()=> {
@@ -182,7 +182,7 @@ describe('EditorService', () => {
     spyOn(publicDataService, 'post').and.returnValue(of({"responseCode": "OK"}));
     editorService.submitRequestChanges(contentId, comment).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
-    }, error => expect(error.message).toContain('submitRequestChanges 404 error'));
+    });
   });
 
   it('#publishContent() should publish content when API success', async()=> {
@@ -191,7 +191,7 @@ describe('EditorService', () => {
     spyOn(publicDataService, 'post').and.returnValue(of({"responseCode": "OK"}));
     editorService.publishContent(contentId).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
-    }, error => expect(error.message).toContain('publishContent 404 error'));
+    });
   });
 
   it('#addResourceToHierarchy() should add resouce to hierarchy when API success', async()=> {
@@ -202,7 +202,7 @@ describe('EditorService', () => {
     spyOn(publicDataService, 'patch').and.returnValue(of({"responseCode": "OK"}));
     editorService.addResourceToHierarchy(collection, unitIdentifier, contentId).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
-    }, error => expect(error.message).toContain('addResourceToHierarchy 404 error'));
+    });
   });
 
   it('#getCategoryDefinition() should return #objectCategoryDefinition when API success ', async()=> {
@@ -213,7 +213,7 @@ describe('EditorService', () => {
     spyOn(publicDataService, 'post').and.returnValue(of({"responseCode": "OK"}));
     editorService.getCategoryDefinition(categoryName, channel, objectType).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
-    }, error => expect(error.message).toContain('getCategoryDefinition 404 error'));
+    });
   });
 
   it('#checkIfContentsCanbeAdded() should return true', ()=> {
