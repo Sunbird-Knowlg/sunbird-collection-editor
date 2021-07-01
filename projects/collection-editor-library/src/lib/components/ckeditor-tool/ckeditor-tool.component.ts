@@ -860,7 +860,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     });
     return src;
   }
-  // Here Event listener is attacthed to document to listen the click event from Wiris plugin ('OK'-> button)
+  // Here Event listener is attached to document to listen the click event from Wiris plugin ('OK'-> button)
   attachEvent(editor) {
     document.addEventListener('click', e => {
       if (e.target && (e.target as Element).className === 'wrs_modal_button_accept') {
