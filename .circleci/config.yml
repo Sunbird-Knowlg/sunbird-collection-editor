@@ -39,18 +39,18 @@ jobs:
           name: Install sonar scanner
           command: npm install -g sonarqube-scanner
       - run:
-         name: Run sonar scanner
-         command: 'cd ~/sunbird-collection-editor && sonar-scanner'
+          name: Run sonar scanner
+          command: 'cd ~/sunbird-collection-editor && sonar-scanner'
       - run:
-        name: Publish to NPM
-        command: |
-          if [ -z $CIRCLE_PR_NUMBER ]; then
-            npm run build-lib && npm pack ./dist/collection-editor-library
-            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
-            npm publish project-sunbird-sunbird-collection-editor-*
-          else
-            npm run build-lib && npm pack ./dist/collection-editor-library
-          fi
+          name: Publish to NPM
+          command: |
+            if [ -z $CIRCLE_PR_NUMBER ]; then
+              npm run build-lib && npm pack ./dist/collection-editor-library
+              echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+              npm publish project-sunbird-sunbird-collection-editor-*
+            else
+              npm run build-lib && npm pack ./dist/collection-editor-library
+            fi
 workflows:
   version: 2
   build_and_test:
