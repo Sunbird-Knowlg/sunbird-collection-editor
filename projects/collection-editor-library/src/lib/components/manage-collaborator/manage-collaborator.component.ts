@@ -107,10 +107,9 @@ export class ManageCollaboratorComponent implements OnInit {
   }
 
   excludeCreatorAndCollaborators(allUsers) {
-    const users = _.filter(allUsers, user => {
+    return _.filter(allUsers, user => {
       return !_.includes(this.creatorAndCollaboratorsIds, user.identifier);
     });
-    return users;
   }
 
   toggleSelectionUser(userIdentifier) {

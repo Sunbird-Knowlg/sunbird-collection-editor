@@ -82,15 +82,19 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       ],
       fontSize: {
         options: [
-          9,
-          11,
-          13,
-          15,
-          17,
-          19,
-          21,
-          23,
-          25
+          'eight',
+          'ten',
+          'twelve',
+          'fourteen',
+          'sixteen',
+          'eighteen',
+          'twenty',
+          'twentytwo',
+          'twentyfour',
+          'twentysix',
+          'twentyeight',
+          'thirty',
+          'thirtysix'
         ]
       },
       image: {
@@ -125,8 +129,8 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
           icon: 'original',
           className: 'resize-original'
         }],
-        toolbar: ['imageStyle:alignLeft', 'imageStyle:alignCenter',
-          'imageStyle:alignRight', '|', 'resizeImage:25', 'resizeImage:50', 'resizeImage:75',  'resizeImage:100', 'resizeImage:original'],
+        toolbar: ['imageStyle:alignLeft', 'imageStyle:alignCenter', 'imageStyle:alignRight', '|',
+        'resizeImage:25', 'resizeImage:50', 'resizeImage:75',  'resizeImage:100', 'resizeImage:original'],
         styles: ['full', 'alignLeft', 'alignRight', 'alignCenter']
       },
       isReadOnly: false,
@@ -280,7 +284,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
         }
         console.log('Editor was initialized');
         this.changeTracker(this.editorInstance);
-        this.attacthEvent(this.editorInstance);
+        this.attachEvent(this.editorInstance);
         // this.pasteTracker(this.editorInstance);
         this.characterCount = this.countCharacters(this.editorInstance.model.document);
       })
@@ -856,8 +860,8 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     });
     return src;
   }
-  // Here Event listener is attacthed to document to listen the click event from Wiris plugin ('OK'-> button)
-  attacthEvent(editor) {
+  // Here Event listener is attached to document to listen the click event from Wiris plugin ('OK'-> button)
+  attachEvent(editor) {
     document.addEventListener('click', e => {
       if (e.target && (e.target as Element).className === 'wrs_modal_button_accept') {
         editor.model.change(writer => {

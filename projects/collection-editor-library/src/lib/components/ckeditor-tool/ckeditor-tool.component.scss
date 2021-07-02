@@ -165,6 +165,10 @@
     border: none;
   }
 
+  .ck-dropdown.ck-font-size-dropdown .ck-dropdown__panel {
+    height: 150px;
+    overflow-y: scroll;
+  }
 
   figure.image.ck-widget {
     width: auto;
