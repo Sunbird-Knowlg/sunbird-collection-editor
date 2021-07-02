@@ -1,4 +1,3 @@
-import { data } from 'jquery';
 import { QuestionService } from './../../services/question/question.service';
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -10,7 +9,6 @@ import { FormsModule } from '@angular/forms';
 import { EditorService } from '../../services/editor/editor.service';
 import { of } from 'rxjs';
 import * as _ from 'lodash-es';
-import { EPERM } from 'constants';
 
 const mockEditorService = {
   editorConfig: {
