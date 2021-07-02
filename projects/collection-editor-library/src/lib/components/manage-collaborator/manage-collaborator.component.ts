@@ -12,7 +12,7 @@ import * as _ from 'lodash-es';
 })
 export class ManageCollaboratorComponent implements OnInit {
   @Output() modalDismissEmitter = new EventEmitter<any>();
-  @ViewChild('modal', { static: false }) private modal;
+  @ViewChild('modal') private modal;
   @Input() addCollaborator;
   @Input() collectionId;
   public showCollaborationPopup: boolean;
@@ -55,10 +55,10 @@ export class ManageCollaboratorComponent implements OnInit {
     this.currentUser = _.get(this.editorService.editorConfig, 'context.user');
     this.isRootOrgAdmin = _.has(this.currentUser, 'isRootOrgAdmin') ? this.currentUser.isRootOrgAdmin : false;
     this.userSearchBody.request.filters.rootOrgId = this.currentUser.orgIds;
-    this.getCollbaoratorAndCreator();
+    this.setCreatorAndCollaborators();
   }
 
-  getCollbaoratorAndCreator() {
+  setCreatorAndCollaborators() {
     this.editorService.fetchContentDetails(this.collectionId).subscribe(res => {
       this.contentCollaborators = _.get(res.result.content, 'collaborators', []);
       this.contentOwner = [_.get(res.result.content, 'createdBy')];
@@ -110,8 +110,7 @@ export class ManageCollaboratorComponent implements OnInit {
     const users = _.filter(allUsers, user => {
       return !_.includes(this.creatorAndCollaboratorsIds, user.identifier);
     });
-    // return users; // line to be kept
-    return allUsers; // line to be removed
+    return users;
   }
 
   toggleSelectionUser(userIdentifier) {
@@ -154,7 +153,7 @@ export class ManageCollaboratorComponent implements OnInit {
     this.updatedCollaborators = _.difference(this.updatedCollaborators, this.selectedcollaborators);
     this.helperService.updateCollaborator(this.collectionId, this.updatedCollaborators).subscribe((response: any) => {
       if (response.params.status === 'successful') {
-        this.toasterService.success('Collaborators updated successfully');
+        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.012'));
       } else {
         this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.001'));
       }
@@ -235,7 +234,7 @@ export class ManageCollaboratorComponent implements OnInit {
       console.log(error);
       this.searchRes.content = [];
       this.searchRes.isEmptyResponse = true;
-      this.searchRes.errorMessage = 'Oops! Something went wrong. Please try again later.';
+      this.searchRes.errorMessage = _.get(this.configService, 'labelConfig.messages.error.001');
     });
   }
 
