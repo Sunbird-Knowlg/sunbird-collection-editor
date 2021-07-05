@@ -9,6 +9,7 @@ import { ToasterService} from '../../services/toaster/toaster.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { DataService } from '../data/data.service';
 import { map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 
 interface SelectedChildren {
   primaryCategory?: string;
@@ -27,7 +28,8 @@ export class EditorService {
   public contentsCount = 0;
   constructor(public treeService: TreeService, private toasterService: ToasterService,
               public configService: ConfigService, private telemetryService: EditorTelemetryService,
-              private publicDataService: PublicDataService, private dataService: DataService) { }
+              private publicDataService: PublicDataService, private dataService: DataService,
+              private httpClient: HttpClient) { }
 
   public initialize(config: IEditorConfig) {
     this._editorConfig = config;
@@ -361,6 +363,41 @@ export class EditorService {
       return false;
     } else {
       return true;
+    }
+  }
+  validateCSVFile(formData, collectionnId) {
+    const url = _.get(this.configService.urlConFig, 'URLS.CSV.UPLOAD');
+    const req = {
+      url: `${url}${collectionnId}`,
+      data: formData
+    };
+    return this.publicDataService.post(req);
+  }
+  downloadHierarchyCsv(collectionnId) {
+    const url = _.get(this.configService.urlConFig, 'URLS.CSV.DOWNLOAD');
+    const req = {
+      url: `${url}${collectionnId}`,
+    };
+    return this.publicDataService.get(req);
+  }
+  downloadBlobUrlFile(config) {
+    try {
+      this.httpClient.get(config.blobUrl, {responseType: 'blob'})
+      .subscribe(blob => {
+        const objectUrl: string = URL.createObjectURL(blob);
+        const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
+        a.href = objectUrl;
+        a.download = config.fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(objectUrl);
+        this.toasterService.success(config.successMessage);
+      }, (error) => {
+        console.error(_.get(this.configService, 'labelConfig.messages.error.034') + error);
+      });
+    } catch (error) {
+      console.error( _.replace(_.get(this.configService, 'labelConfig.messages.error.033'), '{FILE_TYPE}', config.fileType ) + error);
     }
   }
 }

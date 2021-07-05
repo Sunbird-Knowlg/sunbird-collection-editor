@@ -144,7 +144,30 @@
        "selectLayout":"Select Layout",
        "vertical":"Vertical",
        "grid":"Grid",
-       "horizontal":"Horizontal"
+       "horizontal":"Horizontal",
+       "folders":"Folders",
+       "createHierarchyCsv":"Create Hierarchy using CSV",
+       "downloadFoldersInCSV":"Download Folders in CSV",
+       "uploadUpdateCSV":"Upload & Update Folders via CSV",
+       "downloadSampleHierarchyCSv":"Download sample hierarchy CSV file and create a hierarchy using this format",
+       "makeSureFile":"Make sure your file :",
+       "allColumnsAreAvailable":"All columns are available as shown in format.",
+       "hasAllMandatoryColumn":"Has all mandatory columns filled, as marked in the format",
+       "noDuplicateRow":"There are no duplicate rows",
+       "downloadSampleCSV":"Download sample hierarchy CSV",
+       "dragAndDropCSV":"Drag and Drop files to upload",
+       "selectFileToUpload":"Select file to upload",
+       "uploadEntries":"Upload .csv,.xl upto 300 entries",
+       "Or":"Or",
+       "pleaseWait":"Please wait",
+       "validateCsvFile":"Validating CSV file",
+       "hierarchyValidationError":"Hierarchy Validation Error",
+       "followingErrors":"The file has following errors. Please check",
+       "reUploadCSV":"Re-upload CSV",
+       "hierarchyValidation":"Hierarchy Validation",
+       "updateHierarchyCSV":"Update Hierarcy using CSV",
+       "hierarchyAdded":"Hierarchy has been added to editor.",
+       "successful":"Successful !"
       },
     "err":{
        "somethingWentWrong":"Something went wrong",
@@ -186,7 +209,9 @@
          "029": "Please fill the required metadata",
          "030": "search failed",
          "031": "Cannot create question. reached limit of maximum number of questions allowed.",
-         "032": "Cannot add content. reached limit of maximum number of contents allowed."
+         "032": "Cannot add content. reached limit of maximum number of contents allowed.",
+         "033": "failed to convert url to blob ",
+         "034": "failed to download {FILE_TYPE} file using blob url "
       }, 
       "success": {
          "001": "Content is saved",
@@ -199,7 +224,8 @@
          "008": "Question is updated sucessfully",
          "009": "QR code(s) updated successfully",
          "010": "QR code generated.",
-         "011": "QR codes downloaded" 
+         "011": "QR codes downloaded" ,
+         "012": "CSV file downloaded successfully"
       },
       "warning" : {
          "001" : "Errors found in linked QR Codes. Please check and correct.",

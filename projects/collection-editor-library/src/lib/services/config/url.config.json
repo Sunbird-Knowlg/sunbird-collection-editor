@@ -42,6 +42,10 @@
     "frameworkRead":"framework/v1/read/",
     "compositSearch":"composite/v3/search",
     "channelRead":"channel/v1/read/",
-    "telemetry":"/data/v3/telemetry"
+    "telemetry":"/data/v3/telemetry",
+    "CSV": {
+      "UPLOAD": "collection/v1/import/",
+      "DOWNLOAD": "collection/v1/export/"
+    }
   }
 }

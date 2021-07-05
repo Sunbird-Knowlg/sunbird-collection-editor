@@ -7,6 +7,7 @@ import { TreeService } from '../../services/tree/tree.service';
 import { DialcodeService } from '../../services/dialcode/dialcode.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
 import { ConfigService } from '../../services/config/config.service';
+import { EditorService } from '../../services/editor/editor.service';
 
 @Component({
   selector: 'lib-dialcode',
@@ -29,7 +30,8 @@ export class DialcodeComponent implements OnInit {
   public contentId: string;
   constructor(public telemetryService: EditorTelemetryService, private treeService: TreeService,
               private dialcodeService: DialcodeService, private toasterService: ToasterService,
-              private httpClient: HttpClient, public configService: ConfigService) { }
+              private httpClient: HttpClient, public configService: ConfigService,
+              private editorService: EditorService) { }
 
   ngOnInit() {
     this.setQRCodeCriteria();
@@ -145,24 +147,13 @@ export class DialcodeComponent implements OnInit {
   }
 
   downloadFile(url: string, filename: string) {
-    try {
-      this.httpClient.get(url, {responseType: 'blob'})
-      .subscribe(blob => {
-        const objectUrl: string = URL.createObjectURL(blob);
-        const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
-        a.href = objectUrl;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(objectUrl);
-        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.011'));
-      }, (error) => {
-        console.error('failed to convert url to blob ' + error);
-      });
-    } catch (error) {
-      console.error('failed to download zip file using blob url ' + error);
-    }
+    const config = {
+        blobUrl: url,
+        successMessage: _.get(this.configService, 'labelConfig.messages.success.011'),
+        fileType: 'zip',
+        fileName: filename
+    };
+    this.editorService.downloadBlobUrlFile(config);
   }
 
   keyPressNumbers(event: KeyboardEvent) {

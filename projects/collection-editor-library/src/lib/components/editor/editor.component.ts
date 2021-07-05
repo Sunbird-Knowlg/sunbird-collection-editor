@@ -61,6 +61,22 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public contentComment: string;
   public showComment: boolean;
   public showReviewModal: boolean;
+  public showCreateCSV = false;
+  public showUpdateCSV = false;
+  public successCSV = false;
+  public isUploadCSV = false;
+  public errorCSV = {
+    status: false,
+    message: ''
+  };
+  public validateCSV = false;
+  public uploadCSVFile = true;
+  public formData: any;
+  public childrenCount: any;
+  public configObjectType: any;
+  public isClosable = true;
+  public sampleCsvUrl: any;
+  // string = (<HTMLInputElement>document.getElementById('portalCloudStorageUrl')).value.split(',')  + 'hierarchy-upload-format.csv';
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
               private toasterService: ToasterService, private dialcodeService: DialcodeService,
@@ -111,6 +127,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           console.log(error);
         }
       );
+    this.configObjectType = this.configService.categoryConfig[this.editorConfig.config.objectType] === 'questionSet' ? false : true;
     this.pageStartTime = Date.now();
     this.telemetryService.initializeTelemetry(this.editorConfig);
     this.telemetryService.telemetryPageId = this.pageId;
@@ -609,7 +626,80 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     return false;
   }
+  onClickFolder() {
+    this.childrenCount = this.editorService.getContentChildrens().length <= 1 ? true : false;
+  }
+  uploadCSV(event) {
+    const file = event.target.files[0];
+    this.formData = new FormData();
+    this.formData.append('file', file);
+    this.isUploadCSV = true;
+  }
+  validateCSVFile() {
+    this.validateCSV = true;
+    this.uploadCSVFile = false;
+    this.isUploadCSV = false;
+    this.isClosable = false;
+    this.editorService.validateCSVFile(this.formData, this.collectionId).subscribe(res => {
+      this.validateCSV = false;
+      this.isClosable = true;
+      this.successCSV = true;
+      this.mergeCollectionExternalProperties().subscribe((res: any) => {
+      });
+    }, error => {
+      this.validateCSV = false;
+      this.errorCSV.status = true;
+      this.errorCSV.message = _.get(error, 'error.params.errmsg');
+      this.isClosable = true;
+    });
+  }
+  closeHierarchyModal() {
+    this.errorCSV.status = false;
+    this.errorCSV.message = '';
+    this.isUploadCSV = false;
+    this.showCreateCSV = false;
+    this.showUpdateCSV = false;
+    this.formData = null;
+  }
+  onClickReupload() {
+    this.uploadCSVFile = true;
+    this.errorCSV.status = false;
+    this.errorCSV.message = '';
+    this.isUploadCSV = false;
+    this.formData = null;
+  }
+  createHierarchyCsv() {
+    this.showCreateCSV = true;
+    this.uploadCSVFile = true;
+  }
 
+  downloadHierarchyCsv() {
+    this.editorService.downloadHierarchyCsv(this.collectionId).subscribe(res => {
+      const tocUrl = _.get(res, 'result.collection.tocUrl');
+      this.downloadCSVFile(tocUrl);
+    }, error => {
+      this.toasterService.error(_.get(error, 'error.params.errmsg'));
+    });
+  }
+  uploadHierarchyCsv() {
+    this.showUpdateCSV = true;
+    this.uploadCSVFile = true;
+    this.errorCSV.status = false;
+    this.errorCSV.message = '';
+  }
+  updateHierarchyCSVFile() {
+    this.uploadCSVFile = true;
+    this.showUpdateCSV = true;
+  }
+  downloadCSVFile(tocUrl?) {
+    const downloadConfig = {
+      blobUrl: tocUrl,
+      successMessage: _.get(this.configService, 'labelConfig.messages.success.012'),
+      fileType: 'csv',
+      fileName: this.collectionId
+    };
+    this.editorService.downloadBlobUrlFile(downloadConfig);
+  }
   ngOnDestroy() {
     this.generateTelemetryEndEvent();
     this.treeService.clearTreeCache();

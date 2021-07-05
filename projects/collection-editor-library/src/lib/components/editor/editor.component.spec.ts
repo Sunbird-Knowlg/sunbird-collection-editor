@@ -8,9 +8,9 @@ import { TelemetryInteractDirective } from '../../directives/telemetry-interact/
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TreeService } from '../../services/tree/tree.service';
-import { editorConfig, nativeElement, getCategoryDefinitionResponse } from './editor.component.spec.data';
+import { editorConfig, nativeElement, getCategoryDefinitionResponse, csvExport } from './editor.component.spec.data';
 import { ConfigService } from '../../services/config/config.service';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { DialcodeService } from '../../services/dialcode/dialcode.service';
 import { treeData } from './../fancy-tree/fancy-tree.component.spec.data';
 import * as urlConfig from '../../services/config/url.config.json';
@@ -500,5 +500,46 @@ describe('EditorComponent', () => {
     spyOn(component, 'saveContent');
     component.showLibraryComponentPage();
     expect(component.saveContent).not.toHaveBeenCalled();
+  });
+  it('#downloadFile() should download the file', () => {
+    const config = {
+      // tslint:disable-next-line:max-line-length
+       blobUrl: 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/course/toc/do_11331579492804198413_untitled-course_1625465046239.csv',
+       successMessage: 'CSV file downloaded successfully',
+       fileType: 'csv',
+       fileName: 'do_113274017771085824116'
+  };
+    const editorService = TestBed.get(EditorService);
+    spyOn(editorService, 'downloadBlobUrlFile').and.callThrough();
+    component.downloadCSVFile(config.blobUrl);
+    expect(editorService.downloadBlobUrlFile).toHaveBeenCalledWith(config);
+  });
+  it('#updateHierarchyCSVFile() should call updateHierarchyCSVFile', () => {
+    spyOn(component, 'updateHierarchyCSVFile').and.callThrough();
+    component.updateHierarchyCSVFile();
+    expect(component.uploadCSVFile).toBeTruthy();
+    expect(component.showUpdateCSV).toBeTruthy();
+  });
+  it('#uploadHierarchyCsv() should call uploadHierarchyCsv', () => {
+    spyOn(component, 'uploadHierarchyCsv').and.callThrough();
+    component.uploadHierarchyCsv();
+    expect(component.uploadCSVFile).toBeTruthy();
+    expect(component.showUpdateCSV).toBeTruthy();
+    expect(component.errorCSV.status).toBeFalsy();
+    expect(component.errorCSV.message).toBe('');
+  });
+  it('#downloadHierarchyCsv() should call downloadHierarchyCsv and success case', () => {
+    spyOn(component['editorService'], 'downloadHierarchyCsv').and.returnValue(of(csvExport.successExport));
+    spyOn(component, 'downloadCSVFile').and.callThrough();
+    component.downloadHierarchyCsv();
+    expect(component.downloadCSVFile).toHaveBeenCalledWith(csvExport.successExport.result.collection.tocUrl);
+  });
+  it('#downloadHierarchyCsv() should call downloadHierarchyCsv and error case', () => {
+    component.collectionId = 'do_11331581945782272012';
+    spyOn(component['toasterService'], 'error');
+    spyOn(component['editorService'], 'downloadHierarchyCsv').and.returnValue(throwError(csvExport.errorExport));
+    spyOn(component, 'downloadCSVFile').and.callThrough();
+    component.downloadHierarchyCsv();
+    expect(component['toasterService'].error).toHaveBeenCalledWith(undefined);
   });
 });
