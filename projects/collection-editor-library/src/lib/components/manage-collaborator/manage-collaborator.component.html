@@ -34,19 +34,24 @@
     </div>
     <sui-tabset>
         <div class="ui pointing secondary menu">
-            <a class="item" *ngIf="(isContentOwner || isRootOrgAdmin)" (activate)="getAllusers()" suiTabHeader="1">{{configService.labelConfig?.lbl?.addCollaborators}}</a>
-            <a class="item" (activate)="getCollaborators()" suiTabHeader="2">{{configService.labelConfig?.lbl?.manageCollaborators}}</a>
+            <a class="item" *ngIf="(isContentOwner || isRootOrgAdmin)" (activate)="getAllusers()" suiTabHeader="1" libTelemetryInteract
+            [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('add_collaborators','click','launch', telemetryService.telemetryPageId)"
+            >{{configService.labelConfig?.lbl?.addCollaborators}}</a>
+            <a class="item" (activate)="getCollaborators()" suiTabHeader="2" libTelemetryInteract
+            [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('manage_collaborators','click','launch', telemetryService.telemetryPageId)"
+            >{{configService.labelConfig?.lbl?.manageCollaborators}}</a>
         </div>
         <div class="ui segment p-0 mt-1" suiTabContent="1">
             <div *ngIf="!users?.length">
                 {{configService.labelConfig?.err?.userNotFound}}
             </div>
-                <select class="search dropdown py-5 sb-bg-color-white d-flex mb-10 my-20 ml-auto" *ngIf="users?.length"
-                (change)="sortUsersList($event.target.value)">
-                    <option value="">--Sort By--</option>
-                    <option value="firstName">Name</option>
-                    <option value="organisations">Organisation</option>
-                </select>
+            <div *ngIf="users?.length" class="w-100">Showing {{users.length}} out of {{allUsersCount}}</div>
+            <select class="search dropdown py-5 sb-bg-color-white d-flex mb-10 my-20 ml-auto" *ngIf="users?.length"
+            (change)="sortUsersList($event.target.value)">
+                <option value="">Sort By</option>
+                <option value="firstName">Name</option>
+                <option value="organisations">Organisation</option>
+            </select>
             <div class="masonry-grid" *ngIf="users?.length">
                 <div *ngFor="let user of users" class="sb-card">
                     <div class="sb-card-body">
@@ -64,11 +69,13 @@
                             </div>
                             <div class="d-flex flex-align-self-end sb-custom-toggle">
                                 <a class="sb-color-primary d-flex fs-0-785 font-weight-bold flex-ai-end" 
-                                *ngIf="!user.isSelected" (click)="toggleSelectionUser(user.identifier)">
+                                *ngIf="!user.isSelected" (click)="toggleSelectionUser(user.identifier)" libTelemetryInteract
+                                [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('add_user','click','select', telemetryService.telemetryPageId, {identifier: user.identifier})">
                                     <i class="icon plus" aria-hidden="true"></i>
                                     {{configService.labelConfig?.button_labels?.add_btn_label}}
                                 </a>
-                                <div class="ui right floated compact segment" *ngIf="user.isSelected" (click)="toggleSelectionUser(user.identifier)">
+                                <div class="ui right floated compact segment" *ngIf="user.isSelected" (click)="toggleSelectionUser(user.identifier)" libTelemetryInteract
+                                [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('remove_user','click','select', telemetryService.telemetryPageId, {identifier: user.identifier})">
                                     <div class="ui mini fitted toggle checkbox">
                                         <input type="checkbox" checked><label></label>
                                     </div>
@@ -83,6 +90,7 @@
             <div *ngIf="!collaborators?.length">
                 {{configService.labelConfig?.err?.collaboratorsNotFound}}
             </div>
+            <div *ngIf="collaborators?.length" class="w-100">{{collaborators.length}} collaborators exists</div>
             <div class="masonry-grid mt-50" *ngIf="collaborators?.length">
                 <div *ngFor="let collaborator of collaborators" class="sb-card">
                     <div class="sb-card-body">
@@ -100,10 +108,14 @@
                             </div>
                             <div class="d-flex flex-align-self-end sb-custom-toggle">
                                 <a class="sb-color-error d-flex fs-0-785 font-weight-bold flex-ai-end" 
-                                *ngIf="!collaborator.isSelected && (isContentOwner || isRootOrgAdmin)" (click)="toggleSelectionCollaborator(collaborator.identifier)">
+                                *ngIf="!collaborator.isSelected && (isContentOwner || isRootOrgAdmin)" (click)="toggleSelectionCollaborator(collaborator.identifier)"
+                                libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('remove_collaborator','click','select',
+                                telemetryService.telemetryPageId, {identifier: collaborator.identifier})">
                                 {{configService.labelConfig?.button_labels?.remove_btn_label}}
                                 </a>
-                                <div class="ui right floated compact segment" *ngIf="collaborator.isSelected && (isContentOwner || isRootOrgAdmin)" (click)="toggleSelectionCollaborator(collaborator.identifier)">
+                                <div class="ui right floated compact segment" *ngIf="collaborator.isSelected && (isContentOwner || isRootOrgAdmin)" (click)="toggleSelectionCollaborator(collaborator.identifier)"
+                                libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('add_collaborator','click','select',
+                                telemetryService.telemetryPageId, {identifier: collaborator.identifier})">
                                     <div class="ui mini fitted toggle checkbox">
                                         <input type="checkbox" checked><label></label>
                                     </div>
@@ -120,7 +132,9 @@
     <button class="sb-btn sb-btn-normal sb-btn-primary"
     [ngClass]="{'sb-btn-disabled': (selectedUsers.length === 0 && selectedcollaborators.length === 0)}"
     [disabled]="(selectedUsers.length === 0 && selectedcollaborators.length === 0)"
-     (click)="addRemoveCollaboratorToCourse(modal)">
+     (click)="addRemoveCollaboratorToCourse(modal)" libTelemetryInteract
+     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('done','click','submit',
+     telemetryService?.telemetryPageId)">
      {{configService.labelConfig?.button_labels?.done_btn_label}}
     </button>
     </div>

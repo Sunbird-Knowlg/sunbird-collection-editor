@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
 import { EditorService } from '../../services/editor/editor.service';
 import { HelperService } from '../../services/helper/helper.service';
@@ -43,12 +44,14 @@ export class ManageCollaboratorComponent implements OnInit {
   public isContentOwner: boolean;
   public isRootOrgAdmin: boolean;
   public currentUser: any;
+  public allUsersCount = 0;
 
   constructor(
     public helperService: HelperService,
     public toasterService: ToasterService,
     public configService: ConfigService,
-    public editorService: EditorService
+    public editorService: EditorService,
+    public telemetryService: EditorTelemetryService
     ) { }
 
   ngOnInit() {
@@ -94,6 +97,7 @@ export class ManageCollaboratorComponent implements OnInit {
       this.users = [];
       if (_.has(response, 'result.response.content')) {
         const allUsers = _.get(response, 'result.response.content');
+        this.allUsersCount = allUsers.length - 1;
         this.users = this.excludeCreatorAndCollaborators(allUsers);
       }
     },
