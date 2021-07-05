@@ -32,7 +32,6 @@
     "@types/jquery": "^3.5.5",
     "alphanum-sort": "^1.0.2",
     "angular2-uuid": "^1.1.1",
-    "canvas": "^2.8.0",
     "common-form-elements-v9": "^4.1.0",
     "core-js": "^2.5.4",
     "express": "^4.17.1",
