@@ -241,5 +241,20 @@ importError: {
   "result": {
       "messages": null
   }
+},
+successImport: {
+  "id": "api.collection.export",
+  "ver": "4.0",
+  "ts": "2021-07-05T09:58:51ZZ",
+  "params": {
+      "resmsgid": "0801c119-ad94-4eb9-809c-998ed95789ea",
+      "msgid": null,
+      "err": null,
+      "status": "successful",
+      "errmsg": null
+  },
+  "responseCode": "OK",
+  "result": {
+  }
 }
 }

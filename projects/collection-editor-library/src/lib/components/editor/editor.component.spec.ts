@@ -518,14 +518,9 @@ describe('EditorComponent', () => {
   it('#updateHierarchyCSVFile() should call updateHierarchyCSVFile', () => {
     spyOn(component, 'updateHierarchyCSVFile').and.callThrough();
     component.updateHierarchyCSVFile();
-    expect(component.uploadCSVFile).toBeTruthy();
+    expect(component.openCSVPopUp).toBeTruthy();
     expect(component.showUpdateCSV).toBeTruthy();
-  });
-  it('#uploadHierarchyCsv() should call uploadHierarchyCsv', () => {
-    spyOn(component, 'uploadHierarchyCsv').and.callThrough();
-    component.uploadHierarchyCsv();
-    expect(component.uploadCSVFile).toBeTruthy();
-    expect(component.showUpdateCSV).toBeTruthy();
+    expect(component.updateCSVFile).toBeTruthy();
     expect(component.errorCSV.status).toBeFalsy();
     expect(component.errorCSV.message).toBe('');
   });
@@ -549,6 +544,7 @@ describe('EditorComponent', () => {
   });
   it('#onClickFolder() should call onClickFolder and set csv create and update options', () => {
     spyOn(component['editorService'], 'getHierarchyFolder').and.callFake(() => [1]);
+    component.editorConfig = editorConfig;
     component.onClickFolder();
     expect(component.childrenCount).toBeTruthy();
   });
@@ -560,8 +556,15 @@ describe('EditorComponent', () => {
   });
   it('#onClickReupload() should call onClickReupload and reset conditionns', () => {
     spyOn(component, 'onClickReupload').and.callThrough();
+    spyOn(component, 'resetConditionns').and.callThrough();
+    component.showCreateCSV = true;
     component.onClickReupload();
     expect(component.uploadCSVFile).toBeTruthy();
+    expect(component.resetConditionns).toHaveBeenCalled();
+  });
+  it('#resetConditionns() should call resetConditionns and reset conditionns', () => {
+    spyOn(component, 'closeHierarchyModal').and.callThrough();
+    component.closeHierarchyModal();
     expect(component.errorCSV.status).toBeFalsy();
     expect(component.errorCSV.message).toBe('');
     expect(component.isUploadCSV).toBeFalsy();
@@ -569,16 +572,16 @@ describe('EditorComponent', () => {
   });
   it('#closeHierarchyModal() should call closeHierarchyModal and reset conditionns', () => {
     spyOn(component, 'closeHierarchyModal').and.callThrough();
+    spyOn(component, 'resetConditionns').and.callThrough();
     component.closeHierarchyModal();
-    expect(component.uploadCSVFile).toBeTruthy();
-    expect(component.errorCSV.status).toBeFalsy();
-    expect(component.errorCSV.message).toBe('');
-    expect(component.isUploadCSV).toBeFalsy();
+    expect(component.uploadCSVFile).toBeFalsy();
     expect(component.showCreateCSV).toBeFalsy();
     expect(component.showUpdateCSV).toBeFalsy();
-    expect(component.formData).toBe(null);
+    expect(component.updateCSVFile).toBeFalsy();
+    expect(component.openCSVPopUp).toBeFalsy();
+    expect(component.resetConditionns).toHaveBeenCalled();
   });
-  it('#validateCSVFile() should call validateCSVFile and check csv file', () => {
+  it('#validateCSVFile() should call validateCSVFile and check csv file for error case', () => {
     spyOn(component['editorService'], 'validateCSVFile').and.returnValue(throwError(csvImport.importError));
     spyOn(component, 'mergeCollectionExternalProperties');
     component.validateCSV = true;
