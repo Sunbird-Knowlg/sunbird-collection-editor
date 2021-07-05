@@ -122,6 +122,12 @@ editorConfig = {
           }
         }
       },
+      "collection":{
+        "maxContentsLimit": 10
+      },
+      "questionSet":{
+        "maxQuestionsLimit": 10
+      },
       "contentPolicyUrl": "/term-of-use.html"
     }
   }
