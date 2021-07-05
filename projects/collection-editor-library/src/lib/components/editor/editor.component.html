@@ -262,7 +262,7 @@
                  {{configService.labelConfig?.lbl?.dragAndDropCSV}}<br />
               </h5>
               <h6 class="mb-8 sb-color-gray-400 mt-10">Or</h6>
-              <button class="upload-input-button sb-btn sb-btn-success sb-btn-normal"><i class="icon upload"></i>
+              <button class="upload-input-button sb-btn sb-btn-success sb-btn-normal"><i aria-hidden="true" class="icon upload"></i>
                 {{configService.labelConfig?.lbl?.selectFileToUpload}}  
                 <input (change)="uploadCSV($event)" type="file" >
               </button>
@@ -297,7 +297,7 @@
             <li class="item">{{errorCSV.message}}</li>
           </ul>
           <div class="qq-upload-button-selector sb-btn sb-btn-normal sb-btn-success my-20" (click)="onClickReupload()">
-            <div><i class="icon refresh"></i>{{configService.labelConfig?.lbl?.reUploadCSV}}</div>
+            <div><i aria-hidden="true" class="icon refresh"></i>{{configService.labelConfig?.lbl?.reUploadCSV}}</div>
           </div>
         </div>
       </div>
