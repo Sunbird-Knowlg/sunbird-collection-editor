@@ -540,6 +540,6 @@ describe('EditorComponent', () => {
     spyOn(component['editorService'], 'downloadHierarchyCsv').and.returnValue(throwError(csvExport.errorExport));
     spyOn(component, 'downloadCSVFile').and.callThrough();
     component.downloadHierarchyCsv();
-    expect(component['toasterService'].error).toHaveBeenCalledWith(undefined);
+    expect(component['toasterService'].error).toHaveBeenCalledWith(csvExport.errorExport.params.errmsg);
   });
 });
