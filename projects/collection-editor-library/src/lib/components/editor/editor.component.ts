@@ -667,7 +667,11 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.openCSVPopUp = false;
   }
   onClickReupload() {
-    this.showCreateCSV ? this.uploadCSVFile = true : this.updateCSVFile = true;
+    if (this.showCreateCSV) {
+      this.uploadCSVFile = true;
+    } else {
+      this.updateCSVFile = true;
+    }
     this.validateCSV = false;
     this.resetConditionns();
   }
