@@ -644,7 +644,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       this.validateCSV = false;
       this.isClosable = true;
       this.successCSV = true;
-      this.mergeCollectionExternalProperties().subscribe((res: any) => {
+      this.mergeCollectionExternalProperties().subscribe((response: any) => {
       });
     }, error => {
       this.validateCSV = false;
