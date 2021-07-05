@@ -501,4 +501,19 @@ describe('EditorComponent', () => {
     component.showLibraryComponentPage();
     expect(component.saveContent).not.toHaveBeenCalled();
   });
+
+  it ('#toolbarEventListener() should set addCollaborator to true', () => {
+    const event = {
+      button : 'addCollaborator'
+    };
+    component.toolbarEventListener(event);
+    expect(component.addCollaborator).toBeTruthy();
+  });
+
+  it('#handleModalDismiss should set addCollaborator to false', () => {
+    component.addCollaborator = true;
+    spyOn(component, 'handleModalDismiss').and.callThrough();
+    component.handleModalDismiss({});
+    expect(component.addCollaborator).toBeFalsy();
+  });
 });

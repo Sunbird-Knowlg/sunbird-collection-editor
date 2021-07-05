@@ -16,14 +16,14 @@ export class ManageCollaboratorComponent implements OnInit {
   @Input() addCollaborator;
   @Input() collectionId;
   public showCollaborationPopup: boolean;
-  private contentCollaborators: any;
-  private contentOwner;
-  private creatorAndCollaboratorsIds;
+  public contentCollaborators: any;
+  public contentOwner;
+  public creatorAndCollaboratorsIds;
   public selectedUsers = [];
   public selectedcollaborators = [];
   public users = [];
   public collaborators = [];
-  private manageCollaboratorTabVisit = 0;
+  public manageCollaboratorTabVisit = 0;
   public updatedCollaborators = [];
   public isAddCollaboratorTab: boolean;
   public searchKeyword = '';
@@ -42,7 +42,7 @@ export class ManageCollaboratorComponent implements OnInit {
   };
   public isContentOwner: boolean;
   public isRootOrgAdmin: boolean;
-  private currentUser: any;
+  public currentUser: any;
 
   constructor(
     public helperService: HelperService,
@@ -54,7 +54,9 @@ export class ManageCollaboratorComponent implements OnInit {
   ngOnInit() {
     this.currentUser = _.get(this.editorService.editorConfig, 'context.user');
     this.isRootOrgAdmin = _.has(this.currentUser, 'isRootOrgAdmin') ? this.currentUser.isRootOrgAdmin : false;
-    this.userSearchBody.request.filters.rootOrgId = this.currentUser.orgIds;
+    if (_.has(this.currentUser, 'orgIds')) {
+      this.userSearchBody.request.filters.rootOrgId = this.currentUser.orgIds;
+    }
     this.setCreatorAndCollaborators();
   }
 
@@ -90,14 +92,9 @@ export class ManageCollaboratorComponent implements OnInit {
   getAllUserList() {
     this.helperService.getAllUser(this.userSearchBody).subscribe((response: any) => {
       this.users = [];
-      const count = _.get(response, 'result.response.count');
-      if (!count) {
-        this.users = [];
-      } else {
-        if (_.has(response, 'result.response.content')) {
-          const allUsers = _.get(response, 'result.response.content');
-          this.users = this.excludeCreatorAndCollaborators(allUsers);
-        }
+      if (_.has(response, 'result.response.content')) {
+        const allUsers = _.get(response, 'result.response.content');
+        this.users = this.excludeCreatorAndCollaborators(allUsers);
       }
     },
     (error) => {
@@ -178,13 +175,9 @@ export class ManageCollaboratorComponent implements OnInit {
       this.userSearchBody.request.filters['userId'] = this.contentCollaborators;
       if (!_.isEmpty(this.contentCollaborators)) {
         this.helperService.getAllUser(this.userSearchBody).subscribe((response: any) => {
-          const count = _.get(response, 'result.response.count');
-          if (!count) {
-            this.collaborators = [];
-          } else {
-            if (_.has(response, 'result.response.content')) {
-              this.collaborators = _.get(response, 'result.response.content');
-            }
+          this.collaborators = [];
+          if (_.has(response, 'result.response.content')) {
+            this.collaborators = _.get(response, 'result.response.content');
           }
         },
         (error) => {
