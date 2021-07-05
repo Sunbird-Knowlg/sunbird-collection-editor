@@ -8,7 +8,7 @@ import { TelemetryInteractDirective } from '../../directives/telemetry-interact/
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TreeService } from '../../services/tree/tree.service';
-import { editorConfig, nativeElement, getCategoryDefinitionResponse, csvExport } from './editor.component.spec.data';
+import { editorConfig, nativeElement, getCategoryDefinitionResponse, csvExport, csvImport} from './editor.component.spec.data';
 import { ConfigService } from '../../services/config/config.service';
 import { of, throwError } from 'rxjs';
 import { DialcodeService } from '../../services/dialcode/dialcode.service';
@@ -16,6 +16,7 @@ import { treeData } from './../fancy-tree/fancy-tree.component.spec.data';
 import * as urlConfig from '../../services/config/url.config.json';
 import * as labelConfig from '../../services/config/label.config.json';
 import * as categoryConfig from '../../services/config/category.config.json';
+import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 
 describe('EditorComponent', () => {
   const configStub = {
@@ -540,6 +541,58 @@ describe('EditorComponent', () => {
     spyOn(component['editorService'], 'downloadHierarchyCsv').and.returnValue(throwError(csvExport.errorExport));
     spyOn(component, 'downloadCSVFile').and.callThrough();
     component.downloadHierarchyCsv();
-    expect(component['toasterService'].error).toHaveBeenCalledWith(csvExport.errorExport.params.errmsg);
+    component['editorService'].downloadHierarchyCsv('do_113312173590659072160').subscribe(data => {
+    },
+      error => {
+        expect(error.responseCode).toBe('CLIENT_ERROR');
+      });
+  });
+  it('#onClickFolder() should call onClickFolder and set csv create and update options', () => {
+    spyOn(component['editorService'], 'getHierarchyFolder').and.callFake(() => [1]);
+    component.onClickFolder();
+    expect(component.childrenCount).toBeTruthy();
+  });
+  it('#createHierarchyCsv() should call createHierarchyCsv and open pop up', () => {
+    spyOn(component, 'createHierarchyCsv').and.callThrough();
+    component.createHierarchyCsv();
+    expect(component.showCreateCSV).toBeTruthy();
+    expect(component.uploadCSVFile).toBeTruthy();
+  });
+  it('#onClickReupload() should call onClickReupload and reset conditionns', () => {
+    spyOn(component, 'onClickReupload').and.callThrough();
+    component.onClickReupload();
+    expect(component.uploadCSVFile).toBeTruthy();
+    expect(component.errorCSV.status).toBeFalsy();
+    expect(component.errorCSV.message).toBe('');
+    expect(component.isUploadCSV).toBeFalsy();
+    expect(component.formData).toBe(null);
+  });
+  it('#closeHierarchyModal() should call closeHierarchyModal and reset conditionns', () => {
+    spyOn(component, 'closeHierarchyModal').and.callThrough();
+    component.closeHierarchyModal();
+    expect(component.uploadCSVFile).toBeTruthy();
+    expect(component.errorCSV.status).toBeFalsy();
+    expect(component.errorCSV.message).toBe('');
+    expect(component.isUploadCSV).toBeFalsy();
+    expect(component.showCreateCSV).toBeFalsy();
+    expect(component.showUpdateCSV).toBeFalsy();
+    expect(component.formData).toBe(null);
+  });
+  it('#validateCSVFile() should call validateCSVFile and check csv file', () => {
+    spyOn(component['editorService'], 'validateCSVFile').and.returnValue(throwError(csvImport.importError));
+    spyOn(component, 'mergeCollectionExternalProperties');
+    component.validateCSV = true;
+    component.uploadCSVFile = false;
+    component.isUploadCSV = true;
+    component.isClosable = false;
+    component.validateCSVFile();
+    component['editorService'].validateCSVFile(null, 'do_113312173590659072160').subscribe(data => {
+    },
+      error => {
+        expect(error.responseCode).toBe('CLIENT_ERROR');
+        expect(component.validateCSV).toBeFalsy();
+        expect(component.errorCSV.status).toBeTruthy();
+        expect(component.isClosable).toBeTruthy();
+      });
   });
 });

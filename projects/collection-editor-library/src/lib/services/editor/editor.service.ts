@@ -365,6 +365,16 @@ export class EditorService {
       return true;
     }
   }
+  getHierarchyFolder() {
+    const treeObj = this.treeService.getTreeObject();
+    const contents = [];
+    treeObj.visit((node) => {
+      if (node && !node.data.root) {
+        contents.push(node.data.id);
+      }
+    });
+    return contents;
+  }
   validateCSVFile(formData, collectionnId) {
     const url = _.get(this.configService.urlConFig, 'URLS.CSV.UPLOAD');
     const req = {

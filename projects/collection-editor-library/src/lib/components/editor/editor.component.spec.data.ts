@@ -223,5 +223,23 @@ errorExport: {
   "result": {
       "messages": null
   }
+},
+}
+export const csvImport = {
+importError: {
+  "id": "api.collection.import",
+  "ver": "4.0",
+  "ts": "2021-07-05T11:51:48ZZ",
+  "params": {
+      "resmsgid": "341d4c9d-625b-470c-8b2f-b5d6626d548a",
+      "msgid": null,
+      "err": "INVALID_CSV_FILE",
+      "status": "failed",
+      "errmsg": "Please provide valid csv file. Please check for data columns without headers."
+  },
+  "responseCode": "CLIENT_ERROR",
+  "result": {
+      "messages": null
+  }
 }
 }
