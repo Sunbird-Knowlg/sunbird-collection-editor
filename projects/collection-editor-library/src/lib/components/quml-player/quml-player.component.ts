@@ -31,6 +31,9 @@ export class QumlPlayerComponent implements OnInit {
     this.qumlPlayerConfig.context.threshold = _.get(this.configService, 'playerConfig.threshold');
     this.qumlPlayerConfig.metadata = _.cloneDeep(this.questionSetHierarchy);
     if (this.qumlPlayerConfig.metadata) {
+      let childNodes = this.qumlPlayerConfig.metadata.childNodes;
+      childNodes = _.filter(childNodes, (identifier) => identifier !== this.qumlPlayerConfig.metadata.identifier);
+      this.qumlPlayerConfig.metadata.childNodes = childNodes;
       const totalQuestions = this.qumlPlayerConfig.metadata.childNodes.length;
       this.qumlPlayerConfig.metadata.maxQuestions = this.qumlPlayerConfig.metadata.maxQuestions || totalQuestions;
       if (this.isSingleQuestionPreview) {
