@@ -122,6 +122,7 @@ describe('HelperService', () => {
     service.getAllUser(userSearchBody);
     expect(publicDataService.post).toHaveBeenCalled();
   });
+
   it('#updateCollaborator() should call publicDataService.patch()', () => {
     const publicDataService: PublicDataService = TestBed.inject(PublicDataService);
     spyOn(publicDataService, 'patch').and.returnValue(of({}));
