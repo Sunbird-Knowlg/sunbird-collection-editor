@@ -14,19 +14,19 @@
                     <i class="icon ellipsis vertical h-1" aria-hidden="true" (click)="onClickFolder()"></i>
                     <div class="menu" suiDropdownMenu>
                       <button type="button" class="item fs-0-785 bg-none"  
-                      (click)="createHierarchyCsv()" [disabled]="childrenCount">
+                      (click)="createHierarchyCsv()" >
                          <i class="icon folder outline sb-color-primary"></i>
                         <span class="text" [ngClass]="{'label-disable': childrenCount}">{{configService.labelConfig?.lbl?.createHierarchyCsv}}</span>
                     </button>
                     <div class="ui divider"></div>
-                    <button type="button" class="item fs-0-785 bg-none" (click)="downloadHierarchyCsv()" [disabled]="!childrenCount">
+                    <button type="button" class="item fs-0-785 bg-none" (click)="downloadHierarchyCsv()" >
                         <i class="icon download sb-color-primary" aria-hidden="true"></i> 
                       <span class="text" [ngClass]="{'label-disable': !childrenCount}" > 
                          {{configService.labelConfig?.lbl?.downloadFoldersInCSV}}</span>
                     </button>
                     <div class="ui divider">
                     </div>
-                    <button type="button" class="item fs-0-785 bg-none" (click)="updateHierarchyCSVFile()" [disabled]="!childrenCount">
+                    <button type="button" class="item fs-0-785 bg-none" (click)="updateHierarchyCSVFile()" >
                         <i class="icon upload sb-color-primary" aria-hidden="true"></i> 
                       <span class="text" [ngClass]="{'label-disable': !childrenCount}" > 
                         {{configService.labelConfig?.lbl?.uploadUpdateCSV}}

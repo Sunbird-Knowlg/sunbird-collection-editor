@@ -627,7 +627,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     return false;
   }
   onClickFolder() {
-    this.childrenCount = this.editorService.getContentChildrens().length <= 1 ? true : false;
+    this.childrenCount = this.editorService.getContentChildrens().length >= 1 ? true : false;
   }
   uploadCSV(event) {
     const file = event.target.files[0];
