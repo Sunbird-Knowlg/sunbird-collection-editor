@@ -73,7 +73,7 @@ export class ManageCollaboratorComponent implements OnInit {
   }
 
   checkUserRole() {
-    if (this.contentOwner && this.contentOwner[0] === this.currentUser.id) {
+    if (this.contentOwner && (this.contentOwner[0] === this.currentUser.id)) {
       this.isContentOwner = true;
     }
     if (this.isContentOwner || this.isRootOrgAdmin) {
