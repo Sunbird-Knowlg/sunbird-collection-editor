@@ -334,8 +334,7 @@ describe('EditorComponent', () => {
   });
 
   it ('#toolbarEventListener() should call #toggleCollaboratorModalPoup()', () => {
-    spyOn(component, 'toolbarEventListener').and.callThrough();
-    spyOn(component, 'toggleCollaboratorModalPoup').and.callFake(() => {});
+    spyOn(component, 'toggleCollaboratorModalPoup');
     const event = {
       button : 'addCollaborator'
     };
@@ -346,14 +345,12 @@ describe('EditorComponent', () => {
 
   it ('#toggleCollaboratorModalPoup() should set addCollaborator to true', () => {
     component.addCollaborator = false;
-    spyOn(component, 'toggleCollaboratorModalPoup').and.callThrough();
     component.toggleCollaboratorModalPoup();
     expect(component.addCollaborator).toEqual(true);
   });
 
   it ('#toggleCollaboratorModalPoup() should set addCollaborator to false', () => {
     component.addCollaborator = true;
-    spyOn(component, 'toggleCollaboratorModalPoup').and.callThrough();
     component.toggleCollaboratorModalPoup();
     expect(component.addCollaborator).toEqual(false);
   });
@@ -381,8 +378,7 @@ describe('EditorComponent', () => {
   });
 
   it('#handleModalDismiss should call #toggleCollaboratorModalPoup()', () => {
-    spyOn(component, 'toggleCollaboratorModalPoup').and.callFake(() => {});
-    spyOn(component, 'handleModalDismiss').and.callThrough();
+    spyOn(component, 'toggleCollaboratorModalPoup');
     component.handleModalDismiss({});
     expect(component.toggleCollaboratorModalPoup).toHaveBeenCalled();
   });
@@ -652,5 +648,19 @@ describe('EditorComponent', () => {
     spyOn(component, 'saveContent');
     component.showLibraryComponentPage();
     expect(component.saveContent).not.toHaveBeenCalled();
+  });
+
+  it('#ngOnDestroy should call modal.deny()', () => {
+    component.telemetryService = undefined;
+    component.treeService = undefined;
+    // tslint:disable-next-line:no-string-literal
+    component['modal'] = {
+      deny: jasmine.createSpy('deny')
+    };
+    spyOn(component, 'generateTelemetryEndEvent');
+    component.ngOnDestroy();
+    expect(component.generateTelemetryEndEvent).not.toHaveBeenCalled();
+    // tslint:disable-next-line:no-string-literal
+    expect(component['modal'].deny).toHaveBeenCalled();
   });
 });
