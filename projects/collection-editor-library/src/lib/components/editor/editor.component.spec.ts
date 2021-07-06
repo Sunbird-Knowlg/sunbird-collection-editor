@@ -79,7 +79,43 @@ describe('EditorComponent', () => {
 
   it('#showPreview to be false', () => {
     expect(component.showPreview).toBeFalsy();
-  })
+  });
+  it('#showCreateCSV to be false', () => {
+    expect(component.showCreateCSV).toBeFalsy();
+  });
+  it('#showUpdateCSV to be false', () => {
+    expect(component.showUpdateCSV).toBeFalsy();
+  });
+  it('#showSuccessCSV to be false', () => {
+    expect(component.showSuccessCSV).toBeFalsy();
+  });
+  it('#isUploadCSV to be false', () => {
+    expect(component.isUploadCSV).toBeFalsy();
+  });
+  it('#validateCSV to be false', () => {
+    expect(component.validateCSV).toBeFalsy();
+  });
+  it('#uploadCSVFile to be false', () => {
+    expect(component.uploadCSVFile).toBeFalsy();
+  });
+  it('#formData to be undefined', () => {
+    expect(component.formData).toBeUndefined();
+  });
+  it('#childrenCount to be undefined', () => {
+    expect(component.childrenCount).toBeUndefined();
+  });
+  it('#configObjectType to be true', () => {
+    expect(component.configObjectType).toBeTruthy();
+  });
+  it('#isClosable to be true', () => {
+    expect(component.isClosable).toBeTruthy();
+  });
+  it('#sampleCsvUrl to be undefined', () => {
+    expect(component.sampleCsvUrl).toBeUndefined();
+  });
+  it('#openCSVPopUp to be undefined', () => {
+    expect(component.openCSVPopUp).toBeUndefined();
+  });
 
   it('#ngOnInit() should call #editorService.initialize() and editorService.getToolbarConfig', () => {
     const editorService = TestBed.get(EditorService);
@@ -564,6 +600,14 @@ describe('EditorComponent', () => {
     expect(component.uploadCSVFile).toBeTruthy();
     expect(component.resetConditionns).toHaveBeenCalled();
   });
+  it('#onClickReupload() should call onClickReupload and reset conditionns', () => {
+    spyOn(component, 'onClickReupload').and.callThrough();
+    spyOn(component, 'resetConditionns').and.callThrough();
+    component.showCreateCSV = false;
+    component.onClickReupload();
+    expect(component.updateCSVFile).toBeTruthy();
+    expect(component.resetConditionns).toHaveBeenCalled();
+  });
   it('#resetConditionns() should call resetConditionns and reset conditionns', () => {
     spyOn(component, 'closeHierarchyModal').and.callThrough();
     component.closeHierarchyModal();
@@ -599,5 +643,22 @@ describe('EditorComponent', () => {
         expect(component.errorCSV.status).toBeTruthy();
         expect(component.isClosable).toBeTruthy();
       });
+  });
+  it('#uploadCSV() should upload file', () => {
+    const file = new File([''], 'filename', { type: 'csv/text' });
+    const event = {
+      target: {
+        files: [
+          file
+        ]
+      }
+    };
+    component.uploadCSV(event);
+    expect(component.isUploadCSV).toBeTruthy();
+  });
+  it('#configObjectType to be true', () => {
+    spyOn(component, 'ngOnInit');
+    component.ngOnInit();
+    expect(component.configObjectType).toBeTruthy();
   });
 });

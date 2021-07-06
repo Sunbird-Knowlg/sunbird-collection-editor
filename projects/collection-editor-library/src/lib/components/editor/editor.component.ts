@@ -63,7 +63,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public showReviewModal: boolean;
   public showCreateCSV = false;
   public showUpdateCSV = false;
-  public successCSV = false;
+  public showSuccessCSV = false;
   public isUploadCSV = false;
   public errorCSV = {
     status: false,
@@ -630,9 +630,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   onClickFolder() {
     this.saveContent().then((message: string) => {
-      this.childrenCount = this.editorService.getHierarchyFolder().length ? true : false;
     }).catch(((error: string) => {
+      this.toasterService.error(error);
     }));
+    this.childrenCount = this.editorService.getHierarchyFolder().length ? true : false;
   }
   uploadCSV(event) {
     const file = event.target.files[0];
@@ -649,7 +650,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.editorService.validateCSVFile(this.formData, this.collectionId).subscribe(res => {
       this.validateCSV = false;
       this.isClosable = true;
-      this.successCSV = true;
+      this.showSuccessCSV = true;
       this.mergeCollectionExternalProperties().subscribe((response: any) => {
       });
     }, error => {
