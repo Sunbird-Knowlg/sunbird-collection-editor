@@ -78,7 +78,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public sampleCsvUrl: any;
   public openCSVPopUp: any;
   public updateCSVFile: any;
-  public acceptType: any;
   // string = (<HTMLInputElement>document.getElementById('portalCloudStorageUrl')).value.split(',')  + 'hierarchy-upload-format.csv';
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
@@ -630,8 +629,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     return false;
   }
   onClickFolder() {
-    this.childrenCount = this.editorService.getHierarchyFolder().length  ? true : false;
-    this.acceptType = _.get(this.editorConfig.config.assetConfig, 'csv.accepted');
+    this.saveContent().then((message: string) => {
+      this.childrenCount = this.editorService.getHierarchyFolder().length ? true : false;
+    }).catch(((error: string) => {
+    }));
   }
   uploadCSV(event) {
     const file = event.target.files[0];

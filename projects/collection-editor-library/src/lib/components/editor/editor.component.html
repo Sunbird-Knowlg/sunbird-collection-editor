@@ -6,36 +6,46 @@
         <div class="ui">
           <div class="ui twelve column grid m-0 ">
             <!-- Left Sidebar for cards -->
-            <div class="three wide column p-0 overflow-y mb-40">
-              <div class="p-50" *ngIf="configObjectType">
-                {{configService.labelConfig?.lbl?.folders}}
-                <a class="profile-avtar computer only p-0 pr-10" tabindex="0">
-                <div suiDropdown class="ui dropdown left top pointing z-index-9"  id="dropdown-menu-list-header">
-                    <i class="icon ellipsis vertical h-1" aria-hidden="true" (click)="onClickFolder()"></i>
-                    <div class="menu" suiDropdownMenu>
-                      <button type="button" class="item fs-0-785 bg-none"  
-                      (click)="createHierarchyCsv()" [disabled]="childrenCount">
-                         <i class="icon folder outline sb-color-primary" aria-hidden="true"></i>
-                        <span class="text" [ngClass]="{'label-disable': childrenCount}">{{configService.labelConfig?.lbl?.createHierarchyCsv}}</span>
-                    </button>
-                    <div class="ui divider"></div>
-                    <button type="button" class="item fs-0-785 bg-none" (click)="downloadHierarchyCsv()" [disabled]="!childrenCount">
-                        <i class="icon download sb-color-primary" aria-hidden="true"></i> 
-                      <span class="text" [ngClass]="{'label-disable': !childrenCount}" > 
-                         {{configService.labelConfig?.lbl?.downloadFoldersInCSV}}</span>
-                    </button>
-                    <div class="ui divider">
-                    </div>
-                    <button type="button" class="item fs-0-785 bg-none" (click)="updateHierarchyCSVFile()" [disabled]="!childrenCount">
-                        <i class="icon upload sb-color-primary" aria-hidden="true"></i> 
-                      <span class="text" [ngClass]="{'label-disable': !childrenCount}" > 
-                        {{configService.labelConfig?.lbl?.uploadUpdateCSV}}
-                        </span>
-                    </button>
-                    </div>
-                </div>
-                </a>
+            <div class="p-50 sb-folder-menu" *ngIf="configObjectType">
+              {{configService.labelConfig?.lbl?.folders}}
+              <a class="profile-avtar computer only p-0 pr-10" tabindex="0">
+              <div suiDropdown class="ui dropdown left top pointing z-index-9"  id="dropdown-menu-list-header">
+                  <i class="icon ellipsis vertical h-1" aria-hidden="true" (click)="onClickFolder()"></i>
+                  <div class="menu" suiDropdownMenu>
+                    <button type="button" class="item fs-0-785 bg-none"  
+                    libTelemetryInteract
+                    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('open_popup','click',configService.labelConfig?.lbl?.createHierarchyCsv,
+                     this.telemetryService.telemetryPageId,{key: 'dialog_id', value: configService.labelConfig?.lbl?.createHierarchyCsv})"
+                    (click)="createHierarchyCsv()" [disabled]="childrenCount">
+                       <i class="icon folder outline sb-color-primary" aria-hidden="true"></i>
+                      <span class="text" [ngClass]="{'label-disable': childrenCount}">{{configService.labelConfig?.lbl?.createHierarchyCsv}}</span>
+                  </button>
+                  <div class="ui divider"></div>
+                  <button  libTelemetryInteract
+                  [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('csv_download','click',configService.labelConfig?.lbl?.downloadFoldersInCSV,
+                   this.telemetryService.telemetryPageId,{key: 'identifier', value: collectionId})"
+                  type="button" class="item fs-0-785 bg-none" (click)="downloadHierarchyCsv()" [disabled]="!childrenCount">
+                      <i class="icon download sb-color-primary" aria-hidden="true"></i> 
+                    <span class="text" [ngClass]="{'label-disable': !childrenCount}" > 
+                       {{configService.labelConfig?.lbl?.downloadFoldersInCSV}}</span>
+                  </button>
+                  <div class="ui divider">
+                  </div>
+                  <button 
+                  libTelemetryInteract
+                  [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('open_popup','click',configService.labelConfig?.lbl?.uploadUpdateCSV,
+                   this.telemetryService.telemetryPageId,{key: 'dialog_id', value: configService.labelConfig?.lbl?.updateHierarchyCSV})"
+                  type="button" class="item fs-0-785 bg-none" (click)="updateHierarchyCSVFile()" [disabled]="!childrenCount">
+                      <i class="icon upload sb-color-primary" aria-hidden="true"></i> 
+                    <span class="text" [ngClass]="{'label-disable': !childrenCount}" > 
+                      {{configService.labelConfig?.lbl?.uploadUpdateCSV}}
+                      </span>
+                  </button>
+                  </div>
               </div>
+              </a>
+            </div>
+            <div class="three wide column p-0 overflow-y mt-50 mb-40">
               <lib-fancy-tree  *ngIf="collectionTreeNodes && collectionTreeNodes.data"
               [nodes]="collectionTreeNodes" [options]="{ showConnectors: true }" [buttonLoaders]="buttonLoaders"
               (treeEventEmitter)="treeEventListener($event)" class="sb-collectionTree-fancyTree sb-collectionTree-fancyTreelist sb-questionset-scroll">
@@ -182,9 +192,13 @@
                 {{configService.labelConfig?.lbl?.dragAndDropCSV}} <br />
               </h5>
               <h6 class="mb-8 sb-color-gray-400 mt-10">Or</h6>
-              <button class="upload-input-button sb-btn sb-btn-success sb-btn-normal"><i aria-hidden="true" class="icon upload"></i>
+              <button class="upload-input-button sb-btn sb-btn-success sb-btn-normal"
+              libTelemetryInteract
+              [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('select_csv_upload','click',configService.labelConfig?.lbl?.selectFileToUpload,
+               this.telemetryService.telemetryPageId, {key: 'identifier', value: collectionId})"
+              ><i aria-hidden="true" class="icon upload"></i>
                 {{configService.labelConfig?.lbl?.selectFileToUpload}}  
-                <input (change)="uploadCSV($event)" accept="acceptType" type="file" >
+                <input (change)="uploadCSV($event)" accept=".csv, application/vnd.ms-excel" type="file" >
               </button>
               <p class="sb-color-gray-200 fs-0-785">{{configService.labelConfig?.lbl?.uploadEntries}}</p>
             </div>
@@ -198,9 +212,13 @@
                {{configService.labelConfig?.lbl?.dragAndDropCSV}}<br />
             </h5>
             <h6 class="mb-8 sb-color-gray-400 mt-10">Or</h6>
-            <button class="upload-input-button sb-btn sb-btn-success sb-btn-normal"><i aria-hidden="true" class="icon upload"></i>
+            <button class="upload-input-button sb-btn sb-btn-success sb-btn-normal"
+            libTelemetryInteract
+            [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('select_csv_update','click',configService.labelConfig?.lbl?.selectFileToUpload,
+             this.telemetryService.telemetryPageId, {key: 'identifier', value: collectionId})"
+            ><i aria-hidden="true" class="icon upload"></i>
               {{configService.labelConfig?.lbl?.selectFileToUpload}}  
-              <input (change)="uploadCSV($event)" accept="acceptType" type="file" >
+              <input (change)="uploadCSV($event)" accept=".csv, application/vnd.ms-excel" type="file" >
             </button>
             <p class="sb-color-gray-200 fs-0-785">{{configService.labelConfig?.lbl?.uploadEntries}}</p>
           </div>
@@ -232,7 +250,11 @@
           <ul class="mt-15 sb-circle-ul">
             <li class="item">{{errorCSV.message}}</li>
           </ul>
-          <div class="qq-upload-button-selector sb-btn sb-btn-normal sb-btn-success my-20" (click)="onClickReupload()">
+          <div class="qq-upload-button-selector sb-btn sb-btn-normal sb-btn-success my-20" 
+          libTelemetryInteract
+          [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('select_csv_reupload','click',configService.labelConfig?.lbl?.reUploadCSV,
+           this.telemetryService.telemetryPageId, {key: 'identifier', value: collectionId})"
+           (click)="onClickReupload()">
             <div><i aria-hidden="true" class="icon refresh"></i>{{configService.labelConfig?.lbl?.reUploadCSV}}</div>
           </div>
         </div>
@@ -256,11 +278,19 @@
       </div>
     </div>
     <div class="sb-modal-actions">
-      <button class="sb-btn sb-btn-normal " (click)="closeHierarchyModal()"[disabled]="!isClosable" 
+      <button class="sb-btn sb-btn-normal " 
+      libTelemetryInteract
+      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('close_popup','click',configService.labelConfig?.button_labels?.close_btn_label,
+       this.telemetryService.telemetryPageId, {key: 'identifier', value: collectionId})"
+      (click)="closeHierarchyModal()"[disabled]="!isClosable" 
       [ngClass]="{'sb-btn-primary': isClosable, 'sb-btn-disabled': !isClosable}" >
          {{configService.labelConfig?.button_labels?.close_btn_label}}
       </button>
-      <button class="sb-btn sb-btn-normal " (click)="validateCSVFile()"[disabled]="!isUploadCSV" 
+      <button class="sb-btn sb-btn-normal "
+      libTelemetryInteract
+      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('csv_upload','click',configService.labelConfig?.button_labels?.next_btn_label,
+       this.telemetryService.telemetryPageId, {key: 'identifier', value: collectionId})"
+      (click)="validateCSVFile()"[disabled]="!isUploadCSV" 
       [ngClass]="{'sb-btn-primary': isUploadCSV, 'sb-btn-disabled': !isUploadCSV}" >
          {{configService.labelConfig?.button_labels?.next_btn_label}}
       </button>

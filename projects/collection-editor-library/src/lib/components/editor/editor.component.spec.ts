@@ -544,9 +544,11 @@ describe('EditorComponent', () => {
   });
   it('#onClickFolder() should call onClickFolder and set csv create and update options', () => {
     spyOn(component['editorService'], 'getHierarchyFolder').and.callFake(() => [1]);
-    component.editorConfig = editorConfig;
+    spyOn(component, 'saveContent').and.callFake(() => {
+      return Promise.resolve();
+    });
     component.onClickFolder();
-    expect(component.childrenCount).toBeTruthy();
+    expect(component.saveContent).toHaveBeenCalled();
   });
   it('#createHierarchyCsv() should call createHierarchyCsv and open pop up', () => {
     spyOn(component, 'createHierarchyCsv').and.callThrough();
