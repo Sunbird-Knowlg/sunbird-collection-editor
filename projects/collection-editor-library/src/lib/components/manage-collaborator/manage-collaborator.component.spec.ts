@@ -237,4 +237,31 @@ describe('ManageCollaboratorComponent', () => {
     expect(component.searchKeyword).toEqual('');
     expect(component.searchByKeyword).toHaveBeenCalled();
   });
+
+  it('#validateEmail() should return true', () => {
+    spyOn(component, 'validateEmail').and.callThrough();
+    const isEmail = component.validateEmail('abcd@gmail.com');
+    expect(isEmail).toBeTruthy();
+  });
+
+  it('#validateEmail() should return false', () => {
+    spyOn(component, 'validateEmail').and.callThrough();
+    const isEmail = component.validateEmail('abcd');
+    expect(isEmail).toBeFalsy();
+  });
+
+  it('#selectUser() should call toggleSelectionUser method', () => {
+    spyOn(component, 'toggleSelectionUser').and.callFake(() => {});
+    spyOn(component, 'selectUser').and.callThrough();
+    component.selectUser({identifier: '12345'});
+    expect(component.toggleSelectionUser).toHaveBeenCalled();
+  });
+
+  it('#viewAllResults() should set user data', () => {
+    component.searchRes.content = mockData.alluserRes.result.response.content;
+    spyOn(component, 'viewAllResults').and.callThrough();
+    component.viewAllResults();
+    expect(component.users).toBe(mockData.alluserRes.result.response.content);
+  });
+
 });
