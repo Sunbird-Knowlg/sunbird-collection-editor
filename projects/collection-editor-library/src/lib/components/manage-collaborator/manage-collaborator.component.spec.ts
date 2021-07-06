@@ -8,6 +8,31 @@ import { ToasterService } from '../../services/toaster/toaster.service';
 import { mockData } from './manage-collaborator.component.spec.data';
 import { of, throwError } from 'rxjs';
 import * as _ from 'lodash-es';
+
+const mockEditorService = {
+  editorConfig: {
+    config: {
+      assetConfig: {
+        image: {
+          size: '1',
+          accepted: 'png, jpeg'
+        }
+      }
+    },
+    context: {
+      user: {
+        id: 123,
+        fullName: 'Ram Gopal',
+        isRootOrgAdmin: false,
+        orgIds: '12345'
+
+      },
+      channel: 'sunbird'
+    }
+  },
+  fetchContentDetails() {
+  }
+};
 describe('ManageCollaboratorComponent', () => {
   let component: ManageCollaboratorComponent;
   let fixture: ComponentFixture<ManageCollaboratorComponent>;
@@ -18,7 +43,7 @@ describe('ManageCollaboratorComponent', () => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule ],
       declarations: [ ManageCollaboratorComponent ],
-      providers: [EditorService, ToasterService],
+      providers: [EditorService, ToasterService, { provide: EditorService, useValue: mockEditorService }],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     })
     .compileComponents();
@@ -38,9 +63,10 @@ describe('ManageCollaboratorComponent', () => {
 
   it('#ngOnInit() should call setCreatorAndCollaborators method', () => {
     spyOn(component, 'setCreatorAndCollaborators').and.callFake(() => {});
+    spyOn(component, 'ngOnInit').and.callThrough();
     component.ngOnInit();
     expect(component.isRootOrgAdmin).toBeDefined();
-    expect(component.userSearchBody).toBeDefined();
+    expect(component.userSearchBody.request.filters.rootOrgId).toBeDefined();
     expect(component.setCreatorAndCollaborators).toHaveBeenCalled();
   });
 
@@ -60,22 +86,27 @@ describe('ManageCollaboratorComponent', () => {
     component.isRootOrgAdmin = true;
     component.contentOwner = ['12345'];
     component.currentUser = {id: '12345'};
+    spyOn(component, 'getCollaborators');
     spyOn(component, 'getAllUserList').and.callFake(() => {});
     spyOn(component, 'checkUserRole').and.callThrough();
+    expect(component.isContentOwner).toBeFalsy();
+    expect(component.contentOwner).toBeDefined();
     component.checkUserRole();
     expect(component.isContentOwner).toBeTruthy();
     expect(component.getAllUserList).toHaveBeenCalled();
+    expect(component.getCollaborators).not.toHaveBeenCalled();
   });
 
   it('#checkUserRole() should call getCollaborators method', () => {
-    // component.isContentOwner = true;
     component.isRootOrgAdmin = false;
     component.contentOwner = ['12345'];
     component.currentUser = {id: '123456'};
+    spyOn(component, 'getAllUserList');
     spyOn(component, 'getCollaborators').and.callFake(() => {});
     spyOn(component, 'checkUserRole').and.callThrough();
     component.checkUserRole();
     expect(component.isContentOwner).toBeFalsy();
+    expect(component.getAllUserList).not.toHaveBeenCalled();
     expect(component.getCollaborators).toHaveBeenCalled();
   });
 
@@ -178,7 +209,7 @@ describe('ManageCollaboratorComponent', () => {
   });
 
   it('#getAllusers() should set isAddCollaboratorTab to true', () => {
-    component.isAddCollaboratorTab = false;
+    // component.isAddCollaboratorTab = false;
     spyOn(component, 'getAllusers').and.callThrough();
     component.getAllusers();
     expect(component.isAddCollaboratorTab).toBeTruthy();
@@ -217,6 +248,7 @@ describe('ManageCollaboratorComponent', () => {
     spyOn(helperService, 'getAllUser').and.returnValue(of(mockData.alluserRes));
     spyOn(component, 'searchByKeyword').and.callThrough();
     component.searchByKeyword();
+    expect(component.searchKeyword).toBeDefined();
     expect(component.validateEmail).toHaveBeenCalled();
     expect(helperService.getAllUser).toHaveBeenCalled();
     expect(component.searchRes.searchStatus).toEqual('end');

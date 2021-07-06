@@ -502,6 +502,33 @@ describe('EditorComponent', () => {
     expect(component.saveContent).not.toHaveBeenCalled();
   });
 
+  it ('#toolbarEventListener() should set showReviewModal to true ', () => {
+    component.showReviewModal = false;
+    const event = {
+      button : 'showReviewcomments'
+    };
+    component.toolbarEventListener(event);
+    expect(component.showReviewModal).toBeTruthy();
+  });
+
+  it ('#toolbarEventListener() should set showReviewModal to false ', () => {
+    component.showReviewModal = true;
+    const event = {
+      button : 'showReviewcomments'
+    };
+    component.toolbarEventListener(event);
+    expect(component.showReviewModal).toBeFalsy();
+  });
+
+  it ('#toolbarEventListener() should set showReviewModal to false ', () => {
+    component.showReviewModal = true;
+    const event = {
+      button : 'showCorrectioncomments'
+    };
+    component.toolbarEventListener(event);
+    expect(component.showReviewModal).toBeFalsy();
+  });
+
   it ('#toolbarEventListener() should set addCollaborator to true', () => {
     const event = {
       button : 'addCollaborator'

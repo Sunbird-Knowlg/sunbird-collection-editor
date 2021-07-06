@@ -41,7 +41,7 @@ export class ManageCollaboratorComponent implements OnInit {
         limit: 200
     }
   };
-  public isContentOwner: boolean;
+  public isContentOwner = false;
   public isRootOrgAdmin: boolean;
   public currentUser: any;
   public allUsersCount = 0;
@@ -73,10 +73,8 @@ export class ManageCollaboratorComponent implements OnInit {
   }
 
   checkUserRole() {
-    if (this.contentOwner[0] === this.currentUser.id) {
+    if (this.contentOwner && this.contentOwner[0] === this.currentUser.id) {
       this.isContentOwner = true;
-    } else {
-      this.isContentOwner = false;
     }
     if (this.isContentOwner || this.isRootOrgAdmin) {
       this.isAddCollaboratorTab = true;
