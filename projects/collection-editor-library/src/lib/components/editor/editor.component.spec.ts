@@ -8,7 +8,8 @@ import { TelemetryInteractDirective } from '../../directives/telemetry-interact/
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TreeService } from '../../services/tree/tree.service';
-import { editorConfig, nativeElement, getCategoryDefinitionResponse } from './editor.component.spec.data';
+import { editorConfig, nativeElement, getCategoryDefinitionResponse, hierarchyResponse,
+  categoryDefinition } from './editor.component.spec.data';
 import { ConfigService } from '../../services/config/config.service';
 import { of } from 'rxjs';
 import { DialcodeService } from '../../services/dialcode/dialcode.service';
@@ -16,6 +17,8 @@ import { treeData } from './../fancy-tree/fancy-tree.component.spec.data';
 import * as urlConfig from '../../services/config/url.config.json';
 import * as labelConfig from '../../services/config/label.config.json';
 import * as categoryConfig from '../../services/config/category.config.json';
+import { FrameworkService } from '../../services/framework/framework.service';
+import { HelperService } from '../../services/helper/helper.service';
 
 describe('EditorComponent', () => {
   const configStub = {
@@ -45,10 +48,6 @@ describe('EditorComponent', () => {
     editorService = TestBed.inject(EditorService);
     component.editorConfig = editorConfig;
     spyOnProperty(editorService, 'editorConfig', 'get').and.returnValue(editorConfig);
-    const treeService = TestBed.inject(TreeService);
-    spyOn(treeService, 'initialize').and.callFake(() => {
-      return true;
-    });
     // fixture.detectChanges();
   });
 
@@ -68,10 +67,6 @@ describe('EditorComponent', () => {
     expect(component.showLibraryPage).toBeFalsy();
   });
 
-  it('#showQuestionTemplatePopup to be false', () => {
-    expect(component.showQuestionTemplatePopup).toBeFalsy();
-  });
-
   it('#showDeleteConfirmationPopUp to be false', () => {
     expect(component.showDeleteConfirmationPopUp).toBeFalsy();
   });
@@ -84,6 +79,10 @@ describe('EditorComponent', () => {
     expect(component.showQuestionTemplatePopup).toBeFalsy();
   });
 
+  it('#addCollaborator to be undefined', () => {
+    expect(component.addCollaborator).toBeUndefined();
+  });
+
   it('#buttonLoaders values should be set', () => {
     expect(component.buttonLoaders.saveAsDraftButtonLoader).toBeFalsy();
     expect(component.buttonLoaders.addFromLibraryButtonLoader).toBeFalsy();
@@ -91,39 +90,79 @@ describe('EditorComponent', () => {
     expect(component.buttonLoaders.showReviewComment).toBeFalsy();
   });
 
-  it('#ngOnInit() should call #editorService.initialize() and editorService.getToolbarConfig', () => {
-    // const editorService = TestBed.get(EditorService);
-    component.editorConfig = editorConfig;
-    spyOn(editorService, 'initialize');
-    spyOn(editorService, 'getToolbarConfig');
+  it('#ngOnInit() should call all methods inside it', () => {
+    spyOn(editorService, 'initialize').and.callFake(() => {});
+    spyOn(editorService, 'getToolbarConfig').and.returnValue({title: 'abcd', showDialcode: 'No'});
+    const treeService = TestBed.inject(TreeService);
+    spyOn(treeService, 'initialize').and.callFake(() => {});
+    spyOn(component, 'mergeCollectionExternalProperties').and.returnValue(of(hierarchyResponse));
+    const frameworkService = TestBed.inject(FrameworkService);
+    spyOn(frameworkService, 'initialize').and.callFake(() => {});
+    spyOn(frameworkService, 'getTargetFrameworkCategories').and.callFake(() => {});
+    const helperService = TestBed.inject(HelperService);
+    spyOn(helperService, 'initialize').and.callFake(() => {});
+    spyOn(editorService, 'getCategoryDefinition').and.returnValue(of(getCategoryDefinitionResponse));
     component.ngOnInit();
+    expect(component.editorMode).toBeDefined();
     expect(editorService.initialize).toHaveBeenCalled();
+    expect(treeService.initialize).toHaveBeenCalled();
+    expect(component.collectionId).toBeDefined();
     expect(editorService.getToolbarConfig).toHaveBeenCalled();
+    expect(component.toolbarConfig).toBeDefined();
+    expect(component.organisationFramework).toBeDefined();
+    expect(component.targetFramework).toBeDefined();
+    expect(frameworkService.initialize).toHaveBeenCalled();
+    expect(frameworkService.getTargetFrameworkCategories).toHaveBeenCalled();
+    expect(helperService.initialize).toHaveBeenCalled();
+    expect(editorService.getCategoryDefinition).toHaveBeenCalled();
+  });
+
+  it('#setEditorForms() should set variable values', () => {
+    spyOn(component, 'setEditorForms').and.callThrough();
+    component.setEditorForms(categoryDefinition);
+    expect(component.unitFormConfig).toBeDefined();
+    expect(component.rootFormConfig).toBeDefined();
+    expect(component.libraryComponentInput.searchFormConfig).toBeDefined();
+    expect(component.leafFormConfig).toBeDefined();
   });
 
   it('#ngAfterViewInit() should call #impression()', () => {
-    const telemetryService = TestBed.get(EditorTelemetryService);
-    spyOn(telemetryService, 'impression').and.callFake(() => {
-      return true;
-    });
+    const telemetryService = TestBed.inject(EditorTelemetryService);
+    telemetryService.telemetryPageId = 'collection_editor';
+    spyOn(telemetryService, 'impression').and.callFake(() => {});
+    spyOn(component, 'ngAfterViewInit').and.callThrough();
     component.ngAfterViewInit();
     expect(telemetryService.impression).toHaveBeenCalled();
   });
 
   it('#redirectToChapterListTab() should emit #editorEmitter event', () => {
+    component.actionType = 'dummyCase';
+    component.collectionId = 'do_12345';
     spyOn(component.editorEmitter, 'emit');
     component.redirectToChapterListTab();
     expect(component.editorEmitter.emit).toHaveBeenCalled();
   });
 
-  it('#updateToolbarTitle() should call #getActiveNode() method', () => {
+  it('#updateToolbarTitle() should call #getActiveNode() method and set title name as test', () => {
     const treeService = TestBed.inject(TreeService);
-    component.toolbarConfig = {title: 'test'};
+    component.toolbarConfig = {title: ''};
     spyOn(treeService, 'getActiveNode').and.callFake(() => {
       return {data: {root: true}};
     });
     component.updateToolbarTitle({event: {name: 'test'}});
     expect(treeService.getActiveNode).toHaveBeenCalled();
+    expect(component.toolbarConfig.title).toEqual('test');
+  });
+
+  it('#updateToolbarTitle() should call #getActiveNode() method and set title name as Untitled', () => {
+    const treeService = TestBed.inject(TreeService);
+    component.toolbarConfig = {title: ''};
+    spyOn(treeService, 'getActiveNode').and.callFake(() => {
+      return {data: {root: true}};
+    });
+    component.updateToolbarTitle({event: {name: ''}});
+    expect(treeService.getActiveNode).toHaveBeenCalled();
+    expect(component.toolbarConfig.title).toEqual('Untitled');
   });
 
   it('#validateFormStatus() should return true', () => {
@@ -152,7 +191,7 @@ describe('EditorComponent', () => {
   });
 
   it('#toolbarEventListener() should call #previewContent() if event is previewContent', () => {
-    spyOn(component, 'previewContent');
+    spyOn(component, 'previewContent').and.callFake(() => {});
     const event = {
       button : 'previewContent'
     };
@@ -161,7 +200,7 @@ describe('EditorComponent', () => {
   });
 
   it('#toolbarEventListener() should call #showLibraryComponentPage() if event is addFromLibrary', () => {
-    spyOn(component, 'showLibraryComponentPage');
+    spyOn(component, 'showLibraryComponentPage').and.callFake(() => {});
     const event = {
       button : 'addFromLibrary'
     };
@@ -170,7 +209,7 @@ describe('EditorComponent', () => {
   });
 
   it ('#toolbarEventListener() should call #submitHandler() if event is submitContent', () => {
-    spyOn(component, 'submitHandler');
+    spyOn(component, 'submitHandler').and.callFake(() => {});
     const event = {
       button : 'submitContent'
     };
@@ -187,16 +226,28 @@ describe('EditorComponent', () => {
   });
 
   it ('#toolbarEventListener() should call #rejectContent() if event is rejectContent', () => {
-    spyOn(component, 'rejectContent');
+    spyOn(component, 'redirectToQuestionTab').and.callFake(() => {});
     const event = {
-      button : 'rejectContent'
+      button : 'editContent',
+      comment: 'abcd'
+    };
+    component.toolbarEventListener(event);
+    expect(component.redirectToQuestionTab).toHaveBeenCalled();
+  });
+
+
+  it ('#toolbarEventListener() should call #rejectContent() if event is rejectContent', () => {
+    spyOn(component, 'rejectContent').and.callFake(() => {});
+    const event = {
+      button : 'rejectContent',
+      comment: 'abcd'
     };
     component.toolbarEventListener(event);
     expect(component.rejectContent).toHaveBeenCalled();
   });
 
   it('#toolbarEventListener() should call #publishContent() if event is publishContent', () => {
-    spyOn(component, 'publishContent');
+    spyOn(component, 'publishContent').and.callFake(() => {});
     const event = {
       button : 'publishContent'
     };
@@ -204,8 +255,19 @@ describe('EditorComponent', () => {
     expect(component.publishContent).toHaveBeenCalled();
   });
 
-  it('#toolbarEventListener() should call #updateToolbarTitle() if event is onFormValueChange', () => {
+  it('#toolbarEventListener() should set formStatusMapper', () => {
+    const treeService = TestBed.inject(TreeService);
+    spyOn(treeService, 'getActiveNode').and.returnValue({data: {id: '12345'}});
     spyOn(component, 'updateToolbarTitle');
+    const event = {
+      button : 'onFormStatusChange',
+      event: {isValid: true}
+    };
+    component.toolbarEventListener(event);
+  });
+
+  it('#toolbarEventListener() should call #updateToolbarTitle() if event is onFormValueChange', () => {
+    spyOn(component, 'updateToolbarTitle').and.callFake(() => {});
     const event = {
       button : 'onFormValueChange'
     };
@@ -214,7 +276,7 @@ describe('EditorComponent', () => {
   });
 
   it('#toolbarEventListener() should call #redirectToChapterListTab() if event is backContent', () => {
-    spyOn(component, 'redirectToChapterListTab');
+    spyOn(component, 'redirectToChapterListTab').and.callFake(() => {});
     const event = {
       button : 'backContent'
     };
@@ -223,16 +285,17 @@ describe('EditorComponent', () => {
   });
 
   it('#toolbarEventListener() should call #redirectToChapterListTab() if event is sendForCorrections', () => {
-    spyOn(component, 'redirectToChapterListTab');
+    spyOn(component, 'redirectToChapterListTab').and.callFake(() => {});
     const event = {
-      button : 'sendForCorrections'
+      button : 'sendForCorrections',
+      comment: 'abcd'
     };
     component.toolbarEventListener(event);
     expect(component.redirectToChapterListTab).toHaveBeenCalled();
   });
 
   it('#toolbarEventListener() should call #redirectToChapterListTab() if event is sourcingApprove', () => {
-    spyOn(component, 'redirectToChapterListTab');
+    spyOn(component, 'redirectToChapterListTab').and.callFake(() => {});
     const event = {
       button : 'sourcingApprove'
     };
@@ -241,16 +304,91 @@ describe('EditorComponent', () => {
   });
 
   it('#toolbarEventListener() should call #redirectToChapterListTab() if event is sourcingReject', () => {
-    spyOn(component, 'redirectToChapterListTab');
+    spyOn(component, 'redirectToChapterListTab').and.callFake(() => {});
     const event = {
-      button : 'sourcingReject'
+      button : 'sourcingReject',
+      comment: 'abcd'
     };
     component.toolbarEventListener(event);
     expect(component.redirectToChapterListTab).toHaveBeenCalled();
   });
 
+  it ('#toolbarEventListener() should set showReviewModal to true ', () => {
+    spyOn(component, 'toolbarEventListener').and.callThrough();
+    component.showReviewModal = false;
+    const event = {
+      button : 'showReviewcomments'
+    };
+    component.toolbarEventListener(event);
+    expect(component.showReviewModal).toBeTruthy();
+  });
+
+  it ('#toolbarEventListener() should set showReviewModal to false ', () => {
+    spyOn(component, 'toolbarEventListener').and.callThrough();
+    component.showReviewModal = true;
+    const event = {
+      button : 'showReviewcomments'
+    };
+    component.toolbarEventListener(event);
+    expect(component.showReviewModal).toBeFalsy();
+  });
+
+  it ('#toolbarEventListener() should call #toggleCollaboratorModalPoup()', () => {
+    spyOn(component, 'toolbarEventListener').and.callThrough();
+    spyOn(component, 'toggleCollaboratorModalPoup').and.callFake(() => {});
+    const event = {
+      button : 'addCollaborator'
+    };
+    component.toolbarEventListener(event);
+    expect(component.actionType).toBe('addCollaborator');
+    expect(component.toggleCollaboratorModalPoup).toHaveBeenCalled();
+  });
+
+  it ('#toggleCollaboratorModalPoup() should set addCollaborator to true', () => {
+    component.addCollaborator = false;
+    spyOn(component, 'toggleCollaboratorModalPoup').and.callThrough();
+    component.toggleCollaboratorModalPoup();
+    expect(component.addCollaborator).toEqual(true);
+  });
+
+  it ('#toggleCollaboratorModalPoup() should set addCollaborator to false', () => {
+    component.addCollaborator = true;
+    spyOn(component, 'toggleCollaboratorModalPoup').and.callThrough();
+    component.toggleCollaboratorModalPoup();
+    expect(component.addCollaborator).toEqual(false);
+  });
+
+  it ('#toolbarEventListener() should set showReviewModal to true ', () => {
+    spyOn(component, 'toolbarEventListener').and.callThrough();
+    component.showReviewModal = undefined;
+    const event = {
+      button : 'showCorrectioncomments'
+    };
+    component.toolbarEventListener(event);
+    expect(component.contentComment).toBeUndefined();
+    expect(component.showReviewModal).toEqual(true);
+  });
+
+  it ('#toolbarEventListener() should set showReviewModal to false ', () => {
+    spyOn(component, 'toolbarEventListener').and.callThrough();
+    component.showReviewModal = true;
+    const event = {
+      button : 'showCorrectioncomments'
+    };
+    component.toolbarEventListener(event);
+    expect(component.contentComment).toBeUndefined();
+    expect(component.showReviewModal).toEqual(false);
+  });
+
+  it('#handleModalDismiss should call #toggleCollaboratorModalPoup()', () => {
+    spyOn(component, 'toggleCollaboratorModalPoup').and.callFake(() => {});
+    spyOn(component, 'handleModalDismiss').and.callThrough();
+    component.handleModalDismiss({});
+    expect(component.toggleCollaboratorModalPoup).toHaveBeenCalled();
+  });
+
   it('#saveContent() should call #validateFormStatus()', () => {
-    spyOn(component, 'validateFormStatus');
+    spyOn(component, 'validateFormStatus').and.callFake(() => {});
     component.saveContent();
     expect(component.validateFormStatus).toHaveBeenCalled();
   });
@@ -279,7 +417,7 @@ describe('EditorComponent', () => {
     component.toolbarConfig = {
       showDialcode: 'yes'
     };
-    const dialcodeService = TestBed.get(DialcodeService);
+    const dialcodeService = TestBed.inject(DialcodeService);
     spyOn(dialcodeService, 'validateUnitsDialcodes').and.callFake(() => {
       return true;
     });
@@ -294,7 +432,7 @@ describe('EditorComponent', () => {
     component.toolbarConfig = {
       showDialcode: 'yes'
     };
-    const dialcodeService = TestBed.get(DialcodeService);
+    const dialcodeService = TestBed.inject(DialcodeService);
     spyOn(dialcodeService, 'validateUnitsDialcodes').and.callFake(() => {
       return true;
     });
@@ -312,7 +450,6 @@ describe('EditorComponent', () => {
   });
 
   it('#rejectContent() should call #submitRequestChanges() and #redirectToChapterListTab()', async () => {
-    // const editorService = TestBed.get(EditorService);
     component.collectionId = 'do_1234';
     spyOn(editorService, 'submitRequestChanges').and.returnValue(of({}));
     spyOn(component, 'redirectToChapterListTab');
@@ -322,7 +459,6 @@ describe('EditorComponent', () => {
   });
 
   it('#publishContent should call #publishContent() and #redirectToChapterListTab()', () => {
-    // const editorService = TestBed.get(EditorService);
     spyOn(editorService, 'publishContent').and.returnValue(of({}));
     spyOn(component, 'redirectToChapterListTab');
     component.publishContent();
@@ -341,14 +477,14 @@ describe('EditorComponent', () => {
 
   it('#libraryEventListener() should set pageId to collection_editor', async () => {
     const res = {};
-    spyOn(component, 'libraryEventListener').and.returnValue(of(res));
+    spyOn(component, 'mergeCollectionExternalProperties').and.returnValue(of(res));
     component.libraryEventListener({});
     expect(component.pageId).toEqual('collection_editor');
   });
 
   it('#treeEventListener() should call #updateTreeNodeData()', () => {
     const event = { type: 'test' };
-    spyOn(component, 'updateTreeNodeData');
+    spyOn(component, 'updateTreeNodeData').and.callFake(() => {});
     component.treeEventListener(event);
     expect(component.updateTreeNodeData).toHaveBeenCalled();
   });
@@ -467,6 +603,7 @@ describe('EditorComponent', () => {
       }
     };
     const result = component.showCommentAddedAgainstContent();
+    expect(component.contentComment).toEqual('test');
     expect(result).toEqual(true);
   });
 
@@ -515,65 +652,5 @@ describe('EditorComponent', () => {
     spyOn(component, 'saveContent');
     component.showLibraryComponentPage();
     expect(component.saveContent).not.toHaveBeenCalled();
-  });
-
-  it ('#toolbarEventListener() should set showReviewModal to true ', () => {
-    spyOn(component, 'toolbarEventListener').and.callThrough();
-    component.showReviewModal = false;
-    const event = {
-      button : 'showReviewcomments'
-    };
-    component.toolbarEventListener(event);
-    expect(component.showReviewModal).toBeTruthy();
-  });
-
-  it ('#toolbarEventListener() should set showReviewModal to false ', () => {
-    spyOn(component, 'toolbarEventListener').and.callThrough();
-    component.showReviewModal = true;
-    const event = {
-      button : 'showReviewcomments'
-    };
-    component.toolbarEventListener(event);
-    expect(component.showReviewModal).toBeFalsy();
-  });
-
-  it ('#toolbarEventListener() should set showReviewModal to false ', () => {
-    spyOn(component, 'toolbarEventListener').and.callThrough();
-    component.showReviewModal = true;
-    const event = {
-      button : 'showCorrectioncomments'
-    };
-    component.toolbarEventListener(event);
-    expect(component.contentComment).toBeUndefined();
-    expect(component.showReviewModal).toBeFalsy();
-  });
-
-  it ('#toolbarEventListener() should set addCollaborator to true', () => {
-    component.addCollaborator = false;
-    spyOn(component, 'toolbarEventListener').and.callThrough();
-    const event = {
-      button : 'addCollaborator'
-    };
-    component.toolbarEventListener(event);
-    expect(component.actionType).toBe('addCollaborator');
-    expect(component.addCollaborator).toBeTruthy();
-  });
-
-  xit ('#toolbarEventListener() should set addCollaborator to false', () => {
-    component.addCollaborator = true;
-    spyOn(component, 'toolbarEventListener').and.callThrough();
-    const event = {
-      button : 'addCollaborator'
-    };
-    component.toolbarEventListener(event);
-    expect(component.actionType).toBe('addCollaborator');
-    expect(component.addCollaborator).toBeFalsy();
-  });
-
-  it('#handleModalDismiss should set addCollaborator to false', () => {
-    component.addCollaborator = true;
-    spyOn(component, 'handleModalDismiss').and.callThrough();
-    component.handleModalDismiss({});
-    expect(component.addCollaborator).toBeFalsy();
   });
 });

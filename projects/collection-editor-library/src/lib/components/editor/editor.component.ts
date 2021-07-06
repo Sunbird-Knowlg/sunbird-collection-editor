@@ -317,11 +317,18 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.showReviewModal = ! this.showReviewModal;
         break;
       case 'addCollaborator':
-        this.addCollaborator = true;
+        this.toggleCollaboratorModalPoup();
         break;
       default:
         break;
     }
+  }
+
+  toggleCollaboratorModalPoup() {
+    this.addCollaborator = ! this.addCollaborator;
+  }
+  handleModalDismiss(event) {
+    this.toggleCollaboratorModalPoup();
   }
 
   redirectToChapterListTab(data?: any) {
@@ -614,13 +621,13 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     return false;
   }
 
-  handleModalDismiss(event) {
-    this.addCollaborator = false;
-  }
-
   ngOnDestroy() {
-    this.generateTelemetryEndEvent();
-    this.treeService.clearTreeCache();
+    if (this.telemetryService) {
+      this.generateTelemetryEndEvent();
+    }
+    if (this.treeService) {
+      this.treeService.clearTreeCache();
+    }
     if (this.modal && this.modal.deny) {
       this.modal.deny();
     }
