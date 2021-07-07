@@ -225,29 +225,12 @@ errorExport: {
   }
 },
 }
-export const csvImport = {
-importError: {
-  "id": "api.collection.import",
-  "ver": "4.0",
-  "ts": "2021-07-05T11:51:48ZZ",
+export const hirearchyGet = {
+  "id": "api.content.hierarchy.get",
+  "ver": "3.0",
+  "ts": "2021-07-07T12:58:28ZZ",
   "params": {
-      "resmsgid": "341d4c9d-625b-470c-8b2f-b5d6626d548a",
-      "msgid": null,
-      "err": "INVALID_CSV_FILE",
-      "status": "failed",
-      "errmsg": "Please provide valid csv file. Please check for data columns without headers."
-  },
-  "responseCode": "CLIENT_ERROR",
-  "result": {
-      "messages": null
-  }
-},
-successImport: {
-  "id": "api.collection.export",
-  "ver": "4.0",
-  "ts": "2021-07-05T09:58:51ZZ",
-  "params": {
-      "resmsgid": "0801c119-ad94-4eb9-809c-998ed95789ea",
+      "resmsgid": "53fdfd79-2ab3-4c1c-8e4a-dc3a44ca3dbd",
       "msgid": null,
       "err": null,
       "status": "successful",
@@ -255,6 +238,103 @@ successImport: {
   },
   "responseCode": "OK",
   "result": {
+      "content": {
+          "ownershipType": [
+              "createdBy"
+          ],
+          "copyright": "NIT123",
+          "keywords": [
+              "test"
+          ],
+          "subject": [
+              "English",
+              "Hindi"
+          ],
+          "targetMediumIds": [
+              "nit_k-12_medium_hindi"
+          ],
+          "channel": "01309282781705830427",
+          "organisation": [
+              "NIT"
+          ],
+          "language": [
+              "English"
+          ],
+          "mimeType": "application/vnd.ekstep.content-collection",
+          "targetGradeLevelIds": [
+              "nit_k-12_gradelevel_grade-2"
+          ],
+          "objectType": "Content",
+          "appIcon": "",
+          "primaryCategory": "Course",
+          "children": [],
+          "contentEncoding": "gzip",
+          "lockKey": "6ea80434-00b2-4e43-a872-20c34ee78615",
+          "generateDIALCodes": "Yes",
+          "contentType": "Course",
+          "trackable": {
+              "enabled": "Yes",
+              "autoBatch": "Yes"
+          },
+          "identifier": "do_113316577504272384141",
+          "audience": [
+              "Student"
+          ],
+          "subjectIds": [
+              "nit_k-12_subject_english",
+              "nit_k-12_subject_hindi"
+          ],
+          "visibility": "Default",
+          "consumerId": "273f3b18-5dda-4a27-984a-060c7cd398d3",
+          "discussionForum": {
+              "enabled": "Yes"
+          },
+          "mediaType": "content",
+          "osId": "org.ekstep.quiz.app",
+          "languageCode": [
+              "en"
+          ],
+          "version": 2,
+          "license": "CC BY 4.0",
+          "name": "Course",
+          "targetBoardIds": [
+              "nit_k-12_board_ncert"
+          ],
+          "status": "Draft",
+          "code": "org.sunbird.TEDujL",
+          "credentials": {
+              "enabled": "Yes"
+          },
+          "description": "Enter description for Course",
+          "idealScreenSize": "normal",
+          "createdOn": "2021-07-06T08:06:17.392+0000",
+          "targetSubjectIds": [
+              "nit_k-12_subject_hindi"
+          ],
+          "copyrightYear": 2021,
+          "contentDisposition": "inline",
+          "lastUpdatedOn": "2021-07-07T12:20:44.344+0000",
+          "dialcodeRequired": "No",
+          "lastStatusChangedOn": "2021-07-06T08:06:17.392+0000",
+          "createdFor": [
+              "01309282781705830427"
+          ],
+          "creator": "N11",
+          "os": [
+              "All"
+          ],
+          "targetFWIds": [
+              "nit_k-12"
+          ],
+          "versionKey": "1625660444344",
+          "idealScreenDensity": "hdpi",
+          "framework": "nit_k-12",
+          "depth": 0,
+          "createdBy": "5a587cc1-e018-4859-a0a8-e842650b9d64",
+          "compatibilityLevel": 1,
+          "userConsent": "Yes",
+          "timeLimits": "{}",
+          "resourceType": "Course"
+      }
   }
-}
 }

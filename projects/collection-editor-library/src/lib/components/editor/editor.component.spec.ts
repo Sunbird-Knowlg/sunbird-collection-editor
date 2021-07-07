@@ -8,7 +8,7 @@ import { TelemetryInteractDirective } from '../../directives/telemetry-interact/
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TreeService } from '../../services/tree/tree.service';
-import { editorConfig, nativeElement, getCategoryDefinitionResponse, csvExport, csvImport} from './editor.component.spec.data';
+import { editorConfig, nativeElement, getCategoryDefinitionResponse, csvExport, hirearchyGet} from './editor.component.spec.data';
 import { ConfigService } from '../../services/config/config.service';
 import { of, throwError } from 'rxjs';
 import { DialcodeService } from '../../services/dialcode/dialcode.service';
@@ -547,4 +547,47 @@ describe('EditorComponent', () => {
     component.ngOnInit();
     expect(component.configObjectType).toBeTruthy();
   });
+  it('#setCsvDropDownOptions and should set csv dropdown options', () => {
+    component.csvDropDownOptions = {
+      isDisableCreateCsv: true,
+      isDisableUpdateCsv: true,
+      isDisableDownloadCsv: true
+    };
+    component.setCsvDropDownOptions(false, true, true);
+    expect(component.csvDropDownOptions.isDisableCreateCsv).toBeFalsy();
+    expect(component.csvDropDownOptions.isDisableUpdateCsv).toBeTruthy();
+    expect(component.csvDropDownOptions.isDisableDownloadCsv).toBeTruthy();
+  });
+  it('#hanndleCsvEmitter should check for create csv conditions', () => {
+    const event = {type: 'createCsv'};
+    component.hanndleCsvEmitter(event);
+    expect(component.showCsvUploadPopup).toBeTruthy();
+    expect(component.isCreateCsv).toBeTruthy();
+  });
+  it('#hanndleCsvEmitter should check for closeModal conditions', () => {
+    const event = {type: 'closeModal'};
+    component.hanndleCsvEmitter(event);
+    expect(component.showCsvUploadPopup).toBeFalsy();
+  });
+  it('#hanndleCsvEmitter should check for updateCsv conditions', () => {
+    const event = {type: 'updateCsv'};
+    component.hanndleCsvEmitter(event);
+    expect(component.showCsvUploadPopup).toBeTruthy();
+    expect(component.isCreateCsv).toBeFalsy();
+  });
+  it('#hanndleCsvEmitter should check for downloadCsv conditions', () => {
+    spyOn(component, 'downloadHierarchyCsv');
+    const event = {type: 'downloadCsv'};
+    component.hanndleCsvEmitter(event);
+    expect(component.downloadHierarchyCsv).toHaveBeenCalled();
+  });
+  it('#hanndleCsvEmitter should check for downloadCsv conditions', () => {
+    spyOn(component, 'mergeCollectionExternalProperties').and.returnValue(of(hirearchyGet));
+    const event = {type: 'updateHierarchy'};
+    component.hanndleCsvEmitter(event);
+    expect(component.mergeCollectionExternalProperties).toHaveBeenCalled();
+    expect(component.pageId).toBeDefined();
+    expect(component.telemetryService.telemetryPageId).toBeDefined();
+  });
 });
+

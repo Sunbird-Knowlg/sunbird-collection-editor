@@ -16,17 +16,17 @@
                     libTelemetryInteract
                     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('open_popup','click',configService.labelConfig?.lbl?.createHierarchyCsv,
                      this.telemetryService.telemetryPageId,{key: 'dialog_id', value: configService.labelConfig?.lbl?.createHierarchyCsv})"
-                    (click)="hanndleCsvEmitter({type: 'createCsv'})" [disabled]="csvDropDownOptions.createCsv">
-                       <i class="icon folder outline sb-color-primary" aria-hidden="true"></i>
-                      <span class="text" [ngClass]="{'label-disable': csvDropDownOptions.createCsv}">{{configService.labelConfig?.lbl?.createHierarchyCsv}}</span>
+                    (click)="hanndleCsvEmitter({type: 'createCsv'})" [disabled]="csvDropDownOptions.isDisableCreateCsv">
+                       <i class="icon folder outline sb-color-primary" [ngClass]="{'sb-disable-icon': csvDropDownOptions.isDisableCreateCsv}"  aria-hidden="true"></i>
+                      <span class="text" [ngClass]="{'label-disable': csvDropDownOptions.isDisableCreateCsv}">{{configService.labelConfig?.lbl?.createHierarchyCsv}}</span>
                   </button>
                   <div class="ui divider"></div>
                   <button  libTelemetryInteract
                   [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('csv_download','click',configService.labelConfig?.lbl?.downloadFoldersInCSV,
                    this.telemetryService.telemetryPageId,{key: 'identifier', value: collectionId})"
-                  type="button" class="item fs-0-785 bg-none" (click)="hanndleCsvEmitter({type: 'downloadCsv'})" [disabled]="csvDropDownOptions.downloadCsv">
-                      <i class="icon download sb-color-primary" aria-hidden="true"></i> 
-                    <span class="text" [ngClass]="{'label-disable': csvDropDownOptions.downloadCsv}" > 
+                  type="button" class="item fs-0-785 bg-none" (click)="hanndleCsvEmitter({type: 'downloadCsv'})" [disabled]="csvDropDownOptions.isDisableDownloadCsv">
+                      <i class="icon download sb-color-primary" [ngClass]="{'sb-disable-icon': csvDropDownOptions.isDisableDownloadCsv}" aria-hidden="true"></i> 
+                    <span class="text" [ngClass]="{'label-disable': csvDropDownOptions.isDisableDownloadCsv}" > 
                        {{configService.labelConfig?.lbl?.downloadFoldersInCSV}}</span>
                   </button>
                   <div class="ui divider">
@@ -35,9 +35,9 @@
                   libTelemetryInteract
                   [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('open_popup','click',configService.labelConfig?.lbl?.uploadUpdateCSV,
                    this.telemetryService.telemetryPageId,{key: 'dialog_id', value: configService.labelConfig?.lbl?.updateHierarchyCSV})"
-                  type="button" class="item fs-0-785 bg-none" (click)="hanndleCsvEmitter({type: 'updateCsv'})" [disabled]="csvDropDownOptions.updateCsv">
-                      <i class="icon upload sb-color-primary" aria-hidden="true"></i> 
-                    <span class="text" [ngClass]="{'label-disable': csvDropDownOptions.updateCsv}" > 
+                  type="button" class="item fs-0-785 bg-none" (click)="hanndleCsvEmitter({type: 'updateCsv'})" [disabled]="csvDropDownOptions.isDisableUpdateCsv">
+                      <i class="icon upload sb-color-primary" aria-hidden="true" [ngClass]="{'label-disable': csvDropDownOptions.isDisableUpdateCsv}"></i> 
+                    <span class="text" [ngClass]="{'label-disable': csvDropDownOptions.isDisableUpdateCsv}" > 
                       {{configService.labelConfig?.lbl?.uploadUpdateCSV}}
                       </span>
                   </button>

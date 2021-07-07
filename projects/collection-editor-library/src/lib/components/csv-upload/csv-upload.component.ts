@@ -3,8 +3,8 @@ import { ConfigService } from '../../services/config/config.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
 import { EditorService } from '../../services/editor/editor.service';
-import { catchError, map, tap } from 'rxjs/operators';
-import { Observable, throwError, forkJoin } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
 import * as _ from 'lodash-es';
 @Component({
   selector: 'lib-csv-upload',
@@ -27,7 +27,7 @@ export class CsvUploadComponent implements OnInit {
   public fileName: any;
   public file: any;
   constructor(public telemetryService: EditorTelemetryService, public configService: ConfigService,
-              private toasterService: ToasterService, private editorService: EditorService,) { }
+    private toasterService: ToasterService, private editorService: EditorService, ) { }
 
   ngOnInit(): void {
     this.handleInputCondition();
@@ -73,7 +73,7 @@ export class CsvUploadComponent implements OnInit {
       };
       this.uploadToBlob(signedURL, this.file, config).subscribe(() => {
         const fileURL = signedURL.split('?')[0];
-        this.updateContentWithURL(fileURL, this.collectionId);
+        this.updateContentWithURL(fileURL, this.file.type, this.collectionId);
       });
     });
   }
@@ -88,12 +88,25 @@ export class CsvUploadComponent implements OnInit {
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     }), map(data => data));
   }
-  updateContentWithURL(fileURL, contentId) {
-    this.editorService.validateCSVFile(fileURL, contentId).subscribe(res => {
-      this.showCsvValidationStatus = false;
+  updateContentWithURL(fileURL, mimeType, contentId) {
+    const data = new FormData();
+    data.append('fileUrl', fileURL);
+    data.append('mimeType', mimeType);
+    const config = {
+      enctype: 'multipart/form-data',
+      processData: false,
+      contentType: false,
+      cache: false
+    };
+    const option = {
+      data,
+      param: config
+    };
+    this.editorService.validateCSVFile(option, contentId).subscribe(res => {
       this.isClosable = true;
       this.showSuccessCSV = true;
-      this.csvUploadEmitter.emit({status: true, type: 'updateHierarchy'});
+      this.showCsvValidationStatus = false;
+      this.csvUploadEmitter.emit({ status: true, type: 'updateHierarchy' });
     }, error => {
       this.showCsvValidationStatus = false;
       this.errorCsvStatus = true;
@@ -102,10 +115,10 @@ export class CsvUploadComponent implements OnInit {
     });
   }
   closeHierarchyModal(modal) {
-    this.resetConditionns();
+    this.resetConditions();
     this.uploadCSVFile = false;
     this.updateCSVFile = false;
-    this.csvUploadEmitter.emit({status: true, type: 'closeModal'});
+    this.csvUploadEmitter.emit({ status: true, type: 'closeModal' });
     modal.deny();
   }
   onClickReupload() {
@@ -115,9 +128,9 @@ export class CsvUploadComponent implements OnInit {
       this.updateCSVFile = true;
     }
     this.showCsvValidationStatus = false;
-    this.resetConditionns();
+    this.resetConditions();
   }
-  resetConditionns() {
+  resetConditions() {
     this.errorCsvStatus = false;
     this.errorCsvMessage = '';
     this.isUploadCSV = false;
@@ -125,7 +138,7 @@ export class CsvUploadComponent implements OnInit {
   }
   downloadSampleCSVFile() {
     const downloadConfig = {
-      blobUrl: '', // need to update here for sample file url
+      blobUrl: this.sampleCsvUrl, // need to update here for sample file url
       successMessage: _.get(this.configService, 'labelConfig.messages.success.013'),
       fileType: 'csv',
       fileName: this.collectionId

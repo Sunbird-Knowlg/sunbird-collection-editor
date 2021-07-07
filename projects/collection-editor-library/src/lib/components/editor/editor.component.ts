@@ -232,6 +232,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   mergeCollectionExternalProperties(): Observable<any> {
     const requests = [];
+    this.collectionTreeNodes = null;
     const objectType = this.configService.categoryConfig[this.editorConfig.config.objectType];
     requests.push(this.editorService.fetchCollectionHierarchy(this.collectionId));
     if (objectType === 'questionSet') {
@@ -625,9 +626,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     }));
   }
   setCsvDropDownOptions(createCsv, updateCsv, downloadCsv) {
-    this.csvDropDownOptions.createCsv = createCsv;
-    this.csvDropDownOptions.updateCsv = updateCsv;
-    this.csvDropDownOptions.downloadCsv = downloadCsv;
+    this.csvDropDownOptions.isDisableCreateCsv = createCsv;
+    this.csvDropDownOptions.isDisableUpdateCsv = updateCsv;
+    this.csvDropDownOptions.isDisableDownloadCsv = downloadCsv;
   }
   downloadHierarchyCsv() {
     this.editorService.downloadHierarchyCsv(this.collectionId).subscribe(res => {
