@@ -106,6 +106,7 @@ export const collectionEditorConfig = {
         contentType: 'CourseUnit',
         primaryCategory: 'Course Unit',
         iconClass: 'fa fa-folder-o',
+        showAddCollaborator: true,
         children: {
           Content: [
             'Explanation Content',
@@ -241,6 +242,7 @@ export const questionEditorConfig = {
     primaryCategory: 'Practice Question Set',
     isRoot: true,
     iconClass: 'fa fa-book',
+    showAddCollaborator: false,
     children: {
       Question: [
         'Multiple Choice Question',
