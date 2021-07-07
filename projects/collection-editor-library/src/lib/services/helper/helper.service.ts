@@ -102,7 +102,8 @@ export class HelperService {
 
   getAllUser(userSearchBody) {
     const req = {
-      url: `user/v1/search?fields=orgName`,
+      url:  _.get(this.configService.urlConFig, 'URLS.USER.SEARCH'),
+      param: {fields: 'orgName'},
       data: {
         request: userSearchBody.request
       }
@@ -113,7 +114,7 @@ export class HelperService {
 
   updateCollaborator(contentId, collaboratorList) {
     const req = {
-      url: `content/v1/collaborator/update/` + contentId,
+      url: _.get(this.configService.urlConFig, 'URLS.CONTENT.UPDATE_COLLABORATOR') + contentId,
       data: {
           request: {
               content: {
