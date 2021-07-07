@@ -33,28 +33,28 @@
         [size]="'normal'" class="sb-modal bx-none overflow-modal" appBodyScroll
         (dismissed)="showDeleteConfirmationPopUp = !showDeleteConfirmationPopUp" #modal>
         <div class="sb-modal-header">
-            Confirm Delete Content
+          {{configService.labelConfig?.lbl?.confirmDeleteContent}}
         </div>
         <div class="sb-modal-content">
             <!-- <div class="sb-publish-content">
               <div class="review-modal-list">
                 {{ contentComment }}
             </div> -->
-            <div> Are you sure want to delete the selected Node?</div>
+            <div> {{configService.labelConfig?.lbl?.confirmDeleteNode}}</div>
         </div>
         <div class="sb-modal-actions">
           <button type="button" class="sb-btn sb-btn-normal sb-btn-primary mr-8" (click)="showDeleteConfirmationPopUp = !showDeleteConfirmationPopUp"
           libTelemetryInteract
-          [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('no','click','cancel', this.telemetryService.telemetryPageId,{key: 'dialog_id', value: 'confirm_delete_content','identifier' : selectedNodeData?.data?.id})"> No </button>
+          [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('no','click','cancel', this.telemetryService.telemetryPageId,{key: 'dialog_id', value: 'confirm_delete_content','identifier' : selectedNodeData?.data?.id})"> {{configService.labelConfig?.button_labels?.no_btn_label}} </button>
           <button type="button" class="sb-btn sb-btn-secondary sb-btn-normal " (click)="deleteNode();"
           libTelemetryInteract
-          [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('yes','click','submit', this.telemetryService.telemetryPageId,{key: 'dialog_id', value: 'confirm_delete_content','identifier' : selectedNodeData?.data?.id})"> Yes </button>
+          [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('yes','click','submit', this.telemetryService.telemetryPageId,{key: 'dialog_id', value: 'confirm_delete_content','identifier' : selectedNodeData?.data?.id})"> {{configService.labelConfig?.button_labels?.yes_btn_label}} </button>
         </div>
       </sui-modal>
       <sui-modal *ngIf='showConfirmPopup' [mustScroll]="false" [isClosable]="true" [transitionDuration]="0" [size]="'normal'"
           class="sb-modal overflow-modal" appBodyScroll (dismissed)="showConfirmPopup = !showConfirmPopup; terms = false;" #modal>
           <div class="sb-modal-header">
-            Accepting Terms & Conditions
+            {{configService.labelConfig?.lbl?.acceptTerms}}
           </div>
           <div class="sb-modal-content">
             <div class="ui grid">
@@ -62,11 +62,11 @@
                 <div class="sb-checkbox sb-checkbox-primary font-italic p-0 m-0"><input [(ngModel)]="terms" id="termAndConditions"
                     name="example" type="checkbox">
                   <label for="termAndConditions" class="fsmall pl-32"><span class="sb-required">*</span><span
-                      class="font-weight-bold mb-4 d-block">"I agree that by submitting / publishing this Content,</span>
-                    <div class="sb-color-gray-300">I confirm that this Content complies with prescribed guidelines, including the Terms of Use and Content Policy and that I consent to publish it under the <a
-                        class="sb-color-primary font-weight-bold cursor-pointer" href="https://creativecommons.org/licenses" target="_blank" > Creative Commons Framework in</a>
-                      accordance
-                      with the <a class="sb-color-primary font-weight-bold cursor-pointer" href="{{contentPolicyUrl}}" target="_blank" >Content Policy.</a> I have made sure that I do not violate others’ copyright or privacy rights."</div>
+                      class="font-weight-bold mb-4 d-block">"{{configService.labelConfig?.lbl?.iAgreeSubmit}}</span>
+                    <div class="sb-color-gray-300">{{configService.labelConfig?.lbl?.iconfirmContent}}<a
+                        class="sb-color-primary font-weight-bold cursor-pointer" href="https://creativecommons.org/licenses" target="_blank" > {{configService.labelConfig?.lbl?.createCommonFramework}}</a>
+                        {{configService.labelConfig?.lbl?.accordance}} 
+                     <a class="sb-color-primary font-weight-bold cursor-pointer" href="{{contentPolicyUrl}}" target="_blank" >{{configService.labelConfig?.lbl?.contentPolicy}}</a> {{configService.labelConfig?.lbl?.privacyRights}}"</div>
                   </label>
                 </div>
               </div>
@@ -76,14 +76,14 @@
             <button type="button" class="sb-btn sb-btn-normal" [ngClass]="!terms ? 'sb-btn-disabled' : 'sb-btn-primary'" [disabled]="!terms"
               (click)="sendForReview()" libTelemetryInteract
               [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('submit','click','submit', this.telemetryService.telemetryPageId,{key: 'dialog_id', value: 'accepting_terms_conditions','termAndConditions' : terms})">
-              Submit
+              {{configService.labelConfig?.button_labels?.submit_btn_label}}
             </button>
           </div>
       </sui-modal>
       <sui-modal *ngIf='showPreview' [mustScroll]="false" [isClosable]="true" [transitionDuration]="0" [size]="'large'"
           class="sb-modal overflow-modal preview-modal" appBodyScroll (dismissed)="showPreview = !showPreview;" #modal>
           <div class="sb-modal-header">
-            Question Set Preview
+            {{configService.labelConfig?.lbl?.questionSetPreview}}
           </div>
           <div class="sb-modal-content">
             <div class="br-2 b-1-100">
@@ -108,16 +108,16 @@
 <sui-modal *ngIf="showReviewModal" [mustScroll]="true" [isClosable]="false" [transitionDuration]="0"
   [size]="'normal'" class="sb-modal bx-none overflow-modal" appBodyScroll #modal (dismissed)="showReviewModal = false;">
   <div class="sb-modal-header">
-    Review Comments
+    {{configService.labelConfig?.lbl?.reviewComments}}
   </div>
   <div class="sb-modal-content">
       <div class="sb-field">
-          <label>Comments</label>
+          <label>{{configService.labelConfig?.lbl?.comments}}</label>
             <textarea disabled="disabled" type="text" class="wmd-input width-100 sb-form-control p-10 sb-disabled-textarea" id="wmd-input" [(ngModel)]="contentComment" name="rejectedComment"></textarea>
       </div>
   </div>
   <div class="sb-modal-actions">
     <button class="sb-btn sb-btn-normal sb-btn-outline-primary" (click)="modal.deny('denied')"
-    libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('close','click','cancel', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'review_comments'})">Close</button>
+    libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('close','click','cancel', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'review_comments'})">{{configService.labelConfig?.button_labels?.close_btn_label}}</button>
   </div>
 </sui-modal>

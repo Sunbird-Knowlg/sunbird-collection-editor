@@ -12,7 +12,7 @@ declare var $: any;
   encapsulation: ViewEncapsulation.None,
 })
 export class ContentplayerPageComponent implements OnInit, OnChanges {
-  @ViewChild('contentIframe', {static: false}) contentIframe: ElementRef;
+  @ViewChild('contentIframe') contentIframe: ElementRef;
   @Input() contentMetadata: any;
   public contentDetails: any;
   public playerConfig: any;
