@@ -80,42 +80,6 @@ describe('EditorComponent', () => {
   it('#showPreview to be false', () => {
     expect(component.showPreview).toBeFalsy();
   });
-  it('#showCreateCSV to be false', () => {
-    expect(component.showCreateCSV).toBeFalsy();
-  });
-  it('#showUpdateCSV to be false', () => {
-    expect(component.showUpdateCSV).toBeFalsy();
-  });
-  it('#showSuccessCSV to be false', () => {
-    expect(component.showSuccessCSV).toBeFalsy();
-  });
-  it('#isUploadCSV to be false', () => {
-    expect(component.isUploadCSV).toBeFalsy();
-  });
-  it('#validateCSV to be false', () => {
-    expect(component.validateCSV).toBeFalsy();
-  });
-  it('#uploadCSVFile to be false', () => {
-    expect(component.uploadCSVFile).toBeFalsy();
-  });
-  it('#formData to be undefined', () => {
-    expect(component.formData).toBeUndefined();
-  });
-  it('#childrenCount to be undefined', () => {
-    expect(component.childrenCount).toBeUndefined();
-  });
-  it('#configObjectType to be true', () => {
-    expect(component.configObjectType).toBeTruthy();
-  });
-  it('#isClosable to be true', () => {
-    expect(component.isClosable).toBeTruthy();
-  });
-  it('#sampleCsvUrl to be undefined', () => {
-    expect(component.sampleCsvUrl).toBeUndefined();
-  });
-  it('#openCSVPopUp to be undefined', () => {
-    expect(component.openCSVPopUp).toBeUndefined();
-  });
 
   it('#ngOnInit() should call #editorService.initialize() and editorService.getToolbarConfig', () => {
     const editorService = TestBed.get(EditorService);
@@ -551,15 +515,7 @@ describe('EditorComponent', () => {
     component.downloadCSVFile(config.blobUrl);
     expect(editorService.downloadBlobUrlFile).toHaveBeenCalledWith(config);
   });
-  it('#updateHierarchyCSVFile() should call updateHierarchyCSVFile', () => {
-    spyOn(component, 'updateHierarchyCSVFile').and.callThrough();
-    component.updateHierarchyCSVFile();
-    expect(component.openCSVPopUp).toBeTruthy();
-    expect(component.showUpdateCSV).toBeTruthy();
-    expect(component.updateCSVFile).toBeTruthy();
-    expect(component.errorCSV.status).toBeFalsy();
-    expect(component.errorCSV.message).toBe('');
-  });
+
   it('#downloadHierarchyCsv() should call downloadHierarchyCsv and success case', () => {
     spyOn(component['editorService'], 'downloadHierarchyCsv').and.returnValue(of(csvExport.successExport));
     spyOn(component, 'downloadCSVFile').and.callThrough();
@@ -585,76 +541,6 @@ describe('EditorComponent', () => {
     });
     component.onClickFolder();
     expect(component.saveContent).toHaveBeenCalled();
-  });
-  it('#createHierarchyCsv() should call createHierarchyCsv and open pop up', () => {
-    spyOn(component, 'createHierarchyCsv').and.callThrough();
-    component.createHierarchyCsv();
-    expect(component.showCreateCSV).toBeTruthy();
-    expect(component.uploadCSVFile).toBeTruthy();
-  });
-  it('#onClickReupload() should call onClickReupload and reset conditionns', () => {
-    spyOn(component, 'onClickReupload').and.callThrough();
-    spyOn(component, 'resetConditionns').and.callThrough();
-    component.showCreateCSV = true;
-    component.onClickReupload();
-    expect(component.uploadCSVFile).toBeTruthy();
-    expect(component.resetConditionns).toHaveBeenCalled();
-  });
-  it('#onClickReupload() should call onClickReupload and reset conditionns', () => {
-    spyOn(component, 'onClickReupload').and.callThrough();
-    spyOn(component, 'resetConditionns').and.callThrough();
-    component.showCreateCSV = false;
-    component.onClickReupload();
-    expect(component.updateCSVFile).toBeTruthy();
-    expect(component.resetConditionns).toHaveBeenCalled();
-  });
-  it('#resetConditionns() should call resetConditionns and reset conditionns', () => {
-    spyOn(component, 'closeHierarchyModal').and.callThrough();
-    component.closeHierarchyModal();
-    expect(component.errorCSV.status).toBeFalsy();
-    expect(component.errorCSV.message).toBe('');
-    expect(component.isUploadCSV).toBeFalsy();
-    expect(component.formData).toBe(null);
-  });
-  it('#closeHierarchyModal() should call closeHierarchyModal and reset conditionns', () => {
-    spyOn(component, 'closeHierarchyModal').and.callThrough();
-    spyOn(component, 'resetConditionns').and.callThrough();
-    component.closeHierarchyModal();
-    expect(component.uploadCSVFile).toBeFalsy();
-    expect(component.showCreateCSV).toBeFalsy();
-    expect(component.showUpdateCSV).toBeFalsy();
-    expect(component.updateCSVFile).toBeFalsy();
-    expect(component.openCSVPopUp).toBeFalsy();
-    expect(component.resetConditionns).toHaveBeenCalled();
-  });
-  it('#validateCSVFile() should call validateCSVFile and check csv file for error case', () => {
-    spyOn(component['editorService'], 'validateCSVFile').and.returnValue(throwError(csvImport.importError));
-    spyOn(component, 'mergeCollectionExternalProperties');
-    component.validateCSV = true;
-    component.uploadCSVFile = false;
-    component.isUploadCSV = true;
-    component.isClosable = false;
-    component.validateCSVFile();
-    component['editorService'].validateCSVFile(null, 'do_113312173590659072160').subscribe(data => {
-    },
-      error => {
-        expect(error.responseCode).toBe('CLIENT_ERROR');
-        expect(component.validateCSV).toBeFalsy();
-        expect(component.errorCSV.status).toBeTruthy();
-        expect(component.isClosable).toBeTruthy();
-      });
-  });
-  it('#uploadCSV() should upload file', () => {
-    const file = new File([''], 'filename', { type: 'csv/text' });
-    const event = {
-      target: {
-        files: [
-          file
-        ]
-      }
-    };
-    component.uploadCSV(event);
-    expect(component.isUploadCSV).toBeTruthy();
   });
   it('#configObjectType to be true', () => {
     spyOn(component, 'ngOnInit');

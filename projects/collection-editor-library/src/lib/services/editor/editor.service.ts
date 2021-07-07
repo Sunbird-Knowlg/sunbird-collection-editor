@@ -20,6 +20,7 @@ interface SelectedChildren {
 
 export class EditorService {
   data: any = {};
+  public httpClient: HttpClient;
   private _selectedChildren: SelectedChildren = {};
   public questionStream$ = new Subject<any>();
   private _editorConfig: IEditorConfig;
@@ -29,7 +30,9 @@ export class EditorService {
   constructor(public treeService: TreeService, private toasterService: ToasterService,
               public configService: ConfigService, private telemetryService: EditorTelemetryService,
               private publicDataService: PublicDataService, private dataService: DataService,
-              private httpClient: HttpClient) { }
+              httpClient: HttpClient) {
+                this.httpClient = httpClient;
+              }
 
   public initialize(config: IEditorConfig) {
     this._editorConfig = config;
@@ -375,18 +378,17 @@ export class EditorService {
     });
     return contents;
   }
-  validateCSVFile(formData, collectionnId) {
+  validateCSVFile(fileUrl, collectionnId: any) {
     const url = _.get(this.configService.urlConFig, 'URLS.CSV.UPLOAD');
-    const req = {
-      url: `${url}${collectionnId}`,
-      data: formData
+    const reqParam = {
+      url: `${url}${collectionnId}?fileUrl=${fileUrl}`
     };
-    return this.publicDataService.post(req);
+    return this.publicDataService.post(reqParam);
   }
-  downloadHierarchyCsv(collectionnId) {
+  downloadHierarchyCsv(collectionId) {
     const url = _.get(this.configService.urlConFig, 'URLS.CSV.DOWNLOAD');
     const req = {
-      url: `${url}${collectionnId}`,
+      url: `${url}${collectionId}`,
     };
     return this.publicDataService.get(req);
   }
@@ -409,5 +411,14 @@ export class EditorService {
     } catch (error) {
       console.error( _.replace(_.get(this.configService, 'labelConfig.messages.error.033'), '{FILE_TYPE}', config.fileType ) + error);
     }
+  }
+  generatePreSignedUrl(req, contentId: any, type) {
+    const reqParam = {
+      url: `${this.configService.urlConFig.URLS.CONTENT.UPLOAD_URL}${contentId}?type=${type}`,
+      data: {
+        request: req
+      }
+    };
+    return this.publicDataService.post(reqParam);
   }
 }

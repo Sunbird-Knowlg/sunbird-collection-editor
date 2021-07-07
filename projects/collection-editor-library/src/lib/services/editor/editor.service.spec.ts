@@ -288,6 +288,14 @@ describe('EditorService', () => {
   });
   it('#validateCSVFile() should validateCSVFile', async () => {
     const publicDataService: PublicDataService = TestBed.get(PublicDataService);
+    const file = new File([''], 'filename', { type: 'csv/text' });
+    const event = {
+      target: {
+        files: [
+          file
+        ]
+      }
+    };
     spyOn(publicDataService, 'post').and.returnValue(of({
       id: 'api.collection.import',
       ver: '4.0',
@@ -304,7 +312,7 @@ describe('EditorService', () => {
         messages: null
       }
     }));
-    editorService.validateCSVFile(null, 'do_113312173590659072160').subscribe(data => {
+    editorService.validateCSVFile(event.target.files[0], 'do_113312173590659072160').subscribe(data => {
     },
       error => {
         expect(error.error.responseCode).toBe('CLIENT_ERROR');

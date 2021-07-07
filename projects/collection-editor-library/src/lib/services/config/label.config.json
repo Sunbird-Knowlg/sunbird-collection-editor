@@ -167,7 +167,8 @@
        "hierarchyValidation":"Hierarchy Validation",
        "updateHierarchyCSV":"Update Hierarcy using CSV",
        "hierarchyAdded":"Hierarchy has been added to editor.",
-       "successful":"Successful !"
+       "successful":"Successful !",
+       "csvDownloadInstruction":"This should be the same file that you have downloaded using Download folders in CSV option"
       },
     "err":{
        "somethingWentWrong":"Something went wrong",
@@ -225,7 +226,8 @@
          "009": "QR code(s) updated successfully",
          "010": "QR code generated.",
          "011": "QR codes downloaded" ,
-         "012": "CSV file downloaded successfully"
+         "012": "CSV file downloaded successfully",
+         "013": "Sample csv file downloaded successfully"
       },
       "warning" : {
          "001" : "Errors found in linked QR Codes. Please check and correct.",
