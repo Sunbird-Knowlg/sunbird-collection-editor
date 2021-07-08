@@ -92,42 +92,6 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
       }
     });
   }
-  /**
-   * Get the association data for B M G S
-   */
-  getAssociationData(selectedData: Array<any>, category: string, frameworkCategories) {
-    // Getting data for selected parent, eg: If board is selected it will get the medium data from board array
-    let selectedCategoryData = [];
-    _.forEach(selectedData, (data) => {
-      const categoryData = _.filter(data.associations, (o) => {
-        return o.category === category;
-      });
-      if (categoryData) {
-        selectedCategoryData = _.concat(selectedCategoryData, categoryData);
-      }
-    });
-
-    // Getting associated data from next category, eg: If board is selected it will get the association data for medium
-    let associationData;
-    _.forEach(frameworkCategories, (data) => {
-      if (data.code === category) {
-        associationData = data.terms;
-      }
-    });
-
-    // Mapping the final data for next drop down
-    let resultArray = [];
-    _.forEach(selectedCategoryData, (data) => {
-      const codeData = _.find(associationData, (element) => {
-        return element.code === data.code;
-      });
-      if (codeData) {
-        resultArray = _.concat(resultArray, codeData);
-      }
-    });
-
-    return _.sortBy(_.unionBy(resultArray, 'identifier'), 'index');
-  }
 
   populateFilters() {
     const categoryMasterList = this.frameworkDetails.frameworkData;
@@ -148,23 +112,6 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
       name: 'searchForm',
       fields: this.filterFields
     }];
-  }
-
-  // should get applied association data from framework details
-  getOnChangeAssociationValues(selectedFilter, caterory) {
-    const mediumData = _.find(this.frameworkDetails.frameworkData, (element) => {
-      return element.name === caterory;
-    });
-    let getAssociationsData = [];
-    _.forEach(selectedFilter, (value) => {
-      const getAssociationData = _.map(_.get(mediumData, 'terms'), (framework) => {
-        if (framework.name === value) {
-          return framework;
-        }
-      });
-      getAssociationsData = _.compact(_.concat(getAssociationsData, getAssociationData));
-    });
-    return getAssociationsData;
   }
 
   onQueryEnter(event) {
