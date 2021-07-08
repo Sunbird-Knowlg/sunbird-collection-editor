@@ -124,6 +124,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     let targetFWIdentifiers: any;
     let orgFWType: any;
     let targetFWType: any;
+
+    this.sethierarchyConfig(categoryDefinitionData);
+
     orgFWIdentifiers = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.framework.enum') ||
     _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.framework.default');
     if (_.isEmpty(this.targetFramework || _.get(this.editorConfig, 'context.targetFWIds'))) {
@@ -251,6 +254,46 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
   ));
+  }
+
+  sethierarchyConfig(primaryCatConfig) {
+    let hierarchyConfig;
+    if (_.get(primaryCatConfig, 'result.objectCategoryDefinition.objectMetadata.config')) {
+      hierarchyConfig = _.get(primaryCatConfig, 'result.objectCategoryDefinition.objectMetadata.config.sourcingSettings.collection');
+      if (!_.isEmpty(hierarchyConfig.children)) {
+        hierarchyConfig.children = this.getHierarchyChildrenConfig(hierarchyConfig.children);
+      }
+      if (!_.isEmpty(hierarchyConfig.hierarchy)) {
+        _.forEach(hierarchyConfig.hierarchy, (hierarchyValue) => {
+          if (_.get(hierarchyValue, 'children')) {
+            hierarchyConfig['children'] = this.getHierarchyChildrenConfig(_.get(hierarchyValue, 'children'));
+          }
+        });
+      }
+    }
+    this.editorConfig.config = _.assign(this.editorConfig.config, hierarchyConfig);
+  }
+
+  getHierarchyChildrenConfig(childrenData) {
+    _.forEach(childrenData, (value, key) => {
+      if (_.isEmpty(value)) {
+        switch (key) {
+          case 'Question':
+            childrenData[key] = _.get(this.helperService.channelInfo, 'questionPrimaryCategories') || [];
+            break;
+          case 'Content':
+            childrenData[key] =  _.get(this.helperService.channelInfo, 'contentPrimaryCategories') || [];
+            break;
+          case 'Collection':
+            childrenData[key] = _.get(this.helperService.channelInfo, 'collectionPrimaryCategories') || [];
+            break;
+          case 'QuestionSet':
+            childrenData[key] = _.get(this.helperService.channelInfo, 'questionsetPrimaryCategories') || [];
+            break;
+        }
+      }
+    });
+    return childrenData;
   }
 
   toolbarEventListener(event) {
