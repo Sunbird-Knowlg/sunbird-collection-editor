@@ -61,6 +61,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public contentComment: string;
   public showComment: boolean;
   public showReviewModal: boolean;
+  public ishierarchyConfigSet =  false;
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
               private toasterService: ToasterService, private dialcodeService: DialcodeService,
@@ -269,24 +270,25 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         });
       }
     }
+    this.ishierarchyConfigSet = true;
     this.editorConfig.config = _.assign(this.editorConfig.config, hierarchyConfig);
   }
 
   getHierarchyChildrenConfig(childrenData) {
     _.forEach(childrenData, (value, key) => {
-      if (_.isEmpty(value)) {
+      if (!_.isEmpty(value)) {
         switch (key) {
           case 'Question':
-            childrenData[key] = _.get(this.helperService.channelInfo, 'questionPrimaryCategories') || [];
+            childrenData[key] = _.map(this.helperService.questionPrimaryCategories, 'name') || []; 
             break;
           case 'Content':
-            childrenData[key] =  _.get(this.helperService.channelInfo, 'contentPrimaryCategories') || [];
+            childrenData[key] = _.map(this.helperService.contentPrimaryCategories, 'name') || [];
             break;
           case 'Collection':
-            childrenData[key] = _.get(this.helperService.channelInfo, 'collectionPrimaryCategories') || [];
+            childrenData[key] = _.map(this.helperService.collectionPrimaryCategories, 'name') || [];
             break;
           case 'QuestionSet':
-            childrenData[key] = _.get(this.helperService.channelInfo, 'questionsetPrimaryCategories') || [];
+            childrenData[key] = _.map(this.helperService.questionsetPrimaryCategories, 'name') || [];
             break;
         }
       }

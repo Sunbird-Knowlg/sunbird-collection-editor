@@ -14,6 +14,8 @@ export class HelperService {
   // tslint:disable-next-line:variable-name
   private _channelData: any;
   // tslint:disable-next-line:variable-name
+  private _channelPrimaryCategories: any;
+  // tslint:disable-next-line:variable-name
   private _channelData$ = new BehaviorSubject<any>(undefined);
 
   public readonly channelData$: Observable<any> = this._channelData$
@@ -25,6 +27,7 @@ export class HelperService {
     this.getLicenses().subscribe((data: any) => this._availableLicenses = _.get(data, 'license'));
     this.getChannelData(channelId).subscribe(data => {
       this._channelData = data;
+      this._channelPrimaryCategories =  _.get(this._channelData, 'primaryCategories') || [];
       this._channelData$.next({ err: null, channelData: this._channelData });
     });
   }
@@ -33,8 +36,28 @@ export class HelperService {
     return this._channelData;
   }
 
+  public get channelPrimaryCategories(): any {
+    return this._channelPrimaryCategories;
+  }
+
   public get contentPrimaryCategories() : any {
-    return _.get(this.channelInfo, 'contentPrimaryCategories') || [] ;
+    const channeltargetObjectTypeGroup = _.groupBy(this.channelPrimaryCategories, 'targetObjectType');
+    return _.get(channeltargetObjectTypeGroup, 'Content') || [];
+  }
+
+  public get questionPrimaryCategories() : any {
+    const channeltargetObjectTypeGroup = _.groupBy(this.channelPrimaryCategories, 'targetObjectType');
+    return _.get(channeltargetObjectTypeGroup, 'Question') || [];
+  }
+
+  public get collectionPrimaryCategories() : any {
+    const channeltargetObjectTypeGroup = _.groupBy(this.channelPrimaryCategories, 'targetObjectType');
+    return _.get(channeltargetObjectTypeGroup, 'Collection') || [];
+  }
+
+  public get questionsetPrimaryCategories() : any {
+    const channeltargetObjectTypeGroup = _.groupBy(this.channelPrimaryCategories, 'targetObjectType');
+    return _.get(channeltargetObjectTypeGroup, 'QuestionSet') || [];
   }
 
   getLicenses(): Observable<any> {
@@ -88,7 +111,7 @@ export class HelperService {
         m *= 60;
     }
     return _.toString(s);
-}
+  }
 
   getTimerFormat(field) {
     const validationObj = _.find(_.get(field, 'validations'), {type: 'time'});
@@ -98,7 +121,4 @@ export class HelperService {
       return 'HH:mm:ss';
     }
   }
-
-
-
 }
