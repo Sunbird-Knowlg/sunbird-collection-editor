@@ -65,6 +65,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public showCsvUploadPopup = false;
   public configObjectType: any;
   public isCreateCsv = true;
+  public addCollaborator: boolean;
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
               private toasterService: ToasterService, private dialcodeService: DialcodeService,
@@ -259,6 +260,15 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     ));
   }
 
+  toggleCollaboratorModalPoup() {
+    if (this.addCollaborator) {
+      this.addCollaborator = false;
+    } else if (!this.addCollaborator) {
+      this.addCollaborator = true;
+    } else {
+    }
+  }
+
   toolbarEventListener(event) {
     this.actionType = event.button;
     switch (event.button) {
@@ -313,6 +323,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         break;
       case 'sourcingReject':
         this.redirectToChapterListTab({ comment: event.comment });
+        break;
+      case 'addCollaborator':
+        this.toggleCollaboratorModalPoup();
         break;
       case 'showReviewcomments':
         this.showReviewModal = !this.showReviewModal;
@@ -641,7 +654,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   downloadCSVFile(tocUrl) {
     const downloadConfig = {
       blobUrl: tocUrl,
-      successMessage: _.get(this.configService, 'labelConfig.messages.success.012'),
+      successMessage: _.get(this.configService, 'labelConfig.messages.success.013'),
       fileType: 'csv',
       fileName: this.collectionId
     };
@@ -674,8 +687,12 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
   ngOnDestroy() {
-    this.generateTelemetryEndEvent();
-    this.treeService.clearTreeCache();
+    if (this.telemetryService) {
+      this.generateTelemetryEndEvent();
+    }
+    if (this.treeService) {
+      this.treeService.clearTreeCache();
+    }
     if (this.modal && this.modal.deny) {
       this.modal.deny();
     }

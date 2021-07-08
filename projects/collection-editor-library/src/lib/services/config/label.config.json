@@ -43,7 +43,9 @@
        "apply_btn_label":"Apply",
        "reset_btn_label":"Reset",
        "delete_btn_label":"Delete",
-       "next_btn_label":"Next"
+       "next_btn_label":"Next",
+       "remove_btn_label":"Remove",
+       "done_btn_label":"Done"
     },
     "lbl":{
        "search":"Search",
@@ -168,11 +170,17 @@
        "updateHierarchyCSV":"Update Hierarcy using CSV",
        "hierarchyAdded":"Hierarchy has been added to editor.",
        "successful":"Successful !",
-       "csvDownloadInstruction":"This should be the same file that you have downloaded using Download folders in CSV option"
+       "csvDownloadInstruction":"This should be the same file that you have downloaded using Download folders in CSV option",
+       "collaborators": "Collaborators",
+       "addCollaborators": "Add Collaborators",
+       "manageCollaborators": "Manage Collaborators"
       },
     "err":{
        "somethingWentWrong":"Something went wrong",
-       "contentNotFoundonOrigin": "The content not found in consumption"
+       "contentNotFoundonOrigin": "The content not found in consumption",
+       "resultNotFound": "No Results Found",
+       "userNotFound": "No users found",
+       "collaboratorsNotFound": "No collaborators found for this content"
     },
     "termsAndConditions": {
      "001": "I understand and confirm that all resources and assets created through the content editor or uploaded on the platform shall be available for free and public use without limitations on the platform (web portal, applications and any other end user interface that the platform would enable) and will be licensed under terms & conditions and policy guidelines of the platform. In doing so, the copyright and license of the original author is not infringed."
@@ -226,8 +234,10 @@
          "009": "QR code(s) updated successfully",
          "010": "QR code generated.",
          "011": "QR codes downloaded" ,
-         "012": "CSV file downloaded successfully",
-         "013": "Sample csv file downloaded successfully"
+         "012": "Collaborators updated successfully",
+         "013": "CSV file downloaded successfully",
+         "014": "Sample csv file downloaded successfully"
+ 
       },
       "warning" : {
          "001" : "Errors found in linked QR Codes. Please check and correct.",

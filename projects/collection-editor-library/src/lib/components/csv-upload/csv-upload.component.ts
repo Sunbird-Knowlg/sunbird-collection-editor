@@ -139,7 +139,7 @@ export class CsvUploadComponent implements OnInit {
   downloadSampleCSVFile() {
     const downloadConfig = {
       blobUrl: this.sampleCsvUrl, // need to update here for sample file url
-      successMessage: _.get(this.configService, 'labelConfig.messages.success.013'),
+      successMessage: _.get(this.configService, 'labelConfig.messages.success.014'),
       fileType: 'csv',
       fileName: this.collectionId
     };
