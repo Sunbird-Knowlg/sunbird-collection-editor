@@ -4,6 +4,7 @@ import { catchError, map, skipWhile, tap} from 'rxjs/operators';
 import * as _ from 'lodash-es';
 import { PublicDataService} from '../public-data/public-data.service';
 import { DataService} from '../data/data.service';
+import { ConfigService } from '../config/config.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -21,7 +22,7 @@ export class HelperService {
   public readonly channelData$: Observable<any> = this._channelData$
   .asObservable().pipe(skipWhile(data => data === undefined || data === null));
 
-  constructor(private publicDataService: PublicDataService, private dataService: DataService) { }
+  constructor(private publicDataService: PublicDataService, private configService: ConfigService, private dataService: DataService) { }
 
   initialize(channelId) {
     this.getLicenses().subscribe((data: any) => this._availableLicenses = _.get(data, 'license'));
@@ -62,7 +63,7 @@ export class HelperService {
 
   getLicenses(): Observable<any> {
     const req = {
-      url: `composite/v3/search`,
+      url: `${this.configService.urlConFig.URLS.compositSearch}`,
       data: {
         request: {
           filters: {
@@ -75,7 +76,7 @@ export class HelperService {
     return this.publicDataService.post(req).pipe(map((res: any) => {
       return res.result;
     }), catchError(err => {
-      const errInfo = { errorMsg: 'search failed' };
+      const errInfo = { errorMsg: _.get(this.configService, 'labelConfig.messages.error.030') };
       return throwError(errInfo);
     }));
   }
@@ -88,7 +89,7 @@ export class HelperService {
     const channelData = sessionStorage.getItem(channelId);
     if (!channelData) {
       const channelOptions = {
-        url: 'channel/v1/read/' + channelId
+        url: _.get(this.configService.urlConFig, 'URLS.channelRead') + channelId
       };
       return this.dataService.get(channelOptions).pipe(map((data: any) => data.result.channel));
     } else {
@@ -98,7 +99,7 @@ export class HelperService {
 
   get channelData() {
     return {
-      contentPrimaryCategories: ['Course Assessment', 'eTextbook', 'Explanation Content', 'Learning Resource', 'Practice Question Set']
+      contentPrimaryCategories: this.configService.editorConfig.contentPrimaryCategories
     };
   }
 
@@ -120,5 +121,31 @@ export class HelperService {
     } else {
       return 'HH:mm:ss';
     }
+  }
+
+  getAllUser(userSearchBody) {
+    const req = {
+      url:  _.get(this.configService.urlConFig, 'URLS.USER.SEARCH'),
+      param: {fields: 'orgName'},
+      data: {
+        request: userSearchBody.request
+      }
+    };
+
+    return this.publicDataService.post(req);
+  }
+
+  updateCollaborator(contentId, collaboratorList) {
+    const req = {
+      url: _.get(this.configService.urlConFig, 'URLS.CONTENT.UPDATE_COLLABORATOR') + contentId,
+      data: {
+          request: {
+              content: {
+                  collaborators: collaboratorList
+              }
+          }
+      }
+    };
+    return this.publicDataService.patch(req);
   }
 }

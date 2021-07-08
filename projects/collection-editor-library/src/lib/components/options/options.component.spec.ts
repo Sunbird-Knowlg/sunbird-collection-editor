@@ -5,15 +5,17 @@ import { FormsModule } from '@angular/forms';
 import { OptionsComponent } from './options.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { mockOptionData } from './options.component.spec.data';
+import { ConfigService } from '../../services/config/config.service';
+import { SuiModule } from 'ng2-semantic-ui-v9';
 
 describe('OptionsComponent', () => {
   let component: OptionsComponent;
   let fixture: ComponentFixture<OptionsComponent>;
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, FormsModule ],
+      imports: [ HttpClientTestingModule, FormsModule, SuiModule ],
       declarations: [ OptionsComponent, TelemetryInteractDirective ],
-      providers: [],
+      providers: [ConfigService],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     })
     .compileComponents();
@@ -78,9 +80,9 @@ describe('OptionsComponent', () => {
     expect(mockOptionData.prepareMcqBody.interactions).toEqual(result);
   });
 
-  it('#setTemplete() should set #templateType to "mcq-grid-split"  ', () => {
+  it('#setTemplete() should set #templateType to "mcq-vertical-split"  ', () => {
     spyOn(component, 'editorDataHandler').and.callThrough();
-    const templateType = 'mcq-grid-split';
+    const templateType = 'mcq-vertical-split';
     component.editorState = mockOptionData.editorOptionData;
     component.setTemplete(templateType);
     expect(component.templateType).toEqual(templateType);
