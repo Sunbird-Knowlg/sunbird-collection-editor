@@ -106,7 +106,7 @@
   </ng-container>
 </ng-container>
 <ng-container *ngIf="addCollaborator">
-  <lib-manage-collaborator [addCollaborator]="addCollaborator" [collectionId]="collectionId" (modalDismissEmitter)="handleModalDismiss($event)"></lib-manage-collaborator>
+  <lib-manage-collaborator [addCollaborator]="addCollaborator" [collectionId]="collectionId" (modalDismissEmitter)="toggleCollaboratorModalPoup()"></lib-manage-collaborator>
 </ng-container>
 <sui-modal *ngIf="showReviewModal" [mustScroll]="true" [isClosable]="false" [transitionDuration]="0"
   [size]="'normal'" class="sb-modal bx-none overflow-modal" appBodyScroll #modal (dismissed)="showReviewModal = false;">

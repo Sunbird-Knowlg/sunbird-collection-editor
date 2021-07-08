@@ -254,6 +254,15 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   ));
   }
 
+  toggleCollaboratorModalPoup() {
+    if (this.addCollaborator) {
+      this.addCollaborator = false;
+    } else if (!this.addCollaborator) {
+      this.addCollaborator = true;
+    } else {
+    }
+  }
+
   toolbarEventListener(event) {
     this.actionType = event.button;
     switch (event.button) {
@@ -322,13 +331,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       default:
         break;
     }
-  }
-
-  toggleCollaboratorModalPoup() {
-    this.addCollaborator = ! this.addCollaborator;
-  }
-  handleModalDismiss(event) {
-    this.toggleCollaboratorModalPoup();
   }
 
   redirectToChapterListTab(data?: any) {
