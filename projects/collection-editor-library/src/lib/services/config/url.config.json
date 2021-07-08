@@ -33,7 +33,8 @@
     "READ":"content/v3/read/",
     "CREATE":"content/v3/create",
     "UPLOAD":"content/v3/upload/",
-    "UPLOAD_URL":"content/v3/upload/url/"
+    "UPLOAD_URL":"content/v3/upload/url/",
+    "UPDATE_COLLABORATOR":"content/v1/collaborator/update/"
     },
     "QUESTION": {
       "LIST":"question/v1/list",
@@ -42,6 +43,9 @@
     "frameworkRead":"framework/v1/read/",
     "compositSearch":"composite/v3/search",
     "channelRead":"channel/v1/read/",
-    "telemetry":"/data/v3/telemetry"
+    "telemetry":"/data/v3/telemetry",
+    "USER": {
+      "SEARCH":"user/v1/search"
+    }
   }
 }

@@ -37,12 +37,13 @@ import { CacheSessionStorage } from 'ng2-cache-service/dist/src/services/storage
 import { QumlPlayerComponent } from './components/quml-player/quml-player.component';
 import { DialcodeComponent } from './components/dialcode/dialcode.component';
 import { DialcodeService } from './services/dialcode/dialcode.service';
+import { ManageCollaboratorComponent } from './components/manage-collaborator/manage-collaborator.component';
 @NgModule({
   declarations: [CollectionEditorLibraryComponent, ContentplayerPageComponent, EditorComponent, QumlplayerPageComponent,
     HeaderComponent, FancyTreeComponent, MetaFormComponent, LibraryComponent, LibraryFilterComponent, LibraryListComponent,
     QuestionComponent, OptionsComponent, AnswerComponent, CkeditorToolComponent,
     LibraryPlayerComponent, ResourceReorderComponent, SkeletonLoaderComponent, TemplateComponent, TelemetryInteractDirective,
-    AssetBrowserComponent, CollectionIconComponent, QumlPlayerComponent, DialcodeComponent],
+    AssetBrowserComponent, CollectionIconComponent, QumlPlayerComponent, DialcodeComponent, ManageCollaboratorComponent],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule.forChild([]), SuiModule,
   CommonFormElementsModule, InfiniteScrollModule, HttpClientModule, SunbirdPdfPlayerModule, SunbirdVideoPlayerModule,
   QumlLibraryModule, CarouselModule],

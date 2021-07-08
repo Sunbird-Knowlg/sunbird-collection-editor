@@ -71,6 +71,7 @@ export const collectionEditorConfig = {
     dialcodeMinLength: 2,
     dialcodeMaxLength: 250,
     iconClass: 'fa fa-book',
+    showAddCollaborator: true,
     children: {},
     hierarchy: {
       level1: {
@@ -241,6 +242,7 @@ export const questionEditorConfig = {
     primaryCategory: 'Practice Question Set',
     isRoot: true,
     iconClass: 'fa fa-book',
+    showAddCollaborator: false,
     children: {
       Question: [
         'Multiple Choice Question',
