@@ -83,9 +83,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       (response) => {
         const hierarchyResponse = _.first(response);
         const collection = _.get(hierarchyResponse, `result.${this.configService.categoryConfig[this.editorConfig.config.objectType]}`);
-        this.toolbarConfig.title = _.get(collection, 'name');
+        this.toolbarConfig.title = collection.name;
         this.organisationFramework = _.get(collection, 'framework') || _.get(this.editorConfig, 'context.framework');
-        this.targetFramework = _.get(collection, 'targetFWIds') ||  _.get(this.editorConfig, 'context.targetFWIds') || [];
+        this.targetFramework = _.get(collection, 'targetFWIds') ||  _.get(this.editorConfig, 'context.targetFWIds');
         if (this.organisationFramework) {
           this.frameworkService.initialize(this.organisationFramework);
         }
@@ -318,15 +318,15 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       case 'sourcingReject':
         this.redirectToChapterListTab({ comment: event.comment });
         break;
+      case 'addCollaborator':
+        this.toggleCollaboratorModalPoup();
+        break;
       case 'showReviewcomments':
         this.showReviewModal = ! this.showReviewModal;
         break;
       case 'showCorrectioncomments':
         this.contentComment = _.get(this.editorConfig, 'context.correctionComments')
         this.showReviewModal = ! this.showReviewModal;
-        break;
-      case 'addCollaborator':
-        this.toggleCollaboratorModalPoup();
         break;
       default:
         break;

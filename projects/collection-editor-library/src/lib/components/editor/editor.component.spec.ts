@@ -46,6 +46,8 @@ describe('EditorComponent', () => {
     component = fixture.componentInstance;
     // tslint:disable-next-line:no-string-literal
     editorConfig.context['targetFWIds'] = ['nit_k12'];
+    // tslint:disable-next-line:no-string-literal
+    editorConfig.context['correctionComments'] = 'change description';
     // fixture.detectChanges();
   });
 
@@ -112,7 +114,7 @@ describe('EditorComponent', () => {
     expect(telemetryService.start).toHaveBeenCalled();
   });
 
-  it('#ngOnInit() should not call some methods', () => {
+  xit('#ngOnInit() should not call some methods', () => {
     const editorService = TestBed.inject(EditorService);
     const configService = TestBed.inject(ConfigService);
     component.editorConfig = editorConfig;
@@ -209,7 +211,7 @@ describe('EditorComponent', () => {
     expect(component.addCollaborator).toEqual(false);
   });
 
-  xit('#toolbarEventListener() should call #saveContent() if event is saveContent', () => {
+  it('#toolbarEventListener() should call #saveContent() if event is saveContent', () => {
     spyOn(component, 'saveContent').and.callFake(() => {
       return Promise.resolve();
     });
@@ -381,12 +383,14 @@ describe('EditorComponent', () => {
 
   it ('#toolbarEventListener() should set showReviewModal to true ', () => {
     spyOn(component, 'toolbarEventListener').and.callThrough();
-    component.showReviewModal = undefined;
+    // tslint:disable-next-line:no-string-literal
+    component['editorConfig'] = editorConfig;
+    component.showReviewModal = false;
     const event = {
       button : 'showCorrectioncomments'
     };
     component.toolbarEventListener(event);
-    expect(component.contentComment).toBeUndefined();
+    expect(component.contentComment).toEqual('change description');
     expect(component.showReviewModal).toEqual(true);
   });
 
@@ -425,12 +429,6 @@ describe('EditorComponent', () => {
     expect(component.actionType).toBe('xyz');
     expect(component.toggleCollaboratorModalPoup).not.toHaveBeenCalled();
   });
-
-  // it('#handleModalDismiss should call #toggleCollaboratorModalPoup()', () => {
-  //   spyOn(component, 'toggleCollaboratorModalPoup');
-  //   component.handleModalDismiss({});
-  //   expect(component.toggleCollaboratorModalPoup).toHaveBeenCalled();
-  // });
 
   it('#redirectToChapterListTab() should emit #editorEmitter event', () => {
     component.actionType = 'dummyCase';
