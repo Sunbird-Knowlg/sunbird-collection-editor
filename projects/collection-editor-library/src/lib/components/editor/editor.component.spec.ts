@@ -16,7 +16,6 @@ import { treeData } from './../fancy-tree/fancy-tree.component.spec.data';
 import * as urlConfig from '../../services/config/url.config.json';
 import * as labelConfig from '../../services/config/label.config.json';
 import * as categoryConfig from '../../services/config/category.config.json';
-import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 
 describe('EditorComponent', () => {
   const configStub = {
