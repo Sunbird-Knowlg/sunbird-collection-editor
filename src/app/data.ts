@@ -71,6 +71,7 @@ export const collectionEditorConfig = {
     dialcodeMinLength: 2,
     dialcodeMaxLength: 250,
     iconClass: 'fa fa-book',
+    showAddCollaborator: true,
     children: {},
     hierarchy: {
       level1: {
@@ -106,7 +107,6 @@ export const collectionEditorConfig = {
         contentType: 'CourseUnit',
         primaryCategory: 'Course Unit',
         iconClass: 'fa fa-folder-o',
-        showAddCollaborator: true,
         children: {
           Content: [
             'Explanation Content',
