@@ -763,12 +763,13 @@ describe('EditorComponent', () => {
     expect(component.saveContent).not.toHaveBeenCalled();
   });
   it('#downloadFile() should download the file', () => {
+    component.collectionId = 'do_113274017771085824116';
     const config = {
       // tslint:disable-next-line:max-line-length
       blobUrl: 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/course/toc/do_11331579492804198413_untitled-course_1625465046239.csv',
       successMessage: 'CSV file downloaded successfully',
       fileType: 'csv',
-      fileName: 'do_113274017771085824116'
+      fileName: component.collectionId
     };
     const editorService = TestBed.get(EditorService);
     spyOn(editorService, 'downloadBlobUrlFile').and.callThrough();
@@ -802,11 +803,7 @@ describe('EditorComponent', () => {
     component.onClickFolder();
     expect(component.saveContent).toHaveBeenCalled();
   });
-  it('#configObjectType to be true', () => {
-    spyOn(component, 'ngOnInit');
-    component.ngOnInit();
-    expect(component.configObjectType).toBeTruthy();
-  });
+
   it('#setCsvDropDownOptions and should set csv dropdown options', () => {
     component.csvDropDownOptions = {
       isDisableCreateCsv: true,
