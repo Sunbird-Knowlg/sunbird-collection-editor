@@ -17,7 +17,7 @@ export class CsvUploadComponent implements OnInit {
   @Output() csvUploadEmitter = new EventEmitter<any>();
   public showSuccessCSV = false;
   public showCsvValidationStatus = false;
-  public isUploadCSV = false;
+  public isUploadCSVEnable = false;
   public errorCsvStatus = false;
   public errorCsvMessage: any;
   public isClosable = true;
@@ -42,12 +42,12 @@ export class CsvUploadComponent implements OnInit {
   uploadCSV(event) {
     this.file = event.target.files[0];
     this.fileName = this.file.name;
-    this.isUploadCSV = true;
+    this.isUploadCSVEnable = true; // change to different name
   }
   validateCSVFile() {
     this.showCsvValidationStatus = true;
     this.uploadCSVFile = false;
-    this.isUploadCSV = false;
+    this.isUploadCSVEnable = false;
     this.isClosable = false;
     this.updateCSVFile = false;
     const request = {
@@ -133,7 +133,7 @@ export class CsvUploadComponent implements OnInit {
   resetConditions() {
     this.errorCsvStatus = false;
     this.errorCsvMessage = '';
-    this.isUploadCSV = false;
+    this.isUploadCSVEnable = false;
     this.file = null;
   }
   downloadSampleCSVFile() {

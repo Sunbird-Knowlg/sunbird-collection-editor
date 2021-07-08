@@ -63,7 +63,7 @@ describe('CsvUploadComponent', () => {
       }
     };
     component.uploadCSV(event);
-    expect(component.isUploadCSV).toBeTruthy();
+    expect(component.isUploadCSVEnable).toBeTruthy();
     expect(component.file).toBeDefined();
     expect(component.fileName).toBeDefined();
   });
@@ -100,7 +100,7 @@ describe('CsvUploadComponent', () => {
   it('#resetConditionns should reset variables', () => {
     component.resetConditions();
     expect(component.errorCsvStatus).toBeFalsy();
-    expect(component.isUploadCSV).toBeFalsy();
+    expect(component.isUploadCSVEnable).toBeFalsy();
     expect(component.file).toBeNull();
     expect(component.errorCsvMessage).toBe('');
   });
@@ -136,7 +136,7 @@ describe('CsvUploadComponent', () => {
     };
     spyOn(component['editorService'], 'validateCSVFile').and.returnValue(throwError(csvImport.importError));
     component.uploadCSVFile = false;
-    component.isUploadCSV = true;
+    component.isUploadCSVEnable = true;
     component.isClosable = false;
     component.updateContentWithURL(csvImport.fileUrl, 'text/csv', component.collectionId);
     component['editorService'].validateCSVFile(option, 'do_113312173590659072160').subscribe(data => {

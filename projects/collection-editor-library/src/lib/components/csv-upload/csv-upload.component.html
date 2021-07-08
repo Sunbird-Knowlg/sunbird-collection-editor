@@ -128,8 +128,8 @@
       libTelemetryInteract
       [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('csv_upload','click',configService.labelConfig?.button_labels?.next_btn_label,
        this.telemetryService.telemetryPageId, {key: 'identifier', value: collectionId})"
-      (click)="validateCSVFile()"[disabled]="!isUploadCSV" 
-      [ngClass]="{'sb-btn-primary': isUploadCSV, 'sb-btn-disabled': !isUploadCSV}" >
+      (click)="validateCSVFile()"[disabled]="!isUploadCSVEnable" 
+      [ngClass]="{'sb-btn-primary': isUploadCSVEnable, 'sb-btn-disabled': !isUploadCSVEnable}" >
          {{configService.labelConfig?.button_labels?.next_btn_label}}
       </button>
     </div>
