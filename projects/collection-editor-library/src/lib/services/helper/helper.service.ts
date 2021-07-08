@@ -89,7 +89,7 @@ export class HelperService {
         m *= 60;
     }
     return _.toString(s);
-}
+  }
 
   getTimerFormat(field) {
     const validationObj = _.find(_.get(field, 'validations'), {type: 'time'});
@@ -100,6 +100,29 @@ export class HelperService {
     }
   }
 
+  getAllUser(userSearchBody) {
+    const req = {
+      url:  _.get(this.configService.urlConFig, 'URLS.USER.SEARCH'),
+      param: {fields: 'orgName'},
+      data: {
+        request: userSearchBody.request
+      }
+    };
 
+    return this.publicDataService.post(req);
+  }
 
+  updateCollaborator(contentId, collaboratorList) {
+    const req = {
+      url: _.get(this.configService.urlConFig, 'URLS.CONTENT.UPDATE_COLLABORATOR') + contentId,
+      data: {
+          request: {
+              content: {
+                  collaborators: collaboratorList
+              }
+          }
+      }
+    };
+    return this.publicDataService.patch(req);
+  }
 }

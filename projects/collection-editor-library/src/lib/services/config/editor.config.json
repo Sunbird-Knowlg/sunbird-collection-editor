@@ -24,5 +24,6 @@
     },
     "collection": {
       "maxContentsLimit": "10"
-    }
+    },
+    "showAddCollaborator": false
 }
