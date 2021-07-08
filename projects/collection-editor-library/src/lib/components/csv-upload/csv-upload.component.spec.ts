@@ -107,7 +107,7 @@ describe('CsvUploadComponent', () => {
   it('#downloadSampleCSVFile() should download the file', () => {
     component.collectionId = 'do_113274017771085824116';
     // tslint:disable-next-line:max-line-length
-    component.sampleCsvUrl = 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/course/toc/do_11331579492804198413_untitled-course_1625465046239.csv'
+    component.sampleCsvUrl = 'https://sunbirddev.blob.core.windows.net/sourcing/collection-hierarchy/create-collection-hierarchy.csv';
     const config = {
       blobUrl: component.sampleCsvUrl,
       successMessage: 'Sample csv file downloaded successfully',

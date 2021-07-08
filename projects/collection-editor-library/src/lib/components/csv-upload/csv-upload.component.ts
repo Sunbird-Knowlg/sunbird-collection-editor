@@ -21,7 +21,7 @@ export class CsvUploadComponent implements OnInit {
   public errorCsvStatus = false;
   public errorCsvMessage: any;
   public isClosable = true;
-  public sampleCsvUrl: any; // need add sample file url
+  public sampleCsvUrl: any;
   public updateCSVFile = false;
   public uploadCSVFile = false;
   public fileName: any;
@@ -35,6 +35,8 @@ export class CsvUploadComponent implements OnInit {
   handleInputCondition() {
     if (this.isCreateCsv) {
       this.uploadCSVFile = true;
+      // tslint:disable-next-line:max-line-length
+      this.sampleCsvUrl = _.get(this.configService, 'editorConfig.publicStorageAccount') + _.get(this.configService.urlConFig, 'URLS.CSV.SAMPLE_COLLECTION_HIERARCHY');
     } else {
       this.updateCSVFile = true;
     }
@@ -60,7 +62,7 @@ export class CsvUploadComponent implements OnInit {
       this.isClosable = true;
       this.errorCsvStatus = true;
       this.showCsvValidationStatus = false;
-      this.errorCsvMessage = _.get(err, 'error.params.errmsg');
+      this.errorCsvMessage = _.get(err, 'error.params.errmsg') || errInfo.errorMsg;
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     })).subscribe((response) => {
       const signedURL = response.result.pre_signed_url;
@@ -84,7 +86,7 @@ export class CsvUploadComponent implements OnInit {
       this.isClosable = true;
       this.errorCsvStatus = true;
       this.showCsvValidationStatus = false;
-      this.errorCsvMessage = _.get(err, 'error.params.errmsg');
+      this.errorCsvMessage = _.get(err, 'error.params.errmsg') || errInfo.errorMsg;
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     }), map(data => data));
   }
@@ -138,7 +140,7 @@ export class CsvUploadComponent implements OnInit {
   }
   downloadSampleCSVFile() {
     const downloadConfig = {
-      blobUrl: this.sampleCsvUrl, // need to update here for sample file url
+      blobUrl: this.sampleCsvUrl,
       successMessage: _.get(this.configService, 'labelConfig.messages.success.014'),
       fileType: 'csv',
       fileName: this.collectionId
