@@ -1,6 +1,6 @@
 {
   "name": "@project-sunbird/sunbird-collection-editor-v9",
-  "version": "4.1.16",
+  "version": "4.1.18",
   "peerDependencies": {
     "@angular/common": "~9.1.13",
     "@angular/core": "~9.1.13",

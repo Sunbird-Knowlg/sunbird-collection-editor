@@ -249,7 +249,16 @@ export class ManageCollaboratorComponent implements OnInit {
   }
 
   selectUser(user) {
-    this.toggleSelectionUser(user.identifier);
+    user.isSelected = true;
+    let index = _.findIndex(this.users, (element) => { return element.identifier === user.identifier; });
+    if (index > -1) {
+      this.users.splice(index, 1);
+      this.users.unshift(user);
+    }
+    const selectedIndex = this.selectedUsers.indexOf(user.identifier);
+    if (selectedIndex === -1) {
+      this.selectedUsers.push(user.identifier);
+    }
   }
 
   viewAllResults() {
