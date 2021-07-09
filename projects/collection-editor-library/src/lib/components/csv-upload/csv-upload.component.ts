@@ -42,54 +42,15 @@ export class CsvUploadComponent implements OnInit {
     }
   }
   uploadCSV(event) {
-    this.file = event.target.files[0];
-    this.fileName = this.file.name;
-    this.isUploadCsvEnable = true;
-  }
-  validateCSVFile() {
-    this.showCsvValidationStatus = true;
-    this.uploadCSVFile = false;
-    this.isUploadCsvEnable = false;
-    this.isClosable = false;
-    this.updateCSVFile = false;
-    const request = {
-      content: {
-        fileName: this.fileName
-      }
-    };
-    this.editorService.generatePreSignedUrl(request, this.collectionId, 'hierarchy').pipe(catchError(err => {
-      const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.026') };
-      this.isClosable = true;
-      this.errorCsvStatus = true;
-      this.showCsvValidationStatus = false;
-      this.errorCsvMessage = _.get(err, 'error.params.errmsg') || errInfo.errorMsg;
-      return throwError(this.editorService.apiErrorHandling(err, errInfo));
-    })).subscribe((response) => {
-      const signedURL = response.result.pre_signed_url;
-      const config = {
-        processData: false,
-        contentType: 'text/csv',
-        headers: {
-          'x-ms-blob-type': 'BlockBlob'
-        }
-      };
-      this.uploadToBlob(signedURL, this.file, config).subscribe(() => {
-        const fileURL = signedURL.split('?')[0];
-        this.updateContentWithURL(fileURL, this.file.type, this.collectionId);
-      });
-    });
+    if (event && event.target && event.target.files) {
+      this.file = event.target.files[0];
+      this.fileName = this.file.name;
+      this.isUploadCsvEnable = true;
+    } else {
+      this.isUploadCsvEnable = false;
+    }
   }
 
-  uploadToBlob(signedURL, file, config): Observable<any> {
-    return this.editorService.httpClient.put(signedURL, file, config).pipe(catchError(err => {
-      const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.018') };
-      this.isClosable = true;
-      this.errorCsvStatus = true;
-      this.showCsvValidationStatus = false;
-      this.errorCsvMessage = _.get(err, 'error.params.errmsg') || errInfo.errorMsg;
-      return throwError(this.editorService.apiErrorHandling(err, errInfo));
-    }), map(data => data));
-  }
   updateContentWithURL(fileURL, mimeType, contentId) {
     const data = new FormData();
     data.append('fileUrl', fileURL);
@@ -146,5 +107,48 @@ export class CsvUploadComponent implements OnInit {
       fileName: this.collectionId
     };
     this.editorService.downloadBlobUrlFile(downloadConfig);
+  }
+  uploadToBlob(signedURL, file, config): Observable<any> {
+    return this.editorService.httpClient.put(signedURL, file, config).pipe(catchError(err => {
+      const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.018')};
+      this.isClosable = true;
+      this.errorCsvStatus = true;
+      this.showCsvValidationStatus = false;
+      this.errorCsvMessage = _.get(err, 'error.params.errmsg') || errInfo.errorMsg;
+      return throwError(this.editorService.apiErrorHandling(err, errInfo));
+    }), map(data => data));
+  }
+  validateCSVFile() {
+    this.showCsvValidationStatus = true;
+    this.uploadCSVFile = false;
+    this.isUploadCsvEnable = false;
+    this.isClosable = false;
+    this.updateCSVFile = false;
+    const request = {
+      content: {
+        fileName: this.fileName
+      }
+    };
+    this.editorService.generatePreSignedUrl(request, this.collectionId, 'hierarchy').pipe(catchError(err => {
+      const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.026') };
+      this.isClosable = true;
+      this.errorCsvStatus = true;
+      this.showCsvValidationStatus = false;
+      this.errorCsvMessage = _.get(err, 'error.params.errmsg') || errInfo.errorMsg;
+      return throwError(this.editorService.apiErrorHandling(err, errInfo));
+    })).subscribe((response) => {
+      const signedURL = _.get(response.result, 'pre_signed_url');
+      const config = {
+        processData: false,
+        contentType: 'text/csv',
+        headers: {
+          'x-ms-blob-type': 'BlockBlob'
+        }
+      };
+      this.uploadToBlob(signedURL, this.file, config).subscribe(() => {
+        const fileURL = signedURL.split('?')[0];
+        this.updateContentWithURL(fileURL, this.file.type, this.collectionId);
+      });
+    });
   }
 }

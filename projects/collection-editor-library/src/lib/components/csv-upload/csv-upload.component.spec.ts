@@ -11,7 +11,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
 import { EditorService } from './../../services/editor/editor.service';
-import {csvImport} from './csv-upload.component.spec.data';
+import {csvImport, preSignedUrl} from './csv-upload.component.spec.data';
 describe('CsvUploadComponent', () => {
   let component: CsvUploadComponent;
   let fixture: ComponentFixture<CsvUploadComponent>;
@@ -35,7 +35,7 @@ describe('CsvUploadComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('should create', () => {
+  it('should create CsvUploadComponent', () => {
     expect(component).toBeTruthy();
   });
   it('#ngOnInit should call handleInputCondition', () => {
@@ -54,7 +54,7 @@ describe('CsvUploadComponent', () => {
     component.handleInputCondition();
     expect(component.updateCSVFile).toBeTruthy();
   });
-  it('#uploadCSV() should upload file', () => {
+  it('#uploadCSV() should upload file for defined value', () => {
     const file = {lastModified: 1625731160551,
         lastModifiedDate: 'Thu Jul 08 2021 13:29:20 GMT+0530 (India Standard Time)',
         name: "Blank.csv",
@@ -72,6 +72,14 @@ describe('CsvUploadComponent', () => {
     expect(component.isUploadCsvEnable).toBeTruthy();
     expect(component.file).toBeDefined();
     expect(component.fileName).toBeDefined();
+  });
+  it('#uploadCSV() should upload file for undefined value', () => {
+    component.isUploadCsvEnable = true;
+    const event = {};
+    component.uploadCSV(event);
+    expect(component.isUploadCsvEnable).toBeFalsy();
+    expect(component.file).toBeUndefined();
+    expect(component.fileName).toBeUndefined();
   });
   it('#closeHierarchyModal should close popup', () => {
     spyOn(component.csvUploadEmitter, 'emit');
@@ -125,7 +133,7 @@ describe('CsvUploadComponent', () => {
     component.downloadSampleCSVFile();
     expect(editorService.downloadBlobUrlFile).toHaveBeenCalledWith(config);
   });
-  it('#validateCSVFile() should call validateCSVFile and check csv file for error case', () => {
+  it('#updateContentWithURL() should call updateContentWithURL and check csv file for error case', () => {
     component.collectionId = 'do_113274017771085824116';
     const data = new FormData();
     data.append('fileUrl', csvImport.fileUrl);
@@ -153,5 +161,58 @@ describe('CsvUploadComponent', () => {
         expect(component.errorCsvStatus).toBeTruthy();
         expect(component.isClosable).toBeTruthy();
       });
+  });
+  it('#uploadToBlob should get pre signed url for success case', () => {
+    spyOn(component['editorService'].httpClient, 'put').and.returnValue(of({}));
+    component.uploadToBlob('sampleSigned.url', 'file', 'config');
+    expect(component['editorService'].httpClient.put).toHaveBeenCalledWith('sampleSigned.url', 'file', 'config');
+  });
+  xit('#uploadToBlob should get pre signed url for error case', async () => {
+    component.configService.labelConfig = {messages: {error: {
+      '018': 'error'
+    }}};
+    component.collectionId = 'do_113312173590659072160';
+    spyOn(component['editorService'], 'apiErrorHandling').and.callThrough();
+    spyOn(component['editorService'].httpClient, 'put').and.returnValue(throwError({error: preSignedUrl.error}));
+    component.uploadToBlob('sampleSigned.url', 'file', 'config');
+    expect(component['editorService'].httpClient.put).toHaveBeenCalledWith('sampleSigned.url', 'file', 'config');
+    // expect(component.isClosable).toBeTruthy();
+    // expect(component.errorCsvStatus).toBeTruthy();
+    // expect(component.showCsvValidationStatus).toBeFalsy();
+    // expect(component.errorCsvMessage).toBeDefined();
+    // expect(component['editorService'].apiErrorHandling).toHaveBeenCalled();
+  });
+  it('#validateCSVFile should call validateCSVFile success case', () => {
+    component.collectionId = 'do_113312173590659072160';
+    component.fileName = 'samplefile';
+    component.file = {type: 'csv/text'};
+    spyOn(component, 'uploadToBlob').and.returnValue(of({}));
+    spyOn(component, 'updateContentWithURL');
+    // tslint:disable-next-line:no-string-literal
+    spyOn(component['editorService'], 'generatePreSignedUrl').and.returnValue(of(preSignedUrl.succes));
+    // tslint:disable-next-line:no-string-literal
+    spyOn(component['editorService'], 'apiErrorHandling').and.callThrough();
+    component.validateCSVFile();
+    expect(component.uploadToBlob).toHaveBeenCalled();
+    expect(component.updateContentWithURL).toHaveBeenCalled();
+  });
+  xit('#validateCSVFile should call validateCSVFile for error case', () => {
+    component.configService.labelConfig = {messages: {error: {
+      '026': 'error'
+    }}};
+    component.collectionId = 'do_113312173590659072160';
+    component.fileName = 'samplefile';
+    component.file = {type: 'csv/text'};
+    spyOn(component, 'uploadToBlob').and.returnValue(of({}));
+    spyOn(component, 'updateContentWithURL');
+    // tslint:disable-next-line:no-string-literal
+    spyOn(component['editorService'], 'generatePreSignedUrl').and.returnValue(throwError({error: preSignedUrl.error}));
+    // tslint:disable-next-line:no-string-literal
+    spyOn(component['editorService'], 'apiErrorHandling').and.callThrough();
+    component.validateCSVFile();
+    expect(component.isClosable).toBeTruthy();
+    expect(component.errorCsvStatus).toBeTruthy();
+    expect(component.showCsvValidationStatus).toBeFalsy();
+    expect(component.errorCsvMessage).toBeDefined();
   });
 });

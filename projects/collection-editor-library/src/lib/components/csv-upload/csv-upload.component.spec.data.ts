@@ -69,3 +69,38 @@ export const csvImport = {
     },
     fileUrl: 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/hierarchy/do_113316577504272384141/blank.csv'
 };
+export const preSignedUrl = {
+    succes: {
+        "id": "api.content.upload.url",
+        "ver": "3.0",
+        "ts": "2021-07-09T09:29:55ZZ",
+        "params": {
+            "resmsgid": "1ae2eef7-72a6-4b8c-96a4-cc89940f5970",
+            "msgid": null,
+            "err": null,
+            "status": "successful",
+            "errmsg": null
+        },
+        "responseCode": "OK",
+        "result": {
+            "identifier": "do_113301063790198784120",
+            "url_expiry": "54000",
+            "pre_signed_url": "https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/hierarchy/do_113301063790198784120/10_correct_file_format.csv?sv=2017-04-17&se=2021-07-10T00%3A29%3A55Z&sr=b&sp=w&sig=k0kpWNrtkh1lDwkD0XM9LyHhwj6mP%2Bpr/Uy1/sxY2NU%3D"
+        }
+    },
+    error: {
+        id: 'api.error',
+        ver: '1.0',
+        ts: '2021-07-05 03:57:14:915+0000',
+        params: {
+            resmsgid: '158fce40-dd45-11eb-adbf-81ddba34dfdd',
+            msgid: null,
+            status: 'failed',
+            err: 'FORBIDDEN_ERROR',
+            errmsg: 'Forbidden: API WHITELIST Access is denied'
+        },
+        responseCode: 'FORBIDDEN',
+        result: {}
+    }
+};
+

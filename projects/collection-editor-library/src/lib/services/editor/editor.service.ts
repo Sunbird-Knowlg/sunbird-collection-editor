@@ -20,7 +20,6 @@ interface SelectedChildren {
 
 export class EditorService {
   data: any = {};
-  // public httpClient: HttpClient;
   private _selectedChildren: SelectedChildren = {};
   public questionStream$ = new Subject<any>();
   private _editorConfig: IEditorConfig;
@@ -29,8 +28,7 @@ export class EditorService {
   public contentsCount = 0;
   constructor(public treeService: TreeService, private toasterService: ToasterService,
               public configService: ConfigService, private telemetryService: EditorTelemetryService,
-              private publicDataService: PublicDataService, private dataService: DataService,
-              public httpClient: HttpClient) {
+              private publicDataService: PublicDataService, private dataService: DataService, public httpClient: HttpClient) {
               }
 
   public initialize(config: IEditorConfig) {
