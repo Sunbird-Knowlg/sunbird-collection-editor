@@ -20,7 +20,7 @@ interface SelectedChildren {
 
 export class EditorService {
   data: any = {};
-  public httpClient: HttpClient;
+  // public httpClient: HttpClient;
   private _selectedChildren: SelectedChildren = {};
   public questionStream$ = new Subject<any>();
   private _editorConfig: IEditorConfig;
@@ -30,8 +30,7 @@ export class EditorService {
   constructor(public treeService: TreeService, private toasterService: ToasterService,
               public configService: ConfigService, private telemetryService: EditorTelemetryService,
               private publicDataService: PublicDataService, private dataService: DataService,
-              httpClient: HttpClient) {
-                this.httpClient = httpClient;
+              public httpClient: HttpClient) {
               }
 
   public initialize(config: IEditorConfig) {
@@ -371,11 +370,13 @@ export class EditorService {
   getHierarchyFolder() {
     const treeObj = this.treeService.getTreeObject();
     const contents = [];
+    if (treeObj) {
     treeObj.visit((node) => {
       if (node && !node.data.root) {
         contents.push(node.data.id);
       }
     });
+  }
     return contents;
   }
   validateCSVFile(fileUrl, collectionnId: any) {
@@ -391,6 +392,15 @@ export class EditorService {
       url: `${url}${collectionId}`,
     };
     return this.publicDataService.get(req);
+  }
+  generatePreSignedUrl(req, contentId: any, type) {
+    const reqParam = {
+      url: `${this.configService.urlConFig.URLS.CONTENT.UPLOAD_URL}${contentId}?type=${type}`,
+      data: {
+        request: req
+      }
+    };
+    return this.publicDataService.post(reqParam);
   }
   downloadBlobUrlFile(config) {
     try {
@@ -411,14 +421,5 @@ export class EditorService {
     } catch (error) {
       console.error( _.replace(_.get(this.configService, 'labelConfig.messages.error.033'), '{FILE_TYPE}', config.fileType ) + error);
     }
-  }
-  generatePreSignedUrl(req, contentId: any, type) {
-    const reqParam = {
-      url: `${this.configService.urlConFig.URLS.CONTENT.UPLOAD_URL}${contentId}?type=${type}`,
-      data: {
-        request: req
-      }
-    };
-    return this.publicDataService.post(reqParam);
   }
 }

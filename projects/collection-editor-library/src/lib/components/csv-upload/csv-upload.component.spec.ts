@@ -47,6 +47,7 @@ describe('CsvUploadComponent', () => {
     component.isCreateCsv = true;
     component.handleInputCondition();
     expect(component.uploadCSVFile).toBeTruthy();
+    expect(component.sampleCsvUrl).toBeDefined();
   });
   it('#handleInputCondition should set pop up conditions', () => {
     component.isCreateCsv = false;
@@ -54,7 +55,12 @@ describe('CsvUploadComponent', () => {
     expect(component.updateCSVFile).toBeTruthy();
   });
   it('#uploadCSV() should upload file', () => {
-    const file = new File([''], 'filename', { type: 'csv/text' });
+    const file = {lastModified: 1625731160551,
+        lastModifiedDate: 'Thu Jul 08 2021 13:29:20 GMT+0530 (India Standard Time)',
+        name: "Blank.csv",
+        size: 773,
+        type: "text/csv",
+        webkitRelativePath: '' };
     const event = {
       target: {
         files: [
@@ -144,9 +150,25 @@ describe('CsvUploadComponent', () => {
       error => {
         expect(error.responseCode).toBe('CLIENT_ERROR');
         expect(component.showCsvValidationStatus).toBeFalsy();
-        // expect(component.errorCsvMessage).toBe(csvImport.importError.params.errmsg);
         expect(component.errorCsvStatus).toBeTruthy();
         expect(component.isClosable).toBeTruthy();
       });
   });
+  it('#uploadToBlob should call uploadToBlob', () => {
+    component.resetConditions();
+    expect(component.errorCsvStatus).toBeFalsy();
+    expect(component.isUploadCSVEnable).toBeFalsy();
+    expect(component.file).toBeNull();
+    expect(component.errorCsvMessage).toBe('');
+  });
+  // uploadToBlob(signedURL, file, config): Observable<any> {
+  //   return this.editorService.httpClient.put(signedURL, file, config).pipe(catchError(err => {
+  //     const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.018') };
+  //     this.isClosable = true;
+  //     this.errorCsvStatus = true;
+  //     this.showCsvValidationStatus = false;
+  //     this.errorCsvMessage = _.get(err, 'error.params.errmsg') || errInfo.errorMsg;
+  //     return throwError(this.editorService.apiErrorHandling(err, errInfo));
+  //   }), map(data => data));
+  // }
 });

@@ -233,6 +233,12 @@ describe('EditorService', () => {
     expect(result).toBe(true);
   });
 
+  it('#checkIfContentsCanbeAdded() should return false', () => {
+    spyOn(editorService.treeService, 'getTreeObject').and.callFake(() => undefined);
+    const content = editorService.getHierarchyFolder();
+    expect(editorService.treeService.getTreeObject).toHaveBeenCalled();
+    expect(content.length).toEqual(0);
+  });
   it('#checkIfContentsCanbeAdded() should return false', ()=> {
     editorService.contentsCount = 0;
     spyOn(editorService, 'getContentChildrens').and.callFake(() => [1,2,3,4,5,6,7,8,9,10]);
@@ -242,10 +248,10 @@ describe('EditorService', () => {
   });
   it('#downloadBlobUrlFile() should download the file', () => {
     const service: EditorService = TestBed.get(EditorService);
+    const http = TestBed.get(HttpClient);
     const toasterService = TestBed.get(ToasterService);
     spyOn(toasterService, 'success').and.callThrough();
     spyOn(URL, 'createObjectURL').and.callFake((data) => { });
-    const http = TestBed.get(HttpClient);
     spyOn(http, 'get').and.returnValue(of({ test: 'ok' }));
     const downloadConfig = {
       // tslint:disable-next-line:max-line-length
@@ -318,5 +324,12 @@ describe('EditorService', () => {
         expect(error.error.responseCode).toBe('CLIENT_ERROR');
 
       });
+  });
+  it('#generatePreSignedUrl() should call generatePreSignedUrl',  () => {
+    const publicDataService: PublicDataService = TestBed.get(PublicDataService);
+    spyOn(publicDataService, 'post').and.returnValue(of());
+    const returnValue = editorService.generatePreSignedUrl({}, 'do_113312173590659072160', 'hierarchy');
+    expect(publicDataService.post).toHaveBeenCalled();
+    expect(returnValue).toBeDefined();
   });
 });

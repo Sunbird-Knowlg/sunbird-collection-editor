@@ -44,7 +44,7 @@ export class CsvUploadComponent implements OnInit {
   uploadCSV(event) {
     this.file = event.target.files[0];
     this.fileName = this.file.name;
-    this.isUploadCSVEnable = true; // change to different name
+    this.isUploadCSVEnable = true;
   }
   validateCSVFile() {
     this.showCsvValidationStatus = true;

@@ -83,6 +83,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.treeService.initialize(this.editorConfig);
     this.collectionId = _.get(this.editorConfig, 'context.identifier');
     this.toolbarConfig = this.editorService.getToolbarConfig();
+    this.configObjectType = this.configService.categoryConfig[this.editorConfig.config.objectType] === 'questionSet' ? false : true;
     this.mergeCollectionExternalProperties().subscribe(
       (response) => {
         const hierarchyResponse = _.first(response);
@@ -116,7 +117,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           console.log(error);
         }
       );
-    this.configObjectType = this.configService.categoryConfig[this.editorConfig.config.objectType] === 'questionSet' ? false : true;
     this.pageStartTime = Date.now();
     this.telemetryService.initializeTelemetry(this.editorConfig);
     this.telemetryService.telemetryPageId = this.pageId;

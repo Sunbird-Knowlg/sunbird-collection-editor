@@ -114,6 +114,7 @@ describe('EditorComponent', () => {
     expect(telemetryService.initializeTelemetry).toHaveBeenCalled();
     expect(telemetryService.telemetryPageId).toEqual('collection_editor');
     expect(telemetryService.start).toHaveBeenCalled();
+    expect(component.configObjectType).toBeTruthy();
   });
 
   xit('#ngOnInit() should not call some methods', () => {
@@ -778,6 +779,7 @@ describe('EditorComponent', () => {
   });
 
   it('#downloadHierarchyCsv() should call downloadHierarchyCsv and success case', () => {
+    // tslint:disable-next-line:no-string-literal
     spyOn(component['editorService'], 'downloadHierarchyCsv').and.returnValue(of(csvExport.successExport));
     spyOn(component, 'downloadCSVFile').and.callThrough();
     component.downloadHierarchyCsv();
@@ -785,10 +787,13 @@ describe('EditorComponent', () => {
   });
   it('#downloadHierarchyCsv() should call downloadHierarchyCsv and error case', () => {
     component.collectionId = 'do_11331581945782272012';
+    // tslint:disable-next-line:no-string-literal
     spyOn(component['toasterService'], 'error');
+    // tslint:disable-next-line:no-string-literal
     spyOn(component['editorService'], 'downloadHierarchyCsv').and.returnValue(throwError(csvExport.errorExport));
     spyOn(component, 'downloadCSVFile').and.callThrough();
     component.downloadHierarchyCsv();
+    // tslint:disable-next-line:no-string-literal
     component['editorService'].downloadHierarchyCsv('do_113312173590659072160').subscribe(data => {
     },
       error => {
@@ -796,12 +801,18 @@ describe('EditorComponent', () => {
       });
   });
   it('#onClickFolder() should call onClickFolder and set csv create and update options', () => {
+    spyOn(component, 'setCsvDropDownOptions');
+    // tslint:disable-next-line:no-string-literal
     spyOn(component['editorService'], 'getHierarchyFolder').and.callFake(() => [1]);
-    spyOn(component, 'saveContent').and.callFake(() => {
-      return Promise.resolve();
-    });
+    spyOn(component, 'saveContent').and.returnValue(Promise.resolve('Content is saved'));
     component.onClickFolder();
+    // tslint:disable-next-line:no-string-literal
+    const status =  component['editorService'].getHierarchyFolder().length ? true : false;
     expect(component.saveContent).toHaveBeenCalled();
+    expect(status).toBeTruthy();
+    // tslint:disable-next-line:no-string-literal
+    expect(component['editorService'].getHierarchyFolder).toHaveBeenCalled();
+    expect(component.setCsvDropDownOptions).toHaveBeenCalledWith(true, true, true);
   });
 
   it('#setCsvDropDownOptions and should set csv dropdown options', () => {

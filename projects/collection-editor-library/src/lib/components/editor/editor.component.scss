@@ -409,5 +409,9 @@ sb-dynamic-richtext .ck-content .table{
   position: absolute;
   top: 131px;
   left: 35px;
+  display: flex;
+  justify-content: space-between;
+  width: 24%;
 }
 .sb-disable-icon{color:#ccc !important;}
+.sb-w-240px{width:240px}
