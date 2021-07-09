@@ -379,10 +379,11 @@ export class EditorService {
   }
     return contents;
   }
-  validateCSVFile(fileUrl, collectionnId: any) {
+  validateCSVFile(formData, collectionnId: any) {
     const url = _.get(this.configService.urlConFig, 'URLS.CSV.UPLOAD');
     const reqParam = {
-      url: `${url}${collectionnId}?fileUrl=${fileUrl}`
+      url: `${url}${collectionnId}`,
+      data: formData.data
     };
     return this.publicDataService.post(reqParam);
   }
