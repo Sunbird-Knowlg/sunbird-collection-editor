@@ -69,7 +69,7 @@ describe('CsvUploadComponent', () => {
       }
     };
     component.uploadCSV(event);
-    expect(component.isUploadCSVEnable).toBeTruthy();
+    expect(component.isUploadCsvEnable).toBeTruthy();
     expect(component.file).toBeDefined();
     expect(component.fileName).toBeDefined();
   });
@@ -106,7 +106,7 @@ describe('CsvUploadComponent', () => {
   it('#resetConditionns should reset variables', () => {
     component.resetConditions();
     expect(component.errorCsvStatus).toBeFalsy();
-    expect(component.isUploadCSVEnable).toBeFalsy();
+    expect(component.isUploadCsvEnable).toBeFalsy();
     expect(component.file).toBeNull();
     expect(component.errorCsvMessage).toBe('');
   });
@@ -142,7 +142,7 @@ describe('CsvUploadComponent', () => {
     };
     spyOn(component['editorService'], 'validateCSVFile').and.returnValue(throwError(csvImport.importError));
     component.uploadCSVFile = false;
-    component.isUploadCSVEnable = true;
+    component.isUploadCsvEnable = true;
     component.isClosable = false;
     component.updateContentWithURL(csvImport.fileUrl, 'text/csv', component.collectionId);
     component['editorService'].validateCSVFile(option, 'do_113312173590659072160').subscribe(data => {
@@ -154,21 +154,4 @@ describe('CsvUploadComponent', () => {
         expect(component.isClosable).toBeTruthy();
       });
   });
-  it('#uploadToBlob should call uploadToBlob', () => {
-    component.resetConditions();
-    expect(component.errorCsvStatus).toBeFalsy();
-    expect(component.isUploadCSVEnable).toBeFalsy();
-    expect(component.file).toBeNull();
-    expect(component.errorCsvMessage).toBe('');
-  });
-  // uploadToBlob(signedURL, file, config): Observable<any> {
-  //   return this.editorService.httpClient.put(signedURL, file, config).pipe(catchError(err => {
-  //     const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.018') };
-  //     this.isClosable = true;
-  //     this.errorCsvStatus = true;
-  //     this.showCsvValidationStatus = false;
-  //     this.errorCsvMessage = _.get(err, 'error.params.errmsg') || errInfo.errorMsg;
-  //     return throwError(this.editorService.apiErrorHandling(err, errInfo));
-  //   }), map(data => data));
-  // }
 });

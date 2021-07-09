@@ -98,7 +98,7 @@
         </div>
       </div>
 
-      <div class="d-flex sb-bg-color-success-0 p-10 sb-min-h-250 mn-15" *ngIf="showSuccessCSV">
+      <div class="d-flex sb-bg-color-success-0 p-10 sb-min-h-250 mn-15" *ngIf="showSuccessCsv">
         <div class="w-50 text-center">
           <img src="../../assets/images/bulkuploadfile.png" alt="" class="w-30">
         </div>
@@ -128,8 +128,8 @@
       libTelemetryInteract
       [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('csv_upload','click',configService.labelConfig?.button_labels?.next_btn_label,
        this.telemetryService.telemetryPageId, {key: 'identifier', value: collectionId})"
-      (click)="validateCSVFile()"[disabled]="!isUploadCSVEnable" 
-      [ngClass]="{'sb-btn-primary': isUploadCSVEnable, 'sb-btn-disabled': !isUploadCSVEnable}" >
+      (click)="validateCSVFile()"[disabled]="!isUploadCsvEnable" 
+      [ngClass]="{'sb-btn-primary': isUploadCsvEnable, 'sb-btn-disabled': !isUploadCsvEnable}" >
          {{configService.labelConfig?.button_labels?.next_btn_label}}
       </button>
     </div>

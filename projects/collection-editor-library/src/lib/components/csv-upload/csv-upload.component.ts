@@ -15,9 +15,9 @@ export class CsvUploadComponent implements OnInit {
   @Input() collectionId;
   @Input() isCreateCsv;
   @Output() csvUploadEmitter = new EventEmitter<any>();
-  public showSuccessCSV = false;
+  public showSuccessCsv = false;
   public showCsvValidationStatus = false;
-  public isUploadCSVEnable = false;
+  public isUploadCsvEnable = false;
   public errorCsvStatus = false;
   public errorCsvMessage: any;
   public isClosable = true;
@@ -27,7 +27,7 @@ export class CsvUploadComponent implements OnInit {
   public fileName: any;
   public file: any;
   constructor(public telemetryService: EditorTelemetryService, public configService: ConfigService,
-    private toasterService: ToasterService, private editorService: EditorService, ) { }
+              private toasterService: ToasterService, private editorService: EditorService, ) { }
 
   ngOnInit(): void {
     this.handleInputCondition();
@@ -44,12 +44,12 @@ export class CsvUploadComponent implements OnInit {
   uploadCSV(event) {
     this.file = event.target.files[0];
     this.fileName = this.file.name;
-    this.isUploadCSVEnable = true;
+    this.isUploadCsvEnable = true;
   }
   validateCSVFile() {
     this.showCsvValidationStatus = true;
     this.uploadCSVFile = false;
-    this.isUploadCSVEnable = false;
+    this.isUploadCsvEnable = false;
     this.isClosable = false;
     this.updateCSVFile = false;
     const request = {
@@ -106,7 +106,7 @@ export class CsvUploadComponent implements OnInit {
     };
     this.editorService.validateCSVFile(option, contentId).subscribe(res => {
       this.isClosable = true;
-      this.showSuccessCSV = true;
+      this.showSuccessCsv = true;
       this.showCsvValidationStatus = false;
       this.csvUploadEmitter.emit({ status: true, type: 'updateHierarchy' });
     }, error => {
@@ -135,7 +135,7 @@ export class CsvUploadComponent implements OnInit {
   resetConditions() {
     this.errorCsvStatus = false;
     this.errorCsvMessage = '';
-    this.isUploadCSVEnable = false;
+    this.isUploadCsvEnable = false;
     this.file = null;
   }
   downloadSampleCSVFile() {
