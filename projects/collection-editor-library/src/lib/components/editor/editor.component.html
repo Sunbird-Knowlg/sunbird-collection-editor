@@ -10,8 +10,8 @@
             <div>  {{configService.labelConfig?.lbl?.folders}} </div>
               <a class="profile-avtar computer only p-0 pr-10" tabindex="0">
               <div suiDropdown class="ui dropdown right top pointing z-index-9"  id="dropdown-menu-list-header">
-                  <i class="icon ellipsis vertical h-1" aria-hidden="true" (click)="onClickFolder()"></i>
-                  <div class="menu" suiDropdownMenu>
+                  <i class="icon ellipsis vertical h-1" aria-hidden="true"  [ngClass]="{'sb-disable-icon': isStatusReviewMode}" (click)="onClickFolder()"></i>
+                  <div class="menu" suiDropdownMenu *ngIf="!isStatusReviewMode">
                     <button type="button" class="item fs-0-785 bg-none"  
                     libTelemetryInteract
                     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('open_popup','click',configService.labelConfig?.lbl?.createHierarchyCsv,
@@ -34,7 +34,7 @@
                   <button 
                   libTelemetryInteract
                   [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('open_popup','click',configService.labelConfig?.lbl?.uploadUpdateCSV,
-                   this.telemetryService.telemetryPageId,{key: 'dialog_id', value: configService.labelConfig?.lbl?.updateHierarchyCSV})"
+                   this.telemetryService.telemetryPageId,{key: 'dialog_id', value: configService.labelConfig?.lbl?.uploadUpdateCSV})"
                   type="button" class="item fs-0-785 bg-none" (click)="hanndleCsvEmitter({type: 'updateCsv'})" [disabled]="csvDropDownOptions.isDisableUpdateCsv">
                       <i class="icon upload sb-color-primary" aria-hidden="true" [ngClass]="{'label-disable': csvDropDownOptions.isDisableUpdateCsv}"></i> 
                     <span class="text" [ngClass]="{'label-disable': csvDropDownOptions.isDisableUpdateCsv}" > 
@@ -45,7 +45,7 @@
               </div>
               </a>
             </div>
-            <div class="three wide column p-0 overflow-y mt-50 mb-40">
+            <div class="three wide column p-0 overflow-y mt-50 mb-40 h-100vh">
               <lib-fancy-tree  *ngIf="collectionTreeNodes && collectionTreeNodes.data"
               [nodes]="collectionTreeNodes" [options]="{ showConnectors: true }" [buttonLoaders]="buttonLoaders"
               (treeEventEmitter)="treeEventListener($event)" class="sb-collectionTree-fancyTree sb-collectionTree-fancyTreelist sb-questionset-scroll">

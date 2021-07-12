@@ -65,6 +65,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public showCsvUploadPopup = false;
   public configObjectType: any;
   public isCreateCsv = true;
+  public isStatusReviewMode = false;
   public addCollaborator: boolean;
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
@@ -84,6 +85,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.collectionId = _.get(this.editorConfig, 'context.identifier');
     this.toolbarConfig = this.editorService.getToolbarConfig();
     this.configObjectType = this.configService.categoryConfig[this.editorConfig.config.objectType] === 'questionSet' ? false : true;
+    this.isStatusReviewMode = this.isReviewMode();
     this.mergeCollectionExternalProperties().subscribe(
       (response) => {
         const hierarchyResponse = _.first(response);
@@ -629,16 +631,18 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     return false;
   }
   onClickFolder() {
-    this.setCsvDropDownOptions(true, true, true);
+    if (!this.isStatusReviewMode) {
+    this.setCsvDropDownOptionsDisable(true, true, true);
     this.saveContent().then((message: string) => {
      const status =  this.editorService.getHierarchyFolder().length ? true : false;
-     this.setCsvDropDownOptions(status, !status, !status);
+     this.setCsvDropDownOptionsDisable(status, !status, !status);
     }).catch(((error: string) => {
-      this.setCsvDropDownOptions(true, true, true);
+      this.setCsvDropDownOptionsDisable(true, true, true);
       this.toasterService.error(error);
     }));
   }
-  setCsvDropDownOptions(createCsv, updateCsv, downloadCsv) {
+  }
+  setCsvDropDownOptionsDisable(createCsv, updateCsv, downloadCsv) {
     this.csvDropDownOptions.isDisableCreateCsv = createCsv;
     this.csvDropDownOptions.isDisableUpdateCsv = updateCsv;
     this.csvDropDownOptions.isDisableDownloadCsv = downloadCsv;
@@ -651,10 +655,13 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       this.toasterService.error(_.get(error, 'error.params.errmsg'));
     });
   }
+  isReviewMode() {
+    return  _.includes(['review', 'read', 'sourcingreview' ], this.editorService.editorMode);
+   }
   downloadCSVFile(tocUrl) {
     const downloadConfig = {
       blobUrl: tocUrl,
-      successMessage: _.get(this.configService, 'labelConfig.messages.success.013'),
+      successMessage: false,
       fileType: 'csv',
       fileName: this.collectionId
     };

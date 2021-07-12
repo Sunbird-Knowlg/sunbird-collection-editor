@@ -81,6 +81,7 @@ describe('EditorComponent', () => {
     component.configService = configService;
     // spyOnProperty(editorService, 'editorConfig', 'get').and.returnValue(editorConfig);
     spyOn(editorService, 'initialize');
+    spyOn(component, 'isReviewMode').and.returnValue(true);
     spyOn(editorService, 'getToolbarConfig').and.returnValue({ title: 'abcd', showDialcode: 'No' });
     const treeService = TestBed.inject(TreeService);
     spyOn(treeService, 'initialize').and.callFake(() => { });
@@ -115,6 +116,7 @@ describe('EditorComponent', () => {
     expect(telemetryService.telemetryPageId).toEqual('collection_editor');
     expect(telemetryService.start).toHaveBeenCalled();
     expect(component.configObjectType).toBeTruthy();
+    expect(component.isStatusReviewMode).toBeTruthy();
   });
 
   xit('#ngOnInit() should not call some methods', () => {
@@ -768,7 +770,7 @@ describe('EditorComponent', () => {
     const config = {
       // tslint:disable-next-line:max-line-length
       blobUrl: 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/course/toc/do_11331579492804198413_untitled-course_1625465046239.csv',
-      successMessage: 'CSV file downloaded successfully',
+      successMessage: false,
       fileType: 'csv',
       fileName: component.collectionId
     };
@@ -801,7 +803,8 @@ describe('EditorComponent', () => {
       });
   });
   it('#onClickFolder() should call onClickFolder and set csv create and update options', () => {
-    spyOn(component, 'setCsvDropDownOptions');
+    component.isStatusReviewMode = false;
+    spyOn(component, 'setCsvDropDownOptionsDisable');
     // tslint:disable-next-line:no-string-literal
     spyOn(component['editorService'], 'getHierarchyFolder').and.callFake(() => [1]);
     spyOn(component, 'saveContent').and.returnValue(Promise.resolve('Content is saved'));
@@ -812,16 +815,16 @@ describe('EditorComponent', () => {
     expect(status).toBeTruthy();
     // tslint:disable-next-line:no-string-literal
     expect(component['editorService'].getHierarchyFolder).toHaveBeenCalled();
-    expect(component.setCsvDropDownOptions).toHaveBeenCalledWith(true, true, true);
+    expect(component.setCsvDropDownOptionsDisable).toHaveBeenCalledWith(true, true, true);
   });
 
-  it('#setCsvDropDownOptions and should set csv dropdown options', () => {
+  it('#setCsvDropDownOptionsDisable and should set csv dropdown options', () => {
     component.csvDropDownOptions = {
       isDisableCreateCsv: true,
       isDisableUpdateCsv: true,
       isDisableDownloadCsv: true
     };
-    component.setCsvDropDownOptions(false, true, true);
+    component.setCsvDropDownOptionsDisable(false, true, true);
     expect(component.csvDropDownOptions.isDisableCreateCsv).toBeFalsy();
     expect(component.csvDropDownOptions.isDisableUpdateCsv).toBeTruthy();
     expect(component.csvDropDownOptions.isDisableDownloadCsv).toBeTruthy();
@@ -869,6 +872,11 @@ describe('EditorComponent', () => {
     expect(component.generateTelemetryEndEvent).not.toHaveBeenCalled();
     // tslint:disable-next-line:no-string-literal
     expect(component['modal'].deny).toHaveBeenCalled();
+  });
+  it('#isReviewMode should return editor mode status', () => {
+    spyOn(component, 'isReviewMode').and.returnValue(true);
+    const value = component.isReviewMode();
+    expect(value).toBeTruthy();
   });
 });
 

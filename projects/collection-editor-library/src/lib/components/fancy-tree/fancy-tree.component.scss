@@ -17,7 +17,7 @@
           font-size: 0.9286rem !important;
           font-weight: 700 !important;
           padding-left: 5px;
-          width: 6.3rem !important;
+          width: inherit !important;
         }
         .highlightNode {
           color: red !important;
@@ -160,6 +160,7 @@
   }
   .sb-dotted-dropdown{
     line-height: 1.4rem;
+    padding-left: 30px;
     .menu{
       .item{
         font-size: 0.785rem !important;
@@ -176,4 +177,16 @@
   .w-25{
     width: 25.1%;
     max-width: 25.1%;
+  }
+  #removeNodeIcon{
+    padding-right: 24px;
+  }
+  .sb-dotted-dropdown{
+    position: absolute !important;
+    right: 6px;
+    padding-left: 33px;
+    .menu{
+      right: 0 !important;
+      left: inherit !important;
+    }
   }

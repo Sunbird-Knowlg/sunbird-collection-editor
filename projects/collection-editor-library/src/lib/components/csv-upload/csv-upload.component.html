@@ -2,7 +2,7 @@
     class="sb-modal bx-none overflow-modal" appBodyScroll (dismissed)="closeHierarchyModal(modal)" #modal>
     <div class="sb-modal-header">
      <span *ngIf="isCreateCsv"> {{configService.labelConfig?.lbl?.createHierarchyCsv}} </span>
-     <span *ngIf="!isCreateCsv"> {{configService.labelConfig?.lbl?.updateHierarchyCSV}}</span>  
+     <span *ngIf="!isCreateCsv"> {{configService.labelConfig?.lbl?.uploadUpdateCSV}}</span>  
 
     </div>
     <div class="sb-modal-content">
@@ -86,7 +86,7 @@
           <i class="fa fa-exclamation-triangle pr-5 sb-color-error pr-10" aria-hidden="true"></i> {{configService.labelConfig?.lbl?.hierarchyValidationError}}
          <div class="sb-color-gray-200 pt-20 fs-0-785"> {{configService.labelConfig?.lbl?.followingErrors}}</div>
           <ul class="mt-15 sb-circle-ul">
-            <li class="item">{{errorCsvMessage}}</li>
+            <li class="item" *ngFor="let error of errorCsvMessage">{{error}}</li>
           </ul>
           <div class="qq-upload-button-selector sb-btn sb-btn-normal sb-btn-success my-20" 
           libTelemetryInteract
@@ -110,7 +110,10 @@
             <small class="font-weight-bold pt-10 d-block">{{configService.labelConfig?.lbl?.successful}}</small>
           </div>
       </div>
-       <div class="sb-color-gray-200 pt-20 fs-0-785">{{configService.labelConfig?.lbl?.hierarchyAdded}}</div>
+       <div class="sb-color-gray-200 pt-20 fs-0-785">
+         <span *ngIf="isCreateCsv"> {{configService.labelConfig?.lbl?.hierarchyAdded}} </span>
+         <span *ngIf="!isCreateCsv"> {{configService.labelConfig?.lbl?.hierarchyUpdated}} </span>
+         </div>
       </div>
     </div>
       </div>

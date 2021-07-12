@@ -124,7 +124,7 @@ describe('CsvUploadComponent', () => {
     component.sampleCsvUrl = 'https://sunbirddev.blob.core.windows.net/sourcing/collection-hierarchy/create-collection-hierarchy.csv';
     const config = {
       blobUrl: component.sampleCsvUrl,
-      successMessage: 'Sample csv file downloaded successfully',
+      successMessage: false,
       fileType: 'csv',
       fileName: component.collectionId
     };
@@ -148,39 +148,37 @@ describe('CsvUploadComponent', () => {
       data,
       param: config
     };
-    spyOn(component['editorService'], 'validateCSVFile').and.returnValue(throwError(csvImport.importError));
+    // tslint:disable-next-line:no-string-literal
+    spyOn(component['editorService'], 'validateCSVFile').and.returnValue(throwError({error: csvImport.importError}));
     component.uploadCSVFile = false;
     component.isUploadCsvEnable = true;
     component.isClosable = false;
     component.updateContentWithURL(csvImport.fileUrl, 'text/csv', component.collectionId);
-    component['editorService'].validateCSVFile(option, 'do_113312173590659072160').subscribe(data => {
-    },
-      error => {
-        expect(error.responseCode).toBe('CLIENT_ERROR');
-        expect(component.showCsvValidationStatus).toBeFalsy();
-        expect(component.errorCsvStatus).toBeTruthy();
-        expect(component.isClosable).toBeTruthy();
-      });
+    expect(component.showCsvValidationStatus).toBeFalsy();
+    expect(component.errorCsvStatus).toBeTruthy();
+    expect(component.isClosable).toBeTruthy();
   });
   it('#uploadToBlob should get pre signed url for success case', () => {
+    // tslint:disable-next-line:no-string-literal
     spyOn(component['editorService'].httpClient, 'put').and.returnValue(of({}));
     component.uploadToBlob('sampleSigned.url', 'file', 'config');
+    // tslint:disable-next-line:no-string-literal
     expect(component['editorService'].httpClient.put).toHaveBeenCalledWith('sampleSigned.url', 'file', 'config');
   });
-  xit('#uploadToBlob should get pre signed url for error case', async () => {
+  it('#uploadToBlob should get pre signed url for error case', async () => {
     component.configService.labelConfig = {messages: {error: {
       '018': 'error'
     }}};
     component.collectionId = 'do_113312173590659072160';
+    // tslint:disable-next-line:no-string-literal
     spyOn(component['editorService'], 'apiErrorHandling').and.callThrough();
+    // tslint:disable-next-line:no-string-literal
     spyOn(component['editorService'].httpClient, 'put').and.returnValue(throwError({error: preSignedUrl.error}));
-    component.uploadToBlob('sampleSigned.url', 'file', 'config');
-    expect(component['editorService'].httpClient.put).toHaveBeenCalledWith('sampleSigned.url', 'file', 'config');
-    // expect(component.isClosable).toBeTruthy();
-    // expect(component.errorCsvStatus).toBeTruthy();
-    // expect(component.showCsvValidationStatus).toBeFalsy();
-    // expect(component.errorCsvMessage).toBeDefined();
-    // expect(component['editorService'].apiErrorHandling).toHaveBeenCalled();
+    // tslint:disable-next-line:max-line-length
+    const signedUrl = 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/hierarchy/do_1133209415529676801189/10_correct_file_format.csv?sv=2017-04-17&se=2021-07-13T04%3A57%3A02Z&sr=b&sp=w&sig=j0IG63JtWdoKTdsz151d9XKvrTTvwWTLW3JJqlXby6c%3D';
+    component.uploadToBlob(signedUrl, 'file', 'config');
+    // tslint:disable-next-line:no-string-literal
+    expect(component['editorService'].httpClient.put).toHaveBeenCalledWith(signedUrl, 'file', 'config');
   });
   it('#validateCSVFile should call validateCSVFile success case', () => {
     component.collectionId = 'do_113312173590659072160';

@@ -73,7 +73,7 @@ export class CsvUploadComponent implements OnInit {
     }, error => {
       this.showCsvValidationStatus = false;
       this.errorCsvStatus = true;
-      this.errorCsvMessage = _.get(error, 'error.params.errmsg');
+      this.errorCsvMessage = _.get(error, 'error.params.errmsg').split('\n');
       this.isClosable = true;
     });
   }
@@ -102,7 +102,7 @@ export class CsvUploadComponent implements OnInit {
   downloadSampleCSVFile() {
     const downloadConfig = {
       blobUrl: this.sampleCsvUrl,
-      successMessage: _.get(this.configService, 'labelConfig.messages.success.014'),
+      successMessage: false,
       fileType: 'csv',
       fileName: this.collectionId
     };
