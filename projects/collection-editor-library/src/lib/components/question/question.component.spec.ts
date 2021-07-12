@@ -11,7 +11,7 @@ import { EditorCursor } from '../../collection-editor-cursor.service';
 import { SuiModule } from 'ng2-semantic-ui-v9';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
-import { collectionHierarchy, mockData, readQuestion } from './question.component.spec.data';
+import { collectionHierarchyMock, mockData, readQuestionMock } from './question.component.spec.data';
 import { of } from 'rxjs';
 
 const mockEditorService = {
@@ -63,9 +63,9 @@ describe('QuestionComponent', () => {
     spyOn(telemetryService, 'impression').and.callFake(() => { });
     spyOn(component, 'initialize').and.callThrough();
     spyOn(editorService, 'getToolbarConfig').and.returnValue({ title: 'abcd', showDialcode: 'No', showPreview: '' });
-    spyOn(editorService, 'fetchCollectionHierarchy').and.returnValue(of(collectionHierarchy));
+    spyOn(editorService, 'fetchCollectionHierarchy').and.returnValue(of(collectionHierarchyMock));
     let questionService: QuestionService = TestBed.inject(QuestionService);
-    spyOn(questionService, 'readQuestion').and.returnValue(of(readQuestion));
+    spyOn(questionService, 'readQuestion').and.returnValue(of(readQuestionMock));
     fixture.detectChanges();
   });
 
