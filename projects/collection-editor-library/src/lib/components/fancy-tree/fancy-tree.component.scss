@@ -159,11 +159,14 @@
     }
   }
   .sb-dotted-dropdown{
-    line-height: 1.4rem;
-    padding-left: 30px;
+    position: absolute !important;
+    right: 6px;
+    padding-left: 33px;
     .menu{
+      right: 0 !important;
+      left: inherit !important;
       .item{
-        font-size: 0.785rem !important;
+      font-size: 0.785rem !important;
       }
     }
   }
@@ -180,13 +183,4 @@
   }
   #removeNodeIcon{
     padding-right: 24px;
-  }
-  .sb-dotted-dropdown{
-    position: absolute !important;
-    right: 6px;
-    padding-left: 33px;
-    .menu{
-      right: 0 !important;
-      left: inherit !important;
-    }
   }
