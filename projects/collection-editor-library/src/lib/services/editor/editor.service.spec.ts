@@ -266,6 +266,26 @@ describe('EditorService', () => {
     expect(http.get).toHaveBeenCalledWith(downloadConfig.blobUrl, { responseType: 'blob' });
     expect(toasterService.success).toHaveBeenCalledWith(configServiceData.labelConfig.messages.success['011']);
   });
+  it('#downloadBlobUrlFile() should download the file and dose not show toaster message', () => {
+    const service: EditorService = TestBed.get(EditorService);
+    const http = TestBed.get(HttpClient);
+    const toasterService = TestBed.get(ToasterService);
+    spyOn(toasterService, 'success').and.callThrough();
+    spyOn(URL, 'createObjectURL').and.callFake((data) => { });
+    spyOn(http, 'get').and.returnValue(of({ test: 'ok' }));
+    const downloadConfig = {
+      // tslint:disable-next-line:max-line-length
+      blobUrl: 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/textbook/toc/do_113312173590659072160_dev-testing-1_1625022971409.csv',
+      successMessage: false,
+      fileType: 'csv',
+      fileName: 'do_113312173590659072160'
+    };
+    service.downloadBlobUrlFile(downloadConfig);
+    expect(http.get).toHaveBeenCalled();
+    expect(http.get).toHaveBeenCalledTimes(1);
+    expect(http.get).toHaveBeenCalledWith(downloadConfig.blobUrl, { responseType: 'blob' });
+    expect(toasterService.success).not.toHaveBeenCalledWith(configServiceData.labelConfig.messages.success['011']);
+  });
   it('#downloadHierarchyCsv() should downloadHierarchyCsv', async () => {
     const publicDataService: PublicDataService = TestBed.get(PublicDataService);
     spyOn(publicDataService, 'get').and.returnValue(of({
