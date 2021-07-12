@@ -108,3 +108,5 @@
 .flex-align-self-end{
   align-self: flex-end;
 }
+
+.masonry-grid .ui.toggle.checkbox input:checked~.box:after{left:2rem !important;}
