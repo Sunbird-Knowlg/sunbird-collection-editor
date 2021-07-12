@@ -346,7 +346,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       this.toolbarConfig.title = data.event.name;
     } else if (_.isEmpty(data.event.name) && selectedNode.data.root) {
       this.toolbarConfig.title = 'Untitled';
-    } else { }
+    }
   }
 
   showLibraryComponentPage() {

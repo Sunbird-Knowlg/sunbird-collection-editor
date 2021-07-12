@@ -159,7 +159,6 @@ describe('FancyTreeComponent', () => {
     };
 
     let result = component.getIconClass(child, 1);
-    console.log(result)
     expect(result).toEqual('fa fa-file-o');
   })
 
@@ -173,7 +172,6 @@ describe('FancyTreeComponent', () => {
     };
 
     let result = component.getIconClass(child, 1);
-    console.log(result)
     expect(result).toEqual('fa fa-folder-o');
   })
 
@@ -187,7 +185,6 @@ describe('FancyTreeComponent', () => {
     };
 
     let result = component.getIconClass(child, 1);
-    console.log(result)
     expect(result).toEqual('fa fa-file-o');
   })
 
@@ -226,9 +223,7 @@ describe('FancyTreeComponent', () => {
   })
 
   it('#dropNotAllowed() should return false', ()=> {
-    // const toasterService = TestBed.get(ToasterService);
     let result = component.dropNotAllowed();
-    console.log(result);
     expect(result).toBeFalsy();
   })
 
