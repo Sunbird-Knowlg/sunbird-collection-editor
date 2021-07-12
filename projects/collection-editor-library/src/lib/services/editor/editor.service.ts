@@ -413,7 +413,9 @@ export class EditorService {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(objectUrl);
-        this.toasterService.success(config.successMessage);
+        if (config.successMessage) {
+          this.toasterService.success(config.successMessage);
+        }
       }, (error) => {
         console.error(_.get(this.configService, 'labelConfig.messages.error.034') + error);
       });
