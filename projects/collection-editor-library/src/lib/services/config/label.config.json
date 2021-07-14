@@ -167,7 +167,6 @@
        "followingErrors":"Following errors are found in the file. Please correct and upload again",
        "reUploadCSV":"Upload file again",
        "hierarchyValidation":"Hierarchy Validation",
-       "updateHierarchyCSV":"Update Hierarcy using CSV",
        "hierarchyAdded":"Folders have been successfully created. Please close the dialog",
        "hierarchyUpdated":"Folder metadata has been successfully updated. Please close the dialog",
        "successful":"Successful !",
@@ -235,10 +234,7 @@
          "009": "QR code(s) updated successfully",
          "010": "QR code generated.",
          "011": "QR codes downloaded" ,
-         "012": "Collaborators updated successfully",
-         "013": "CSV file downloaded successfully",
-         "014": "Sample csv file downloaded successfully"
- 
+         "012": "Collaborators updated successfully" 
       },
       "warning" : {
          "001" : "Errors found in linked QR Codes. Please check and correct.",
