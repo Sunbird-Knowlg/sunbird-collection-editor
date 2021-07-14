@@ -78,6 +78,7 @@ describe('EditorComponent', () => {
     const editorService = TestBed.inject(EditorService);
     const configService = TestBed.inject(ConfigService);
     component.editorConfig = editorConfig;
+    component.collectionTreeNodes = null;
     component.configService = configService;
     // spyOnProperty(editorService, 'editorConfig', 'get').and.returnValue(editorConfig);
     spyOn(editorService, 'initialize');
