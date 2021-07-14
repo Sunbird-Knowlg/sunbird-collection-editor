@@ -45,7 +45,7 @@
               </div>
               </a>
             </div>
-            <div class="three wide column p-0 overflow-y mt-50 mb-40 h-100vh">
+            <div class="three wide column p-0 overflow-y  mb-40 h-100vh" [ngClass]="{'mt-50': configObjectType}">
               <lib-fancy-tree  *ngIf="collectionTreeNodes && collectionTreeNodes.data"
               [nodes]="collectionTreeNodes" [options]="{ showConnectors: true }" [buttonLoaders]="buttonLoaders"
               (treeEventEmitter)="treeEventListener($event)" class="sb-collectionTree-fancyTree sb-collectionTree-fancyTreelist sb-questionset-scroll">

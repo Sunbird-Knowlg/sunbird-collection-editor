@@ -9,7 +9,7 @@ import * as _ from 'lodash-es';
 @Component({
   selector: 'lib-csv-upload',
   templateUrl: './csv-upload.component.html',
-  styleUrls: ['./csv-upload.component.css']
+  styleUrls: ['./csv-upload.component.scss']
 })
 export class CsvUploadComponent implements OnInit {
   @Input() collectionId;
@@ -36,7 +36,7 @@ export class CsvUploadComponent implements OnInit {
     if (this.isCreateCsv) {
       this.uploadCSVFile = true;
       // tslint:disable-next-line:max-line-length
-      this.sampleCsvUrl = _.get(this.configService, 'editorConfig.publicStorageAccount') + _.get(this.configService.urlConFig, 'URLS.CSV.SAMPLE_COLLECTION_HIERARCHY');
+      this.sampleCsvUrl = _.get(this.editorService, 'editorConfig.config.publicStorageAccount') + _.get(this.configService.urlConFig, 'URLS.CSV.SAMPLE_COLLECTION_HIERARCHY');
     } else {
       this.updateCSVFile = true;
     }
