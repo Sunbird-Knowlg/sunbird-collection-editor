@@ -61,6 +61,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public contentComment: string;
   public showComment: boolean;
   public showReviewModal: boolean;
+  public ishierarchyConfigSet =  false;
+  public addCollaborator: boolean;
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
               private toasterService: ToasterService, private dialcodeService: DialcodeService,
@@ -103,6 +105,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           this.toolbarConfig.showDialcode = dialcode ? dialcode.toLowerCase() : 'no';
           this.helperService.channelData$.subscribe(
             (channelResponse) => {
+              this.sethierarchyConfig(response);
               this.getFrameworkDetails(response);
             }
           );
@@ -255,7 +258,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   ));
   }
-
   sethierarchyConfig(primaryCatConfig) {
     let hierarchyConfig;
     if (_.get(primaryCatConfig, 'result.objectCategoryDefinition.objectMetadata.config')) {
@@ -271,6 +273,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         });
       }
     }
+    this.ishierarchyConfigSet = true;
     this.editorConfig.config = _.assign(this.editorConfig.config, hierarchyConfig);
   }
 
@@ -294,8 +297,15 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     });
     return childrenData;
+  }  
+  toggleCollaboratorModalPoup() {
+    if (this.addCollaborator) {
+      this.addCollaborator = false;
+    } else if (!this.addCollaborator) {
+      this.addCollaborator = true;
+    } else {
+    }
   }
-
   toolbarEventListener(event) {
     this.actionType = event.button;
     switch (event.button) {
@@ -351,6 +361,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       case 'sourcingReject':
         this.redirectToChapterListTab({ comment: event.comment });
         break;
+      case 'addCollaborator':
+        this.toggleCollaboratorModalPoup();
+        break;
       case 'showReviewcomments':
         this.showReviewModal = ! this.showReviewModal;
         break;
@@ -376,7 +389,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       this.toolbarConfig.title = data.event.name;
     } else if (_.isEmpty(data.event.name) && selectedNode.data.root) {
       this.toolbarConfig.title = 'Untitled';
-    } else { }
+    }
   }
 
   showLibraryComponentPage() {
@@ -654,8 +667,12 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
-    this.generateTelemetryEndEvent();
-    this.treeService.clearTreeCache();
+    if (this.telemetryService) {
+      this.generateTelemetryEndEvent();
+    }
+    if (this.treeService) {
+      this.treeService.clearTreeCache();
+    }
     if (this.modal && this.modal.deny) {
       this.modal.deny();
     }

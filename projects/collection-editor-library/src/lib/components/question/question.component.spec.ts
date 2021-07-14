@@ -1,8 +1,8 @@
+import { QuestionService } from './../../services/question/question.service';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { QuestionComponent } from './question.component';
 import { Router } from '@angular/router';
-import { QuestionService } from '../../services/question/question.service';
 import { PlayerService } from '../../services/player/player.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { EditorService } from '../../services/editor/editor.service';
@@ -11,7 +11,29 @@ import { EditorCursor } from '../../collection-editor-cursor.service';
 import { SuiModule } from 'ng2-semantic-ui-v9';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
-import {mockData} from './question.component.spec.data';
+import { collectionHierarchyMock, mockData, readQuestionMock } from './question.component.spec.data';
+import { of } from 'rxjs';
+
+const mockEditorService = {
+  editorConfig: {
+    config: {
+      hierarchy: {
+        level1: {
+          name: 'Module',
+          type: 'Unit',
+          mimeType: 'application/vnd.ekstep.content-collection',
+          contentType: 'Course Unit',
+          iconClass: 'fa fa-folder-o',
+          children: {}
+        }
+      }
+    }
+  },
+  selectedChildren: {},
+  getToolbarConfig: () => { },
+  fetchCollectionHierarchy: (questionSetId) => { }
+};
+
 describe('QuestionComponent', () => {
   let component: QuestionComponent;
   let fixture: ComponentFixture<QuestionComponent>;
@@ -20,24 +42,37 @@ describe('QuestionComponent', () => {
   }
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ QuestionComponent, TelemetryInteractDirective ],
+      declarations: [QuestionComponent, TelemetryInteractDirective],
       imports: [HttpClientTestingModule, SuiModule],
       providers: [EditorTelemetryService, QuestionService, ToasterService,
-         PlayerService, EditorService, { provide: Router, useClass: RouterStub }, EditorCursor],
+        PlayerService, { provide: EditorService, useValue: mockEditorService }, { provide: Router, useClass: RouterStub }, EditorCursor],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(QuestionComponent);
     component = fixture.componentInstance;
-    // fixture.detectChanges();
+    component.questionInput = {
+      "questionSetId": "do_11330102570702438417",
+      "questionId": "do_11330103476396851218"
+    };
+    let editorService: EditorService = TestBed.inject(EditorService);
+    let telemetryService: EditorTelemetryService = TestBed.inject(EditorTelemetryService);
+    spyOn(telemetryService, 'impression').and.callFake(() => { });
+    spyOn(component, 'initialize').and.callThrough();
+    spyOn(editorService, 'getToolbarConfig').and.returnValue({ title: 'abcd', showDialcode: 'No', showPreview: '' });
+    spyOn(editorService, 'fetchCollectionHierarchy').and.returnValue(of(collectionHierarchyMock));
+    let questionService: QuestionService = TestBed.inject(QuestionService);
+    spyOn(questionService, 'readQuestion').and.returnValue(of(readQuestionMock));
+    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
   xit('should call populateFormData ', () => {
     component.leafFormConfig = mockData.childMetadata;
     component.questionMetaData = mockData.questionMetaData;
@@ -78,38 +113,38 @@ describe('QuestionComponent', () => {
     component.onStatusChanges('');
     expect(component.onStatusChanges).toHaveBeenCalled();
   });
-  it('#ngAfterViewInit() should call ngAfterViewInit and emit telemetry impression event', () => {
-    const data = {type: 'edit', pageid: undefined , uri: undefined, duration: 0};
+  xit('#ngAfterViewInit() should call ngAfterViewInit and emit telemetry impression event', () => {
+    const data = { type: 'edit', pageid: undefined, uri: undefined, duration: 0 };
     spyOn(component.telemetryService, 'impression');
     component.ngAfterViewInit();
     expect(component.telemetryService.impression).toHaveBeenCalled();
   });
   it('#toolbarEventListener() should call toolbarEventListener for saveContent', () => {
-    const data = {button: 'saveContent'};
+    const data = { button: 'saveContent' };
     spyOn(component, 'saveContent');
     component.toolbarEventListener(data);
     expect(component.saveContent).toHaveBeenCalled();
   });
   it('#toolbarEventListener() should call toolbarEventListener for cancelContent', () => {
-    const data = {button: 'cancelContent'};
+    const data = { button: 'cancelContent' };
     spyOn(component, 'handleRedirectToQuestionset');
     component.toolbarEventListener(data);
     expect(component.handleRedirectToQuestionset).toHaveBeenCalled();
   });
   it('#toolbarEventListener() should call toolbarEventListener for backContent', () => {
-    const data = {button: 'backContent'};
+    const data = { button: 'backContent' };
     spyOn(component, 'handleRedirectToQuestionset');
     component.toolbarEventListener(data);
     expect(component.handleRedirectToQuestionset).toHaveBeenCalled();
   });
   it('#toolbarEventListener() should call toolbarEventListener for previewContent', () => {
-    const data = {button: 'previewContent'};
+    const data = { button: 'previewContent' };
     spyOn(component, 'previewContent');
     component.toolbarEventListener(data);
     expect(component.previewContent).toHaveBeenCalled();
   });
   it('#toolbarEventListener() should call toolbarEventListener for editContent', () => {
-    const data = {button: 'editContent'};
+    const data = { button: 'editContent' };
     spyOn(component, 'previewFormData');
     component.toolbarEventListener(data);
     expect(component.previewFormData).toHaveBeenCalledWith(true);
@@ -117,7 +152,7 @@ describe('QuestionComponent', () => {
     expect(component.toolbarConfig.showPreview).toBeFalsy();
   });
   it('#toolbarEventListener() should call toolbarEventListener for default case', () => {
-    const data = {button: ''};
+    const data = { button: '' };
     spyOn(component, 'toolbarEventListener');
     component.toolbarEventListener(data);
     expect(component.toolbarEventListener).toHaveBeenCalledWith(data);
@@ -166,7 +201,7 @@ describe('QuestionComponent', () => {
   });
   it('#editorDataHandler() should call editorDataHandler for media', () => {
     component.editorState = mockData.editorState;
-    mockData.eventData.mediaobj = {id: '1234'};
+    mockData.eventData.mediaobj = { id: '1234' };
     spyOn(component, 'setMedia');
     component.editorDataHandler(mockData.eventData);
     expect(component.editorState).toBeDefined();
@@ -174,8 +209,8 @@ describe('QuestionComponent', () => {
   });
   it('#setMedia should call setMedia and set media arry', () => {
     component.editorState = mockData.editorState;
-    component.mediaArr = [{id: '6789'}];
-    component.setMedia({id: '1234'});
+    component.mediaArr = [{ id: '6789' }];
+    component.setMedia({ id: '1234' });
     expect(component.mediaArr).toBeDefined();
   });
   it('#saveQuestion() should call saveQuestion for updateQuestion', () => {
@@ -232,17 +267,17 @@ describe('QuestionComponent', () => {
     expect(component.deleteSolution).toHaveBeenCalled();
   });
   it('#videoDataOutput() should call videoDataOutput and event data is not  empty', () => {
-    const event = {name: 'event name', identifier: '1234'};
+    const event = { name: 'event name', identifier: '1234' };
     component.videoDataOutput(event);
     expect(component.videoSolutionData).toBeDefined();
   });
   it('#videoDataOutput() should call videoDataOutput for thumbnail', () => {
-    const event = {name: 'event name', identifier: '1234', thumbnail: 'sample data'};
+    const event = { name: 'event name', identifier: '1234', thumbnail: 'sample data' };
     component.videoDataOutput(event);
     expect(component.videoSolutionData).toBeDefined();
   });
   it('#videoDataOutput() should call videoDataOutput for thumbnail', () => {
-    const event = {name: 'event name', identifier: '1234', thumbnail: 'sample data'};
+    const event = { name: 'event name', identifier: '1234', thumbnail: 'sample data' };
     component.videoDataOutput(event);
     expect(component.videoSolutionData).toBeDefined();
   });

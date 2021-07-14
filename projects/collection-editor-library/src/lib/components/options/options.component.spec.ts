@@ -80,9 +80,9 @@ describe('OptionsComponent', () => {
     expect(mockOptionData.prepareMcqBody.interactions).toEqual(result);
   });
 
-  it('#setTemplete() should set #templateType to "mcq-grid-split"  ', () => {
+  it('#setTemplete() should set #templateType to "mcq-vertical-split"  ', () => {
     spyOn(component, 'editorDataHandler').and.callThrough();
-    const templateType = 'mcq-grid-split';
+    const templateType = 'mcq-vertical-split';
     component.editorState = mockOptionData.editorOptionData;
     component.setTemplete(templateType);
     expect(component.templateType).toEqual(templateType);

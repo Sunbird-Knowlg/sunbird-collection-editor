@@ -7,7 +7,7 @@
           <div class="ui twelve column grid m-0 ">
             <!-- Left Sidebar for cards -->
             <div class="three wide column p-0 overflow-y mb-40">
-              <lib-fancy-tree  *ngIf="collectionTreeNodes && collectionTreeNodes.data"
+              <lib-fancy-tree  *ngIf="collectionTreeNodes && collectionTreeNodes.data && ishierarchyConfigSet"
               [nodes]="collectionTreeNodes" [options]="{ showConnectors: true }" [buttonLoaders]="buttonLoaders"
               (treeEventEmitter)="treeEventListener($event)" class="sb-collectionTree-fancyTree sb-collectionTree-fancyTreelist sb-questionset-scroll">
               </lib-fancy-tree>
@@ -104,6 +104,9 @@
     <lib-question [questionInput]="questionComponentInput" [leafFormConfig]="leafFormConfig"   (questionEmitter)="questionEventListener($event)">
     </lib-question>
   </ng-container>
+</ng-container>
+<ng-container *ngIf="addCollaborator">
+  <lib-manage-collaborator [addCollaborator]="addCollaborator" [collectionId]="collectionId" (modalDismissEmitter)="toggleCollaboratorModalPoup()"></lib-manage-collaborator>
 </ng-container>
 <sui-modal *ngIf="showReviewModal" [mustScroll]="true" [isClosable]="false" [transitionDuration]="0"
   [size]="'normal'" class="sb-modal bx-none overflow-modal" appBodyScroll #modal (dismissed)="showReviewModal = false;">
