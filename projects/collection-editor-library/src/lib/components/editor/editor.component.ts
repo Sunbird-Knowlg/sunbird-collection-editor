@@ -61,6 +61,11 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public contentComment: string;
   public showComment: boolean;
   public showReviewModal: boolean;
+  public csvDropDownOptions: any = {};
+  public showCsvUploadPopup = false;
+  public configObjectType: any;
+  public isCreateCsv = true;
+  public isStatusReviewMode = false;
   public ishierarchyConfigSet =  false;
   public addCollaborator: boolean;
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
@@ -80,13 +85,15 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.treeService.initialize(this.editorConfig);
     this.collectionId = _.get(this.editorConfig, 'context.identifier');
     this.toolbarConfig = this.editorService.getToolbarConfig();
+    this.configObjectType = this.configService.categoryConfig[this.editorConfig.config.objectType] === 'questionSet' ? false : true;
+    this.isStatusReviewMode = this.isReviewMode();
     this.mergeCollectionExternalProperties().subscribe(
       (response) => {
         const hierarchyResponse = _.first(response);
         const collection = _.get(hierarchyResponse, `result.${this.configService.categoryConfig[this.editorConfig.config.objectType]}`);
         this.toolbarConfig.title = collection.name;
         this.organisationFramework = _.get(collection, 'framework') || _.get(this.editorConfig, 'context.framework');
-        this.targetFramework = _.get(collection, 'targetFWIds') ||  _.get(this.editorConfig, 'context.targetFWIds');
+        this.targetFramework = _.get(collection, 'targetFWIds') || _.get(this.editorConfig, 'context.targetFWIds');
         if (this.organisationFramework) {
           this.frameworkService.initialize(this.organisationFramework);
         }
@@ -128,25 +135,25 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     let orgFWType: any;
     let targetFWType: any;
     orgFWIdentifiers = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.framework.enum') ||
-    _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.framework.default');
+      _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.framework.default');
     if (_.isEmpty(this.targetFramework || _.get(this.editorConfig, 'context.targetFWIds'))) {
       // tslint:disable-next-line:max-line-length
       targetFWIdentifiers = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.targetFWIds.default');
-      if (_.isEmpty(targetFWIdentifiers) ) {
+      if (_.isEmpty(targetFWIdentifiers)) {
         // tslint:disable-next-line:max-line-length
         targetFWType = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.config.frameworkMetadata.targetFWType');
         const channelFrameworks = _.get(this.helperService.channelInfo, 'frameworks');
         const channelFrameworksType = _.map(channelFrameworks, 'type');
         const channelFrameworksIdentifiers = _.map(_.get(this.helperService.channelInfo, 'frameworks'), 'identifier');
-        const difference =  _.difference(targetFWType, _.uniq(channelFrameworksType));
+        const difference = _.difference(targetFWType, _.uniq(channelFrameworksType));
 
         if (targetFWType && channelFrameworksType && _.isEmpty(difference)) {
-          this.targetFramework =  _.get(_.first(_.filter(channelFrameworks, framework => {
+          this.targetFramework = _.get(_.first(_.filter(channelFrameworks, framework => {
             return framework.type === _.first(targetFWType);
           })), 'identifier');
           this.treeService.updateMetaDataProperty('targetFWIds', _.castArray(this.targetFramework));
           this.frameworkService.getTargetFrameworkCategories(_.castArray(this.targetFramework));
-        } else if ((targetFWType && channelFrameworksType && !_.isEmpty(difference))  || _.isEmpty(channelFrameworksType)) {
+        } else if ((targetFWType && channelFrameworksType && !_.isEmpty(difference)) || _.isEmpty(channelFrameworksType)) {
           this.frameworkService.getFrameworkData(undefined, difference, undefined, 'Yes').subscribe(
             (targetResponse) => {
               this.targetFramework = _.get(_.first(_.get(targetResponse, 'result.Framework')), 'identifier');
@@ -174,7 +181,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       let orgFrameworkList = [];
       orgFWType = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.config.frameworkMetadata.orgFWType');
       const channelFrameworksType = _.map(_.get(this.helperService.channelInfo, 'frameworks'), 'type');
-      const difference =  _.difference(orgFWType, _.uniq(channelFrameworksType));
+      const difference = _.difference(orgFWType, _.uniq(channelFrameworksType));
       if (channelFrameworksType) {
         orgFrameworkList = _.map(_.get(this.helperService.channelInfo, 'frameworks'), (framework) => {
           return { label: framework.name, identifier: framework.identifier };
@@ -229,13 +236,14 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   mergeCollectionExternalProperties(): Observable<any> {
-  const requests = [];
-  const objectType = this.configService.categoryConfig[this.editorConfig.config.objectType];
-  requests.push(this.editorService.fetchCollectionHierarchy(this.collectionId));
-  if (objectType === 'questionSet') {
-    requests.push(this.editorService.readQuestionSet(this.collectionId));
-   }
-  return forkJoin(requests).pipe(tap(responseList => {
+    const requests = [];
+    this.collectionTreeNodes = null;
+    const objectType = this.configService.categoryConfig[this.editorConfig.config.objectType];
+    requests.push(this.editorService.fetchCollectionHierarchy(this.collectionId));
+    if (objectType === 'questionSet') {
+      requests.push(this.editorService.readQuestionSet(this.collectionId));
+    }
+    return forkJoin(requests).pipe(tap(responseList => {
       const hierarchyResponse = _.first(responseList);
       this.collectionTreeNodes = {
         data: _.get(hierarchyResponse, `result.${objectType}`)
@@ -253,7 +261,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.collectionTreeNodes.data.instructions = data.instructions ? data.instructions : '';
       }
     }
-  ));
+    ));
   }
   sethierarchyConfig(primaryCatConfig) {
     let hierarchyConfig;
@@ -364,11 +372,11 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.toggleCollaboratorModalPoup();
         break;
       case 'showReviewcomments':
-        this.showReviewModal = ! this.showReviewModal;
+        this.showReviewModal = !this.showReviewModal;
         break;
       case 'showCorrectioncomments':
         this.contentComment = _.get(this.editorConfig, 'context.correctionComments')
-        this.showReviewModal = ! this.showReviewModal;
+        this.showReviewModal = !this.showReviewModal;
         break;
       default:
         break;
@@ -393,16 +401,16 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   showLibraryComponentPage() {
     if (this.editorService.checkIfContentsCanbeAdded()) {
-    this.buttonLoaders.addFromLibraryButtonLoader = true;
-    this.saveContent().then(res => {
-      this.libraryComponentInput.collectionId = this.collectionId;
-      this.buttonLoaders.addFromLibraryButtonLoader = false;
-      this.pageId = 'library';
-    }).catch(err => {
-      this.toasterService.error(err);
-      this.buttonLoaders.addFromLibraryButtonLoader = false;
-    });
-  }
+      this.buttonLoaders.addFromLibraryButtonLoader = true;
+      this.saveContent().then(res => {
+        this.libraryComponentInput.collectionId = this.collectionId;
+        this.buttonLoaders.addFromLibraryButtonLoader = false;
+        this.pageId = 'library';
+      }).catch(err => {
+        this.toasterService.error(err);
+        this.buttonLoaders.addFromLibraryButtonLoader = false;
+      });
+    }
   }
 
   libraryEventListener(event: any) {
@@ -417,7 +425,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       if (!this.validateFormStatus()) {
         return reject(_.get(this.configService, 'labelConfig.messages.error.029'));
       }
-      const nodesModified =  _.get(this.editorService.getCollectionHierarchy(), 'nodesModified');
+      const nodesModified = _.get(this.editorService.getCollectionHierarchy(), 'nodesModified');
       const objectType = this.configService.categoryConfig[this.editorConfig.config.objectType];
       if (objectType === 'questionSet') {
         const maxScore = await this.editorService.getMaxScore();
@@ -459,11 +467,11 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     const isValid = _.every(this.formStatusMapper, Boolean);
     if (isValid) { return true; }
     _.forIn(this.formStatusMapper, (value, key) => {
-        if (value) {
-          this.treeService.highlightNode(key, 'remove');
-        } else {
-          this.treeService.highlightNode(key, 'add');
-        }
+      if (value) {
+        this.treeService.highlightNode(key, 'remove');
+      } else {
+        this.treeService.highlightNode(key, 'add');
+      }
     });
     return false;
   }
@@ -509,17 +517,17 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
   updateTreeNodeData() {
-      const treeNodeData =  _.get(this.treeService.getFirstChild(), 'data.metadata');
-      if (!treeNodeData.timeLimits) {
-        treeNodeData.timeLimits = {};
-      }
-      if (treeNodeData.maxTime) {
-        treeNodeData.timeLimits.maxTime = this.helperService.hmsToSeconds(treeNodeData.maxTime);
-      }
-      if (treeNodeData.warningTime) {
-        treeNodeData.timeLimits.warningTime = this.helperService.hmsToSeconds(treeNodeData.warningTime);
-      }
-      this.collectionTreeNodes.data =  _.merge(this.collectionTreeNodes.data, _.omit(treeNodeData, ['childNodes']) );
+    const treeNodeData = _.get(this.treeService.getFirstChild(), 'data.metadata');
+    if (!treeNodeData.timeLimits) {
+      treeNodeData.timeLimits = {};
+    }
+    if (treeNodeData.maxTime) {
+      treeNodeData.timeLimits.maxTime = this.helperService.hmsToSeconds(treeNodeData.maxTime);
+    }
+    if (treeNodeData.warningTime) {
+      treeNodeData.timeLimits.warningTime = this.helperService.hmsToSeconds(treeNodeData.warningTime);
+    }
+    this.collectionTreeNodes.data = _.merge(this.collectionTreeNodes.data, _.omit(treeNodeData, ['childNodes']));
   }
   treeEventListener(event: any) {
     this.actionType = event.type;
@@ -540,15 +548,15 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         break;
       case 'createNewContent':
         if (this.editorService.checkIfContentsCanbeAdded()) {
-        this.buttonLoaders.addFromLibraryButtonLoader = true;
-        this.saveContent().then((message: string) => {
-          this.buttonLoaders.addFromLibraryButtonLoader = false;
-          this.showQuestionTemplatePopup = true;
-        }).catch(((error: string) => {
-          this.toasterService.error(error);
-          this.buttonLoaders.addFromLibraryButtonLoader = false;
-        }));
-      }
+          this.buttonLoaders.addFromLibraryButtonLoader = true;
+          this.saveContent().then((message: string) => {
+            this.buttonLoaders.addFromLibraryButtonLoader = false;
+            this.showQuestionTemplatePopup = true;
+          }).catch(((error: string) => {
+            this.toasterService.error(error);
+            this.buttonLoaders.addFromLibraryButtonLoader = false;
+          }));
+        }
         break;
       default:
         break;
@@ -664,7 +672,69 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     return false;
   }
-
+  onClickFolder() {
+    if (!this.isStatusReviewMode) {
+    this.setCsvDropDownOptionsDisable(true, true, true);
+    this.saveContent().then((message: string) => {
+     const status =  this.editorService.getHierarchyFolder().length ? true : false;
+     this.setCsvDropDownOptionsDisable(status, !status, !status);
+    }).catch(((error: string) => {
+      this.setCsvDropDownOptionsDisable(true, true, true);
+      this.toasterService.error(error);
+    }));
+  }
+  }
+  setCsvDropDownOptionsDisable(createCsv, updateCsv, downloadCsv) {
+    this.csvDropDownOptions.isDisableCreateCsv = createCsv;
+    this.csvDropDownOptions.isDisableUpdateCsv = updateCsv;
+    this.csvDropDownOptions.isDisableDownloadCsv = downloadCsv;
+  }
+  downloadHierarchyCsv() {
+    this.editorService.downloadHierarchyCsv(this.collectionId).subscribe(res => {
+      const tocUrl = _.get(res, 'result.collection.tocUrl');
+      this.downloadCSVFile(tocUrl);
+    }, error => {
+      this.toasterService.error(_.get(error, 'error.params.errmsg'));
+    });
+  }
+  isReviewMode() {
+    return  _.includes(['review', 'read', 'sourcingreview' ], this.editorService.editorMode);
+   }
+  downloadCSVFile(tocUrl) {
+    const downloadConfig = {
+      blobUrl: tocUrl,
+      successMessage: false,
+      fileType: 'csv',
+      fileName: this.collectionId
+    };
+    this.editorService.downloadBlobUrlFile(downloadConfig);
+  }
+  hanndleCsvEmitter(event) {
+    switch (event.type) {
+      case 'closeModal':
+        this.showCsvUploadPopup = false;
+        break;
+      case 'updateHierarchy':
+        this.mergeCollectionExternalProperties().subscribe((res: any) => {
+          this.pageId = 'collection_editor';
+          this.telemetryService.telemetryPageId = this.pageId;
+        });
+        break;
+      case 'createCsv':
+        this.showCsvUploadPopup = true;
+        this.isCreateCsv = true;
+        break;
+      case 'updateCsv':
+        this.showCsvUploadPopup = true;
+        this.isCreateCsv = false;
+        break;
+      case 'downloadCsv':
+        this.downloadHierarchyCsv();
+        break;
+      default:
+        break;
+    }
+  }
   ngOnDestroy() {
     if (this.telemetryService) {
       this.generateTelemetryEndEvent();
