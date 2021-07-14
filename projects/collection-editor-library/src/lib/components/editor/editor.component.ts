@@ -66,6 +66,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public configObjectType: any;
   public isCreateCsv = true;
   public isStatusReviewMode = false;
+  public ishierarchyConfigSet =  false;
   public addCollaborator: boolean;
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
@@ -111,6 +112,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           this.toolbarConfig.showDialcode = dialcode ? dialcode.toLowerCase() : 'no';
           this.helperService.channelData$.subscribe(
             (channelResponse) => {
+              this.sethierarchyConfig(response);
               this.getFrameworkDetails(response);
             }
           );
@@ -261,7 +263,47 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     ));
   }
+  sethierarchyConfig(primaryCatConfig) {
+    let hierarchyConfig;
+    if (_.get(primaryCatConfig, 'result.objectCategoryDefinition.objectMetadata.config')) {
+      hierarchyConfig = _.get(primaryCatConfig, 'result.objectCategoryDefinition.objectMetadata.config.sourcingSettings.collection');
+      if (!_.isEmpty(hierarchyConfig.children)) {
+        hierarchyConfig.children = this.getHierarchyChildrenConfig(hierarchyConfig.children);
+      }
+      if (!_.isEmpty(hierarchyConfig.hierarchy)) {
+        _.forEach(hierarchyConfig.hierarchy, (hierarchyValue) => {
+          if (_.get(hierarchyValue, 'children')) {
+            hierarchyConfig['children'] = this.getHierarchyChildrenConfig(_.get(hierarchyValue, 'children'));
+          }
+        });
+      }
+    }
+    this.ishierarchyConfigSet = true;
+    this.editorConfig.config = _.assign(this.editorConfig.config, hierarchyConfig);
+  }
 
+  getHierarchyChildrenConfig(childrenData) {
+    _.forEach(childrenData, (value, key) => {
+      if (!_.isEmpty(value)) {
+        switch (key) {
+          case 'Question':
+            childrenData[key] = _.map(this.helperService.questionPrimaryCategories, 'name') || []; 
+            break;
+          case 'Content':
+            childrenData[key] = _.map(this.helperService.contentPrimaryCategories, 'name') || [];
+            break;
+          case 'Collection':
+            childrenData[key] = _.map(this.helperService.collectionPrimaryCategories, 'name') || [];
+            break;
+          case 'QuestionSet':
+            childrenData[key] = _.map(this.helperService.questionsetPrimaryCategories, 'name') || [];
+            break;
+        }
+      }
+    });
+    return childrenData;
+  }
+  
   toggleCollaboratorModalPoup() {
     if (this.addCollaborator) {
       this.addCollaborator = false;
@@ -270,7 +312,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     } else {
     }
   }
-
+  
   toolbarEventListener(event) {
     this.actionType = event.button;
     switch (event.button) {
