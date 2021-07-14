@@ -68,9 +68,10 @@
               &::before {
                 // content: url("/assets/images/writing.png");
                 color: var(--primary-color) !important;
-                margin-top: 5px;
+                margin-top: 2px;
                 float: left;
-                margin-left: 11px;
+                margin-left: 6px;
+                font-size: 16px;
               }
   
               &:last-child {
@@ -114,15 +115,21 @@
       }
   
       .fa-caret-down {
+        margin-top: 6px;
         display: block;
         width: 10px;
         padding-left: 2px;
       }
   
       .fa-caret-right {
+        margin-top: 6px;
         display: block;
         width: 10px;
         padding-left: 6px;
+      }
+
+      .fa-book {
+        margin-top: 9px;
       }
     }
   

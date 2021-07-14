@@ -349,29 +349,40 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   dropNode(targetNode, currentNode) {
+
+    let dropAllowed = true;
     // tslint:disable-next-line:max-line-length
-    if (currentNode.otherNode.folder === true && (this.maxTreeDepth(currentNode.otherNode) + (targetNode.getLevel() - 1)) > _.get(this.config, 'maxDepth')) {
+    if (currentNode.otherNode.getLevel() === targetNode.getLevel() && currentNode.otherNode.folder === true &&  currentNode.hitMode !== 'over') {
+      dropAllowed = true;
+    // tslint:disable-next-line:max-line-length
+    } else if (currentNode.otherNode.folder === true && (this.maxTreeDepth(currentNode.otherNode) + (targetNode.getLevel() - 1)) > _.get(this.config, 'maxDepth')) {
       return this.dropNotAllowed();
+    } else if (currentNode.otherNode.folder === false && !this.checkContentAddition(targetNode, currentNode)) {
+      dropAllowed = false;
     }
-    if (currentNode.otherNode.folder === false && !this.checkContentAddition(targetNode, currentNode)) {
-      return this.dropNotAllowed();
+
+    if (dropAllowed) {
+        currentNode.otherNode.moveTo(targetNode, currentNode.hitMode);
+        this.treeService.nextTreeStatus('reorder');
+        return true;
+    } else {
+        this.toasterService.warning(`${currentNode.otherNode.title} cannot be added to ${currentNode.node.title}`);
+        return false;
     }
-    currentNode.otherNode.moveTo(targetNode, currentNode.hitMode);
-    this.treeService.nextTreeStatus('reorder');
-    return true;
+
   }
 
   dragDrop(node, data) {
     if ((data.hitMode === 'before' || data.hitMode === 'after' || data.hitMode === 'over') && data.node.data.root) {
       return this.dropNotAllowed();
     }
-    if (_.get(this.config, 'maxDepth')) {
+    if (_.has(this.config, 'maxDepth')) {
       return this.dropNode(node, data);
     }
   }
 
   dropNotAllowed() {
-    this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.007'));
+    this.toasterService.warning(_.get(this.configService, 'labelConfig.messages.error.007'));
     return false;
   }
 

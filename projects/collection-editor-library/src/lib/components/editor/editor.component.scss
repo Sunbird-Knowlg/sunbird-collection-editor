@@ -315,3 +315,31 @@ sb-dynamic-richtext .ck-content .table{
   input:focus-visible{
     border: none !important;
   }
+
+
+  .sb-collectionTree-fancyTree{
+  .fancytree-title{
+    margin-top: 5px;
+  }
+}
+.sb-collectionTree-fancyTree ul.fancytree-container{
+  font-family: inherit !important;
+  border: none !important;
+  font-family: inherit !important;
+}
+.sb-collectionTree-fancyTree{
+  .fancytree-node{
+    .fancytree-title{
+      background: none !important;
+    }
+  }
+}
+.sb-collectionTree-fancyTree .fancytree-expander, .sb-collectionTree-fancyTree li{
+  background-image: none !important;
+}
+.sb-collectionTree-fancyTree span.fancytree-node{
+  width: inherit !important;
+}
+.sb-collectionTree-fancyTree span .fancytree-title{
+  outline: 0 !important;
+}
