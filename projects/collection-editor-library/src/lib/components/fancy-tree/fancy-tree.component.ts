@@ -41,15 +41,14 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     <div id="addchild" class="item">Add Child</div>
   </span>
   </span>`;
-  public folderMenuTemplate = `<span class="ui dropdown sb-dotted-dropdown" autoclose="itemClick" suidropdown="" tabindex="0">
+  public folderMenuTemplate = `<span id= "removeNodeIcon"> <i class="fa fa-trash-o" type="button"></i> </span><span class="ui dropdown sb-dotted-dropdown" autoclose="itemClick" suidropdown="" tabindex="0">
   <span id="contextMenu" class="p-0 w-auto"><i class="icon ellipsis vertical sb-color-black"></i></span>
   <span id= "contextMenuDropDown" class="menu transition hidden" suidropdownmenu="" style="">
     <div id="addsibling" class="item">Add Sibling</div>
     <div id="addchild" class="item">Add Child</div>
     <div id="delete" class="item">Delete</div>
   </span>
-  </span>
-  <span id= "removeNodeIcon"> <i class="fa fa-trash-o" type="button"></i> </span>`;
+  </span>`;
   // tslint:disable-next-line:max-line-length
   public contentMenuTemplate = `<span id="contextMenu"><span id= "removeNodeIcon"> <i class="fa fa-trash-o" type="button"></i> </span></span>`;
   constructor(public treeService: TreeService, private editorService: EditorService,

@@ -44,6 +44,11 @@
     "compositSearch":"composite/v3/search",
     "channelRead":"channel/v1/read/",
     "telemetry":"/data/v3/telemetry",
+    "CSV": {
+      "UPLOAD": "collection/v1/import/",
+      "DOWNLOAD": "collection/v1/export/",
+      "SAMPLE_COLLECTION_HIERARCHY": "sourcing/collection-hierarchy/create-collection-hierarchy.csv"
+    },
     "USER": {
       "SEARCH":"user/v1/search"
     }
