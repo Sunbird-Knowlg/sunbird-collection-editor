@@ -349,7 +349,8 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   dropNode(targetNode, currentNode) {
 
-    let dropAllowed = true;
+    let dropAllowed;
+    dropAllowed = true;
     // tslint:disable-next-line:max-line-length
     if (currentNode.otherNode.getLevel() === targetNode.getLevel() && currentNode.otherNode.folder === true &&  currentNode.hitMode !== 'over') {
       dropAllowed = true;

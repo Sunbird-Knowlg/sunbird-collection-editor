@@ -1,4 +1,7 @@
 .sb-collectionTree-fancyTreelist {
+  ul {
+    padding: 0 !important;
+  }
     .ui-fancytree {
       margin-bottom: 1rem !important;
       &:before {
