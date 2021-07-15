@@ -272,6 +272,7 @@ sb-dynamic-richtext
   border-right: 1px solid #c4c4c4 !important;
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
+  border-bottom: 0 !important;
 }
 sb-dynamic-richtext
   .ck-rounded-corners
@@ -283,13 +284,7 @@ sb-dynamic-richtext
   border: 1px solid #c4c4c4 !important;
   border-color: var(--ck-color-base-border) !important;
 }
-sb-dynamic-richtext
-  .ck-rounded-corners
-  .ck.ck-editor__top
-  .ck-sticky-panel
-  .ck-toolbar {
-  border-bottom: 0 !important;
-}
+
 
 sb-dynamic-richtext .ck-content .table {
   margin: 0.8rem 0 !important;
