@@ -93,7 +93,7 @@ export class LibraryComponent implements OnInit, AfterViewInit, OnDestroy {
     }));
 
     if (_.isEmpty(contentTypes)) {
-      contentTypes = this.helperService.contentPrimaryCategories;
+      contentTypes = _.map(this.helperService.contentPrimaryCategories, 'name'); 
     }
 
     this.defaultFilters = _.pickBy({
