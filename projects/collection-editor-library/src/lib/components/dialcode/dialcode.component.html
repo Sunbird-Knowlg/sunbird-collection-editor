@@ -30,7 +30,7 @@
 <sui-modal *ngIf="showQRCodePopup" [mustScroll]="true" [isClosable]="true" [transitionDuration]="0" [size]="'small'"
     class="sb-modal bx-none overflow-modal" appBodyScroll (dismissed)="showQRCodePopup = !showQRCodePopup" #modal>
     <div class="sb-modal-header">
-        Request for QR Codes
+        {{configService.labelConfig?.lbl?.requestForQrCode}}
     </div>
     <div class="sb-modal-content">
         <div class="d-flex flex-jc-space-between p-20">
@@ -40,7 +40,7 @@
                     [ngClass]="dialcodeControl.errors ? 'sb-color-error' : '' " class="sb-form-control p-5 w-100" placeholder="e.g. 45">
                     <div *ngIf="dialcodeControl.invalid">
                         <small class="sb-color-error pt-10 d-block" *ngIf="dialcodeControl.errors.max">
-                            This number is too large for the request
+                            {{configService.labelConfig?.lbl?.numberToolarge}}
                         </small>
                         <small class="sb-color-error pt-10 d-block" *ngIf="dialcodeControl.errors.minErr">
                             {{dialcodeControl.errors.minErr}}
@@ -52,7 +52,7 @@
                 </div>
             </div>
             <button class="sb-btn sb-btn-normal sb-btn-primary" [ngClass]="dialcodeControl.valid ? '': 'sb-btn-outline-disabled'" 
-            [disabled]="!dialcodeControl.valid" (click)="submitDialcodeForm();" >Request</button>
+            [disabled]="!dialcodeControl.valid" (click)="submitDialcodeForm();" >{{configService.labelConfig?.button_labels?.request_btn_label}}</button>
         </div>
     </div>
 </sui-modal>

@@ -15,7 +15,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
   @Input() showImagePicker;
   @Output() assetBrowserEmitter = new EventEmitter<any>();
   @Output() modalDismissEmitter = new EventEmitter<any>();
-  @ViewChild('modal', { static: false }) private modal;
+  @ViewChild('modal') private modal;
   constructor(private editorService: EditorService, public configService: ConfigService,
               private questionService: QuestionService) { }
   assetConfig: any = {};
@@ -91,7 +91,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
       req['query'] = query;
     }
     this.questionService.getAssetMedia(req).pipe(catchError(err => {
-      const errInfo = { errorMsg: 'Image search failed' };
+      const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.022') };
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     })).subscribe((res) => {
         this.assetsCount = res.result.count;
@@ -127,7 +127,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
       req['query'] = query;
     }
     this.questionService.getAssetMedia(req).pipe(catchError(err => {
-      const errInfo = { errorMsg: 'Image search failed' };
+      const errInfo = { errorMsg:  _.get(this.configService.labelConfig, 'messages.error.022')};
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     }))
       .subscribe((res) => {
@@ -165,7 +165,8 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
       this.showErrorMsg = false;
       if (fileSize > this.assetConfig.image.size) {
         this.showErrorMsg = true;
-        this.errorMsg = 'Max size allowed is ' + this.assetConfig.image.size + 'MB';
+        this.errorMsg =  _.get(this.configService.labelConfig, 'messages.error.021') +
+        this.assetConfig.image.size + this.assetConfig.image.sizeType;
         this.resetFormData();
       } else {
         this.errorMsg = '';
@@ -174,7 +175,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
       }
     } else {
       this.showErrorMsg = true;
-      this.errorMsg = 'Please choose an image file';
+      this.errorMsg = _.get(this.configService.labelConfig, 'messages.error.020');
     }
     if (!this.showErrorMsg) {
       this.imageUploadLoader = true;
@@ -199,7 +200,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
   }
   uploadAndUseImage(modal) {
     this.questionService.createMediaAsset({ content: this.assestData }).pipe(catchError(err => {
-      const errInfo = { errorMsg: 'Image upload failed' };
+      const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.019') };
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     })).subscribe((res) => {
       const imgId = res.result.node_id;
@@ -207,7 +208,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
         data: this.formData
       };
       this.questionService.uploadMedia(request, imgId).pipe(catchError(err => {
-        const errInfo = { errorMsg: 'Image upload failed' };
+        const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.019') };
         return throwError(this.editorService.apiErrorHandling(err, errInfo));
       })).subscribe((response) => {
         this.addImageInEditor(response.result.content_url, response.result.node_id);
@@ -229,7 +230,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
 
   uploadToBlob(signedURL, file, config): Observable<any> {
     return this.questionService.http.put(signedURL, file, config).pipe(catchError(err => {
-      const errInfo = { errorMsg: 'Unable to upload to Blob and Content Creation Failed, Please Try Again' };
+      const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.018') };
       this.isClosable = true;
       this.loading = false;
       return throwError(this.editorService.apiErrorHandling(err, errInfo));

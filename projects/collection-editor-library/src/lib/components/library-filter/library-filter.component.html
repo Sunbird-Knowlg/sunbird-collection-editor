@@ -4,7 +4,7 @@
       <div class="sb-search-box small no-btn">
         <div class="input-div relative">
           <i class="search icon"></i>
-          <input id="searchInputField" class="sb-search-input" [(ngModel)]="searchQuery" type="text" (keyup.enter)="onQueryEnter($event);" placeholder="Search Library"
+          <input id="searchInputField" class="sb-search-input" [(ngModel)]="searchQuery" type="text" (keyup.enter)="onQueryEnter($event);" placeholder={{configService.labelConfig?.lbl?.searchLibrary}}
           libTelemetryInteract
           [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('search_library','click',undefined, this.telemetryService?.telemetryPageId)"/>
         </div>
@@ -29,11 +29,11 @@
         <button type="button" class="sb-btn sb-btn-normal sb-btn-outline-primary ml-5" (click)="resetFilter();"
         libTelemetryInteract
         [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('reset','click','submit', this.telemetryService?.telemetryPageId)"
-        >Reset</button>
+        >{{configService.labelConfig?.button_labels?.reset_btn_label}}</button>
         <button type="button" class="sb-btn sb-btn-normal sb-btn-primary ml-15" (click)="applyFilter();"
         libTelemetryInteract
         [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('apply','click','submit', this.telemetryService?.telemetryPageId, {filters: filterValues})"
-        >Apply</button>
+        >{{configService.labelConfig?.button_labels?.apply_btn_label}}</button>
       </div>
     </div>
   </div>

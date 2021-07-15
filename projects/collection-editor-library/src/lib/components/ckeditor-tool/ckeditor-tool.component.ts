@@ -14,7 +14,7 @@ import { config } from '../asset-browser/asset-browser.data';
   styleUrls: ['./ckeditor-tool.component.scss']
 })
 export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
-  @ViewChild('editor', { static: false }) public editorRef: ElementRef;
+  @ViewChild('editor') public editorRef: ElementRef;
   @Input() editorDataInput: any;
   @Output() editorDataOutput = new EventEmitter<any>();
   @Output() hasError = new EventEmitter<any>();
@@ -31,7 +31,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
   public characterCount;
   public mediaobj;
   initialized = false;
-  public assetProxyUrl = '/assets/public/';
+  public assetProxyUrl: any;
   public lastImgResizeWidth;
   constructor(private questionService: QuestionService, private editorService: EditorService,
               private toasterService: ToasterService, public configService: ConfigService) { }
@@ -67,6 +67,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
   public emptyImageSearchMessage: any;
   public emptyVideoSearchMessage: any;
   ngOnInit() {
+    this.assetProxyUrl =  _.get(this.configService.urlConFig, 'URLS.assetProxyUrl');
     this.initialFormConfig = _.get(config, 'uploadIconFormConfig');
     this.formConfig = _.get(config, 'uploadIconFormConfig');
     this.emptyImageSearchMessage =  _.get(this.configService.labelConfig, 'messages.error.016');
@@ -75,32 +76,30 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     this.assetConfig = this.editorService.editorConfig.config.assetConfig;
     this.initialized = true;
     this.editorConfig = {
-      toolbar: ['bold', '|', 'italic', '|', 'underline',
-        '|', 'numberedList', '|', 'fontSize', '|', 'subscript', '|', 'superscript', '|', 'MathText', '|',
-        'specialCharacters', '|'
+      toolbar: ['heading', '|', 'bold', '|', 'italic', '|', 'underline', '|', 'BulletedList', '|', 'alignment',
+        '|', 'insertTable', '|', 'numberedList', '|', 'fontSize', '|', 'subscript', '|', 'superscript', '|',
+        'MathText', '|', 'specialCharacters', '|'
       ],
       fontSize: {
         options: [
-          9,
-          11,
-          13,
-          15,
-          17,
-          19,
-          21,
-          23,
-          25
+          'eight',
+          'ten',
+          'twelve',
+          'fourteen',
+          'sixteen',
+          'eighteen',
+          'twenty',
+          'twentytwo',
+          'twentyfour',
+          'twentysix',
+          'twentyeight',
+          'thirty',
+          'thirtysix'
         ]
       },
       image: {
         resizeUnit: '%',
         resizeOptions: [{
-          name: 'resizeImage:original',
-          value: null,
-          icon: 'original',
-          className: 'resize-100'
-        },
-        {
           name: 'resizeImage:25',
           value: '25',
           icon: 'small',
@@ -117,9 +116,21 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
           value: '75',
           icon: 'large',
           className: 'resize-75'
+        },
+        {
+          name: 'resizeImage:100',
+          value: '100',
+          icon: 'full',
+          className: 'resize-100'
+        },
+        {
+          name: 'resizeImage:original',
+          value: null,
+          icon: 'original',
+          className: 'resize-original'
         }],
-        toolbar: ['imageStyle:alignLeft', 'imageStyle:full',
-          'imageStyle:alignRight', 'resizeImage:25', 'resizeImage:50', 'resizeImage:75', 'resizeImage:original'],
+        toolbar: ['imageStyle:alignLeft', 'imageStyle:alignCenter', 'imageStyle:alignRight', '|',
+        'resizeImage:25', 'resizeImage:50', 'resizeImage:75',  'resizeImage:100', 'resizeImage:original'],
         styles: ['full', 'alignLeft', 'alignRight', 'alignCenter']
       },
       isReadOnly: false,
@@ -235,6 +246,25 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
 
   initializeEditors() {
     ClassicEditor.create(this.editorRef.nativeElement, {
+      alignment: {
+        options: [
+          { name: 'left', className: 'text-left' },
+          { name: 'center', className: 'text-center' },
+          { name: 'right', className: 'text-right' }
+        ]
+      },
+      heading: {
+        options: [
+          { model: 'paragraph', title: 'Paragraph' },
+          { model: 'heading1', view: 'h1', title: 'Heading 1' },
+          { model: 'heading2', view: 'h2', title: 'Heading 2' },
+          { model: 'heading3', view: 'h3', title: 'Heading 3' },
+          { model: 'heading4', view: 'h4', title: 'Heading 4' },
+          { model: 'heading5', view: 'h5', title: 'Heading 5' },
+          { model: 'heading6', view: 'h6', title: 'Heading 6' }
+        ]
+      },
+      extraPlugins: ['Table', 'Heading'],
       toolbar: this.editorConfig.toolbar,
       fontSize: this.editorConfig.fontSize,
       image: this.editorConfig.image,
@@ -254,7 +284,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
         }
         console.log('Editor was initialized');
         this.changeTracker(this.editorInstance);
-        this.attacthEvent(this.editorInstance);
+        this.attachEvent(this.editorInstance);
         // this.pasteTracker(this.editorInstance);
         this.characterCount = this.countCharacters(this.editorInstance.model.document);
       })
@@ -325,7 +355,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       req['query'] = query;
     }
     this.questionService.getAssetMedia(req).pipe(catchError(err => {
-      const errInfo = { errorMsg: 'Image search failed' };
+      const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.022') };
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     })).subscribe((res) => {
       this.assetsCount = res.result.count;
@@ -387,7 +417,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       req['query'] = query;
     }
     this.questionService.getAssetMedia(req).pipe(catchError(err => {
-      const errInfo = { errorMsg: 'Image search failed' };
+      const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.022') };
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     }))
       .subscribe((res) => {
@@ -426,7 +456,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
     this.questionService.getAssetMedia(req).pipe(catchError(err => {
-      const errInfo = { errorMsg: 'Video search failed' };
+      const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.023')};
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     })).subscribe((res) => {
       this.assetsCount = res.result.count;
@@ -458,7 +488,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
     this.questionService.getAssetMedia(req).pipe(catchError(err => {
-      const errInfo = { errorMsg: 'Video search failed' };
+      const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.023') };
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     })).subscribe((res) => {
       this.assetsCount = res.result.count;
@@ -516,7 +546,8 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       this.showErrorMsg = false;
       if (fileSize > this.assetConfig.image.size) {
         this.showErrorMsg = true;
-        this.errorMsg = 'Max size allowed is ' + this.assetConfig.image.size + 'MB';
+        this.errorMsg = _.get(this.configService.labelConfig, 'messages.error.021')
+         + this.assetConfig.image.size + this.assetConfig.image.sizeType;
         this.resetFormConfig();
       } else {
         this.errorMsg = '';
@@ -525,7 +556,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       }
     } else {
       this.showErrorMsg = true;
-      this.errorMsg = 'Please choose an image file';
+      this.errorMsg = _.get(this.configService.labelConfig, 'messages.error.020');
     }
     if (!this.showErrorMsg) {
       this.imageUploadLoader = true;
@@ -550,7 +581,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
   }
   uploadAndUseImage(modal) {
     this.questionService.createMediaAsset({ content: this.assestData }).pipe(catchError(err => {
-      const errInfo = { errorMsg: 'Image upload failed' };
+      const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.019') };
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     })).subscribe((res) => {
       const imgId = res.result.node_id;
@@ -558,7 +589,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
         data: this.formData
       };
       this.questionService.uploadMedia(request, imgId).pipe(catchError(err => {
-        const errInfo = { errorMsg: 'Image upload failed' };
+        const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.019') };
         return throwError(this.editorService.apiErrorHandling(err, errInfo));
       })).subscribe((response) => {
         this.addImageInEditor(response.result.content_url, response.result.node_id);
@@ -634,7 +665,8 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       this.showErrorMsg = false;
       if (fileSize > this.assetConfig.video.size) {
         this.showErrorMsg = true;
-        this.errorMsg = 'Max size allowed is ' + this.assetConfig.video.size + 'MB';
+        this.errorMsg = _.get(this.configService.labelConfig, 'messages.error.021') +
+         this.assetConfig.video.size + this.assetConfig.video.sizeType;
         this.resetFormConfig();
       } else {
         this.errorMsg = '';
@@ -643,7 +675,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       }
     } else {
       this.showErrorMsg = true;
-      this.errorMsg = 'Please choose an video file';
+      this.errorMsg = _.get(this.configService.labelConfig, 'messages.error.024');
     }
     if (!this.showErrorMsg) {
       this.imageUploadLoader = true;
@@ -662,7 +694,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
         this.loading = false;
         this.isClosable = true;
         this.imageFormValid = true;
-        const errInfo = { errorMsg: ' Unable to create an Asset' };
+        const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.025') };
         return throwError(this.editorService.apiErrorHandling(err, errInfo));
       })).subscribe((res) => {
         const contentId = res.result.node_id;
@@ -672,7 +704,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
           }
         };
         this.questionService.generatePreSignedUrl(request, contentId).pipe(catchError(err => {
-          const errInfo = { errorMsg: 'Unable to get pre_signed_url and Content Creation Failed, Please Try Again' };
+          const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.026') };
           this.loading = false;
           this.isClosable = true;
           this.imageFormValid = true;
@@ -708,7 +740,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
 
   uploadToBlob(signedURL, file, config): Observable<any> {
     return this.questionService.http.put(signedURL, file, config).pipe(catchError(err => {
-      const errInfo = { errorMsg: 'Unable to upload to Blob and Content Creation Failed, Please Try Again' };
+      const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.018') };
       this.isClosable = true;
       this.loading = false;
       this.imageFormValid = true;
@@ -731,7 +763,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       param: config
     };
     this.questionService.uploadMedia(option, contentId).pipe(catchError(err => {
-      const errInfo = { errorMsg: 'Unable to update pre_signed_url with Content Id and Content Creation Failed, Please Try Again' };
+      const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.027') };
       this.isClosable = true;
       this.loading = false;
       this.imageFormValid = true;
@@ -828,8 +860,8 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     });
     return src;
   }
-  // Here Event listener is attacthed to document to listen the click event from Wiris plugin ('OK'-> button)
-  attacthEvent(editor) {
+  // Here Event listener is attached to document to listen the click event from Wiris plugin ('OK'-> button)
+  attachEvent(editor) {
     document.addEventListener('click', e => {
       if (e.target && (e.target as Element).className === 'wrs_modal_button_accept') {
         editor.model.change(writer => {

@@ -25,6 +25,27 @@
       "SEARCH"  : "dialcode/v3/search",
       "LINK" : "collection/v3/dialcode/link/"
     },
-    "ContentPolicyUrl" : "/term-of-use.html" 
+    "ContentPolicyUrl" : "/term-of-use.html",
+    "assetProxyUrl": "/assets/public/",
+    "getCategoryDefinition": "object/category/definition/v1/read?fields=objectMetadata,forms,name",
+    "CONTENT": {
+    "HIERARCHY_ADD":"content/v3/hierarchy/add",
+    "READ":"content/v3/read/",
+    "CREATE":"content/v3/create",
+    "UPLOAD":"content/v3/upload/",
+    "UPLOAD_URL":"content/v3/upload/url/",
+    "UPDATE_COLLABORATOR":"content/v1/collaborator/update/"
+    },
+    "QUESTION": {
+      "LIST":"question/v1/list",
+      "READ":"question/v1/read/"
+    },
+    "frameworkRead":"framework/v1/read/",
+    "compositSearch":"composite/v3/search",
+    "channelRead":"channel/v1/read/",
+    "telemetry":"/data/v3/telemetry",
+    "USER": {
+      "SEARCH":"user/v1/search"
+    }
   }
 }
