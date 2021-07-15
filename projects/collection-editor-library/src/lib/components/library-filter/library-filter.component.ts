@@ -47,7 +47,7 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
     }));
 
     if (_.isEmpty(contentTypes)) {
-      contentTypes = this.helperService.contentPrimaryCategories;
+      contentTypes = _.map(this.helperService.contentPrimaryCategories, 'name');
     }
 
     this.currentFilters = {
@@ -129,7 +129,7 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
 
   resetFilter() {
     this.filterValues = {
-      primaryCategory: this.helperService.contentPrimaryCategories
+      primaryCategory: _.map(this.helperService.contentPrimaryCategories, 'name')
     };
     this.searchQuery = '';
     _.forEach(this.filterFields, (field) => {
