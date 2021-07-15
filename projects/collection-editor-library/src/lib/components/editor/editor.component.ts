@@ -276,7 +276,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   getHierarchyChildrenConfig(childrenData) {
     _.forEach(childrenData, (value, key) => {
-      if (!_.isEmpty(value)) {
+      if (_.isEmpty(value)) {
         switch (key) {
           case 'Question':
             childrenData[key] = _.map(this.helperService.questionPrimaryCategories, 'name') || []; 
@@ -296,6 +296,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     return childrenData;
   }
 
+  
   toolbarEventListener(event) {
     this.actionType = event.button;
     switch (event.button) {
