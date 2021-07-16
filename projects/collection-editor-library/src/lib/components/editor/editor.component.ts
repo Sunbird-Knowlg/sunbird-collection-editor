@@ -284,7 +284,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   getHierarchyChildrenConfig(childrenData) {
     _.forEach(childrenData, (value, key) => {
-      if (!_.isEmpty(value)) {
+      if (_.isEmpty(value)) {
         switch (key) {
           case 'Question':
             childrenData[key] = _.map(this.helperService.questionPrimaryCategories, 'name') || []; 
