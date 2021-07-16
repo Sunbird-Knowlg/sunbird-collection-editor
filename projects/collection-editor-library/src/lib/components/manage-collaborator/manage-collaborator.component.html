@@ -1,10 +1,10 @@
 <sui-modal *ngIf="showCollaborationPopup" [mustScroll]="true" [isClosable]="true" [transitionDuration]="0"
-    [size]="'fullscreen'" class="sb-modal sb-modal-fullscreen" appBodyScroll 
+    [size]="'fullscreen'" class="sb-modal sb-modal-fullscreen showCollaborator" appBodyScroll 
     (dismissed)="dismissCollaborationPopup()" #modal>
     <div class="sb-modal-header">
     </div>
-    <div class="sb-modal-content">
-        <div class="d-flex flex-jc-space-between py-5 flex-align-item-center h-50">
+    <div class="sb-modal-content sb-bg-color-primary-100 pt-0">
+        <div class="d-flex flex-jc-space-between py-10 flex-align-item-center h-70 sb-bg-color-white">
             <div class="fs-1 font-weight-bold">{{configService.labelConfig?.lbl?.collaborators}}</div>
                 <div>
                     <div class="sb-search-box small no-btn mr-10" *ngIf="isAddCollaboratorTab">
@@ -33,7 +33,7 @@
             </div>
     </div>
     <sui-tabset>
-        <div class="ui pointing secondary menu">
+        <div class="ui pointing secondary menu sb-bg-color-white">
             <a class="item" *ngIf="(isContentOwner || isRootOrgAdmin)" (activate)="getAllusers()" suiTabHeader="1" libTelemetryInteract
             [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('add_collaborators','click','launch', telemetryService.telemetryPageId)"
             >{{configService.labelConfig?.lbl?.addCollaborators}}</a>
@@ -42,7 +42,7 @@
             >{{configService.labelConfig?.lbl?.manageCollaborators}}</a>
         </div>
         <div class="ui segment p-0 mt-1" suiTabContent="1">
-            <div *ngIf="!users?.length">
+            <div *ngIf="!users?.length" class="p-10">
                 {{configService.labelConfig?.err?.userNotFound}}
             </div>
             <div class="d-flex py-10">
@@ -89,7 +89,7 @@
             </div>
         </div>
         <div class="ui segment  p-0 mt-1" suiTabContent="2">
-            <div *ngIf="!collaborators?.length">
+            <div *ngIf="!collaborators?.length" class="p-10">
                 {{configService.labelConfig?.err?.collaboratorsNotFound}}
             </div>
             <div *ngIf="collaborators?.length" class="w-100 pt-10">{{collaborators.length}} collaborators exists</div>
