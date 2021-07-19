@@ -713,7 +713,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       fileType: 'csv',
       fileName: this.collectionId
     };
-    this.editorService.downloadBlobUrlFile(downloadConfig);
+    window.open(downloadConfig.blobUrl, '_blank');
+    /*this.editorService.downloadBlobUrlFile(downloadConfig);*/
   }
   hanndleCsvEmitter(event) {
     switch (event.type) {
