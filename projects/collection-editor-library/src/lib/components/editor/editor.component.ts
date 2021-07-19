@@ -94,6 +94,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         const hierarchyResponse = _.first(response);
         const collection = _.get(hierarchyResponse, `result.${this.configService.categoryConfig[this.editorConfig.config.objectType]}`);
         this.toolbarConfig.title = collection.name;
+        this.toolbarConfig.isAddCollaborator = (collection.createdBy === _.get(this.editorConfig, 'context.user.id'));
         this.organisationFramework = _.get(collection, 'framework') || _.get(this.editorConfig, 'context.framework');
         this.targetFramework = _.get(collection, 'targetFWIds') || _.get(this.editorConfig, 'context.targetFWIds');
         if (this.organisationFramework) {
@@ -276,7 +277,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       if (!_.isEmpty(hierarchyConfig.hierarchy)) {
         _.forEach(hierarchyConfig.hierarchy, (hierarchyValue) => {
           if (_.get(hierarchyValue, 'children')) {
-            hierarchyConfig['children'] = this.getHierarchyChildrenConfig(_.get(hierarchyValue, 'children'));
+            hierarchyValue['children'] = this.getHierarchyChildrenConfig(_.get(hierarchyValue, 'children'));
           }
         });
       }
@@ -290,7 +291,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       if (_.isEmpty(value)) {
         switch (key) {
           case 'Question':
-            childrenData[key] = _.map(this.helperService.questionPrimaryCategories, 'name') || []; 
+            childrenData[key] = _.map(this.helperService.questionPrimaryCategories, 'name') || this.editorConfig.config.questionPrimaryCategories;; 
             break;
           case 'Content':
             childrenData[key] = _.map(this.helperService.contentPrimaryCategories, 'name') || [];
@@ -483,14 +484,20 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   previewContent() {
     this.buttonLoaders.previewButtonLoader = true;
-    this.saveContent().then(res => {
+    if (!this.isStatusReviewMode) {
+      this.saveContent().then(res => {
+        this.updateTreeNodeData();
+        this.buttonLoaders.previewButtonLoader = false;
+        this.showPreview = true;
+      }).catch(err => {
+        this.toasterService.error(err);
+        this.buttonLoaders.previewButtonLoader = false;
+      });
+    } else {
       this.updateTreeNodeData();
       this.buttonLoaders.previewButtonLoader = false;
       this.showPreview = true;
-    }).catch(err => {
-      this.toasterService.error(err);
-      this.buttonLoaders.previewButtonLoader = false;
-    });
+    }
   }
 
   sendForReview() {
@@ -718,7 +725,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       fileType: 'csv',
       fileName: this.collectionId
     };
-    this.editorService.downloadBlobUrlFile(downloadConfig);
+    window.open(downloadConfig.blobUrl, '_blank');
+    /*this.editorService.downloadBlobUrlFile(downloadConfig);*/
   }
   hanndleCsvEmitter(event) {
     switch (event.type) {
