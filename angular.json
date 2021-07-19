@@ -49,6 +49,7 @@
               }
             ],
             "styles": [
+              "node_modules/jquery.fancytree/dist/skin-lion/ui.fancytree.min.css",
               "src/assets/quml-styles/quml-carousel.css",
               "node_modules/@project-sunbird/sb-styles/assets/_styles.scss",
               "src/styles.scss",

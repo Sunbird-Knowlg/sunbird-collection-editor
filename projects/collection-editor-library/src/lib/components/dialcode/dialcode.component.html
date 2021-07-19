@@ -28,7 +28,7 @@
 <div class="seperator pr-20"></div>
 
 <sui-modal *ngIf="showQRCodePopup" [mustScroll]="true" [isClosable]="true" [transitionDuration]="0" [size]="'small'"
-    class="sb-modal bx-none overflow-modal" appBodyScroll (dismissed)="showQRCodePopup = !showQRCodePopup" #modal>
+    class="sb-modal bx-none overflow-modal dialcodeModal" appBodyScroll (dismissed)="showQRCodePopup = !showQRCodePopup" #modal>
     <div class="sb-modal-header">
         {{configService.labelConfig?.lbl?.requestForQrCode}}
     </div>
