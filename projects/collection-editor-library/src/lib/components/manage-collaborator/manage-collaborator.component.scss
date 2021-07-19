@@ -111,22 +111,3 @@
 
 .masonry-grid .ui.toggle.checkbox input:checked~.box:after{left:2rem !important;}
 
-.showCollaborator {
-  .ui.segment{
-    max-height: calc(80vh - 8em);
-    overflow-y: auto;
-  }
-  .ui.dimmer{
-    overflow-y: unset;
-  }
-  .sb-modal-content{
-    .flex-align-item-center{
-      border-bottom: solid 1px #ccc;
-      margin: 0px -16px;
-      padding: 0 20px;
-    }
-  }
-  .ui.pointing{
-    margin: 0 -15px;
-  }
-}

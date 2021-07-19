@@ -42,7 +42,7 @@
             >{{configService.labelConfig?.lbl?.manageCollaborators}}</a>
         </div>
         <div class="ui segment p-15 mt-1" suiTabContent="1">
-            <div *ngIf="!users?.length" class="p-10">
+            <div *ngIf="!users?.length">
                 {{configService.labelConfig?.err?.userNotFound}}
             </div>
             <div class="d-flex py-10">
