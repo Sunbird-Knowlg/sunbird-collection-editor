@@ -21,7 +21,7 @@ describe('FancyTreeComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      providers: [EditorTelemetryService,TreeService, EditorService,
+      providers: [EditorTelemetryService, TreeService, EditorService,
           { provide: Router, useClass: RouterStub }, ToasterService,
           { provide: ConfigService, useValue: config }],
       imports: [HttpClientTestingModule, SuiModule],
@@ -42,15 +42,15 @@ describe('FancyTreeComponent', () => {
   });
 
   it('#ngOnInit() should call #buildTree()', () => {
-    let editorService = TestBed.get(EditorService);
+    const editorService = TestBed.get(EditorService);
     component.nodes = {
       data: treeData
-    }
+    };
     spyOnProperty(editorService, 'editorConfig', 'get').and.returnValue(editorConfig);
     spyOn(component, 'buildTree');
     component.ngOnInit();
     expect(component.buildTree).toHaveBeenCalled();
-  })
+  });
 
   it('#addFromLibrary() should call #emitshowLibraryPageEvent()', () => {
     const editorService: EditorService = TestBed.get(EditorService);
@@ -59,13 +59,13 @@ describe('FancyTreeComponent', () => {
     expect(editorService.emitshowLibraryPageEvent).toHaveBeenCalledWith('showLibraryPage');
   });
 
-  it('#ngAfterViewInit() should call #getTreeConfig() and #renderTree()', ()=> {
+  it('#ngAfterViewInit() should call #getTreeConfig() and #renderTree()', () => {
     spyOn(component, 'getTreeConfig');
     spyOn(component, 'renderTree');
     component.ngAfterViewInit();
     expect(component.getTreeConfig).toHaveBeenCalled();
     expect(component.renderTree).toHaveBeenCalled();
-  })
+  });
 
   it('#addFromLibrary() should call #emitshowLibraryPageEvent()', () => {
     const editorService: EditorService = TestBed.get(EditorService);
@@ -75,21 +75,21 @@ describe('FancyTreeComponent', () => {
   });
 
   it('#handleActionButtons() should call #removeNode() if action is delete', () => {
-    const el = {'id': 'delete'}
+    const el = {id: 'delete'};
     spyOn(component, 'removeNode');
     component.handleActionButtons(el);
     expect(component.removeNode).toHaveBeenCalled();
   });
 
   it('#handleActionButtons() should call #addSibling() if action is addsibling', () => {
-    const el = {'id': 'addsibling'}
+    const el = {id: 'addsibling'};
     spyOn(component, 'addSibling');
     component.handleActionButtons(el);
     expect(component.addSibling).toHaveBeenCalled();
   });
 
   it('#handleActionButtons() should call #addChild() if action is addchild', () => {
-    const el = {'id': 'addchild'}
+    const el = {id: 'addchild'};
     spyOn(component, 'addChild');
     component.handleActionButtons(el);
     expect(component.addChild).toHaveBeenCalled();
@@ -103,132 +103,189 @@ describe('FancyTreeComponent', () => {
 
   it('#isFolder() should return false if config.objectType = QuestionSet and child.objectType = Question', () => {
     component.config = {
-      'objectType': "QuestionSet"
+      objectType: 'QuestionSet'
     };
     const child = {
-      'objectType': 'Question'
+      objectType: 'Question'
     };
 
-    let result = component.isFolder(child);
+    const result = component.isFolder(child);
     expect(result).toEqual(false);
   });
 
   it('#isFolder() should return true if child.visibility = Parent', () => {
     component.config = {
-      'objectType': "QuestionSet"
+      objectType: 'QuestionSet'
     };
     const child = {
-      'objectType': '',
-      'visibility': 'Parent'
+      objectType: '',
+      visibility: 'Parent'
     };
 
-    let result = component.isFolder(child);
+    const result = component.isFolder(child);
     expect(result).toEqual(true);
   });
 
   it('#isFolder() should return false if child.visibility != Parent', () => {
     component.config = {
-      'objectType': "QuestionSet"
+      objectType: 'QuestionSet'
     };
     const child = {
-      'objectType': '',
-      'visibility': 'Child'
+      objectType: '',
+      visibility: 'Child'
     };
 
-    let result = component.isFolder(child);
+    const result = component.isFolder(child);
     expect(result).toEqual(false);
   });
 
-  it('#isContent() should return true if config.objectType = QuestionSet and child.objectType = Question', ()=> {
+  it('#isContent() should return true if config.objectType = QuestionSet and child.objectType = Question', () => {
     component.config = {
-      'objectType': 'QuestionSet'
-    }
+      objectType: 'QuestionSet'
+    };
     const child = {
-      'objectType': 'Question'
-    }
-    let result = component.isContent(child);
+      objectType: 'Question'
+    };
+    const result = component.isContent(child);
     expect(result).toEqual(true);
-  })
+  });
 
-  it('#getIconClass() should return class = fa fa-file-o', ()=> {
+  it('#getIconClass() should return class = fa fa-file-o', () => {
     component.config = {
-      'objectType': "QuestionSet"
+      objectType: 'QuestionSet'
     };
     const child = {
-      'objectType': 'Question'
+      objectType: 'Question'
     };
 
-    let result = component.getIconClass(child, 1);
+    const result = component.getIconClass(child, 1);
     expect(result).toEqual('fa fa-file-o');
-  })
+  });
 
-  it('#getIconClass() should return class = fa fa-folder-o', ()=> {
+  it('#getIconClass() should return class = fa fa-folder-o', () => {
     component.config = {
-      'objectType': "QuestionSet"
+      objectType: 'QuestionSet'
     };
     const child = {
-      'objectType': '',
-      'visibility': 'Parent'
+      objectType: '',
+      visibility: 'Parent'
     };
 
-    let result = component.getIconClass(child, 1);
+    const result = component.getIconClass(child, 1);
     expect(result).toEqual('fa fa-folder-o');
-  })
+  });
 
-  it('#getIconClass() should return class = fa fa-file-o', ()=> {
+  it('#getIconClass() should return class = fa fa-file-o', () => {
     component.config = {
-      'objectType': "QuestionSet"
+      objectType: 'QuestionSet'
     };
     const child = {
-      'objectType': '',
-      'visibility': ''
+      objectType: '',
+      visibility: ''
     };
 
-    let result = component.getIconClass(child, 1);
+    const result = component.getIconClass(child, 1);
     expect(result).toEqual('fa fa-file-o');
-  })
+  });
 
-  it('#dragDrop() should call #dropNotAllowed()', ()=> {
+  it('#dragDrop() should call #dropNotAllowed()', () => {
     const data = {
-      'hitMode': 'before',
-      'node': {
-          'data': {
-            'root': true
+      hitMode: 'before',
+      node: {
+          data: {
+            root: true
           },
       }
-    }
+    };
     spyOn(component, 'dropNotAllowed');
     const node = {};
     component.dragDrop(node, data);
     expect(component.dropNotAllowed).toHaveBeenCalled();
-  })
+  });
 
-  it('#dragDrop() should call #dropNode()', ()=> {
+  it('#dragDrop() should call #dropNode()', () => {
     const data = {
-      'node': {
-          'data': {
-            'root': true
+      node: {
+          data: {
+            root: true
           },
       }
-    }
+    };
     component.config = {
-      'maxDepth': 2
-    }
-    spyOn(component, 'dropNode').and.callFake(()=> {
+      maxDepth: 2
+    };
+    spyOn(component, 'dropNode').and.callFake(() => {
       return true;
-    })
+    });
     const node = {};
     component.dragDrop(node, data);
     expect(component.dropNode).toHaveBeenCalled();
-  })
+  });
 
-  it('#dropNotAllowed() should return false', ()=> {
-    let result = component.dropNotAllowed();
+  it('#dropNotAllowed() should return false', () => {
+    const result = component.dropNotAllowed();
     expect(result).toBeFalsy();
-  })
+  });
 
-  it('#buildTree() should return tree objects', ()=> {
-    let result = component.buildTree(treeData, tree, 2);
+  it('#buildTree() should return tree objects', () => {
+    const result = component.buildTree(treeData, tree, 2);
     expect(result.length).toBeGreaterThan(1);
-  })
+  });
+
+  it ('#checkContentAddition() should check node hitMode', () => {
+    component.config = editorConfig;
+    const targetNode = { folder: false, getLevel: () => 2 };
+    let contentNode: any = { hitMode: 'before', otherNode : { data: { metadata: { primaryCategory: 'eTextbook'}}}};
+    const result = component.checkContentAddition(targetNode, contentNode);
+    expect(result).toBeTruthy();
+    contentNode =  { hitMode: 'over' };
+    const result1 = component.checkContentAddition(targetNode, contentNode);
+    expect(result1).toBeFalsy();
+  });
+
+  it ('#checkContentAddition() should check contentType while rearrange resources', () => {
+    component.config = editorConfig.config;
+    const targetNode = { folder: true, getLevel: () => 3 };
+    const contentNode: any = { hitMode: 'before', otherNode : { data: { metadata: { primaryCategory: 'eTextbook'}}}};
+    const result = component.checkContentAddition(targetNode, contentNode);
+    expect(result).toBeTruthy();
+  });
+
+  it ('#dropNotAllowed() should throw warning message', () => {
+    const toasterService = TestBed.inject(ToasterService);
+    spyOn(toasterService, 'warning').and.callThrough();
+    const result = component.dropNotAllowed();
+    expect(result).toBeFalsy();
+    expect(toasterService.warning).toHaveBeenCalled();
+  });
+
+  it ('#dragDrop() should throw warning message when root node', () => {
+    const toasterService = TestBed.inject(ToasterService);
+    spyOn(toasterService, 'warning').and.callThrough();
+    const targetNode = { folder: false, getLevel: () => 2 };
+    const contentNode: any = { hitMode: 'before', node: { data: { root: true } }};
+    const result = component.dragDrop(targetNode, contentNode);
+    expect(result).toBeFalsy();
+    expect(toasterService.warning).toHaveBeenCalled();
+  });
+
+  it ('#dragDrop() should drag node when maxDepth not empty', () => {
+    component.config =  editorConfig.config;
+    const targetNode = { folder: false, getLevel: () => 2 };
+    spyOn(component, 'dropNode').and.callFake(() => {
+      return true;
+    });
+    const contentNode: any = { hitMode: 'before', node: { data: { root: false } }};
+    const result = component.dragDrop(targetNode, contentNode);
+    expect(result).toBeTruthy();
+  });
+
+  it ('#dropNode() should drop node', () => {
+    component.config =  editorConfig.config;
+    const targetNode = { folder: false, getLevel: () => 2 };
+    const contentNode: any = { hitMode: 'before', otherNode: { getLevel: () => 1, moveTo: () => true }, node: { data: { root: false } }};
+    const result = component.dropNode(targetNode, contentNode);
+    expect(result).toBeTruthy();
+  });
+
 });

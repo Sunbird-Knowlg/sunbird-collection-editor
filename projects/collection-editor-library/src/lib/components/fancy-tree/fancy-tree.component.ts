@@ -347,30 +347,42 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
 
-  dropNode(node, data) {
+  dropNode(targetNode, currentNode) {
+
+    let dropAllowed;
+    dropAllowed = true;
     // tslint:disable-next-line:max-line-length
-    if (data.otherNode.folder === true && (this.maxTreeDepth(data.otherNode) + (node.getLevel() - 1)) > _.get(this.config, 'maxDepth')) {
+    if (currentNode.otherNode.getLevel() === targetNode.getLevel() && currentNode.otherNode.folder === true &&  currentNode.hitMode !== 'over') {
+      dropAllowed = true;
+    // tslint:disable-next-line:max-line-length
+    } else if (currentNode.otherNode.folder === true && (this.maxTreeDepth(currentNode.otherNode) + (targetNode.getLevel() - 1)) > _.get(this.config, 'maxDepth')) {
       return this.dropNotAllowed();
+    } else if (currentNode.otherNode.folder === false && !this.checkContentAddition(targetNode, currentNode)) {
+      dropAllowed = false;
     }
-    if (data.otherNode.folder === false && !this.checkContentAddition(node, data.otherNode)) {
-      return this.dropNotAllowed();
+
+    if (dropAllowed) {
+        currentNode.otherNode.moveTo(targetNode, currentNode.hitMode);
+        this.treeService.nextTreeStatus('reorder');
+        return true;
+    } else {
+        this.toasterService.warning(`${currentNode.otherNode.title} cannot be added to ${currentNode.node.title}`);
+        return false;
     }
-    data.otherNode.moveTo(node, data.hitMode);
-    this.treeService.nextTreeStatus('reorder');
-    return true;
+
   }
 
   dragDrop(node, data) {
     if ((data.hitMode === 'before' || data.hitMode === 'after' || data.hitMode === 'over') && data.node.data.root) {
       return this.dropNotAllowed();
     }
-    if (_.get(this.config, 'maxDepth')) {
+    if (_.has(this.config, 'maxDepth')) {
       return this.dropNode(node, data);
     }
   }
 
   dropNotAllowed() {
-    this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.007'));
+    this.toasterService.warning(_.get(this.configService, 'labelConfig.messages.error.007'));
     return false;
   }
 
@@ -393,13 +405,16 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   checkContentAddition(targetNode, contentNode): boolean {
-    if (targetNode.folder === false) {
+    if (targetNode.folder === false && (contentNode.hitMode === 'before' || contentNode.hitMode === 'after')) {
+      return true;
+    }
+    if (targetNode.folder === false && contentNode.hitMode === 'over') {
       return false;
     }
     const nodeConfig = this.config.hierarchy[`level${targetNode.getLevel() - 1}`];
     const contentPrimaryCategories = _.flatMap(_.get(nodeConfig, 'children'));
     if (!_.isEmpty(contentPrimaryCategories)) {
-      return _.includes(contentPrimaryCategories, _.get(contentNode, 'data.metadata.primaryCategory')) ? true : false;
+      return _.includes(contentPrimaryCategories, _.get(contentNode, 'otherNode.data.metadata.primaryCategory')) ? true : false;
     }
     return false;
   }
