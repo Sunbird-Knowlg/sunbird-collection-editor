@@ -273,7 +273,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       if (!_.isEmpty(hierarchyConfig.hierarchy)) {
         _.forEach(hierarchyConfig.hierarchy, (hierarchyValue) => {
           if (_.get(hierarchyValue, 'children')) {
-            hierarchyConfig['children'] = this.getHierarchyChildrenConfig(_.get(hierarchyValue, 'children'));
+            hierarchyValue['children'] = this.getHierarchyChildrenConfig(_.get(hierarchyValue, 'children'));
           }
         });
       }
