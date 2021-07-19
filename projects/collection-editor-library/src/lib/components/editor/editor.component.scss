@@ -323,6 +323,12 @@ input:focus-visible {
   border: none !important;
 }
 
+.dialcodeModal {
+  input:focus-visible {
+    border: .0625rem solid #999999 !important;
+  }
+}
+
 .sb-collectionTree-fancyTree {
 
   div:first-of-type {
