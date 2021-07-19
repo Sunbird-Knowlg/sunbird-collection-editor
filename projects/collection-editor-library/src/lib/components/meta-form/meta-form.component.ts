@@ -51,6 +51,11 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
       this.showAppIcon = false;
     }
     this.appIcon = _.get(this.nodeMetadata, 'data.metadata.appIcon');
+    if (this.isReviewMode()) {
+      this.appIconConfig = {...this.appIconConfig , ... {isAppIconEditable: false}};
+    } else {
+      this.appIconConfig = {...this.appIconConfig , ... {isAppIconEditable: true}};
+    }
     const ifEditable = this.ifFieldIsEditable('appIcon');
   }
 
