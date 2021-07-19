@@ -1,0 +1,139 @@
+<sui-modal  [mustScroll]="true" [isClosable]="isClosable" [transitionDuration]="0" [size]="'normal'"
+    class="sb-modal bx-none overflow-modal" appBodyScroll (dismissed)="closeHierarchyModal(modal)" #modal>
+    <div class="sb-modal-header">
+     <span *ngIf="isCreateCsv"> {{configService.labelConfig?.lbl?.createHierarchyCsv}} </span>
+     <span *ngIf="!isCreateCsv"> {{configService.labelConfig?.lbl?.uploadUpdateCSV}}</span>  
+
+    </div>
+    <div class="sb-modal-content">
+      <div>
+        <!-- upload csv file  -->
+        <div class="d-flex" *ngIf="uploadCSVFile">
+          <div class="pl-20 pt-20 d-block w-50">
+            <p>{{configService.labelConfig?.lbl?.downloadSampleHierarchyCSv}} </p>
+            <div class="sb-color-gray-200 fs-0-785">{{configService.labelConfig?.lbl?.makeSureFile}} </div>
+            <ul class="ui ordered list sb-dock-ordered-list mt-15">
+              <li class="item">{{configService.labelConfig?.lbl?.allColumnsAreAvailable}}</li>
+              <li class="item">{{configService.labelConfig?.lbl?.hasAllMandatoryColumn}}</li>
+              <li class="item">{{configService.labelConfig?.lbl?.noDuplicateRow}}</li>
+            </ul>
+            <a target="_blank"  (click)="downloadSampleCSVFile()"
+              class="sb-btn sb-btn-normal sb-btn-outline-primary my-20 text-decor-none sb-color-primary"><i
+              aria-hidden="true"  class="fa fa-download pr-10"></i>{{configService.labelConfig?.lbl?.downloadSampleCSV}}</a>
+          </div>
+          <div class="p-10 w-60 text-center sb-bg-color-primary-0 sb-br-primary">
+            <img src="../../assets/images/bulkuploadfile.png" alt="" class="w-20 pb-10">
+            <div id="qq-upload-actions" class="upload-file-description d-flex flex-ai-center flex-dc">
+              <h5 class="mb-8 sb-color-gray-400">
+                {{configService.labelConfig?.lbl?.dragAndDropCSV}} <br />
+              </h5>
+              <h6 class="mb-8 sb-color-gray-400 mt-10">{{configService.labelConfig?.lbl?.Or}}</h6>
+              <button class="upload-input-button sb-btn sb-btn-success sb-btn-normal"
+              libTelemetryInteract
+              [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('select_csv_upload','click',configService.labelConfig?.lbl?.selectFileToUpload,
+               this.telemetryService.telemetryPageId, {key: 'identifier', value: collectionId})"
+              ><i aria-hidden="true" class="icon upload"></i>
+                {{configService.labelConfig?.lbl?.selectFileToUpload}}  
+                <input (change)="uploadCSV($event)" accept=".csv, application/vnd.ms-excel" type="file" >
+              </button>
+              <p class="sb-color-gray-200 fs-0-785">{{configService.labelConfig?.lbl?.uploadEntries}}</p>
+            </div>
+            </div>
+        </div>  
+        <!-- update csv file  -->
+        <div class="p-20  text-center sb-bg-color-primary-0 sb-br-primary" *ngIf="updateCSVFile">
+          <img src="../../assets/images/bulkuploadfile.png" alt="" class="w-10 pb-10">
+          <div id="qq-upload-actions" class="upload-file-description d-flex flex-ai-center flex-dc">
+            <h5 class="mb-8 sb-color-gray-400">
+               {{configService.labelConfig?.lbl?.dragAndDropCSV}}<br />
+            </h5>
+            <h6 class="mb-8 sb-color-gray-400 mt-10">{{configService.labelConfig?.lbl?.Or}}</h6>
+            <button class="upload-input-button sb-btn sb-btn-success sb-btn-normal"
+            libTelemetryInteract
+            [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('select_csv_update','click',configService.labelConfig?.lbl?.selectFileToUpload,
+             this.telemetryService.telemetryPageId, {key: 'identifier', value: collectionId})"
+            ><i aria-hidden="true" class="icon upload"></i>
+              {{configService.labelConfig?.lbl?.selectFileToUpload}}  
+              <input (change)="uploadCSV($event)" accept=".csv, application/vnd.ms-excel" type="file" >
+            </button>
+            <p class="sb-color-gray-200 fs-0-785">{{configService.labelConfig?.lbl?.uploadEntries}}</p>
+          </div>
+        </div>
+        <div *ngIf="updateCSVFile" class="py-20"><i aria-hidden="true" class="icon info circle pr-10 sb-color-gray-200"></i> 
+            <span class="sb-color-gray-200 fs-0-785">{{configService.labelConfig?.lbl?.csvDownloadInstruction}}</span></div>
+        <!-- Validation message  -->
+        <div class="d-flex sb-min-h-250 flex-ai-center mn-15 sb-bg-color-primary-0" *ngIf="showCsvValidationStatus">
+          <div class="w-50 text-center">
+            <img src="../../assets/images/bulkuploadfile.png" alt="" class="w-30">
+          </div>
+        <div class="w-50">
+          <div class="pos-relative">
+            <span class="sb-loader sb-success-loader"></span>
+            <div class="font-weight-bold mb-10">
+               {{configService.labelConfig?.lbl?.pleaseWait}}
+            </div>
+            <span class="sb-color-gray-400 "> {{configService.labelConfig?.lbl?.validateCsvFile}}</span>
+          </div>
+        </div>
+      </div>
+
+        <!-- Validation failed message = 4 -->
+        <div class="d-flex sb-min-h-250 flex-ai-center" *ngIf="errorCsvStatus">
+          <div class="w-50 text-center">
+            <img src="../../assets/images/bulkuploadfile.png" alt="" class="w-30">
+          </div>
+        <div class="w-50">
+          <i class="fa fa-exclamation-triangle pr-5 sb-color-error pr-10" aria-hidden="true"></i> {{configService.labelConfig?.lbl?.hierarchyValidationError}}
+         <div class="sb-color-gray-200 pt-20 fs-0-785"> {{configService.labelConfig?.lbl?.followingErrors}}</div>
+          <ul class="mt-15 sb-circle-ul">
+            <li class="item" *ngFor="let error of errorCsvMessage">{{error}}</li>
+          </ul>
+          <div class="qq-upload-button-selector sb-btn sb-btn-normal sb-btn-success my-20" 
+          libTelemetryInteract
+          [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('select_csv_reupload','click',configService.labelConfig?.lbl?.reUploadCSV,
+           this.telemetryService.telemetryPageId, {key: 'identifier', value: collectionId})"
+           (click)="onClickReupload()">
+            <div><i aria-hidden="true" class="icon refresh"></i>{{configService.labelConfig?.lbl?.reUploadCSV}}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex sb-bg-color-success-0 p-10 sb-min-h-250 mn-15" *ngIf="showSuccessCsv">
+        <div class="w-50 text-center">
+          <img src="../../assets/images/bulkuploadfile.png" alt="" class="w-30">
+        </div>
+      <div class="w-50 flex-ai-center">
+        <div class="d-flex">
+          <i class="icon check circle outline sb-color-success" aria-hidden="true"></i>
+          <div>
+              {{configService.labelConfig?.lbl?.hierarchyValidation}}
+            <small class="font-weight-bold pt-10 d-block">{{configService.labelConfig?.lbl?.successful}}</small>
+          </div>
+      </div>
+       <div class="sb-color-gray-200 pt-20 fs-0-785">
+         <span *ngIf="isCreateCsv"> {{configService.labelConfig?.lbl?.hierarchyAdded}} </span>
+         <span *ngIf="!isCreateCsv"> {{configService.labelConfig?.lbl?.hierarchyUpdated}} </span>
+         </div>
+      </div>
+    </div>
+      </div>
+    </div>
+    <div class="sb-modal-actions">
+      <button class="sb-btn sb-btn-normal " 
+      libTelemetryInteract
+      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('close_popup','click',configService.labelConfig?.button_labels?.close_btn_label,
+       this.telemetryService.telemetryPageId, {key: 'identifier', value: collectionId})"
+      (click)="closeHierarchyModal(modal)"[disabled]="!isClosable" 
+      [ngClass]="{'sb-btn-primary': isClosable, 'sb-btn-disabled': !isClosable}" >
+         {{configService.labelConfig?.button_labels?.close_btn_label}}
+      </button>
+      <button class="sb-btn sb-btn-normal "
+      libTelemetryInteract
+      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('csv_upload','click',configService.labelConfig?.button_labels?.next_btn_label,
+       this.telemetryService.telemetryPageId, {key: 'identifier', value: collectionId})"
+      (click)="validateCSVFile()"[disabled]="!isUploadCsvEnable" 
+      [ngClass]="{'sb-btn-primary': isUploadCsvEnable, 'sb-btn-disabled': !isUploadCsvEnable}" >
+         {{configService.labelConfig?.button_labels?.next_btn_label}}
+      </button>
+    </div>
+</sui-modal>

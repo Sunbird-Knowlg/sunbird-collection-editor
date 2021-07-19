@@ -9,6 +9,7 @@ import { ToasterService} from '../../services/toaster/toaster.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { DataService } from '../data/data.service';
 import { map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 
 interface SelectedChildren {
   primaryCategory?: string;
@@ -27,7 +28,8 @@ export class EditorService {
   public contentsCount = 0;
   constructor(public treeService: TreeService, private toasterService: ToasterService,
               public configService: ConfigService, private telemetryService: EditorTelemetryService,
-              private publicDataService: PublicDataService, private dataService: DataService) { }
+              private publicDataService: PublicDataService, private dataService: DataService, public httpClient: HttpClient) {
+              }
 
   public initialize(config: IEditorConfig) {
     this._editorConfig = config;
@@ -361,6 +363,64 @@ export class EditorService {
       return false;
     } else {
       return true;
+    }
+  }
+  getHierarchyFolder() {
+    const treeObj = this.treeService.getTreeObject();
+    const contents = [];
+    if (treeObj) {
+    treeObj.visit((node) => {
+      if (node && !node.data.root) {
+        contents.push(node.data.id);
+      }
+    });
+  }
+    return contents;
+  }
+  validateCSVFile(formData, collectionnId: any) {
+    const url = _.get(this.configService.urlConFig, 'URLS.CSV.UPLOAD');
+    const reqParam = {
+      url: `${url}${collectionnId}`,
+      data: formData.data
+    };
+    return this.publicDataService.post(reqParam);
+  }
+  downloadHierarchyCsv(collectionId) {
+    const url = _.get(this.configService.urlConFig, 'URLS.CSV.DOWNLOAD');
+    const req = {
+      url: `${url}${collectionId}`,
+    };
+    return this.publicDataService.get(req);
+  }
+  generatePreSignedUrl(req, contentId: any, type) {
+    const reqParam = {
+      url: `${this.configService.urlConFig.URLS.CONTENT.UPLOAD_URL}${contentId}?type=${type}`,
+      data: {
+        request: req
+      }
+    };
+    return this.publicDataService.post(reqParam);
+  }
+  downloadBlobUrlFile(config) {
+    try {
+      this.httpClient.get(config.blobUrl, {responseType: 'blob'})
+      .subscribe(blob => {
+        const objectUrl: string = URL.createObjectURL(blob);
+        const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
+        a.href = objectUrl;
+        a.download = config.fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(objectUrl);
+        if (config.successMessage) {
+          this.toasterService.success(config.successMessage);
+        }
+      }, (error) => {
+        console.error(_.get(this.configService, 'labelConfig.messages.error.034') + error);
+      });
+    } catch (error) {
+      console.error( _.replace(_.get(this.configService, 'labelConfig.messages.error.033'), '{FILE_TYPE}', config.fileType ) + error);
     }
   }
 }

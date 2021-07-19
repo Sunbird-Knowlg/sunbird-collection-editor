@@ -6,8 +6,47 @@
         <div class="ui">
           <div class="ui twelve column grid m-0 ">
             <!-- Left Sidebar for cards -->
-            <div class="three wide column p-0 overflow-y mb-40">
-              <lib-fancy-tree  *ngIf="collectionTreeNodes && collectionTreeNodes.data"
+            <div class="p-50 sb-folder-menu" *ngIf="configObjectType">
+            <div>  {{configService.labelConfig?.lbl?.folders}} </div>
+              <a class="profile-avtar computer only p-0 pr-10" tabindex="0">
+              <div suiDropdown class="ui dropdown right top pointing z-index-9"  id="dropdown-menu-list-header">
+                  <i class="icon ellipsis vertical h-1" aria-hidden="true"  [ngClass]="{'sb-disable-icon': isStatusReviewMode}" (click)="onClickFolder()"></i>
+                  <div class="menu" suiDropdownMenu *ngIf="!isStatusReviewMode">
+                    <button type="button" class="item fs-0-785 bg-none"  
+                    libTelemetryInteract
+                    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('open_popup','click',configService.labelConfig?.lbl?.createHierarchyCsv,
+                     this.telemetryService.telemetryPageId,{key: 'dialog_id', value: configService.labelConfig?.lbl?.createHierarchyCsv})"
+                    (click)="hanndleCsvEmitter({type: 'createCsv'})" [disabled]="csvDropDownOptions.isDisableCreateCsv">
+                       <i class="icon folder outline sb-color-primary" [ngClass]="{'sb-disable-icon': csvDropDownOptions.isDisableCreateCsv}"  aria-hidden="true"></i>
+                      <span class="text" [ngClass]="{'label-disable': csvDropDownOptions.isDisableCreateCsv}">{{configService.labelConfig?.lbl?.createHierarchyCsv}}</span>
+                  </button>
+                  <div class="ui divider"></div>
+                  <button  libTelemetryInteract
+                  [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('csv_download','click',configService.labelConfig?.lbl?.downloadFoldersInCSV,
+                   this.telemetryService.telemetryPageId,{key: 'identifier', value: collectionId})"
+                  type="button" class="item fs-0-785 bg-none" (click)="hanndleCsvEmitter({type: 'downloadCsv'})" [disabled]="csvDropDownOptions.isDisableDownloadCsv">
+                      <i class="icon download sb-color-primary" [ngClass]="{'sb-disable-icon': csvDropDownOptions.isDisableDownloadCsv}" aria-hidden="true"></i> 
+                    <span class="text" [ngClass]="{'label-disable': csvDropDownOptions.isDisableDownloadCsv}" > 
+                       {{configService.labelConfig?.lbl?.downloadFoldersInCSV}}</span>
+                  </button>
+                  <div class="ui divider">
+                  </div>
+                  <button 
+                  libTelemetryInteract
+                  [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('open_popup','click',configService.labelConfig?.lbl?.uploadUpdateCSV,
+                   this.telemetryService.telemetryPageId,{key: 'dialog_id', value: configService.labelConfig?.lbl?.uploadUpdateCSV})"
+                  type="button" class="item fs-0-785 bg-none" (click)="hanndleCsvEmitter({type: 'updateCsv'})" [disabled]="csvDropDownOptions.isDisableUpdateCsv">
+                      <i class="icon upload sb-color-primary" aria-hidden="true" [ngClass]="{'label-disable': csvDropDownOptions.isDisableUpdateCsv}"></i> 
+                    <span class="text" [ngClass]="{'label-disable': csvDropDownOptions.isDisableUpdateCsv}" > 
+                      {{configService.labelConfig?.lbl?.uploadUpdateCSV}}
+                      </span>
+                  </button>
+                  </div>
+              </div>
+              </a>
+            </div>
+            <div class="three wide column p-0 overflow-y  mb-40 h-100vh" [ngClass]="{'mt-50': configObjectType}">
+              <lib-fancy-tree  *ngIf="collectionTreeNodes && collectionTreeNodes.data && ishierarchyConfigSet"
               [nodes]="collectionTreeNodes" [options]="{ showConnectors: true }" [buttonLoaders]="buttonLoaders"
               (treeEventEmitter)="treeEventListener($event)" class="sb-collectionTree-fancyTree sb-collectionTree-fancyTreelist sb-questionset-scroll">
               </lib-fancy-tree>
@@ -124,3 +163,7 @@
     libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('close','click','cancel', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'review_comments'})">{{configService.labelConfig?.button_labels?.close_btn_label}}</button>
   </div>
 </sui-modal>
+
+  <lib-csv-upload *ngIf="showCsvUploadPopup" [isCreateCsv]= "isCreateCsv"  (csvUploadEmitter)= "hanndleCsvEmitter($event)" [collectionId]="collectionId">
+  </lib-csv-upload>
+

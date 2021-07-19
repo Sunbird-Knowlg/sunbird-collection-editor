@@ -131,7 +131,7 @@ export const questionEditorConfig = {
       lastName: 'Bhuva',
       orgIds: ['01309282781705830427']
     },
-    identifier: 'do_11330102570702438417', // do_1132393548335759361558
+    identifier: 'do_1132393548335759361558', // do_11330102570702438417
     authToken: ' ',
     sid: 'iYO2K6dOSdA0rwq7NeT1TDzS-dbqduvV',
     did: '7e85b4967aebd6704ba1f604f20056b6',
@@ -236,7 +236,11 @@ export const questionEditorConfig = {
     }
   },
   config: {
-    mode: 'edit', // edit / review / read / sourcingReview
+    mode: 'review', // edit / review / read / sourcingReview
+    editableFields: {
+      //sourcingreview: ['instructions'],
+      review: ['name', 'learningOutcome'],
+    },
     maxDepth: 0,
     objectType: 'QuestionSet',
     primaryCategory: 'Practice Question Set',

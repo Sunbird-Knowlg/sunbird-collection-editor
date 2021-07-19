@@ -11,6 +11,7 @@ import { mockData } from './dialcode.component.spec.data';
 import { ConfigService } from '../../services/config/config.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
 import { HttpClient } from '@angular/common/http';
+import { EditorService } from '../../services/editor/editor.service';
 
 describe('DialcodeComponent', () => {
   let component: DialcodeComponent;
@@ -35,7 +36,7 @@ describe('DialcodeComponent', () => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule, HttpClientTestingModule ],
       declarations: [ DialcodeComponent, TelemetryInteractDirective ],
-      providers: [TreeService, DialcodeService, { provide: ConfigService, useValue: configServiceData}, ToasterService],
+      providers: [TreeService, DialcodeService, EditorService, { provide: ConfigService, useValue: configServiceData}, ToasterService],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
     })
     .compileComponents();
@@ -221,16 +222,17 @@ describe('DialcodeComponent', () => {
   });
 
   it('#downloadFile() should download the file', () => {
-    const toasterService = TestBed.get(ToasterService);
-    spyOn(toasterService, 'success').and.callThrough();
-    spyOn(URL, 'createObjectURL').and.callFake((data) => {});
-    const http = TestBed.get(HttpClient);
-    spyOn(http, 'get').and.returnValue(of({ test: 'ok' }));
+    const config = {
+      // tslint:disable-next-line:max-line-length
+       blobUrl: 'https://sunbirddev.blob.core.windows.net/dial/01309282781705830427/do_113296158955659264158_1623066349548.zip',
+       successMessage: 'QR codes downloaded',
+       fileType: 'zip',
+       fileName: 'test'
+  };
+    const editorService = TestBed.get(EditorService);
+    spyOn(editorService, 'downloadBlobUrlFile').and.callThrough();
     component.downloadFile(mockData.downloadQRcodeCompleted.result.url, 'test');
-    expect(http.get).toHaveBeenCalled();
-    expect(http.get).toHaveBeenCalledTimes(1);
-    expect(http.get).toHaveBeenCalledWith(mockData.downloadQRcodeCompleted.result.url, { responseType: 'blob' });
-    expect(toasterService.success).toHaveBeenCalledWith(configServiceData.labelConfig.messages.success['011']);
+    expect(editorService.downloadBlobUrlFile).toHaveBeenCalledWith(config);
   });
 
   it('#keyPressNumbers() should return expected data', () => {

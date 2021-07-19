@@ -10,6 +10,7 @@ import * as labelConfig from '../../services/config/label.config.json';
 import * as categoryConfig from '../../services/config/category.config.json';
 import { of } from 'rxjs';
 import { PublicDataService } from '../public-data/public-data.service';
+import { ToasterService} from '../../services/toaster/toaster.service';
 
 
 describe('EditorService', () => {
@@ -19,7 +20,15 @@ describe('EditorService', () => {
     labelConfig: (labelConfig as any).default,
     categoryConfig: (categoryConfig as any).default
   };
-
+  const configServiceData = {
+    labelConfig: {
+      messages: {
+        success: {
+          '011': 'File downloaded'
+        },
+      }
+    }
+  };
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientModule],
@@ -224,11 +233,123 @@ describe('EditorService', () => {
     expect(result).toBe(true);
   });
 
+  it('#checkIfContentsCanbeAdded() should return false', () => {
+    spyOn(editorService.treeService, 'getTreeObject').and.callFake(() => undefined);
+    const content = editorService.getHierarchyFolder();
+    expect(editorService.treeService.getTreeObject).toHaveBeenCalled();
+    expect(content.length).toEqual(0);
+  });
   it('#checkIfContentsCanbeAdded() should return false', ()=> {
     editorService.contentsCount = 0;
     spyOn(editorService, 'getContentChildrens').and.callFake(() => [1,2,3,4,5,6,7,8,9,10]);
     let result = editorService.checkIfContentsCanbeAdded();
     expect(editorService.getContentChildrens).toHaveBeenCalled();
     expect(result).toBe(false);
+  });
+  it('#downloadBlobUrlFile() should download the file', () => {
+    const service: EditorService = TestBed.get(EditorService);
+    const http = TestBed.get(HttpClient);
+    const toasterService = TestBed.get(ToasterService);
+    spyOn(toasterService, 'success').and.callThrough();
+    spyOn(URL, 'createObjectURL').and.callFake((data) => { });
+    spyOn(http, 'get').and.returnValue(of({ test: 'ok' }));
+    const downloadConfig = {
+      // tslint:disable-next-line:max-line-length
+      blobUrl: 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/textbook/toc/do_113312173590659072160_dev-testing-1_1625022971409.csv',
+      successMessage: 'File downloaded',
+      fileType: 'csv',
+      fileName: 'do_113312173590659072160'
+    };
+    service.downloadBlobUrlFile(downloadConfig);
+    expect(http.get).toHaveBeenCalled();
+    expect(http.get).toHaveBeenCalledTimes(1);
+    expect(http.get).toHaveBeenCalledWith(downloadConfig.blobUrl, { responseType: 'blob' });
+    expect(toasterService.success).toHaveBeenCalledWith(configServiceData.labelConfig.messages.success['011']);
+  });
+  it('#downloadBlobUrlFile() should download the file and dose not show toaster message', () => {
+    const service: EditorService = TestBed.get(EditorService);
+    const http = TestBed.get(HttpClient);
+    const toasterService = TestBed.get(ToasterService);
+    spyOn(toasterService, 'success').and.callThrough();
+    spyOn(URL, 'createObjectURL').and.callFake((data) => { });
+    spyOn(http, 'get').and.returnValue(of({ test: 'ok' }));
+    const downloadConfig = {
+      // tslint:disable-next-line:max-line-length
+      blobUrl: 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/textbook/toc/do_113312173590659072160_dev-testing-1_1625022971409.csv',
+      successMessage: false,
+      fileType: 'csv',
+      fileName: 'do_113312173590659072160'
+    };
+    service.downloadBlobUrlFile(downloadConfig);
+    expect(http.get).toHaveBeenCalled();
+    expect(http.get).toHaveBeenCalledTimes(1);
+    expect(http.get).toHaveBeenCalledWith(downloadConfig.blobUrl, { responseType: 'blob' });
+    expect(toasterService.success).not.toHaveBeenCalledWith(configServiceData.labelConfig.messages.success['011']);
+  });
+  it('#downloadHierarchyCsv() should downloadHierarchyCsv', async () => {
+    const publicDataService: PublicDataService = TestBed.get(PublicDataService);
+    spyOn(publicDataService, 'get').and.returnValue(of({
+      id: 'api.collection.export',
+      ver: '4.0',
+      ts: '2021-07-05T07:43:10ZZ',
+      params: {
+        resmsgid: 'd54936f9-9f9a-449a-a797-5564d5a97c6c',
+        msgid: null,
+        err: null,
+        status: 'successful',
+        errmsg: null
+      },
+      responseCode: 'OK',
+      result: {
+        collection: {
+          // tslint:disable-next-line:max-line-length
+          tocUrl: 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/textbook/toc/do_113312173590659072160_dev-testing-1_1625022971409.csv',
+          ttl: '54000'
+        }
+      }
+    }));
+    editorService.downloadHierarchyCsv('do_113312173590659072160').subscribe(data => {
+      expect(data.responseCode).toBe('OK');
+    });
+  });
+  it('#validateCSVFile() should validateCSVFile', async () => {
+    const publicDataService: PublicDataService = TestBed.get(PublicDataService);
+    const file = new File([''], 'filename', { type: 'csv/text' });
+    const event = {
+      target: {
+        files: [
+          file
+        ]
+      }
+    };
+    spyOn(publicDataService, 'post').and.returnValue(of({
+      id: 'api.collection.import',
+      ver: '4.0',
+      ts: '2021-07-05T08:28:06ZZ',
+      params: {
+        resmsgid: 'f151855b-98fd-4baf-b8dc-00c31cc47b71',
+        msgid: null,
+        err: 'INVALID_CSV_FILE',
+        status: 'failed',
+        errmsg: 'Please provide valid csv file. Please check for data columns without headers.'
+      },
+      responseCode: 'CLIENT_ERROR',
+      result: {
+        messages: null
+      }
+    }));
+    editorService.validateCSVFile(event.target.files[0], 'do_113312173590659072160').subscribe(data => {
+    },
+      error => {
+        expect(error.error.responseCode).toBe('CLIENT_ERROR');
+
+      });
+  });
+  it('#generatePreSignedUrl() should call generatePreSignedUrl',  () => {
+    const publicDataService: PublicDataService = TestBed.get(PublicDataService);
+    spyOn(publicDataService, 'post').and.returnValue(of());
+    const returnValue = editorService.generatePreSignedUrl({}, 'do_113312173590659072160', 'hierarchy');
+    expect(publicDataService.post).toHaveBeenCalled();
+    expect(returnValue).toBeDefined();
   });
 });
