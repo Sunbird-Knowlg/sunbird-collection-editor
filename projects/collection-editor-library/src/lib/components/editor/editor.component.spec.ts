@@ -631,6 +631,7 @@ describe('EditorComponent', () => {
         }
       }
     };
+    component.isObjectTypeCollection = false;
     spyOn(component, 'updateTreeNodeData').and.callFake(() => {
       return true;
     });
@@ -877,6 +878,22 @@ describe('EditorComponent', () => {
     spyOn(component, 'isReviewMode').and.returnValue(true);
     const value = component.isReviewMode();
     expect(value).toBeTruthy();
+  });
+  it('#handleCsvDropdownOptionsOnCollection should set dropdown status initially', () => {
+    spyOn(component, 'setCsvDropDownOptionsDisable').and.callThrough();
+    component.isComponenetInitialized = true;
+    component.handleCsvDropdownOptionsOnCollection();
+    expect(component.isEnableCvsAction).toBeTruthy();
+    expect(component.isComponenetInitialized).toBeFalsy();
+    expect(component.setCsvDropDownOptionsDisable).toHaveBeenCalledWith(true, true, true);
+  });
+  it('#handleCsvDropdownOptionsOnCollection should set isEnableCvsAction status false', () => {
+    spyOn(component, 'setCsvDropDownOptionsDisable').and.callThrough();
+    component.isComponenetInitialized = false;
+    component.handleCsvDropdownOptionsOnCollection();
+    expect(component.isEnableCvsAction).toBeFalsy();
+    expect(component.isComponenetInitialized).toBeFalsy();
+    expect(component.setCsvDropDownOptionsDisable).toHaveBeenCalledWith(true, true, true);
   });
 });
 
