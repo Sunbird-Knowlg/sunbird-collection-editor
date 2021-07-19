@@ -41,7 +41,7 @@
             [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('manage_collaborators','click','launch', telemetryService.telemetryPageId)"
             >{{configService.labelConfig?.lbl?.manageCollaborators}}</a>
         </div>
-        <div class="ui segment p-0 mt-1" suiTabContent="1">
+        <div class="ui segment p-15 mt-1" suiTabContent="1">
             <div *ngIf="!users?.length" class="p-10">
                 {{configService.labelConfig?.err?.userNotFound}}
             </div>
@@ -88,7 +88,7 @@
                 </div>
             </div>
         </div>
-        <div class="ui segment  p-0 mt-1" suiTabContent="2">
+        <div class="ui segment  p-15 mt-1" suiTabContent="2">
             <div *ngIf="!collaborators?.length" class="p-10">
                 {{configService.labelConfig?.err?.collaboratorsNotFound}}
             </div>
