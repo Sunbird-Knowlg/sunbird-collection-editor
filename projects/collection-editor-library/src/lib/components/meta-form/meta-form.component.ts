@@ -51,11 +51,7 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
       this.showAppIcon = false;
     }
     this.appIcon = _.get(this.nodeMetadata, 'data.metadata.appIcon');
-    if (this.isReviewMode()) {
-      this.appIconConfig = {...this.appIconConfig , ... {isAppIconEditable: false}};
-    } else {
-      this.appIconConfig = {...this.appIconConfig , ... {isAppIconEditable: true}};
-    }
+    const ifEditable = this.ifFieldIsEditable('appIcon');
   }
 
   fetchFrameWorkDetails() {
@@ -223,9 +219,8 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
           });
         }
 
-        if (this.isReviewMode()) {
-          _.set(field, 'editable', false);
-        }
+        const ifEditable = this.ifFieldIsEditable(field.code); 
+        _.set(field, 'editable', ifEditable);
 
       });
     });
@@ -233,9 +228,20 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
     this.formFieldProperties = _.cloneDeep(formConfig);
     console.log(this.formFieldProperties);
   }
- isReviewMode() {
-  return  _.includes(['review', 'read', 'sourcingreview' ], this.editorService.editorMode);
- }
+  isReviewMode() {
+    return  _.includes(['review', 'read', 'sourcingreview' ], this.editorService.editorMode);
+  }
+  ifFieldIsEditable(fieldCode) {
+    const ediorMode = this.editorService.editorMode;
+    if (!this.isReviewMode()) {
+      return true;
+    }
+    const editableFields = _.get(this.editorService.editorConfig.config, 'editableFields');
+    if (editableFields && !_.isEmpty(editableFields[ediorMode]) && _.includes(editableFields[ediorMode], fieldCode)) {
+      return true;
+    }
+    return false;
+  }
   outputData(eventData: any) { }
 
   onStatusChanges(event) {
