@@ -92,6 +92,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         const hierarchyResponse = _.first(response);
         const collection = _.get(hierarchyResponse, `result.${this.configService.categoryConfig[this.editorConfig.config.objectType]}`);
         this.toolbarConfig.title = collection.name;
+        this.toolbarConfig.isAddCollaborator = (collection.createdBy === _.get(this.editorConfig, 'context.user.id'));
         this.organisationFramework = _.get(collection, 'framework') || _.get(this.editorConfig, 'context.framework');
         this.targetFramework = _.get(collection, 'targetFWIds') || _.get(this.editorConfig, 'context.targetFWIds');
         if (this.organisationFramework) {
