@@ -36,15 +36,15 @@
 .flex-align-item-center{
   align-items: center;
 }
-.h-50{
-  height: 50px;
+.h-70{
+  height: 70px;
 }
 .mt-50{
   margin-top: 50px;
 }
 
 .sb-card {
-  width: 18.57rem;
+  width: 18.1rem;
   background-color: var(--white);
   border: .0625rem solid #dedede;
   border-radius: .25rem;
@@ -110,3 +110,4 @@
 }
 
 .masonry-grid .ui.toggle.checkbox input:checked~.box:after{left:2rem !important;}
+

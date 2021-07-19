@@ -415,3 +415,22 @@ sb-dynamic-richtext .ck-content .table{
 }
 .sb-disable-icon{color:#ccc !important;}
 .sb-w-240px{width:240px}
+.showCollaborator{
+  .ui.dimmer{
+    overflow-y: unset !important;
+  }
+  .ui.segment{
+    max-height: calc(80vh - 8em)  !important;
+    overflow-y: auto  !important;
+  }
+  .sb-modal-content{
+    .flex-align-item-center{
+      border-bottom: solid 1px #ccc;
+      margin: 0px -16px;
+      padding: 0 20px;
+    }
+  }
+  .ui.pointing{
+    margin: 0 -15px !important;
+  }
+}
