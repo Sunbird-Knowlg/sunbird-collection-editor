@@ -66,7 +66,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public isObjectTypeCollection: any;
   public isCreateCsv = true;
   public isStatusReviewMode = false;
-  public isEnableCvsAction : any;
+  public isEnableCsvAction : any;
   public isComponenetInitialized: any;
   public ishierarchyConfigSet =  false;
   public addCollaborator: boolean;
@@ -325,10 +325,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.saveContent().then((message: string) => {
           this.buttonLoaders.saveAsDraftButtonLoader = false;
           this.toasterService.success(message);
-          this.isEnableCvsAction = true;
+          this.isEnableCsvAction = true;
         }).catch(((error: string) => {
           this.buttonLoaders.saveAsDraftButtonLoader = false;
-          this.isEnableCvsAction = false;
+          this.isEnableCsvAction = false;
           this.toasterService.error(error);
         }));
         break;
@@ -689,15 +689,15 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   handleCsvDropdownOptionsOnCollection() {
     if(this.isComponenetInitialized) {
-      this.isEnableCvsAction = true;
+      this.isEnableCsvAction = true;
       this.isComponenetInitialized = false;
     } else {
-      this.isEnableCvsAction = false;
+      this.isEnableCsvAction = false;
     }
     this.setCsvDropDownOptionsDisable(true, true, true);
   }
   onClickFolder() {
-    if (this.isEnableCvsAction) {
+    if (this.isEnableCsvAction) {
      const status =  this.editorService.getHierarchyFolder().length ? true : false;
      this.setCsvDropDownOptionsDisable(status, !status, !status);
   }

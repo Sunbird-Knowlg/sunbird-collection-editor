@@ -806,7 +806,7 @@ describe('EditorComponent', () => {
   });
   it('#onClickFolder() should call onClickFolder and set csv create and update options', () => {
     component.isStatusReviewMode = false;
-    component.isEnableCvsAction = true;
+    component.isEnableCsvAction = true;
     spyOn(component, 'setCsvDropDownOptionsDisable');
     // tslint:disable-next-line:no-string-literal
     spyOn(component['editorService'], 'getHierarchyFolder').and.callFake(() => [1]);
@@ -883,15 +883,15 @@ describe('EditorComponent', () => {
     spyOn(component, 'setCsvDropDownOptionsDisable').and.callThrough();
     component.isComponenetInitialized = true;
     component.handleCsvDropdownOptionsOnCollection();
-    expect(component.isEnableCvsAction).toBeTruthy();
+    expect(component.isEnableCsvAction).toBeTruthy();
     expect(component.isComponenetInitialized).toBeFalsy();
     expect(component.setCsvDropDownOptionsDisable).toHaveBeenCalledWith(true, true, true);
   });
-  it('#handleCsvDropdownOptionsOnCollection should set isEnableCvsAction status false', () => {
+  it('#handleCsvDropdownOptionsOnCollection should set isEnableCsvAction status false', () => {
     spyOn(component, 'setCsvDropDownOptionsDisable').and.callThrough();
     component.isComponenetInitialized = false;
     component.handleCsvDropdownOptionsOnCollection();
-    expect(component.isEnableCvsAction).toBeFalsy();
+    expect(component.isEnableCsvAction).toBeFalsy();
     expect(component.isComponenetInitialized).toBeFalsy();
     expect(component.setCsvDropDownOptionsDisable).toHaveBeenCalledWith(true, true, true);
   });
