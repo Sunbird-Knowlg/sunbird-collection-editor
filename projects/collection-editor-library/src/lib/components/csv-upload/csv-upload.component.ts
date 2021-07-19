@@ -98,6 +98,7 @@ export class CsvUploadComponent implements OnInit {
     this.errorCsvMessage = '';
     this.isUploadCsvEnable = false;
     this.file = null;
+    this.fileName = '';
   }
   downloadSampleCSVFile() {
     const downloadConfig = {

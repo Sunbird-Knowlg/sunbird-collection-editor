@@ -116,7 +116,7 @@ describe('EditorComponent', () => {
     expect(telemetryService.initializeTelemetry).toHaveBeenCalled();
     expect(telemetryService.telemetryPageId).toEqual('collection_editor');
     expect(telemetryService.start).toHaveBeenCalled();
-    expect(component.configObjectType).toBeTruthy();
+    expect(component.isObjectTypeCollection).toBeTruthy();
     expect(component.isStatusReviewMode).toBeTruthy();
   });
 
@@ -805,18 +805,17 @@ describe('EditorComponent', () => {
   });
   it('#onClickFolder() should call onClickFolder and set csv create and update options', () => {
     component.isStatusReviewMode = false;
+    component.isEnableCvsAction = true;
     spyOn(component, 'setCsvDropDownOptionsDisable');
     // tslint:disable-next-line:no-string-literal
     spyOn(component['editorService'], 'getHierarchyFolder').and.callFake(() => [1]);
-    spyOn(component, 'saveContent').and.returnValue(Promise.resolve('Content is saved'));
     component.onClickFolder();
     // tslint:disable-next-line:no-string-literal
     const status =  component['editorService'].getHierarchyFolder().length ? true : false;
-    expect(component.saveContent).toHaveBeenCalled();
     expect(status).toBeTruthy();
     // tslint:disable-next-line:no-string-literal
     expect(component['editorService'].getHierarchyFolder).toHaveBeenCalled();
-    expect(component.setCsvDropDownOptionsDisable).toHaveBeenCalledWith(true, true, true);
+    expect(component.setCsvDropDownOptionsDisable).toHaveBeenCalledWith(true, false, false);
   });
 
   it('#setCsvDropDownOptionsDisable and should set csv dropdown options', () => {
