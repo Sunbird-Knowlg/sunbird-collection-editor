@@ -17,14 +17,15 @@
             "accepted": "mp4, webm"
           }
     },
+    "questionPrimaryCategories": ["Multiple Choice Question", "Subjective Question"], 
     "contentPrimaryCategories": ["Course Assessment", "eTextbook", "Explanation Content", "Learning Resource", "Practice Question Set"],
     "readQuestionFields": "body,primaryCategory,mimeType,qType,answer,templateId,responseDeclaration,interactionTypes,interactions,name,solutions,editorState,media,",
     "omitFalseyProperties":["topic", "topicsIds", "targetTopicIds", "keywords"],
     "questionSet": {
-      "maxQuestionsLimit": "500"
+      "maxQuestionsLimit": "10"
     },
     "collection": {
-      "maxContentsLimit": "1000"
+      "maxContentsLimit": "50"
     },
     "showAddCollaborator": false
 }

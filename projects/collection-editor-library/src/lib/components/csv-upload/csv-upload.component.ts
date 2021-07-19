@@ -106,7 +106,8 @@ export class CsvUploadComponent implements OnInit {
       fileType: 'csv',
       fileName: this.collectionId
     };
-    this.editorService.downloadBlobUrlFile(downloadConfig);
+    window.open(downloadConfig.blobUrl, '_blank');
+    /*this.editorService.downloadBlobUrlFile(downloadConfig);*/
   }
   uploadToBlob(signedURL, file, config): Observable<any> {
     return this.editorService.httpClient.put(signedURL, file, config).pipe(catchError(err => {
