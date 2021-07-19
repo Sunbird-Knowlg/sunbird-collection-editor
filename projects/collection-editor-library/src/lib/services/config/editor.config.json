@@ -21,10 +21,10 @@
     "readQuestionFields": "body,primaryCategory,mimeType,qType,answer,templateId,responseDeclaration,interactionTypes,interactions,name,solutions,editorState,media,",
     "omitFalseyProperties":["topic", "topicsIds", "targetTopicIds", "keywords"],
     "questionSet": {
-      "maxQuestionsLimit": "500"
+      "maxQuestionsLimit": "10"
     },
     "collection": {
-      "maxContentsLimit": "1000"
+      "maxContentsLimit": "50"
     },
     "showAddCollaborator": false
 }
