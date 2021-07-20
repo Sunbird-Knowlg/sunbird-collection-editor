@@ -34,9 +34,10 @@
                this.telemetryService.telemetryPageId, {key: 'identifier', value: collectionId})"
               ><i aria-hidden="true" class="icon upload"></i>
                 {{configService.labelConfig?.lbl?.selectFileToUpload}}  
-                <input (change)="uploadCSV($event)" accept=".csv, application/vnd.ms-excel" type="file" >
+                <input (change)="uploadCSV($event)" accept=".csv" type="file" >
               </button>
               <p class="sb-color-gray-200 fs-0-785">{{configService.labelConfig?.lbl?.uploadEntries}}</p>
+              <span class="sb-color-primary fs-0-785" *ngIf="fileName">{{fileName}}</span>
             </div>
             </div>
         </div>  
@@ -54,9 +55,10 @@
              this.telemetryService.telemetryPageId, {key: 'identifier', value: collectionId})"
             ><i aria-hidden="true" class="icon upload"></i>
               {{configService.labelConfig?.lbl?.selectFileToUpload}}  
-              <input (change)="uploadCSV($event)" accept=".csv, application/vnd.ms-excel" type="file" >
+              <input (change)="uploadCSV($event)" accept=".csv" type="file" >
             </button>
             <p class="sb-color-gray-200 fs-0-785">{{configService.labelConfig?.lbl?.uploadEntries}}</p>
+            <span class="sb-color-primary  fs-0-785" *ngIf="fileName">{{fileName}}</span>
           </div>
         </div>
         <div *ngIf="updateCSVFile" class="py-20"><i aria-hidden="true" class="icon info circle pr-10 sb-color-gray-200"></i> 
@@ -106,14 +108,10 @@
         <div class="d-flex">
           <i class="icon check circle outline sb-color-success" aria-hidden="true"></i>
           <div>
-              {{configService.labelConfig?.lbl?.hierarchyValidation}}
-            <small class="font-weight-bold pt-10 d-block">{{configService.labelConfig?.lbl?.successful}}</small>
+            <span *ngIf="isCreateCsv" class="fs-0-92"> {{configService.labelConfig?.lbl?.hierarchyAdded}} </span>
+            <span *ngIf="!isCreateCsv" class="fs-0-92"> {{configService.labelConfig?.lbl?.hierarchyUpdated}} </span>
           </div>
       </div>
-       <div class="sb-color-gray-200 pt-20 fs-0-785">
-         <span *ngIf="isCreateCsv"> {{configService.labelConfig?.lbl?.hierarchyAdded}} </span>
-         <span *ngIf="!isCreateCsv"> {{configService.labelConfig?.lbl?.hierarchyUpdated}} </span>
-         </div>
       </div>
     </div>
       </div>
