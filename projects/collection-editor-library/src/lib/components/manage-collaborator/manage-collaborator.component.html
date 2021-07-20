@@ -33,7 +33,7 @@
             </div>
     </div>
     <sui-tabset>
-        <div class="ui pointing secondary menu sb-bg-color-white">
+        <div class="ui pointing secondary menu">
             <a class="item" *ngIf="(isContentOwner || isRootOrgAdmin)" (activate)="getAllusers()" suiTabHeader="1" libTelemetryInteract
             [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('add_collaborators','click','launch', telemetryService.telemetryPageId)"
             >{{configService.labelConfig?.lbl?.addCollaborators}}</a>
@@ -41,13 +41,13 @@
             [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('manage_collaborators','click','launch', telemetryService.telemetryPageId)"
             >{{configService.labelConfig?.lbl?.manageCollaborators}}</a>
         </div>
-        <div class="ui segment p-15 mt-1" suiTabContent="1">
-            <div *ngIf="!users?.length">
+        <div class="ui segment p-15 mt-1 sb-bg-color-primary-100" suiTabContent="1">
+            <div *ngIf="!users?.length" class="font-weight-bold sb-bg-color-white p-10">
                 {{configService.labelConfig?.err?.userNotFound}}
             </div>
             <div class="d-flex py-10">
-                <div *ngIf="users?.length" class="w-100 pt-10">Showing {{users.length}} out of {{allUsersCount}}</div>
-                <select class="search dropdown py-5 sb-bg-color-white mb-10" *ngIf="users?.length"
+                <div *ngIf="users?.length" class="w-100 pt-10 font-weight-bold">Showing {{users.length}} out of {{allUsersCount}}</div>
+                <select class="search dropdown py-5 sb-bg-color-white mb-10 font-weight-bold" *ngIf="users?.length"
                 (change)="sortUsersList($event.target.value)">
                     <option value="">Sort By</option>
                     <option value="firstName">Name</option>
@@ -88,11 +88,11 @@
                 </div>
             </div>
         </div>
-        <div class="ui segment  p-15 mt-1" suiTabContent="2">
-            <div *ngIf="!collaborators?.length" class="p-10">
+        <div class="ui segment  p-15 mt-1 sb-bg-color-primary-100" suiTabContent="2">
+            <div *ngIf="!collaborators?.length" class="p-10 font-weight-bold sb-bg-color-white">
                 {{configService.labelConfig?.err?.collaboratorsNotFound}}
             </div>
-            <div *ngIf="collaborators?.length" class="w-100 pt-10">{{collaborators.length}} collaborators exists</div>
+            <div *ngIf="collaborators?.length" class="w-100 pt-10 font-weight-bold">{{collaborators.length}} collaborators exists</div>
             <div class="masonry-grid mt-20" *ngIf="collaborators?.length">
                 <div *ngFor="let collaborator of collaborators" class="sb-card">
                     <div class="sb-card-body">
