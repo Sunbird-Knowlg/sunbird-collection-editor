@@ -881,18 +881,18 @@ describe('EditorComponent', () => {
   });
   it('#handleCsvDropdownOptionsOnCollection should set dropdown status initially', () => {
     spyOn(component, 'setCsvDropDownOptionsDisable').and.callThrough();
-    component.isComponenetInitialized = true;
+    component.isTreeInitialized = true;
     component.handleCsvDropdownOptionsOnCollection();
     expect(component.isEnableCsvAction).toBeTruthy();
-    expect(component.isComponenetInitialized).toBeFalsy();
+    expect(component.isTreeInitialized).toBeFalsy();
     expect(component.setCsvDropDownOptionsDisable).toHaveBeenCalledWith(true, true, true);
   });
   it('#handleCsvDropdownOptionsOnCollection should set isEnableCsvAction status false', () => {
     spyOn(component, 'setCsvDropDownOptionsDisable').and.callThrough();
-    component.isComponenetInitialized = false;
+    component.isTreeInitialized = false;
     component.handleCsvDropdownOptionsOnCollection();
     expect(component.isEnableCsvAction).toBeFalsy();
-    expect(component.isComponenetInitialized).toBeFalsy();
+    expect(component.isTreeInitialized).toBeFalsy();
     expect(component.setCsvDropDownOptionsDisable).toHaveBeenCalledWith(true, true, true);
   });
 });

@@ -67,7 +67,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public isCreateCsv = true;
   public isStatusReviewMode = false;
   public isEnableCsvAction : any;
-  public isComponenetInitialized: any;
+  public isTreeInitialized: any;
   public ishierarchyConfigSet =  false;
   public addCollaborator: boolean;
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
@@ -241,7 +241,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   mergeCollectionExternalProperties(): Observable<any> {
     const requests = [];
     this.collectionTreeNodes = null;
-    this.isComponenetInitialized = true;
+    this.isTreeInitialized = true;
     const objectType = this.configService.categoryConfig[this.editorConfig.config.objectType];
     requests.push(this.editorService.fetchCollectionHierarchy(this.collectionId));
     if (objectType === 'questionSet') {
@@ -309,6 +309,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   
   toggleCollaboratorModalPoup() {
+    this.isEnableCsvAction = true;
     if (this.addCollaborator) {
       this.addCollaborator = false;
     } else if (!this.addCollaborator) {
@@ -357,6 +358,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         const selectedNode = this.treeService.getActiveNode();
         if (selectedNode && selectedNode.data.id) {
           this.formStatusMapper[selectedNode.data.id] = event.event.isValid;
+        }
+        if(this.isObjectTypeCollection) {
+          this.handleCsvDropdownOptionsOnCollection();
         }
         break;
       case 'onFormValueChange':
@@ -688,9 +692,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     return false;
   }
   handleCsvDropdownOptionsOnCollection() {
-    if(this.isComponenetInitialized) {
+    if(this.isTreeInitialized) {
       this.isEnableCsvAction = true;
-      this.isComponenetInitialized = false;
+      this.isTreeInitialized = false;
     } else {
       this.isEnableCsvAction = false;
     }
