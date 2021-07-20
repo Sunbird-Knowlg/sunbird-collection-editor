@@ -1,3 +1,5 @@
+@import "~@jquery.fancytree/dist/skin-lion/ui.fancytree.min.css";
+
 .optionsArrayMap,
 .optionsLast,
 .optionsArray {
@@ -328,40 +330,100 @@ input:focus-visible {
     border: .0625rem solid #999999 !important;
   }
 }
-
-.sb-collectionTree-fancyTree {
-
-  div:first-of-type {
-    max-height: 100vh;
-  }
-
-  .fancytree-title {
-    margin-top: 5px;
-  }
-
-  ul.fancytree-container {
-    font-family: inherit !important;
-    border: none !important;
-  }
-
-  .fancytree-node {
-    .fancytree-title {
-      background: none !important;
-    }
-  }
-
+// Fancy tree css
+.sb-collectionTree-fancyTreelist .ui-fancytree li:before, .ui-fancytree ul li:before{
+  content: none  !important;
 }
-
-.sb-collectionTree-fancyTree .fancytree-expander,
-.sb-collectionTree-fancyTree li {
-  background-image: none !important;
+.sb-collectionTree-fancyTreelist .ui-fancytree:before, .ui-fancytree ul:before{
+  content: none  !important;
 }
-.sb-collectionTree-fancyTree span.fancytree-node {
+.sb-collectionTree-fancyTreelist .ui-fancytree .fancytree-folder .fancytree-title {
+  color: var(--primary-color)!important;
+  font-size: .9286rem!important;
+  font-weight: 700!important;
+  padding-left: 5px;
+  width: inherit!important;
+}
+.sb-collectionTree-fancyTreelist .ui-fancytree li .fancytree-custom-icon::before {
+  color: var(--primary-color)!important;
+  margin-left: 5px;
+}
+.sb-collectionTree-fancyTreelist .ui-fancytree .fa-caret-right, .ui-fancytree .fa-caret-down, .ui-fancytree ul .fa-caret-right, .ui-fancytree ul .fa-caret-down{
+  display: block !important;
+}
+#fancytree-drop-marker, span.fancytree-checkbox, span.fancytree-drag-helper-img, span.fancytree-empty, span.fancytree-expander, span.fancytree-icon, span.fancytree-vline{
+  height: inherit !important;
   width: inherit !important;
 }
-.sb-collectionTree-fancyTree span .fancytree-title {
+.sb-collectionTree-fancyTreelist ul.fancytree-container{
+  font-size: inherit !important;
+  font-family: inherit !important;
+  border: none !important;
+}
+.sb-collectionTree-fancyTreelist ul.fancytree-connectors.fancytree-container li{
+  background-image: none !important;
+}
+.sb-collectionTree-fancyTreelist span.fancytree-node{
+  width: inherit !important;
+}
+.sb-collectionTree-fancyTreelist span.fancytree-active span.fancytree-title, span.fancytree-selected span.fancytree-title{
+  background: none !important;
+}
+.sb-collectionTree-fancyTreelist .fancytree-treefocus span.fancytree-active span.fancytree-title, .fancytree-treefocus span.fancytree-selected span.fancytree-title{
+  background: none !important;
+}
+.sb-collectionTree-fancyTreelist span.fancytree-focused span.fancytree-title{
   outline: 0 !important;
 }
+.sb-collectionTree-fancyTreelist .fancytree-exp-edl span.fancytree-expander, .fancytree-exp-el span.fancytree-expander{
+  background-position: -34px -94px;
+}
+.sb-collectionTree-fancyTreelist .ui-fancytree{
+  margin:0 ;
+}
+.ui-fancytree, .ui-fancytree ul{
+  margin: 0 0 0 0.625rem !important;
+}
+.fancytree-exp-e span.fancytree-expander, .fancytree-exp-ed span.fancytree-expander{
+  background-position: -32px -68px !important;
+}
+
+// .sb-collectionTree-fancyTreelist span.fancytree-has-children  ul  li  span.fancytree-lastsib{
+//   margin-left: 64px !important;
+// }
+// .sb-collectionTree-fancyTree {
+
+//   div:first-of-type {
+//     max-height: 100vh;
+//   }
+
+//   .fancytree-title {
+//     margin-top: 5px;
+//   }
+
+//   ul.fancytree-container {
+//     font-family: inherit !important;
+//     border: none !important;
+//   }
+
+//   .fancytree-node {
+//     .fancytree-title {
+//       background: none !important;
+//     }
+//   }
+
+// }
+
+// .sb-collectionTree-fancyTree .fancytree-expander,
+// .sb-collectionTree-fancyTree li {
+//   background-image: none !important;
+// }
+// .sb-collectionTree-fancyTree span.fancytree-node {
+//   width: inherit !important;
+// }
+// .sb-collectionTree-fancyTree span .fancytree-title {
+//   outline: 0 !important;
+// }
 .sb-loader {
   position: fixed;
   top: 0%;
