@@ -159,7 +159,7 @@
        "downloadSampleCSV":"Download sample csv file",
        "dragAndDropCSV":"Drag and Drop files to upload",
        "selectFileToUpload":"Select file to upload",
-       "uploadEntries":"Upload .csv,.xl upto 300 entries",
+       "uploadEntries":"File accepted - csv",
        "Or":"Or",
        "pleaseWait":"Please wait",
        "validateCsvFile":"Validating CSV file",
