@@ -507,20 +507,28 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   rejectContent(comment) {
-    this.editorService.submitRequestChanges(this.collectionId, comment).subscribe(res => {
-      this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.003'));
-      this.redirectToChapterListTab();
-    }, err => {
-      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.003'));
+    this.saveContent().then(res => {
+      this.editorService.submitRequestChanges(this.collectionId, comment).subscribe(res => {
+        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.003'));
+        this.redirectToChapterListTab();
+      }, err => {
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.003'));
+      });
+    }).catch(err => {
+      this.toasterService.error(err);
     });
   }
 
   publishContent() {
-    this.editorService.publishContent(this.collectionId).subscribe(res => {
-      this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.004'));
-      this.redirectToChapterListTab();
-    }, err => {
-      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.004'));
+    this.saveContent().then(res => {
+      this.editorService.publishContent(this.collectionId).subscribe(res => {
+        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.004'));
+        this.redirectToChapterListTab();
+      }, err => {
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.004'));
+      });
+    }).catch(err => {
+      this.toasterService.error(err);
     });
   }
   updateTreeNodeData() {
