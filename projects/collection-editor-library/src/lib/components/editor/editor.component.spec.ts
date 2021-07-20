@@ -555,23 +555,20 @@ describe('EditorComponent', () => {
     expect(component.saveContent).toHaveBeenCalled();
   });
 
-  it('#rejectContent() should call #submitRequestChanges() and #redirectToChapterListTab()', async () => {
-    component.collectionId = 'do_1234';
-    const editorService = TestBed.inject(EditorService);
-    spyOn(editorService, 'submitRequestChanges').and.returnValue(of({}));
-    spyOn(component, 'redirectToChapterListTab');
-    component.rejectContent('test');
-    expect(editorService.submitRequestChanges).toHaveBeenCalled();
-    expect(component.redirectToChapterListTab).toHaveBeenCalled();
+  it('#rejectContent() should call #saveContent #submitRequestChanges() and #redirectToChapterListTab()', async () => {
+    spyOn(component, 'saveContent').and.callFake(() => {
+      return Promise.resolve();
+    });
+    component.rejectContent('rejected');
+    expect(component.saveContent).toHaveBeenCalled();
   });
 
-  it('#publishContent should call #publishContent() and #redirectToChapterListTab()', () => {
-    const editorService = TestBed.inject(EditorService);
-    spyOn(editorService, 'publishContent').and.returnValue(of({}));
-    spyOn(component, 'redirectToChapterListTab');
+  it('#publishContent should call #saveContent #publishContent() and #redirectToChapterListTab()', () => {
+    spyOn(component, 'saveContent').and.callFake(() => {
+      return Promise.resolve();
+    });
     component.publishContent();
-    expect(editorService.publishContent).toHaveBeenCalled();
-    expect(component.redirectToChapterListTab).toHaveBeenCalled();
+    expect(component.saveContent).toHaveBeenCalled();
   });
 
   xit('#showLibraryComponentPage() should set #addFromLibraryButtonLoader to true and call #saveContent()', () => {
