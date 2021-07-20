@@ -427,6 +427,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.mergeCollectionExternalProperties().subscribe((res: any) => {
       this.pageId = 'collection_editor';
       this.telemetryService.telemetryPageId = this.pageId;
+      this.isEnableCsvAction = true;
     });
   }
 
@@ -677,6 +678,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.mergeCollectionExternalProperties().subscribe((res: any) => {
       this.pageId = 'collection_editor';
       this.telemetryService.telemetryPageId = this.pageId;
+      this.isEnableCsvAction = true;
     });
   }
 
@@ -741,6 +743,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.mergeCollectionExternalProperties().subscribe((res: any) => {
           this.pageId = 'collection_editor';
           this.telemetryService.telemetryPageId = this.pageId;
+          this.isEnableCsvAction = true;
         });
         break;
       case 'createCsv':
