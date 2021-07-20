@@ -549,5 +549,10 @@ input:focus-visible {
   }
   .ui.pointing{
     margin: 0 -15px !important;
+    .item{
+      &.active{
+        font-weight: 600 !important;
+      }
+    }
   }
 }
