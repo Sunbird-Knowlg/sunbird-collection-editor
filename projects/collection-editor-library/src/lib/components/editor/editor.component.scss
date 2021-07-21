@@ -331,11 +331,10 @@ input:focus-visible {
   }
 }
 // Fancy tree css
-#fancytree-drop-marker, span.fancytree-checkbox, span.fancytree-drag-helper-img, span.fancytree-empty, span.fancytree-expander, span.fancytree-icon, span.fancytree-vline{
-  height: inherit !important;
-  width: inherit !important;
-}
 .sb-collectionTree-fancyTreelist {
+  .fancytree-exp-n span.fancytree-expander,.fancytree-exp-nl span.fancytree-expander{
+    display: none !important;
+  }
   .ui-fancytree:before, .ui-fancytree ul:before{
     content: none  !important;
   }
