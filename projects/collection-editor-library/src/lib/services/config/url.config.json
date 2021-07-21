@@ -47,7 +47,7 @@
     "CSV": {
       "UPLOAD": "collection/v1/import/",
       "DOWNLOAD": "collection/v1/export/",
-      "SAMPLE_COLLECTION_HIERARCHY": "sourcing/collection-hierarchy/create-collection-hierarchy.csv"
+      "SAMPLE_COLLECTION_HIERARCHY": "sourcing/collection-hierarchy/createfoldersamplecsvfile.csv"
     },
     "USER": {
       "SEARCH":"user/v1/search"
