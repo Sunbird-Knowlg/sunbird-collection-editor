@@ -28,26 +28,40 @@
               "src/favicon.ico",
               {
                 "glob": "**/*",
-                "input": "./node_modules/@project-sunbird/sunbird-pdf-player-v8/lib/assets/",
+                "input": "node_modules/@project-sunbird/sunbird-pdf-player-v8/lib/assets/",
                 "output": "/assets/"
               },
               {
                 "glob": "**/*",
                 "input": "node_modules/@project-sunbird/sunbird-video-player-v8/lib/assets/",
                 "output": "/assets/"
+              },
+              {
+                "glob": "**/*",
+                "input": "projects/collection-editor-library/src/lib/assets",
+                "output": "/assets/"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@project-sunbird/sunbird-quml-player-v8/lib/assets/",
+                "output": "/assets/"
               }
             ],
             "styles": [
+              "src/assets/quml-styles/quml-carousel.css",
+              "node_modules/@project-sunbird/sb-styles/assets/_styles.scss",
               "src/styles.scss",
               "src/assets/lib/semantic/semantic.min.css",
               "src/assets/styles/styles.scss",
               "node_modules/font-awesome/css/font-awesome.css",
-              "node_modules/video.js/dist/video-js.min.css",
-              "node_modules/@project-sunbird/sb-styles/assets/_styles.scss"
+              "node_modules/katex/dist/katex.min.css",
+              "node_modules/video.js/dist/video-js.min.css"
             ],
             "scripts": [
+              "src/assets/libs/iziToast/iziToast.min.js",
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/jquery.fancytree/dist/jquery.fancytree-all-deps.min.js",
+              "node_modules/katex/dist/katex.min.js",
               "src/assets/lib/dimmer.min.js",
               "src/assets/lib/transition.min.js",
               "src/assets/lib/modal.min.js",
@@ -175,7 +189,7 @@
           },
           "configurations": {
             "production": {
-              "project": "projects/course-editor-library/ng-package.prod.json"
+              "project": "projects/collection-editor-library/ng-package.prod.json"
             }
           }
         },
@@ -184,7 +198,11 @@
           "options": {
             "main": "projects/collection-editor-library/src/test.ts",
             "tsConfig": "projects/collection-editor-library/tsconfig.spec.json",
-            "karmaConfig": "projects/collection-editor-library/karma.conf.js"
+            "karmaConfig": "projects/collection-editor-library/karma.conf.js",
+            "scripts": [
+              "src/assets/libs/iziToast/iziToast.min.js",
+              "node_modules/jquery/dist/jquery.min.js"
+            ]
           }
         },
         "lint": {

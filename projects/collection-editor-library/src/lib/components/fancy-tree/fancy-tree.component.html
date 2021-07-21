@@ -1,30 +1,35 @@
 <div #fancyTree></div>
-<div class="sb-fixed-with-whitebg pr-20 d-flex flex-jc-space-between ">
-  <div class="d-flex">
+<div class="sb-fixed-with-whitebg pr-20 d-flex flex-jc-space-between" *ngIf="config && config.mode === 'edit'">
+  <div class="d-flex w-25">
     <div class="sb-btn-cover">
-      <button (click)="addSibling();" class="sb-btn sb-btn-outline-primary sb-btn-normal sb-btn-radius ml-20 mr-10 b-none"><i class="icon plus"></i> Sibling</button>
+      <button [ngClass]="visibility?.addSibling ? '' : 'sb-disabled'" (click)="addSibling();"
+        class="sb-btn sb-btn-outline-primary sb-btn-normal sb-btn-radius p-0 b-none"><i class="icon plus"></i>Add
+        Sibling</button>
     </div>
     <div class="sb-btn-cover">
-        <button (click)="addChild();"  class="sb-btn sb-btn-outline-primary sb-btn-normal sb-btn-radius b-none"><i class="icon plus"></i> Add Child</button>
+      <button [ngClass]="visibility?.addChild ? '' : 'sb-disabled'" (click)="addChild();"
+        class="sb-btn sb-btn-outline-primary sb-btn-normal sb-btn-radius b-none p-0"><i class="icon plus"></i> Add
+        Child</button>
     </div>
   </div>
-  <button  class="sb-btn sb-btn-outline-primary sb-btn-normal mt-10"><i class="icon plus"></i> Add from library</button>
+  <button *ngIf="config.objectType !== 'QuestionSet'" (click)="addFromLibrary();"
+    [disabled]="!visibility?.addFromLibrary"
+    [ngClass]="[!visibility?.addFromLibrary ? 'sb-btn-outline-disabled' : '', (visibility?.addFromLibrary && buttonLoaders?.addFromLibraryButtonLoader) ? 'sb-btn-loading-spinner sb-btn-outline-disabled': '']"
+    class="sb-btn sb-btn-outline-primary sb-btn-normal mt-10 mr-30" libTelemetryInteract
+    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('add_from_library','click','launch', telemetryService.telemetryPageId)">
+    <i class="icon plus" *ngIf="!buttonLoaders?.addFromLibraryButtonLoader"></i>
+    <div class="sb-loading-spinner" *ngIf="buttonLoaders?.addFromLibraryButtonLoader" role="status" aria-hidden="true">
+    </div>
+    Add from library
+  </button>
+  <button *ngIf="config.objectType === 'QuestionSet'" [disabled]="!visibility?.createNew"
+    [ngClass]="[!visibility?.createNew ? 'sb-btn-outline-disabled' : '', (visibility?.createNew && buttonLoaders?.addFromLibraryButtonLoader) ? 'sb-btn-loading-spinner sb-btn-outline-disabled': '']"
+    type="button" class="sb-btn sb-btn-normal sb-btn-primary mt-10 mr-30" (click)="createNewContent()"
+    libTelemetryInteract
+    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('create_new','click','launch', telemetryService.telemetryPageId)">
+    <i class="icon plus" *ngIf="!buttonLoaders?.addFromLibraryButtonLoader"></i>
+    <div class="sb-loading-spinner" *ngIf="buttonLoaders?.addFromLibraryButtonLoader" role="status" aria-hidden="true">
+    </div>
+    Create New
+  </button>
 </div>
-<sui-modal *ngIf="showDeleteConfirmationPopUp" [mustScroll]="true" [isClosable]="true" [transitionDuration]="0"
-  [size]="'normal'" class="sb-modal" appBodyScroll
-  (dismissed)="showDeleteConfirmationPopUp = !showDeleteConfirmationPopUp" #modal>
-  <div class="sb-modal-header">
-      Confirm
-  </div>
-  <div class="sb-modal-content">
-      <!-- <div class="sb-publish-content">
-        <div class="review-modal-list">
-          {{ contentComment }}
-      </div> -->
-      <div> Are you sure want to delete the selected Node?</div>
-  </div>
-  <div class="sb-modal-actions">
-    <button type="button" class="sb-btn sb-btn-normal sb-btn-primary mr-8" (click)="showDeleteConfirmationPopUp = !showDeleteConfirmationPopUp"> No </button>
-    <button type="button" class="sb-btn sb-btn-secondary sb-btn-normal " (click)="removeNode(); showDeleteConfirmationPopUp = !showDeleteConfirmationPopUp"> Yes </button>
-  </div>
-</sui-modal>

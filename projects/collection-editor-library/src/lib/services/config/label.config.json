@@ -1,0 +1,102 @@
+{
+    "button_labels":{
+       "preview_collection_btn_label": "Preview",
+       "preview_collection_btn_icon": "icon eye",
+       "save_collection_btn_label":"Save as Draft",
+       "save_collection_btn_icon":"",
+       "submit_collection_btn_label":"Send for Review",
+       "submit_collection_btn_icon":"",
+       "reject_collection_btn_label":"Reject",
+       "reject_collection_btn_icon":"",
+       "publish_collection_btn_label":"Publish",
+       "publish_collection_btn_icon":"",
+       "edit_question_btn_label":"Edit",
+       "edit_question_btn_icon":"icon edit",
+       "preview_question_btn_label":"Preview",
+       "preview_question_btn_icon":"icon eye",
+       "cancel_question_btn_label":"Cancel",
+       "cancel_question_btn_icon":"",
+       "save_question_btn_label":"Save",
+       "save_question_btn_icon":"",
+       "send_back_for_correction_collection_btn_label":"Send Back For Corrections",
+       "send_back_for_correction_collection_btn_icon":"",
+       "sourcing_approve_collection_btn_label":"Approve",
+       "sourcing_approve_collection_btn_icon":"",
+       "sourcing_reject_collection_btn_label":"Reject",
+       "sourcing_reject_collection_btn_icon":""
+    },
+    "lbl":{
+       "search":"Search",
+       "subject":"Subject",
+       "medium":"Medium",
+       "gradeLevel":"Class",
+       "contentType":"Content Type",
+       "reset":"Reset",
+       "apply":"apply",
+       "filterText":"Change Filters",
+       "Questiondetails":"Question details",
+       "selectContent":"Select content",
+       "noMatchingContent":"Sorry there is no matching content",
+       "changeFilterMessage":"Changing filter helps you find more content",
+       "changeFilter":"Change filters",
+       "whereDoYouWantToAddThisContent":"Where do you want to add this content?",
+       "selectContentToAdd":"Use search and filters above to find more content",
+       "addedToCollection":"Added to collection",
+       "changingFilters":"Changing filters make you find more content",
+       "ChangeFilters":"Change filters",
+       "addFromLibrary":"Add from Library",
+       "showContentAddedToCollection":"Show content added to collection",
+       "addContent":"Add content",
+       "sortBy":"Sort By",
+       "sortlabel":"A - Z",
+       "viewOnOrigin":"View Content on consumption"
+    },
+    "err":{
+       "somethingWentWrong":"Something went wrong",
+       "contentNotFoundonOrigin": "The content not found in consumption"
+    },
+    "termsAndConditions": {
+     "001": "I understand and confirm that all resources and assets created through the content editor or uploaded on the platform shall be available for free and public use without limitations on the platform (web portal, applications and any other end user interface that the platform would enable) and will be licensed under terms & conditions and policy guidelines of the platform. In doing so, the copyright and license of the original author is not infringed."
+    },
+    "messages": {
+      "error": {
+         "001": "Something went wrong, Please try later",
+         "002": "Sending for review failed. Please try again...",
+         "003": "Rejecting failed. Please try again...",
+         "004": "Publishing failed. Please try again...",
+         "005": "Please fill the required metadata",
+         "006": "Fetch question set template failed. Please try again...",
+         "007": "Sorry, this operation is not allowed...",
+         "008": "Please fill the required fields",
+         "009": "File is required to upload",
+         "010": "No external link allowed",
+         "011": "Unable to read the Video, Please Try Again",
+         "012": "QR code(s) updating failed!",
+         "013": "No new QR Codes have been generated!",
+         "014": "The number should be at least {number}",
+         "015": "The number should be greater than {number}",
+         "016": "No images found, please try searching for something else",
+         "017": "No videos found, please try searching for something else"
+      }, 
+      "success": {
+         "001": "Content is saved",
+         "002": "Content is sent for review",
+         "003": "Content is sent back for corrections",
+         "004": "Content is published",
+         "005": "Content is added to the folder",
+         "006": "Asset Successfully Uploaded...",
+         "007": "Question is created sucessfully",
+         "008": "Question is updated sucessfully",
+         "009": "QR code(s) updated successfully",
+         "010": "QR code generated.",
+         "011": "QR codes downloaded" 
+      },
+      "warning" : {
+         "001" : "Errors found in linked QR Codes. Please check and correct.",
+         "002" : "Unable to update some of the QR codes."
+      },
+      "info" : {
+         "001" : "QR code image generation is in progress. Please try downloading after sometime"
+      }
+    }
+ }

@@ -1,8 +1,8 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { CsTelemetryModule } from '@project-sunbird/client-services/telemetry';
-import { IEditorConfig, Context } from '../../interfaces';
-import { HelperService } from '../index';
 import * as _ from 'lodash-es';
+import { CsTelemetryModule } from '@project-sunbird/client-services/telemetry';
+import { IEditorConfig, Context } from '../../interfaces/editor';
+import { HelperService } from '../helper/helper.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,8 +12,6 @@ export class EditorTelemetryService {
   telemetryEvent = new EventEmitter<any>();
   private context: Context;
   private telemetryObject: any;
-  private contentSessionId: string;
-  private playSessionId: string;
   private pdata: any;
   private sid: string;
   private uid: string;
@@ -28,13 +26,11 @@ export class EditorTelemetryService {
     this.duration = new Date().getTime();
     this.context = config.context;
     this.channel = config.context.channel;
-    this.contentSessionId = this.helperService.uniqueId();
-    this.playSessionId = this.helperService.uniqueId();
-    this.channel = config.context.channel;
     this.pdata = this.context.pdata;
     this.sid =  this.context.sid;
     this.uid =  this.context.uid;
     this.env =  this.context.env;
+    this.pdata.pid = `${this.context.pdata.pid}.${this.env}`;
     this.rollup = this.context.contextRollup;
     if (!CsTelemetryModule.instance.isInitialised) {
       CsTelemetryModule.instance.init({});
@@ -50,11 +46,10 @@ export class EditorTelemetryService {
             sid: config.context.sid,
             batchsize: 20,
             mode: config.context.mode,
-            host: config.context.host || '',
+            host: config.context.host || document.location.origin,
             endpoint: config.context.endpoint || '/data/v3/telemetry',
             tags: config.context.tags,
-            cdata: _.merge(this.context.cdata, [{ id: this.contentSessionId, type: 'ContentSession' },
-            { id: this.playSessionId, type: 'PlaySession' }])
+            cdata: this.context.cdata || []
           },
           userOrgDetails: {}
         }
@@ -132,8 +127,7 @@ export class EditorTelemetryService {
         env: this.env,
         sid: this.sid,
         uid: this.uid,
-        cdata: _.merge(this.context.cdata, [{ id: this.contentSessionId, type: 'ContentSession' },
-            { id: this.playSessionId, type: 'PlaySession' }]),
+        cdata: this.context.cdata || [],
         rollup: this.rollup || {}
       }
     });

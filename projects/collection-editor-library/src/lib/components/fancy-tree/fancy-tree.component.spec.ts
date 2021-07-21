@@ -1,23 +1,27 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { FancyTreeComponent } from './fancy-tree.component';
-import { ActivatedRoute } from '@angular/router';
-import { TelemetryInteractDirective } from '@sunbird/telemetry';
-
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
+import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
+import {mockData} from './fancy-tree.component.spec.data';
+import { Router } from '@angular/router';
+import { TreeService } from '../../services/tree/tree.service';
+import { SuiModule } from 'ng2-semantic-ui/dist';
+import { EditorService } from '../../services/editor/editor.service';
 describe('FancyTreeComponent', () => {
   let component: FancyTreeComponent;
   let fixture: ComponentFixture<FancyTreeComponent>;
-  const fakeActivatedRoute = {
-    snapshot: {
-      queryParams: {
-        dialCode: 'D4R4K4'
-      }
-    }
-  };
+
+  class RouterStub {
+    navigate = jasmine.createSpy('navigate');
+  }
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FancyTreeComponent ],
-      providers: [ { provide: ActivatedRoute, useValue: fakeActivatedRoute } ]
+      providers: [EditorTelemetryService,TreeService,EditorService, { provide: Router, useClass: RouterStub }],
+      imports: [HttpClientTestingModule, SuiModule],
+      declarations: [ FancyTreeComponent, TelemetryInteractDirective ],
+      schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();
   }));
@@ -25,52 +29,18 @@ describe('FancyTreeComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(FancyTreeComponent);
     component = fixture.componentInstance;
+    // fixture.detectChanges();
   });
 
   it('should create', () => {
-    component.nodes = {
-        id: '1',
-        title: 'node1',
-        children: [{
-          id: '1.1',
-          title: 'node1.1'
-        }, {
-          id: '1.2',
-          title: 'node1.2',
-          children: [
-            {
-              id: '1.2.1',
-              title: 'node1.2.1'
-            }]
-        }]
-    };
-    component.options = {};
-    fixture.detectChanges();
     expect(component).toBeTruthy();
   });
-
-  it('should initialize the telemetry data', () => {
-    // arrange
-    const mockFancyTree = (options) => {
-      options.click(undefined, {
-        node: {
-          data: {}
-        }
-      });
-    };
-    component.options = {};
-    component.telemetryInteractDirective = {} as TelemetryInteractDirective;
-    component.telemetryInteractDirective.telemetryInteractCdata = [{id: 'D4R4K4', type: 'dialCode'}];
-    spyOn(component, 'getTelemetryInteractEdata').and.stub();
-    spyOn(component, 'getTelemetryInteractObject').and.stub();
-    spyOn(window as any, '$').and.callFake(() => {
-      return {
-        fancytree: mockFancyTree
-      };
-    });
-    // act
-    component.ngAfterViewInit();
-    expect(component.getTelemetryInteractEdata).toHaveBeenCalled();
-    expect(component.getTelemetryInteractObject).toHaveBeenCalled();
+  it('should call addFromLibrary ', () => {
+    const editorService: EditorService = TestBed.get(EditorService);
+    spyOn(editorService, 'emitshowLibraryPageEvent').and.returnValue('showLibraryPage');
+    component.addFromLibrary();
+    expect(editorService.emitshowLibraryPageEvent).toHaveBeenCalledWith('showLibraryPage');
   });
 });
+
+

@@ -1,0 +1,17 @@
+{
+    "rejectCommentsMaxLength": 500,
+    "setDefaultCopyRight": true,
+    "showOriginPreviewUrl": false, 
+    "showSourcingStatus": false, 
+    "showCorrectionComments": false,
+    "assetConfig": {
+        "image": {
+            "size": "1",
+            "accepted": "png, jpeg"
+          },
+          "video": {
+            "size": "50",
+            "accepted": "mp4, webm"
+          }
+    }
+}

@@ -1,77 +1,127 @@
 import { Injectable } from '@angular/core';
 import 'jquery.fancytree';
 import { UUID } from 'angular2-uuid';
-import { EditorConfig } from '../../interfaces';
 declare var $: any;
-
 import * as _ from 'lodash-es';
+import { IEditorConfig } from '../../interfaces/editor';
+import { ToasterService } from '../toaster/toaster.service';
+import { HelperService } from '../helper/helper.service';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { skipWhile } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TreeService {
-  public config;
+  public config: any;
   treeCache = {
     nodesModified: {},
     nodes: []
   };
-
   treeNativeElement: any;
+  omitFalseyProps = ['topic', 'topicsIds', 'targetTopicIds', 'keywords'];
+  // tslint:disable-next-line:variable-name
+  private _treeStatus$ = new BehaviorSubject<any>(undefined);
+  public readonly treeStatus$: Observable<any> = this._treeStatus$
+  .asObservable().pipe(skipWhile(status => status === undefined || status === null));
 
-  constructor() { }
+  constructor(private toasterService: ToasterService, private helperService: HelperService) { }
 
-  // tslint:disable-next-line:no-shadowed-variable
-  public initialize(editorConfig: EditorConfig) {
+  public initialize(editorConfig: IEditorConfig) {
     this.config = editorConfig.config;
   }
 
-  getTreeObject() {
-    return $(this.treeNativeElement).fancytree('getTree');
-  }
-
-  getHierarchy() {
-
+  nextTreeStatus(status) {
+    this._treeStatus$.next(status);
   }
 
   setTreeElement(el) {
     this.treeNativeElement = el;
   }
 
-  addNode(data, createType) {
+  updateNode(metadata) {
+    this.setNodeTitle(metadata.name);
+    this.updateTreeNodeMetadata(metadata);
+  }
+
+  updateAppIcon(appIconUrl) {
+    const activeNode = this.getActiveNode();
+    const nodeId = activeNode.data.id;
+    activeNode.data.metadata = {...activeNode.data.metadata, appIcon : appIconUrl};
+    this.setTreeCache(nodeId, {appIcon : appIconUrl}, activeNode.data);
+  }
+
+  updateMetaDataProperty(key, value) {
+    const node = this.getFirstChild();
+    const nodeId = node.data.id;
+    node.data.metadata = {...node.data.metadata, [key] : value};
+    this.setTreeCache(nodeId, _.merge({}, {[key] : value}, _.pick(node.data.metadata, ['objectType'])));
+  }
+
+  updateTreeNodeMetadata(newData: any) {
+    const activeNode = this.getActiveNode();
+    const nodeId = activeNode.data.id;
+    if (newData.instructions) {
+      newData.instructions = { default: newData.instructions };
+     }
+    activeNode.data.metadata = { ...activeNode.data.metadata, ...newData };
+    activeNode.title = newData.name;
+    newData = _.omitBy(newData, (v, key ) => _.isUndefined(v) || _.isNull(v) || (v === '' && _.includes(this.omitFalseyProps, key)));
+    newData = _.merge({}, newData, _.pick(activeNode.data.metadata, ['objectType', 'contentType', 'primaryCategory']));
+    const attributions = newData.attributions;
+    if (attributions && _.isString(attributions)) {
+      newData.attributions = attributions.split(',');
+    }
+    const { maxTime, warningTime, copyrightYear } = newData;
+
+    if (copyrightYear) {
+      newData.copyrightYear = _.toNumber(copyrightYear);
+    }
+    const timeLimits: any = {};
+    if (maxTime) {
+      timeLimits.maxTime = this.helperService.hmsToSeconds(maxTime);
+    }
+    if (warningTime) {
+      timeLimits.warningTime = this.helperService.hmsToSeconds(warningTime);
+    }
+    newData.timeLimits = timeLimits;
+    delete newData.maxTime;
+    delete newData.warningTime;
+    this.setTreeCache(nodeId, newData, activeNode.data);
+  }
+
+  addNode(createType) {
     let newNode;
-    data = data || {};
     const selectedNode = this.getActiveNode();
-    const node: any = {};
     // tslint:disable-next-line:max-line-length
     const nodeConfig = (createType === 'sibling') ? this.config.hierarchy[`level${selectedNode.getLevel() - 1}`] : this.config.hierarchy[`level${selectedNode.getLevel()}`];
-    node.title = data.name ? (data.name) : _.get(nodeConfig, 'name');
-    node.tooltip = node.tiltle;
-    node.objectType = (data.visibility && data.visibility === 'Default') ? data.primaryCategory : nodeConfig.type;
-    node.id = data.identifier ? data.identifier : UUID.UUID();
-    node.root = false;
-    node.folder = (data.visibility && data.visibility === 'Default') ? false : true;
-    node.icon = (data.visibility && data.visibility === 'Default') ? 'fa fa-file-o' : _.get(nodeConfig, 'iconClass');
-    node.metadata = data;
-    if (node.folder) {
-      newNode = (createType === 'sibling') ? selectedNode.appendSibling(node) : selectedNode.addChildren(node);
-      if (_.isEmpty(newNode.data.metadata)) {
-        // tslint:disable-next-line:max-line-length
-        newNode.data.metadata = { mimeType: 'application/vnd.ekstep.content-collection', code: node.id, name: node.title };
+    const uniqueId = UUID.UUID();
+    const nodeTitle = _.get(nodeConfig, 'name');
+    const node: any = {
+      id: uniqueId,
+      title: nodeTitle,
+      tooltip: nodeTitle,
+      ...(nodeConfig.contentType && { contentType: nodeConfig.contentType }),
+      primaryCategory: _.get(nodeConfig, 'primaryCategory'),
+      objectType: _.get(this.config, 'objectType'),
+      root: false,
+      folder: true,
+      icon: _.get(nodeConfig, 'iconClass'),
+      metadata: {
+        mimeType: _.get(nodeConfig, 'mimeType'),
+        code: uniqueId,
+        name: nodeTitle
       }
-      // tslint:disable-next-line:max-line-length
-      // const modificationData = { isNew: true, root: false, metadata: { mimeType: 'application/vnd.ekstep.content-collection', contentType: _.get(this.getActiveNode(), 'data.objectType'), code: node.id, name: node.title } };
-      // tslint:disable-next-line:max-line-length
-      const metadata = { mimeType: 'application/vnd.ekstep.content-collection', code: node.id, name: node.title, primaryCategory: 'Textbook Unit' };
-      this.setTreeCache(node.id, metadata);
-    } else {
-      newNode = (createType === 'sibling') ? selectedNode.appendSibling(node) : selectedNode.addChildren(node);
-    }
+    };
+    node.metadata = _.merge({}, node.metadata, _.pick(node, ['contentType', 'objectType', 'primaryCategory']));
+    newNode = (createType === 'sibling') ? selectedNode.appendSibling(node) : selectedNode.addChildren(node);
+    this.setTreeCache(node.id, node.metadata);
     newNode.setActive();
-    // selectedNode.sortChildren(null, true);
     selectedNode.setExpanded();
     $('span.fancytree-title').attr('style', 'width:11em;text-overflow:ellipsis;white-space:nowrap;overflow:hidden');
     $(this.treeNativeElement).scrollLeft($('.fancytree-lastsib').width());
     $(this.treeNativeElement).scrollTop($('.fancytree-lastsib').height());
+    this.nextTreeStatus('added');
   }
 
   removeNode() {
@@ -79,26 +129,36 @@ export class TreeService {
     const afterDeleteNode = selectedNode.getPrevSibling() ? selectedNode.getPrevSibling() : selectedNode.getParent();
     this.setActiveNode(afterDeleteNode);
     selectedNode.remove();
+    this.clearTreeCache(selectedNode.data);
     $('span.fancytree-title').attr('style', 'width:11em;text-overflow:ellipsis;white-space:nowrap;overflow:hidden');
     $(this.treeNativeElement).scrollLeft($('.fancytree-lastsib').width());
     $(this.treeNativeElement).scrollTop($('.fancytree-lastsib').height());
+    this.nextTreeStatus('removed');
+  }
+
+  getTreeObject() {
+    return $(this.treeNativeElement).fancytree('getTree');
   }
 
   getActiveNode() {
-    return $(this.treeNativeElement).fancytree('getTree').getActiveNode();
+    return this.getTreeObject().getActiveNode();
   }
 
-  setActiveNode(node) {
-    node.setActive(true);
+  setActiveNode(node?) {
+    const rootFirstChildNode = this.getFirstChild();
+    if (node) {
+      node.setActive(true);
+    } else {
+      rootFirstChildNode.setActive(true);
+    }
   }
 
   getFirstChild() {
-    // console.log($(this.treeNativeElement).fancytree('getRootNode').getChildren());
     return $(this.treeNativeElement).fancytree('getRootNode').getFirstChild();
   }
 
   findNode(nodeId) {
-    return $(this.treeNativeElement).fancytree('getTree').findFirst((node) => node.data.id === nodeId);
+    return this.getTreeObject().findFirst((node) => node.data.id === nodeId);
   }
 
   expandNode(nodeId) {
@@ -106,54 +166,54 @@ export class TreeService {
   }
 
   replaceNodeId(identifiers) {
-    $(this.treeNativeElement).fancytree('getTree').visit((node) => {
+    this.getTreeObject().visit((node) => {
       if (identifiers[node.data.id]) {
         node.data.id = identifiers[node.data.id];
       }
     });
   }
 
-  updateNodeMetadata(newData, nodeId) {
-    $(this.treeNativeElement).fancytree('getTree').visit((node) => {
-      if (nodeId === node.data.id) {
-        this.checkModification(node, newData);
-        node.data.metadata = {...node.data.metadata, ...newData.metadata};
-        node.title = newData.metadata.name;
-        return;
-      }
+  getNodeById(id) {
+    // tslint:disable-next-line:variable-name
+    let _node: any;
+    this.getTreeObject().visit((node) => {
+      if (node.data.id === id) { _node = node; }
     });
+    return _node;
   }
 
-  checkModification(node, newData) {
-    const oldMetadata = _.get(node, 'data.metadata');
-    const newMetadata = _.pickBy(_.get(newData, 'metadata'), _.identity);
-    if (oldMetadata) {
-      for (const key in newMetadata) {
-        if (typeof(oldMetadata[key]) === typeof(newMetadata[key])) {
-          // tslint:disable-next-line:max-line-length
-          if ((typeof(newMetadata[key]) === 'string' || typeof(newMetadata[key]) === 'number')  && oldMetadata[key] !== newMetadata[key]) {
-            // tslint:disable-next-line:max-line-length
-            // const modificationData = {root: false, metadata: {..._.pick(newMetadata, key)}, ...(node.data.id.includes('do_') ? {isNew: false} : {isNew: true})};
-            this.setTreeCache(node.data.id, _.pick(newMetadata, key));
-          // tslint:disable-next-line:max-line-length
-          } else if (typeof(newMetadata[key]) === 'object' && (newMetadata[key].length !== oldMetadata[key].length || _.difference(oldMetadata[key], newMetadata[key]).length)) {
-            // tslint:disable-next-line:max-line-length
-            // const modificationData = {root: false, metadata: {..._.pick(newMetadata, key)}, ...(node.data.id.includes('do_') ? {isNew: false} : {isNew: true})};
-            this.setTreeCache(node.data.id, _.pick(newMetadata, key));
-          }
-        } else {
-          this.setTreeCache(node.data.id, _.pick(newMetadata, key));
-        }
-      }
-    }
+  // Generate a flat list of node children and sub children
+  getChildren() {
+    const nodes = [];
+    this.getActiveNode().visit((node) => {
+      nodes.push(node);
+    });
+    return nodes;
   }
 
-  setTreeCache(nodeId, data) {
+  highlightNode(nodeId: string, action: string) {
+    const nodeElem = this.getNodeById(nodeId);
+    if (!nodeElem) { return; }
+    if (action === 'add') {
+      nodeElem.span.childNodes[1].classList.add('highlightNode');
+      nodeElem.span.childNodes[2].classList.add('highlightNode');
+    } else if (action === 'remove') {
+      nodeElem.span.childNodes[1].classList.remove('highlightNode');
+      nodeElem.span.childNodes[2].classList.remove('highlightNode');
+    } else {}
+  }
+
+  setTreeCache(nodeId, metadata, activeNode?) {
     if (this.treeCache.nodesModified[nodeId]) {
-      this.treeCache.nodesModified[nodeId]['metadata'] = {...this.treeCache.nodesModified[nodeId]['metadata'], ...data};
-    } else {
       // tslint:disable-next-line:max-line-length
-      this.treeCache.nodesModified[nodeId] = {root: false, metadata: {...data}, ...(nodeId.includes('do_') ? {isNew: false} : {isNew: true})};
+      this.treeCache.nodesModified[nodeId].metadata = _.assign(this.treeCache.nodesModified[nodeId].metadata, _.omit(metadata, 'objectType'));
+    } else {
+      this.treeCache.nodesModified[nodeId] = {
+        root: activeNode && activeNode.root ? true : false,
+        objectType: metadata.objectType,
+        metadata: { ..._.omit(metadata, ['objectType']) },
+        ...(nodeId.includes('do_') ? { isNew: false } : { isNew: true })
+      };
       this.treeCache.nodes.push(nodeId); // To track sequence of modifiation
     }
   }
@@ -168,23 +228,41 @@ export class TreeService {
     }
   }
 
-  setNodeTitle(nTitle) {
-    if (!nTitle) {
-      nTitle = 'Untitled';
+  setNodeTitle(title) {
+    if (!title) {
+      title = 'Untitled';
     }
-    // title = instance.removeSpecialChars(title);
-    this.getActiveNode().applyPatch({ title: nTitle }).done((a, b) => {
-      // instance.onRenderNode(undefined, { node: ecEditor.jQuery(‘#collection-tree’).fancytree(‘getTree’).getActiveNode() }, true)
-    });
+    title = this.removeSpecialChars(title);
+    this.getActiveNode().applyPatch({ title }).done((a, b) => { });
     $('span.fancytree-title').attr('style', 'width:11em;text-overflow:ellipsis;white-space:nowrap;overflow:hidden');
   }
 
+  removeSpecialChars(text) {
+    if (text) {
+      // tslint:disable-next-line:quotemark
+      const iChars = "!`~@#$^*+=[]\\\'{}|\"<>%/";
+      for (let i = 0; i < text.length; i++) {
+        if (iChars.indexOf(text.charAt(i)) !== -1) {
+          this.toasterService.error('Special character "' + text.charAt(i) + '" is not allowed');
+        }
+      }
+      // tslint:disable-next-line:max-line-length
+      text = text.replace(/[^\u0600-\u06FF\uFB50-\uFDFF\uFE70-\uFEFF\uFB50-\uFDFF\u0980-\u09FF\u0900-\u097F\u0D00-\u0D7F\u0A80-\u0AFF\u0C80-\u0CFF\u0B00-\u0B7F\u0A00-\u0A7F\u0B80-\u0BFF\u0C00-\u0C7F\w:&_\-.(\),\/\s]|[/]/g, '');
+      return text;
+    }
+  }
+
   closePrevOpenedDropDown() {
-    $(this.treeNativeElement).fancytree('getTree').visit((node) => {
+    this.getTreeObject().visit((node) => {
       const nSpan = $(node.span);
       const dropDownElement = $(nSpan[0]).find(`#contextMenuDropDown`);
       dropDownElement.addClass('hidden');
       dropDownElement.removeClass('visible');
     });
+  }
+
+  reloadTree(nodes: any) {
+    this.getTreeObject().reload(nodes);
+    $('span.fancytree-title').attr('style', 'width:15em;text-overflow:ellipsis;white-space:nowrap;overflow:hidden');
   }
 }

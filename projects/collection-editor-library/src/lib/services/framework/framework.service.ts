@@ -1,22 +1,30 @@
 import { Injectable } from '@angular/core';
-import { ServerResponse, Framework, FrameworkData } from '../../interfaces';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { skipWhile } from 'rxjs/operators';
+import { Observable, BehaviorSubject, of } from 'rxjs';
+import { mergeMap, skipWhile, tap } from 'rxjs/operators';
 import * as _ from 'lodash-es';
-import { DataService } from '../../services';
+import { ServerResponse } from '../../interfaces/serverResponse';
+import { Framework } from '../../interfaces/framework';
+import { FrameworkData } from '../../interfaces/framework';
+import { DataService } from '../data/data.service';
+import { ConfigService } from '../config/config.service';
+import { PublicDataService } from '../public-data/public-data.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FrameworkService {
   private _organisationFramework: string;
+  private _selectedOrganisationFramework: string;
   private _targetFrameworkIds: Array<any> =  [];
   private _frameworkData: FrameworkData = {};
   private _frameworkData$ = new BehaviorSubject<Framework>(undefined);
+  public frameworkValues: any;
   public readonly frameworkData$: Observable<Framework> = this._frameworkData$
     .asObservable().pipe(skipWhile(data => data === undefined || data === null));
 
-  constructor(private dataService: DataService) { }
+    constructor(private dataService: DataService,
+                private configService: ConfigService,
+                private publicDataService: PublicDataService) { }
 
   public initialize(framework: string) {
     if (framework && _.get(this._frameworkData, framework)) {
@@ -66,7 +74,7 @@ export class FrameworkService {
   }
 
   public set targetFrameworkIds(id: any) {
-    _.compact(this._targetFrameworkIds.push(id));
+    _.uniq(_.compact(this._targetFrameworkIds.push(id)));
   }
 
   public get organisationFramework(): string {
@@ -77,5 +85,32 @@ export class FrameworkService {
     this._organisationFramework = framework;
   }
 
+  public get selectedOrganisationFramework(): string {
+    return this._selectedOrganisationFramework;
+  }
 
+
+  public set selectedOrganisationFramework(framework: string) {
+    this._selectedOrganisationFramework = framework;
+  }
+
+
+  getFrameworkData(channel?, type?, identifier?, systemDefault?) {
+    const option = {
+      url: `${this.configService.urlConFig.URLS.COMPOSITE.SEARCH}`,
+      data: {
+        request: {
+            filters: {
+                objectType: 'Framework',
+                status: ['Live'],
+                ...(type && {type}),
+                ...(identifier && {identifier}),
+                ...(channel && {channel}),
+                ...(systemDefault && {systemDefault})
+            }
+        }
+    }
+      };
+    return this.publicDataService.post(option);
+  }
 }

@@ -1,4 +1,22 @@
 {
+    "/action/questionset/v1": {
+        "target": "http://localhost:3000",
+        "secure": false,
+        "logLevel": "debug",
+        "changeOrigin": true
+    },
+    "/action/object/category/definition/v1/": {
+        "target": "http://localhost:3000",
+        "secure": false,
+        "logLevel": "debug",
+        "changeOrigin": true
+    },
+    "/action/question/v1": {
+        "target": "http://localhost:3000",
+        "secure": false,
+        "logLevel": "debug",
+        "changeOrigin": true
+    },
     "/api/framework/v1/read/*": {
         "target": "http://localhost:3000",
         "secure": false,
@@ -47,4 +65,4 @@
         "logLevel": "debug",
         "changeOrigin": true
     }
-} 
+}

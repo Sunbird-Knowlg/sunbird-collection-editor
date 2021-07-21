@@ -328,6 +328,7 @@
   
   // spaces
   $base-block-space: 0.5rem;
+  $block-padding-xy: ($base-block-space * 2);
 
   // Filters
 $sb-prominent-filter-background-color: $white-color;
@@ -368,3 +369,6 @@ $sb-search-btn-font-size: $font-size-sm;
 $sb-search-close-btn-bg: $blue;
 $sb-search-close-btn-color: $white;
   
+
+/* sb-input */
+$sb-input-line-height: 1.5;

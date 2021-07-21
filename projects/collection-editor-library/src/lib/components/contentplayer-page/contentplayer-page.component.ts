@@ -1,55 +1,51 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild, OnChanges, ViewEncapsulation} from '@angular/core';
 import * as _ from 'lodash-es';
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
-import { IeventData } from '../../interfaces';
-import { EditorService, HelperService, TreeService } from '../../services';
-import { PLAYER_CONFIG } from '../../editor.config';
+import { EditorService} from '../../services/editor/editor.service';
+import { PlayerService } from '../../services/player/player.service';
+import { ConfigService } from '../../services/config/config.service';
 declare var $: any;
 
 @Component({
   selector: 'lib-contentplayer-page',
   templateUrl: './contentplayer-page.component.html',
-  styleUrls: ['./contentplayer-page.component.scss']
+  styleUrls: ['./contentplayer-page.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
-export class ContentplayerPageComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ContentplayerPageComponent implements OnInit, OnChanges {
   @ViewChild('contentIframe', {static: false}) contentIframe: ElementRef;
+  @Input() contentMetadata: any;
   public contentDetails: any;
   public playerConfig: any;
-  private onComponentDestroy$ = new Subject<any>();
   public content: any;
   public playerType: string;
-  constructor(private editorService: EditorService, private helperService: HelperService, private treeService: TreeService) { }
+  public contentId: string;
+  constructor(private editorService: EditorService, private playerService: PlayerService,
+              public configService: ConfigService) { }
 
-  ngOnInit() {
-    // this.getContentDetails();
-    this.editorService.nodeData$.pipe(takeUntil(this.onComponentDestroy$)).subscribe((data: IeventData) => {
-      if (data.type === 'nodeSelect' && (!this.playerConfig || this.playerConfig.metadata.identifier !== data.metadata.identifier)) {
-        this.content = data.metadata;
-        this.getContentDetails();
-      }
-    });
+  ngOnInit() {}
+
+  ngOnChanges() {
+    this.contentMetadata = _.get(this.contentMetadata, 'data.metadata') || this.contentMetadata;
+    if (this.contentId !== this.contentMetadata.identifier) {
+      this.contentId = this.contentMetadata.identifier;
+      this.getContentDetails();
+    }
   }
-
-  ngAfterViewInit() {
-    // this.loadDefaultPlayer();
-  }
-
   getContentDetails() {
     this.playerType = 'default-player';
-    this.editorService.fetchContentDetails(this.content.identifier).subscribe(res => {
+    this.editorService.fetchContentDetails(this.contentId).subscribe(res => {
       this.contentDetails = {
-        contentId: this.content.identifier,
+        contentId : this.contentId,
         contentData: _.get(res, 'result.content')
       };
-      this.playerConfig = this.helperService.getPlayerConfig(this.contentDetails);
+      this.playerConfig = this.playerService.getPlayerConfig(this.contentDetails);
       this.setPlayerType();
       this.playerType === 'default-player' ? this.loadDefaultPlayer() : this.playerConfig.config = {};
     });
   }
 
   setPlayerType() {
-    const playerType = _.get(PLAYER_CONFIG, 'playerType');
+    const playerType = _.get(this.configService.playerConfig, 'playerType');
     _.forIn(playerType, (value, key) => {
       if (value.length) {
         if (_.includes(value, _.get(this.contentDetails, 'contentData.mimeType'))) {
@@ -94,16 +90,7 @@ export class ContentplayerPageComponent implements OnInit, AfterViewInit, OnDest
     }
   }
 
-  eventHandler(e) {
+  eventHandler(e) {}
 
-  }
-
-  generateContentReadEvent(e, boo) {
-
-  }
-
-  ngOnDestroy() {
-    this.onComponentDestroy$.next();
-    this.onComponentDestroy$.complete();
-  }
+  generateContentReadEvent(e, boo) {}
 }
