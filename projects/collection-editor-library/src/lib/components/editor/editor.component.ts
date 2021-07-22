@@ -504,7 +504,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       this.showPreview = true;
     }
   }
-
   sendForReview() {
     this.saveContent().then(messg => {
       this.editorService.reviewContent(this.collectionId).subscribe(data => {
@@ -515,25 +514,58 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       });
     }).catch(err => this.toasterService.error(err));
   }
-
   rejectContent(comment) {
-    this.editorService.submitRequestChanges(this.collectionId, comment).subscribe(res => {
-      this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.003'));
-      this.redirectToChapterListTab();
-    }, err => {
-      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.003'));
-    });
+    const editableFields = _.get(this.editorConfig.config, 'editableFields');
+    if (this.editorMode === 'orgreview' && editableFields && !_.isEmpty(editableFields[this.editorMode])) {
+      if (!this.validateFormStatus()) {
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
+        return false;
+      }
+      this.editorService.updateCollection(this.collectionId).subscribe(res => {
+        this.editorService.submitRequestChanges(this.collectionId, comment).subscribe(res => {
+          this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.003'));
+          this.redirectToChapterListTab();
+        }, err => {
+          this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.003'));
+        });
+      }, err => {
+        this.toasterService.error(err);
+      });
+    } else {
+      this.editorService.submitRequestChanges(this.collectionId, comment).subscribe(res => {
+        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.003'));
+        this.redirectToChapterListTab();
+      }, err => {
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.003'));
+      });
+    }
   }
-
   publishContent() {
-    this.editorService.publishContent(this.collectionId).subscribe(res => {
-      this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.004'));
-      this.redirectToChapterListTab();
-    }, err => {
-      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.004'));
-    });
+    const editableFields = _.get(this.editorConfig.config, 'editableFields');
+    if (this.editorMode === 'orgreview' && editableFields && !_.isEmpty(editableFields[this.editorMode])) {
+      if (!this.validateFormStatus()) {
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
+        return false;
+      }
+      this.editorService.updateCollection(this.collectionId).subscribe(res => {
+        this.editorService.publishContent(this.collectionId).subscribe(res => {
+          this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.004'));
+          this.redirectToChapterListTab();
+        }, err => {
+          this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.004'));
+        });
+      }, err => {
+        this.toasterService.error(err);
+      });
+    } else {
+      this.editorService.publishContent(this.collectionId).subscribe(res => {
+        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.004'));
+        this.redirectToChapterListTab();
+      }, err => {
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.004'));
+      });
+    }
   }
-
   updateTreeNodeData() {
     const treeNodeData = _.get(this.treeService.getFirstChild(), 'data.metadata');
     if (!treeNodeData.timeLimits) {
@@ -723,7 +755,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
   isReviewMode() {
-    return  _.includes(['review', 'read', 'sourcingreview' ], this.editorService.editorMode);
+    return  _.includes([ 'review', 'read', 'sourcingreview', 'orgreview' ], this.editorService.editorMode);
    }
   downloadCSVFile(tocUrl) {
     const downloadConfig = {
