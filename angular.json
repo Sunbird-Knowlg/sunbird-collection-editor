@@ -49,7 +49,6 @@
               }
             ],
             "styles": [
-              "node_modules/jquery.fancytree/dist/skin-lion/ui.fancytree.min.css",
               "src/assets/quml-styles/quml-carousel.css",
               "node_modules/@project-sunbird/sb-styles/assets/_styles.scss",
               "src/styles.scss",
@@ -194,9 +193,9 @@
           },
           "configurations": {
             "production": {
-              "project": "projects/collection-editor-library/ng-package.prod.json"
-            ,              "tsConfig": "projects/collection-editor-library/tsconfig.lib.prod.json"
-}
+              "project": "projects/collection-editor-library/ng-package.prod.json",
+              "tsConfig": "projects/collection-editor-library/tsconfig.lib.prod.json"
+            }
           }
         },
         "test": {
@@ -209,7 +208,7 @@
               "src/assets/libs/iziToast/iziToast.min.js",
               "node_modules/jquery/dist/jquery.min.js"
             ],
-            "codeCoverageExclude":[
+            "codeCoverageExclude": [
               "projects/collection-editor-library/src/lib/interfaces/*/*.ts"
             ]
           }
@@ -229,5 +228,8 @@
       }
     }
   },
-  "defaultProject": "sunbird-collection-editor"
+  "defaultProject": "sunbird-collection-editor",
+  "cli": {
+    "analytics": false
+  }
 }

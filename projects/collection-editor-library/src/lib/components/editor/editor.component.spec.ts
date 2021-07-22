@@ -116,7 +116,7 @@ describe('EditorComponent', () => {
     expect(telemetryService.initializeTelemetry).toHaveBeenCalled();
     expect(telemetryService.telemetryPageId).toEqual('collection_editor');
     expect(telemetryService.start).toHaveBeenCalled();
-    expect(component.configObjectType).toBeTruthy();
+    expect(component.isObjectTypeCollection).toBeTruthy();
     expect(component.isStatusReviewMode).toBeTruthy();
   });
 
@@ -631,6 +631,7 @@ describe('EditorComponent', () => {
         }
       }
     };
+    component.isObjectTypeCollection = false;
     spyOn(component, 'updateTreeNodeData').and.callFake(() => {
       return true;
     });
@@ -805,18 +806,17 @@ describe('EditorComponent', () => {
   });
   it('#onClickFolder() should call onClickFolder and set csv create and update options', () => {
     component.isStatusReviewMode = false;
+    component.isEnableCsvAction = true;
     spyOn(component, 'setCsvDropDownOptionsDisable');
     // tslint:disable-next-line:no-string-literal
     spyOn(component['editorService'], 'getHierarchyFolder').and.callFake(() => [1]);
-    spyOn(component, 'saveContent').and.returnValue(Promise.resolve('Content is saved'));
     component.onClickFolder();
     // tslint:disable-next-line:no-string-literal
     const status =  component['editorService'].getHierarchyFolder().length ? true : false;
-    expect(component.saveContent).toHaveBeenCalled();
     expect(status).toBeTruthy();
     // tslint:disable-next-line:no-string-literal
     expect(component['editorService'].getHierarchyFolder).toHaveBeenCalled();
-    expect(component.setCsvDropDownOptionsDisable).toHaveBeenCalledWith(true, true, true);
+    expect(component.setCsvDropDownOptionsDisable).toHaveBeenCalledWith(true, false, false);
   });
 
   it('#setCsvDropDownOptionsDisable and should set csv dropdown options', () => {
@@ -878,6 +878,22 @@ describe('EditorComponent', () => {
     spyOn(component, 'isReviewMode').and.returnValue(true);
     const value = component.isReviewMode();
     expect(value).toBeTruthy();
+  });
+  it('#handleCsvDropdownOptionsOnCollection should set dropdown status initially', () => {
+    spyOn(component, 'setCsvDropDownOptionsDisable').and.callThrough();
+    component.isTreeInitialized = true;
+    component.handleCsvDropdownOptionsOnCollection();
+    expect(component.isEnableCsvAction).toBeTruthy();
+    expect(component.isTreeInitialized).toBeFalsy();
+    expect(component.setCsvDropDownOptionsDisable).toHaveBeenCalledWith(true, true, true);
+  });
+  it('#handleCsvDropdownOptionsOnCollection should set isEnableCsvAction status false', () => {
+    spyOn(component, 'setCsvDropDownOptionsDisable').and.callThrough();
+    component.isTreeInitialized = false;
+    component.handleCsvDropdownOptionsOnCollection();
+    expect(component.isEnableCsvAction).toBeFalsy();
+    expect(component.isTreeInitialized).toBeFalsy();
+    expect(component.setCsvDropDownOptionsDisable).toHaveBeenCalledWith(true, true, true);
   });
 });
 
