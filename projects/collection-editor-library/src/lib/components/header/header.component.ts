@@ -43,8 +43,8 @@ export class HeaderComponent implements OnDestroy, OnInit {
       this.visibility = {};
       this.visibility.saveContent = this.editorService.editorMode === 'edit';
       this.visibility.submitContent = this.editorService.editorMode === 'edit';
-      this.visibility.rejectContent = this.editorService.editorMode === 'review';
-      this.visibility.publishContent = this.editorService.editorMode === 'review';
+      this.visibility.rejectContent = this.editorService.editorMode === 'review' || this.editorService.editorMode === 'orgreview';
+      this.visibility.publishContent = this.editorService.editorMode === 'review' || this.editorService.editorMode === 'orgreview';
       this.visibility.sendForCorrectionsContent = this.editorService.editorMode === 'sourcingreview';
       this.visibility.sourcingApproveContent = this.editorService.editorMode === 'sourcingreview';
       this.visibility.sourcingRejectContent = this.editorService.editorMode === 'sourcingreview';

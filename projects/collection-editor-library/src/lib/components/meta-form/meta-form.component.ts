@@ -234,7 +234,7 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
     console.log(this.formFieldProperties);
   }
   isReviewMode() {
-    return  _.includes(['review', 'read', 'sourcingreview' ], this.editorService.editorMode);
+    return  _.includes([ 'review', 'read', 'sourcingreview', 'orgreview' ], this.editorService.editorMode);
   }
   ifFieldIsEditable(fieldCode) {
     const ediorMode = this.editorService.editorMode;
