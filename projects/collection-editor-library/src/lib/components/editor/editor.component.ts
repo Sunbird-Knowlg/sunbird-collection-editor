@@ -11,7 +11,7 @@ import { HelperService } from '../../services/helper/helper.service';
 import { IEditorConfig } from '../../interfaces/editor';
 import { Router } from '@angular/router';
 import { catchError, map, tap } from 'rxjs/operators';
-import { Observable, throwError, forkJoin } from 'rxjs';
+import { Observable, throwError, forkJoin, Subscription } from 'rxjs';
 import * as _ from 'lodash-es';
 import { ConfigService } from '../../services/config/config.service';
 import { DialcodeService } from '../../services/dialcode/dialcode.service';
@@ -70,6 +70,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public isTreeInitialized: any;
   public ishierarchyConfigSet =  false;
   public addCollaborator: boolean;
+  public unSubscribeShowLibraryPageEmitter: Subscription;
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
               private toasterService: ToasterService, private dialcodeService: DialcodeService,
@@ -128,7 +129,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.telemetryService.initializeTelemetry(this.editorConfig);
     this.telemetryService.telemetryPageId = this.pageId;
     this.telemetryService.start({ type: 'editor', pageid: this.telemetryService.telemetryPageId });
-    this.editorService.getshowLibraryPageEmitter()
+    this.unSubscribeShowLibraryPageEmitter = this.editorService.getshowLibraryPageEmitter()
       .subscribe(item => this.showLibraryComponentPage());
   }
 
@@ -803,6 +804,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     if (this.modal && this.modal.deny) {
       this.modal.deny();
+    }
+    if (this.unSubscribeShowLibraryPageEmitter) {
+      this.unSubscribeShowLibraryPageEmitter.unsubscribe();
     }
   }
 }
