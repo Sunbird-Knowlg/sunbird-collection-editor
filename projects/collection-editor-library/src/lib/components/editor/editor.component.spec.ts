@@ -347,26 +347,6 @@ describe('EditorComponent', () => {
     component.toolbarEventListener(event);
     expect(component.redirectToChapterListTab).toHaveBeenCalledWith({ comment: 'abcd' });
   });
-
-  it('#toolbarEventListener() should call #redirectToChapterListTab() if event is sourcingApprove', () => {
-    spyOn(component, 'redirectToChapterListTab').and.callFake(() => { });
-    const event = {
-      button: 'sourcingApprove'
-    };
-    component.toolbarEventListener(event);
-    expect(component.redirectToChapterListTab).toHaveBeenCalled();
-  });
-
-  it('#toolbarEventListener() should call #redirectToChapterListTab() if event is sourcingReject', () => {
-    spyOn(component, 'redirectToChapterListTab').and.callFake(() => { });
-    const event = {
-      button: 'sourcingReject',
-      comment: 'abcd'
-    };
-    component.toolbarEventListener(event);
-    expect(component.redirectToChapterListTab).toHaveBeenCalledWith({ comment: 'abcd' });
-  });
-
   it('#toolbarEventListener() should set showReviewModal to true ', () => {
     spyOn(component, 'toolbarEventListener').and.callThrough();
     component.showReviewModal = false;
@@ -575,7 +555,21 @@ describe('EditorComponent', () => {
     expect(editorService.publishContent).toHaveBeenCalled();
     expect(component.redirectToChapterListTab).toHaveBeenCalled();
   });
+  it('#toolbarEventListener() should call #redirectToChapterListTab() if event is sourcingApprove', () => {
+    const editorService = TestBed.inject(EditorService);
+    spyOn(component, 'redirectToChapterListTab');
+    component.editorConfig = editorConfig;
+    component.sourcingApproveContent();
+    expect(component.redirectToChapterListTab).toHaveBeenCalled();
+  });
 
+  it('#toolbarEventListener() should call #redirectToChapterListTab() if event is sourcingReject', () => {
+    const editorService = TestBed.inject(EditorService);
+    spyOn(component, 'redirectToChapterListTab');
+    component.editorConfig = editorConfig;
+    component.sourcingRejectContent({'comment': 'abc'});
+    expect(component.redirectToChapterListTab).toHaveBeenCalled();
+  });
   xit('#showLibraryComponentPage() should set #addFromLibraryButtonLoader to true and call #saveContent()', () => {
     spyOn(component, 'saveContent').and.callFake(() => {
       return Promise.resolve();
