@@ -33,7 +33,7 @@ export class LibraryComponent implements OnInit, AfterViewInit, OnDestroy {
   public defaultFilters: any;
   pageStartTime: any;
   selectedUnit: string;
-  public targetFrameworkId: any;
+  public frameworkId: any;
   constructor(public telemetryService: EditorTelemetryService,
               private editorService: EditorService,
               private router: Router,
@@ -52,7 +52,7 @@ export class LibraryComponent implements OnInit, AfterViewInit, OnDestroy {
     this.editorService.fetchCollectionHierarchy(this.collectionId).subscribe((response: any) => {
       this.collectionhierarcyData = response.result.content;
       this.collectionHierarchy = this.getUnitWithChildren(this.collectionhierarcyData, this.collectionId);
-      this.targetFrameworkId = this.collectionhierarcyData.targetFWIds[0];
+      this.frameworkId = this.collectionhierarcyData.targetFWIds[0] || this.collectionhierarcyData.framework;
       this.setDefaultFilters();
       this.fetchContentList();
       this.telemetryService.telemetryPageId = this.pageId;
@@ -93,7 +93,7 @@ export class LibraryComponent implements OnInit, AfterViewInit, OnDestroy {
     }));
 
     if (_.isEmpty(contentTypes)) {
-      contentTypes = _.map(this.helperService.contentPrimaryCategories, 'name'); 
+      contentTypes = _.map(this.helperService.contentPrimaryCategories, 'name');
     }
 
     this.defaultFilters = _.pickBy({
