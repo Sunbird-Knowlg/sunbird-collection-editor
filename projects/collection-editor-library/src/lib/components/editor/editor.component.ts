@@ -70,6 +70,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public isTreeInitialized: any;
   public ishierarchyConfigSet =  false;
   public addCollaborator: boolean;
+  public publishchecklist: any;
+  public requestforchangeschecklist: any;
   public unSubscribeShowLibraryPageEmitter: Subscription;
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
@@ -138,6 +140,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     let targetFWIdentifiers: any;
     let orgFWType: any;
     let targetFWType: any;
+    this.publishchecklist = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.publishchecklist.properties');
+    this.requestforchangeschecklist = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.requestforchangeschecklist.properties');
     orgFWIdentifiers = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.framework.enum') ||
       _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.framework.default');
     if (_.isEmpty(this.targetFramework || _.get(this.editorConfig, 'context.targetFWIds'))) {
@@ -353,7 +357,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.rejectContent(event.comment);
         break;
       case 'publishContent':
-        this.publishContent();
+        this.publishContent(event.publishChecklist);
         break;
       case 'onFormStatusChange':
         const selectedNode = this.treeService.getActiveNode();
@@ -541,7 +545,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       });
     }
   }
-  publishContent() {
+  publishContent(publishChecklist) {
     const editableFields = _.get(this.editorConfig.config, 'editableFields');
     if (this.editorMode === 'orgreview' && editableFields && !_.isEmpty(editableFields[this.editorMode])) {
       if (!this.validateFormStatus()) {
@@ -549,7 +553,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         return false;
       }
       this.editorService.updateCollection(this.collectionId).subscribe(res => {
-        this.editorService.publishContent(this.collectionId).subscribe(res => {
+        this.editorService.publishContent(this.collectionId, publishChecklist).subscribe(res => {
           this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.004'));
           this.redirectToChapterListTab();
         }, err => {
@@ -559,7 +563,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.toasterService.error(err);
       });
     } else {
-      this.editorService.publishContent(this.collectionId).subscribe(res => {
+      this.editorService.publishContent(this.collectionId, publishChecklist).subscribe(res => {
         this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.004'));
         this.redirectToChapterListTab();
       }, err => {
