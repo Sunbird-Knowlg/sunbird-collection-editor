@@ -378,10 +378,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.redirectToChapterListTab({ comment: event.comment });
         break;
       case 'sourcingApprove':
-        this.redirectToChapterListTab();
+        this.sourcingApproveContent();
         break;
       case 'sourcingReject':
-        this.redirectToChapterListTab({ comment: event.comment });
+        this.sourcingRejectContent({ comment: event.comment })
         break;
       case 'addCollaborator':
         this.toggleCollaboratorModalPoup();
@@ -569,6 +569,38 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       }, err => {
         this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.004'));
       });
+    }
+  }
+  sourcingApproveContent () {
+    const editableFields = _.get(this.editorConfig.config, 'editableFields');
+    if (this.editorMode === 'sourcingreview' && editableFields && !_.isEmpty(editableFields[this.editorMode])) {
+      if (!this.validateFormStatus()) {
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
+        return false;
+      }
+      this.editorService.updateCollection(this.collectionId).subscribe(res => {
+          this.redirectToChapterListTab();
+      }, err => {
+        this.toasterService.error(err);
+      });
+    } else {
+        this.redirectToChapterListTab();
+    }
+  } 
+  sourcingRejectContent(obj) {
+    const editableFields = _.get(this.editorConfig.config, 'editableFields');
+    if (this.editorMode === 'sourcingreview' && editableFields && !_.isEmpty(editableFields[this.editorMode])) {
+      if (!this.validateFormStatus()) {
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
+        return false;
+      }
+      this.editorService.updateCollection(this.collectionId).subscribe(res => {
+          this.redirectToChapterListTab(obj);
+      }, err => {
+        this.toasterService.error(err);
+      });
+    } else {
+        this.redirectToChapterListTab(obj);
     }
   }
   updateTreeNodeData() {
