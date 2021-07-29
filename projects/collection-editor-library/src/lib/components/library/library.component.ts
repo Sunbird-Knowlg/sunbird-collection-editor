@@ -52,7 +52,11 @@ export class LibraryComponent implements OnInit, AfterViewInit, OnDestroy {
     this.editorService.fetchCollectionHierarchy(this.collectionId).subscribe((response: any) => {
       this.collectionhierarcyData = response.result.content;
       this.collectionHierarchy = this.getUnitWithChildren(this.collectionhierarcyData, this.collectionId);
-      this.frameworkId = this.collectionhierarcyData.targetFWIds[0] || this.collectionhierarcyData.framework;
+      if (_.has(this.collectionhierarcyData, 'targetFWIds')) {
+        this.frameworkId = _.first(_.castArray(this.collectionhierarcyData.targetFWIds));
+      } else {
+        this.frameworkId = _.first(_.castArray(this.collectionhierarcyData.framework));
+      }
       this.setDefaultFilters();
       this.fetchContentList();
       this.telemetryService.telemetryPageId = this.pageId;
