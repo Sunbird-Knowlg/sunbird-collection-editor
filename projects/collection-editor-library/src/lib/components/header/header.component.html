@@ -132,7 +132,7 @@
   </div> 
 </div>
 </div>
-
+<!-- 
 <sui-modal *ngIf="showRequestChangesPopup" [mustScroll]="true" [isClosable]="false" [transitionDuration]="0"
   [size]="'normal'" class="sb-modal bx-none overflow-modal" appBodyScroll #modal (dismissed)="showRequestChangesPopup = false;">
   <div class="sb-modal-header">
@@ -147,9 +147,6 @@
               <textarea type="text" class="wmd-input width-100 sb-form-control" id="wmd-input" [(ngModel)]="rejectComment" placeholder="Add comment" name="rejectComment" required maxlength="{{configService?.editorConfig?.rejectCommentsMaxLength}}"></textarea>
               <label class="ui basic red error label pt-1 mt-5 width-100"
                   *ngIf="FormControl.form.controls.rejectComment?.touched && !FormControl.form.valid">{{configService.labelConfig?.lbl?.fillComments}} </label>
-
-              <!-- <textarea rows="4" name="moretext" class="sb-form-control" placeholder="Type here..."></textarea>
-              <span class="characters-left">1000 Characters left</span> -->
           </div>
       </div>
   </div>
@@ -162,9 +159,9 @@
     libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('cancel','click','cancel', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'add_review_comments'})">{{configService.labelConfig?.button_labels?.cancel_btn_label}}</button>
   </div>
 </form>
-</sui-modal>
+</sui-modal> -->
 
-<sui-modal *ngIf="showPublishCollectionPopup" [mustScroll]="true" [isClosable]="true" [transitionDuration]="0"
+<!-- <sui-modal *ngIf="showPublishCollectionPopup" [mustScroll]="true" [isClosable]="true" [transitionDuration]="0"
       [size]="'small'" class="sb-modal bx-none overflow-modal" appBodyScroll
       (dismissed)="showPublishCollectionPopup = !showPublishCollectionPopup" #modal>
       <div class="sb-modal-header">
@@ -183,4 +180,12 @@
           {{configService.labelConfig?.button_labels?.no_btn_label}}
         </button>
       </div>
-</sui-modal>
+</sui-modal> -->
+
+<lib-request-checklist *ngIf="showRequestChangesPopup"   [actionType]="actionType"
+[requestforchangeschecklist]="requestforchangeschecklist" (requestEmitter)="requestEmitter($event)">
+</lib-request-checklist>
+
+<lib-publish-checklist *ngIf="showPublishCollectionPopup" [publishchecklist]="publishchecklist" 
+ (publishEmitter)="publishEmitter($event)">
+</lib-publish-checklist>

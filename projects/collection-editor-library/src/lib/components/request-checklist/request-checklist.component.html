@@ -1,0 +1,63 @@
+<sui-modal *ngIf="!requestforchangeschecklist?.contents" [mustScroll]="true" [isClosable]="true"
+    [transitionDuration]="0" [size]="'normal'" class="sb-modal bx-none overflow-modal" appBodyScroll #modal
+    (dismissed)="handlePopUpEvents('closeModal', modal)">
+    <div class="sb-modal-header">
+        {{configService.labelConfig?.lbl?.addReviewComments}}
+    </div>
+    <form #FormControl="ngForm" class="ui form">
+        <div class="sb-modal-content">
+            <div class="sb-field-group">
+                <label>{{configService.labelConfig?.lbl?.enterYourComments}}</label>
+                <div class="sb-field relative">
+
+                    <textarea type="text" class="wmd-input width-100 sb-form-control" id="wmd-input"
+                        [(ngModel)]="rejectComment" placeholder="Add comment" name="rejectComment" required
+                        maxlength="{{configService?.editorConfig?.rejectCommentsMaxLength}}"></textarea>
+                    <label class="ui basic red error label pt-1 mt-5 width-100"
+                        *ngIf="FormControl.form.controls.rejectComment?.touched && !FormControl.form.valid">{{configService.labelConfig?.lbl?.fillComments}}
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="sb-modal-actions">
+            <button id="submitReview" type="submit" class="sb-btn sb-btn-normal"
+                [ngClass]="{'sb-btn-primary': FormControl.form.valid, 'sb-btn-disabled': !FormControl.form.valid}"
+                (click)="handlePopUpEvents('rejectContent', modal);"
+                [disabled]="!FormControl.form.valid" libTelemetryInteract
+                [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('submit_review','click','submit', telemetryService.telemetryPageId, {key: 'dialog_id', value: 'add_review_comments'})">
+                {{configService.labelConfig?.button_labels?.submit_review_btn_label}} </button>
+            <button class="sb-btn sb-btn-normal sb-btn-outline-primary" (click)="handlePopUpEvents('closeModal', modal)"
+                libTelemetryInteract
+                [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('cancel','click','cancel', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'add_review_comments'})">{{configService.labelConfig?.button_labels?.cancel_btn_label}}</button>
+        </div>
+    </form>
+</sui-modal>
+
+
+<sui-modal *ngIf="requestforchangeschecklist?.contents" [mustScroll]="true" [isClosable]="true"
+    [transitionDuration]="0" [size]="'normal'" class="sb-modal bx-none overflow-modal" appBodyScroll #modal
+    (dismissed)="handlePopUpEvents('closeModal', modal)">
+    <div class="sb-modal-header">
+        {{configService.labelConfig?.lbl?.addReviewComments}}
+    </div>
+    <div class="sb-modal-content">
+    <div class="sectionTitle" *ngIf="requestforchangeschecklist?.title">{{requestforchangeschecklist?.title}}</div>
+        <sb-dynamic-form *ngIf="requestforchangeschecklist?.contents" [config]="requestforchangeschecklist?.contents"
+            (initialize)="outputData($event)" (statusChanges)="onStatusChanges($event)"
+            (valueChanges)="valueChanges($event)"></sb-dynamic-form>
+    </div>
+
+        <div class="sb-modal-actions">
+            <button class="sb-btn sb-btn-normal"
+                [ngClass]="{'sb-btn-primary': isButtonEnable, 'sb-btn-disabled': !isButtonEnable}"
+                [disabled]="!isButtonEnable" (click)="handlePopUpEvents('rejectContent', modal)" libTelemetryInteract
+                [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('yes','click','submit', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'add_review_comments'})">
+                {{configService.labelConfig?.button_labels?.yes_btn_label}}
+            </button>
+            <button class="sb-btn sb-btn-normal sb-btn-outline-primary" (click)="handlePopUpEvents('closeModal', modal)"
+                libTelemetryInteract
+                [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('no','click','cancel', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'add_review_comments'})">
+                {{configService.labelConfig?.button_labels?.no_btn_label}}
+            </button>
+        </div>
+</sui-modal>

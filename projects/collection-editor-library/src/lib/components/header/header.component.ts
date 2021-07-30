@@ -16,6 +16,8 @@ export class HeaderComponent implements OnDestroy, OnInit {
   @Input() labelConfigData: any;
   @Input() buttonLoaders: any;
   @Input() showComment: any;
+  @Input() publishchecklist: any;
+  @Input() requestforchangeschecklist: any;
   @Output() toolbarEmitter = new EventEmitter<any>();
   @ViewChild('FormControl') FormControl: NgForm;
   @ViewChild('modal') public modal;
@@ -66,12 +68,25 @@ export class HeaderComponent implements OnDestroy, OnInit {
   openRequestChangePopup(action: string) {
     this.actionType = action;
     this.showRequestChangesPopup = true;
+    console.log(action, 'openRequestChangePopup');
   }
 
   buttonEmitter(action) {
     this.toolbarEmitter.emit({button: action.type, ...(action.comment && {comment: this.rejectComment})});
   }
-
+  publishEmitter(event) {
+    this.showPublishCollectionPopup = false;
+    if(event.button === 'publishContent') {
+      this.toolbarEmitter.emit(event)
+    }
+  }
+  requestEmitter(event) {
+    console.log(event, 'event');
+    this.showRequestChangesPopup = false;
+    if(event.button !== 'closeModal') {
+    this.toolbarEmitter.emit(event)
+    }
+  }
   ngOnDestroy() {
     if (this.modal && this.modal.deny) {
       this.modal.deny();

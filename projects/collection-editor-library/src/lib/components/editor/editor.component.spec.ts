@@ -551,7 +551,7 @@ describe('EditorComponent', () => {
     spyOn(editorService, 'publishContent').and.returnValue(of({}));
     spyOn(component, 'redirectToChapterListTab');
     component.editorConfig = editorConfig;
-    component.publishContent();
+    component.publishContent([]);
     expect(editorService.publishContent).toHaveBeenCalled();
     expect(component.redirectToChapterListTab).toHaveBeenCalled();
   });
