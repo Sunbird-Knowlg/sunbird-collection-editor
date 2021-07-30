@@ -60,27 +60,29 @@ describe('RequestChecklistComponent', () => {
     expect(component.requestEmitter.emit).toHaveBeenCalledWith({ button: type });
     expect(modal.deny).toHaveBeenCalled();
   });
-  it('#handlePopUpEvents should close popup with rejectContent', () => {
+  it('#handlePopUpEvents should close popup with rejectContent for requestforchangeschecklist null value', () => {
     spyOn(component.requestEmitter, 'emit');
     const modal = {
       deny: jasmine.createSpy('deny')
     };
+    component.actionType = 'rejectContent';
     component.requestforchangeschecklist = null;
     component.rejectComment = 'sample comment'
     component.handlePopUpEvents('rejectContent',modal);
-    expect(component.requestEmitter.emit).toHaveBeenCalledWith({ button: 'rejectContent', rejectComment: component.rejectComment, rejectReasons: [] });
+    expect(component.requestEmitter.emit).toHaveBeenCalledWith({ button: component.actionType, rejectComment: component.rejectComment, rejectReasons: [] });
     expect(modal.deny).toHaveBeenCalled();
   });
-  it('#handlePopUpEvents should close popup with rejectContent', () => {
+  it('#handlePopUpEvents should close popup with rejectContent for requestforchangeschecklist', () => {
     spyOn(component.requestEmitter, 'emit');
     const modal = {
       deny: jasmine.createSpy('deny')
     };
+    component.actionType = 'rejectContent';
     component.requestforchangeschecklist = mockData.requestforchangeschecklist;
     component.checkBoxSelected = mockData.checkedData;
     component.rejectComment = 'sample comment'
     component.handlePopUpEvents('rejectContent',modal);
-    expect(component.requestEmitter.emit).toHaveBeenCalledWith({ button: 'rejectContent', rejectComment: component.rejectComment, rejectReasons: mockData.rejectReasons });
+    expect(component.requestEmitter.emit).toHaveBeenCalledWith({ button: component.actionType, rejectComment: component.rejectComment, rejectReasons: mockData.rejectReasons });
     expect(modal.deny).toHaveBeenCalled();
   });
 });
