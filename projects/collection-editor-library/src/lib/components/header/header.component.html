@@ -132,7 +132,7 @@
   </div> 
 </div>
 </div>
-<!-- 
+
 <sui-modal *ngIf="showRequestChangesPopup" [mustScroll]="true" [isClosable]="false" [transitionDuration]="0"
   [size]="'normal'" class="sb-modal bx-none overflow-modal" appBodyScroll #modal (dismissed)="showRequestChangesPopup = false;">
   <div class="sb-modal-header">
@@ -159,7 +159,7 @@
     libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('cancel','click','cancel', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'add_review_comments'})">{{configService.labelConfig?.button_labels?.cancel_btn_label}}</button>
   </div>
 </form>
-</sui-modal> -->
+</sui-modal>
 
 <!-- <sui-modal *ngIf="showPublishCollectionPopup" [mustScroll]="true" [isClosable]="true" [transitionDuration]="0"
       [size]="'small'" class="sb-modal bx-none overflow-modal" appBodyScroll
@@ -182,9 +182,9 @@
       </div>
 </sui-modal> -->
 
-<lib-request-checklist *ngIf="showRequestChangesPopup"   [actionType]="actionType"
+<!-- <lib-request-checklist *ngIf="showRequestChangesPopup"   [actionType]="actionType"
 [requestforchangeschecklist]="requestforchangeschecklist" (requestEmitter)="requestEmitter($event)">
-</lib-request-checklist>
+</lib-request-checklist> -->
 
 <lib-publish-checklist *ngIf="showPublishCollectionPopup" [publishchecklist]="publishchecklist" 
  (publishEmitter)="publishEmitter($event)">

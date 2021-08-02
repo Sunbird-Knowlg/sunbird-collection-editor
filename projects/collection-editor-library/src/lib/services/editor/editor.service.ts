@@ -216,7 +216,7 @@ export class EditorService {
       request: {
         [objType]: {
           lastPublishedBy: this.editorConfig.context.user.id,
-          publishChecklist: _.get(publishData, 'publishChecklist')
+          publishChecklist: _.get(publishData, 'publishCheckList')
         }
       }
     };

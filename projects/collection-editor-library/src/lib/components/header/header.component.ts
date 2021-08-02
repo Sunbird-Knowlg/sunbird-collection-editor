@@ -68,7 +68,6 @@ export class HeaderComponent implements OnDestroy, OnInit {
   openRequestChangePopup(action: string) {
     this.actionType = action;
     this.showRequestChangesPopup = true;
-    console.log(action, 'openRequestChangePopup');
   }
 
   buttonEmitter(action) {
@@ -81,7 +80,6 @@ export class HeaderComponent implements OnDestroy, OnInit {
     }
   }
   requestEmitter(event) {
-    console.log(event, 'event');
     this.showRequestChangesPopup = false;
     if(event.button !== 'closeModal') {
     this.toolbarEmitter.emit(event)

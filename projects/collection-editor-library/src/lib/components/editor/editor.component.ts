@@ -527,7 +527,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         return false;
       }
       this.editorService.updateCollection(this.collectionId).subscribe(res => {
-        this.editorService.submitRequestChanges(this.collectionId, rejectData).subscribe(res => {
+        this.editorService.submitRequestChanges(this.collectionId, rejectData).subscribe(response => {
           this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.003'));
           this.redirectToChapterListTab();
         }, err => {
@@ -553,7 +553,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         return false;
       }
       this.editorService.updateCollection(this.collectionId).subscribe(res => {
-        this.editorService.publishContent(this.collectionId, publishData).subscribe(res => {
+        this.editorService.publishContent(this.collectionId, publishData).subscribe(response => {
           this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.004'));
           this.redirectToChapterListTab();
         }, err => {
