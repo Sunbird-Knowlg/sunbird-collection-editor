@@ -173,14 +173,15 @@ export class EditorService {
     return this.publicDataService.post(option);
   }
 
-  publishContent(contentId) {
+  publishContent(contentId, publishData) {
     let objType = this.configService.categoryConfig[this.editorConfig.config.objectType];
     objType = objType.toLowerCase();
     const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
     const requestBody = {
       request: {
         [objType]: {
-          lastPublishedBy: this.editorConfig.context.user.id
+          lastPublishedBy: this.editorConfig.context.user.id,
+          publishChecklist: _.get(publishData, 'publishCheckList')
         }
       }
     };

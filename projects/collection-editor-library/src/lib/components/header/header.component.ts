@@ -16,6 +16,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
   @Input() labelConfigData: any;
   @Input() buttonLoaders: any;
   @Input() showComment: any;
+  @Input() publishchecklist: any;
   @Output() toolbarEmitter = new EventEmitter<any>();
   @ViewChild('FormControl') FormControl: NgForm;
   @ViewChild('modal') public modal;
@@ -71,7 +72,12 @@ export class HeaderComponent implements OnDestroy, OnInit {
   buttonEmitter(action) {
     this.toolbarEmitter.emit({button: action.type, ...(action.comment && {comment: this.rejectComment})});
   }
-
+  publishEmitter(event) {
+    this.showPublishCollectionPopup = false;
+    if(event.button === 'publishContent') {
+      this.toolbarEmitter.emit(event)
+    }
+  }
   ngOnDestroy() {
     if (this.modal && this.modal.deny) {
       this.modal.deny();

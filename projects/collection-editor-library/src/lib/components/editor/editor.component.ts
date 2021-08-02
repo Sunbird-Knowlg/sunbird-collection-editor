@@ -70,6 +70,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public isTreeInitialized: any;
   public ishierarchyConfigSet =  false;
   public addCollaborator: boolean;
+  public publishchecklist: any;
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
               private toasterService: ToasterService, private dialcodeService: DialcodeService,
@@ -139,6 +140,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     let targetFWType: any;
     orgFWIdentifiers = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.framework.enum') ||
       _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.framework.default');
+      this.publishchecklist = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.publishchecklist.properties');
     if (_.isEmpty(this.targetFramework || _.get(this.editorConfig, 'context.targetFWIds'))) {
       // tslint:disable-next-line:max-line-length
       targetFWIdentifiers = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.targetFWIds.default');
@@ -352,7 +354,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.rejectContent(event.comment);
         break;
       case 'publishContent':
-        this.publishContent();
+        this.publishContent(event);
         break;
       case 'onFormStatusChange':
         const selectedNode = this.treeService.getActiveNode();
@@ -525,8 +527,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  publishContent() {
-    this.editorService.publishContent(this.collectionId).subscribe(res => {
+  publishContent(publishData) {
+    this.editorService.publishContent(this.collectionId, publishData).subscribe(res => {
       this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.004'));
       this.redirectToChapterListTab();
     }, err => {

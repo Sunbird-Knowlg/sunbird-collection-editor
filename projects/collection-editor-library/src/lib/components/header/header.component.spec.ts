@@ -76,4 +76,19 @@ describe('HeaderComponent', () => {
     component.ngOnDestroy();
     expect(component.modal.deny).toHaveBeenCalled();
   });
+  it('#publishEmitter() should call publishEmitter for close modal', () => {
+    const data = { button: 'closeModal' };
+    component.showPublishCollectionPopup = true;
+    spyOn(component.toolbarEmitter, 'emit');
+    component.publishEmitter(data);
+    expect(component.showPublishCollectionPopup).toBeFalsy();
+  });
+  it('#publishEmitter() should call publishEmitter for publish event', () => {
+    const data = { button: 'publishContent', publishCheckList: [] };
+    component.showPublishCollectionPopup = true;
+    spyOn(component.toolbarEmitter, 'emit');
+    component.publishEmitter(data);
+    expect(component.showPublishCollectionPopup).toBeFalsy();
+    expect(component.toolbarEmitter.emit).toHaveBeenCalledWith(data);
+  });
 });

@@ -569,7 +569,7 @@ describe('EditorComponent', () => {
     const editorService = TestBed.inject(EditorService);
     spyOn(editorService, 'publishContent').and.returnValue(of({}));
     spyOn(component, 'redirectToChapterListTab');
-    component.publishContent();
+    component.publishContent({});
     expect(editorService.publishContent).toHaveBeenCalled();
     expect(component.redirectToChapterListTab).toHaveBeenCalled();
   });

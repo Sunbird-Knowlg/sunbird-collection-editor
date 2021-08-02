@@ -1,7 +1,8 @@
 <ng-container [ngSwitch]="pageId">
   <ng-container *ngSwitchCase="'collection_editor'">
     <div class="add-to-library mb-10">
-      <lib-header [pageId]="pageId" [labelConfigData]="toolbarConfig" [buttonLoaders]="buttonLoaders" (toolbarEmitter)="toolbarEventListener($event)"> </lib-header>
+      <lib-header [pageId]="pageId" [publishchecklist]="publishchecklist"
+      [labelConfigData]="toolbarConfig" [buttonLoaders]="buttonLoaders" (toolbarEmitter)="toolbarEventListener($event)"> </lib-header>
       <div class="h-100vh sb-bg-white">
         <div class="ui">
           <div class="ui twelve column grid m-0 ">
