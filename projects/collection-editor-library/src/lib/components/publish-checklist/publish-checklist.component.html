@@ -4,9 +4,9 @@
     {{configService.labelConfig?.lbl?.publishCollection}}
   </div>
   <div class="sb-modal-content">
-    <span *ngIf="!publishchecklist"> {{configService.labelConfig?.lbl?.confirmPublishCollection}} </span>
-    <div class="sectionTitle" *ngIf="publishchecklist?.title">{{publishchecklist.title}}</div>
-    <sb-dynamic-form *ngIf="publishchecklist?.contents" [config]="publishchecklist?.contents"
+    <span *ngIf="!publishchecklist?.length"> {{configService.labelConfig?.lbl?.confirmPublishCollection}} </span>
+    <div class="sectionTitle" *ngIf="publishchecklist?.length">{{configService.labelConfig?.lbl?.publishchecklistTitle}}</div>
+    <sb-dynamic-form *ngIf="publishchecklist?.length" [config]="publishchecklist"
       (initialize)="outputData($event)" (statusChanges)="onStatusChanges($event)" (valueChanges)="valueChanges($event)">
     </sb-dynamic-form>
   </div>

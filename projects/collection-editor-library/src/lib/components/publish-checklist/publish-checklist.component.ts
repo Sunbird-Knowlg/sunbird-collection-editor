@@ -22,12 +22,11 @@ export class PublishChecklistComponent implements OnInit {
   }
 
   handlePopUpEvents(type, modal) {
-    if (type === 'publishContent' && !this.publishchecklist) {
+    if (type === 'publishContent' && !this.publishchecklist.length) {
       this.publishEmitter.emit({ button: type, publishCheckList: [] });
-    } else if (type === 'publishContent' && this.publishchecklist) {
+    } else if (type === 'publishContent' && this.publishchecklist.length) {
       let publishData = []
-      const fields = _.get(this.publishchecklist, 'contents');
-      _.forEach(_.flattenDeep(_.map(fields, 'fields')), field => {
+      _.forEach(_.flattenDeep(_.map(this.publishchecklist, 'fields')), field => {
         if (this.checkBoxSelected && this.checkBoxSelected[field.code]) {
           publishData.push(field.name);
         }

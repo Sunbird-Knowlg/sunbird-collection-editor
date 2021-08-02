@@ -1,7 +1,5 @@
 export const mockData = {
-    publishchecklist: {
-        "title": "Please confirm that ALL the following items are verified (by ticking the check-boxes) before you can publish:",
-        "contents": [
+    publishchecklist: [
             {
                 "name": "Appropriateness",
                 'renderingHints': {
@@ -273,8 +271,7 @@ export const mockData = {
                     }
                 ]
             }
-        ]
-    },
+        ],
     listData: ['No Hate speech, Abuse, Violence, Profanity',
         'No Sexual content, Nudity or Vulgarity', 'No Discrimination or Defamation',
         'Is suitable for children', 'Appropriate Title, Description',
