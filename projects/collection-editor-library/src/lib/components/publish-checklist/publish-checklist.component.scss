@@ -9,3 +9,33 @@
 .formSection {
     padding: 0px !important;
 }
+
+ /* This is for one row 3 column view for check box fields*/
+ .d-grid-inline-3 {
+    display: inline-grid;
+    width: 33.3%;
+    grid-column-gap: 1rem;
+    grid-row-gap: 1rem;
+  }
+  
+   /* This is for show section name for new config */
+  .show-section-name .sectionName {
+    display: block;
+  }
+   /* This is for hide section name  for new config*/
+  .hide-section-name .sectionName {
+    display: none;
+  }
+   /* This is to hide section name for old config*/
+  .two-column-grid .sectionName {
+    display:none;
+  }
+  .sectionName{
+    font-size: 1rem !important;
+    font-weight: 600;
+  }
+  .publish-checklist{
+      label {
+          font-size: 13px !important;
+      }
+  }
