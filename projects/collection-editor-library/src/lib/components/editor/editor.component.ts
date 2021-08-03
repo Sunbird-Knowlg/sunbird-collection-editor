@@ -552,7 +552,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         return false;
       }
       this.editorService.updateCollection(this.collectionId).subscribe(res => {
-        this.editorService.publishContent(this.collectionId, publishData).subscribe(res => {
+        this.editorService.publishContent(this.collectionId, publishData).subscribe(response => {
           this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.004'));
           this.redirectToChapterListTab();
         }, err => {
@@ -572,7 +572,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   sourcingApproveContent (publishCheckList) {
     const editableFields = _.get(this.editorConfig.config, 'editableFields');
-    if (this.editorMode === 'sourcingreview' && ((editableFields && !_.isEmpty(editableFields[this.editorMode]) || this.publishchecklist.length))) {
+    if (this.editorMode === 'sourcingreview' && ((editableFields && !_.isEmpty(editableFields[this.editorMode])) || this.publishchecklist.length)) {
       if (!this.validateFormStatus()) {
         this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
         return false;
