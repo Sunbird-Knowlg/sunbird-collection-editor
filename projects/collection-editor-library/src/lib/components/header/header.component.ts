@@ -74,7 +74,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
   }
   publishEmitter(event) {
     this.showPublishCollectionPopup = false;
-    if(event.button === 'publishContent') {
+    if(event.button === 'publishContent' || event.button === 'sourcingApprove') {
       this.toolbarEmitter.emit(event)
     }
   }
