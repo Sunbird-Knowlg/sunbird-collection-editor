@@ -154,7 +154,7 @@ export class EditorService {
     return formFields;
   }
 
-  updateCollection(collectionId) {
+  updateCollection(collectionId, publishCheckList?) {
     let objType = this.configService.categoryConfig[this.editorConfig.config.objectType];
     objType = objType.toLowerCase();
     const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
@@ -167,6 +167,9 @@ export class EditorService {
         }
       }
     };
+    if(publishCheckList && publishCheckList.length) {
+      requestBody.request[objType]['publishChecklist'] = publishCheckList;
+    }
     const option = {
       url: `${url.SYSYTEM_UPDATE}${collectionId}`,
       data: requestBody

@@ -10,6 +10,7 @@ import * as _ from 'lodash-es';
 })
 export class PublishChecklistComponent implements OnInit {
   @Input() publishchecklist: any;
+  @Input() actionType: any;
   @Output() publishEmitter = new EventEmitter<any>();
   public isButtonEnable = false;
   public checkBoxSelected: any;
@@ -22,16 +23,16 @@ export class PublishChecklistComponent implements OnInit {
   }
 
   handlePopUpEvents(type, modal) {
-    if (type === 'publishContent' && !this.publishchecklist.length) {
-      this.publishEmitter.emit({ button: type, publishCheckList: [] });
-    } else if (type === 'publishContent' && this.publishchecklist.length) {
+    if (type === 'submit' && !this.publishchecklist.length) {
+      this.publishEmitter.emit({ button: this.actionType, publishCheckList: [] });
+    } else if (type === 'submit' && this.publishchecklist.length) {
       let publishData = []
       _.forEach(_.flattenDeep(_.map(this.publishchecklist, 'fields')), field => {
         if (this.checkBoxSelected && this.checkBoxSelected[field.code]) {
           publishData.push(field.name);
         }
       });
-      this.publishEmitter.emit({ button: type, publishCheckList: publishData });
+      this.publishEmitter.emit({ button: this.actionType, publishCheckList: publishData });
     } else if (type === 'closeModal') {
       this.publishEmitter.emit({ button: type });
     }

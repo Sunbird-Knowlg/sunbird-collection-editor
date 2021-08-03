@@ -91,4 +91,10 @@ describe('HeaderComponent', () => {
     expect(component.showPublishCollectionPopup).toBeFalsy();
     expect(component.toolbarEmitter.emit).toHaveBeenCalledWith(data);
   });
+  it('#openPublishCheckListPopup() should open showPublishCollectionPopup', () => {
+    component.showPublishCollectionPopup = false;
+    component.openPublishCheckListPopup('publishContent');
+    expect(component.showPublishCollectionPopup).toBeTruthy();
+    expect(component.actionType).toBeDefined();
+  });
 });

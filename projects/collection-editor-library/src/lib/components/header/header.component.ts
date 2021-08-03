@@ -32,8 +32,8 @@ export class HeaderComponent implements OnDestroy, OnInit {
   public correctionComments: string;
 
   constructor(private editorService: EditorService,
-              public telemetryService: EditorTelemetryService,
-              public configService: ConfigService) {}
+    public telemetryService: EditorTelemetryService,
+    public configService: ConfigService) { }
 
   async ngOnInit() {
     await this.handleActionButtons()
@@ -41,20 +41,20 @@ export class HeaderComponent implements OnDestroy, OnInit {
   }
 
   async handleActionButtons() {
-      this.visibility = {};
-      this.visibility.saveContent = this.editorService.editorMode === 'edit';
-      this.visibility.submitContent = this.editorService.editorMode === 'edit';
-      this.visibility.rejectContent = this.editorService.editorMode === 'review' || this.editorService.editorMode === 'orgreview';
-      this.visibility.publishContent = this.editorService.editorMode === 'review' || this.editorService.editorMode === 'orgreview';
-      this.visibility.sendForCorrectionsContent = this.editorService.editorMode === 'sourcingreview';
-      this.visibility.sourcingApproveContent = this.editorService.editorMode === 'sourcingreview';
-      this.visibility.sourcingRejectContent = this.editorService.editorMode === 'sourcingreview';
-      this.visibility.previewContent = _.get(this.editorService, 'editorConfig.config.objectType') === 'QuestionSet';
-      this.visibility.dialcode = this.editorService.editorMode === 'edit';
-      this.visibility.showOriginPreviewUrl =  _.get(this.editorService, 'editorConfig.config.showOriginPreviewUrl');
-      this.visibility.showSourcingStatus =  _.get(this.editorService, 'editorConfig.config.showSourcingStatus');
-      this.visibility.showCorrectionComments =  _.get(this.editorService, 'editorConfig.config.showCorrectionComments');
-      this.visibility.addCollaborator =  _.get(this.editorService, 'editorConfig.config.showAddCollaborator');
+    this.visibility = {};
+    this.visibility.saveContent = this.editorService.editorMode === 'edit';
+    this.visibility.submitContent = this.editorService.editorMode === 'edit';
+    this.visibility.rejectContent = this.editorService.editorMode === 'review' || this.editorService.editorMode === 'orgreview';
+    this.visibility.publishContent = this.editorService.editorMode === 'review' || this.editorService.editorMode === 'orgreview';
+    this.visibility.sendForCorrectionsContent = this.editorService.editorMode === 'sourcingreview';
+    this.visibility.sourcingApproveContent = this.editorService.editorMode === 'sourcingreview';
+    this.visibility.sourcingRejectContent = this.editorService.editorMode === 'sourcingreview';
+    this.visibility.previewContent = _.get(this.editorService, 'editorConfig.config.objectType') === 'QuestionSet';
+    this.visibility.dialcode = this.editorService.editorMode === 'edit';
+    this.visibility.showOriginPreviewUrl = _.get(this.editorService, 'editorConfig.config.showOriginPreviewUrl');
+    this.visibility.showSourcingStatus = _.get(this.editorService, 'editorConfig.config.showSourcingStatus');
+    this.visibility.showCorrectionComments = _.get(this.editorService, 'editorConfig.config.showCorrectionComments');
+    this.visibility.addCollaborator = _.get(this.editorService, 'editorConfig.config.showAddCollaborator');
   }
 
   getSourcingData() {
@@ -70,11 +70,15 @@ export class HeaderComponent implements OnDestroy, OnInit {
   }
 
   buttonEmitter(action) {
-    this.toolbarEmitter.emit({button: action.type, ...(action.comment && {comment: this.rejectComment})});
+    this.toolbarEmitter.emit({ button: action.type, ...(action.comment && { comment: this.rejectComment }) });
+  }
+  openPublishCheckListPopup(action) {
+    this.actionType = action;
+    this.showPublishCollectionPopup = true;
   }
   publishEmitter(event) {
     this.showPublishCollectionPopup = false;
-    if(event.button === 'publishContent' || event.button === 'sourcingApprove') {
+    if (event.button === 'publishContent' || event.button === 'sourcingApprove') {
       this.toolbarEmitter.emit(event)
     }
   }

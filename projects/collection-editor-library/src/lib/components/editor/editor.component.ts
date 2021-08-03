@@ -376,7 +376,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.redirectToChapterListTab({ comment: event.comment });
         break;
       case 'sourcingApprove':
-        this.sourcingApproveContent();
+        this.sourcingApproveContent(event?.publishCheckList);
         break;
       case 'sourcingReject':
         this.sourcingRejectContent({ comment: event.comment })
@@ -545,7 +545,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   publishContent(publishData) {
-    const editableFields = _.get(this.editorConfig.config, 'editableFields');
+    const editableFields = _.get(this.editorConfig, 'config.editableFields');
     if (this.editorMode === 'orgreview' && editableFields && !_.isEmpty(editableFields[this.editorMode])) {
       if (!this.validateFormStatus()) {
         this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
@@ -570,14 +570,14 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       });
     }
   }
-  sourcingApproveContent () {
+  sourcingApproveContent (publishCheckList) {
     const editableFields = _.get(this.editorConfig.config, 'editableFields');
-    if (this.editorMode === 'sourcingreview' && editableFields && !_.isEmpty(editableFields[this.editorMode])) {
+    if (this.editorMode === 'sourcingreview' && ((editableFields && !_.isEmpty(editableFields[this.editorMode]) || this.publishchecklist.length))) {
       if (!this.validateFormStatus()) {
         this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
         return false;
       }
-      this.editorService.updateCollection(this.collectionId).subscribe(res => {
+      this.editorService.updateCollection(this.collectionId, publishCheckList).subscribe(res => {
           this.redirectToChapterListTab();
       }, err => {
         this.toasterService.error(err);

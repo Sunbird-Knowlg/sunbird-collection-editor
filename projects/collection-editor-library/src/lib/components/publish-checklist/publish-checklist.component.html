@@ -13,7 +13,7 @@
   <div class="sb-modal-actions">
     <button class="sb-btn sb-btn-normal"
       [ngClass]="{'sb-btn-primary': isButtonEnable, 'sb-btn-disabled': !isButtonEnable}" [disabled]="!isButtonEnable"
-      (click)="handlePopUpEvents('publishContent', modal)" libTelemetryInteract
+      (click)="handlePopUpEvents('submit', modal)" libTelemetryInteract
       [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('yes','click','submit', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'publish_collection'})">
       {{configService.labelConfig?.button_labels?.yes_btn_label}}
     </button>
