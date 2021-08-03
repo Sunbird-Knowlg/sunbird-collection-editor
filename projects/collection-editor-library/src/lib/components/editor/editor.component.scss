@@ -331,7 +331,13 @@ input:focus-visible {
   }
 }
 // Fancy tree css
+#fancytree-drop-marker.fa-long-arrow-right:before{
+  content: " " !important;
+}
 .sb-collectionTree-fancyTreelist {
+  ul> li> span:first-child{
+    padding: 15px 33px;
+  }
   .fancytree-exp-n span.fancytree-expander,.fancytree-exp-nl span.fancytree-expander{
     display: none !important;
   }
@@ -391,7 +397,9 @@ input:focus-visible {
   .fancytree-exp-edl span.fancytree-expander, .fancytree-exp-el span.fancytree-expander{
     background-position: -34px -94px !important;
   }
-
+  .fancytree-treefocus span.fancytree-active span.fancytree-title,.fancytree-treefocus span.fancytree-selected span.fancytree-title{
+    color:inherit;
+  }
 }
 .sb-loader {
   position: fixed;

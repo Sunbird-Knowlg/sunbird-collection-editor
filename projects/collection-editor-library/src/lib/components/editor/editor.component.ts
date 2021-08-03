@@ -11,7 +11,7 @@ import { HelperService } from '../../services/helper/helper.service';
 import { IEditorConfig } from '../../interfaces/editor';
 import { Router } from '@angular/router';
 import { catchError, map, tap } from 'rxjs/operators';
-import { Observable, throwError, forkJoin } from 'rxjs';
+import { Observable, throwError, forkJoin, Subscription } from 'rxjs';
 import * as _ from 'lodash-es';
 import { ConfigService } from '../../services/config/config.service';
 import { DialcodeService } from '../../services/dialcode/dialcode.service';
@@ -71,6 +71,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public ishierarchyConfigSet =  false;
   public addCollaborator: boolean;
   public publishchecklist: any;
+  public unSubscribeShowLibraryPageEmitter: Subscription;
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
               private toasterService: ToasterService, private dialcodeService: DialcodeService,
@@ -129,7 +130,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.telemetryService.initializeTelemetry(this.editorConfig);
     this.telemetryService.telemetryPageId = this.pageId;
     this.telemetryService.start({ type: 'editor', pageid: this.telemetryService.telemetryPageId });
-    this.editorService.getshowLibraryPageEmitter()
+    this.unSubscribeShowLibraryPageEmitter = this.editorService.getshowLibraryPageEmitter()
       .subscribe(item => this.showLibraryComponentPage());
   }
 
@@ -375,10 +376,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.redirectToChapterListTab({ comment: event.comment });
         break;
       case 'sourcingApprove':
-        this.redirectToChapterListTab();
+        this.sourcingApproveContent();
         break;
       case 'sourcingReject':
-        this.redirectToChapterListTab({ comment: event.comment });
+        this.sourcingRejectContent({ comment: event.comment })
         break;
       case 'addCollaborator':
         this.toggleCollaboratorModalPoup();
@@ -506,7 +507,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       this.showPreview = true;
     }
   }
-
   sendForReview() {
     this.saveContent().then(messg => {
       this.editorService.reviewContent(this.collectionId).subscribe(data => {
@@ -517,25 +517,91 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       });
     }).catch(err => this.toasterService.error(err));
   }
-
   rejectContent(comment) {
-    this.editorService.submitRequestChanges(this.collectionId, comment).subscribe(res => {
-      this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.003'));
-      this.redirectToChapterListTab();
-    }, err => {
-      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.003'));
-    });
+    const editableFields = _.get(this.editorConfig.config, 'editableFields');
+    if (this.editorMode === 'orgreview' && editableFields && !_.isEmpty(editableFields[this.editorMode])) {
+      if (!this.validateFormStatus()) {
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
+        return false;
+      }
+      this.editorService.updateCollection(this.collectionId).subscribe(res => {
+        this.editorService.submitRequestChanges(this.collectionId, comment).subscribe(res => {
+          this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.003'));
+          this.redirectToChapterListTab();
+        }, err => {
+          this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.003'));
+        });
+      }, err => {
+        this.toasterService.error(err);
+      });
+    } else {
+      this.editorService.submitRequestChanges(this.collectionId, comment).subscribe(res => {
+        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.003'));
+        this.redirectToChapterListTab();
+      }, err => {
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.003'));
+      });
+    }
   }
 
   publishContent(publishData) {
-    this.editorService.publishContent(this.collectionId, publishData).subscribe(res => {
-      this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.004'));
-      this.redirectToChapterListTab();
-    }, err => {
-      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.004'));
-    });
+    const editableFields = _.get(this.editorConfig.config, 'editableFields');
+    if (this.editorMode === 'orgreview' && editableFields && !_.isEmpty(editableFields[this.editorMode])) {
+      if (!this.validateFormStatus()) {
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
+        return false;
+      }
+      this.editorService.updateCollection(this.collectionId).subscribe(res => {
+        this.editorService.publishContent(this.collectionId, publishData).subscribe(res => {
+          this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.004'));
+          this.redirectToChapterListTab();
+        }, err => {
+          this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.004'));
+        });
+      }, err => {
+        this.toasterService.error(err);
+      });
+    } else {
+      this.editorService.publishContent(this.collectionId, publishData).subscribe(res => {
+        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.004'));
+        this.redirectToChapterListTab();
+      }, err => {
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.004'));
+      });
+    }
   }
-
+  sourcingApproveContent () {
+    const editableFields = _.get(this.editorConfig.config, 'editableFields');
+    if (this.editorMode === 'sourcingreview' && editableFields && !_.isEmpty(editableFields[this.editorMode])) {
+      if (!this.validateFormStatus()) {
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
+        return false;
+      }
+      this.editorService.updateCollection(this.collectionId).subscribe(res => {
+          this.redirectToChapterListTab();
+      }, err => {
+        this.toasterService.error(err);
+      });
+    } else {
+        this.redirectToChapterListTab();
+    }
+  } 
+  sourcingRejectContent(obj) {
+    const editableFields = _.get(this.editorConfig.config, 'editableFields');
+    if (this.editorMode === 'sourcingreview' && editableFields && !_.isEmpty(editableFields[this.editorMode])) {
+      if (!this.validateFormStatus()) {
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
+        return false;
+      }
+      this.editorService.updateCollection(this.collectionId).subscribe(res => {
+          this.redirectToChapterListTab(obj);
+      }, err => {
+        this.toasterService.error(err);
+      });
+    } else {
+        this.redirectToChapterListTab(obj);
+    }
+  }
   updateTreeNodeData() {
     const treeNodeData = _.get(this.treeService.getFirstChild(), 'data.metadata');
     if (!treeNodeData.timeLimits) {
@@ -725,7 +791,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
   isReviewMode() {
-    return  _.includes(['review', 'read', 'sourcingreview' ], this.editorService.editorMode);
+    return  _.includes([ 'review', 'read', 'sourcingreview', 'orgreview' ], this.editorService.editorMode);
    }
   downloadCSVFile(tocUrl) {
     const downloadConfig = {
@@ -773,6 +839,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     if (this.modal && this.modal.deny) {
       this.modal.deny();
+    }
+    if (this.unSubscribeShowLibraryPageEmitter) {
+      this.unSubscribeShowLibraryPageEmitter.unsubscribe();
     }
   }
 }
