@@ -154,7 +154,7 @@ export class EditorService {
     return formFields;
   }
 
-  updateCollection(collectionId, publishCheckList?) {
+  updateCollection(collectionId, data?) {
     let objType = this.configService.categoryConfig[this.editorConfig.config.objectType];
     objType = objType.toLowerCase();
     const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
@@ -167,8 +167,9 @@ export class EditorService {
         }
       }
     };
-    if(publishCheckList && publishCheckList.length) {
-      requestBody.request[objType]['publishChecklist'] = publishCheckList;
+    const publishChecklist =  _.get(data, 'publishCheckList') || [];
+    if(publishChecklist && !_.isEmpty(publishChecklist)) {
+      requestBody.request[objType]['publishChecklist'] = publishChecklist;
     }
     const option = {
       url: `${url.SYSYTEM_UPDATE}${collectionId}`,
@@ -210,18 +211,21 @@ export class EditorService {
     return this.publicDataService.post(option);
   }
 
-  publishContent(contentId, publishData) {
+  publishContent(contentId, data) {
     let objType = this.configService.categoryConfig[this.editorConfig.config.objectType];
     objType = objType.toLowerCase();
     const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
     const requestBody = {
       request: {
         [objType]: {
-          lastPublishedBy: this.editorConfig.context.user.id,
-          publishChecklist: _.get(publishData, 'publishCheckList')
+          lastPublishedBy: this.editorConfig.context.user.id
         }
       }
     };
+   const publishChecklist =  _.get(data, 'publishCheckList') || [];
+    if(publishChecklist && !_.isEmpty(publishChecklist)) {
+      requestBody.request[objType]['publishChecklist'] = publishChecklist;
+    }
     const option = {
       url: `${url.CONTENT_PUBLISH}${contentId}`,
       data: requestBody

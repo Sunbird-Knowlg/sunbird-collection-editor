@@ -58,7 +58,7 @@ describe('PublishChecklistComponent', () => {
     component.publishchecklist = {};
     component.actionType = 'publishContent';
     component.handlePopUpEvents('submit',modal);
-    expect(component.publishEmitter.emit).toHaveBeenCalledWith({ button: 'publishContent', publishCheckList: [] });
+    expect(component.publishEmitter.emit).toHaveBeenCalledWith({ button: 'publishContent',});
     expect(modal.deny).toHaveBeenCalled();
   });
   it('#handlePopUpEvents should close popup with publishContent when publishchecklist is configured', () => {

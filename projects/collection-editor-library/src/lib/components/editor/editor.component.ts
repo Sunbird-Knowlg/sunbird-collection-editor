@@ -141,7 +141,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     let targetFWType: any;
     orgFWIdentifiers = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.framework.enum') ||
       _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.framework.default');
-      this.publishchecklist = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.publishchecklist.properties');
+      this.publishchecklist = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.publishchecklist.properties') || [];
     if (_.isEmpty(this.targetFramework || _.get(this.editorConfig, 'context.targetFWIds'))) {
       // tslint:disable-next-line:max-line-length
       targetFWIdentifiers = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.targetFWIds.default');
@@ -376,7 +376,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.redirectToChapterListTab({ comment: event.comment });
         break;
       case 'sourcingApprove':
-        this.sourcingApproveContent(event?.publishCheckList);
+        this.sourcingApproveContent(event);
         break;
       case 'sourcingReject':
         this.sourcingRejectContent({ comment: event.comment })
@@ -544,7 +544,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  publishContent(publishData) {
+  publishContent(event) {
     const editableFields = _.get(this.editorConfig, 'config.editableFields');
     if (this.editorMode === 'orgreview' && editableFields && !_.isEmpty(editableFields[this.editorMode])) {
       if (!this.validateFormStatus()) {
@@ -552,7 +552,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         return false;
       }
       this.editorService.updateCollection(this.collectionId).subscribe(res => {
-        this.editorService.publishContent(this.collectionId, publishData).subscribe(response => {
+        this.editorService.publishContent(this.collectionId, event).subscribe(response => {
           this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.004'));
           this.redirectToChapterListTab();
         }, err => {
@@ -562,7 +562,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.toasterService.error(err);
       });
     } else {
-      this.editorService.publishContent(this.collectionId, publishData).subscribe(res => {
+      this.editorService.publishContent(this.collectionId, event).subscribe(res => {
         this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.004'));
         this.redirectToChapterListTab();
       }, err => {
@@ -570,14 +570,14 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       });
     }
   }
-  sourcingApproveContent (publishCheckList) {
+  sourcingApproveContent (event) {
     const editableFields = _.get(this.editorConfig.config, 'editableFields');
-    if (this.editorMode === 'sourcingreview' && ((editableFields && !_.isEmpty(editableFields[this.editorMode])) || this.publishchecklist.length)) {
+    if (this.editorMode === 'sourcingreview' && ((editableFields && !_.isEmpty(editableFields[this.editorMode])) || !_.isEmpty(this.publishchecklist))) {
       if (!this.validateFormStatus()) {
         this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
         return false;
       }
-      this.editorService.updateCollection(this.collectionId, publishCheckList).subscribe(res => {
+      this.editorService.updateCollection(this.collectionId, event).subscribe(res => {
           this.redirectToChapterListTab();
       }, err => {
         this.toasterService.error(err);

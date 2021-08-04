@@ -23,9 +23,9 @@ export class PublishChecklistComponent implements OnInit {
   }
 
   handlePopUpEvents(type, modal) {
-    if (type === 'submit' && !this.publishchecklist.length) {
-      this.publishEmitter.emit({ button: this.actionType, publishCheckList: [] });
-    } else if (type === 'submit' && this.publishchecklist.length) {
+    if (type === 'submit' && _.isEmpty(this.publishchecklist)) {
+      this.publishEmitter.emit({ button: this.actionType });
+    } else if (type === 'submit' && this.publishchecklist && !_.isEmpty(this.publishchecklist)) {
       let publishData = []
       _.forEach(_.flattenDeep(_.map(this.publishchecklist, 'fields')), field => {
         if (this.checkBoxSelected && this.checkBoxSelected[field.code]) {
