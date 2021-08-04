@@ -44,7 +44,6 @@
 }
 
 .sb-card {
-  width: 20.3rem;
   background-color: var(--white);
   border: .0625rem solid #dedede;
   border-radius: .25rem;
@@ -71,7 +70,7 @@
   }
 
   .sb-card-image {
-    width: 4.75rem;
+    width: 3.75rem;
     height: 3.75rem;
     border: .0625rem solid var(--gray-100);
     background-color: rgb(52, 73, 94);
@@ -92,7 +91,7 @@
 
   .sb-card-meta {
       height: 3.75rem;
-      width: 10.75rem;
+      width: 9rem;
       display: flex;
       flex-wrap: wrap;
       flex-direction: column;
