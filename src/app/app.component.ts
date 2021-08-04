@@ -1,14 +1,21 @@
 import { Component } from '@angular/core';
-import { questionEditorConfig, collectionEditorConfig } from './data';
+import { questionEditorConfig, collectionEditorConfig, courseEditorConfig } from './data';
+
+const configMapper = {
+  question: questionEditorConfig,
+  collection : collectionEditorConfig,
+  course: courseEditorConfig
+};
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'sunbird-collection-editor';
+  title = 'Sunbird Collection Editor';
   editor: any = localStorage.getItem('editorType') || '';
-  editorConfig: any = this.editor === 'question' ? questionEditorConfig : collectionEditorConfig;
+  public editorConfig: any = configMapper[this.editor];
 
   editorEventListener(event) {
     this.editor = undefined;
@@ -19,7 +26,9 @@ export class AppComponent {
   setType(editorType) {
     if (editorType === 'question') {
       localStorage.setItem('editorType', 'question');
-    } else {
+    } else if (editorType === 'course') {
+      localStorage.setItem('editorType', 'course');
+    }  else if (editorType === 'collection') {
       localStorage.setItem('editorType', 'collection');
     }
     window.location.reload();
