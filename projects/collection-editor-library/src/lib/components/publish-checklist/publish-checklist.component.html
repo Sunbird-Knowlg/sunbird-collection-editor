@@ -1,0 +1,26 @@
+<sui-modal [mustScroll]="true" [isClosable]="true" [transitionDuration]="0" [size]="'normal'"
+  class="sb-modal bx-none overflow-modal publish-checklist" appBodyScroll (dismissed)="handlePopUpEvents('closeModal', modal)" #modal>
+  <div class="sb-modal-header">
+    {{configService.labelConfig?.lbl?.publishCollection}}
+  </div>
+  <div class="sb-modal-content">
+    <span *ngIf="!publishchecklist?.length"> {{configService.labelConfig?.lbl?.confirmPublishCollection}} </span>
+    <div class="sectionTitle" *ngIf="publishchecklist?.length">{{configService.labelConfig?.lbl?.publishchecklistTitle}}</div>
+    <sb-dynamic-form *ngIf="publishchecklist?.length" [config]="publishchecklist"
+      (initialize)="outputData($event)" (statusChanges)="onStatusChanges($event)" (valueChanges)="valueChanges($event)">
+    </sb-dynamic-form>
+  </div>
+  <div class="sb-modal-actions">
+    <button class="sb-btn sb-btn-normal"
+      [ngClass]="{'sb-btn-primary': isButtonEnable, 'sb-btn-disabled': !isButtonEnable}" [disabled]="!isButtonEnable"
+      (click)="handlePopUpEvents('submit', modal)" libTelemetryInteract
+      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('yes','click','submit', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'publish_collection'})">
+      {{configService.labelConfig?.button_labels?.yes_btn_label}}
+    </button>
+    <button class="sb-btn sb-btn-normal sb-btn-outline-primary" (click)="handlePopUpEvents('closeModal', modal)"
+      libTelemetryInteract
+      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('no','click','cancel', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'add_review_comments'})">
+      {{configService.labelConfig?.button_labels?.no_btn_label}}
+    </button>
+  </div>
+</sui-modal>

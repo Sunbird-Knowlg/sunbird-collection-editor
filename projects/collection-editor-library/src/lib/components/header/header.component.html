@@ -75,7 +75,7 @@
       {{labelConfigData.reject_collection_btn_label}}
     </button>
 
-    <button *ngIf="visibility && visibility?.publishContent" class="sb-btn sb-btn-secondary sb-btn-normal ripple" (click)="showPublishCollectionPopup = true" libTelemetryInteract
+    <button *ngIf="visibility && visibility?.publishContent" class="sb-btn sb-btn-secondary sb-btn-normal ripple" (click)="openPublishCheckListPopup('publishContent')" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('publish','click','submit', telemetryService.telemetryPageId)">
       <i class="{{labelConfigData.publish_collection_btn_icon}}"></i> 
       {{labelConfigData.publish_collection_btn_label}}
@@ -87,7 +87,7 @@
       {{labelConfigData.send_back_for_correction_collection_btn_label}}
     </button>
 
-    <button *ngIf="visibility && visibility?.sourcingApproveContent" class="sb-btn sb-btn-secondary sb-btn-normal ripple mr-10" (click)="buttonEmitter({type:'sourcingApprove'})" libTelemetryInteract
+    <button *ngIf="visibility && visibility?.sourcingApproveContent" class="sb-btn sb-btn-secondary sb-btn-normal ripple mr-10" (click)="openPublishCheckListPopup('sourcingApprove')" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('approve','click','submit', telemetryService.telemetryPageId)">
       <i class="{{labelConfigData.sourcing_approve_collection_btn_icon}}"></i> 
       {{labelConfigData.sourcing_approve_collection_btn_label}}
@@ -164,23 +164,8 @@
 </form>
 </sui-modal>
 
-<sui-modal *ngIf="showPublishCollectionPopup" [mustScroll]="true" [isClosable]="true" [transitionDuration]="0"
-      [size]="'small'" class="sb-modal bx-none overflow-modal" appBodyScroll
-      (dismissed)="showPublishCollectionPopup = !showPublishCollectionPopup" #modal>
-      <div class="sb-modal-header">
-        {{configService.labelConfig?.lbl?.publishCollection}}
-      </div>
-      <div class="sb-modal-content">
-        {{configService.labelConfig?.lbl?.confirmPublishCollection}}
-      </div>
-      <div class="sb-modal-actions">
-        <button class="sb-btn sb-btn-normal sb-btn-primary" (click)="buttonEmitter({type: 'publishContent'});showPublishCollectionPopup = false;"
-        libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('yes','click','submit', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'publish_collection'})">
-          {{configService.labelConfig?.button_labels?.yes_btn_label}}
-        </button>
-        <button class="sb-btn sb-btn-normal sb-btn-outline-primary" (click)="showPublishCollectionPopup = !showPublishCollectionPopup"
-        libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('no','click','cancel', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'add_review_comments'})">
-          {{configService.labelConfig?.button_labels?.no_btn_label}}
-        </button>
-      </div>
-</sui-modal>
+
+
+<lib-publish-checklist *ngIf="showPublishCollectionPopup" [actionType]="actionType" [publishchecklist]="publishchecklist" 
+ (publishEmitter)="publishEmitter($event)">
+</lib-publish-checklist>
