@@ -339,7 +339,7 @@ input:focus-visible {
     padding: 15px 33px;
   }
   .fancytree-exp-n span.fancytree-expander,.fancytree-exp-nl span.fancytree-expander{
-    display: none !important;
+    background: none !important;
   }
   .ui-fancytree:before, .ui-fancytree ul:before{
     content: none  !important;
