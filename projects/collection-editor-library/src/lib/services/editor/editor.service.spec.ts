@@ -198,7 +198,7 @@ describe('EditorService', () => {
     const contentId = 'do_11326714211239526417';
     const publicDataService = TestBed.get(PublicDataService);
     spyOn(publicDataService, 'post').and.returnValue(of({"responseCode": "OK"}));
-    editorService.publishContent(contentId).subscribe(data => {
+    editorService.publishContent(contentId, {}).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
     });
   });

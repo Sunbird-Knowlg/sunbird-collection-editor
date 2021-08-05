@@ -173,7 +173,8 @@
        "csvDownloadInstruction":"Please make sure that this is the file downloaded using the “Download folders as csv file” option and changes are made to it",
        "collaborators": "Collaborators",
        "addCollaborators": "Add Collaborators",
-       "manageCollaborators": "Manage Collaborators"
+       "manageCollaborators": "Manage Collaborators",
+       "publishchecklistTitle": "Please confirm that ALL the following items are verified (by ticking the check-boxes) before you can publish:"
       },
     "err":{
        "somethingWentWrong":"Something went wrong",
