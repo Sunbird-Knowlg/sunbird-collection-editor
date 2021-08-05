@@ -245,7 +245,13 @@ describe('FancyTreeComponent', () => {
 
   it ('#checkContentAddition() should check contentType while rearrange resources', () => {
     component.config = editorConfig.config;
-    const targetNode = { folder: true, getLevel: () => 3 };
+    const targetNode = {
+      folder: true,
+      getLevel: () => 3,
+      getParent: () => {
+        return  { getLevel: () => 3 };
+      }
+    };
     const contentNode: any = { hitMode: 'before', otherNode : { data: { metadata: { primaryCategory: 'eTextbook'}}}};
     const result = component.checkContentAddition(targetNode, contentNode);
     expect(result).toBeTruthy();
