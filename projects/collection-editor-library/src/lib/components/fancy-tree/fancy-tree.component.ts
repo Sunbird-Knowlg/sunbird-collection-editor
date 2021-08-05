@@ -411,6 +411,11 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     if (targetNode.folder === false && contentNode.hitMode === 'over') {
       return false;
     }
+
+    if (targetNode.folder === true && (contentNode.hitMode === 'before' || contentNode.hitMode === 'after')) {
+      targetNode = targetNode.getParent();
+    }
+
     const nodeConfig = this.config.hierarchy[`level${targetNode.getLevel() - 1}`];
     const contentPrimaryCategories = _.flatMap(_.get(nodeConfig, 'children'));
     if (!_.isEmpty(contentPrimaryCategories)) {
