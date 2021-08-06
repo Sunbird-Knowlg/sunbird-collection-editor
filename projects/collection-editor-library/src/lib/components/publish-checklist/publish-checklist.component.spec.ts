@@ -68,7 +68,7 @@ describe('PublishChecklistComponent', () => {
     };
     component.actionType = 'publishContent';
     component.publishchecklist = mockData.publishchecklist;
-    component.checkBoxSelected = mockData.checkedData;
+    component.fieldsAvailable = mockData.checkedData;
     component.handlePopUpEvents('submit',modal);
     expect(component.publishEmitter.emit).toHaveBeenCalledWith({ button: 'publishContent', publishData: {publishCheckList:mockData.listData }});
     expect(modal.deny).toHaveBeenCalled();
@@ -81,6 +81,6 @@ describe('PublishChecklistComponent', () => {
   it('#onStatusChanges should call onStatusChanges and enable/disable button', () => {
     const event = mockData.checkedData
     component.valueChanges(event);
-    expect(component.checkBoxSelected).toBeDefined();
+    expect(component.fieldsAvailable).toBeDefined();
   });
 });

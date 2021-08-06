@@ -13,7 +13,7 @@ export class PublishChecklistComponent implements OnInit {
   @Input() actionType: any;
   @Output() publishEmitter = new EventEmitter<any>();
   public isButtonEnable = false;
-  public checkBoxSelected: any;
+  public fieldsAvailable: any;
   constructor(
     public telemetryService: EditorTelemetryService,
     public configService: ConfigService) { }
@@ -29,10 +29,10 @@ export class PublishChecklistComponent implements OnInit {
       let checkBoxData = []
       let publishData = {}
       _.forEach(_.flattenDeep(_.map(this.publishchecklist, 'fields')), field => {
-        if (this.checkBoxSelected && this.checkBoxSelected[field.code] === true) {
+        if (this.fieldsAvailable && this.fieldsAvailable[field.code] === true) {
           checkBoxData.push(field.name);
         } else {
-          publishData[field.code] = this.checkBoxSelected[field.code];
+          publishData[field.code] = this.fieldsAvailable[field.code]; // asign value to field other than checkbox's example publishComment = 'some comment'
         }
       });
       publishData['publishCheckList'] = checkBoxData;
@@ -49,6 +49,6 @@ export class PublishChecklistComponent implements OnInit {
   }
 
   valueChanges(event: any) {
-    this.checkBoxSelected = event;
+    this.fieldsAvailable = event;
   }
 }
