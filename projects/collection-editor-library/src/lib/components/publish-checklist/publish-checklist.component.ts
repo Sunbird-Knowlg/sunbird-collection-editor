@@ -36,7 +36,9 @@ export class PublishChecklistComponent implements OnInit {
         }
       });
       if (checkBoxData && checkBoxData.length) {
-        publishData['publishCheckList'] = checkBoxData;
+        publishData['publishChecklist'] = checkBoxData;
+
+
       }
       this.publishEmitter.emit({ button: this.actionType, publishData: publishData});
     } else if (type === 'closeModal') {

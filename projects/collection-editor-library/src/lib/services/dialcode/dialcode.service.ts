@@ -178,15 +178,17 @@ export class DialcodeService implements DialcodeCursor {
     rootNode.visit((node) => {
       dialcodes = node.data.metadata.dialcodes;
       const unitDialCode = _.isArray(dialcodes) ? dialcodes[0] : dialcodes;
-      if (node.data.metadata.dialcodeRequired === 'Yes' && !_.includes(this.dialcodeList, unitDialCode)) {
-        dialCodeMisssing = true;
-        this.treeService.highlightNode(node.data.id, 'add');
-      } else if (node.data.metadata.dialcodeRequired === 'Yes' && _.isEmpty(dialcodes)) {
-        dialCodeMisssing = true;
-        this.treeService.highlightNode(node.data.id, 'add');
-      } else if (node.data.metadata.dialcodeRequired === 'No' && !_.isEmpty(dialcodes)) {
-        dialCodeMisssing = true;
-        this.treeService.highlightNode(node.data.id, 'add');
+      if (node.data.metadata.visibility === 'Parent' || node.data.root) {
+        if (node.data.metadata.dialcodeRequired === 'Yes' && !_.includes(this.dialcodeList, unitDialCode)) {
+          dialCodeMisssing = true;
+          this.treeService.highlightNode(node.data.id, 'add');
+        } else if (node.data.metadata.dialcodeRequired === 'Yes' && _.isEmpty(dialcodes)) {
+          dialCodeMisssing = true;
+          this.treeService.highlightNode(node.data.id, 'add');
+        } else if (node.data.metadata.dialcodeRequired === 'No' && !_.isEmpty(dialcodes)) {
+          dialCodeMisssing = true;
+          this.treeService.highlightNode(node.data.id, 'add');
+        }
       }
     });
     if (dialCodeMisssing) {
