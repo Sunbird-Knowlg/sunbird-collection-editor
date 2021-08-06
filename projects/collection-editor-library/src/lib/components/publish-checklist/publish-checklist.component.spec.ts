@@ -70,7 +70,7 @@ describe('PublishChecklistComponent', () => {
     component.publishchecklist = mockData.publishchecklist;
     component.checkBoxSelected = mockData.checkedData;
     component.handlePopUpEvents('submit',modal);
-    expect(component.publishEmitter.emit).toHaveBeenCalledWith({ button: 'publishContent', publishCheckList: mockData.listData });
+    expect(component.publishEmitter.emit).toHaveBeenCalledWith({ button: 'publishContent', publishData: {publishCheckList:mockData.listData }});
     expect(modal.deny).toHaveBeenCalled();
   });
   it('#onStatusChanges should call onStatusChanges and enable/disable button', () => {
