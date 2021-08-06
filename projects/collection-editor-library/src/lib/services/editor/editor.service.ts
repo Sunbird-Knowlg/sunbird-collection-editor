@@ -167,9 +167,9 @@ export class EditorService {
         }
       }
     };
-    const publishChecklist =  _.get(data, 'publishCheckList') || [];
-    if(publishChecklist && !_.isEmpty(publishChecklist)) {
-      requestBody.request[objType]['publishChecklist'] = publishChecklist;
+    const publishData =  _.get(data, 'publishData');
+    if(publishData) { 
+     requestBody.request[objType] = { ...requestBody.request[objType], ...publishData };
     }
     const option = {
       url: `${url.SYSYTEM_UPDATE}${collectionId}`,
@@ -211,7 +211,7 @@ export class EditorService {
     return this.publicDataService.post(option);
   }
 
-  publishContent(contentId, data) {
+  publishContent(contentId, event) {
     let objType = this.configService.categoryConfig[this.editorConfig.config.objectType];
     objType = objType.toLowerCase();
     const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
@@ -222,10 +222,10 @@ export class EditorService {
         }
       }
     };
-   const publishChecklist =  _.get(data, 'publishCheckList') || [];
-    if(publishChecklist && !_.isEmpty(publishChecklist)) {
-      requestBody.request[objType]['publishChecklist'] = publishChecklist;
-    }
+   const publishData =  _.get(event, 'publishData');
+   if(publishData) { 
+    requestBody.request[objType] = { ...requestBody.request[objType], ...publishData };
+   } 
     const option = {
       url: `${url.CONTENT_PUBLISH}${contentId}`,
       data: requestBody

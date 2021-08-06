@@ -13,7 +13,7 @@ export class PublishChecklistComponent implements OnInit {
   @Input() actionType: any;
   @Output() publishEmitter = new EventEmitter<any>();
   public isButtonEnable = false;
-  public checkBoxSelected: any;
+  public fieldsAvailable: any;
   constructor(
     public telemetryService: EditorTelemetryService,
     public configService: ConfigService) { }
@@ -26,13 +26,19 @@ export class PublishChecklistComponent implements OnInit {
     if (type === 'submit' && _.isEmpty(this.publishchecklist)) {
       this.publishEmitter.emit({ button: this.actionType });
     } else if (type === 'submit' && this.publishchecklist && !_.isEmpty(this.publishchecklist)) {
-      let publishData = []
+      let checkBoxData = []
+      let publishData = {}
       _.forEach(_.flattenDeep(_.map(this.publishchecklist, 'fields')), field => {
-        if (this.checkBoxSelected && this.checkBoxSelected[field.code]) {
-          publishData.push(field.name);
+        if (this.fieldsAvailable && this.fieldsAvailable[field.code] === true && field.inputType === 'checkbox') {
+          checkBoxData.push(field.name);
+        } else {
+          publishData[field.code] = this.fieldsAvailable[field.code]; // asign value to field other than checkbox's example publishComment = 'some comment'
         }
       });
-      this.publishEmitter.emit({ button: this.actionType, publishCheckList: publishData });
+      if (checkBoxData && checkBoxData.length) {
+        publishData['publishCheckList'] = checkBoxData;
+      }
+      this.publishEmitter.emit({ button: this.actionType, publishData: publishData});
     } else if (type === 'closeModal') {
       this.publishEmitter.emit({ button: type });
     }
@@ -45,6 +51,6 @@ export class PublishChecklistComponent implements OnInit {
   }
 
   valueChanges(event: any) {
-    this.checkBoxSelected = event;
+    this.fieldsAvailable = event;
   }
 }
