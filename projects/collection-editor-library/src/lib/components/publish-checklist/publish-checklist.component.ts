@@ -29,13 +29,15 @@ export class PublishChecklistComponent implements OnInit {
       let checkBoxData = []
       let publishData = {}
       _.forEach(_.flattenDeep(_.map(this.publishchecklist, 'fields')), field => {
-        if (this.fieldsAvailable && this.fieldsAvailable[field.code] === true) {
+        if (this.fieldsAvailable && this.fieldsAvailable[field.code] === true && field.inputType === 'checkbox') {
           checkBoxData.push(field.name);
         } else {
           publishData[field.code] = this.fieldsAvailable[field.code]; // asign value to field other than checkbox's example publishComment = 'some comment'
         }
       });
-      publishData['publishCheckList'] = checkBoxData;
+      if (checkBoxData && checkBoxData.length) {
+        publishData['publishCheckList'] = checkBoxData;
+      }
       this.publishEmitter.emit({ button: this.actionType, publishData: publishData});
     } else if (type === 'closeModal') {
       this.publishEmitter.emit({ button: type });
