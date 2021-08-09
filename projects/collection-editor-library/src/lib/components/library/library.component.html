@@ -1,7 +1,7 @@
 <div class="add-to-library mb-0">
   <!-- Blue Header -->
   <div class="sb-bg-color-primary add-to-library__header">
-    <div class="ui container relative position">
+    <div class="ui container sb-container relative position">
       <div class="d-flex flex-ai-center">
         <button class="sb-btn sb-btn-primary sb-btn-xs back-btn px-0" libTelemetryInteract
         [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('back','click','launch', telemetryService?.telemetryPageId)"(click)="back();"><i class="arrow left icon fs-1"></i></button>
@@ -21,7 +21,7 @@
   </div>
 <!-- Filter -->
   <lib-library-filter *ngIf="!showLoader" [filterValues]="defaultFilters" [searchFormConfig]="searchFormConfig" [filterOpenStatus]="isFilterOpen" [targetFrameworkId]="targetFrameworkId" (filterChangeEvent)="onFilterChange($event);"></lib-library-filter>
-  <div class="ui container min-h-500" *ngIf="!showLoader && contentList?.length">
+  <div class="ui container sb-container min-h-500" *ngIf="!showLoader && contentList?.length">
     <!-- Player Section -->
     <div class="sb-g add-to-library__toc-player">
       <!-- Left Sidebar for cards -->
@@ -36,7 +36,7 @@
   </div>
 </div>
 <div class="result-no-found">
-  <div class="ui container" *ngIf="showLoader">
+  <div class="ui container sb-container" *ngIf="showLoader">
     <div class="sb-g add-to-library__toc-player ml-30">
       <!-- Left Sidebar for cards -->
       <section class="sb-g-col-xs-12 sb-g-col-md-4 sb-g-col-lg-4">
@@ -60,7 +60,7 @@
 
 <!--empty result -->
 <div class="result-no-found">
-  <div class="ui container" *ngIf="!showLoader && !contentList?.length">
+  <div class="ui container sb-container" *ngIf="!showLoader && !contentList?.length">
     <div class="add-to-library__no-result">
       <h5 class="font-weight-bold">{{configService.labelConfig?.lbl?.noMatchingContent}}</h5>
       <img alt="No Content available" class="mt-16" src="assets/images/emptyResult.svg">
