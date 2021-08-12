@@ -1,5 +1,5 @@
-<sui-modal [mustScroll]="true" [isClosable]="true" [transitionDuration]="0" [size]="'normal'"
-  class="sb-modal bx-none overflow-modal publish-checklist" appBodyScroll (dismissed)="handlePopUpEvents('closeModal', modal)" #modal>
+<sui-modal [mustScroll]="true" [isClosable]="isClosable" [transitionDuration]="0" [size]="'normal'"
+  class="sb-modal bx-none overflow-modal publish-checklist" appBodyScroll (dismissed)="isClosable = false" #modal>
   <div class="sb-modal-header">
     {{configService.labelConfig?.lbl?.publishCollection}}
   </div>
