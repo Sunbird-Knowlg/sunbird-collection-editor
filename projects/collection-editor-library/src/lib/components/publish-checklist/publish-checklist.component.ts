@@ -14,6 +14,7 @@ export class PublishChecklistComponent implements OnInit {
   @Output() publishEmitter = new EventEmitter<any>();
   public isButtonEnable = false;
   public fieldsAvailable: any;
+  public isClosable = false;
   constructor(
     public telemetryService: EditorTelemetryService,
     public configService: ConfigService) { }
@@ -23,6 +24,7 @@ export class PublishChecklistComponent implements OnInit {
   }
 
   handlePopUpEvents(type, modal) {
+    this.isClosable = true;
     if (type === 'submit' && _.isEmpty(this.publishchecklist)) {
       this.publishEmitter.emit({ button: this.actionType });
     } else if (type === 'submit' && this.publishchecklist && !_.isEmpty(this.publishchecklist)) {
@@ -37,8 +39,6 @@ export class PublishChecklistComponent implements OnInit {
       });
       if (checkBoxData && checkBoxData.length) {
         publishData['publishChecklist'] = checkBoxData;
-
-
       }
       this.publishEmitter.emit({ button: this.actionType, publishData: publishData});
     } else if (type === 'closeModal') {
