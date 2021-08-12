@@ -46,6 +46,7 @@ describe('PublishChecklistComponent', () => {
       deny: jasmine.createSpy('deny')
     };
     const type = 'closeModal'
+    component.isClosable = true;
     component.handlePopUpEvents(type,modal);
     expect(component.publishEmitter.emit).toHaveBeenCalledWith({ button: type });
     expect(modal.deny).toHaveBeenCalled();
@@ -56,6 +57,7 @@ describe('PublishChecklistComponent', () => {
       deny: jasmine.createSpy('deny')
     };
     component.publishchecklist = {};
+    component.isClosable = true;
     component.actionType = 'publishContent';
     component.handlePopUpEvents('submit',modal);
     expect(component.publishEmitter.emit).toHaveBeenCalledWith({ button: 'publishContent',});
@@ -67,6 +69,7 @@ describe('PublishChecklistComponent', () => {
       deny: jasmine.createSpy('deny')
     };
     component.actionType = 'publishContent';
+    component.isClosable = true;
     component.publishchecklist = mockData.publishchecklist;
     component.fieldsAvailable = mockData.checkedData;
     component.handlePopUpEvents('submit',modal);
