@@ -533,3 +533,19 @@ input:focus-visible {
     }
   }
 }
+.sb-keywords{
+  input{
+    width: 100%;
+  }
+  input::placeholder{
+    display: block !important;
+    width: 100%;
+  }
+  .ng2-tags-container{
+    width: inherit !important;
+    display: block !important;
+    tag{
+      display: inline-flex !important;
+    }
+  }
+}
