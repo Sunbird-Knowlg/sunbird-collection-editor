@@ -269,4 +269,14 @@ export class DialcodeService implements DialcodeCursor {
     }
   }
 
+  readExistingQrCode() {
+    const rootNode = this.treeService.getTreeObject();
+    this.dialcodeList = [] ;
+    rootNode.visit(( node ) => {
+        if (!_.isEmpty(node.data.metadata.dialcodes)) {
+            this.dialcodeList.push(node.data.metadata.dialcodes[0]);
+        }
+    });
+  }
+
 }
