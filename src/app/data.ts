@@ -1,4 +1,4 @@
-export const collectionEditorConfig = {
+export const courseEditorConfig = {
   context: {
     user: {
       id: '5a587cc1-e018-4859-a0a8-e842650b9d64',
@@ -7,10 +7,10 @@ export const collectionEditorConfig = {
       lastName: 'Bhuva',
       orgIds: ['01309282781705830427']
     },
-    identifier: 'do_113274017771085824116',
-    channel: '01307938306521497658',
+    identifier: 'do_1133180138837606401237',
+    channel: '01309282781705830427',
     // framework: 'nit_k-12',
-    targetFWIds: ['nit_k-12'],
+    // targetFWIds: ['nit_k-12'],
     authToken: ' ',
     sid: 'iYO2K6dOSdA0rwq7NeT1TDzS-dbqduvV',
     did: '7e85b4967aebd6704ba1f604f20056b6',
@@ -56,7 +56,7 @@ export const collectionEditorConfig = {
     host: '',
     defaultLicense: 'CC BY 4.0',
     endpoint: '/data/v3/telemetry',
-    env: 'question_set',
+    env: 'collection_editor',
     cloudStorageUrls: [
       'https://s3.ap-south-1.amazonaws.com/ekstep-public-qa/',
       'https://ekstep-public-qa.s3-ap-south-1.amazonaws.com/',
@@ -64,13 +64,14 @@ export const collectionEditorConfig = {
   },
   config: {
     mode: 'edit', // edit / review / read / sourcingReview
-    maxDepth: 2,
+    maxDepth: 4,
     objectType: 'Collection',
     primaryCategory: 'Course', // Professional Development Course, Curriculum Course
     isRoot: true,
     dialcodeMinLength: 2,
     dialcodeMaxLength: 250,
     iconClass: 'fa fa-book',
+    showAddCollaborator: true,
     children: {},
     hierarchy: {
       level1: {
@@ -115,6 +116,23 @@ export const collectionEditorConfig = {
             'Course Assessment'
           ]
         }
+      },
+      level4: {
+        name: 'Sub-Sub-Module',
+        type: 'Unit',
+        mimeType: 'application/vnd.ekstep.content-collection',
+        contentType: 'CourseUnit',
+        primaryCategory: 'Course Unit',
+        iconClass: 'fa fa-folder-o',
+        children: {
+          Content: [
+            'Explanation Content',
+            'Learning Resource',
+            'eTextbook',
+            'Teacher Resource',
+            'Course Assessment'
+          ]
+        }
       }
     },
     contentPolicyUrl: '/term-of-use.html'
@@ -130,7 +148,7 @@ export const questionEditorConfig = {
       lastName: 'Bhuva',
       orgIds: ['01309282781705830427']
     },
-    identifier: 'do_113263678834016256111', // do_1132393548335759361558
+    identifier: 'do_1132393548335759361558', // do_11330102570702438417
     authToken: ' ',
     sid: 'iYO2K6dOSdA0rwq7NeT1TDzS-dbqduvV',
     did: '7e85b4967aebd6704ba1f604f20056b6',
@@ -167,7 +185,7 @@ export const questionEditorConfig = {
     host: 'https://dev.sunbirded.org',
     defaultLicense: 'CC BY 4.0',
     endpoint: '/data/v3/telemetry',
-    env: 'questionSetLibrary',
+    env: 'questionset_editor',
     framework: 'ekstep_ncert_k-12',
     cloudStorageUrls: ['https://s3.ap-south-1.amazonaws.com/ekstep-public-qa/', 'https://ekstep-public-qa.s3-ap-south-1.amazonaws.com/',
                       'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/'],
@@ -236,11 +254,16 @@ export const questionEditorConfig = {
   },
   config: {
     mode: 'edit', // edit / review / read / sourcingReview
+    editableFields: {
+      // sourcingreview: ['instructions'],
+      review: ['name', 'learningOutcome'],
+    },
     maxDepth: 0,
     objectType: 'QuestionSet',
     primaryCategory: 'Practice Question Set',
     isRoot: true,
     iconClass: 'fa fa-book',
+    showAddCollaborator: false,
     children: {
       Question: [
         'Multiple Choice Question',
@@ -288,5 +311,104 @@ export const questionEditorConfig = {
       // }
     },
     contentPolicyUrl: '/term-of-use.html'
+  }
+};
+
+export const collectionEditorConfig = {
+  context: {
+      identifier: 'do_113332810440933376130',
+      channel: '01309282781705830427',
+      authToken: '',
+      sid: 'vLpZ1rFl6-sxMVHi4RrmrlHw0HsX9ggC',
+      did: '1d8e290dd3c2a6a9eeac58568cdef28d',
+      uid: '5a587cc1-e018-4859-a0a8-e842650b9d64',
+      additionalCategories: {},
+      host: 'http://localhost:3000',
+      pdata: {
+          id: 'local.sunbird.portal',
+          ver: '4.1.0',
+          pid: 'sunbird-portal'
+      },
+      actor: {
+          id: '5a587cc1-e018-4859-a0a8-e842650b9d64',
+          type: 'User'
+      },
+      contextRollup: {
+          l1: '01309282781705830427'
+      },
+      tags: [
+          '01309282781705830427',
+          '01309282781705830427'
+      ],
+      timeDiff: -0.463,
+      endpoint: '/data/v3/telemetry',
+      env: 'collection_editor',
+      user: {
+          id: '5a587cc1-e018-4859-a0a8-e842650b9d64',
+          orgIds: [
+              '01309282781705830427'
+          ],
+          organisations: {},
+          fullName: 'N11',
+          firstName: 'N11',
+          lastName: '',
+          isRootOrgAdmin: true
+      },
+      channelData: {},
+      framework: 'ekstep_ncert_k-12'
+  },
+  config: {
+      mode: 'edit',
+      showAddCollaborator: true,
+      maxDepth: 4,
+      objectType: 'Collection',
+      primaryCategory: 'Digital Textbook',
+      isRoot: true,
+      iconClass: 'fa fa-book',
+      children: {},
+      hierarchy: {
+          level1: {
+              name: 'Textbook Unit',
+              type: 'Unit',
+              mimeType: 'application/vnd.ekstep.content-collection',
+              contentType: 'TextBookUnit',
+              primaryCategory: 'Textbook Unit',
+              iconClass: 'fa fa-folder-o',
+              children: {}
+          },
+          level2: {
+              name: 'Textbook Unit',
+              type: 'Unit',
+              mimeType: 'application/vnd.ekstep.content-collection',
+              contentType: 'TextBookUnit',
+              primaryCategory: 'Textbook Unit',
+              iconClass: 'fa fa-folder-o',
+              children: {
+                  Content: []
+              }
+          },
+          level3: {
+              name: 'Textbook Unit',
+              type: 'Unit',
+              mimeType: 'application/vnd.ekstep.content-collection',
+              contentType: 'TextBookUnit',
+              primaryCategory: 'Textbook Unit',
+              iconClass: 'fa fa-folder-o',
+              children: {
+                  Content: []
+              }
+          },
+          level4: {
+              name: 'Textbook Unit',
+              type: 'Unit',
+              mimeType: 'application/vnd.ekstep.content-collection',
+              contentType: 'TextBookUnit',
+              primaryCategory: 'Textbook Unit',
+              iconClass: 'fa fa-folder-o',
+              children: {
+                  Content: []
+              }
+          }
+      }
   }
 };

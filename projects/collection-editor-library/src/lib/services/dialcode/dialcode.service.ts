@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import * as _ from 'lodash-es';
-import { DialcodeCursor } from 'common-form-elements';
+import { DialcodeCursor } from 'common-form-elements-v9';
 import { ConfigService } from '../config/config.service';
 import { PublicDataService } from '../public-data/public-data.service';
 import { TreeService } from '../../services/tree/tree.service';
@@ -178,15 +178,17 @@ export class DialcodeService implements DialcodeCursor {
     rootNode.visit((node) => {
       dialcodes = node.data.metadata.dialcodes;
       const unitDialCode = _.isArray(dialcodes) ? dialcodes[0] : dialcodes;
-      if (node.data.metadata.dialcodeRequired === 'Yes' && !_.includes(this.dialcodeList, unitDialCode)) {
-        dialCodeMisssing = true;
-        this.treeService.highlightNode(node.data.id, 'add');
-      } else if (node.data.metadata.dialcodeRequired === 'Yes' && _.isEmpty(dialcodes)) {
-        dialCodeMisssing = true;
-        this.treeService.highlightNode(node.data.id, 'add');
-      } else if (node.data.metadata.dialcodeRequired === 'No' && !_.isEmpty(dialcodes)) {
-        dialCodeMisssing = true;
-        this.treeService.highlightNode(node.data.id, 'add');
+      if (node.data.metadata.visibility === 'Parent' || node.data.root) {
+        if (node.data.metadata.dialcodeRequired === 'Yes' && !_.includes(this.dialcodeList, unitDialCode)) {
+          dialCodeMisssing = true;
+          this.treeService.highlightNode(node.data.id, 'add');
+        } else if (node.data.metadata.dialcodeRequired === 'Yes' && _.isEmpty(dialcodes)) {
+          dialCodeMisssing = true;
+          this.treeService.highlightNode(node.data.id, 'add');
+        } else if (node.data.metadata.dialcodeRequired === 'No' && !_.isEmpty(dialcodes)) {
+          dialCodeMisssing = true;
+          this.treeService.highlightNode(node.data.id, 'add');
+        }
       }
     });
     if (dialCodeMisssing) {
@@ -265,6 +267,16 @@ export class DialcodeService implements DialcodeCursor {
     } else if (!_.isEmpty(this.invaliddialCodeMap)) {
       this.toasterService.warning(_.get(this.configService, 'labelConfig.messages.warning.002'));
     }
+  }
+
+  readExistingQrCode() {
+    const rootNode = this.treeService.getTreeObject();
+    this.dialcodeList = [] ;
+    rootNode.visit(( node ) => {
+        if (!_.isEmpty(node.data.metadata.dialcodes)) {
+            this.dialcodeList.push(node.data.metadata.dialcodes[0]);
+        }
+    });
   }
 
 }

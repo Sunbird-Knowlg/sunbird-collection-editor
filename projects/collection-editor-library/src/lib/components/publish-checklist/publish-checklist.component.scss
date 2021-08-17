@@ -1,0 +1,82 @@
+.sb-modal-content sb-dynamic-checkbox {
+  margin: 0 !important;
+}
+.sb-modal-content .sb-checkbox {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.4;
+  padding: 7px 0 20px 0;
+}
+.formSection {
+  padding: 0px !important;
+}
+
+/* This is for show section name for new config */
+.display-sectionName .sectionName {
+  display: block;
+}
+/* This is for hide section name  for new config*/
+.hidden-sectionName .sectionName {
+  display: none;
+}
+/* This is to hide section name for old config*/
+.two-column-grid .sectionName {
+  display: none;
+}
+.sectionName {
+  font-size: 1rem !important;
+  font-weight: 600;
+}
+/* This is for one row one column view other than check box fields*/
+.d-grid {
+  display: grid;
+  grid-column-gap: 1rem;
+  grid-row-gap: 1rem;
+}
+/* This is for one row 2 column view other than check box fields*/
+.d-grid-2 {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-column-gap: 1rem;
+  grid-row-gap: 1rem;
+}
+/* This is for one row 3 column view other than check box fields*/
+.d-grid-3 {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-column-gap: 1rem;
+  grid-row-gap: 1rem;
+}
+
+/* This is for one row 1 column view for check box fields*/
+.d-grid-inline-1 {
+  display: inline-grid;
+  width: 100%;
+  grid-column-gap: 1rem;
+  grid-row-gap: 1rem;
+}
+/* This is for one row 2 column view for check box fields*/
+.d-grid-inline-2 {
+  display: inline-grid;
+  width: 50%;
+  grid-column-gap: 1rem;
+  grid-row-gap: 1rem;
+}
+/* This is for one row 3 column view for check box fields*/
+.d-grid-inline-3 {
+    display: inline-grid;
+    width: 33.3%;
+    grid-column-gap: 1rem;
+    grid-row-gap: 1rem;
+  }
+/* This is for one row 4 column view for check box fields*/
+.d-grid-inline-4 {
+  display: inline-grid;
+  width: 25%;
+  grid-column-gap: 1rem;
+  grid-row-gap: 1rem;
+}

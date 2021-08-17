@@ -16,9 +16,10 @@ export class HeaderComponent implements OnDestroy, OnInit {
   @Input() labelConfigData: any;
   @Input() buttonLoaders: any;
   @Input() showComment: any;
+  @Input() publishchecklist: any;
   @Output() toolbarEmitter = new EventEmitter<any>();
-  @ViewChild('FormControl', {static: false}) FormControl: NgForm;
-  @ViewChild('modal', {static: false}) public modal;
+  @ViewChild('FormControl') FormControl: NgForm;
+  @ViewChild('modal') public modal;
   public visibility: any;
   public showReviewModal: boolean;
   public showRequestChangesPopup: boolean;
@@ -28,31 +29,32 @@ export class HeaderComponent implements OnDestroy, OnInit {
   public sourcingStatusText: string;
   public sourcingStatusClass: string;
   public originPreviewUrl: string;
-  public correctionComments: string
+  public correctionComments: string;
 
   constructor(private editorService: EditorService,
-              public telemetryService: EditorTelemetryService,
-              public configService: ConfigService) {}
+    public telemetryService: EditorTelemetryService,
+    public configService: ConfigService) { }
 
-  ngOnInit() {
-    this.handleActionButtons();
-    this.getSourcingData();
+  async ngOnInit() {
+    await this.handleActionButtons()
+    this.getSourcingData()
   }
 
-  handleActionButtons() {
+  async handleActionButtons() {
     this.visibility = {};
     this.visibility.saveContent = this.editorService.editorMode === 'edit';
     this.visibility.submitContent = this.editorService.editorMode === 'edit';
-    this.visibility.rejectContent = this.editorService.editorMode === 'review';
-    this.visibility.publishContent = this.editorService.editorMode === 'review';
+    this.visibility.rejectContent = this.editorService.editorMode === 'review' || this.editorService.editorMode === 'orgreview';
+    this.visibility.publishContent = this.editorService.editorMode === 'review' || this.editorService.editorMode === 'orgreview';
     this.visibility.sendForCorrectionsContent = this.editorService.editorMode === 'sourcingreview';
     this.visibility.sourcingApproveContent = this.editorService.editorMode === 'sourcingreview';
     this.visibility.sourcingRejectContent = this.editorService.editorMode === 'sourcingreview';
     this.visibility.previewContent = _.get(this.editorService, 'editorConfig.config.objectType') === 'QuestionSet';
     this.visibility.dialcode = this.editorService.editorMode === 'edit';
-    this.visibility.showOriginPreviewUrl =  _.get(this.editorService, 'editorConfig.config.showOriginPreviewUrl');
-    this.visibility.showSourcingStatus =  _.get(this.editorService, 'editorConfig.config.showSourcingStatus');
-    this.visibility.showCorrectionComments =  _.get(this.editorService, 'editorConfig.config.showCorrectionComments');
+    this.visibility.showOriginPreviewUrl = _.get(this.editorService, 'editorConfig.config.showOriginPreviewUrl');
+    this.visibility.showSourcingStatus = _.get(this.editorService, 'editorConfig.config.showSourcingStatus');
+    this.visibility.showCorrectionComments = _.get(this.editorService, 'editorConfig.config.showCorrectionComments');
+    this.visibility.addCollaborator = _.get(this.editorService, 'editorConfig.config.showAddCollaborator');
   }
 
   getSourcingData() {
@@ -68,9 +70,18 @@ export class HeaderComponent implements OnDestroy, OnInit {
   }
 
   buttonEmitter(action) {
-    this.toolbarEmitter.emit({button: action.type, ...(action.comment && {comment: this.rejectComment})});
+    this.toolbarEmitter.emit({ button: action.type, ...(action.comment && { comment: this.rejectComment }) });
   }
-
+  openPublishCheckListPopup(action) {
+    this.actionType = action;
+    this.showPublishCollectionPopup = true;
+  }
+  publishEmitter(event) {
+    this.showPublishCollectionPopup = false;
+    if (event.button === 'publishContent' || event.button === 'sourcingApprove') {
+      this.toolbarEmitter.emit(event)
+    }
+  }
   ngOnDestroy() {
     if (this.modal && this.modal.deny) {
       this.modal.deny();

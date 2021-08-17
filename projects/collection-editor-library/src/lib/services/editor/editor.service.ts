@@ -9,6 +9,7 @@ import { ToasterService} from '../../services/toaster/toaster.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { DataService } from '../data/data.service';
 import { map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 
 interface SelectedChildren {
   primaryCategory?: string;
@@ -24,10 +25,11 @@ export class EditorService {
   private _editorConfig: IEditorConfig;
   private _editorMode = 'edit';
   public showLibraryPage: EventEmitter<number> = new EventEmitter();
-
+  public contentsCount = 0;
   constructor(public treeService: TreeService, private toasterService: ToasterService,
               public configService: ConfigService, private telemetryService: EditorTelemetryService,
-              private publicDataService: PublicDataService, private dataService: DataService) { }
+              private publicDataService: PublicDataService, private dataService: DataService, public httpClient: HttpClient) {
+              }
 
   public initialize(config: IEditorConfig) {
     this._editorConfig = config;
@@ -79,7 +81,7 @@ export class EditorService {
 
   getQuestionList(questionIds: string[]): Observable<any> {
     const option = {
-      url: 'question/v1/list',
+      url: _.get(this.configService.urlConFig, 'URLS.QUESTION.LIST'),
       data: {
         request: {
           search: {
@@ -117,7 +119,7 @@ export class EditorService {
 
   fetchContentDetails(contentId) {
     const req = {
-      url: 'content/v3/read/' + contentId
+      url: _.get(this.configService.urlConFig, 'URLS.CONTENT.READ') + contentId
     };
     return this.publicDataService.get(req);
   }
@@ -136,6 +138,44 @@ export class EditorService {
       }
     };
     return this.publicDataService.patch(req);
+  }
+
+  getFieldsToUpdate(collectionId) {
+    let formFields = {};
+    const editableFields = _.get(this.editorConfig.config, 'editableFields');
+    if (editableFields && !_.isEmpty(editableFields[this.editorMode])) {
+      const fields = editableFields[this.editorMode];
+      const nodesModified = _.get(this.getCollectionHierarchy(), 'nodesModified');
+      const collectionFormData = _.get(nodesModified[collectionId], 'metadata');
+      _.forEach(fields, fieldCode => {
+        formFields[fieldCode] = collectionFormData[fieldCode];
+      });
+    }
+    return formFields;
+  }
+
+  updateCollection(collectionId, data?) {
+    let objType = this.configService.categoryConfig[this.editorConfig.config.objectType];
+    objType = objType.toLowerCase();
+    const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
+    const fieldsObj = this.getFieldsToUpdate(collectionId);
+    const requestBody = {
+      request: {
+        [objType]: {
+          ...fieldsObj,
+          lastPublishedBy: this.editorConfig.context.user.id
+        }
+      }
+    };
+    const publishData =  _.get(data, 'publishData');
+    if(publishData) { 
+     requestBody.request[objType] = { ...requestBody.request[objType], ...publishData };
+    }
+    const option = {
+      url: `${url.SYSYTEM_UPDATE}${collectionId}`,
+      data: requestBody
+    };
+    return this.publicDataService.patch(option);
   }
 
   reviewContent(contentId): Observable<any> {
@@ -171,7 +211,7 @@ export class EditorService {
     return this.publicDataService.post(option);
   }
 
-  publishContent(contentId) {
+  publishContent(contentId, event) {
     let objType = this.configService.categoryConfig[this.editorConfig.config.objectType];
     objType = objType.toLowerCase();
     const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
@@ -182,6 +222,10 @@ export class EditorService {
         }
       }
     };
+   const publishData =  _.get(event, 'publishData');
+   if(publishData) { 
+    requestBody.request[objType] = { ...requestBody.request[objType], ...publishData };
+   } 
     const option = {
       url: `${url.CONTENT_PUBLISH}${contentId}`,
       data: requestBody
@@ -191,7 +235,7 @@ export class EditorService {
 
   addResourceToHierarchy(collection, unitIdentifier, contentId): Observable<any> {
     const req = {
-      url: 'content/v3/hierarchy/add',
+      url: _.get(this.configService.urlConFig, 'URLS.CONTENT.HIERARCHY_ADD'),
       data: {
         request: {
           rootId: collection,
@@ -269,7 +313,7 @@ export class EditorService {
 
   getCategoryDefinition(categoryName, channel, objectType?: any) {
     const req = {
-      url: 'object/category/definition/v1/read?fields=objectMetadata,forms,name',
+      url: _.get(this.configService.urlConFig, 'URLS.getCategoryDefinition'),
       data: {
         request: {
           objectCategoryDefinition: {
@@ -324,6 +368,101 @@ export class EditorService {
     };
     this.telemetryService.error(telemetryErrorData);
   }
-
-
+  // this method is used to get all the contents in course/question inside every module and sub module
+  getContentChildrens() {
+    const treeObj = this.treeService.getTreeObject();
+    const contents = [];
+    treeObj.visit((node) => {
+      if (node.folder === false) {
+        contents.push(node.data.id);
+      }
+    });
+    return contents;
+  }
+  // this method is used to keep count of contents added from library page
+  contentsCountAddedInLibraryPage(setToZero?) {
+    if (setToZero) {
+      this.contentsCount = 0; // setting this count to zero  while going out from library page
+    } else {
+      this.contentsCount = this.contentsCount + 1;
+    }
+  }
+  checkIfContentsCanbeAdded() {
+    const config = {
+      errorMessage: '',
+      maxLimit: 0
+    };
+    if (_.get(this.editorConfig, 'config.objectType') === 'QuestionSet') {
+      config.errorMessage = _.get(this.configService, 'labelConfig.messages.error.031');
+      config.maxLimit = _.get(this.editorConfig, 'config.questionSet.maxQuestionsLimit');
+    } else {
+      config.errorMessage = _.get(this.configService, 'labelConfig.messages.error.032');
+      config.maxLimit = _.get(this.editorConfig, 'config.collection.maxContentsLimit');
+    }
+    const childrenCount = this.getContentChildrens().length + this.contentsCount;
+    if (childrenCount >= config.maxLimit) {
+      this.toasterService.error(config.errorMessage);
+      return false;
+    } else {
+      return true;
+    }
+  }
+  getHierarchyFolder() {
+    const treeObj = this.treeService.getTreeObject();
+    const contents = [];
+    if (treeObj) {
+    treeObj.visit((node) => {
+      if (node && !node.data.root) {
+        contents.push(node.data.id);
+      }
+    });
+  }
+    return contents;
+  }
+  validateCSVFile(formData, collectionnId: any) {
+    const url = _.get(this.configService.urlConFig, 'URLS.CSV.UPLOAD');
+    const reqParam = {
+      url: `${url}${collectionnId}`,
+      data: formData.data
+    };
+    return this.publicDataService.post(reqParam);
+  }
+  downloadHierarchyCsv(collectionId) {
+    const url = _.get(this.configService.urlConFig, 'URLS.CSV.DOWNLOAD');
+    const req = {
+      url: `${url}${collectionId}`,
+    };
+    return this.publicDataService.get(req);
+  }
+  generatePreSignedUrl(req, contentId: any, type) {
+    const reqParam = {
+      url: `${this.configService.urlConFig.URLS.CONTENT.UPLOAD_URL}${contentId}?type=${type}`,
+      data: {
+        request: req
+      }
+    };
+    return this.publicDataService.post(reqParam);
+  }
+  downloadBlobUrlFile(config) {
+    try {
+      this.httpClient.get(config.blobUrl, {responseType: 'blob'})
+      .subscribe(blob => {
+        const objectUrl: string = URL.createObjectURL(blob);
+        const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
+        a.href = objectUrl;
+        a.download = config.fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(objectUrl);
+        if (config.successMessage) {
+          this.toasterService.success(config.successMessage);
+        }
+      }, (error) => {
+        console.error(_.get(this.configService, 'labelConfig.messages.error.034') + error);
+      });
+    } catch (error) {
+      console.error( _.replace(_.get(this.configService, 'labelConfig.messages.error.033'), '{FILE_TYPE}', config.fileType ) + error);
+    }
+  }
 }
