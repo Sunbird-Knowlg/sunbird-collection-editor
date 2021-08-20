@@ -45,7 +45,8 @@
        "delete_btn_label":"Delete",
        "next_btn_label":"Next",
        "remove_btn_label":"Remove",
-       "done_btn_label":"Done"
+       "done_btn_label":"Done",
+       "add_translation_label":"Add Translation"
     },
     "lbl":{
        "search":"Search",
