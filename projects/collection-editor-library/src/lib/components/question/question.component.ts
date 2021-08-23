@@ -525,7 +525,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   setQumlPlayerData(questionId: string) {
-    const questionMetadata: any = this.getQuestionMetadata();
+    const questionMetadata: any = _.cloneDeep(this.getQuestionMetadata());
     questionMetadata.identifier = questionId;
     this.questionSetHierarchy.children = [questionMetadata];
     this.editorCursor.setQuestionMap(questionId, questionMetadata);

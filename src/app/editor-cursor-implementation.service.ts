@@ -33,6 +33,10 @@ export class EditorCursorImplementationService implements QuestionCursor, Editor
     }));
   }
 
+  getQuestionSet(identifier: string): Observable<any> {
+    return of({});
+  }
+
   getQuestionData(questionId) {
     return this.questionMap.get(_.first(_.castArray(questionId))) || undefined;
   }
