@@ -174,7 +174,12 @@
        "csvDownloadInstruction":"Please make sure that this is the file downloaded using the “Download folders as csv file” option and changes are made to it",
        "collaborators": "Collaborators",
        "addCollaborators": "Add Collaborators",
-       "manageCollaborators": "Manage Collaborators"
+       "manageCollaborators": "Manage Collaborators",
+       "sliderValue":"Slider Value",
+       "left":"Left",
+       "stepSize":"Step size",
+       "right":"Right",
+       "translation":"Translation"
       },
     "err":{
        "somethingWentWrong":"Something went wrong",
