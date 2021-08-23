@@ -14,6 +14,22 @@ export class OptionsComponent implements OnInit {
   public setCharacterLimit = 160;
   public setImageLimit = 1;
   public templateType = 'mcq-vertical';
+  subMenus = [
+    {
+      id: 'addHint',
+      name: 'Add Hint',
+      value: '',
+      enabled: false,
+      type: 'input',
+    },
+    {
+      id: 'addTip',
+      name: 'Add Tip',
+      value: '',
+      enabled: false,
+      type: 'input',
+    },
+  ]
   constructor(public telemetryService: EditorTelemetryService) { }
 
   ngOnInit() {
@@ -90,5 +106,8 @@ export class OptionsComponent implements OnInit {
     this.editorDataHandler();
   }
 
+   subMenuChange({ index, value }) {
+    this.subMenus[index].value=value
+  }
 }
 
