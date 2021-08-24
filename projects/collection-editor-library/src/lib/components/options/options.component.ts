@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, EventEmitter, Output, ViewEncapsulation } from '@angular/core';
 import * as _ from 'lodash-es';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
+import { ConfigService } from '../../services/config/config.service';
 @Component({
   selector: 'lib-options',
   templateUrl: './options.component.html',
@@ -30,7 +31,7 @@ export class OptionsComponent implements OnInit {
       type: 'input',
     },
   ]
-  constructor(public telemetryService: EditorTelemetryService) { }
+  constructor(public telemetryService: EditorTelemetryService, public configService: ConfigService) { }
 
   ngOnInit() {
     if (!_.isUndefined(this.editorState.templateId)) {

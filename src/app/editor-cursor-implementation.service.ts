@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Observable, of, throwError} from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { map, mergeMap } from 'rxjs/operators';
-import { QuestionCursor } from '@project-sunbird/sunbird-quml-player-v8';
+import { QuestionCursor } from '@project-sunbird/sunbird-quml-player-v9';
 import { EditorCursor } from 'collection-editor-library';
 import * as _ from 'lodash-es';
 
@@ -31,6 +31,10 @@ export class EditorCursorImplementationService implements QuestionCursor, Editor
     return this.post(questionIds).pipe(map((data) => {
       return data.result;
     }));
+  }
+
+  getQuestionSet(identifier: string): Observable<any> {
+    return of({});
   }
 
   getQuestionData(questionId) {
