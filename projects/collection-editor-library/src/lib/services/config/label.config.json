@@ -180,7 +180,8 @@
        "stepSize":"Step size",
        "right":"Right",
        "translation":"Translation",
-       "publishchecklistTitle": "Please confirm that ALL the following items are verified (by ticking the check-boxes) before you can publish:",
+       "publishchecklistTitle": "Please confirm that ALL the following items are verified (by ticking the check-boxes) before you can publish:"
+    },
     "err":{
        "somethingWentWrong":"Something went wrong",
        "contentNotFoundonOrigin": "The content not found in consumption",
