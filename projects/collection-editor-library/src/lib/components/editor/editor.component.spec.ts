@@ -371,9 +371,10 @@ describe('EditorComponent', () => {
     spyOn(component, 'toolbarEventListener').and.callThrough();
     // tslint:disable-next-line:no-string-literal
     component['editorConfig'] = editorConfig;
+    component['contentComment'] = 'change description';
     component.showReviewModal = false;
     const event = {
-      button: 'showCorrectioncomments'
+      button: 'showReviewcomments'
     };
     component.toolbarEventListener(event);
     expect(component.contentComment).toEqual('change description');
@@ -386,7 +387,7 @@ describe('EditorComponent', () => {
     component['editorConfig'] = undefined;
     component.showReviewModal = true;
     const event = {
-      button: 'showCorrectioncomments'
+      button: 'showReviewcomments'
     };
     component.toolbarEventListener(event);
     expect(component.contentComment).toBeUndefined();
@@ -707,6 +708,7 @@ describe('EditorComponent', () => {
     component.collectionTreeNodes = {
       data: {
         status: 'Draft',
+        prevStatus: 'Review',
         rejectComment: 'test'
       }
     };
