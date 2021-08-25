@@ -45,7 +45,8 @@
        "delete_btn_label":"Delete",
        "next_btn_label":"Next",
        "remove_btn_label":"Remove",
-       "done_btn_label":"Done"
+       "done_btn_label":"Done",
+       "add_translation_label":"Add Translation"
     },
     "lbl":{
        "search":"Search",
@@ -174,8 +175,13 @@
        "collaborators": "Collaborators",
        "addCollaborators": "Add Collaborators",
        "manageCollaborators": "Manage Collaborators",
+       "sliderValue":"Slider Value",
+       "left":"Left",
+       "stepSize":"Step size",
+       "right":"Right",
+       "translation":"Translation",
        "publishchecklistTitle": "Please confirm that ALL the following items are verified (by ticking the check-boxes) before you can publish:"
-      },
+    },
     "err":{
        "somethingWentWrong":"Something went wrong",
        "contentNotFoundonOrigin": "The content not found in consumption",

@@ -101,6 +101,7 @@
               </div>
             </div>
           </div>
+          <lib-translations *ngIf="showTranslation"></lib-translations>
           <!-- child question section -->
           <div class="b-1-100 br-4 my-15 px-32 py-10 sb-bg-color-primary-0" *ngFor="let question of dependentQuestions;let childindex=index">
             {{ questionSetHierarchy.children ? 'Q'+ (questionSetHierarchy.children.length+1):''}} {{'. '+ (childindex+1)}}  

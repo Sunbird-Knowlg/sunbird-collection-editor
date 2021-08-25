@@ -71,6 +71,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   public buttonLoaders = {
     saveButtonLoader: false
   };
+  public showTranslation:boolean=false;
   subMenus = [
     {
       id: 'addHint',
@@ -102,9 +103,12 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     const { primaryCategory } = this.editorService.selectedChildren;
     this.questionPrimaryCategory = primaryCategory;
     this.pageStartTime = Date.now();
+    console.log("question page called");
+
   }
 
   ngOnInit() {
+    console.log("question page called");
     this.leafFormConfig= [...this.leafFormConfig,...extraConfig]
     const { questionSetId, questionId, type } = this.questionInput;
     this.questionInteractionType = type;
@@ -112,6 +116,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.questionSetId = questionSetId;
     this.toolbarConfig = this.editorService.getToolbarConfig();
     this.toolbarConfig.showPreview = false;
+    this.toolbarConfig.add_translation=true;
     this.solutionUUID = UUID.UUID();
     this.telemetryService.telemetryPageId = this.pageId;
     this.initialLeafFormConfig = _.cloneDeep(this.leafFormConfig);
@@ -154,6 +159,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       if (!_.isUndefined(this.questionId)) {
         this.questionService.readQuestion(this.questionId, leafFormConfigfields)
           .subscribe((res) => {
+            console.log("question");
+            console.log(res);
             if (res.result) {
               this.questionMetaData = res.result.question;
               this.populateFormData();
@@ -162,6 +169,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
               }
               // tslint:disable-next-line:max-line-length
               this.questionInteractionType = this.questionMetaData.interactionTypes ? this.questionMetaData.interactionTypes[0] : 'default';
+              console.log(this.questionInteractionType);
               if (this.questionInteractionType === 'default') {
                 if (this.questionMetaData.editorState) {
                   this.editorState = this.questionMetaData.editorState;
@@ -232,6 +240,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   toolbarEventListener(event) {
+    console.log("button emitter");
+    console.log(event);
     switch (event.button) {
       case 'saveContent':
         this.saveContent();
@@ -250,6 +260,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         this.showPreview = false;
         this.toolbarConfig.showPreview = false;
         break;
+      case 'showTranslation':
+        this.showTranslation = true;
+        break;  
       default:
         break;
     }

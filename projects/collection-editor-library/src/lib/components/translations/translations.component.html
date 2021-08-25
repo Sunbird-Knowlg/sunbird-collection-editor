@@ -1,0 +1,25 @@
+<div class="tarnslation">
+    <label class="fs-0-92 font-weight-bold">{{configService.labelConfig?.lbl?.translation}}</label>
+</div>
+<div class="py-20 px-32 sb-bg-color-primary-0 br-4 b-1-100">
+    <div class="sb-field-group" *ngIf="sampleJson">
+        <label class="fs-0-92 font-weight-bold">{{configService.labelConfig?.lbl?.question}}</label>
+        <div class="fs-0-92" *ngIf="sampleJson.body">
+            <h5 class="label-align">{{sampleJson.body.en}}</h5>
+            <div class="ckeditor-tool__question mb-5 mt-15">
+                <lib-ckeditor-tool (editorDataOutput)="editorDataHandler($event, 'question')"
+                    [editorDataInput]="editorState.question"></lib-ckeditor-tool>
+            </div>
+        </div>
+        <div *ngIf="sampleJson.interactionTypes[0]=='choice' &&sampleJson.interactions.response1.options.length">
+            <label class="fs-0-92 font-weight-bold">{{configService.labelConfig?.lbl?.options}}</label>
+            <div class="fs-0-92" *ngFor="let options of sampleJson.interactions.response1.options">
+                <h5 class="label-align mt-15">{{options.label.en}}</h5>
+                <div class="ckeditor-tool__question mb-5">
+                    <lib-ckeditor-tool (editorDataOutput)="editorDataHandler($event, 'question')"
+                        [editorDataInput]="editorState.question"></lib-ckeditor-tool>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
