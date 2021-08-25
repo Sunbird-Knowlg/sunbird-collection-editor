@@ -384,10 +384,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       case 'showReviewcomments':
         this.showReviewModal = !this.showReviewModal;
         break;
-      case 'showCorrectioncomments':
-        this.contentComment = _.get(this.editorConfig, 'context.correctionComments')
-        this.showReviewModal = !this.showReviewModal;
-        break;
+      //case 'showCorrectioncomments':
+        //this.contentComment = _.get(this.editorConfig, 'context.correctionComments')
+        //this.showReviewModal = !this.showReviewModal;
+        //break;
       default:
         break;
     }
@@ -752,8 +752,11 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   showCommentAddedAgainstContent() {
-    if (this.collectionTreeNodes.data.status === 'Draft' && _.has(this.collectionTreeNodes.data, 'rejectComment')) {
+    if (this.collectionTreeNodes.data.status === 'Draft' && this.collectionTreeNodes.data.prevStatus  === "Review" && _.has(this.collectionTreeNodes.data, 'rejectComment')) {
       this.contentComment = _.get(this.collectionTreeNodes.data, 'rejectComment');
+      return true;
+    } else if (_.get(this.editorService, 'editorConfig.config.showCorrectionComments')) {
+      this.contentComment = _.get(this.editorConfig, 'context.correctionComments');
       return true;
     }
     return false;
