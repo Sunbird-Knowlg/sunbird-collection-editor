@@ -339,7 +339,7 @@ input:focus-visible {
     padding: 15px 33px;
   }
   .fancytree-exp-n span.fancytree-expander,.fancytree-exp-nl span.fancytree-expander{
-    display: none !important;
+    background: none !important;
   }
   .ui-fancytree:before, .ui-fancytree ul:before{
     content: none  !important;
@@ -530,6 +530,28 @@ input:focus-visible {
       &.active{
         font-weight: 600 !important;
       }
+    }
+  }
+}
+.publish-checklist{
+  label {
+      font-size: 13px !important;
+      padding: 0 1.5rem !important;
+  }
+}
+.sb-keywords{
+  input{
+    width: 100%;
+  }
+  input::placeholder{
+    display: block !important;
+    width: 100%;
+  }
+  .ng2-tags-container{
+    width: inherit !important;
+    display: block !important;
+    tag{
+      display: inline-flex !important;
     }
   }
 }

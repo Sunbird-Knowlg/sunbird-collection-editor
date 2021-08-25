@@ -70,6 +70,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public isTreeInitialized: any;
   public ishierarchyConfigSet =  false;
   public addCollaborator: boolean;
+  public publishchecklist: any;
   public unSubscribeShowLibraryPageEmitter: Subscription;
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
@@ -140,6 +141,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     let targetFWType: any;
     orgFWIdentifiers = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.framework.enum') ||
       _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.framework.default');
+      this.publishchecklist = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.publishchecklist.properties') || [];
     if (_.isEmpty(this.targetFramework || _.get(this.editorConfig, 'context.targetFWIds'))) {
       // tslint:disable-next-line:max-line-length
       targetFWIdentifiers = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.targetFWIds.default');
@@ -353,7 +355,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.rejectContent(event.comment);
         break;
       case 'publishContent':
-        this.publishContent();
+        this.publishContent(event);
         break;
       case 'onFormStatusChange':
         const selectedNode = this.treeService.getActiveNode();
@@ -374,7 +376,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.redirectToChapterListTab({ comment: event.comment });
         break;
       case 'sourcingApprove':
-        this.sourcingApproveContent();
+        this.sourcingApproveContent(event);
         break;
       case 'sourcingReject':
         this.sourcingRejectContent({ comment: event.comment })
@@ -541,15 +543,16 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       });
     }
   }
-  publishContent() {
-    const editableFields = _.get(this.editorConfig.config, 'editableFields');
+
+  publishContent(event) {
+    const editableFields = _.get(this.editorConfig, 'config.editableFields');
     if (this.editorMode === 'orgreview' && editableFields && !_.isEmpty(editableFields[this.editorMode])) {
       if (!this.validateFormStatus()) {
         this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
         return false;
       }
       this.editorService.updateCollection(this.collectionId).subscribe(res => {
-        this.editorService.publishContent(this.collectionId).subscribe(res => {
+        this.editorService.publishContent(this.collectionId, event).subscribe(response => {
           this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.004'));
           this.redirectToChapterListTab();
         }, err => {
@@ -559,7 +562,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.toasterService.error(err);
       });
     } else {
-      this.editorService.publishContent(this.collectionId).subscribe(res => {
+      this.editorService.publishContent(this.collectionId, event).subscribe(res => {
         this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.004'));
         this.redirectToChapterListTab();
       }, err => {
@@ -567,14 +570,14 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       });
     }
   }
-  sourcingApproveContent () {
+  sourcingApproveContent (event) {
     const editableFields = _.get(this.editorConfig.config, 'editableFields');
-    if (this.editorMode === 'sourcingreview' && editableFields && !_.isEmpty(editableFields[this.editorMode])) {
+    if (this.editorMode === 'sourcingreview' && ((editableFields && !_.isEmpty(editableFields[this.editorMode])) || !_.isEmpty(this.publishchecklist))) {
       if (!this.validateFormStatus()) {
         this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
         return false;
       }
-      this.editorService.updateCollection(this.collectionId).subscribe(res => {
+      this.editorService.updateCollection(this.collectionId, event).subscribe(res => {
           this.redirectToChapterListTab();
       }, err => {
         this.toasterService.error(err);

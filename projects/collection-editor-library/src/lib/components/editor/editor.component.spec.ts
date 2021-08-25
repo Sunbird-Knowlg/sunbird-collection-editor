@@ -550,8 +550,10 @@ describe('EditorComponent', () => {
     const editorService = TestBed.inject(EditorService);
     spyOn(editorService, 'publishContent').and.returnValue(of({}));
     spyOn(component, 'redirectToChapterListTab');
+    component.publishContent({});
     component.editorConfig = editorConfig;
-    component.publishContent();
+    component.publishchecklist = []
+    component.publishContent({});
     expect(editorService.publishContent).toHaveBeenCalled();
     expect(component.redirectToChapterListTab).toHaveBeenCalled();
   });
@@ -559,7 +561,7 @@ describe('EditorComponent', () => {
     const editorService = TestBed.inject(EditorService);
     spyOn(component, 'redirectToChapterListTab');
     component.editorConfig = editorConfig;
-    component.sourcingApproveContent();
+    component.sourcingApproveContent([]);
     expect(component.redirectToChapterListTab).toHaveBeenCalled();
   });
 
