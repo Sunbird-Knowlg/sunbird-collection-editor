@@ -236,10 +236,11 @@ export const questionEditorConfig = {
     }
   },
   config: {
-    mode: 'review', // edit / review / read / sourcingReview
+    mode: 'orgReview', // edit / review / read / sourcingReview // orgReview
     editableFields: {
       //sourcingreview: ['instructions'],
-      review: ['name', 'learningOutcome'],
+      orgreview: ['name', 'instructions', 'learningOutcome'],
+      review: ['name', 'description'],
     },
     maxDepth: 0,
     objectType: 'QuestionSet',
