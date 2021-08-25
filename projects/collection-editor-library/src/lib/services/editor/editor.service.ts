@@ -140,6 +140,44 @@ export class EditorService {
     return this.publicDataService.patch(req);
   }
 
+  getFieldsToUpdate(collectionId) {
+    let formFields = {};
+    const editableFields = _.get(this.editorConfig.config, 'editableFields');
+    if (editableFields && !_.isEmpty(editableFields[this.editorMode])) {
+      const fields = editableFields[this.editorMode];
+      const nodesModified = _.get(this.getCollectionHierarchy(), 'nodesModified');
+      const collectionFormData = _.get(nodesModified[collectionId], 'metadata');
+      _.forEach(fields, fieldCode => {
+        formFields[fieldCode] = collectionFormData[fieldCode];
+      });
+    }
+    return formFields;
+  }
+
+  updateCollection(collectionId, data?) {
+    let objType = this.configService.categoryConfig[this.editorConfig.config.objectType];
+    objType = objType.toLowerCase();
+    const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
+    const fieldsObj = this.getFieldsToUpdate(collectionId);
+    const requestBody = {
+      request: {
+        [objType]: {
+          ...fieldsObj,
+          lastPublishedBy: this.editorConfig.context.user.id
+        }
+      }
+    };
+    const publishData =  _.get(data, 'publishData');
+    if(publishData) { 
+     requestBody.request[objType] = { ...requestBody.request[objType], ...publishData };
+    }
+    const option = {
+      url: `${url.SYSYTEM_UPDATE}${collectionId}`,
+      data: requestBody
+    };
+    return this.publicDataService.patch(option);
+  }
+
   reviewContent(contentId): Observable<any> {
     let objType = this.configService.categoryConfig[this.editorConfig.config.objectType];
     objType = objType.toLowerCase();
@@ -173,7 +211,7 @@ export class EditorService {
     return this.publicDataService.post(option);
   }
 
-  publishContent(contentId) {
+  publishContent(contentId, event) {
     let objType = this.configService.categoryConfig[this.editorConfig.config.objectType];
     objType = objType.toLowerCase();
     const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
@@ -184,6 +222,10 @@ export class EditorService {
         }
       }
     };
+   const publishData =  _.get(event, 'publishData');
+   if(publishData) { 
+    requestBody.request[objType] = { ...requestBody.request[objType], ...publishData };
+   } 
     const option = {
       url: `${url.CONTENT_PUBLISH}${contentId}`,
       data: requestBody

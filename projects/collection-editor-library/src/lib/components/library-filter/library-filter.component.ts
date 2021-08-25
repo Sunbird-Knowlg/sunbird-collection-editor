@@ -20,7 +20,7 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
   @Input() filterValues: any;
   @Input() filterOpenStatus: boolean;
   @Input() searchFormConfig: any;
-  @Input() targetFrameworkId: any;
+  @Input() frameworkId: any;
   @Output() filterChangeEvent: EventEmitter<any> = new EventEmitter();
   public filterConfig: any;
   public isFilterShow = false;
@@ -76,11 +76,11 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
   fetchFrameWorkDetails() {
     this.frameworkService.frameworkData$.pipe(
       takeUntil(this.onComponentDestroy$),
-      filter(data => _.get(data, `frameworkdata.${this.targetFrameworkId}`)),
+      filter(data => _.get(data, `frameworkdata.${this.frameworkId}`)),
       take(1)
     ).subscribe((frameworkDetails: any) => {
       if (frameworkDetails && !frameworkDetails.err) {
-        const frameworkData = frameworkDetails.frameworkdata[this.targetFrameworkId].categories;
+        const frameworkData = frameworkDetails.frameworkdata[this.frameworkId].categories;
         this.frameworkDetails.frameworkData = frameworkData;
         this.frameworkDetails.topicList = _.get(_.find(frameworkData, {
           code: 'topic'

@@ -20,7 +20,7 @@
     </div>
   </div>
 <!-- Filter -->
-  <lib-library-filter *ngIf="!showLoader" [filterValues]="defaultFilters" [searchFormConfig]="searchFormConfig" [filterOpenStatus]="isFilterOpen" [targetFrameworkId]="targetFrameworkId" (filterChangeEvent)="onFilterChange($event);"></lib-library-filter>
+  <lib-library-filter *ngIf="!showLoader" [filterValues]="defaultFilters" [searchFormConfig]="searchFormConfig" [filterOpenStatus]="isFilterOpen" [frameworkId]="frameworkId" (filterChangeEvent)="onFilterChange($event);"></lib-library-filter>
   <div class="ui container min-h-500" *ngIf="!showLoader && contentList?.length">
     <!-- Player Section -->
     <div class="sb-g add-to-library__toc-player">

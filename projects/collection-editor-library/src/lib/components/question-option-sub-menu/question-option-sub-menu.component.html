@@ -1,0 +1,24 @@
+<div class="d-flex">
+  <div class="mr-30" *ngFor="let menu of subMenus; let i = index" (click)="onMenuClick(i)">
+    <button class="sb-btn sb-btn-outline-primary sb-btn-xs sb-left-icon-btn text-inherit b-0 bg-none no-hover pl-0">
+      <i class="plus circle icon fs-1-286 pull-left mr-0"></i><span class="sb-line-height-24">{{ menu?.name }}</span>
+    </button>
+  </div>
+</div>
+<div>
+  <div
+    *ngFor="let menu of subMenus; let index = index"
+    [ngClass]="{ 'd-none': !(menu?.enabled && menu?.type === 'input') }"
+    class="d-flex sb-w-85"
+  >
+    <input
+      (change)="onValueChange($event, index)"
+      class="sb-textbox false w-100 my-10"
+      [placeholder]="menu.name"
+      type="text"
+    />
+    <button class="b-0 bg-none no-hover sb-btn sb-btn-dashed-gray">
+      <i class="icon close"></i>
+    </button>
+  </div>
+</div>
