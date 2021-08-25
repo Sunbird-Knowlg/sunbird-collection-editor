@@ -37,6 +37,8 @@ import { CacheSessionStorage } from 'ng2-cache-service/dist/src/services/storage
 import { QumlPlayerComponent } from './components/quml-player/quml-player.component';
 import { DialcodeComponent } from './components/dialcode/dialcode.component';
 import { DialcodeService } from './services/dialcode/dialcode.service';
+import { AnswerDateComponent } from './components/answer-date/answer-date.component';
+import { QuestionOptionSubMenuComponent } from './components/question-option-sub-menu/question-option-sub-menu.component';
 import { CsvUploadComponent } from './components/csv-upload/csv-upload.component';
 import { ManageCollaboratorComponent } from './components/manage-collaborator/manage-collaborator.component';
 import { PublishChecklistComponent } from './components/publish-checklist/publish-checklist.component';
@@ -46,7 +48,7 @@ import { PublishChecklistComponent } from './components/publish-checklist/publis
     QuestionComponent, OptionsComponent, AnswerComponent, CkeditorToolComponent,
     LibraryPlayerComponent, ResourceReorderComponent, SkeletonLoaderComponent, TemplateComponent, TelemetryInteractDirective,
     AssetBrowserComponent, CollectionIconComponent,
-    QumlPlayerComponent, DialcodeComponent, CsvUploadComponent, ManageCollaboratorComponent, PublishChecklistComponent,],
+    QumlPlayerComponent, DialcodeComponent, CsvUploadComponent, ManageCollaboratorComponent, PublishChecklistComponent,AnswerDateComponent,QuestionOptionSubMenuComponent],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule.forChild([]), SuiModule,
   CommonFormElementsModule, InfiniteScrollModule, HttpClientModule, SunbirdPdfPlayerModule, SunbirdVideoPlayerModule,
   QumlLibraryModule, CarouselModule],

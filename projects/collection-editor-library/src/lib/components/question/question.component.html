@@ -24,6 +24,8 @@
                     [undefined, ''].includes(editorState.question)
                   " class="sb-color-error fs-0-785">{{configService.labelConfig?.lbl?.questionRequired}}</label>
               </div>
+              <lib-question-option-sub-menu [subMenus]="subMenus" (onChange)="subMenuChange($event)"></lib-question-option-sub-menu>
+              <lib-answer-date></lib-answer-date>
 
               <lib-answer *ngIf="questionInteractionType === 'default'"
                 [editorState]="editorState" [showFormError]="showFormError"
@@ -98,6 +100,13 @@
                 </div>
               </div>
             </div>
+          </div>
+          <!-- child question section -->
+          <div class="b-1-100 br-4 my-15 px-32 py-10 sb-bg-color-primary-0" *ngFor="let question of dependentQuestions;let childindex=index">
+            {{ questionSetHierarchy.children ? 'Q'+ (questionSetHierarchy.children.length+1):''}} {{'. '+ (childindex+1)}}  
+            <button class="sb-btn sb-btn-outline-primary sb-btn-xs sb-left-icon-btn text-inherit b-0 bg-none no-hover pl-0">
+              <span class="sb-line-height-24">edit question</span>
+            </button>
           </div>
           <hr>
           <div *ngIf="leafFormConfig">
