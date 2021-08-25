@@ -53,7 +53,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
     this.visibility.dialcode = this.editorService.editorMode === 'edit';
     this.visibility.showOriginPreviewUrl = _.get(this.editorService, 'editorConfig.config.showOriginPreviewUrl');
     this.visibility.showSourcingStatus = _.get(this.editorService, 'editorConfig.config.showSourcingStatus');
-    this.visibility.showCorrectionComments = _.get(this.editorService, 'editorConfig.config.showCorrectionComments');
+    //this.visibility.showCorrectionComments = _.get(this.editorService, 'editorConfig.config.showCorrectionComments');
     this.visibility.addCollaborator = _.get(this.editorService, 'editorConfig.config.showAddCollaborator');
   }
 
