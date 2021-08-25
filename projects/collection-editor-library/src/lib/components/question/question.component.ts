@@ -15,6 +15,7 @@ import { FrameworkService } from '../../services/framework/framework.service';
 import { TreeService } from '../../services/tree/tree.service';
 import { EditorCursor } from '../../collection-editor-cursor.service';
 import { filter, finalize, take, takeUntil } from 'rxjs/operators';
+import { extraConfig } from "./extraConfig";
 @Component({
   selector: 'lib-question',
   templateUrl: './question.component.html',
@@ -71,6 +72,29 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     saveButtonLoader: false
   };
   public showTranslation:boolean=false;
+  subMenus = [
+    {
+      id: 'addHint',
+      name: 'Add Hint',
+      value: '',
+      enabled: false,
+      type: 'input',
+    },
+    {
+      id: 'addTip',
+      name: 'Add Tip',
+      value: '',
+      enabled: false,
+      type: 'input',
+    },
+    {
+      id: 'addDependantQuestion',
+      name: 'Add Dependant Question',
+      value: [],
+      enabled: false,
+      type:''
+    },
+  ];
   constructor(
     private questionService: QuestionService, private editorService: EditorService, public telemetryService: EditorTelemetryService,
     public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,
@@ -85,6 +109,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     console.log("question page called");
+    this.leafFormConfig= [...this.leafFormConfig,...extraConfig]
     const { questionSetId, questionId, type } = this.questionInput;
     this.questionInteractionType = type;
     this.questionId = questionId;
@@ -600,6 +625,13 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         this.childFormData[formFieldCategory.code] = formFieldCategory.default;
       }
     });
+  }
+
+  subMenuChange({ index, value }) {
+    this.subMenus[index].value=value
+  }
+  get dependentQuestions(){
+    return this.subMenus.filter(menu=>menu.id==='addDependantQuestion')[0].value
   }
   ngOnDestroy() {
     this.onComponentDestroy$.next();
