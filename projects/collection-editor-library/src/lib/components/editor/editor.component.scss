@@ -555,3 +555,13 @@ input:focus-visible {
     }
   }
 }
+.sb-dialcode {
+  border-bottom: 0.5px solid #333333;
+  padding: 8px 5px !important;
+  border-radius: 0 !important;
+  &:focus-visible{
+    border-bottom: 0.5px solid #333333 !important;
+    border-radius: 0 !important;
+    outline: 0 !important;
+  }
+}
