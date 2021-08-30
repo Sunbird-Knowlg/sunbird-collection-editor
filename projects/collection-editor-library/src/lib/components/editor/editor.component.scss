@@ -527,7 +527,14 @@ input:focus-visible {
   .ui.pointing{
     margin: 0 -15px !important;
     .item{
-      &.active{
+      &.acti.sb-dialcode {
+        width: 100%;
+        padding: 8px 16px;
+        border: 0;
+        border-bottom: 0.5px solid #333333 !important;
+        box-sizing: border-box;
+        border-radius: none !important;
+      }ve{
         font-weight: 600 !important;
       }
     }
@@ -553,5 +560,15 @@ input:focus-visible {
     tag{
       display: inline-flex !important;
     }
+  }
+}
+.sb-dialcode {
+  border-bottom: 0.5px solid #333333;
+  padding: 8px 5px !important;
+  border-radius: 0 !important;
+  &:focus-visible{
+    border-bottom: 0.5px solid #333333 !important;
+    border-radius: 0 !important;
+    outline: 0 !important;
   }
 }
