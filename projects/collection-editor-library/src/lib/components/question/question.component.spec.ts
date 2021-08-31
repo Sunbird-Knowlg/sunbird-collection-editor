@@ -281,4 +281,15 @@ describe('QuestionComponent', () => {
     component.videoDataOutput(event);
     expect(component.videoSolutionData).toBeDefined();
   });
+  it('#subMenuChange() should set the sub-menu value ', () => {
+    component.subMenus =  mockData.subMenus;
+    spyOn(component, 'subMenuChange').and.callThrough();
+    component.subMenuChange({index:1,value:'test'})
+    expect(component.subMenus[1].value).toBe('test');
+  })
+  it('#dependentQuestions() should return dependentQuestions ', () => {
+    component.subMenus =  mockData.subMenus;
+    spyOn(component, 'dependentQuestions').and.callThrough();
+    expect( component.dependentQuestions.length).toBe(1)
+  })
 });
