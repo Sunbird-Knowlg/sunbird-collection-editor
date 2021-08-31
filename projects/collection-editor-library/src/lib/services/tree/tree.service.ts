@@ -85,7 +85,9 @@ export class TreeService {
     if (warningTime) {
       timeLimits.warningTime = this.helperService.hmsToSeconds(warningTime);
     }
-    newData.timeLimits = timeLimits;
+    if (!_.isEmpty(timeLimits)) {
+      newData.timeLimits = timeLimits;
+    }
     delete newData.maxTime;
     delete newData.warningTime;
     this.setTreeCache(nodeId, newData, activeNode.data);
