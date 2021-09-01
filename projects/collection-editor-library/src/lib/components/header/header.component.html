@@ -107,6 +107,13 @@
       <i *ngIf="labelConfigData.edit_question_btn_icon" class="{{labelConfigData.edit_question_btn_icon}}"></i>
       {{ labelConfigData.edit_question_btn_label}}
     </button>
+
+    <button *ngIf="labelConfigData.add_translation" class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10" 
+    (click)="buttonEmitter({type: 'showTranslation'})">
+    <i class="plus circle icon"></i>
+    {{ labelConfigData.add_translation_label}}
+    </button>
+
     <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10" *ngIf="!labelConfigData.showPreview"
       [ngClass]="!buttonLoaders?.previewButtonLoader ? '': 'sb-btn-loading-spinner sb-btn-outline-disabled'"
       (click)="buttonEmitter({type: 'previewContent'})" libTelemetryInteract

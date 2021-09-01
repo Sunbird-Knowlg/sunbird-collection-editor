@@ -41,6 +41,8 @@ import { AnswerDateComponent } from './components/answer-date/answer-date.compon
 import { QuestionOptionSubMenuComponent } from './components/question-option-sub-menu/question-option-sub-menu.component';
 import { CsvUploadComponent } from './components/csv-upload/csv-upload.component';
 import { ManageCollaboratorComponent } from './components/manage-collaborator/manage-collaborator.component';
+import { SliderComponent } from './components/slider/slider.component';
+import { TranslationsComponent } from './components/translations/translations.component';
 import { PublishChecklistComponent } from './components/publish-checklist/publish-checklist.component';
 @NgModule({
   declarations: [CollectionEditorLibraryComponent, ContentplayerPageComponent, EditorComponent, QumlplayerPageComponent,
@@ -48,7 +50,7 @@ import { PublishChecklistComponent } from './components/publish-checklist/publis
     QuestionComponent, OptionsComponent, AnswerComponent, CkeditorToolComponent,
     LibraryPlayerComponent, ResourceReorderComponent, SkeletonLoaderComponent, TemplateComponent, TelemetryInteractDirective,
     AssetBrowserComponent, CollectionIconComponent,
-    QumlPlayerComponent, DialcodeComponent, CsvUploadComponent, ManageCollaboratorComponent, PublishChecklistComponent,AnswerDateComponent,QuestionOptionSubMenuComponent],
+    QumlPlayerComponent, DialcodeComponent, CsvUploadComponent, ManageCollaboratorComponent, PublishChecklistComponent,AnswerDateComponent,QuestionOptionSubMenuComponent,SliderComponent, TranslationsComponent],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule.forChild([]), SuiModule,
   CommonFormElementsModule, InfiniteScrollModule, HttpClientModule, SunbirdPdfPlayerModule, SunbirdVideoPlayerModule,
   QumlLibraryModule, CarouselModule],
