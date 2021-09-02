@@ -72,6 +72,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public addCollaborator: boolean;
   public publishchecklist: any;
   public unSubscribeShowLibraryPageEmitter: Subscription;
+  public sourcingSettings: any;
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
               private toasterService: ToasterService, private dialcodeService: DialcodeService,
@@ -713,6 +714,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     })).subscribe((res) => {
       const selectedtemplateDetails = res.result.objectCategoryDefinition;
       const catMetaData = selectedtemplateDetails.objectMetadata;
+      this.sourcingSettings = catMetaData.config.sourcingSettings
       if (_.isEmpty(_.get(catMetaData, 'schema.properties.interactionTypes.items.enum'))) {
         // this.toasterService.error(this.resourceService.messages.emsg.m0026);
         this.editorService.selectedChildren = {
@@ -743,6 +745,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   questionEventListener(event: any) {
+    if (event.type === 'createNewContent') {
+      this.treeEventListener(event)
+    }
     this.selectedNodeData = undefined;
     this.mergeCollectionExternalProperties().subscribe((res: any) => {
       this.pageId = 'collection_editor';

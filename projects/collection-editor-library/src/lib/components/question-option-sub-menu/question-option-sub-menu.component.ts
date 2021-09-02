@@ -9,6 +9,7 @@ export interface SubMenu {
   value: string|any[];
   enabled: boolean;
   type: string;
+  show:boolean
 }
 @Component({
   selector: 'lib-question-option-sub-menu',
@@ -20,13 +21,15 @@ export class QuestionOptionSubMenuComponent implements OnInit {
   @Input() subMenus: SubMenu[];
   @Output() public onChange: EventEmitter<SubMenuEvent> = new EventEmitter<SubMenuEvent>();
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   onMenuClick(index) {
     const selectedMenu = this.subMenus[index];
     selectedMenu.enabled = !selectedMenu.enabled;
     if (selectedMenu.enabled && selectedMenu.type != 'input' && Array.isArray(selectedMenu.value)) {
-      selectedMenu.value.push({ index: selectedMenu.value.length });
+      // selectedMenu.value.push({ index: selectedMenu.value.length });
+      this.onChange.emit({index:index,value:undefined})
     }
   }
 

@@ -2,6 +2,7 @@ import { Component, OnInit, Input, EventEmitter, Output, ViewEncapsulation } fro
 import * as _ from 'lodash-es';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { ConfigService } from '../../services/config/config.service';
+import { SubMenu } from '../question-option-sub-menu/question-option-sub-menu.component';
 @Component({
   selector: 'lib-options',
   templateUrl: './options.component.html',
@@ -11,26 +12,13 @@ import { ConfigService } from '../../services/config/config.service';
 export class OptionsComponent implements OnInit {
   @Input() editorState: any;
   @Input() showFormError;
+  @Input() sourcingSettings;
   @Output() editorDataOutput: EventEmitter<any> = new EventEmitter<any>();
   public setCharacterLimit = 160;
   public setImageLimit = 1;
   public templateType = 'mcq-vertical';
-  subMenus = [
-    {
-      id: 'addHint',
-      name: 'Add Hint',
-      value: '',
-      enabled: false,
-      type: 'input',
-    },
-    {
-      id: 'addTip',
-      name: 'Add Tip',
-      value: '',
-      enabled: false,
-      type: 'input',
-    },
-  ]
+  subMenus :SubMenu[]
+  
   constructor(public telemetryService: EditorTelemetryService, public configService: ConfigService) { }
 
   ngOnInit() {
@@ -38,6 +26,7 @@ export class OptionsComponent implements OnInit {
       this.templateType = this.editorState.templateId;
     }
     this.editorDataHandler();
+    this.subMenuConfig()
   }
 
   editorDataHandler(event?) {
@@ -109,6 +98,19 @@ export class OptionsComponent implements OnInit {
 
    subMenuChange({ index, value }) {
     this.subMenus[index].value=value
+   }
+  
+  subMenuConfig() {
+    this.subMenus=[
+    {
+      id: 'addHint',
+      name: 'Add Hint',
+      value: '',
+      enabled: false,
+      type: 'input',
+      show:this.sourcingSettings.showAddHints
+    },
+   ]
   }
 }
 
