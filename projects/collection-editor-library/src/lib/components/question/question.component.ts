@@ -16,6 +16,7 @@ import { TreeService } from '../../services/tree/tree.service';
 import { EditorCursor } from '../../collection-editor-cursor.service';
 import { filter, finalize, take, takeUntil } from 'rxjs/operators';
 import { extraConfig } from "./extraConfig";
+import { SubMenu } from '../question-option-sub-menu/question-option-sub-menu.component';
 @Component({
   selector: 'lib-question',
   templateUrl: './question.component.html',
@@ -26,6 +27,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   QumlPlayerConfig: any = {};
   @Input() questionInput: any;
   @Input() leafFormConfig: any;
+  @Input() sourcingSettings:any
   public initialLeafFormConfig: any;
   public childFormData: any;
   @Output() questionEmitter = new EventEmitter<any>();
@@ -72,29 +74,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     saveButtonLoader: false
   };
   public showTranslation:boolean=false;
-  subMenus = [
-    {
-      id: 'addHint',
-      name: 'Add Hint',
-      value: '',
-      enabled: false,
-      type: 'input',
-    },
-    {
-      id: 'addTip',
-      name: 'Add Tip',
-      value: '',
-      enabled: false,
-      type: 'input',
-    },
-    {
-      id: 'addDependantQuestion',
-      name: 'Add Dependant Question',
-      value: [],
-      enabled: false,
-      type:''
-    },
-  ];
+  subMenus:SubMenu[]
+  showAddSecondaryQuestionCat: boolean;
   constructor(
     private questionService: QuestionService, private editorService: EditorService, public telemetryService: EditorTelemetryService,
     public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,
@@ -129,6 +110,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         this.populateFrameworkData();
       }
     });
+    this.subMenuConfig()
   }
   fetchFrameWorkDetails() {
     return this.frameworkService.frameworkData$.pipe(takeUntil(this.onComponentDestroy$),
@@ -243,6 +225,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log(event);
     switch (event.button) {
       case 'saveContent':
+        this.showAddSecondaryQuestionCat=false
         this.saveContent();
         break;
       case 'cancelContent':
@@ -304,7 +287,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.questionInteractionType === 'choice') {
       const optionValid = _.find(this.editorState.options, option =>
         (option.body === undefined || option.body === '' || option.length > this.setCharacterLimit));
-      if (optionValid || !this.editorState.answer) {
+      if (optionValid || (!this.editorState.answer && this.sourcingSettings.enforceCorrectAnswer)) {
         this.showFormError = true;
         return;
       } else {
@@ -316,7 +299,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   redirectToQuestionset() {
     this.showConfirmPopup = false;
     setTimeout(() => {
-      this.questionEmitter.emit({ status: false });
+      this.showAddSecondaryQuestionCat ? this.questionEmitter.emit({ type: 'createNewContent' }) : this.questionEmitter.emit({ status: false });
+      this.showAddSecondaryQuestionCat = false;
     }, 100);
   }
 
@@ -629,10 +613,50 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   subMenuChange({ index, value }) {
-    this.subMenus[index].value=value
+    if (this.subMenus[index].id === 'addDependantQuestion') {
+      this.showAddSecondaryQuestionCat = true;
+      this.saveContent()
+      if (this.showFormError) {
+        this.showAddSecondaryQuestionCat = false;
+        return
+      }
+    }
+    this.subMenus[index].value = value;
   }
-  get dependentQuestions(){
-    return this.subMenus.filter(menu=>menu.id==='addDependantQuestion')[0].value
+  get dependentQuestions() {
+    try {
+       return this.subMenus.filter(menu=>menu.id==='addDependantQuestion')[0].value
+    } catch (error) {
+      return null
+    }
+  }
+  subMenuConfig() {
+    this.subMenus=[
+      {
+        id: 'addHint',
+        name: 'Add Hint',
+        value: '',
+        enabled: false,
+        type: 'input',
+        show:this.sourcingSettings.showAddHints
+      },
+      {
+        id: 'addTip',
+        name: 'Add Tip',
+        value: '',
+        enabled: false,
+        type: 'input',
+        show:this.sourcingSettings.showAddTips
+      },
+      {
+        id: 'addDependantQuestion',
+        name: 'Add Dependant Question',
+        value: [],
+        enabled: false,
+        type: '',
+        show:this.sourcingSettings.showAddSecondaryQuestion
+      },
+    ];
   }
   ngOnDestroy() {
     this.onComponentDestroy$.next();

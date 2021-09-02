@@ -7,7 +7,7 @@
    <span><button class="sb-btn sb-btn-xs sb-btn-outline-gray mr-5 q-sb-layout-two" [ngClass]="{active: 'mcq-vertical-split' === templateType}" (click)="setTemplete('mcq-vertical-split')"><i class="mr-10 h-7 w-20"></i>{{configService.labelConfig?.lbl?.grid}}</button></span>
    <span><button class="sb-btn sb-btn-xs sb-btn-outline-gray q-sb-layout-three" [ngClass]="{active: 'mcq-horizontal' === templateType}" (click)="setTemplete('mcq-horizontal')"> <i class="mr-10 h-7"></i> {{configService.labelConfig?.lbl?.horizontal}}</button></span>
 </div>
-<label *ngIf="showFormError && !editorState.answer" class="ui basic red error label pt-1 mt-10">
+<label *ngIf="showFormError && !editorState.answer && sourcingSettings?.enforceCorrectAnswer" class="ui basic red error label pt-1 mt-10">
   {{configService.labelConfig?.lbl?.selectOneAns}}</label>
 <div class="d-flex pt-10 flex-dc sb-mcq-form">
   <div class="d-flex sb-mcq-item flex-w-wrap" *ngFor="let option of editorState.options; let i = index">
@@ -28,7 +28,7 @@
       <label *ngIf="option.length > setCharacterLimit" class="ui basic red error label pt-1">
         {{configService.labelConfig?.lbl?.reduceSize}}</label>
     </div>
-    <div class="sb-checkbox sb-checkbox-primary pl-10 mt-0 pt-0" [class.selected]="editorState.answer === i.toString()">
+    <div class="sb-checkbox sb-checkbox-primary pl-10 mt-0 pt-0" [class.selected]="editorState.answer === i.toString()" *ngIf="sourcingSettings?.enforceCorrectAnswer">
       <input type="radio" id="answer_{{ i + 1 }}" name="example" value="{{ i }}"  (change)="editorDataHandler($event);"
       [(ngModel)]="editorState.answer" [ngModelOptions]="{ standalone: true }" [checked]="editorState.answer === i.toString()"
       libTelemetryInteract
@@ -38,8 +38,9 @@
     <div class="w-100">
       <lib-question-option-sub-menu [subMenus]="subMenus" (onChange)="subMenuChange($event)"></lib-question-option-sub-menu>
        <input
-        class="sb-textbox false my-10"
+        class="sb-textbox false mt-20 mb-30"
         [placeholder]="'Add score here'"
+        *ngIf="sourcingSettings.showAddScore"
         type="number"
       />
     </div>
