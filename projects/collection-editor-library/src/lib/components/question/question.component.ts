@@ -109,7 +109,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     console.log("question page called");
-    // this.leafFormConfig= [...this.leafFormConfig,...extraConfig]
     const { questionSetId, questionId, type } = this.questionInput;
     this.questionInteractionType = type;
     this.questionId = questionId;

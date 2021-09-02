@@ -3,10 +3,10 @@ export class SubMenuEvent {
   index: number;
   value: any;
 }
-export class SubMenu {
+export interface SubMenu {
   id: string;
   name: string;
-  value: string;
+  value: string|any[];
   enabled: boolean;
   type: string;
 }
@@ -17,7 +17,7 @@ export class SubMenu {
 })
 export class QuestionOptionSubMenuComponent implements OnInit {
   constructor() {}
-  @Input() subMenus: SubMenu;
+  @Input() subMenus: SubMenu[];
   @Output() public onChange: EventEmitter<SubMenuEvent> = new EventEmitter<SubMenuEvent>();
 
   ngOnInit() {}

@@ -95,4 +95,20 @@ export const mockOptionData = {
     qType: 'MCQ',
     primaryCategory: 'Multiple Choice Question',
   },
+  subMenus : [
+    {
+      id: 'addHint',
+      name: 'Add Hint',
+      value: '',
+      enabled: false,
+      type: 'input',
+    },
+    {
+      id: 'addTip',
+      name: 'Add Tip',
+      value: '',
+      enabled: false,
+      type: 'input',
+    },
+  ]
 };
