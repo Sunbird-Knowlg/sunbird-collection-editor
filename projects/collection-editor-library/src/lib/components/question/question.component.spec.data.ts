@@ -279,7 +279,30 @@ export const mockData = {
         qType: "SA",
         primaryCategory: "Subjective Question",
         mediaobj: undefined
-    }
+    },
+    subMenus:[
+    {
+      id: 'addHint',
+      name: 'Add Hint',
+      value: '',
+      enabled: false,
+      type: 'input',
+    },
+    {
+      id: 'addTip',
+      name: 'Add Tip',
+      value: '',
+      enabled: false,
+      type: 'input',
+    },
+    {
+      id: 'addDependantQuestion',
+      name: 'Add Dependant Question',
+      value: [{id:1}],
+      enabled: false,
+      type:''
+    },
+  ]
 };
 
 export const readQuestionMock = {

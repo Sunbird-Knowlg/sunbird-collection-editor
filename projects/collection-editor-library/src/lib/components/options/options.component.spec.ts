@@ -89,4 +89,11 @@ describe('OptionsComponent', () => {
     expect(component.editorDataHandler).toHaveBeenCalled();
   });
 
+  it('#subMenuChange() should set the sub-menu value ', () => {
+    component.subMenus =  mockOptionData.subMenus;
+    spyOn(component, 'subMenuChange').and.callThrough();
+    component.subMenuChange({index:1,value:'test'})
+    expect(component.subMenus[1].value).toBe('test');
+  })
+
 });
