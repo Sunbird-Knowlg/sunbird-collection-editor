@@ -109,7 +109,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     console.log("question page called");
-    if(this.leafFormConfig) this.leafFormConfig = [...this.leafFormConfig,...extraConfig]
     const { questionSetId, questionId, type } = this.questionInput;
     this.questionInteractionType = type;
     this.questionId = questionId;
@@ -583,9 +582,11 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   output(event) { }
 
   onStatusChanges(event) {
+    console.log(event);
   }
 
   valueChanges(event) {
+    console.log(event);
     this.childFormData = event;
   }
   validateFormFields() {
