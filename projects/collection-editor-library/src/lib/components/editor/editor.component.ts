@@ -10,11 +10,15 @@ import { ToasterService } from '../../services/toaster/toaster.service';
 import { HelperService } from '../../services/helper/helper.service';
 import { IEditorConfig } from '../../interfaces/editor';
 import { Router } from '@angular/router';
-import { catchError, map, tap } from 'rxjs/operators';
-import { Observable, throwError, forkJoin, Subscription } from 'rxjs';
+import { catchError, map, tap, switchMap } from 'rxjs/operators';
+import { Observable, throwError, forkJoin, Subscription, merge, of } from 'rxjs';
 import * as _ from 'lodash-es';
 import { ConfigService } from '../../services/config/config.service';
 import { DialcodeService } from '../../services/dialcode/dialcode.service';
+import { FormControl, FormGroup } from '@angular/forms';
+
+let evidenceMimeType;
+
 @Component({
   selector: 'lib-editor',
   templateUrl: './editor.component.html',
@@ -218,6 +222,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           this.frameworkService.frameworkValues = _.concat(_.map(_.get(response, 'result.Framework'), framework => {
             return { label: framework.name, identifier: framework.identifier };
           }));
+          console.log("leafconfig");
+          console.log(categoryDefinitionData);
           this.setEditorForms(categoryDefinitionData);
         }, error => {
           console.log('error', error);
@@ -233,6 +239,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     // tslint:disable-next-line:max-line-length
     this.libraryComponentInput.searchFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.search.properties');
     this.leafFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.childMetadata.properties');
+    
   }
 
   ngAfterViewInit() {
@@ -713,6 +720,19 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       return throwError(this.editorService.apiErrorHandling(error, errInfo));
     })).subscribe((res) => {
       const selectedtemplateDetails = res.result.objectCategoryDefinition;
+      console.log("form read");
+      console.log(selectedtemplateDetails);
+      if(_.get(selectedtemplateDetails,'forms.create.properties.length')){
+        let questionCategoryConfig=selectedtemplateDetails.forms.create.properties;
+        questionCategoryConfig.forEach(field => {
+          if (field.code === 'evidenceMimeType') {
+            evidenceMimeType = field.range;
+            field.options = this.setEvidence;
+            field.range = null;
+        }
+        });
+        this.leafFormConfig= questionCategoryConfig;
+      }
       const catMetaData = selectedtemplateDetails.objectMetadata;
       this.sourcingSettings = catMetaData.config.sourcingSettings
       if (_.isEmpty(_.get(catMetaData, 'schema.properties.interactionTypes.items.enum'))) {
@@ -849,4 +869,22 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       this.unSubscribeShowLibraryPageEmitter.unsubscribe();
     }
   }
+
+
+  setEvidence(control, depends: FormControl[], formGroup: FormGroup, loading, loaded) {
+    control.isVisible = 'no';
+    const response = merge(..._.map(depends, depend => depend.valueChanges)).pipe(
+        switchMap((value: any) => {
+            if (!_.isEmpty(value) && _.toLower(value) === 'yes') {
+                control.isVisible = 'yes';
+                return of({range: evidenceMimeType});
+            } else {
+                control.isVisible = 'no';
+                return of(null);
+            }
+        })
+    );
+    return response;
+  }
+
 }
