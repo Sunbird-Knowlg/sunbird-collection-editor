@@ -115,7 +115,9 @@ export class TranslationsComponent implements OnInit {
   constructor(public configService: ConfigService) {}
 
   ngOnInit(): void {
+    
   }
+
   editorDataHandler(event, type?) {
     if (type === 'question') {
       this.editorState.question = event.body;
