@@ -17,8 +17,8 @@ export class OptionsComponent implements OnInit {
   public setCharacterLimit = 160;
   public setImageLimit = 1;
   public templateType = 'mcq-vertical';
-  subMenus :SubMenu[]
-  
+  subMenus: SubMenu[];
+
   constructor(public telemetryService: EditorTelemetryService, public configService: ConfigService) { }
 
   ngOnInit() {
@@ -26,7 +26,7 @@ export class OptionsComponent implements OnInit {
       this.templateType = this.editorState.templateId;
     }
     this.editorDataHandler();
-    this.subMenuConfig()
+    this.subMenuConfig();
   }
 
   editorDataHandler(event?) {
@@ -97,20 +97,20 @@ export class OptionsComponent implements OnInit {
   }
 
    subMenuChange({ index, value }) {
-    this.subMenus[index].value=value
+    this.subMenus[index].value = value;
    }
-  
+
   subMenuConfig() {
-    this.subMenus=[
+    this.subMenus = [
     {
       id: 'addHint',
       name: 'Add Hint',
       value: '',
       enabled: false,
       type: 'input',
-      show:this.sourcingSettings.showAddHints
+      show: this.sourcingSettings.showAddHints
     },
-   ]
+   ];
   }
 }
 

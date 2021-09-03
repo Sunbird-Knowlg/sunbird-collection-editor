@@ -435,7 +435,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     metadata = _.merge(metadata, this.getDefaultSessionContext());
     metadata = _.merge(metadata, _.pickBy(this.childFormData, _.identity));
-    return _.omit(metadata, ['question', 'numberOfOptions', 'options']);
+    // tslint:disable-next-line:max-line-length
+    return _.omit(metadata, ['question', 'numberOfOptions', 'options', 'allowMultiSelect', 'showEvidence', 'evidenceMimeType', 'showRemarks', 'markAsNotMandatory']);
   }
 
   getMcqQuestionHtmlBody(question, templateId) {
@@ -615,30 +616,31 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   subMenuChange({ index, value }) {
     if (this.subMenus[index].id === 'addDependantQuestion') {
       this.showAddSecondaryQuestionCat = true;
-      this.saveContent()
+      this.saveContent();
       if (this.showFormError) {
         this.showAddSecondaryQuestionCat = false;
-        return
+        return;
       }
     }
     this.subMenus[index].value = value;
   }
+
   get dependentQuestions() {
     try {
-       return this.subMenus.filter(menu=>menu.id==='addDependantQuestion')[0].value
+       return this.subMenus.filter(menu => menu.id === 'addDependantQuestion')[0].value;
     } catch (error) {
-      return null
+      return null;
     }
   }
   subMenuConfig() {
-    this.subMenus=[
+    this.subMenus = [
       {
         id: 'addHint',
         name: 'Add Hint',
         value: '',
         enabled: false,
         type: 'input',
-        show:this.sourcingSettings.showAddHints
+        show: _.get(this.sourcingSettings, 'showAddHints')
       },
       {
         id: 'addTip',
@@ -646,7 +648,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         value: '',
         enabled: false,
         type: 'input',
-        show:this.sourcingSettings.showAddTips
+        show: _.get(this.sourcingSettings, 'showAddTips')
       },
       {
         id: 'addDependantQuestion',
@@ -654,7 +656,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         value: [],
         enabled: false,
         type: '',
-        show:this.sourcingSettings.showAddSecondaryQuestion
+        show: _.get(this.sourcingSettings, 'showAddSecondaryQuestion')
       },
     ];
   }

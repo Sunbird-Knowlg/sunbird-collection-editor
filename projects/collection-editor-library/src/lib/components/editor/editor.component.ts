@@ -720,10 +720,11 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       return throwError(this.editorService.apiErrorHandling(error, errInfo));
     })).subscribe((res) => {
       const selectedtemplateDetails = res.result.objectCategoryDefinition;
-      console.log("form read");
+      console.log('form read');
       console.log(selectedtemplateDetails);
-      if(_.get(selectedtemplateDetails,'forms.create.properties.length')){
-        let questionCategoryConfig=selectedtemplateDetails.forms.create.properties;
+      const selectedTemplateFormFields = _.get(selectedtemplateDetails, 'forms.create.properties.length');
+      if (!_.isEmpty(selectedTemplateFormFields)) {
+        const questionCategoryConfig = selectedTemplateFormFields;
         questionCategoryConfig.forEach(field => {
           if (field.code === 'evidenceMimeType') {
             evidenceMimeType = field.range;
@@ -731,10 +732,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
             field.range = null;
         }
         });
-        this.leafFormConfig= questionCategoryConfig;
+        this.leafFormConfig = questionCategoryConfig;
       }
       const catMetaData = selectedtemplateDetails.objectMetadata;
-      this.sourcingSettings = catMetaData.config.sourcingSettings
+      this.sourcingSettings = catMetaData.config.sourcingSettings;
       if (_.isEmpty(_.get(catMetaData, 'schema.properties.interactionTypes.items.enum'))) {
         // this.toasterService.error(this.resourceService.messages.emsg.m0026);
         this.editorService.selectedChildren = {
