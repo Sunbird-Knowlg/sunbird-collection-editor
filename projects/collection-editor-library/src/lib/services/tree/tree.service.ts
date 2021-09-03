@@ -154,6 +154,11 @@ export class TreeService {
     }
   }
 
+  getParent() {
+    const selectedNode = this.getActiveNode();
+    return selectedNode.getParent();
+  }
+
   getFirstChild() {
     return $(this.treeNativeElement).fancytree('getRootNode').getFirstChild();
   }
