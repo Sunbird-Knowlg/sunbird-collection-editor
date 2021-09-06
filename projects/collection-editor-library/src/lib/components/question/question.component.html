@@ -35,6 +35,8 @@
                 [editorState]="editorState" [showFormError]="showFormError"
                 (editorDataOutput)="editorDataHandler($event)" [sourcingSettings]="sourcingSettings"></lib-options>
 
+              <lib-slider *ngIf="questionInteractionType === 'slider'"></lib-slider>  
+
               <div *ngIf="sourcingSettings.showSolution!==false" class="d-flex flex-ai-center ckeditor-tool__solution py-10 px-16 mt-15 sb-bg-color-white">
                 <label class="fs-0-92 mb-0 ckeditor-tool__label pb-4">
                   <span class="sb-color-primary fs-0-785 mr-4">{{configService.labelConfig?.lbl?.solution}}</span>
