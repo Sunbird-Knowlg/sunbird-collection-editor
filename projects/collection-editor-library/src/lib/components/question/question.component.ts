@@ -638,6 +638,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         id: 'addHint',
         name: 'Add Hint',
         value: '',
+        label:'Hint',
         enabled: false,
         type: 'input',
         show: _.get(this.sourcingSettings, 'showAddHints')
@@ -646,6 +647,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         id: 'addTip',
         name: 'Add Tip',
         value: '',
+        label:'Tip',
         enabled: false,
         type: 'input',
         show: _.get(this.sourcingSettings, 'showAddTips')
@@ -653,6 +655,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       {
         id: 'addDependantQuestion',
         name: 'Add Dependant Question',
+        label:'',
         value: [],
         enabled: false,
         type: '',
