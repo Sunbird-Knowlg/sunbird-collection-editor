@@ -37,8 +37,9 @@
     </div>
     <div class="w-100">
       <lib-question-option-sub-menu [subMenus]="subMenus" (onChange)="subMenuChange($event)"></lib-question-option-sub-menu>
-       <input
-        class="sb-textbox false mt-20 mb-30"
+      <label for="score" class="d-block mt-10 optionLabel">Score</label> 
+      <input
+        class="sb-textbox false mb-30"
         [placeholder]="'Add score here'"
         *ngIf="sourcingSettings.showAddScore"
         type="number"
