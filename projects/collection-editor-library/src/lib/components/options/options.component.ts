@@ -106,6 +106,7 @@ export class OptionsComponent implements OnInit {
       id: 'addHint',
       name: 'Add Hint',
       value: '',
+      label:'Hint',
       enabled: false,
       type: 'input',
       show: this.sourcingSettings.showAddHints

@@ -436,7 +436,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     metadata = _.merge(metadata, this.getDefaultSessionContext());
     metadata = _.merge(metadata, _.pickBy(this.childFormData, _.identity));
     // tslint:disable-next-line:max-line-length
-    return _.omit(metadata, ['question', 'numberOfOptions', 'options', 'allowMultiSelect', 'showEvidence', 'evidenceMimeType', 'showRemarks', 'markAsNotMandatory']);
+    return _.omit(metadata, ['question', 'numberOfOptions', 'options', 'allowMultiSelect', 'showEvidence', 'evidenceMimeType', 'showRemarks', 'markAsNotMandatory','leftAnchor','rightAnchor','step','numberOnly','characterLimit','dateFormat','autoCapture']);
   }
 
   getMcqQuestionHtmlBody(question, templateId) {
@@ -638,6 +638,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         id: 'addHint',
         name: 'Add Hint',
         value: '',
+        label:'Hint',
         enabled: false,
         type: 'input',
         show: _.get(this.sourcingSettings, 'showAddHints')
@@ -646,6 +647,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         id: 'addTip',
         name: 'Add Tip',
         value: '',
+        label:'Tip',
         enabled: false,
         type: 'input',
         show: _.get(this.sourcingSettings, 'showAddTips')
@@ -653,6 +655,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       {
         id: 'addDependantQuestion',
         name: 'Add Dependant Question',
+        label:'',
         value: [],
         enabled: false,
         type: '',

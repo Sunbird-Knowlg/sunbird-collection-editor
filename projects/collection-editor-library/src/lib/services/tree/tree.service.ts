@@ -24,6 +24,7 @@ export class TreeService {
   private _treeStatus$ = new BehaviorSubject<any>(undefined);
   public readonly treeStatus$: Observable<any> = this._treeStatus$
   .asObservable().pipe(skipWhile(status => status === undefined || status === null));
+  previousNode: any;
 
   constructor(private toasterService: ToasterService, private helperService: HelperService, public configService: ConfigService) { }
 

@@ -6,6 +6,7 @@ export class SubMenuEvent {
 export interface SubMenu {
   id: string;
   name: string;
+  label: string;
   value: string|any[];
   enabled: boolean;
   type: string;

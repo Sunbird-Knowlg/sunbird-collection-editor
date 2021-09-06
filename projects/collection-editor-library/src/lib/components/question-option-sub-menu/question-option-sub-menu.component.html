@@ -11,16 +11,21 @@
   <div
     *ngFor="let menu of subMenus; let index = index"
     [ngClass]="{ 'd-none': !(menu?.enabled && menu?.type === 'input') }"
-    class="d-flex sb-w-85"
   >
-    <input
-      (change)="onValueChange($event, index)"
-      class="sb-textbox false w-100 my-10"
-      [placeholder]="menu.name"
-      type="text"
-    />
-    <button class="b-0 bg-none no-hover sb-btn sb-btn-dashed-gray">
-      <i class="icon close"></i>
-    </button>
+    <label for="">{{ menu?.label }}</label>
+    <div class="d-flex sb-w-85">
+      <input
+        (change)="onValueChange($event, index)"
+        class="sb-textbox false w-100 my-10"
+        [placeholder]="menu.name"
+        type="text"
+      />
+      <button
+        class="b-0 bg-none no-hover sb-btn sb-btn-dashed-gray"
+        (click)="menu.enabled = !menu.enabled; menu.value = ''"
+      >
+        <i class="icon close"></i>
+      </button>
+    </div>
   </div>
 </div>

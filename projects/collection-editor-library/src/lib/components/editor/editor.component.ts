@@ -722,7 +722,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       const selectedtemplateDetails = res.result.objectCategoryDefinition;
       console.log('form read');
       console.log(selectedtemplateDetails);
-      const selectedTemplateFormFields = _.get(selectedtemplateDetails, 'forms.create.properties.length');
+      const selectedTemplateFormFields = _.get(selectedtemplateDetails, 'forms.create.properties');
       if (!_.isEmpty(selectedTemplateFormFields)) {
         const questionCategoryConfig = selectedTemplateFormFields;
         questionCategoryConfig.forEach(field => {
