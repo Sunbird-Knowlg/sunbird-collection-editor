@@ -436,7 +436,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     metadata = _.merge(metadata, this.getDefaultSessionContext());
     metadata = _.merge(metadata, _.pickBy(this.childFormData, _.identity));
     // tslint:disable-next-line:max-line-length
-    return _.omit(metadata, ['question', 'numberOfOptions', 'options', 'allowMultiSelect', 'showEvidence', 'evidenceMimeType', 'showRemarks', 'markAsNotMandatory']);
+    return _.omit(metadata, ['question', 'numberOfOptions', 'options', 'allowMultiSelect', 'showEvidence', 'evidenceMimeType', 'showRemarks', 'markAsNotMandatory','leftAnchor','rightAnchor','step','numberOnly','characterLimit','dateFormat','autoCapture']);
   }
 
   getMcqQuestionHtmlBody(question, templateId) {
