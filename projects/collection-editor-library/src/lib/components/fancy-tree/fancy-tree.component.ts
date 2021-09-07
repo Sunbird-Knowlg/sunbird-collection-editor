@@ -147,8 +147,8 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     setTimeout(() => {
       this.treeService.reloadTree(this.rootNode);
-      // this.treeService.setActiveNode();
-      this.treeService.setActiveNode(this.treeService.previousNode)
+      const prevNodeId = this.treeService.getNodeById(this.treeService.previousNode);
+      this.treeService.setActiveNode(prevNodeId);
       const rootNode = this.treeService.getFirstChild();
       rootNode.setExpanded(true);
       this.eachNodeActionButton(rootNode);
@@ -229,7 +229,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       activate: (event, data) => {
         this.treeEventEmitter.emit({ type: 'nodeSelect', data: data.node });
-        this.treeService.previousNode =data.node
+        this.treeService.previousNode = _.get(data, 'node.data.id');
         setTimeout(() => {
           this.attachContextMenu(data.node, true);
           this.eachNodeActionButton(data.node);
