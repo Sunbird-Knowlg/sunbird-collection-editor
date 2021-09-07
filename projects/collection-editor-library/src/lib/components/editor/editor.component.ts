@@ -72,6 +72,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public addCollaborator: boolean;
   public publishchecklist: any;
   public unSubscribeShowLibraryPageEmitter: Subscription;
+  public primaryCategoryDef: any;
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
               private toasterService: ToasterService, private dialcodeService: DialcodeService,
@@ -117,8 +118,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           this.toolbarConfig.showDialcode = dialcode ? dialcode.toLowerCase() : 'no';
           this.helperService.channelData$.subscribe(
             (channelResponse) => {
+              this.primaryCategoryDef = response;
               this.sethierarchyConfig(response);
-              this.getFrameworkDetails(response);
             }
           );
         },
@@ -624,6 +625,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     switch (event.type) {
       case 'nodeSelect':
+        this.getFrameworkDetails(this.primaryCategoryDef);
         this.updateSubmitBtnVisibility();
         this.selectedNodeData = _.cloneDeep(event.data);
         this.isCurrentNodeFolder = _.get(this.selectedNodeData, 'folder');
