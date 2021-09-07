@@ -13,6 +13,7 @@ export class OptionsComponent implements OnInit {
   @Input() editorState: any;
   @Input() showFormError;
   @Input() sourcingSettings;
+  @Input() questionPrimaryCategory;
   @Output() editorDataOutput: EventEmitter<any> = new EventEmitter<any>();
   public setCharacterLimit = 160;
   public setImageLimit = 1;
@@ -48,7 +49,7 @@ export class OptionsComponent implements OnInit {
     });
     metadata = {
       templateId: this.templateType,
-      name: 'Multiple Choice Question',
+      name: this.questionPrimaryCategory || 'Multiple Choice Question',
       responseDeclaration: this.getResponseDeclaration(editorState),
       interactionTypes: ['choice'],
       interactions: this.getInteractions(editorState.options),
@@ -56,7 +57,7 @@ export class OptionsComponent implements OnInit {
         options
       },
       qType: 'MCQ',
-      primaryCategory: 'Multiple Choice Question'
+      primaryCategory: this.questionPrimaryCategory || 'Multiple Choice Question'
     };
     return metadata;
   }
