@@ -7,7 +7,8 @@ export const courseEditorConfig = {
       lastName: 'Bhuva',
       orgIds: ['01309282781705830427']
     },
-    identifier: 'do_1133180138837606401237',
+    identifier:"do_1133610108714352641210" ,
+    // 'do_11335184536953651219',
     channel: '01309282781705830427',
     // framework: 'nit_k-12',
     // targetFWIds: ['nit_k-12'],
@@ -148,7 +149,7 @@ export const questionEditorConfig = {
       lastName: 'Bhuva',
       orgIds: ['01309282781705830427']
     },
-    identifier: 'do_1132393548335759361558', // do_11330102570702438417
+    identifier: 'do_1133610108714352641210', // 'do_1132393548335759361558', // do_11330102570702438417
     authToken: ' ',
     sid: 'iYO2K6dOSdA0rwq7NeT1TDzS-dbqduvV',
     did: '7e85b4967aebd6704ba1f604f20056b6',
@@ -182,7 +183,7 @@ export const questionEditorConfig = {
       l1: 'do_113140468925825024117',
       l2: 'do_113140468926914560125'
     },
-    host: 'https://dev.sunbirded.org',
+    host: 'https://dock.sunbirded.org',
     defaultLicense: 'CC BY 4.0',
     endpoint: '/data/v3/telemetry',
     env: 'questionset_editor',
@@ -258,57 +259,59 @@ export const questionEditorConfig = {
       // sourcingreview: ['instructions'],
       review: ['name', 'learningOutcome'],
     },
-    maxDepth: 0,
+    maxDepth: 4,
     objectType: 'QuestionSet',
-    primaryCategory: 'Practice Question Set',
+    primaryCategory: 'Observation',
     isRoot: true,
     iconClass: 'fa fa-book',
     showAddCollaborator: false,
-    children: {
-      Question: [
-        'Multiple Choice Question',
-        'Subjective Question'
-      ]
-    },
+    children: {},
     hierarchy: {
-      // level1: {
-      //   name: 'Section',
-      //   type: 'Unit',
-      //   mimeType: 'application/vnd.sunbird.questionset',
-      //   primaryCategory: 'Practice Question Set',
-      //   iconClass: 'fa fa-folder-o',
-      //   children: {
-      //     Question: [
-      //       'Multiple Choice Question',
-      //       'Subjective Question'
-      //     ]
-      //   }
-      // },
-      // level2: {
-      //   name: 'Sub Section',
-      //   type: 'Unit',
-      //   mimeType: 'application/vnd.sunbird.questionset',
-      //   primaryCategory: 'Practice Question Set',
-      //   iconClass: 'fa fa-folder-o',
-      //   children: {
-      //     Question: [
-      //       'Multiple Choice Question',
-      //       'Subjective Question'
-      //     ]
-      //   }
-      // },
-      // level3: {
-      //   name: 'Sub Section',
-      //   type: 'Unit',
-      //   mimeType: 'application/vnd.sunbird.questionset',
-      //   primaryCategory: 'Practice Question Set',
-      //   iconClass: 'fa fa-folder-o',
-      //   children: {
-      //     Question: [
-      //       'Subjective Question'
-      //     ]
-      //   }
-      // }
+      level1: {
+        name: 'Section',
+        type: 'Unit',
+        mimeType: 'application/vnd.sunbird.questionset',
+        primaryCategory: 'Survey',
+        iconClass: 'fa fa-folder-o',
+        children: {
+          Question: [
+            'Multiple Choice Question',
+            'Slider',
+            'Text',
+            'Date'
+          ]
+        }
+      },
+      level2: {
+        name: 'Sub Section',
+        type: 'Unit',
+        mimeType: 'application/vnd.sunbird.questionset',
+        primaryCategory: 'Survey',
+        iconClass: 'fa fa-folder-o',
+        children: {
+          Question: [
+            'Multiple Choice Question',
+            'Slider',
+            'Text',
+            'Date'
+          ]
+        }
+      },
+      level3: {
+        name: 'Sub Section',
+        type: 'Unit',
+        mimeType: 'application/vnd.sunbird.questionset',
+        primaryCategory: 'Survey',
+        iconClass: 'fa fa-folder-o',
+        children: {
+          Question: [
+            'Multiple Choice Question',
+            'Slider',
+            'Text',
+            'Date'
+          ]
+        }
+      }
     },
     contentPolicyUrl: '/term-of-use.html'
   }

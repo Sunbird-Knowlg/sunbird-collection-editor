@@ -3,15 +3,15 @@
     <div class="form-container flex-container">
         <div>
             <label><strong>{{configService.labelConfig?.lbl?.left}}</strong></label>
-            <input class="textbox" placeholder="Add minimum value" type="number">
+            <input class="textbox" placeholder="Add minimum value" type="number"  (change)="onValueChange($event,'leftAnchor')" required>
         </div>
         <div>
             <label><strong>{{configService.labelConfig?.lbl?.stepSize}}</strong></label>
-            <input class="textbox" placeholder="Add step size" type="number">
+            <input class="textbox" placeholder="Add step size" type="number"  (change)="onValueChange($event,'step')" required>
         </div>
         <div>
             <label><strong>{{configService.labelConfig?.lbl?.right}}</strong></label>
-            <input class="textbox" placeholder="Add maximum size" type="number">
+            <input class="textbox" placeholder="Add maximum size" type="number"  (change)="onValueChange($event,'rightAnchor')" required>
         </div>
     </div>
 </div>
