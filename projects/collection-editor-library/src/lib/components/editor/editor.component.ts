@@ -751,7 +751,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.editorService.selectedChildren = {
           primaryCategory: selectedQuestionType,
           mimeType: catMetaData.schema.properties.mimeType.enum[0],
-          interactionType: interactionTypes[0],
+          interactionType: interactionTypes[0]
         };
         this.redirectToQuestionTab(undefined, interactionTypes[0]);
       }

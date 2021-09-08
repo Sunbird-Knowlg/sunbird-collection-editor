@@ -20,12 +20,12 @@ export class OptionsComponent implements OnInit {
   public setImageLimit = 1;
   public templateType = 'mcq-vertical';
   subMenus: SubMenu[];
-  rootMeta: any;
+  parentMeta: any;
 
   constructor(public telemetryService: EditorTelemetryService, public configService: ConfigService,public treeService:TreeService) { }
 
   ngOnInit() {
-    this.rootMeta = this.treeService.getParent().data.metadata;
+    this.parentMeta = this.treeService.getParent().data.metadata;
     if (!_.isUndefined(this.editorState.templateId)) {
       this.templateType = this.editorState.templateId;
     }
