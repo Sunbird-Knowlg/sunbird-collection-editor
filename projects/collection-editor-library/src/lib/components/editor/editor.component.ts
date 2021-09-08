@@ -77,6 +77,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public publishchecklist: any;
   public unSubscribeShowLibraryPageEmitter: Subscription;
   public sourcingSettings: any;
+  setChildQuestion: any;
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
               private toasterService: ToasterService, private dialcodeService: DialcodeService,
@@ -644,6 +645,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.showDeleteConfirmationPopUp = true;
         break;
       case 'createNewContent':
+        this.setChildQuestion = event.isChildQuestion;
         if (this.editorService.checkIfContentsCanbeAdded()) {
           this.buttonLoaders.addFromLibraryButtonLoader = true;
           this.saveContent().then((message: string) => {
@@ -760,7 +762,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.questionComponentInput = {
       questionSetId: this.collectionId,
       questionId: mode === 'edit' ? this.selectedNodeData.data.metadata.identifier : undefined,
-      type: interactionType
+      type: interactionType,
+      setChildQueston:this.setChildQuestion
     };
     this.pageId = 'question';
   }
