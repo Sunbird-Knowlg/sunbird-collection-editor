@@ -3,6 +3,7 @@ import * as _ from 'lodash-es';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { ConfigService } from '../../services/config/config.service';
 import { SubMenu } from '../question-option-sub-menu/question-option-sub-menu.component';
+import { TreeService } from '../../services/tree/tree.service';
 @Component({
   selector: 'lib-options',
   templateUrl: './options.component.html',
@@ -19,10 +20,12 @@ export class OptionsComponent implements OnInit {
   public setImageLimit = 1;
   public templateType = 'mcq-vertical';
   subMenus: SubMenu[];
+  rootMeta: any;
 
-  constructor(public telemetryService: EditorTelemetryService, public configService: ConfigService) { }
+  constructor(public telemetryService: EditorTelemetryService, public configService: ConfigService,public treeService:TreeService) { }
 
   ngOnInit() {
+    this.rootMeta = this.treeService.getParent().data.metadata;
     if (!_.isUndefined(this.editorState.templateId)) {
       this.templateType = this.editorState.templateId;
     }
