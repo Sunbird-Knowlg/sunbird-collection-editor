@@ -10,8 +10,8 @@ import { ToasterService } from '../../services/toaster/toaster.service';
 import { HelperService } from '../../services/helper/helper.service';
 import { IEditorConfig } from '../../interfaces/editor';
 import { Router } from '@angular/router';
-import { catchError, map, tap } from 'rxjs/operators';
-import { Observable, throwError, forkJoin, Subscription } from 'rxjs';
+import { catchError, map, takeUntil, tap } from 'rxjs/operators';
+import { Observable, throwError, forkJoin, Subscription, Subject } from 'rxjs';
 import * as _ from 'lodash-es';
 import { ConfigService } from '../../services/config/config.service';
 import { DialcodeService } from '../../services/dialcode/dialcode.service';
@@ -51,6 +51,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   private formStatusMapper: { [key: string]: boolean } = {};
   public targetFramework;
   public organisationFramework;
+  public primaryCategoryDef: any;
   toolbarConfig: any;
   public buttonLoaders = {
     saveAsDraftButtonLoader: false,
@@ -72,6 +73,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public addCollaborator: boolean;
   public publishchecklist: any;
   public unSubscribeShowLibraryPageEmitter: Subscription;
+  public unsubscribe$ = new Subject<void>();
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
               private toasterService: ToasterService, private dialcodeService: DialcodeService,
@@ -118,7 +120,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           this.helperService.channelData$.subscribe(
             (channelResponse) => {
               this.sethierarchyConfig(response);
-              this.getFrameworkDetails(response);
+              this.primaryCategoryDef = response;
             }
           );
         },
@@ -132,6 +134,11 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.telemetryService.start({ type: 'editor', pageid: this.telemetryService.telemetryPageId });
     this.unSubscribeShowLibraryPageEmitter = this.editorService.getshowLibraryPageEmitter()
       .subscribe(item => this.showLibraryComponentPage());
+    this.treeService.treeStatus$.pipe(takeUntil(this.unsubscribe$)).subscribe((status) => {
+      if (status === 'loaded') {
+        this.getFrameworkDetails(this.primaryCategoryDef);
+      }
+    });
   }
 
   getFrameworkDetails(categoryDefinitionData) {
@@ -310,7 +317,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     });
     return childrenData;
   }
-  
+
   toggleCollaboratorModalPoup() {
     this.isEnableCsvAction = true;
     if (this.addCollaborator) {
@@ -320,7 +327,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     } else {
     }
   }
-  
+
   toolbarEventListener(event) {
     this.actionType = event.button;
     switch (event.button) {
@@ -362,7 +369,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         if (selectedNode && selectedNode.data.id) {
           this.formStatusMapper[selectedNode.data.id] = event.event.isValid;
         }
-        if(this.isObjectTypeCollection) {
+        if (this.isObjectTypeCollection) {
           this.handleCsvDropdownOptionsOnCollection();
         }
         break;
@@ -570,8 +577,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       });
     }
   }
-  sourcingApproveContent (event) {
+  sourcingApproveContent(event) {
     const editableFields = _.get(this.editorConfig.config, 'editableFields');
+    // tslint:disable-next-line:max-line-length
     if (this.editorMode === 'sourcingreview' && ((editableFields && !_.isEmpty(editableFields[this.editorMode])) || !_.isEmpty(this.publishchecklist))) {
       if (!this.validateFormStatus()) {
         this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
@@ -585,7 +593,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     } else {
         this.redirectToChapterListTab();
     }
-  } 
+  }
   sourcingRejectContent(obj) {
     const editableFields = _.get(this.editorConfig.config, 'editableFields');
     if (this.editorMode === 'sourcingreview' && editableFields && !_.isEmpty(editableFields[this.editorMode])) {
@@ -618,7 +626,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   treeEventListener(event: any) {
     this.actionType = event.type;
     this.updateTreeNodeData();
-    if(this.isObjectTypeCollection) {
+    if (this.isObjectTypeCollection) {
       this.handleCsvDropdownOptionsOnCollection();
     }
     switch (event.type) {
@@ -756,7 +764,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   showCommentAddedAgainstContent() {
-    if (this.collectionTreeNodes.data.status === 'Draft' && this.collectionTreeNodes.data.prevStatus  === "Review" && _.has(this.collectionTreeNodes.data, 'rejectComment')) {
+    // tslint:disable-next-line:max-line-length
+    if (this.collectionTreeNodes.data.status === 'Draft' && this.collectionTreeNodes.data.prevStatus  === 'Review' && _.has(this.collectionTreeNodes.data, 'rejectComment')) {
       this.contentComment = _.get(this.collectionTreeNodes.data, 'rejectComment');
       return true;
     } else if (_.get(this.editorService, 'editorConfig.config.showCorrectionComments')) {
@@ -766,7 +775,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     return false;
   }
   handleCsvDropdownOptionsOnCollection() {
-    if(this.isTreeInitialized) {
+    if (this.isTreeInitialized) {
       this.isEnableCsvAction = true;
       this.isTreeInitialized = false;
     } else {
@@ -846,5 +855,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.unSubscribeShowLibraryPageEmitter) {
       this.unSubscribeShowLibraryPageEmitter.unsubscribe();
     }
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }
