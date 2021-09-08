@@ -90,6 +90,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     console.log("question page called");
+    console.log(this.sourcingSettings);
+    console.log(this.leafFormConfig);
     const { questionSetId, questionId, type } = this.questionInput;
     this.questionInteractionType = type;
     this.questionId = questionId;
@@ -552,9 +554,18 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     let index;
     let questionTitle = '';
     if (!_.isUndefined(questionId)) {
-      index =  _.findIndex(hierarchyChildren, { 'identifier': questionId });
-      const question  = hierarchyChildren[index];
-      questionTitle = `Q${(index + 1).toString()} | ` + question.primaryCategory;
+      _.forEach(hierarchyChildren, (child) => {
+        if(child.children){
+          index =  _.findIndex(child.children, { 'identifier': questionId });
+          const question  = child.children[index]; 
+          questionTitle = `Q${(index + 1).toString()} | ` + question.primaryCategory;
+        }
+        else{
+          index =  _.findIndex(hierarchyChildren, { 'identifier': questionId });
+          const question  = hierarchyChildren[index];  
+          questionTitle = `Q${(index + 1).toString()} | ` + question.primaryCategory;
+        }
+      });
     } else {
       index = hierarchyChildren.length;
       questionTitle = `Q${(index + 1).toString()} | `;
@@ -563,6 +574,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
     this.toolbarConfig.title = questionTitle;
+    console.log("questionTitle :",this.toolbarConfig.title);
   }
   output(event) { }
 
@@ -668,5 +680,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.onComponentDestroy$.complete();
     this.editorCursor.clearQuestionMap();
   }
+
+  sliderData($event){
+    console.log($event);
+  }
+
 }
 
