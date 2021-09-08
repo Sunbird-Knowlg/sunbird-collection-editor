@@ -299,7 +299,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   redirectToQuestionset() {
     this.showConfirmPopup = false;
     setTimeout(() => {
-      this.showAddSecondaryQuestionCat ? this.questionEmitter.emit({ type: 'createNewContent' }) : this.questionEmitter.emit({ status: false });
+      this.showAddSecondaryQuestionCat ? this.questionEmitter.emit({ type: 'createNewContent',isChildQuestion:true }) : this.questionEmitter.emit({ status: false });
       this.showAddSecondaryQuestionCat = false;
     }, 100);
   }
@@ -659,7 +659,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         value: [],
         enabled: false,
         type: '',
-        show: _.get(this.sourcingSettings, 'showAddSecondaryQuestion')
+        show: _.get(this.sourcingSettings, 'showAddSecondaryQuestion') && !this.questionInput.setChildQueston
       },
     ];
   }
