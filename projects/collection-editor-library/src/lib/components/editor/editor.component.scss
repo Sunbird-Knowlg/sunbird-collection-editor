@@ -565,3 +565,15 @@ input:focus-visible {
     outline: 0 !important;
   }
 }
+sb-dynamic-timer{
+  input{
+    width: 10rem;
+    font-size:0.785rem!important
+  }
+  .sb-btn-outline-primary{
+    height: 2.5rem !important;
+  }
+  sb-btn-normal{
+    height: 2.5rem !important;
+  }
+}
