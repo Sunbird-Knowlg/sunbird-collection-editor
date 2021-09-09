@@ -4,7 +4,7 @@
   "peerDependencies": {
     "@angular/common": "~9.1.13",
     "@angular/core": "~9.1.13",
-    "common-form-elements-v9": "4.2.1",
+    "common-form-elements-v9": "4.3.3",
     "@project-sunbird/ckeditor-build-classic": "4.1.3",
     "ng2-semantic-ui-v9": "0.0.3"
   }
