@@ -189,6 +189,11 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
           }
         }
 
+        if (field.code === 'author') {
+          const defaultAuthor = _.get(metaDataFields, field.code);
+          field.default = !_.isEmpty(defaultAuthor) ? defaultAuthor :  _.get(this.editorService.editorConfig, 'context.user.fullName');
+        }
+
         if (field.code === 'showTimer') {
           field.options = this.showTimer;
         }
