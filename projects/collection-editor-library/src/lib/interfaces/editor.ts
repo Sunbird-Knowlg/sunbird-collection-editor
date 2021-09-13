@@ -35,9 +35,6 @@ export interface User {
     id: string;
     name: string;
     orgIds: string[];
-    fullName: string;
-    lastName: string;
-    firstName: string;
 }
 export interface Pdata {
     id: string;
