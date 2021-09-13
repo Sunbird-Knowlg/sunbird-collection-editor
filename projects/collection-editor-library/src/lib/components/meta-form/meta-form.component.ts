@@ -182,6 +182,11 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
           }
         }
 
+        if (field.code === 'author') {
+          const defaultAuthor = _.get(metaDataFields, field.code);
+          field.default = !_.isEmpty(defaultAuthor) ? defaultAuthor : this.editorService.editorConfig.context.user.fullName;
+        }
+
         if (field.code === 'maxQuestions') {
           const rootFirstChildNode = this.treeService.getFirstChild();
           if (rootFirstChildNode && rootFirstChildNode.children) {
