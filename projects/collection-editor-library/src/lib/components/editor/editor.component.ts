@@ -762,6 +762,36 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       questionId: mode === 'edit' ? this.selectedNodeData.data.metadata.identifier : undefined,
       type: interactionType
     };
+    if(mode === 'edit'){
+      this.editorService.selectedChildren = {
+        primaryCategory: this.selectedNodeData.data.metadata.primaryCategory,
+        interactionType: this.selectedNodeData.data.metadata.interactionTypes[0]
+      };
+      this.editorService.getCategoryDefinition(this.selectedNodeData.data.metadata.primaryCategory, null, 'Question').pipe(catchError(error => {
+        const errInfo = {
+          errorMsg: _.get(this.configService, 'labelConfig.messages.error.006'),
+        };
+        return throwError(this.editorService.apiErrorHandling(error, errInfo));
+      })).subscribe((res) => {
+        const selectedtemplateDetails = res.result.objectCategoryDefinition;
+        console.log('form read');
+        console.log(selectedtemplateDetails);
+        const selectedTemplateFormFields = _.get(selectedtemplateDetails, 'forms.create.properties');
+        if (!_.isEmpty(selectedTemplateFormFields)) {
+          const questionCategoryConfig = selectedTemplateFormFields;
+          questionCategoryConfig.forEach(field => {
+            if (field.code === 'evidenceMimeType') {
+              evidenceMimeType = field.range;
+              field.options = this.setEvidence;
+              field.range = null;
+          }
+          });
+          this.leafFormConfig = questionCategoryConfig;
+        }
+        const catMetaData = selectedtemplateDetails.objectMetadata;
+        this.sourcingSettings = catMetaData.config.sourcingSettings;
+      });
+    }
     this.pageId = 'question';
   }
 
