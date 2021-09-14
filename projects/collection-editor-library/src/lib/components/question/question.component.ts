@@ -8,15 +8,19 @@ import { PlayerService } from '../../services/player/player.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { EditorService } from '../../services/editor/editor.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
-import { throwError, Subject } from 'rxjs';
+import { throwError, Subject, merge, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { ConfigService } from '../../services/config/config.service';
 import { FrameworkService } from '../../services/framework/framework.service';
 import { TreeService } from '../../services/tree/tree.service';
 import { EditorCursor } from '../../collection-editor-cursor.service';
-import { filter, finalize, take, takeUntil } from 'rxjs/operators';
+import { catchError, filter, finalize, switchMap, take, takeUntil } from 'rxjs/operators';
 import { extraConfig } from "./extraConfig";
 import { SubMenu } from '../question-option-sub-menu/question-option-sub-menu.component';
+import { FormControl, FormGroup } from '@angular/forms';
+
+let evidenceMimeType;
+
 @Component({
   selector: 'lib-question',
   templateUrl: './question.component.html',
@@ -76,6 +80,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   public showTranslation:boolean=false;
   subMenus:SubMenu[]
   showAddSecondaryQuestionCat: boolean;
+  sliderDatas:any={};
   constructor(
     private questionService: QuestionService, private editorService: EditorService, public telemetryService: EditorTelemetryService,
     public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,
@@ -438,7 +443,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     metadata = _.merge(metadata, this.getDefaultSessionContext());
     metadata = _.merge(metadata, _.pickBy(this.childFormData, _.identity));
     // tslint:disable-next-line:max-line-length
-    return _.omit(metadata, ['question', 'numberOfOptions', 'options', 'allowMultiSelect', 'showEvidence', 'evidenceMimeType', 'showRemarks', 'markAsNotMandatory','leftAnchor','rightAnchor','step','numberOnly','characterLimit','dateFormat','autoCapture']);
+    return _.omit(metadata, ['question', 'numberOfOptions', 'options', 'allowMultiSelect', 'showEvidence', 'evidenceMimeType', 'showRemarks', 'markAsNotMandatory','leftAnchor','rightAnchor','step','numberOnly','characterLimit','dateFormat','autoCapture','remarksLimit']);
   }
 
   getMcqQuestionHtmlBody(question, templateId) {
@@ -471,10 +476,12 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     const activeNode = this.treeService.getActiveNode();
     const selectedUnitId = _.get(activeNode, 'data.id');
     this.editorService.data = {};
+    let metaData = this.getQuestionMetadata();
+    this.setQuestionTypeVlaues(metaData);
     return {
       nodesModified: {
         [questionId]: {
-          metadata: this.getQuestionMetadata(),
+          metadata:metaData,
           objectType: 'Question',
           root: false,
           isNew: this.questionId ? false : true
@@ -482,6 +489,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       hierarchy: this.editorService._toFlatObj(data, questionId, selectedUnitId)
     };
+  }
+
+  setQuestionTypeVlaues(metaData) {
+    return metaData;
   }
 
   createQuestion() {
@@ -502,7 +513,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateQuestion() {
+    console.log("question update called");
     const requestBody = this.prepareRequestBody();
+    console.log(requestBody);
     this.showHideSpinnerLoader(true);
     this.questionService.updateHierarchyQuestionUpdate(requestBody).pipe(
       finalize(() => {
@@ -683,6 +696,42 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   sliderData($event){
     console.log($event);
+    let val=$event;
+    let obj={
+      validation:{
+        range:{
+          min:'',
+          max:''
+        }
+      },
+      step:''
+    };
+    if(val.leftAnchor != ''){
+      obj['validation']['range']['min']=val.leftAnchor;
+    }
+    if(val.rightAnchor != ''){
+      obj['validation']['range']['max']=val.rightAnchor;
+    }
+    if(val.step!=''){
+      obj['step']=val.step;
+    }
+    this.sliderDatas=obj;
+  }
+
+  setEvidence(control, depends: FormControl[], formGroup: FormGroup, loading, loaded) {
+    control.isVisible = 'no';
+    const response = merge(..._.map(depends, depend => depend.valueChanges)).pipe(
+        switchMap((value: any) => {
+            if (!_.isEmpty(value) && _.toLower(value) === 'yes') {
+                control.isVisible = 'yes';
+                return of({range: evidenceMimeType});
+            } else {
+                control.isVisible = 'no';
+                return of(null);
+            }
+        })
+    );
+    return response;
   }
 
 }
