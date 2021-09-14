@@ -8,15 +8,19 @@ import { PlayerService } from '../../services/player/player.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { EditorService } from '../../services/editor/editor.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
-import { throwError, Subject } from 'rxjs';
+import { throwError, Subject, merge, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { ConfigService } from '../../services/config/config.service';
 import { FrameworkService } from '../../services/framework/framework.service';
 import { TreeService } from '../../services/tree/tree.service';
 import { EditorCursor } from '../../collection-editor-cursor.service';
-import { filter, finalize, take, takeUntil } from 'rxjs/operators';
+import { catchError, filter, finalize, switchMap, take, takeUntil } from 'rxjs/operators';
 import { extraConfig } from "./extraConfig";
 import { SubMenu } from '../question-option-sub-menu/question-option-sub-menu.component';
+import { FormControl, FormGroup } from '@angular/forms';
+
+let evidenceMimeType;
+
 @Component({
   selector: 'lib-question',
   templateUrl: './question.component.html',
@@ -438,7 +442,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     metadata = _.merge(metadata, this.getDefaultSessionContext());
     metadata = _.merge(metadata, _.pickBy(this.childFormData, _.identity));
     // tslint:disable-next-line:max-line-length
-    return _.omit(metadata, ['question', 'numberOfOptions', 'options', 'allowMultiSelect', 'showEvidence', 'evidenceMimeType', 'showRemarks', 'markAsNotMandatory','leftAnchor','rightAnchor','step','numberOnly','characterLimit','dateFormat','autoCapture']);
+    return _.omit(metadata, ['question', 'numberOfOptions', 'options', 'allowMultiSelect', 'showEvidence', 'evidenceMimeType', 'showRemarks', 'markAsNotMandatory','leftAnchor','rightAnchor','step','numberOnly','characterLimit','dateFormat','autoCapture','remarksLimit']);
   }
 
   getMcqQuestionHtmlBody(question, templateId) {
@@ -683,6 +687,22 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   sliderData($event){
     console.log($event);
+  }
+
+  setEvidence(control, depends: FormControl[], formGroup: FormGroup, loading, loaded) {
+    control.isVisible = 'no';
+    const response = merge(..._.map(depends, depend => depend.valueChanges)).pipe(
+        switchMap((value: any) => {
+            if (!_.isEmpty(value) && _.toLower(value) === 'yes') {
+                control.isVisible = 'yes';
+                return of({range: evidenceMimeType});
+            } else {
+                control.isVisible = 'no';
+                return of(null);
+            }
+        })
+    );
+    return response;
   }
 
 }
