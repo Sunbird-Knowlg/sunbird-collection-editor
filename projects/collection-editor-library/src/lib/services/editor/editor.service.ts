@@ -23,7 +23,7 @@ export class EditorService {
   private _selectedChildren: SelectedChildren = {};
   public questionStream$ = new Subject<any>();
   private _editorConfig: IEditorConfig;
-  private _editorMode = 'edit';
+  private _editorMode: any;
   public showLibraryPage: EventEmitter<number> = new EventEmitter();
   public contentsCount = 0;
   constructor(public treeService: TreeService, private toasterService: ToasterService,
