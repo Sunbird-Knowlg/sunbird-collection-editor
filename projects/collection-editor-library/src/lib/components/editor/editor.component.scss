@@ -166,7 +166,7 @@ body {
   .sb-dropdown {
     margin: 1rem 0 !important;
   }
-  .container {
+  .sb-container {
     width: 95% !important;
   }
 }
@@ -553,5 +553,15 @@ input:focus-visible {
     tag{
       display: inline-flex !important;
     }
+  }
+}
+.sb-dialcode {
+  border-bottom: 0.5px solid #333333;
+  padding: 8px 5px !important;
+  border-radius: 0 !important;
+  &:focus-visible{
+    border-bottom: 0.5px solid #333333 !important;
+    border-radius: 0 !important;
+    outline: 0 !important;
   }
 }
