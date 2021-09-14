@@ -80,6 +80,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   public showTranslation:boolean=false;
   subMenus:SubMenu[]
   showAddSecondaryQuestionCat: boolean;
+  sliderDatas:any={};
   constructor(
     private questionService: QuestionService, private editorService: EditorService, public telemetryService: EditorTelemetryService,
     public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,
@@ -475,10 +476,12 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     const activeNode = this.treeService.getActiveNode();
     const selectedUnitId = _.get(activeNode, 'data.id');
     this.editorService.data = {};
+    let metaData = this.getQuestionMetadata();
+    this.setQuestionTypeVlaues(metaData);
     return {
       nodesModified: {
         [questionId]: {
-          metadata: this.getQuestionMetadata(),
+          metadata:metaData,
           objectType: 'Question',
           root: false,
           isNew: this.questionId ? false : true
@@ -486,6 +489,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       hierarchy: this.editorService._toFlatObj(data, questionId, selectedUnitId)
     };
+  }
+
+  setQuestionTypeVlaues(metaData) {
+    return metaData;
   }
 
   createQuestion() {
@@ -506,7 +513,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateQuestion() {
+    console.log("question update called");
     const requestBody = this.prepareRequestBody();
+    console.log(requestBody);
     this.showHideSpinnerLoader(true);
     this.questionService.updateHierarchyQuestionUpdate(requestBody).pipe(
       finalize(() => {
@@ -687,6 +696,26 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   sliderData($event){
     console.log($event);
+    let val=$event;
+    let obj={
+      validation:{
+        range:{
+          min:'',
+          max:''
+        }
+      },
+      step:''
+    };
+    if(val.leftAnchor != ''){
+      obj['validation']['range']['min']=val.leftAnchor;
+    }
+    if(val.rightAnchor != ''){
+      obj['validation']['range']['max']=val.rightAnchor;
+    }
+    if(val.step!=''){
+      obj['step']=val.step;
+    }
+    this.sliderDatas=obj;
   }
 
   setEvidence(control, depends: FormControl[], formGroup: FormGroup, loading, loaded) {
