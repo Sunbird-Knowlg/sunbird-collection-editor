@@ -98,9 +98,9 @@ describe('EditorComponent', () => {
     spyOn(telemetryService, 'start').and.callFake(() => { });
     component.pageId = 'collection_editor';
     component.ngOnInit();
-    expect(editorService.editorMode).toEqual('edit');
+    expect(editorService.editorMode).toEqual(undefined);
     expect(editorService.initialize).toHaveBeenCalledWith(editorConfig);
-    expect(component.editorMode).toEqual('edit');
+    expect(component.editorMode).toEqual(undefined);
     expect(treeService.initialize).toHaveBeenCalled();
     expect(component.collectionId).toBeDefined();
     expect(editorService.getToolbarConfig).toHaveBeenCalled();
