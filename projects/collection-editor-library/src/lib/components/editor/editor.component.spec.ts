@@ -816,16 +816,44 @@ describe('EditorComponent', () => {
     expect(status).toBeTruthy();
     // tslint:disable-next-line:no-string-literal
     expect(component['editorService'].getHierarchyFolder).toHaveBeenCalled();
-    expect(component.setCsvDropDownOptionsDisable).toHaveBeenCalledWith(true, false, false);
+    expect(component.setCsvDropDownOptionsDisable).toHaveBeenCalledWith();
   });
-
+  it('#onClickFolder() should call onClickFolder and set csv create and update options on componenet load', () => {
+    component.isStatusReviewMode = false;
+    component.isEnableCsvAction = false;
+    component.isComponenetInitialized = true;
+    spyOn(component, 'setCsvDropDownOptionsDisable');
+    // tslint:disable-next-line:no-string-literal
+    spyOn(component['editorService'], 'getHierarchyFolder').and.callFake(() => [1]);
+    component.onClickFolder();
+    // tslint:disable-next-line:no-string-literal
+    const status =  component['editorService'].getHierarchyFolder().length ? true : false;
+    expect(status).toBeTruthy();
+    // tslint:disable-next-line:no-string-literal
+    expect(component['editorService'].getHierarchyFolder).toHaveBeenCalled();
+    expect(component.setCsvDropDownOptionsDisable).toHaveBeenCalledWith();
+    expect(component.isComponenetInitialized).toBeFalsy();
+  });
   it('#setCsvDropDownOptionsDisable and should set csv dropdown options', () => {
     component.csvDropDownOptions = {
       isDisableCreateCsv: true,
       isDisableUpdateCsv: true,
       isDisableDownloadCsv: true
     };
-    component.setCsvDropDownOptionsDisable(false, true, true);
+    spyOn(component['editorService'], 'getHierarchyFolder').and.callFake(() => [1]);
+    component.setCsvDropDownOptionsDisable(true);
+    expect(component.csvDropDownOptions.isDisableCreateCsv).toBeTruthy();
+    expect(component.csvDropDownOptions.isDisableUpdateCsv).toBeTruthy();
+    expect(component.csvDropDownOptions.isDisableDownloadCsv).toBeTruthy();
+  });
+  it('#setCsvDropDownOptionsDisable and should set csv dropdown options for empty childs', () => {
+    component.csvDropDownOptions = {
+      isDisableCreateCsv: true,
+      isDisableUpdateCsv: true,
+      isDisableDownloadCsv: true
+    };
+    spyOn(component['editorService'], 'getHierarchyFolder').and.callFake(() => []);
+    component.setCsvDropDownOptionsDisable();
     expect(component.csvDropDownOptions.isDisableCreateCsv).toBeFalsy();
     expect(component.csvDropDownOptions.isDisableUpdateCsv).toBeTruthy();
     expect(component.csvDropDownOptions.isDisableDownloadCsv).toBeTruthy();
@@ -881,19 +909,21 @@ describe('EditorComponent', () => {
   });
   it('#handleCsvDropdownOptionsOnCollection should set dropdown status initially', () => {
     spyOn(component, 'setCsvDropDownOptionsDisable').and.callThrough();
+    spyOn(component['editorService'], 'getHierarchyFolder').and.callFake(() => [1]);
     component.isTreeInitialized = true;
     component.handleCsvDropdownOptionsOnCollection();
     expect(component.isEnableCsvAction).toBeTruthy();
     expect(component.isTreeInitialized).toBeFalsy();
-    expect(component.setCsvDropDownOptionsDisable).toHaveBeenCalledWith(true, true, true);
+    expect(component.setCsvDropDownOptionsDisable).toHaveBeenCalledWith(true);
   });
   it('#handleCsvDropdownOptionsOnCollection should set isEnableCsvAction status false', () => {
     spyOn(component, 'setCsvDropDownOptionsDisable').and.callThrough();
+    spyOn(component['editorService'], 'getHierarchyFolder').and.callFake(() => [1]);
     component.isTreeInitialized = false;
     component.handleCsvDropdownOptionsOnCollection();
     expect(component.isEnableCsvAction).toBeFalsy();
     expect(component.isTreeInitialized).toBeFalsy();
-    expect(component.setCsvDropDownOptionsDisable).toHaveBeenCalledWith(true, true, true);
+    expect(component.setCsvDropDownOptionsDisable).toHaveBeenCalledWith(true);
   });
 });
 
