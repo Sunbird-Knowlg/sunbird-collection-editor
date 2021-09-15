@@ -183,9 +183,9 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         if (field.code === 'maxQuestions') {
-          const rootFirstChildNode = this.treeService.getFirstChild();
-          if (rootFirstChildNode && rootFirstChildNode.children) {
-            field.range = _.times(_.size(rootFirstChildNode.children), index => index + 1);
+          const rootFirstChildNode = this.editorService.getContentChildrens();
+          if (rootFirstChildNode && rootFirstChildNode.length > 0) {
+            field.range = _.times(_.size(rootFirstChildNode), index => index + 1);
           }
         }
 

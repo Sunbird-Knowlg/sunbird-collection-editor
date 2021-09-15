@@ -2,8 +2,8 @@
      <div class="content-player">
         <div class="w-100 h-100">
                 <div class="contentViewerIframeShadow">
-                    <quml-player *ngIf="showPreview" [QumlPlayerConfig]="qumlPlayerConfig" (playerEvent)="getPlayerEvents($event)"
-                        (telemetryEvent)="getTelemetryEvents($event)"></quml-player>
+                    <quml-main-player *ngIf="showPreview" [QumlPlayerConfig]="qumlPlayerConfig" (playerEvent)="getPlayerEvents($event)"
+                        (telemetryEvent)="getTelemetryEvents($event)"></quml-main-player>
                 </div>
             </div>
         </div>

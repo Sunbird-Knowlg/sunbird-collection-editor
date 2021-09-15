@@ -334,3 +334,27 @@ export const collectionHierarchyMock = {
         }
     }
 };
+
+export const mockTreeService = {
+    getChildren: () => {
+        return ['do_11330103476396851218', 'do_233'];
+    },
+    getActiveNode: () => {
+        return {
+            data: {
+                id : 'do_11330103476396851218'
+            },
+            getParent: () => {
+                return {
+                    getChildren: () => {
+                        return [{
+                            data: {
+                                id : 'do_11330103476396851218'
+                            }
+                        }];
+                    }
+                };
+            }
+        };
+    }
+};
