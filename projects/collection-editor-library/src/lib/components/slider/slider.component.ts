@@ -1,10 +1,11 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ConfigService } from '../../services/config/config.service';
+import * as _ from 'lodash-es';
 
 export class SilderEvent {
   leftAnchor: number;
   step: number;
-  rightAnchor:number;
+  rightAnchor: number;
 }
 
 @Component({
@@ -13,11 +14,25 @@ export class SilderEvent {
   styleUrls: ['./slider.component.scss']
 })
 export class SliderComponent implements OnInit {
-  sliderValue:any={};
+  sliderValue:any = {};
+  @Input() editorDataInput: any;
+  leftAnchor: any;
+  rightAnchor: any;
+  step: any;
   @Output() public onChange: EventEmitter<SilderEvent> = new EventEmitter<SilderEvent>();
   constructor(public configService: ConfigService) { }
 
   ngOnInit(): void {
+    if (_.get(this.editorDataInput,"step")) {
+      this.step = this.editorDataInput.step;
+      this.sliderValue['step']= this.editorDataInput.step;
+    }
+    if (_.get(this.editorDataInput,"validation.range")) {
+      this.leftAnchor = this.editorDataInput.validation.range.min;
+      this.rightAnchor = this.editorDataInput.validation.range.max;
+      this.sliderValue['leftAnchor']=this.leftAnchor;
+      this.sliderValue['rightAnchor']=this.rightAnchor;
+    }
   }
 
   onValueChange(event,key){
