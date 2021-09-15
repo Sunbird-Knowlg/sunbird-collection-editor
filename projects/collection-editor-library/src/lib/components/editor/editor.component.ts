@@ -72,6 +72,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public ishierarchyConfigSet =  false;
   public addCollaborator: boolean;
   public publishchecklist: any;
+  public isComponenetInitialized = false;
   public unSubscribeShowLibraryPageEmitter: Subscription;
   public unsubscribe$ = new Subject<void>();
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
@@ -247,6 +248,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       type: 'edit', pageid: this.telemetryService.telemetryPageId, uri: this.router.url,
       duration: (Date.now() - this.pageStartTime) / 1000
     });
+    this.isComponenetInitialized = true;
   }
 
   mergeCollectionExternalProperties(): Observable<any> {
@@ -439,6 +441,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       this.pageId = 'collection_editor';
       this.telemetryService.telemetryPageId = this.pageId;
       this.isEnableCsvAction = true;
+      this.isComponenetInitialized = true;
     });
   }
 
@@ -782,18 +785,21 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     } else {
       this.isEnableCsvAction = false;
     }
-    this.setCsvDropDownOptionsDisable(true, true, true);
+    this.setCsvDropDownOptionsDisable(true);
   }
   onClickFolder() {
-    if (this.isEnableCsvAction) {
-     const status =  this.editorService.getHierarchyFolder().length ? true : false;
-     this.setCsvDropDownOptionsDisable(status, !status, !status);
+    if (this.isComponenetInitialized) {
+      this.isComponenetInitialized = false;
+      this.setCsvDropDownOptionsDisable();
+    } else if (this.isEnableCsvAction) {
+     this.setCsvDropDownOptionsDisable();
   }
   }
-  setCsvDropDownOptionsDisable(createCsv, updateCsv, downloadCsv) {
-    this.csvDropDownOptions.isDisableCreateCsv = createCsv;
-    this.csvDropDownOptions.isDisableUpdateCsv = updateCsv;
-    this.csvDropDownOptions.isDisableDownloadCsv = downloadCsv;
+  setCsvDropDownOptionsDisable(disable?) {
+    const status = this.editorService.getHierarchyFolder().length ? true : false;
+    this.csvDropDownOptions.isDisableCreateCsv = disable ? disable : status;
+    this.csvDropDownOptions.isDisableUpdateCsv = disable ? disable : !status;
+    this.csvDropDownOptions.isDisableDownloadCsv = disable ? disable : !status;
   }
   downloadHierarchyCsv() {
     this.editorService.downloadHierarchyCsv(this.collectionId).subscribe(res => {
