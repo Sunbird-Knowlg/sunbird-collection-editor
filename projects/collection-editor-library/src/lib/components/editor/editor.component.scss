@@ -565,3 +565,15 @@ input:focus-visible {
     outline: 0 !important;
   }
 }
+sb-dynamic-timer{
+  input{
+    width: 10rem;
+    font-size:0.785rem!important;
+    border: 1px solid rgba(34,36,38,.15)!important;
+    border-radius: .28571429rem;
+    font-weight: 500;
+    &:focus-visible{
+    border: 1px solid rgba(34,36,38,.15)!important;
+    }
+  }
+}
