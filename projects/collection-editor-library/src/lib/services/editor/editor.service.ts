@@ -258,17 +258,17 @@ export class EditorService {
   async getMaxScore() {
     const rootNode = this.treeService.getFirstChild();
     const metadata = _.get(rootNode, 'data.metadata');
+    const questionIds = this.getContentChildrens();
     if (metadata.shuffle) {
-      const childrens = _.map(rootNode.getChildren(), (child) =>  child.data.id);
-      if (metadata.maxQuestions && !_.isEmpty(childrens) ) {
-        const { questions } =  await this.getQuestionList(_.take(childrens, metadata.maxQuestions)).toPromise();
+      if (metadata.maxQuestions && !_.isEmpty(questionIds) ) {
+        const { questions } =  await this.getQuestionList(_.take(questionIds, metadata.maxQuestions)).toPromise();
         const maxScore = this.calculateMaxScore(questions);
         return maxScore;
       } else {
-        return rootNode.countChildren();
+        return questionIds.length;
       }
     } else {
-      return metadata.maxQuestions ? metadata.maxQuestions :  rootNode.countChildren();
+      return metadata.maxQuestions ? metadata.maxQuestions : questionIds.length;
     }
   }
 
