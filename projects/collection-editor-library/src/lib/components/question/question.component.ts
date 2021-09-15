@@ -81,6 +81,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   subMenus:SubMenu[]
   showAddSecondaryQuestionCat: boolean;
   sliderDatas:any={};
+  sliderOptions:any={};
   constructor(
     private questionService: QuestionService, private editorService: EditorService, public telemetryService: EditorTelemetryService,
     public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,
@@ -161,6 +162,15 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
               if (this.questionInteractionType === 'default') {
                 if (this.questionMetaData.editorState) {
                   this.editorState = this.questionMetaData.editorState;
+                }
+              }
+
+              if(this.questionInteractionType === 'slider'){
+                if (this.questionMetaData.editorState) {
+                  this.editorState = this.questionMetaData.editorState;
+                  this.sliderOptions=this.questionMetaData.interactions.response1;
+                  console.log("editorState");
+                  console.log(this.editorState);
                 }
               }
 
@@ -492,6 +502,17 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   setQuestionTypeVlaues(metaData) {
+    if(! _.isEmpty(this.sliderDatas) && this.questionInteractionType === 'slider'){
+      metaData.interactionTypes=[this.questionInteractionType];
+      metaData.primaryCategory=this.questionPrimaryCategory;
+      metaData.interactions={
+        response1:{
+          validation:this.sliderDatas.validation,
+          step:this.sliderDatas.step
+      }
+    }
+  }
+    console.log(metaData);
     return metaData;
   }
 
@@ -706,13 +727,13 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       step:''
     };
-    if(val.leftAnchor != ''){
+    if(val.leftAnchor){
       obj['validation']['range']['min']=val.leftAnchor;
     }
-    if(val.rightAnchor != ''){
+    if(val.rightAnchor){
       obj['validation']['range']['max']=val.rightAnchor;
     }
-    if(val.step!=''){
+    if(val.step){
       obj['step']=val.step;
     }
     this.sliderDatas=obj;
