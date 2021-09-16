@@ -170,7 +170,12 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
                   this.editorState = this.questionMetaData.editorState;
                   this.sliderOptions=this.questionMetaData.interactions.response1;
                   console.log("editorState");
-                  console.log(this.editorState);
+                }
+              }
+
+              if (this.questionInteractionType === 'text') {
+                if (this.questionMetaData.editorState) {
+                  this.editorState = this.questionMetaData.editorState;              
                 }
               }
 
@@ -547,8 +552,26 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       //   }
       // }
   }
+
+    if (this.questionInteractionType === 'text') {
+      metaData.interactionTypes = [this.questionInteractionType];
+      metaData.primaryCategory = this.questionPrimaryCategory;
+      metaData.interactions = {
+        ...metaData.interactions,
+        response1: {
+          validation: {
+            limit: {
+              maxLength: this.childFormData.characterLimit,
+            }
+          },
+          type: {
+            number: this.childFormData.numberOnly
+          }
+        }
+      }
+    }
     console.log(metaData);
-    // return metaData;
+     return metaData;
   }
 
   createQuestion() {
