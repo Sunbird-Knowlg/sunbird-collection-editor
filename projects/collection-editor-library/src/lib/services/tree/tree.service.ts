@@ -113,7 +113,8 @@ export class TreeService {
       metadata: {
         mimeType: _.get(nodeConfig, 'mimeType'),
         code: uniqueId,
-        name: nodeTitle
+        name: nodeTitle,
+        visibility: 'Parent'
       }
     };
     node.metadata = _.merge({}, node.metadata, _.pick(node, ['contentType', 'objectType', 'primaryCategory']));
