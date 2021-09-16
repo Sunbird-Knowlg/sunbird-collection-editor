@@ -502,6 +502,29 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   setQuestionTypeVlaues(metaData) {
+    metaData['showEvidence'] = this.childFormData.showEvidence;
+    if (metaData['showEvidence'] = 'Yes') {
+        metaData['evidence'] = {
+          required: "No",
+          mimeType: ["image"],//Todo: fetch from form
+          minCount: 1,
+          maxCount: 1,
+          sizeLimit: "20480",
+        }
+    }
+    metaData['showRemarks'] = this.childFormData.showRemarks;
+    if (metaData['showRemarks'] == 'Yes') {
+      metaData['remarks'] = {
+        maxLength:  this.childFormData.remarksLimit,
+        required: "No"//Todo: confirm if only No
+        }
+    }
+    metaData.interaction = metaData.interaction || {}
+    metaData.interactions['validations'] = { required: this.childFormData.markAsNotMandatory } //Todo: it should be opposite
+    if (this.childFormData.allowMultiSelect == 'Yes') {
+      metaData.responseDeclaration.response1.cardinality = 'multiple';
+      //todo add for html body also
+    }
     if(! _.isEmpty(this.sliderDatas) && this.questionInteractionType === 'slider'){
       metaData.interactionTypes=[this.questionInteractionType];
       metaData.primaryCategory=this.questionPrimaryCategory;
@@ -509,11 +532,23 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         response1:{
           validation:this.sliderDatas.validation,
           step:this.sliderDatas.step
+        }
       }
     }
+    
+    if (this.questionInteractionType === 'date') {
+      debugger
+      metaData.interactionTypes=[this.questionInteractionType];
+      metaData.primaryCategory=this.questionPrimaryCategory;
+      // metaData.interactions={
+      //   response1:{
+      //     validation:this.sliderDatas.validation,
+      //     step:this.sliderDatas.step
+      //   }
+      // }
   }
     console.log(metaData);
-    return metaData;
+    // return metaData;
   }
 
   createQuestion() {
@@ -756,4 +791,3 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
 }
-
