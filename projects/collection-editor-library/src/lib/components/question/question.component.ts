@@ -508,10 +508,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   setQuestionTypeVlaues(metaData) {
     metaData['showEvidence'] = this.childFormData.showEvidence;
-    if (metaData['showEvidence'] = 'Yes') {
+    if (metaData['showEvidence'] === 'Yes') {
         metaData['evidence'] = {
           required: "No",
-          mimeType: ["image"],//Todo: fetch from form
+          mimeType: this.childFormData.evidenceMimeType,
           minCount: 1,
           maxCount: 1,
           sizeLimit: "20480",
@@ -521,11 +521,12 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     if (metaData['showRemarks'] == 'Yes') {
       metaData['remarks'] = {
         maxLength:  this.childFormData.remarksLimit,
-        required: "No"//Todo: confirm if only No
-        }
+        required: "No"
+      }
     }
-    metaData.interaction = metaData.interaction || {}
-    metaData.interactions['validations'] = { required: this.childFormData.markAsNotMandatory } //Todo: it should be opposite
+    metaData.interactions = metaData.interactions || {}
+    
+    metaData.interactions['validation'] = { required:this.childFormData.markAsNotMandatory ==='Yes'?'No':'Yes'}
     if (this.childFormData.allowMultiSelect == 'Yes') {
       metaData.responseDeclaration.response1.cardinality = 'multiple';
       //todo add for html body also
@@ -533,7 +534,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     if(! _.isEmpty(this.sliderDatas) && this.questionInteractionType === 'slider'){
       metaData.interactionTypes=[this.questionInteractionType];
       metaData.primaryCategory=this.questionPrimaryCategory;
-      metaData.interactions={
+      metaData.interactions = {
+        ...metaData.interactions,
         response1:{
           validation:this.sliderDatas.validation,
           step:this.sliderDatas.step
@@ -542,15 +544,15 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     
     if (this.questionInteractionType === 'date') {
-      debugger
       metaData.interactionTypes=[this.questionInteractionType];
       metaData.primaryCategory=this.questionPrimaryCategory;
-      // metaData.interactions={
-      //   response1:{
-      //     validation:this.sliderDatas.validation,
-      //     step:this.sliderDatas.step
-      //   }
-      // }
+      metaData.interactions = {
+        ...metaData.interactions,
+        response1:{
+          validation:{pattern:this.childFormData.dateFormat},
+          autoCapture:this.childFormData.autoCapture
+        }
+      }
   }
 
     if (this.questionInteractionType === 'text') {
@@ -706,6 +708,27 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.questionMetaData && _.has(this.questionMetaData, formFieldCategory.code)) {
           formFieldCategory.default = this.questionMetaData[formFieldCategory.code];
           this.childFormData[formFieldCategory.code] = this.questionMetaData[formFieldCategory.code];
+        };
+        try {
+          let availableAlias = {
+            dateFormat: 'interactions.response1.validation.pattern',
+            autoCapture: 'interactions.response1.autoCapture',
+            markAsNotMandatory: 'interactions.validation.required',
+            numberOnly: 'interactions.response1.type.number',
+            characterLimit: 'interactions.response1.validation.limit.maxLength',
+            remarksLimit:'remarks.maxLength'
+            
+          }
+          if (this.questionMetaData && _.has(availableAlias, formFieldCategory.code)) {
+            let defaultValue = _.get(this.questionMetaData,availableAlias[formFieldCategory.code]) 
+            if (formFieldCategory.code==='markAsNotMandatory') {
+              defaultValue ==='Yes'? (defaultValue='No') : (defaultValue='Yes')
+            }
+            formFieldCategory.default = defaultValue
+            this.childFormData[formFieldCategory.code] = defaultValue  
+          }
+        } catch (error) {
+          
         }
       } else {
         // tslint:disable-next-line:max-line-length
