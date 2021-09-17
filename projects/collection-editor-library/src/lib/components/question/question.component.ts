@@ -716,8 +716,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
             markAsNotMandatory: 'interactions.validation.required',
             numberOnly: 'interactions.response1.type.number',
             characterLimit: 'interactions.response1.validation.limit.maxLength',
-            remarksLimit:'remarks.maxLength'
-            
+            remarksLimit:'remarks.maxLength',
+            evidenceMimeType:"evidence.mimeType"
           }
           if (this.questionMetaData && _.has(availableAlias, formFieldCategory.code)) {
             let defaultValue = _.get(this.questionMetaData,availableAlias[formFieldCategory.code]) 
@@ -820,20 +820,5 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.sliderDatas=obj;
   }
 
-  setEvidence(control, depends: FormControl[], formGroup: FormGroup, loading, loaded) {
-    control.isVisible = 'no';
-    const response = merge(..._.map(depends, depend => depend.valueChanges)).pipe(
-        switchMap((value: any) => {
-            if (!_.isEmpty(value) && _.toLower(value) === 'yes') {
-                control.isVisible = 'yes';
-                return of({range: evidenceMimeType});
-            } else {
-                control.isVisible = 'no';
-                return of(null);
-            }
-        })
-    );
-    return response;
-  }
 
 }
