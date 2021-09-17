@@ -27,10 +27,12 @@ export class SliderComponent implements OnInit {
       this.step = this.editorDataInput.step;
       this.sliderValue['step']= this.editorDataInput.step;
     }
-    if (_.get(this.editorDataInput,"validation.range")) {
+    if (_.get(this.editorDataInput,"validation.range.min")) {
       this.leftAnchor = this.editorDataInput.validation.range.min;
-      this.rightAnchor = this.editorDataInput.validation.range.max;
       this.sliderValue['leftAnchor']=this.leftAnchor;
+    }
+    if (_.get(this.editorDataInput,"validation.range.max")) {
+      this.rightAnchor = this.editorDataInput.validation.range.max;
       this.sliderValue['rightAnchor']=this.rightAnchor;
     }
   }

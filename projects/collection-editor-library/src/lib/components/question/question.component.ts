@@ -294,6 +294,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       this.showFormError = true;
       return;
     }
+    else{
+      this.showFormError = false;
+    }
+
 
     // to handle when question type is subjective
     if (this.questionInteractionType === 'default') {
@@ -316,6 +320,20 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         this.showFormError = false;
       }
     }
+
+    if (this.questionInteractionType === 'slider') {
+      let min = _.get(this.sliderDatas,'validation.range.min');
+      let max = _.get(this.sliderDatas,'validation.range.max');
+      let step =  _.get(this.sliderDatas,'step');
+      if (_.isEmpty(this.sliderDatas) || _.isEmpty(min) || _.isEmpty(max) || _.isEmpty(step)) {
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.005'));
+        this.showFormError = true;
+      }
+      else{
+        this.showFormError = false;
+      }
+    }
+
   }
 
   redirectToQuestionset() {
