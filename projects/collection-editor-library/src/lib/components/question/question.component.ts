@@ -82,6 +82,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   showAddSecondaryQuestionCat: boolean;
   sliderDatas:any={};
   sliderOptions:any={};
+  hints:any;
   constructor(
     private questionService: QuestionService, private editorService: EditorService, public telemetryService: EditorTelemetryService,
     public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,
@@ -169,6 +170,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
                 if (this.questionMetaData.editorState) {
                   this.editorState = this.questionMetaData.editorState;
                   this.sliderOptions=this.questionMetaData.interactions.response1;
+                  this.sliderDatas=this.questionMetaData.interactions.response1;
+                  this.hints =this.questionMetaData.hints;
                   console.log("editorState");
                 }
               }
@@ -549,6 +552,17 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       metaData.responseDeclaration.response1.cardinality = 'multiple';
       //todo add for html body also
     }
+
+    console.log(this.subMenus);
+    _.forEach(this.subMenus,(el:any)=>{
+      console.log(el);
+      if(el.id === 'addHint'){
+        metaData['hints']={
+          en:[el.value]
+        }
+      }
+    })
+
     if(! _.isEmpty(this.sliderDatas) && this.questionInteractionType === 'slider'){
       metaData.interactionTypes=[this.questionInteractionType];
       metaData.primaryCategory=this.questionPrimaryCategory;
@@ -591,7 +605,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
     console.log(metaData);
-     return metaData;
+    //  return metaData;
   }
 
   createQuestion() {
