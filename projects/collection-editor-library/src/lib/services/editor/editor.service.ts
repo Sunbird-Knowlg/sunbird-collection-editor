@@ -284,7 +284,7 @@ export class EditorService {
     const data = this.treeService.getFirstChild();
     let clonedNodeModified = _.cloneDeep(this.treeService.treeCache.nodesModified)
     for (const iterator in  clonedNodeModified) {
-       clonedNodeModified[iterator].metadata = _.omit(clonedNodeModified[iterator].metadata,['enableScoring'])
+       clonedNodeModified[iterator].metadata = _.omit(clonedNodeModified[iterator].metadata,['allowScoring'])
     }
     return {
       nodesModified: clonedNodeModified,

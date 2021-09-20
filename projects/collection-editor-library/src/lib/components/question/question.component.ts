@@ -80,6 +80,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   public showTranslation:boolean=false;
   subMenus:SubMenu[]
   showAddSecondaryQuestionCat: boolean;
+  sliderDatas:any={};
+  sliderOptions:any={};
+  hints:any;
   constructor(
     private questionService: QuestionService, private editorService: EditorService, public telemetryService: EditorTelemetryService,
     public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,
@@ -160,6 +163,22 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
               if (this.questionInteractionType === 'default') {
                 if (this.questionMetaData.editorState) {
                   this.editorState = this.questionMetaData.editorState;
+                }
+              }
+
+              if(this.questionInteractionType === 'slider'){
+                if (this.questionMetaData.editorState) {
+                  this.editorState = this.questionMetaData.editorState;
+                  this.sliderOptions=this.questionMetaData.interactions.response1;
+                  this.sliderDatas=this.questionMetaData.interactions.response1;
+                  this.hints =this.questionMetaData.hints;
+                  console.log("editorState");
+                }
+              }
+
+              if (this.questionInteractionType === 'text') {
+                if (this.questionMetaData.editorState) {
+                  this.editorState = this.questionMetaData.editorState;              
                 }
               }
 
@@ -278,6 +297,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       this.showFormError = true;
       return;
     }
+    else{
+      this.showFormError = false;
+    }
+
 
     // to handle when question type is subjective
     if (this.questionInteractionType === 'default') {
@@ -300,6 +323,20 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         this.showFormError = false;
       }
     }
+
+    if (this.questionInteractionType === 'slider') {
+      let min = _.get(this.sliderDatas,'validation.range.min');
+      let max = _.get(this.sliderDatas,'validation.range.max');
+      let step =  _.get(this.sliderDatas,'step');
+      if (_.isEmpty(this.sliderDatas) || _.isEmpty(min) || _.isEmpty(max) || _.isEmpty(step)) {
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.005'));
+        this.showFormError = true;
+      }
+      else{
+        this.showFormError = false;
+      }
+    }
+
   }
 
   redirectToQuestionset() {
@@ -475,10 +512,12 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     const activeNode = this.treeService.getActiveNode();
     const selectedUnitId = _.get(activeNode, 'data.id');
     this.editorService.data = {};
+    let metaData = this.getQuestionMetadata();
+    this.setQuestionTypeVlaues(metaData);
     return {
       nodesModified: {
         [questionId]: {
-          metadata: this.getQuestionMetadata(),
+          metadata:metaData,
           objectType: 'Question',
           root: false,
           isNew: this.questionId ? false : true
@@ -486,6 +525,87 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       hierarchy: this.editorService._toFlatObj(data, questionId, selectedUnitId)
     };
+  }
+
+  setQuestionTypeVlaues(metaData) {
+    metaData['showEvidence'] = this.childFormData.showEvidence;
+    if (metaData['showEvidence'] === 'Yes') {
+        metaData['evidence'] = {
+          required: "No",
+          mimeType: this.childFormData.evidenceMimeType,
+          minCount: 1,
+          maxCount: 1,
+          sizeLimit: "20480",
+        }
+    }
+    metaData['showRemarks'] = this.childFormData.showRemarks;
+    if (metaData['showRemarks'] == 'Yes') {
+      metaData['remarks'] = {
+        maxLength:  this.childFormData.remarksLimit,
+        required: "No"
+      }
+    }
+    metaData.interactions = metaData.interactions || {}
+    
+    metaData.interactions['validation'] = { required:this.childFormData.markAsNotMandatory ==='Yes'?'No':'Yes'}
+    if (this.childFormData.allowMultiSelect == 'Yes') {
+      metaData.responseDeclaration.response1.cardinality = 'multiple';
+      //todo add for html body also
+    }
+
+    console.log(this.subMenus);
+    _.forEach(this.subMenus,(el:any)=>{
+      console.log(el);
+      if(el.id === 'addHint'){
+        metaData['hints']={
+          en:[el.value]
+        }
+      }
+    })
+
+    if(! _.isEmpty(this.sliderDatas) && this.questionInteractionType === 'slider'){
+      metaData.interactionTypes=[this.questionInteractionType];
+      metaData.primaryCategory=this.questionPrimaryCategory;
+      metaData.interactions = {
+        ...metaData.interactions,
+        response1:{
+          validation:this.sliderDatas.validation,
+          step:this.sliderDatas.step
+        }
+      }
+    }
+    
+    if (this.questionInteractionType === 'date') {
+      metaData.interactionTypes=[this.questionInteractionType];
+      metaData.primaryCategory=this.questionPrimaryCategory;
+      metaData.interactions = {
+        ...metaData.interactions,
+        response1:{
+          validation:{pattern:this.childFormData.dateFormat},
+          autoCapture:this.childFormData.autoCapture
+        }
+      }
+  }
+
+    if (this.questionInteractionType === 'text') {
+      metaData.interactionTypes = [this.questionInteractionType];
+      metaData.primaryCategory = this.questionPrimaryCategory;
+      metaData.interactions = {
+        ...metaData.interactions,
+        response1: {
+          validation: {
+            limit: {
+              maxLength: this.childFormData.characterLimit,
+            }
+          },
+          type: {
+            number: this.childFormData.numberOnly
+          }
+        }
+      }
+    }
+    console.log(metaData);
+    //  return metaData;
   }
 
   createQuestion() {
@@ -506,7 +626,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateQuestion() {
+    console.log("question update called");
     const requestBody = this.prepareRequestBody();
+    console.log(requestBody);
     this.showHideSpinnerLoader(true);
     this.questionService.updateHierarchyQuestionUpdate(requestBody).pipe(
       finalize(() => {
@@ -618,6 +740,27 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.questionMetaData && _.has(this.questionMetaData, formFieldCategory.code)) {
           formFieldCategory.default = this.questionMetaData[formFieldCategory.code];
           this.childFormData[formFieldCategory.code] = this.questionMetaData[formFieldCategory.code];
+        };
+        try {
+          let availableAlias = {
+            dateFormat: 'interactions.response1.validation.pattern',
+            autoCapture: 'interactions.response1.autoCapture',
+            markAsNotMandatory: 'interactions.validation.required',
+            numberOnly: 'interactions.response1.type.number',
+            characterLimit: 'interactions.response1.validation.limit.maxLength',
+            remarksLimit:'remarks.maxLength',
+            evidenceMimeType:"evidence.mimeType"
+          }
+          if (this.questionMetaData && _.has(availableAlias, formFieldCategory.code)) {
+            let defaultValue = _.get(this.questionMetaData,availableAlias[formFieldCategory.code]) 
+            if (formFieldCategory.code==='markAsNotMandatory') {
+              defaultValue ==='Yes'? (defaultValue='No') : (defaultValue='Yes')
+            }
+            formFieldCategory.default = defaultValue
+            this.childFormData[formFieldCategory.code] = defaultValue  
+          }
+        } catch (error) {
+          
         }
       } else {
         // tslint:disable-next-line:max-line-length
@@ -687,23 +830,27 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   sliderData($event){
     console.log($event);
+    let val=$event;
+    let obj={
+      validation:{
+        range:{
+          min:'',
+          max:''
+        }
+      },
+      step:''
+    };
+    if(val.leftAnchor){
+      obj['validation']['range']['min']=val.leftAnchor;
+    }
+    if(val.rightAnchor){
+      obj['validation']['range']['max']=val.rightAnchor;
+    }
+    if(val.step){
+      obj['step']=val.step;
+    }
+    this.sliderDatas=obj;
   }
 
-  setEvidence(control, depends: FormControl[], formGroup: FormGroup, loading, loaded) {
-    control.isVisible = 'no';
-    const response = merge(..._.map(depends, depend => depend.valueChanges)).pipe(
-        switchMap((value: any) => {
-            if (!_.isEmpty(value) && _.toLower(value) === 'yes') {
-                control.isVisible = 'yes';
-                return of({range: evidenceMimeType});
-            } else {
-                control.isVisible = 'no';
-                return of(null);
-            }
-        })
-    );
-    return response;
-  }
 
 }
-
