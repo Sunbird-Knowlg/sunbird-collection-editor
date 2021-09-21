@@ -4,6 +4,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfigService } from '../../services/config/config.service';
 import { PlayerService } from '../../services/player/player.service';
+import { EditorService } from '../../services/editor/editor.service';
 import { mockData } from './quml-player.component.spec.data';
 describe('QumlPlayerComponent', () => {
   let component: QumlPlayerComponent;
@@ -13,7 +14,7 @@ describe('QumlPlayerComponent', () => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       declarations: [QumlPlayerComponent],
-      providers: [ConfigService, PlayerService],
+      providers: [ConfigService, PlayerService, EditorService],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
       .compileComponents();
@@ -44,20 +45,24 @@ describe('QumlPlayerComponent', () => {
   });
   it('#setQumlPlayerData() should call setQumlPlayerData and isSingleQuestionPreview is false', () => {
     const playerService = TestBed.get(PlayerService);
+    const editorService = TestBed.get(EditorService);
     component.qumlPlayerConfig = mockData.qumlPlayerConfig;
     component.questionSetHierarchy = mockData.qumlPlayerConfig.metadata;
     component.qumlPlayerConfig.metadata = mockData.qumlPlayerConfig.metadata;
     component.isSingleQuestionPreview = false;
     spyOn(playerService, 'getQumlPlayerConfig').and.returnValue(mockData.qumlPlayerConfig);
+    spyOn(editorService, 'getContentChildrens').and.returnValue(['do_12345', 'do_123456']);
     component.setQumlPlayerData();
     expect(component.qumlPlayerConfig.metadata).toEqual(mockData.qumlPlayerConfig.metadata);
-    expect(component.qumlPlayerConfig.metadata.totalQuestions).toEqual(mockData.qumlPlayerConfig.metadata.childNodes.length);
+    // expect(component.qumlPlayerConfig.metadata.totalQuestions).toEqual(mockData.qumlPlayerConfig.metadata.childNodes.length);
     expect(component.qumlPlayerConfig.metadata.maxQuestions).toEqual(mockData.qumlPlayerConfig.metadata.maxQuestions);
     expect(component.qumlPlayerConfig.metadata.maxScore).toEqual(mockData.qumlPlayerConfig.metadata.maxScore);
   });
   it('#setQumlPlayerData() should call setQumlPlayerData and isSingleQuestionPreview is true', () => {
     const playerService = TestBed.get(PlayerService);
+    const editorService = TestBed.get(EditorService);
     spyOn(playerService, 'getQumlPlayerConfig').and.returnValue(mockData.qumlPlayerConfig);
+    spyOn(editorService, 'getContentChildrens').and.returnValue(['do_12345', 'do_123456']);
     component.qumlPlayerConfig = mockData.qumlPlayerConfig;
     component.questionSetHierarchy = mockData.qumlPlayerConfig.metadata;
     component.qumlPlayerConfig.metadata = mockData.qumlPlayerConfig.metadata;
