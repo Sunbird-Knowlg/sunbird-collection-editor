@@ -26,7 +26,7 @@
     "@project-sunbird/client-services": "4.2.3",
     "@project-sunbird/sb-styles": "0.0.7",
     "@project-sunbird/sunbird-pdf-player-v9": "4.1.1",
-    "@project-sunbird/sunbird-quml-player-v9": "4.3.8",
+    "@project-sunbird/sunbird-quml-player-v9": "4.3.9",
     "@project-sunbird/sunbird-video-player-v9": "4.1.1",
     "@project-sunbird/telemetry-sdk": "0.0.26",
     "@types/jquery": "^3.5.5",
