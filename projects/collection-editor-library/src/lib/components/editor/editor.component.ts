@@ -505,17 +505,13 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.buttonLoaders.previewButtonLoader = true;
     if (!this.isStatusReviewMode) {
       this.saveContent().then(res => {
-        this.updateTreeNodeData();
-        this.buttonLoaders.previewButtonLoader = false;
-        this.showPreview = true;
+        this.setUpdatedTreeNodeData();
       }).catch(err => {
         this.toasterService.error(err);
         this.buttonLoaders.previewButtonLoader = false;
       });
     } else {
-      this.updateTreeNodeData();
-      this.buttonLoaders.previewButtonLoader = false;
-      this.showPreview = true;
+      this.setUpdatedTreeNodeData();
     }
   }
   sendForReview() {
@@ -613,6 +609,20 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     } else {
         this.redirectToChapterListTab(obj);
     }
+  }
+  setUpdatedTreeNodeData() {
+    this.editorService.fetchCollectionHierarchy(this.collectionId).subscribe((res) => {
+      console.log('hierarchyData', res);
+      this.collectionTreeNodes = {
+        data: _.get(res, `result.${this.configService.categoryConfig[this.editorConfig.config.objectType]}`)
+      };
+      this.updateTreeNodeData();
+      this.buttonLoaders.previewButtonLoader = false;
+      this.showPreview = true;
+    }, error => {
+      this.buttonLoaders.previewButtonLoader = false;
+      this.toasterService.error(_.get(error, 'error.params.errmsg'));
+    });
   }
   updateTreeNodeData() {
     const treeNodeData = _.get(this.treeService.getFirstChild(), 'data.metadata');
