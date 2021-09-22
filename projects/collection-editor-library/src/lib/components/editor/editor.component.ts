@@ -722,6 +722,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       return throwError(this.editorService.apiErrorHandling(error, errInfo));
     })).subscribe((res) => {
       const selectedtemplateDetails = res.result.objectCategoryDefinition;
+      this.editorService.selectedChildren['label']=selectedtemplateDetails.label;
       console.log('form read');
       console.log(selectedtemplateDetails);
       const selectedTemplateFormFields = _.get(selectedtemplateDetails, 'forms.create.properties');
@@ -741,6 +742,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       if (_.isEmpty(_.get(catMetaData, 'schema.properties.interactionTypes.items.enum'))) {
         // this.toasterService.error(this.resourceService.messages.emsg.m0026);
         this.editorService.selectedChildren = {
+          label:selectedtemplateDetails.label,
           primaryCategory: selectedQuestionType,
           mimeType: catMetaData.schema.properties.mimeType.enum[0],
           interactionType: null
@@ -749,6 +751,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       } else {
         const interactionTypes = catMetaData.schema.properties.interactionTypes.items.enum;
         this.editorService.selectedChildren = {
+          label:selectedtemplateDetails.label,
           primaryCategory: selectedQuestionType,
           mimeType: catMetaData.schema.properties.mimeType.enum[0],
           interactionType: interactionTypes[0]
@@ -777,6 +780,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         return throwError(this.editorService.apiErrorHandling(error, errInfo));
       })).subscribe((res) => {
         const selectedtemplateDetails = res.result.objectCategoryDefinition;
+        this.editorService.selectedChildren['label']=selectedtemplateDetails.label;
         console.log('form read');
         console.log(selectedtemplateDetails);
         const selectedTemplateFormFields = _.get(selectedtemplateDetails, 'forms.create.properties');
@@ -793,9 +797,12 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         const catMetaData = selectedtemplateDetails.objectMetadata;
         this.sourcingSettings = catMetaData.config.sourcingSettings;
+        this.pageId = 'question';
       });
     }
+    else{
     this.pageId = 'question';
+    }
   }
 
   questionEventListener(event: any) {

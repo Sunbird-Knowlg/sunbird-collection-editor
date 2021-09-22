@@ -29,7 +29,7 @@
     },
     "ContentPolicyUrl" : "/term-of-use.html",
     "assetProxyUrl": "/assets/public/",
-    "getCategoryDefinition": "object/category/definition/v1/read?fields=objectMetadata,forms,name",
+    "getCategoryDefinition": "object/category/definition/v1/read?fields=objectMetadata,forms,name,label",
     "CONTENT": {
     "HIERARCHY_ADD":"content/v3/hierarchy/add",
     "READ":"content/v3/read/",

@@ -83,6 +83,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   sliderDatas:any={};
   sliderOptions:any={};
   hints:any;
+  categoryLable:any={};
   constructor(
     private questionService: QuestionService, private editorService: EditorService, public telemetryService: EditorTelemetryService,
     public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,
@@ -92,7 +93,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.questionPrimaryCategory = primaryCategory;
     this.pageStartTime = Date.now();
     console.log("question page called");
+    console.log(this.editorService.selectedChildren);
 
+    this.categoryLable[primaryCategory]=this.editorService.selectedChildren.label
+    console.log(this.categoryLable);
   }
 
   ngOnInit() {
@@ -684,19 +688,19 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         if(child.children){
           index =  _.findIndex(child.children, { 'identifier': questionId });
           const question  = child.children[index]; 
-          questionTitle = `Q${(index + 1).toString()} | ` + question.primaryCategory;
+          questionTitle = `Q${(index + 1).toString()} | ` + (_.isUndefined(this.categoryLable[question.primaryCategory])? question.primaryCategory : this.categoryLable[question.primaryCategory]);
         }
         else{
           index =  _.findIndex(hierarchyChildren, { 'identifier': questionId });
           const question  = hierarchyChildren[index];  
-          questionTitle = `Q${(index + 1).toString()} | ` + question.primaryCategory;
+          questionTitle = `Q${(index + 1).toString()} | ` + (_.isUndefined(this.categoryLable[question.primaryCategory])? question.primaryCategory : this.categoryLable[question.primaryCategory]);;
         }
       });
     } else {
       index = hierarchyChildren.length;
       questionTitle = `Q${(index + 1).toString()} | `;
       if (!_.isUndefined(this.questionPrimaryCategory)) {
-        questionTitle = questionTitle + this.questionPrimaryCategory;
+        questionTitle = questionTitle + (_.isUndefined(this.categoryLable[this.questionPrimaryCategory])? this.questionPrimaryCategory : this.categoryLable[this.questionPrimaryCategory]);
       }
     }
     this.toolbarConfig.title = questionTitle;
