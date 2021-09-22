@@ -742,7 +742,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       if (_.isEmpty(_.get(catMetaData, 'schema.properties.interactionTypes.items.enum'))) {
         // this.toasterService.error(this.resourceService.messages.emsg.m0026);
         this.editorService.selectedChildren = {
-          label:selectedtemplateDetails.label,
           primaryCategory: selectedQuestionType,
           mimeType: catMetaData.schema.properties.mimeType.enum[0],
           interactionType: null
@@ -751,7 +750,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       } else {
         const interactionTypes = catMetaData.schema.properties.interactionTypes.items.enum;
         this.editorService.selectedChildren = {
-          label:selectedtemplateDetails.label,
           primaryCategory: selectedQuestionType,
           mimeType: catMetaData.schema.properties.mimeType.enum[0],
           interactionType: interactionTypes[0]
