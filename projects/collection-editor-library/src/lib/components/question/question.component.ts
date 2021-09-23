@@ -688,19 +688,19 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         if(child.children){
           index =  _.findIndex(child.children, { 'identifier': questionId });
           const question  = child.children[index]; 
-          questionTitle = `Q${(index + 1).toString()} | ` + (_.isUndefined(this.categoryLable[question.primaryCategory])? question.primaryCategory : this.categoryLable[question.primaryCategory]);
+          questionTitle = `Q${(index + 1).toString()} | ` + _.get(this.categoryLable, `${question.primaryCategory}`) || question.primaryCategory;
         }
         else{
           index =  _.findIndex(hierarchyChildren, { 'identifier': questionId });
           const question  = hierarchyChildren[index];  
-          questionTitle = `Q${(index + 1).toString()} | ` + (_.isUndefined(this.categoryLable[question.primaryCategory])? question.primaryCategory : this.categoryLable[question.primaryCategory]);;
+          questionTitle = `Q${(index + 1).toString()} | ` + _.get(this.categoryLable, `${question.primaryCategory}`) || question.primaryCategory;;
         }
       });
     } else {
       index = hierarchyChildren.length;
       questionTitle = `Q${(index + 1).toString()} | `;
       if (!_.isUndefined(this.questionPrimaryCategory)) {
-        questionTitle = questionTitle + (_.isUndefined(this.categoryLable[this.questionPrimaryCategory])? this.questionPrimaryCategory : this.categoryLable[this.questionPrimaryCategory]);
+        questionTitle = questionTitle + _.get(this.categoryLable, `${this.questionPrimaryCategory}`) || this.questionPrimaryCategory;
       }
     }
     this.toolbarConfig.title = questionTitle;
