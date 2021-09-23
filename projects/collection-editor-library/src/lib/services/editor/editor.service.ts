@@ -12,6 +12,7 @@ import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 
 interface SelectedChildren {
+  label?:string,
   primaryCategory?: string;
   mimeType?: string;
   interactionType?: string;
@@ -168,7 +169,7 @@ export class EditorService {
       }
     };
     const publishData =  _.get(data, 'publishData');
-    if(publishData) { 
+    if(publishData) {
      requestBody.request[objType] = { ...requestBody.request[objType], ...publishData };
     }
     const option = {
@@ -223,9 +224,9 @@ export class EditorService {
       }
     };
    const publishData =  _.get(event, 'publishData');
-   if(publishData) { 
+   if(publishData) {
     requestBody.request[objType] = { ...requestBody.request[objType], ...publishData };
-   } 
+   }
     const option = {
       url: `${url.CONTENT_PUBLISH}${contentId}`,
       data: requestBody
@@ -282,10 +283,7 @@ export class EditorService {
     const instance = this;
     this.data = {};
     const data = this.treeService.getFirstChild();
-    let clonedNodeModified = _.cloneDeep(this.treeService.treeCache.nodesModified)
-    for (const iterator in  clonedNodeModified) {
-       clonedNodeModified[iterator].metadata = _.omit(clonedNodeModified[iterator].metadata,['allowScoring'])
-    }
+    const clonedNodeModified = _.cloneDeep(this.treeService.treeCache.nodesModified);
     return {
       nodesModified: clonedNodeModified,
       hierarchy: instance._toFlatObj(data)
@@ -328,6 +326,8 @@ export class EditorService {
         }
       }
     };
+    console.log('getCategoryDefinition');
+    console.log(req);
     return this.publicDataService.post(req);
   }
   fetchContentListDetails(req) {

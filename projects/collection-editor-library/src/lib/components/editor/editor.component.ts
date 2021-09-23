@@ -744,6 +744,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       return throwError(this.editorService.apiErrorHandling(error, errInfo));
     })).subscribe((res) => {
       const selectedtemplateDetails = res.result.objectCategoryDefinition;
+      this.editorService.selectedChildren['label']=selectedtemplateDetails.label;
       console.log('form read');
       console.log(selectedtemplateDetails);
       const selectedTemplateFormFields = _.get(selectedtemplateDetails, 'forms.create.properties');
@@ -799,6 +800,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         return throwError(this.editorService.apiErrorHandling(error, errInfo));
       })).subscribe((res) => {
         const selectedtemplateDetails = res.result.objectCategoryDefinition;
+        this.editorService.selectedChildren['label']=selectedtemplateDetails.label;
         console.log('form read');
         console.log(selectedtemplateDetails);
         const selectedTemplateFormFields = _.get(selectedtemplateDetails, 'forms.create.properties');
@@ -815,9 +817,12 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         const catMetaData = selectedtemplateDetails.objectMetadata;
         this.sourcingSettings = catMetaData.config.sourcingSettings;
+        this.pageId = 'question';
       });
     }
+    else{
     this.pageId = 'question';
+    }
   }
 
   questionEventListener(event: any) {

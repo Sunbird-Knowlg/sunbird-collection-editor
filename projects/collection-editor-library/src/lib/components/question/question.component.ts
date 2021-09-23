@@ -77,12 +77,13 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   public buttonLoaders = {
     saveButtonLoader: false
   };
-  public showTranslation: boolean=false;
+  public showTranslation = false;
   subMenus: SubMenu[];
   showAddSecondaryQuestionCat: boolean;
-  sliderDatas: any={};
-  sliderOptions: any={};
+  sliderDatas: any = {};
+  sliderOptions: any = {};
   hints: any;
+  categoryLabel: any = {};
   constructor(
     private questionService: QuestionService, private editorService: EditorService, public telemetryService: EditorTelemetryService,
     public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,
@@ -92,7 +93,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.questionPrimaryCategory = primaryCategory;
     this.pageStartTime = Date.now();
     console.log('question page called');
+    console.log(this.editorService.selectedChildren);
 
+    this.categoryLabel[primaryCategory] = _.get(this.editorService.selectedChildren, 'label');
+    console.log(this.categoryLabel);
   }
 
   ngOnInit() {
@@ -166,7 +170,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
               }
 
-              if(this.questionInteractionType === 'slider') {
+              if (this.questionInteractionType === 'slider') {
                 if (this.questionMetaData.editorState) {
                   this.editorState = this.questionMetaData.editorState;
                   this.sliderOptions = this.questionMetaData.interactions.response1;
@@ -322,9 +326,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     if (this.questionInteractionType === 'slider') {
-      const min = _.get(this.sliderDatas,'validation.range.min');
-      const max = _.get(this.sliderDatas,'validation.range.max');
-      const step =  _.get(this.sliderDatas,'step');
+      const min = _.get(this.sliderDatas, 'validation.range.min');
+      const max = _.get(this.sliderDatas, 'validation.range.max');
+      const step =  _.get(this.sliderDatas, 'step');
       if (_.isEmpty(this.sliderDatas) || _.isEmpty(min) || _.isEmpty(max) || _.isEmpty(step)) {
         this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.005'));
         this.showFormError = true;
@@ -338,7 +342,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   redirectToQuestionset() {
     this.showConfirmPopup = false;
     setTimeout(() => {
-      this.showAddSecondaryQuestionCat ? this.questionEmitter.emit({ type: 'createNewContent',isChildQuestion:true }) : this.questionEmitter.emit({ status: false });
+      this.showAddSecondaryQuestionCat ? this.questionEmitter.emit({ type: 'createNewContent', isChildQuestion: true }) : this.questionEmitter.emit({ status: false });
       this.showAddSecondaryQuestionCat = false;
     }, 100);
   }
@@ -475,7 +479,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     metadata = _.merge(metadata, this.getDefaultSessionContext());
     metadata = _.merge(metadata, _.pickBy(this.childFormData, _.identity));
     // tslint:disable-next-line:max-line-length
-    return _.omit(metadata, ['question', 'numberOfOptions', 'options', 'allowMultiSelect', 'showEvidence', 'evidenceMimeType', 'showRemarks', 'markAsNotMandatory','leftAnchor','rightAnchor','step','numberOnly','characterLimit','dateFormat','autoCapture','remarksLimit']);
+    return _.omit(metadata, ['question', 'numberOfOptions', 'options', 'allowMultiSelect', 'showEvidence', 'evidenceMimeType', 'showRemarks', 'markAsNotMandatory', 'leftAnchor', 'rightAnchor', 'step', 'numberOnly', 'characterLimit', 'dateFormat', 'autoCapture', 'remarksLimit']);
   }
 
   getMcqQuestionHtmlBody(question, templateId) {
@@ -513,7 +517,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     return {
       nodesModified: {
         [questionId]: {
-          metadata:metaData,
+          metadata: metaData,
           objectType: 'Question',
           root: false,
           isNew: this.questionId ? false : true
@@ -543,7 +547,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     metaData.interactions = metaData.interactions || {};
 
-    metaData.interactions.validation = { required:this.childFormData.markAsNotMandatory ==='Yes' ? 'No' : 'Yes'};
+    metaData.interactions.validation = { required: this.childFormData.markAsNotMandatory === 'Yes' ? 'No' : 'Yes'};
     if (this.childFormData.allowMultiSelect === 'Yes') {
       metaData.responseDeclaration.response1.cardinality = 'multiple';
       // todo add for html body also
@@ -681,11 +685,13 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         if (child.children) {
           index =  _.findIndex(child.children, { identifier: questionId });
           const question  = child.children[index];
-          questionTitle = `Q${(index + 1).toString()} | ` + question.primaryCategory;
+          // tslint:disable-next-line:max-line-length
+          questionTitle = `Q${(index + 1).toString()} | ` + _.get(this.categoryLabel, `${question.primaryCategory}`) || question.primaryCategory;
         } else {
           index =  _.findIndex(hierarchyChildren, { identifier: questionId });
           const question  = hierarchyChildren[index];
-          questionTitle = `Q${(index + 1).toString()} | ` + question.primaryCategory;
+          // tslint:disable-next-line:max-line-length
+          questionTitle = `Q${(index + 1).toString()} | ` + _.get(this.categoryLabel, `${question.primaryCategory}`) || question.primaryCategory;
         }
       });
 
@@ -699,7 +705,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       index = hierarchyChildren.length;
       questionTitle = `Q${(index + 1).toString()} | `;
       if (!_.isUndefined(this.questionPrimaryCategory)) {
-        questionTitle = questionTitle + this.questionPrimaryCategory;
+        questionTitle = questionTitle + _.get(this.categoryLabel, `${this.questionPrimaryCategory}`) || this.questionPrimaryCategory;
       }
     }
     this.toolbarConfig.title = questionTitle;
