@@ -10,8 +10,8 @@ import { ToasterService } from '../../services/toaster/toaster.service';
 import { HelperService } from '../../services/helper/helper.service';
 import { IEditorConfig } from '../../interfaces/editor';
 import { Router } from '@angular/router';
-import { catchError, map, tap, switchMap } from 'rxjs/operators';
-import { Observable, throwError, forkJoin, Subscription, merge, of } from 'rxjs';
+import { catchError, map, takeUntil, tap } from 'rxjs/operators';
+import { Observable, throwError, forkJoin, Subscription, Subject, merge, of } from 'rxjs';
 import * as _ from 'lodash-es';
 import { ConfigService } from '../../services/config/config.service';
 import { DialcodeService } from '../../services/dialcode/dialcode.service';
@@ -55,6 +55,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   private formStatusMapper: { [key: string]: boolean } = {};
   public targetFramework;
   public organisationFramework;
+  public primaryCategoryDef: any;
   toolbarConfig: any;
   public buttonLoaders = {
     saveAsDraftButtonLoader: false,
@@ -75,9 +76,11 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public ishierarchyConfigSet =  false;
   public addCollaborator: boolean;
   public publishchecklist: any;
+  public isComponenetInitialized = false;
   public unSubscribeShowLibraryPageEmitter: Subscription;
   public sourcingSettings: any;
   setChildQuestion: any;
+  public unsubscribe$ = new Subject<void>();
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
               private toasterService: ToasterService, private dialcodeService: DialcodeService,
@@ -124,7 +127,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           this.helperService.channelData$.subscribe(
             (channelResponse) => {
               this.sethierarchyConfig(response);
-              this.getFrameworkDetails(response);
+              this.primaryCategoryDef = response;
             }
           );
         },
@@ -138,6 +141,11 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.telemetryService.start({ type: 'editor', pageid: this.telemetryService.telemetryPageId });
     this.unSubscribeShowLibraryPageEmitter = this.editorService.getshowLibraryPageEmitter()
       .subscribe(item => this.showLibraryComponentPage());
+    this.treeService.treeStatus$.pipe(takeUntil(this.unsubscribe$)).subscribe((status) => {
+      if (status === 'loaded') {
+        this.getFrameworkDetails(this.primaryCategoryDef);
+      }
+    });
   }
 
   getFrameworkDetails(categoryDefinitionData) {
@@ -147,7 +155,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     let targetFWType: any;
     orgFWIdentifiers = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.framework.enum') ||
       _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.framework.default');
-      this.publishchecklist = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.publishchecklist.properties') || [];
+    // tslint:disable-next-line:max-line-length
+    this.publishchecklist = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.publishchecklist.properties') || _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.review.properties') || [];
     if (_.isEmpty(this.targetFramework || _.get(this.editorConfig, 'context.targetFWIds'))) {
       // tslint:disable-next-line:max-line-length
       targetFWIdentifiers = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.targetFWIds.default');
@@ -240,7 +249,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     // tslint:disable-next-line:max-line-length
     this.libraryComponentInput.searchFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.search.properties');
     this.leafFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.childMetadata.properties');
-    
+
   }
 
   ngAfterViewInit() {
@@ -248,6 +257,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       type: 'edit', pageid: this.telemetryService.telemetryPageId, uri: this.router.url,
       duration: (Date.now() - this.pageStartTime) / 1000
     });
+    this.isComponenetInitialized = true;
   }
 
   mergeCollectionExternalProperties(): Observable<any> {
@@ -303,7 +313,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       if (_.isEmpty(value)) {
         switch (key) {
           case 'Question':
-            childrenData[key] = _.map(this.helperService.questionPrimaryCategories, 'name') || this.editorConfig.config.questionPrimaryCategories;; 
+            childrenData[key] = _.map(this.helperService.questionPrimaryCategories, 'name') || this.editorConfig.config.questionPrimaryCategories;;
             break;
           case 'Content':
             childrenData[key] = _.map(this.helperService.contentPrimaryCategories, 'name') || [];
@@ -319,7 +329,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     });
     return childrenData;
   }
-  
+
   toggleCollaboratorModalPoup() {
     this.isEnableCsvAction = true;
     if (this.addCollaborator) {
@@ -329,7 +339,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     } else {
     }
   }
-  
+
   toolbarEventListener(event) {
     this.actionType = event.button;
     switch (event.button) {
@@ -371,7 +381,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         if (selectedNode && selectedNode.data.id) {
           this.formStatusMapper[selectedNode.data.id] = event.event.isValid;
         }
-        if(this.isObjectTypeCollection) {
+        if (this.isObjectTypeCollection) {
           this.handleCsvDropdownOptionsOnCollection();
         }
         break;
@@ -396,10 +406,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       case 'showReviewcomments':
         this.showReviewModal = !this.showReviewModal;
         break;
-      case 'showCorrectioncomments':
-        this.contentComment = _.get(this.editorConfig, 'context.correctionComments')
-        this.showReviewModal = !this.showReviewModal;
-        break;
+      //case 'showCorrectioncomments':
+        //this.contentComment = _.get(this.editorConfig, 'context.correctionComments')
+        //this.showReviewModal = !this.showReviewModal;
+        //break;
       default:
         break;
     }
@@ -440,6 +450,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       this.pageId = 'collection_editor';
       this.telemetryService.telemetryPageId = this.pageId;
       this.isEnableCsvAction = true;
+      this.isComponenetInitialized = true;
     });
   }
 
@@ -579,8 +590,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       });
     }
   }
-  sourcingApproveContent (event) {
+  sourcingApproveContent(event) {
     const editableFields = _.get(this.editorConfig.config, 'editableFields');
+    // tslint:disable-next-line:max-line-length
     if (this.editorMode === 'sourcingreview' && ((editableFields && !_.isEmpty(editableFields[this.editorMode])) || !_.isEmpty(this.publishchecklist))) {
       if (!this.validateFormStatus()) {
         this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
@@ -594,7 +606,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     } else {
         this.redirectToChapterListTab();
     }
-  } 
+  }
   sourcingRejectContent(obj) {
     const editableFields = _.get(this.editorConfig.config, 'editableFields');
     if (this.editorMode === 'sourcingreview' && editableFields && !_.isEmpty(editableFields[this.editorMode])) {
@@ -627,7 +639,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   treeEventListener(event: any) {
     this.actionType = event.type;
     this.updateTreeNodeData();
-    if(this.isObjectTypeCollection) {
+    if (this.isObjectTypeCollection) {
       this.handleCsvDropdownOptionsOnCollection();
     }
     switch (event.type) {
@@ -815,31 +827,38 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   showCommentAddedAgainstContent() {
-    if (this.collectionTreeNodes.data.status === 'Draft' && _.has(this.collectionTreeNodes.data, 'rejectComment')) {
+    // tslint:disable-next-line:max-line-length
+    if (this.collectionTreeNodes.data.status === 'Draft' && this.collectionTreeNodes.data.prevStatus  === 'Review' && _.has(this.collectionTreeNodes.data, 'rejectComment')) {
       this.contentComment = _.get(this.collectionTreeNodes.data, 'rejectComment');
+      return true;
+    } else if (_.get(this.editorService, 'editorConfig.config.showCorrectionComments')) {
+      this.contentComment = _.get(this.editorConfig, 'context.correctionComments');
       return true;
     }
     return false;
   }
   handleCsvDropdownOptionsOnCollection() {
-    if(this.isTreeInitialized) {
+    if (this.isTreeInitialized) {
       this.isEnableCsvAction = true;
       this.isTreeInitialized = false;
     } else {
       this.isEnableCsvAction = false;
     }
-    this.setCsvDropDownOptionsDisable(true, true, true);
+    this.setCsvDropDownOptionsDisable(true);
   }
   onClickFolder() {
-    if (this.isEnableCsvAction) {
-     const status =  this.editorService.getHierarchyFolder().length ? true : false;
-     this.setCsvDropDownOptionsDisable(status, !status, !status);
+    if (this.isComponenetInitialized) {
+      this.isComponenetInitialized = false;
+      this.setCsvDropDownOptionsDisable();
+    } else if (this.isEnableCsvAction) {
+     this.setCsvDropDownOptionsDisable();
   }
   }
-  setCsvDropDownOptionsDisable(createCsv, updateCsv, downloadCsv) {
-    this.csvDropDownOptions.isDisableCreateCsv = createCsv;
-    this.csvDropDownOptions.isDisableUpdateCsv = updateCsv;
-    this.csvDropDownOptions.isDisableDownloadCsv = downloadCsv;
+  setCsvDropDownOptionsDisable(disable?) {
+    const status = this.editorService.getHierarchyFolder().length ? true : false;
+    this.csvDropDownOptions.isDisableCreateCsv = disable ? disable : status;
+    this.csvDropDownOptions.isDisableUpdateCsv = disable ? disable : !status;
+    this.csvDropDownOptions.isDisableDownloadCsv = disable ? disable : !status;
   }
   downloadHierarchyCsv() {
     this.editorService.downloadHierarchyCsv(this.collectionId).subscribe(res => {
@@ -902,6 +921,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.unSubscribeShowLibraryPageEmitter) {
       this.unSubscribeShowLibraryPageEmitter.unsubscribe();
     }
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
 

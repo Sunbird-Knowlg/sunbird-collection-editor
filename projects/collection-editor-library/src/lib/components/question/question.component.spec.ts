@@ -8,10 +8,11 @@ import { EditorTelemetryService } from '../../services/telemetry/telemetry.servi
 import { EditorService } from '../../services/editor/editor.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
 import { EditorCursor } from '../../collection-editor-cursor.service';
+import { TreeService } from '../../services/tree/tree.service';
 import { SuiModule } from 'ng2-semantic-ui-v9';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
-import { collectionHierarchyMock, mockData, readQuestionMock } from './question.component.spec.data';
+import { collectionHierarchyMock, mockData, readQuestionMock, mockTreeService } from './question.component.spec.data';
 import { of } from 'rxjs';
 
 const mockEditorService = {
@@ -45,7 +46,8 @@ describe('QuestionComponent', () => {
       declarations: [QuestionComponent, TelemetryInteractDirective],
       imports: [HttpClientTestingModule, SuiModule],
       providers: [EditorTelemetryService, QuestionService, ToasterService,
-        PlayerService, { provide: EditorService, useValue: mockEditorService }, { provide: Router, useClass: RouterStub }, EditorCursor],
+        PlayerService, { provide: EditorService, useValue: mockEditorService }, { provide: Router, useClass: RouterStub }, EditorCursor,
+        { provide: TreeService, useValue: mockTreeService }],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
       .compileComponents();

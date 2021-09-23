@@ -258,17 +258,17 @@ export class EditorService {
   async getMaxScore() {
     const rootNode = this.treeService.getFirstChild();
     const metadata = _.get(rootNode, 'data.metadata');
+    const questionIds = this.getContentChildrens();
     if (metadata.shuffle) {
-      const childrens = _.map(rootNode.getChildren(), (child) =>  child.data.id);
-      if (metadata.maxQuestions && !_.isEmpty(childrens) ) {
-        const { questions } =  await this.getQuestionList(_.take(childrens, metadata.maxQuestions)).toPromise();
+      if (metadata.maxQuestions && !_.isEmpty(questionIds) ) {
+        const { questions } =  await this.getQuestionList(_.take(questionIds, metadata.maxQuestions)).toPromise();
         const maxScore = this.calculateMaxScore(questions);
         return maxScore;
       } else {
-        return rootNode.countChildren();
+        return questionIds.length;
       }
     } else {
-      return metadata.maxQuestions ? metadata.maxQuestions :  rootNode.countChildren();
+      return metadata.maxQuestions ? metadata.maxQuestions : questionIds.length;
     }
   }
 
@@ -373,9 +373,10 @@ export class EditorService {
     this.telemetryService.error(telemetryErrorData);
   }
   // this method is used to get all the contents in course/question inside every module and sub module
-  getContentChildrens() {
-    const treeObj = this.treeService.getTreeObject();
+  getContentChildrens(activeNode?) {
+    let treeObj = this.treeService.getTreeObject();
     const contents = [];
+    if (activeNode) { treeObj = activeNode; }
     treeObj.visit((node) => {
       if (node.folder === false) {
         contents.push(node.data.id);

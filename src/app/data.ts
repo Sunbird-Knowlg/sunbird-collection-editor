@@ -7,8 +7,7 @@ export const courseEditorConfig = {
       lastName: 'Bhuva',
       orgIds: ['01309282781705830427']
     },
-    identifier:"do_1133610108714352641210" ,
-    // 'do_11335184536953651219',
+    identifier: 'do_1133618765350748161337',
     channel: '01309282781705830427',
     // framework: 'nit_k-12',
     // targetFWIds: ['nit_k-12'],
@@ -254,10 +253,11 @@ export const questionEditorConfig = {
     }
   },
   config: {
-    mode: 'edit', // edit / review / read / sourcingReview
+    mode: 'edit', // edit / review / read / sourcingReview // orgReview
     editableFields: {
-      // sourcingreview: ['instructions'],
-      review: ['name', 'learningOutcome'],
+      //sourcingreview: ['instructions'],
+      orgreview: ['name', 'instructions', 'learningOutcome'],
+      review: ['name', 'description'],
     },
     maxDepth: 4,
     objectType: 'QuestionSet',
@@ -319,7 +319,7 @@ export const questionEditorConfig = {
 
 export const collectionEditorConfig = {
   context: {
-      identifier: 'do_113332810440933376130',
+      identifier: 'do_113345692849029120131',
       channel: '01309282781705830427',
       authToken: '',
       sid: 'vLpZ1rFl6-sxMVHi4RrmrlHw0HsX9ggC',
@@ -377,7 +377,15 @@ export const collectionEditorConfig = {
               contentType: 'TextBookUnit',
               primaryCategory: 'Textbook Unit',
               iconClass: 'fa fa-folder-o',
-              children: {}
+              children: {
+                Content: [
+                  'Explanation Content',
+                  'Learning Resource',
+                  'eTextbook',
+                  'Teacher Resource',
+                  'Course Assessment'
+                ]
+              }
           },
           level2: {
               name: 'Textbook Unit',
@@ -387,7 +395,13 @@ export const collectionEditorConfig = {
               primaryCategory: 'Textbook Unit',
               iconClass: 'fa fa-folder-o',
               children: {
-                  Content: []
+                Content: [
+                  'Explanation Content',
+                  'Learning Resource',
+                  'eTextbook',
+                  'Teacher Resource',
+                  'Course Assessment'
+                ]
               }
           },
           level3: {
@@ -398,7 +412,13 @@ export const collectionEditorConfig = {
               primaryCategory: 'Textbook Unit',
               iconClass: 'fa fa-folder-o',
               children: {
-                  Content: []
+                Content: [
+                  'Explanation Content',
+                  'Learning Resource',
+                  'eTextbook',
+                  'Teacher Resource',
+                  'Course Assessment'
+                ]
               }
           },
           level4: {
@@ -409,7 +429,13 @@ export const collectionEditorConfig = {
               primaryCategory: 'Textbook Unit',
               iconClass: 'fa fa-folder-o',
               children: {
-                  Content: []
+                Content: [
+                  'Explanation Content',
+                  'Learning Resource',
+                  'eTextbook',
+                  'Teacher Resource',
+                  'Course Assessment'
+                ]
               }
           }
       }

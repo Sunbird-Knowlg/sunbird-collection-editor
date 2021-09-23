@@ -86,7 +86,9 @@ export class TreeService {
     if (warningTime) {
       timeLimits.warningTime = this.helperService.hmsToSeconds(warningTime);
     }
-    newData.timeLimits = timeLimits;
+    if (!_.isEmpty(timeLimits)) {
+      newData.timeLimits = timeLimits;
+    }
     delete newData.maxTime;
     delete newData.warningTime;
     this.setTreeCache(nodeId, newData, activeNode.data);
@@ -112,7 +114,8 @@ export class TreeService {
       metadata: {
         mimeType: _.get(nodeConfig, 'mimeType'),
         code: uniqueId,
-        name: nodeTitle
+        name: nodeTitle,
+        visibility: 'Parent'
       }
     };
     node.metadata = _.merge({}, node.metadata, _.pick(node, ['contentType', 'objectType', 'primaryCategory']));
