@@ -15,7 +15,7 @@ import { FrameworkService } from '../../services/framework/framework.service';
 import { TreeService } from '../../services/tree/tree.service';
 import { EditorCursor } from '../../collection-editor-cursor.service';
 import { catchError, filter, finalize, switchMap, take, takeUntil } from 'rxjs/operators';
-import { extraConfig } from "./extraConfig";
+import { extraConfig } from './extraConfig';
 import { SubMenu } from '../question-option-sub-menu/question-option-sub-menu.component';
 import { FormControl, FormGroup } from '@angular/forms';
 
@@ -31,7 +31,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   QumlPlayerConfig: any = {};
   @Input() questionInput: any;
   @Input() leafFormConfig: any;
-  @Input() sourcingSettings:any
+  @Input() sourcingSettings: any;
   public initialLeafFormConfig: any;
   public childFormData: any;
   @Output() questionEmitter = new EventEmitter<any>();
@@ -77,30 +77,30 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   public buttonLoaders = {
     saveButtonLoader: false
   };
-  public showTranslation:boolean=false;
-  subMenus:SubMenu[]
+  public showTranslation = false;
+  subMenus: SubMenu[];
   showAddSecondaryQuestionCat: boolean;
-  sliderDatas:any={};
-  sliderOptions:any={};
-  hints:any;
-  categoryLable:any={};
+  sliderDatas: any = {};
+  sliderOptions: any = {};
+  hints: any;
+  categoryLabel: any = {};
   constructor(
     private questionService: QuestionService, private editorService: EditorService, public telemetryService: EditorTelemetryService,
     public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,
-    private frameworkService: FrameworkService, private router: Router, public configService: ConfigService, 
+    private frameworkService: FrameworkService, private router: Router, public configService: ConfigService,
     private editorCursor: EditorCursor) {
     const { primaryCategory } = this.editorService.selectedChildren;
     this.questionPrimaryCategory = primaryCategory;
     this.pageStartTime = Date.now();
-    console.log("question page called");
+    console.log('question page called');
     console.log(this.editorService.selectedChildren);
 
-    this.categoryLable[primaryCategory]=this.editorService.selectedChildren.label
-    console.log(this.categoryLable);
+    this.categoryLabel[primaryCategory] = _.get(this.editorService.selectedChildren, 'label');
+    console.log(this.categoryLabel);
   }
 
   ngOnInit() {
-    console.log("question page called");
+    console.log('question page called');
     console.log(this.sourcingSettings);
     console.log(this.leafFormConfig);
     const { questionSetId, questionId, type } = this.questionInput;
@@ -109,7 +109,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.questionSetId = questionSetId;
     this.toolbarConfig = this.editorService.getToolbarConfig();
     this.toolbarConfig.showPreview = false;
-    this.toolbarConfig.add_translation=true;
+    this.toolbarConfig.add_translation = true;
     this.solutionUUID = UUID.UUID();
     this.telemetryService.telemetryPageId = this.pageId;
     this.initialLeafFormConfig = _.cloneDeep(this.leafFormConfig);
@@ -123,7 +123,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         this.populateFrameworkData();
       }
     });
-    this.subMenuConfig()
+    this.subMenuConfig();
   }
   fetchFrameWorkDetails() {
     return this.frameworkService.frameworkData$.pipe(takeUntil(this.onComponentDestroy$),
@@ -153,7 +153,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       if (!_.isUndefined(this.questionId)) {
         this.questionService.readQuestion(this.questionId, leafFormConfigfields)
           .subscribe((res) => {
-            console.log("question");
+            console.log('question');
             console.log(res);
             if (res.result) {
               this.questionMetaData = res.result.question;
@@ -170,19 +170,19 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
               }
 
-              if(this.questionInteractionType === 'slider'){
+              if (this.questionInteractionType === 'slider') {
                 if (this.questionMetaData.editorState) {
                   this.editorState = this.questionMetaData.editorState;
-                  this.sliderOptions=this.questionMetaData.interactions.response1;
-                  this.sliderDatas=this.questionMetaData.interactions.response1;
-                  this.hints =this.questionMetaData.hints;
-                  console.log("editorState");
+                  this.sliderOptions = this.questionMetaData.interactions.response1;
+                  this.sliderDatas = this.questionMetaData.interactions.response1;
+                  this.hints = this.questionMetaData.hints;
+                  console.log('editorState');
                 }
               }
 
               if (this.questionInteractionType === 'text') {
                 if (this.questionMetaData.editorState) {
-                  this.editorState = this.questionMetaData.editorState;              
+                  this.editorState = this.questionMetaData.editorState;
                 }
               }
 
@@ -198,8 +198,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
                 }, { templateId, numberOfOptions });
                 this.editorState.solutions = this.questionMetaData.editorState.solutions;
               }
-              const hierarchyChildren = this.questionSetHierarchy.children ? this.questionSetHierarchy.children : [];
-              this.setQuestionTitle(hierarchyChildren, this.questionId);
+              this.setQuestionTitle(this.questionId);
               if (!_.isEmpty(this.editorState.solutions)) {
                 this.selectedSolutionType = this.editorState.solutions[0].type;
                 this.solutionUUID = this.editorState.solutions[0].id;
@@ -231,8 +230,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       if (_.isUndefined(this.questionId)) {
         this.tempQuestionId = UUID.UUID();
         this.populateFormData();
-        const hierarchyChildren = this.questionSetHierarchy.children ? this.questionSetHierarchy.children : [];
-        this.setQuestionTitle(hierarchyChildren);
+        this.setQuestionTitle();
         if (this.questionInteractionType === 'default') {
           this.editorState = { question: '', answer: '', solutions: '' };
         }
@@ -250,11 +248,11 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   toolbarEventListener(event) {
-    console.log("button emitter");
+    console.log('button emitter');
     console.log(event);
     switch (event.button) {
       case 'saveContent':
-        this.showAddSecondaryQuestionCat=false
+        this.showAddSecondaryQuestionCat = false;
         this.saveContent();
         break;
       case 'cancelContent':
@@ -273,7 +271,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         break;
       case 'showTranslation':
         this.showTranslation = true;
-        break;  
+        break;
       default:
         break;
     }
@@ -300,8 +298,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     if ([undefined, ''].includes(this.editorState.question)) {
       this.showFormError = true;
       return;
-    }
-    else{
+    } else {
       this.showFormError = false;
     }
 
@@ -329,14 +326,13 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     if (this.questionInteractionType === 'slider') {
-      let min = _.get(this.sliderDatas,'validation.range.min');
-      let max = _.get(this.sliderDatas,'validation.range.max');
-      let step =  _.get(this.sliderDatas,'step');
+      const min = _.get(this.sliderDatas, 'validation.range.min');
+      const max = _.get(this.sliderDatas, 'validation.range.max');
+      const step =  _.get(this.sliderDatas, 'step');
       if (_.isEmpty(this.sliderDatas) || _.isEmpty(min) || _.isEmpty(max) || _.isEmpty(step)) {
         this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.005'));
         this.showFormError = true;
-      }
-      else{
+      } else {
         this.showFormError = false;
       }
     }
@@ -346,7 +342,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   redirectToQuestionset() {
     this.showConfirmPopup = false;
     setTimeout(() => {
-      this.showAddSecondaryQuestionCat ? this.questionEmitter.emit({ type: 'createNewContent',isChildQuestion:true }) : this.questionEmitter.emit({ status: false });
+      this.showAddSecondaryQuestionCat ? this.questionEmitter.emit({ type: 'createNewContent', isChildQuestion: true }) : this.questionEmitter.emit({ status: false });
       this.showAddSecondaryQuestionCat = false;
     }, 100);
   }
@@ -483,7 +479,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     metadata = _.merge(metadata, this.getDefaultSessionContext());
     metadata = _.merge(metadata, _.pickBy(this.childFormData, _.identity));
     // tslint:disable-next-line:max-line-length
-    return _.omit(metadata, ['question', 'numberOfOptions', 'options', 'allowMultiSelect', 'showEvidence', 'evidenceMimeType', 'showRemarks', 'markAsNotMandatory','leftAnchor','rightAnchor','step','numberOnly','characterLimit','dateFormat','autoCapture','remarksLimit']);
+    return _.omit(metadata, ['question', 'numberOfOptions', 'options', 'allowMultiSelect', 'showEvidence', 'evidenceMimeType', 'showRemarks', 'markAsNotMandatory', 'leftAnchor', 'rightAnchor', 'step', 'numberOnly', 'characterLimit', 'dateFormat', 'autoCapture', 'remarksLimit']);
   }
 
   getMcqQuestionHtmlBody(question, templateId) {
@@ -516,12 +512,12 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     const activeNode = this.treeService.getActiveNode();
     const selectedUnitId = _.get(activeNode, 'data.id');
     this.editorService.data = {};
-    let metaData = this.getQuestionMetadata();
+    const metaData = this.getQuestionMetadata();
     this.setQuestionTypeVlaues(metaData);
     return {
       nodesModified: {
         [questionId]: {
-          metadata:metaData,
+          metadata: metaData,
           objectType: 'Question',
           root: false,
           isNew: this.questionId ? false : true
@@ -532,63 +528,63 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   setQuestionTypeVlaues(metaData) {
-    metaData['showEvidence'] = this.childFormData.showEvidence;
-    if (metaData['showEvidence'] === 'Yes') {
-        metaData['evidence'] = {
-          required: "No",
+    metaData.showEvidence = this.childFormData.showEvidence;
+    if (metaData.showEvidence === 'Yes') {
+        metaData.evidence = {
+          required: 'No',
           mimeType: this.childFormData.evidenceMimeType,
           minCount: 1,
           maxCount: 1,
-          sizeLimit: "20480",
-        }
+          sizeLimit: '20480',
+        };
     }
-    metaData['showRemarks'] = this.childFormData.showRemarks;
-    if (metaData['showRemarks'] == 'Yes') {
-      metaData['remarks'] = {
+    metaData.showRemarks = this.childFormData.showRemarks;
+    if (metaData.showRemarks === 'Yes') {
+      metaData.remarks = {
         maxLength:  this.childFormData.remarksLimit,
-        required: "No"
-      }
+        required: 'No'
+      };
     }
-    metaData.interactions = metaData.interactions || {}
-    
-    metaData.interactions['validation'] = { required:this.childFormData.markAsNotMandatory ==='Yes'?'No':'Yes'}
-    if (this.childFormData.allowMultiSelect == 'Yes') {
+    metaData.interactions = metaData.interactions || {};
+
+    metaData.interactions.validation = { required: this.childFormData.markAsNotMandatory === 'Yes' ? 'No' : 'Yes'};
+    if (this.childFormData.allowMultiSelect === 'Yes') {
       metaData.responseDeclaration.response1.cardinality = 'multiple';
-      //todo add for html body also
+      // todo add for html body also
     }
 
     console.log(this.subMenus);
-    _.forEach(this.subMenus,(el:any)=>{
+    _.forEach(this.subMenus, (el: any) => {
       console.log(el);
-      if(el.id === 'addHint'){
-        metaData['hints']={
-          en:[el.value]
-        }
+      if (el.id === 'addHint') {
+        metaData.hints = {
+          en: [el.value]
+        };
       }
-    })
+    });
 
-    if(! _.isEmpty(this.sliderDatas) && this.questionInteractionType === 'slider'){
-      metaData.interactionTypes=[this.questionInteractionType];
-      metaData.primaryCategory=this.questionPrimaryCategory;
+    if (! _.isEmpty(this.sliderDatas) && this.questionInteractionType === 'slider') {
+      metaData.interactionTypes = [this.questionInteractionType];
+      metaData.primaryCategory = this.questionPrimaryCategory;
       metaData.interactions = {
         ...metaData.interactions,
-        response1:{
-          validation:this.sliderDatas.validation,
-          step:this.sliderDatas.step
+        response1: {
+          validation: this.sliderDatas.validation,
+          step: this.sliderDatas.step
         }
-      }
+      };
     }
-    
+
     if (this.questionInteractionType === 'date') {
-      metaData.interactionTypes=[this.questionInteractionType];
-      metaData.primaryCategory=this.questionPrimaryCategory;
+      metaData.interactionTypes = [this.questionInteractionType];
+      metaData.primaryCategory = this.questionPrimaryCategory;
       metaData.interactions = {
         ...metaData.interactions,
-        response1:{
-          validation:{pattern:this.childFormData.dateFormat},
-          autoCapture:this.childFormData.autoCapture
+        response1: {
+          validation: {pattern: this.childFormData.dateFormat},
+          autoCapture: this.childFormData.autoCapture
         }
-      }
+      };
   }
 
     if (this.questionInteractionType === 'text') {
@@ -606,7 +602,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
             number: this.childFormData.numberOnly
           }
         }
-      }
+      };
     }
     console.log(metaData);
     //  return metaData;
@@ -630,7 +626,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateQuestion() {
-    console.log("question update called");
+    console.log('question update called');
     const requestBody = this.prepareRequestBody();
     console.log(requestBody);
     this.showHideSpinnerLoader(true);
@@ -680,31 +676,40 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log('event is for telemetry', JSON.stringify(event));
   }
 
-  setQuestionTitle(hierarchyChildren, questionId?) {
+  setQuestionTitle(questionId?) {
     let index;
     let questionTitle = '';
+    const hierarchyChildren = this.treeService.getChildren();
     if (!_.isUndefined(questionId)) {
       _.forEach(hierarchyChildren, (child) => {
-        if(child.children){
-          index =  _.findIndex(child.children, { 'identifier': questionId });
-          const question  = child.children[index]; 
-          questionTitle = `Q${(index + 1).toString()} | ` + _.get(this.categoryLable, `${question.primaryCategory}`) || question.primaryCategory;
-        }
-        else{
-          index =  _.findIndex(hierarchyChildren, { 'identifier': questionId });
-          const question  = hierarchyChildren[index];  
-          questionTitle = `Q${(index + 1).toString()} | ` + _.get(this.categoryLable, `${question.primaryCategory}`) || question.primaryCategory;;
+        if (child.children) {
+          index =  _.findIndex(child.children, { identifier: questionId });
+          const question  = child.children[index];
+          // tslint:disable-next-line:max-line-length
+          questionTitle = `Q${(index + 1).toString()} | ` + _.get(this.categoryLabel, `${question.primaryCategory}`) || question.primaryCategory;
+        } else {
+          index =  _.findIndex(hierarchyChildren, { identifier: questionId });
+          const question  = hierarchyChildren[index];
+          // tslint:disable-next-line:max-line-length
+          questionTitle = `Q${(index + 1).toString()} | ` + _.get(this.categoryLabel, `${question.primaryCategory}`) || question.primaryCategory;
         }
       });
+
+      // const parentNode = this.treeService.getActiveNode().getParent();
+      // hierarchyChildren = parentNode.getChildren();
+      // index =  _.findIndex(hierarchyChildren, (node) => node.data.id === questionId);
+      // const question  = hierarchyChildren[index];
+      // questionTitle = `Q${(index + 1).toString()} | ` + question.data.primaryCategory;
+
     } else {
       index = hierarchyChildren.length;
       questionTitle = `Q${(index + 1).toString()} | `;
       if (!_.isUndefined(this.questionPrimaryCategory)) {
-        questionTitle = questionTitle + _.get(this.categoryLable, `${this.questionPrimaryCategory}`) || this.questionPrimaryCategory;
+        questionTitle = questionTitle + _.get(this.categoryLabel, `${this.questionPrimaryCategory}`) || this.questionPrimaryCategory;
       }
     }
     this.toolbarConfig.title = questionTitle;
-    console.log("questionTitle :",this.toolbarConfig.title);
+    console.log('questionTitle :', this.toolbarConfig.title);
   }
   output(event) { }
 
@@ -744,27 +749,27 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.questionMetaData && _.has(this.questionMetaData, formFieldCategory.code)) {
           formFieldCategory.default = this.questionMetaData[formFieldCategory.code];
           this.childFormData[formFieldCategory.code] = this.questionMetaData[formFieldCategory.code];
-        };
+        }
         try {
-          let availableAlias = {
+          const availableAlias = {
             dateFormat: 'interactions.response1.validation.pattern',
             autoCapture: 'interactions.response1.autoCapture',
             markAsNotMandatory: 'interactions.validation.required',
             numberOnly: 'interactions.response1.type.number',
             characterLimit: 'interactions.response1.validation.limit.maxLength',
-            remarksLimit:'remarks.maxLength',
-            evidenceMimeType:"evidence.mimeType"
-          }
+            remarksLimit: 'remarks.maxLength',
+            evidenceMimeType: 'evidence.mimeType'
+          };
           if (this.questionMetaData && _.has(availableAlias, formFieldCategory.code)) {
-            let defaultValue = _.get(this.questionMetaData,availableAlias[formFieldCategory.code]) 
-            if (formFieldCategory.code==='markAsNotMandatory') {
-              defaultValue ==='Yes'? (defaultValue='No') : (defaultValue='Yes')
+            let defaultValue = _.get(this.questionMetaData, availableAlias[formFieldCategory.code]);
+            if (formFieldCategory.code === 'markAsNotMandatory') {
+              defaultValue === 'Yes' ? (defaultValue = 'No') : (defaultValue = 'Yes');
             }
-            formFieldCategory.default = defaultValue
-            this.childFormData[formFieldCategory.code] = defaultValue  
+            formFieldCategory.default = defaultValue;
+            this.childFormData[formFieldCategory.code] = defaultValue;
           }
         } catch (error) {
-          
+
         }
       } else {
         // tslint:disable-next-line:max-line-length
@@ -801,7 +806,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         id: 'addHint',
         name: 'Add Hint',
         value: '',
-        label:'Hint',
+        label: 'Hint',
         enabled: false,
         type: 'input',
         show: _.get(this.sourcingSettings, 'showAddHints')
@@ -810,7 +815,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         id: 'addTip',
         name: 'Add Tip',
         value: '',
-        label:'Tip',
+        label: 'Tip',
         enabled: false,
         type: 'input',
         show: _.get(this.sourcingSettings, 'showAddTips')
@@ -818,7 +823,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       {
         id: 'addDependantQuestion',
         name: 'Add Dependant Question',
-        label:'',
+        label: '',
         value: [],
         enabled: false,
         type: '',
@@ -832,28 +837,28 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.editorCursor.clearQuestionMap();
   }
 
-  sliderData($event){
+  sliderData($event) {
     console.log($event);
-    let val=$event;
-    let obj={
-      validation:{
-        range:{
-          min:'',
-          max:''
+    const val = $event;
+    const obj = {
+      validation: {
+        range: {
+          min: '',
+          max: ''
         }
       },
-      step:''
+      step: ''
     };
-    if(val.leftAnchor){
-      obj['validation']['range']['min']=val.leftAnchor;
+    if (val.leftAnchor) {
+      obj.validation.range.min = val.leftAnchor;
     }
-    if(val.rightAnchor){
-      obj['validation']['range']['max']=val.rightAnchor;
+    if (val.rightAnchor) {
+      obj.validation.range.max = val.rightAnchor;
     }
-    if(val.step){
-      obj['step']=val.step;
+    if (val.step) {
+      obj.step = val.step;
     }
-    this.sliderDatas=obj;
+    this.sliderDatas = obj;
   }
 
 

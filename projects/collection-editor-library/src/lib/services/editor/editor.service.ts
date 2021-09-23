@@ -169,7 +169,7 @@ export class EditorService {
       }
     };
     const publishData =  _.get(data, 'publishData');
-    if(publishData) { 
+    if(publishData) {
      requestBody.request[objType] = { ...requestBody.request[objType], ...publishData };
     }
     const option = {
@@ -224,9 +224,9 @@ export class EditorService {
       }
     };
    const publishData =  _.get(event, 'publishData');
-   if(publishData) { 
+   if(publishData) {
     requestBody.request[objType] = { ...requestBody.request[objType], ...publishData };
-   } 
+   }
     const option = {
       url: `${url.CONTENT_PUBLISH}${contentId}`,
       data: requestBody
@@ -259,17 +259,17 @@ export class EditorService {
   async getMaxScore() {
     const rootNode = this.treeService.getFirstChild();
     const metadata = _.get(rootNode, 'data.metadata');
+    const questionIds = this.getContentChildrens();
     if (metadata.shuffle) {
-      const childrens = _.map(rootNode.getChildren(), (child) =>  child.data.id);
-      if (metadata.maxQuestions && !_.isEmpty(childrens) ) {
-        const { questions } =  await this.getQuestionList(_.take(childrens, metadata.maxQuestions)).toPromise();
+      if (metadata.maxQuestions && !_.isEmpty(questionIds) ) {
+        const { questions } =  await this.getQuestionList(_.take(questionIds, metadata.maxQuestions)).toPromise();
         const maxScore = this.calculateMaxScore(questions);
         return maxScore;
       } else {
-        return rootNode.countChildren();
+        return questionIds.length;
       }
     } else {
-      return metadata.maxQuestions ? metadata.maxQuestions :  rootNode.countChildren();
+      return metadata.maxQuestions ? metadata.maxQuestions : questionIds.length;
     }
   }
 
@@ -283,10 +283,7 @@ export class EditorService {
     const instance = this;
     this.data = {};
     const data = this.treeService.getFirstChild();
-    let clonedNodeModified = _.cloneDeep(this.treeService.treeCache.nodesModified)
-    for (const iterator in  clonedNodeModified) {
-       clonedNodeModified[iterator].metadata = _.omit(clonedNodeModified[iterator].metadata,['allowScoring'])
-    }
+    const clonedNodeModified = _.cloneDeep(this.treeService.treeCache.nodesModified);
     return {
       nodesModified: clonedNodeModified,
       hierarchy: instance._toFlatObj(data)
@@ -376,9 +373,10 @@ export class EditorService {
     this.telemetryService.error(telemetryErrorData);
   }
   // this method is used to get all the contents in course/question inside every module and sub module
-  getContentChildrens() {
-    const treeObj = this.treeService.getTreeObject();
+  getContentChildrens(activeNode?) {
+    let treeObj = this.treeService.getTreeObject();
     const contents = [];
+    if (activeNode) { treeObj = activeNode; }
     treeObj.visit((node) => {
       if (node.folder === false) {
         contents.push(node.data.id);

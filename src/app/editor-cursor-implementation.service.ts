@@ -49,6 +49,10 @@ export class EditorCursorImplementationService implements QuestionCursor, Editor
     this.questionMap.clear();
   }
 
+  getAllQuestionSet(identifiers: string[]): Observable<any>  {
+    return of({});
+  }
+
   private post(questionIds): Observable<any> {
     const httpOptions = {
         headers: { 'Content-Type': 'application/json' }
