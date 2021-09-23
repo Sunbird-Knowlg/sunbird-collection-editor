@@ -10,7 +10,7 @@ import { ToasterService } from '../../services/toaster/toaster.service';
 import { HelperService } from '../../services/helper/helper.service';
 import { IEditorConfig } from '../../interfaces/editor';
 import { Router } from '@angular/router';
-import { catchError, map, takeUntil, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { Observable, throwError, forkJoin, Subscription, Subject, merge, of } from 'rxjs';
 import * as _ from 'lodash-es';
 import { ConfigService } from '../../services/config/config.service';
@@ -299,7 +299,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       if (!_.isEmpty(hierarchyConfig.hierarchy)) {
         _.forEach(hierarchyConfig.hierarchy, (hierarchyValue) => {
           if (_.get(hierarchyValue, 'children')) {
-            hierarchyValue['children'] = this.getHierarchyChildrenConfig(_.get(hierarchyValue, 'children'));
+            hierarchyValue.children = this.getHierarchyChildrenConfig(_.get(hierarchyValue, 'children'));
           }
         });
       }
@@ -938,6 +938,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   setEvidence(control, depends: FormControl[], formGroup: FormGroup, loading, loaded) {
     control.isVisible = 'no';
+    control.range = evidenceMimeType;
     const response = merge(..._.map(depends, depend => depend.valueChanges)).pipe(
         switchMap((value: any) => {
             if (!_.isEmpty(value) && _.toLower(value) === 'yes') {
