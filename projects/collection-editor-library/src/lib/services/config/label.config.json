@@ -250,5 +250,8 @@
       "info" : {
          "001" : "QR code image generation is in progress. Please try downloading after sometime"
       }
-    }
+    },
+    "categoryLabels": {
+      "Multiselect Multiple Choice Question": "Multiple Choice Question"
+   }
  }

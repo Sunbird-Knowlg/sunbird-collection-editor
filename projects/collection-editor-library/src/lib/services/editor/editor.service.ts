@@ -12,6 +12,7 @@ import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 
 interface SelectedChildren {
+  label?:string,
   primaryCategory?: string;
   mimeType?: string;
   interactionType?: string;
@@ -328,6 +329,8 @@ export class EditorService {
         }
       }
     };
+    console.log('getCategoryDefinition');
+    console.log(req);
     return this.publicDataService.post(req);
   }
   fetchContentListDetails(req) {
