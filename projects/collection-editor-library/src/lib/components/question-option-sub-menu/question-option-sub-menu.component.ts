@@ -36,6 +36,6 @@ export class QuestionOptionSubMenuComponent implements OnInit {
 
   onValueChange(event, index) {
     if (this.subMenus[index].type === 'input') this.subMenus[index].value = event.target.value;
-    this.onChange.emit({ index: index, value: this.subMenus[index].value });
+    this.onChange.emit({ index: index, value: event.target.value});
   }
 }

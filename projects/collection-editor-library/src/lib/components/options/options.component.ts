@@ -15,22 +15,28 @@ export class OptionsComponent implements OnInit {
   @Input() showFormError;
   @Input() sourcingSettings;
   @Input() questionPrimaryCategory;
+  @Input() mapping = [];
   @Output() editorDataOutput: EventEmitter<any> = new EventEmitter<any>();
   public setCharacterLimit = 160;
   public setImageLimit = 1;
   public templateType = 'mcq-vertical';
-  subMenus: SubMenu[];
+  subMenus: SubMenu[][];
   parentMeta: any;
+  hints = [];
 
-  constructor(public telemetryService: EditorTelemetryService, public configService: ConfigService,public treeService:TreeService) { }
+  constructor(
+    public telemetryService: EditorTelemetryService,
+    public configService: ConfigService,
+    public treeService: TreeService
+  ) {}
 
   ngOnInit() {
-    this.parentMeta = this.treeService.getParent().data.metadata;
+    this.parentMeta = this.treeService.getFirstChild().data.metadata;
     if (!_.isUndefined(this.editorState.templateId)) {
       this.templateType = this.editorState.templateId;
     }
     this.editorDataHandler();
-    this.subMenuConfig();
+    this.mapping = _.get(this.editorState, 'responseDeclaration.response1.mapping') || [];
   }
 
   editorDataHandler(event?) {
@@ -57,10 +63,10 @@ export class OptionsComponent implements OnInit {
       interactionTypes: ['choice'],
       interactions: this.getInteractions(editorState.options),
       editorState: {
-        options
+        options,
       },
       qType: 'MCQ',
-      primaryCategory: this.questionPrimaryCategory || 'Multiple Choice Question'
+      primaryCategory: this.questionPrimaryCategory || 'Multiple Choice Question',
     };
     return metadata;
   }
@@ -73,9 +79,10 @@ export class OptionsComponent implements OnInit {
         type: 'integer',
         correctResponse: {
           value: editorState.answer,
-          outcomes: { SCORE: 1 }
-        }
-      }
+          outcomes: { SCORE: 1 },
+        },
+        mapping: this.mapping,
+      },
     };
     return responseDeclaration;
   }
@@ -84,13 +91,15 @@ export class OptionsComponent implements OnInit {
     let index;
     const interactOptions = _.map(options, (opt, key) => {
       index = Number(key);
-      return { label: opt.body, value: index };
+      const hints  = _.get(this.editorState, `interactions.response1.options[${index}].hints`) 
+      return { label: opt.body, value: index,hints:hints };
     });
+    this.subMenuConfig(options);
     const interactions = {
       response1: {
         type: 'choice',
-        options: interactOptions
-      }
+        options: interactOptions,
+      },
     };
     return interactions;
   }
@@ -100,22 +109,36 @@ export class OptionsComponent implements OnInit {
     this.editorDataHandler();
   }
 
-   subMenuChange({ index, value }) {
-    this.subMenus[index].value = value;
-   }
+  subMenuChange({ index, value },optionIndex) {
+    _.set(this.editorState, `interactions.response1.options[${optionIndex}].hints.en`,value)
+  }
 
-  subMenuConfig() {
-    this.subMenus = [
-    {
-      id: 'addHint',
-      name: 'Add Hint',
-      value: '',
-      label:'Hint',
-      enabled: false,
-      type: 'input',
-      show: this.sourcingSettings.showAddHints
-    },
-   ];
+  subMenuConfig(options) {
+    this.subMenus = []
+    options.map((opt, index) => {
+      const value  = _.get(this.editorState, `interactions.response1.options[${index}].hints.en`) 
+      this.subMenus[index] = [
+        {
+          id: 'addHint',
+          name: 'Add Hint',
+          value: value,
+          label: 'Hint',
+          enabled: value ? true : false,
+          type: 'input',
+          show: this.sourcingSettings.showAddHints,
+        },
+      ];
+    });
+  }
+
+  setScore(value, scoreIndex) {
+    let obj = {
+      respone: scoreIndex,
+      outcomes: {
+        score: value,
+      },
+    };
+    this.mapping[scoreIndex] = obj;
+    this.editorDataHandler();
   }
 }
-

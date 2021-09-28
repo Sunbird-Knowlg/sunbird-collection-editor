@@ -36,14 +36,16 @@
       <label for="answer_{{ i + 1 }}" class="mr-0 fs-0-785">{{configService.labelConfig?.lbl?.correctAns}}</label>
     </div>
     <div class="w-100">
-      <lib-question-option-sub-menu [subMenus]="subMenus" (onChange)="subMenuChange($event)"></lib-question-option-sub-menu>
-      <div *ngIf="parentMeta?.enableScoring">
+      <lib-question-option-sub-menu [subMenus]="subMenus[i]" (onChange)="subMenuChange($event,i)"></lib-question-option-sub-menu>
+      <div *ngIf="parentMeta?.allowScoring">
         <label for="score" class="d-block mt-10 optionLabel">Score</label> 
         <input
           class="sb-textbox false mb-30"
           [placeholder]="'Add score here'"
+          (change)="setScore($event.target.value,i)"
           *ngIf="sourcingSettings.showAddScore"
           type="number"
+          [value]="mapping[i]?.outcomes?.score"
         />
       </div>
     </div>

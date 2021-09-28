@@ -33,7 +33,7 @@
 
               <lib-options *ngIf="questionInteractionType === 'choice'" [questionPrimaryCategory]="questionPrimaryCategory"
                 [editorState]="editorState" [showFormError]="showFormError"
-                (editorDataOutput)="editorDataHandler($event)" [sourcingSettings]="sourcingSettings"></lib-options>
+                (editorDataOutput)="editorDataHandler($event)" [sourcingSettings]="sourcingSettings" [mapping]="scoreMapping"></lib-options>
 
               <lib-slider *ngIf="questionInteractionType === 'slider'" [editorDataInput]="sliderOptions" (onChange)="sliderData($event)"></lib-slider>
 
