@@ -32,7 +32,7 @@ describe('QuestionOptionSubMenuComponent', () => {
     component.subMenus = mockData.subMenus;
     spyOn(component, 'onMenuClick').and.callThrough();
     component.onMenuClick(2)
-    expect(component.subMenus[2].value.length).toBe(1);
+    expect(component.subMenus[2].value.length).toBe(0);
   });
   it('#onValueChange() should emit the value if type is input ', () => {
     component.subMenus = mockData.subMenus;
