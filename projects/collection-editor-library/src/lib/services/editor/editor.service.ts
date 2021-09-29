@@ -283,7 +283,7 @@ export class EditorService {
     const instance = this;
     this.data = {};
     const data = this.treeService.getFirstChild();
-    const clonedNodeModified = _.cloneDeep(this.treeService.treeCache.nodesModified);
+    let clonedNodeModified = _.cloneDeep(this.treeService.treeCache.nodesModified)
     return {
       nodesModified: clonedNodeModified,
       hierarchy: instance._toFlatObj(data)

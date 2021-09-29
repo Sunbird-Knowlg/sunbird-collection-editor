@@ -84,6 +84,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   sliderOptions: any = {};
   hints: any;
   categoryLabel: any = {};
+  scoreMapping: any;
   constructor(
     private questionService: QuestionService, private editorService: EditorService, public telemetryService: EditorTelemetryService,
     public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,
@@ -123,7 +124,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         this.populateFrameworkData();
       }
     });
-    this.subMenuConfig();
   }
   fetchFrameWorkDetails() {
     return this.frameworkService.frameworkData$.pipe(takeUntil(this.onComponentDestroy$),
@@ -158,6 +158,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
             if (res.result) {
               this.questionMetaData = res.result.question;
               this.populateFormData();
+              this.subMenuConfig()
               if (_.isUndefined(this.questionPrimaryCategory)) {
                 this.questionPrimaryCategory = this.questionMetaData.primaryCategory;
               }
@@ -188,15 +189,18 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
               if (this.questionInteractionType === 'choice') {
                 const responseDeclaration = this.questionMetaData.responseDeclaration;
+                this.scoreMapping = _.get(responseDeclaration,"response1.mapping")
                 const templateId = this.questionMetaData.templateId;
                 this.questionMetaData.editorState = this.questionMetaData.editorState;
                 const numberOfOptions = this.questionMetaData.editorState.options.length;
                 const options = _.map(this.questionMetaData.editorState.options, option => ({ body: option.value.body }));
                 const question = this.questionMetaData.editorState.question;
+                const interactions = this.questionMetaData.interactions
                 this.editorState = new McqForm({
                   question, options, answer: _.get(responseDeclaration, 'response1.correctResponse.value')
                 }, { templateId, numberOfOptions });
                 this.editorState.solutions = this.questionMetaData.editorState.solutions;
+                this.editorState.interactions = interactions
               }
               this.setQuestionTitle(this.questionId);
               if (!_.isEmpty(this.editorState.solutions)) {
@@ -237,6 +241,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.questionInteractionType === 'choice') {
           this.editorState = new McqForm({ question: '', options: [] }, {});
         }
+        this.subMenuConfig()
         this.showLoader = false;
       }
     }, (err: ServerResponse) => {
@@ -556,10 +561,15 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log(this.subMenus);
     _.forEach(this.subMenus, (el: any) => {
       console.log(el);
-      if (el.id === 'addHint') {
-        metaData.hints = {
-          en: [el.value]
-        };
+      if(el.id === 'addHint'){
+        metaData['hints']={
+          en:[el.value]
+        }
+      };
+      if(el.id === 'addTip'){
+        metaData['instructions']={
+          en:[el.value]
+        }
       }
     });
 
@@ -805,18 +815,18 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       {
         id: 'addHint',
         name: 'Add Hint',
-        value: '',
-        label: 'Hint',
-        enabled: false,
+        value: _.get(this.questionMetaData,'hints.en[0]'),
+        label:'Hint',
+        enabled: _.get(this.questionMetaData,'hints.en[0]') ? true : false,
         type: 'input',
         show: _.get(this.sourcingSettings, 'showAddHints')
       },
       {
         id: 'addTip',
         name: 'Add Tip',
-        value: '',
-        label: 'Tip',
-        enabled: false,
+        value: _.get(this.questionMetaData,'instructions.en[0]'),
+        label:'Tip',
+        enabled: _.get(this.questionMetaData,'instructions.en[0]') ? true : false,
         type: 'input',
         show: _.get(this.sourcingSettings, 'showAddTips')
       },
