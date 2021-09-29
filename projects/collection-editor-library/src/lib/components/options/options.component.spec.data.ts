@@ -96,19 +96,14 @@ export const mockOptionData = {
     primaryCategory: 'Multiple Choice Question',
   },
   subMenus : [
-    {
+    [{
       id: 'addHint',
       name: 'Add Hint',
       value: '',
       enabled: false,
       type: 'input',
-    },
-    {
-      id: 'addTip',
-      name: 'Add Tip',
-      value: '',
-      enabled: false,
-      type: 'input',
-    },
+      label: 'label',
+      show:true
+    }]
   ]
 };

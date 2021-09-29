@@ -684,7 +684,8 @@ describe('EditorComponent', () => {
       {
         questionSetId: component.collectionId,
         questionId: undefined,
-        type: interactionType
+        type: interactionType,
+        setChildQueston:undefined
       }
     );
     expect(component.pageId).toEqual('question');
