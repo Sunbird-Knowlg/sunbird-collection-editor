@@ -17,7 +17,7 @@
       <input
         (change)="onValueChange($event, index)"
         class="sb-textbox false w-100 my-10"
-        [placeholder]="menu.value ? menu.value : menu.name"
+        [placeholder]="menu.value || menu.name"
         type="text"
       />
       <button
