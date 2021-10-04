@@ -45,6 +45,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public isCurrentNodeRoot: boolean;
   public isQumlPlayer: boolean;
   public showQuestionTemplatePopup = false;
+  public deleteConfirmMessage;
   public showDeleteConfirmationPopUp = false;
   public showPreview = false;
   public actionType: string;
@@ -356,6 +357,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.submitHandler();
         break;
       case 'removeContent':
+        this.deleteConfirmMessage = this.configService.labelConfig?.lbl?.confirmDeleteNode;
         this.showDeleteConfirmationPopUp = true;
         break;
       case 'editContent':
@@ -655,6 +657,11 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.changeDetectionRef.detectChanges();
         break;
       case 'deleteNode':
+        this.deleteConfirmMessage = this.configService.labelConfig?.lbl?.confirmDeleteNode;
+        if (!event.isContent && _.has(this.editorConfig.config, 'hierarchy.level1')) {
+          // tslint:disable-next-line:max-line-length
+          this.deleteConfirmMessage = _.replace(this.deleteConfirmMessage, 'Node', _.get(this.editorConfig.config, 'hierarchy.level1.name'));
+        }
         this.showDeleteConfirmationPopUp = true;
         break;
       case 'createNewContent':

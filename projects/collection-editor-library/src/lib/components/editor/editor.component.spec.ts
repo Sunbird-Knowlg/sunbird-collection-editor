@@ -631,6 +631,7 @@ describe('EditorComponent', () => {
       }
     };
     component.isObjectTypeCollection = false;
+    component.editorConfig = editorConfig;
     spyOn(component, 'updateTreeNodeData').and.callFake(() => {
       return true;
     });
