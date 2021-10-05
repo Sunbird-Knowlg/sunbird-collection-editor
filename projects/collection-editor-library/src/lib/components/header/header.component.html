@@ -59,7 +59,7 @@
       {{labelConfigData.save_collection_btn_label}}
     </button>
 
-    <button *ngIf="visibility && visibility?.submitContent && labelConfigData?.hasChildren" class="sb-btn sb-btn-normal sb-btn-primary mr-10" (click)="buttonEmitter({type:'submitContent'})" libTelemetryInteract
+    <button *ngIf="visibility && visibility?.submitContent && labelConfigData?.hasChildren && !visibility.hideSubmitForReviewBtn" class="sb-btn sb-btn-normal sb-btn-primary mr-10" (click)="buttonEmitter({type:'submitContent'})" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('submit','click','submit', telemetryService.telemetryPageId)"
     >
       <i class="{{labelConfigData.submit_collection_btn_icon}}"></i> 
