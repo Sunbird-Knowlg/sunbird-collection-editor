@@ -287,6 +287,8 @@ export const mockData = {
       value: '',
       enabled: false,
       type: 'input',
+      label: 'label',
+      show:true
     },
     {
       id: 'addTip',
@@ -294,13 +296,17 @@ export const mockData = {
       value: '',
       enabled: false,
       type: 'input',
+      label: 'label',
+      show:true
     },
     {
       id: 'addDependantQuestion',
       name: 'Add Dependant Question',
       value: [{id:1}],
       enabled: false,
-      type:''
+      type: '',
+      label: 'label',
+      show:true
     },
   ]
 };

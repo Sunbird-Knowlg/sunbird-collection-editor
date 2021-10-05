@@ -7,6 +7,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { mockOptionData } from './options.component.spec.data';
 import { ConfigService } from '../../services/config/config.service';
 import { SuiModule } from 'ng2-semantic-ui-v9';
+import { TreeService } from '../../services/tree/tree.service';
 
 describe('OptionsComponent', () => {
   let component: OptionsComponent;
@@ -15,7 +16,7 @@ describe('OptionsComponent', () => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule, FormsModule, SuiModule ],
       declarations: [ OptionsComponent, TelemetryInteractDirective ],
-      providers: [ConfigService],
+      providers: [ConfigService,TreeService],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     })
     .compileComponents();
@@ -92,8 +93,8 @@ describe('OptionsComponent', () => {
   it('#subMenuChange() should set the sub-menu value ', () => {
     component.subMenus =  mockOptionData.subMenus;
     spyOn(component, 'subMenuChange').and.callThrough();
-    component.subMenuChange({index:1,value:'test'})
-    expect(component.subMenus[1].value).toBe('test');
+    component.subMenuChange({index:1,value:'test'},1)
+    expect(component.subMenus[0][0].value).toBe('test');
   })
 
 });
