@@ -501,11 +501,12 @@ input:focus-visible {
 }
 .sb-folder-menu {
   position: absolute;
-  top: 131px;
+  /*top: 131px;*/
   left: 35px;
   display: flex;
   justify-content: space-between;
   width: 24%;
+  margin-top: 5px;
 }
 .sb-disable-icon{color:#ccc !important;}
 .sb-w-240px{width:240px}
