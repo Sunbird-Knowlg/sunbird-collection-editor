@@ -93,17 +93,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     const { primaryCategory } = this.editorService.selectedChildren;
     this.questionPrimaryCategory = primaryCategory;
     this.pageStartTime = Date.now();
-    console.log('question page called');
-    console.log(this.editorService.selectedChildren);
-
     this.categoryLabel[primaryCategory] = _.get(this.editorService.selectedChildren, 'label');
-    console.log(this.categoryLabel);
   }
 
   ngOnInit() {
-    console.log('question page called');
-    console.log(this.sourcingSettings);
-    console.log(this.leafFormConfig);
     const { questionSetId, questionId, type } = this.questionInput;
     this.questionInteractionType = type;
     this.questionId = questionId;
@@ -113,7 +106,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.toolbarConfig.add_translation = true;
     this.solutionUUID = UUID.UUID();
     this.telemetryService.telemetryPageId = this.pageId;
+    if(this.leafFormConfig){
     this.initialLeafFormConfig = _.cloneDeep(this.leafFormConfig);
+    }
     this.initialize();
     this.framework = _.get(this.editorService.editorConfig, 'context.framework');
     this.fetchFrameWorkDetails().subscribe((frameworkDetails: any) => {
@@ -153,8 +148,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       if (!_.isUndefined(this.questionId)) {
         this.questionService.readQuestion(this.questionId, leafFormConfigfields)
           .subscribe((res) => {
-            console.log('question');
-            console.log(res);
             if (res.result) {
               this.questionMetaData = res.result.question;
               this.populateFormData();
@@ -164,7 +157,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
               }
               // tslint:disable-next-line:max-line-length
               this.questionInteractionType = this.questionMetaData.interactionTypes ? this.questionMetaData.interactionTypes[0] : 'default';
-              console.log(this.questionInteractionType);
               if (this.questionInteractionType === 'default') {
                 if (this.questionMetaData.editorState) {
                   this.editorState = this.questionMetaData.editorState;
@@ -689,19 +681,21 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   setQuestionTitle(questionId?) {
     let index;
     let questionTitle = '';
-    const hierarchyChildren = this.treeService.getChildren();
+    let hierarchyChildren = this.treeService.getChildren();
     if (!_.isUndefined(questionId)) {
-      _.forEach(hierarchyChildren, (child) => {
+        const parentNode = this.treeService.getActiveNode().getParent();
+        hierarchyChildren = parentNode.getChildren();
+        _.forEach(hierarchyChildren, (child) => {
         if (child.children) {
           index =  _.findIndex(child.children, { identifier: questionId });
           const question  = child.children[index];
           // tslint:disable-next-line:max-line-length
           questionTitle = `Q${(index + 1).toString()} | ` + _.get(this.categoryLabel, `${question.primaryCategory}`) || question.primaryCategory;
         } else {
-          index =  _.findIndex(hierarchyChildren, { identifier: questionId });
+          index =  _.findIndex(hierarchyChildren, (node) => node.data.id === questionId);
           const question  = hierarchyChildren[index];
           // tslint:disable-next-line:max-line-length
-          questionTitle = `Q${(index + 1).toString()} | ` + _.get(this.categoryLabel, `${question.primaryCategory}`) || question.primaryCategory;
+          questionTitle = `Q${(index + 1).toString()} | ` + _.get(this.categoryLabel, `${_.get(question, 'data.primaryCategory')}`) || question.primaryCategory;
         }
       });
 
