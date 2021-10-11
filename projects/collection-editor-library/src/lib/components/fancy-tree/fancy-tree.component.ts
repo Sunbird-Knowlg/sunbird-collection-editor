@@ -271,7 +271,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.visibility.addSibling = ((node.folder === true) && (!node.data.root) && !((node.getLevel() - 1) > this.config.maxDepth)) ? true : false;
       if (nodeLevel === 0) {
         this.visibility.addFromLibrary = _.isEmpty(_.get(this.config, 'children')) ? false : true;
-        this.visibility.createNew = _.isEmpty(_.get(this.config, 'children')) ? false : true;
+        this.visibility.createNew = _.isEmpty(_.get(this.config, 'children')) || _.get(this.config, 'enableQuestionCreation') === false ? false : true;
       } else {
         const hierarchylevelData = this.config.hierarchy[`level${nodeLevel}`];
         this.visibility.addFromLibrary = ((node.folder === false) || _.isEmpty(_.get(hierarchylevelData, 'children'))) ? false : true;
