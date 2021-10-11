@@ -1,389 +1,740 @@
 export const mockData = {
-    childMetadata: {
-        templateName: '',
-        required: [],
-        properties: [
-            {
-                code: 'name',
-                dataType: 'text',
-                description: 'Name of the content',
-                editable: true,
-                inputType: 'text',
-                label: 'Title',
-                name: 'Title',
-                placeholder: 'Title',
-                renderingHints: {
-                    class: 'sb-g-col-lg-1 required'
-                },
-                required: true,
-                visible: true,
-                validations: [
-                    {
-                        type: 'max',
-                        value: '120',
-                        message: 'Input is Exceeded'
-                    },
-                    {
-                        type: 'required',
-                        message: 'Title is required'
-                    }
-                ]
-            },
-            {
-                code: 'description',
-                dataType: 'text',
-                description: 'Description of the content',
-                editable: true,
-                inputType: 'textarea',
-                label: 'Description',
-                name: 'Description',
-                placeholder: 'Description',
-                renderingHints: {
-                    class: 'sb-g-col-lg-1 required'
-                },
-                required: true,
-                visible: true,
-                validations: [
-                    {
-                        type: 'max',
-                        value: '200',
-                        message: 'Input is Exceeded'
-                    },
-                    {
-                        type: 'required',
-                        message: 'Title is required'
-                    }
-                ]
-            },
-            {
-                code: 'keywords',
-                visible: true,
-                editable: true,
-                dataType: 'list',
-                name: 'Keywords',
-                renderingHints: {
-                    class: 'sb-g-col-lg-1 required'
-                },
-                description: 'Keywords for the content',
-                inputType: 'keywords',
-                label: 'keywords',
-                placeholder: 'Enter Keywords',
-                required: false,
-                validations: [
-                    {
-                        type: 'required',
-                        message: 'Keyword is required'
-                    }
-                ]
-            }
-        ]
-    },
-    questionMetaData: {
-        answer: '<p>adasd</p>',
-        body: '<p>asd</p>',
-        description: 'description',
-        editorState: {
-            answer: '<p>adasd</p>',
-            editorState: { answer: '<p>adasd</p>' },
-            name: 'Subjective Question',
-            primaryCategory: 'Subjective Question',
-            qType: 'SA',
-            question: '<p>asd</p>',
+  childMetadata: {
+    templateName: "",
+    required: [],
+    properties: [
+      {
+        code: "name",
+        dataType: "text",
+        description: "Name of the content",
+        editable: true,
+        inputType: "text",
+        label: "Title",
+        name: "Title",
+        placeholder: "Title",
+        renderingHints: {
+          class: "sb-g-col-lg-1 required",
         },
-        identifier: 'do_113219577241780224147',
-        keywords: ['keyword'],
-        languageCode: ['en'],
-        media: [],
-        mimeType: 'application/vnd.sunbird.question',
-        name: 'Mcq question ',
-        primaryCategory: 'Subjective Question',
-        qType: 'SA',
-        solutions: []
-    },
-    childMetadataUpdated: {
-        templateName: '',
-        required: [],
-        properties: [
-            {
-                code: 'name',
-                dataType: 'text',
-                description: 'Name of the content',
-                editable: false,
-                inputType: 'text',
-                label: 'Title',
-                name: 'Title',
-                placeholder: 'Title',
-                renderingHints: {
-                    class: 'sb-g-col-lg-1 required'
-                },
-                required: true,
-                visible: true,
-                validations: [
-                    {
-                        type: 'max',
-                        value: '120',
-                        message: 'Input is Exceeded'
-                    },
-                    {
-                        type: 'required',
-                        message: 'Title is required'
-                    }
-                ]
-            },
-            {
-                code: 'description',
-                dataType: 'text',
-                description: 'Description of the content',
-                editable: false,
-                inputType: 'textarea',
-                label: 'Description',
-                name: 'Description',
-                placeholder: 'Description',
-                renderingHints: {
-                    class: 'sb-g-col-lg-1 required'
-                },
-                required: true,
-                visible: true,
-                validations: [
-                    {
-                        type: 'max',
-                        value: '200',
-                        message: 'Input is Exceeded'
-                    },
-                    {
-                        type: 'required',
-                        message: 'Title is required'
-                    }
-                ]
-            },
-            {
-                "code": "board",
-                "default": "",
-                "visible": true,
-                "depends": [],
-                "editable": true,
-                "dataType": "text",
-                "renderingHints": {
-                    "class": "sb-g-col-lg-1"
-                },
-                "description": "Board",
-                "label": "Board/Syllabus",
-                "required": false,
-                "name": "Board/Syllabus",
-                "inputType": "select",
-                "placeholder": "Select Board/Syllabus"
-            },
-            {
-                code: 'keywords',
-                visible: true,
-                editable: false,
-                dataType: 'list',
-                name: 'Keywords',
-                renderingHints: {
-                    class: 'sb-g-col-lg-1 required'
-                },
-                description: 'Keywords for the content',
-                inputType: 'keywords',
-                label: 'keywords',
-                placeholder: 'Enter Keywords',
-                required: false,
-                validations: [
-                    {
-                        type: 'required',
-                        message: 'Keyword is required'
-                    }
-                ]
-            }
-        ]
-    },
-    formData: {
-        description: 'description',
-        keywords: ['keyword'],
-        name: ''
-    },
-    frameWorkDetails: {
-        frameworkData: [
-            {
-                "identifier": "ekstep_ncert_k-12_board",
-                "code": "board",
-                "terms": [
-                    {
-                        "associations": [
-                            {
-                                "identifier": "ekstep_ncert_k-12_learningoutcome_9686a2a712bdfdb43408555865cda57f2367699a",
-                                "code": "9686a2a712bdfdb43408555865cda57f2367699a",
-                                "translations": null,
-                                "name": "Inequalities in a triangle.",
-                                "description": "Inequalities in a triangle.",
-                                "index": 0,
-                                "category": "learningoutcome",
-                                "status": "Live"
-                            },
-                            {
-                                "identifier": "ekstep_ncert_k-12_topic_08859db5d07d93b99c12b3e5bceb975c582d31b7",
-                                "code": "08859db5d07d93b99c12b3e5bceb975c582d31b7",
-                                "translations": null,
-                                "name": "Nature around the kids",
-                                "description": "Nature around the kids",
-                                "index": 0,
-                                "category": "topic",
-                                "status": "Live"
-                            }],
-                        "identifier": "ekstep_ncert_k-12_board_cbse",
-                        "code": "cbse",
-                        "translations": null,
-                        "name": "CBSE",
-                        "description": "CBSE",
-                        "index": 10,
-                        "category": "board",
-                        "status": "Live"
-                    }
-                ],
-                "translations": null,
-                "name": "Board",
-                "description": "Board",
-                "index": 1,
-                "status": "Live"
-            }
+        required: true,
+        visible: true,
+        validations: [
+          {
+            type: "max",
+            value: "120",
+            message: "Input is Exceeded",
+          },
+          {
+            type: "required",
+            message: "Title is required",
+          },
         ],
-        topicList: [
-            {
-                "identifier": "ekstep_ncert_k-12_topic_08859db5d07d93b99c12b3e5bceb975c582d31b7",
-                "code": "08859db5d07d93b99c12b3e5bceb975c582d31b7",
-                "translations": null,
-                "name": "Nature around the kids",
-                "description": "Nature around the kids",
-                "index": 10,
-                "category": "topic",
-                "status": "Live"
-            }
-        ]
-    },
-    editorState: {
-        body: {
-            "answer": '</p> Yes</p>',
-            "question": "<p>Hi how are you ?</p>",
-            "editorState": {
-                "answer": '</p> Yes</p>'
-            },
-            "name": "Subjective Question",
-            "qType": "SA",
-            "primaryCategory": "Subjective Question"
+      },
+      {
+        code: "description",
+        dataType: "text",
+        description: "Description of the content",
+        editable: true,
+        inputType: "textarea",
+        label: "Description",
+        name: "Description",
+        placeholder: "Description",
+        renderingHints: {
+          class: "sb-g-col-lg-1 required",
         },
-        mediaobj: {}
+        required: true,
+        visible: true,
+        validations: [
+          {
+            type: "max",
+            value: "200",
+            message: "Input is Exceeded",
+          },
+          {
+            type: "required",
+            message: "Title is required",
+          },
+        ],
+      },
+      {
+        code: "keywords",
+        visible: true,
+        editable: true,
+        dataType: "list",
+        name: "Keywords",
+        renderingHints: {
+          class: "sb-g-col-lg-1 required",
+        },
+        description: "Keywords for the content",
+        inputType: "keywords",
+        label: "keywords",
+        placeholder: "Enter Keywords",
+        required: false,
+        validations: [
+          {
+            type: "required",
+            message: "Keyword is required",
+          },
+        ],
+      },
+    ],
+  },
+  questionMetaData: {
+    answer: "<p>adasd</p>",
+    body: "<p>asd</p>",
+    description: "description",
+    editorState: {
+      answer: "<p>adasd</p>",
+      editorState: { answer: "<p>adasd</p>" },
+      name: "Subjective Question",
+      primaryCategory: "Subjective Question",
+      qType: "SA",
+      question: "<p>asd</p>",
     },
-    eventData: {
-        body: { answer: "<p>dad</p>" },
-        editorState: { answer: "<p>dad</p>" },
-        name: "Subjective Question",
-        qType: "SA",
-        primaryCategory: "Subjective Question",
-        mediaobj: undefined
+    identifier: "do_113219577241780224147",
+    keywords: ["keyword"],
+    languageCode: ["en"],
+    media: [],
+    mimeType: "application/vnd.sunbird.question",
+    name: "Mcq question ",
+    primaryCategory: "Subjective Question",
+    qType: "SA",
+    solutions: [],
+  },
+  childMetadataUpdated: {
+    templateName: "",
+    required: [],
+    properties: [
+      {
+        code: "name",
+        dataType: "text",
+        description: "Name of the content",
+        editable: false,
+        inputType: "text",
+        label: "Title",
+        name: "Title",
+        placeholder: "Title",
+        renderingHints: {
+          class: "sb-g-col-lg-1 required",
+        },
+        required: true,
+        visible: true,
+        validations: [
+          {
+            type: "max",
+            value: "120",
+            message: "Input is Exceeded",
+          },
+          {
+            type: "required",
+            message: "Title is required",
+          },
+        ],
+      },
+      {
+        code: "description",
+        dataType: "text",
+        description: "Description of the content",
+        editable: false,
+        inputType: "textarea",
+        label: "Description",
+        name: "Description",
+        placeholder: "Description",
+        renderingHints: {
+          class: "sb-g-col-lg-1 required",
+        },
+        required: true,
+        visible: true,
+        validations: [
+          {
+            type: "max",
+            value: "200",
+            message: "Input is Exceeded",
+          },
+          {
+            type: "required",
+            message: "Title is required",
+          },
+        ],
+      },
+      {
+        code: "board",
+        default: "",
+        visible: true,
+        depends: [],
+        editable: true,
+        dataType: "text",
+        renderingHints: {
+          class: "sb-g-col-lg-1",
+        },
+        description: "Board",
+        label: "Board/Syllabus",
+        required: false,
+        name: "Board/Syllabus",
+        inputType: "select",
+        placeholder: "Select Board/Syllabus",
+      },
+      {
+        code: "keywords",
+        visible: true,
+        editable: false,
+        dataType: "list",
+        name: "Keywords",
+        renderingHints: {
+          class: "sb-g-col-lg-1 required",
+        },
+        description: "Keywords for the content",
+        inputType: "keywords",
+        label: "keywords",
+        placeholder: "Enter Keywords",
+        required: false,
+        validations: [
+          {
+            type: "required",
+            message: "Keyword is required",
+          },
+        ],
+      },
+    ],
+  },
+  formData: {
+    numberOnly: "yes",
+    name: "description",
+  },
+  frameWorkDetails: {
+    frameworkData: [
+      {
+        identifier: "ekstep_ncert_k-12_board",
+        code: "board",
+        terms: [
+          {
+            associations: [
+              {
+                identifier:
+                  "ekstep_ncert_k-12_learningoutcome_9686a2a712bdfdb43408555865cda57f2367699a",
+                code: "9686a2a712bdfdb43408555865cda57f2367699a",
+                translations: null,
+                name: "Inequalities in a triangle.",
+                description: "Inequalities in a triangle.",
+                index: 0,
+                category: "learningoutcome",
+                status: "Live",
+              },
+              {
+                identifier:
+                  "ekstep_ncert_k-12_topic_08859db5d07d93b99c12b3e5bceb975c582d31b7",
+                code: "08859db5d07d93b99c12b3e5bceb975c582d31b7",
+                translations: null,
+                name: "Nature around the kids",
+                description: "Nature around the kids",
+                index: 0,
+                category: "topic",
+                status: "Live",
+              },
+            ],
+            identifier: "ekstep_ncert_k-12_board_cbse",
+            code: "cbse",
+            translations: null,
+            name: "CBSE",
+            description: "CBSE",
+            index: 10,
+            category: "board",
+            status: "Live",
+          },
+        ],
+        translations: null,
+        name: "Board",
+        description: "Board",
+        index: 1,
+        status: "Live",
+      },
+    ],
+    topicList: [
+      {
+        identifier:
+          "ekstep_ncert_k-12_topic_08859db5d07d93b99c12b3e5bceb975c582d31b7",
+        code: "08859db5d07d93b99c12b3e5bceb975c582d31b7",
+        translations: null,
+        name: "Nature around the kids",
+        description: "Nature around the kids",
+        index: 10,
+        category: "topic",
+        status: "Live",
+      },
+    ],
+  },
+  editorState: {
+    body: {
+      answer: "</p> Yes</p>",
+      question: "<p>Hi how are you ?</p>",
+      editorState: {
+        answer: "</p> Yes</p>",
+      },
+      name: "Subjective Question",
+      qType: "SA",
+      primaryCategory: "Subjective Question",
     },
-    subMenus:[
+    mediaobj: {},
+  },
+  eventData: {
+    body: { answer: "<p>dad</p>" },
+    editorState: { answer: "<p>dad</p>" },
+    name: "Subjective Question",
+    qType: "SA",
+    primaryCategory: "Subjective Question",
+    mediaobj: undefined,
+  },
+  subMenus: [
     {
-      id: 'addHint',
-      name: 'Add Hint',
-      value: '',
+      id: "addHint",
+      name: "Add Hint",
+      value: "",
       enabled: false,
-      type: 'input',
-      label: 'label',
-      show:true
+      type: "input",
+      label: "label",
+      show: true,
     },
     {
-      id: 'addTip',
-      name: 'Add Tip',
-      value: '',
+      id: "addTip",
+      name: "Add Tip",
+      value: "",
       enabled: false,
-      type: 'input',
-      label: 'label',
-      show:true
+      type: "input",
+      label: "label",
+      show: true,
     },
     {
-      id: 'addDependantQuestion',
-      name: 'Add Dependant Question',
-      value: [{id:1}],
+      id: "addDependantQuestion",
+      name: "Add Dependant Question",
+      value: [{ id: 1 }],
       enabled: false,
-      type: '',
-      label: 'label',
-      show:true
+      type: "",
+      label: "label",
+      show: true,
     },
-  ]
+  ],
 };
 
 export const readQuestionMock = {
-    "responseCode": "OK",
-    "result": {
-        "question": {
-            "media": [],
-            "editorState": {
-                "answer": "<p>This is anwser</p>",
-                "question": "<figure class=\"table\"><table><tbody><tr><td>adssa</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>dasd</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>dsadas</td></tr></tbody></table></figure><ul><li>dasdasdasd</li></ul>",
-                "solutions": [
-                    {
-                        "id": "07c3e152-374c-5430-ddb0-e4001c84c573",
-                        "type": "html",
-                        "value": "<p>Solution for the subjectiove question</p>"
-                    }
-                ]
+  id: "api.question.read",
+  ver: "3.0",
+  ts: "2021-09-30T09:18:52ZZ",
+  params: {
+    resmsgid: "04f55276-8ddc-4a23-a52e-a188e2ef5c2c",
+    msgid: null,
+    err: null,
+    status: "successful",
+    errmsg: null,
+  },
+  responseCode: "OK",
+  result: {
+    question: {
+      instructions: {
+        en: [null],
+      },
+      showRemarks: "No",
+      mimeType: "application/vnd.sunbird.question",
+      media: [],
+      body: "<p>Text 4</p>",
+      editorState: {
+        question: "<p>Text 4</p>",
+      },
+      interactions: {
+        validation: {
+          required: "Yes",
+        },
+        response1: {
+          validation: {
+            limit: {
+              maxLength: "120",
             },
-            "primaryCategory": "Subjective Question",
-            "identifier": "do_11330103476396851218",
-            "solutions": [
-                {
-                    "id": "07c3e152-374c-5430-ddb0-e4001c84c573",
-                    "type": "html",
-                    "value": "<p>Solution for the subjectiove question</p>"
-                }
-            ],
-            "qType": "SA",
-            "answer": "<p>This is anwser</p>",
-            "name": "Subjective Question ",
-        }
-    }
+          },
+          type: {
+            number: "Yes",
+          },
+        },
+      },
+      primaryCategory: "Text",
+      identifier: "do_1133684252619653121161",
+      solutions: [],
+      hints: {
+        en: [null],
+      },
+      languageCode: ["en"],
+      interactionTypes: ["text"],
+      name: "Text 4",
+      showEvidence: "No",
+    },
+  },
 };
 
 export const collectionHierarchyMock = {
-    "responseCode": "OK",
-    "result": {
-        "questionSet": {
-            "copyright": "NIT123",
-            "primaryCategory": "Practice Question Set",
-            "children": [
-                {
-                    "parent": "do_11330102570702438417",
-                    "copyright": "NIT123",
-                    "code": "0b145869-f65e-0303-0994-c4b82560bdb6",
-                    "prevStatus": "Review",
-                    "objectType": "Question",
-                    "primaryCategory": "Subjective Question",
-                    "identifier": "do_11330103476396851218",
-                }
-            ]
-        }
-    }
+  id: "api.questionset.hierarchy.get",
+  ver: "3.0",
+  ts: "2021-09-30T09:18:52ZZ",
+  params: {
+    resmsgid: "ea22708e-0dd2-475f-96e4-3c40fbd6c8a6",
+    msgid: null,
+    err: null,
+    status: "successful",
+    errmsg: null,
+  },
+  responseCode: "OK",
+  result: {
+    questionSet: {
+      unitIdentifiers: ["do_113351795021979648162"],
+      organisationId: "937dd865-b256-4c1a-9830-a9b5b89f0913",
+      keywords: ["one"],
+      subject: ["Mathematics"],
+      channel: "01309282781705830427",
+      language: ["English"],
+      mimeType: "application/vnd.sunbird.questionset",
+      showHints: "No",
+      objectType: "QuestionSet",
+      gradeLevel: ["Class 4"],
+      primaryCategory: "Observation",
+      children: [
+        {
+          enableMultipleInstances: "No",
+          parent: "do_1133610108714352641210",
+          code: "aad1b079-434b-01c1-7cb7-2d4e846a5242",
+          allowSkip: "Yes",
+          containsUserData: "No",
+          instances: "school",
+          channel: "01309282781705830427",
+          language: ["English"],
+          mimeType: "application/vnd.sunbird.questionset",
+          showHints: "No",
+          createdOn: "2021-09-07T12:58:47.288+0000",
+          objectType: "QuestionSet",
+          allowMultipleInstances: "Yes",
+          primaryCategory: "Survey",
+          children: [
+            {
+              parent: "do_1133613119675432961255",
+              code: "5f2fffa7-f528-093b-ac7c-22539aae53cd",
+              evidence: {
+                required: "No",
+                mimeType: ["image", "video"],
+                minCount: 1,
+                maxCount: 1,
+                sizeLimit: "20480",
+              },
+              subject: ["Mathematics"],
+              showRemarks: "Yes",
+              channel: "01309282781705830427",
+              language: ["English"],
+              medium: ["English"],
+              mimeType: "application/vnd.sunbird.question",
+              templateId: "mcq-vertical",
+              createdOn: "2021-09-17T14:09:01.467+0000",
+              objectType: "Question",
+              gradeLevel: ["Class 4"],
+              primaryCategory: "Multiselect Multiple Choice Question",
+              contentDisposition: "inline",
+              lastUpdatedOn: "2021-09-28T05:02:21.070+0000",
+              contentEncoding: "gzip",
+              showSolutions: "No",
+              allowAnonymousAccess: "Yes",
+              identifier: "do_1133684243780976641152",
+              lastStatusChangedOn: "2021-09-17T14:09:01.467+0000",
+              visibility: "Parent",
+              showTimer: "No",
+              author: "check1@yopmail.com",
+              index: 1,
+              qType: "MCQ",
+              languageCode: ["en"],
+              version: 1,
+              versionKey: "1632805341087",
+              showFeedback: "No",
+              license: "CC BY 4.0",
+              interactionTypes: ["choice"],
+              framework: "ekstep_ncert_k-12",
+              depth: 2,
+              createdBy: "5a587cc1-e018-4859-a0a8-e842650b9d64",
+              compatibilityLevel: 4,
+              name: "MCQ 1",
+              topic: ["Forest"],
+              board: "CBSE",
+              remarks: {
+                maxLength: "100",
+                required: "No",
+              },
+              status: "Draft",
+              showEvidence: "Yes",
+            },
+            {
+              parent: "do_1133613119675432961255",
+              code: "1dc8f706-56fa-f0c2-d3e3-d412fed54b8e",
+              subject: ["Mathematics"],
+              showRemarks: "No",
+              channel: "01309282781705830427",
+              language: ["English"],
+              medium: ["English"],
+              mimeType: "application/vnd.sunbird.question",
+              createdOn: "2021-09-17T14:09:35.957+0000",
+              objectType: "Question",
+              gradeLevel: ["Class 4"],
+              primaryCategory: "Slider",
+              contentDisposition: "inline",
+              lastUpdatedOn: "2021-09-17T14:09:35.957+0000",
+              contentEncoding: "gzip",
+              showSolutions: "No",
+              allowAnonymousAccess: "Yes",
+              identifier: "do_1133684246606397441155",
+              lastStatusChangedOn: "2021-09-17T14:09:35.957+0000",
+              visibility: "Parent",
+              showTimer: "No",
+              author: "check1@yopmail.com",
+              index: 2,
+              languageCode: ["en"],
+              version: 1,
+              versionKey: "1631887775958",
+              showFeedback: "No",
+              license: "CC BY 4.0",
+              interactionTypes: ["slider"],
+              framework: "ekstep_ncert_k-12",
+              depth: 2,
+              createdBy: "5a587cc1-e018-4859-a0a8-e842650b9d64",
+              compatibilityLevel: 4,
+              name: "slider 2",
+              topic: ["Forest"],
+              board: "CBSE",
+              status: "Draft",
+              showEvidence: "No",
+            },
+            {
+              parent: "do_1133613119675432961255",
+              code: "34fe1e2f-62d6-776d-27ce-e876a536e3ce",
+              subject: ["Mathematics"],
+              channel: "01309282781705830427",
+              language: ["English"],
+              medium: ["English"],
+              mimeType: "application/vnd.sunbird.question",
+              createdOn: "2021-09-17T14:10:19.179+0000",
+              objectType: "Question",
+              gradeLevel: ["Class 4"],
+              primaryCategory: "Date",
+              contentDisposition: "inline",
+              lastUpdatedOn: "2021-09-17T14:10:19.179+0000",
+              contentEncoding: "gzip",
+              showSolutions: "No",
+              allowAnonymousAccess: "Yes",
+              identifier: "do_1133684250147143681157",
+              lastStatusChangedOn: "2021-09-17T14:10:19.179+0000",
+              visibility: "Parent",
+              showTimer: "No",
+              author: "check1@yopmail.com",
+              index: 3,
+              languageCode: ["en"],
+              version: 1,
+              versionKey: "1631887819180",
+              showFeedback: "No",
+              license: "CC BY 4.0",
+              interactionTypes: ["date"],
+              framework: "ekstep_ncert_k-12",
+              depth: 2,
+              createdBy: "5a587cc1-e018-4859-a0a8-e842650b9d64",
+              compatibilityLevel: 4,
+              name: "Date 3",
+              topic: ["Forest"],
+              board: "CBSE",
+              status: "Draft",
+            },
+            {
+              parent: "do_1133613119675432961255",
+              code: "81fddcd3-7c19-4fe8-4f5a-2463c52db69e",
+              subject: ["Mathematics"],
+              showRemarks: "No",
+              channel: "01309282781705830427",
+              language: ["English"],
+              medium: ["English"],
+              mimeType: "application/vnd.sunbird.question",
+              createdOn: "2021-09-17T14:10:49.361+0000",
+              objectType: "Question",
+              gradeLevel: ["Class 4"],
+              primaryCategory: "Text",
+              contentDisposition: "inline",
+              lastUpdatedOn: "2021-09-17T14:11:06.836+0000",
+              contentEncoding: "gzip",
+              showSolutions: "No",
+              allowAnonymousAccess: "Yes",
+              identifier: "do_1133684252619653121161",
+              lastStatusChangedOn: "2021-09-17T14:10:49.361+0000",
+              visibility: "Parent",
+              showTimer: "No",
+              author: "check1@yopmail.com",
+              index: 4,
+              languageCode: ["en"],
+              version: 1,
+              versionKey: "1631887866844",
+              showFeedback: "No",
+              license: "CC BY 4.0",
+              interactionTypes: ["text"],
+              framework: "ekstep_ncert_k-12",
+              depth: 2,
+              createdBy: "5a587cc1-e018-4859-a0a8-e842650b9d64",
+              compatibilityLevel: 4,
+              name: "Text 4",
+              topic: ["Forest"],
+              board: "CBSE",
+              status: "Draft",
+              showEvidence: "No",
+            },
+          ],
+          contentDisposition: "inline",
+          lastUpdatedOn: "2021-09-27T11:26:48.406+0000",
+          contentEncoding: "gzip",
+          showSolutions: "No",
+          allowAnonymousAccess: "Yes",
+          identifier: "do_1133613119675432961255",
+          lastStatusChangedOn: "2021-09-07T12:58:47.288+0000",
+          requiresSubmit: "No",
+          visibility: "Parent",
+          showTimer: "No",
+          index: 1,
+          setType: "materialised",
+          languageCode: ["en"],
+          version: 1,
+          versionKey: "1631019527288",
+          showFeedback: "No",
+          license: "CC BY 4.0",
+          depth: 1,
+          compatibilityLevel: 5,
+          name: "Section one",
+          navigationMode: "non-linear",
+          timeLimits: {},
+          shuffle: true,
+          status: "Draft",
+        },
+      ],
+      contentEncoding: "gzip",
+      showSolutions: "No",
+      identifier: "do_1133610108714352641210",
+      visibility: "Default",
+      showTimer: "No",
+      author: "check1@yopmail.com",
+      entityType: "Block",
+      consumerId: "fa13b438-8a3d-41b1-8278-33b0c50210e4",
+      childNodes: [
+        "do_1133684243780976641152",
+        "do_1133613119675432961255",
+        "do_1133684246606397441155",
+        "do_1133684250147143681157",
+        "do_1133684252619653121161",
+      ],
+      maxScore: 5,
+      languageCode: ["en"],
+      version: 1,
+      license: "CC BY 4.0",
+      name: "Observation",
+      status: "Draft",
+      code: "99d28b66-794b-e952-0107-4df851aa618a",
+      allowScoring: "Yes",
+      allowSkip: "Yes",
+      containsUserData: "No",
+      medium: ["English"],
+      createdOn: "2021-09-07T02:46:12.393+0000",
+      contentDisposition: "inline",
+      lastUpdatedOn: "2021-09-28T05:02:21.122+0000",
+      collectionId: "do_113351795021332480160",
+      allowAnonymousAccess: "Yes",
+      lastStatusChangedOn: "2021-09-07T02:46:12.393+0000",
+      creator: "check1@yopmail.com",
+      requiresSubmit: "No",
+      setType: "materialised",
+      versionKey: "1632805341122",
+      showFeedback: "No",
+      framework: "ekstep_ncert_k-12",
+      depth: 0,
+      createdBy: "4e397c42-495e-4fdb-8558-f98176230916",
+      compatibilityLevel: 5,
+      navigationMode: "non-linear",
+      timeLimits: {},
+      shuffle: true,
+      board: "CBSE",
+      programId: "0b465ba0-0547-11ec-a788-ddb68ca633dd",
+    },
+  },
 };
 
-export const mockTreeService = {
-    getChildren: () => {
-        return ['do_11330103476396851218', 'do_233'];
+export const sourcingSettingsMock = {
+  enforceCorrectAnswer: false,
+  showSolution: false,
+  showAddHints: true,
+  showAddScore: false,
+  showAddTips: true,
+  showAddTranslation: true,
+  showAddSecondaryQuestion: false,
+};
+
+export const leafFormConfigMock = [
+  {
+    code: "name",
+    dataType: "text",
+    description: "Name of the content",
+    editable: true,
+    inputType: "text",
+    label: "Title",
+    name: "Title",
+    placeholder: "Title",
+    renderingHints: {
+      class: "sb-g-col-lg-2 required",
     },
-    getActiveNode: () => {
+    required: true,
+    visible: true,
+    validations: [
+      {
+        type: "max",
+        value: "100",
+        message: "Input is Exceeded",
+      },
+      {
+        type: "required",
+        message: "Title is required",
+      },
+    ],
+    default: "Text 4",
+  },
+  {
+    code: "numberOnly",
+    name: "numberOnly",
+    label: "Number Only",
+    placeholder: "Number Only",
+    description: "Number only",
+    default: "Yes",
+    dataType: "text",
+    inputType: "checkbox",
+    editable: true,
+    required: false,
+    visible: true,
+    renderingHints: {
+      class: "sb-g-col-lg-1",
+    },
+  }
+];
+
+export const mockTreeService = {
+  getChildren: () => {
+    return ["do_11330103476396851218", "do_233"];
+  },
+  getActiveNode: () => {
+    return {
+      data: {
+        id: "do_11330103476396851218",
+      },
+      getParent: () => {
         return {
-            data: {
-                id : 'do_11330103476396851218'
-            },
-            getParent: () => {
-                return {
-                    getChildren: () => {
-                        return [{
-                            data: {
-                                id : 'do_11330103476396851218'
-                            }
-                        }];
-                    }
-                };
-            }
+          getChildren: () => {
+            return [
+              {
+                data: {
+                  id: "do_11330103476396851218",
+                },
+              },
+            ];
+          },
         };
-    }
+      },
+    };
+  },
 };
