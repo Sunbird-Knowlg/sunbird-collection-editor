@@ -160,7 +160,7 @@ export class TreeService {
 
   getParent() {
     const selectedNode = this.getActiveNode();
-    return selectedNode.getParent();
+    return !_.isEmpty(selectedNode) ? selectedNode.getParent() : this.getNodeById(this.previousNode) || this.getFirstChild();
   }
 
   getFirstChild() {
@@ -197,6 +197,14 @@ export class TreeService {
     const nodes = [];
     this.getActiveNode().visit((node) => {
       nodes.push(node);
+    });
+    return nodes;
+  }
+
+  getLeafNodes() {
+    const nodes = [];
+    this.getActiveNode().visit((node) => {
+      if (!_.includes(node.icon, 'folder')) { nodes.push(node); }
     });
     return nodes;
   }
