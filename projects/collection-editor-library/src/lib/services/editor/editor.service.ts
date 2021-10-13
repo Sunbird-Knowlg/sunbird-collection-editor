@@ -34,6 +34,8 @@ export class EditorService {
   public initialize(config: IEditorConfig) {
     this._editorConfig = config;
     if (this.configService.editorConfig && this.configService.editorConfig.default) {
+      // tslint:disable-next-line:max-line-length
+      this._editorConfig.config.assetConfig = _.assign(this.configService.editorConfig.default.assetConfig, this._editorConfig.config.assetConfig);
       this._editorConfig.config = _.assign(this.configService.editorConfig.default, this._editorConfig.config);
     }
     this._editorMode = _.get(this._editorConfig, 'config.mode').toLowerCase();
