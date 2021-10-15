@@ -10,6 +10,11 @@
       "DEFAULT_PARAMS_FIELDS": "instructions",
       "SYSYTEM_UPDATE": "questionset/v4/system/update/"
     },
+    "Question": {
+      "HIERARCHY_READ": "questionset/v1/hierarchy",
+      "CREATE": "question/v1/create",
+      "UPDATE": "question/v1/update/"
+    },
     "Collection": {
       "HIERARCHY_READ": "content/v3/hierarchy",
       "HIERARCHY_UPDATE": "content/v3/hierarchy/update",
