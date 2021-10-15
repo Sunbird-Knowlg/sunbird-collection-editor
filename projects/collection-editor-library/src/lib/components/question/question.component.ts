@@ -55,6 +55,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   questionMetaData: any;
   questionInteractionType;
   questionId;
+  creationContext;
   tempQuestionId;
   questionSetId;
   public setCharacterLimit = 160;
@@ -81,10 +82,11 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
-    const { questionSetId, questionId, type } = this.questionInput;
+    const { questionSetId, questionId, type, creationContext } = this.questionInput;
     this.questionInteractionType = type;
     this.questionId = questionId;
     this.questionSetId = questionSetId;
+    this.creationContext = creationContext;
     this.toolbarConfig = this.editorService.getToolbarConfig();
     this.toolbarConfig.showPreview = false;
     this.solutionUUID = UUID.UUID();
@@ -308,6 +310,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   saveQuestion() {
+    if(_.get(this.creationContext, 'objectType') === 'question') {
+      this.upsertQuestion();
+    }
     if (_.isUndefined(this.questionId)) {
       this.createQuestion();
     }
@@ -458,6 +463,26 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     };
   }
 
+  upsertQuestion() {
+    const requestBody = 
+      {
+        question: this.getQuestionMetadata()
+      }
+    this.showHideSpinnerLoader(true);
+    this.questionService.upsertQuestion(this.questionId, requestBody).pipe(
+      finalize(() => {
+        this.showHideSpinnerLoader(false);
+      })).subscribe((response: ServerResponse) => {
+        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.013'));
+        this.redirectToQuestionset();
+      }, (err: ServerResponse) => {
+          const errInfo = {
+            errorMsg: 'Failed to save question. Please try again...',
+          };
+          this.editorService.apiErrorHandling(err, errInfo);
+        });
+  }
+
   createQuestion() {
     const requestBody = this.prepareRequestBody();
     this.showHideSpinnerLoader(true);
@@ -526,19 +551,28 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   setQuestionTitle(questionId?) {
     let index;
-    let questionTitle = '';
-    let hierarchyChildren = this.treeService.getChildren();
-    if (!_.isUndefined(questionId)) {
-      const parentNode = this.treeService.getActiveNode().getParent();
-      hierarchyChildren = parentNode.getChildren();
-      index =  _.findIndex(hierarchyChildren, (node) => node.data.id === questionId);
-      const question  = hierarchyChildren[index];
-      questionTitle = `Q${(index + 1).toString()} | ` + question.data.primaryCategory;
-    } else {
-      index = hierarchyChildren.length;
+    let questionTitle = '';    
+    if(_.get(this.creationContext, 'objectType') === 'question') {
+      index = _.get(this.creationContext, 'index');
       questionTitle = `Q${(index + 1).toString()} | `;
       if (!_.isUndefined(this.questionPrimaryCategory)) {
         questionTitle = questionTitle + this.questionPrimaryCategory;
+      }
+    }
+    else {
+      let hierarchyChildren = this.treeService.getChildren();
+      if (!_.isUndefined(questionId)) {
+        const parentNode = this.treeService.getActiveNode().getParent();
+        hierarchyChildren = parentNode.getChildren();
+        index =  _.findIndex(hierarchyChildren, (node) => node.data.id === questionId);
+        const question  = hierarchyChildren[index];
+        questionTitle = `Q${(index + 1).toString()} | ` + question.data.primaryCategory;
+      } else {
+        index = hierarchyChildren.length;
+        questionTitle = `Q${(index + 1).toString()} | `;
+        if (!_.isUndefined(this.questionPrimaryCategory)) {
+          questionTitle = questionTitle + this.questionPrimaryCategory;
+        }
       }
     }
     this.toolbarConfig.title = questionTitle;
