@@ -326,10 +326,12 @@ export const questionEditorConfig = {
       lastName: 'Bhuva',
       orgIds: ['01309282781705830427']
     },
-    // identifier: 'do_1133868683942297601875', // do_11330102570702438417
+    identifier: 'do_113388757019344896124', // do_113388220110217216123
     collectionIdentifier: 'do_1133872840783626241899',
     collectionPrimaryCategory: 'Exam Question Set',
     collectionObjectType: 'QuestionSet',
+    sourcingResourceStatus: 'Review Pending',
+    sourcingResourceStatusClass: 'sb-color-warning',    
     authToken: ' ',
     sid: 'iYO2K6dOSdA0rwq7NeT1TDzS-dbqduvV',
     did: '7e85b4967aebd6704ba1f604f20056b6',
@@ -432,14 +434,18 @@ export const questionEditorConfig = {
     ],
     labels: {
       save_collection_btn_label: 'Save as Draft',
+      reject_collection_btn_label: 'Request Changes',
     }
   },
   config: {
-    mode: 'edit', // edit / review / read / sourcingReview // orgReview
+    mode: 'review', // edit / review / read / sourcingReview // orgReview
     objectType: 'Question',
     primaryCategory: 'Multiple Choice Question',    
     mimeType: 'application/vnd.sunbird.question',
-    interactionType: 'choice'
+    interactionType: 'choice',
+    showSourcingStatus: true,
+    showCorrectionComments: true,
+    isReadOnlyMode: true
   }
 };
 

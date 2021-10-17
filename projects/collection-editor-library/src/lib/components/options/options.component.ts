@@ -11,6 +11,7 @@ import { ConfigService } from '../../services/config/config.service';
 export class OptionsComponent implements OnInit {
   @Input() editorState: any;
   @Input() showFormError;
+  @Input() isReadOnlyMode;
   @Output() editorDataOutput: EventEmitter<any> = new EventEmitter<any>();
   public setCharacterLimit = 160;
   public setImageLimit = 1;

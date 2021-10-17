@@ -9,6 +9,7 @@ import { EditorTelemetryService } from '../../services/telemetry/telemetry.servi
 import { ToasterService } from '../../services/toaster/toaster.service';
 import { HelperService } from '../../services/helper/helper.service';
 import { IEditorConfig } from '../../interfaces/editor';
+import { ICreationContext } from '../../interfaces/CreationContext';
 import { Router } from '@angular/router';
 import { catchError, map, takeUntil, tap } from 'rxjs/operators';
 import { Observable, throwError, forkJoin, Subscription, Subject } from 'rxjs';
@@ -27,6 +28,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   @Output() editorEmitter = new EventEmitter<any>();
   @ViewChild('modal') private modal;
   public questionComponentInput: any = {};
+  public creationContext: ICreationContext;
   public collectionTreeNodes: any;
   public selectedNodeData: any = {};
   public templateList: any;
@@ -101,7 +103,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
     if(this.objectType === 'question') {
       this.collectionId = _.get(this.editorConfig, 'context.collectionIdentifier');
-      this.initializeFrameworkAndChannel();
+      this.initializeFrameworkAndChannel();      
       this.editorService.getCategoryDefinition(_.get(this.editorConfig, 'context.collectionPrimaryCategory'), 
       this.editorConfig.context.channel, _.get(this.editorConfig, 'context.collectionObjectType'))
       .subscribe(
@@ -800,13 +802,16 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   redirectToQuestionTab(mode, interactionType?) {
 
     let questionId = this.selectedNodeData?.data?.metadata?.identifier;
-    let creationContext;
 
     if(this.objectType === 'question') {
       questionId = _.get(this.editorConfig, 'context.identifier');
       interactionType = _.get(this.editorConfig, 'config.interactionType');
-      creationContext =  {
+      this.creationContext =  {
         objectType: this.objectType,
+        isReadOnlyMode: _.get(this.editorConfig, 'config.isReadOnlyMode'),
+        correctionComments: _.get(this.editorConfig, 'context.correctionComments'),
+        mode: mode,
+        editableFields: _.get(this.editorConfig, 'config.editableFields'),
         index: _.get(this.editorConfig, 'context.index')
       }
 
@@ -814,8 +819,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     
     this.questionComponentInput = {
       questionSetId: this.collectionId,
-      questionId: mode === 'edit' ? questionId : undefined,
-      creationContext: creationContext, // Pass the creation context to the question-component
+      questionId: questionId,
+      creationContext: this.creationContext, // Pass the creation context to the question-component
       type: interactionType
     };
     this.pageId = 'question';
@@ -823,11 +828,18 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   questionEventListener(event: any) {
     this.selectedNodeData = undefined;
-    this.mergeCollectionExternalProperties().subscribe((res: any) => {
-      this.pageId = 'collection_editor';
-      this.telemetryService.telemetryPageId = this.pageId;
-      this.isEnableCsvAction = true;
-    });
+    if(this.objectType === 'question' && event.type === 'close') {
+      this.editorEmitter.emit({
+        close: true, library: 'collection_editor', action: event.actionType, identifier: event.identifier        
+      });
+    }    
+    else {
+      this.mergeCollectionExternalProperties().subscribe((res: any) => {
+        this.pageId = 'collection_editor';
+        this.telemetryService.telemetryPageId = this.pageId;
+        this.isEnableCsvAction = true;
+      });
+    }
   }
 
   get contentPolicyUrl() {
