@@ -23,9 +23,9 @@
       <!--span data-title="View review comments" ((click)="buttonEmitter({type: 'showReviewcomments'})" *ngIf="buttonLoaders?.showReviewComment" libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('view_comments','click','launch', telemetryService.telemetryPageId)">
         <i class="icon comment flex-as-baseline mr-05" aria-hidden="true"></i>{{configService.labelConfig?.lbl?.viewComments}}
       </span-->
-      <span class="fs-0-92" data-title="View review comments" (click)="buttonEmitter({type: 'showReviewcomments'})" *ngIf="buttonLoaders?.showReviewComment" libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('view_comments','click','launch', telemetryService.telemetryPageId)">
+      <span class="fs-0-92" data-title="View review comments" (click)="buttonEmitter({type: 'showReviewcomments'})" *ngIf="buttonLoaders?.showReviewComment || visibility.showCorrectionComments" libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('view_comments','click','launch', telemetryService.telemetryPageId)">
         <i class="icon comment flex-as-baseline mr-05" aria-hidden="true"></i>{{configService.labelConfig?.lbl?.viewComments}}
-      </span>
+      </span>      
       <a *ngIf="visibility.showOriginPreviewUrl && originPreviewUrl" class="sb-color-primary mr-8 pl-10 fs-0-785 font-weight-bold"
       href="{{originPreviewUrl}}" target="_blank">{{configService.labelConfig?.lbl?.viewOnOrigin}}</a>
       <label *ngIf="visibility.showOriginPreviewUrl && !originPreviewUrl" class="sb-color-error mr-8 pl-10 fs-0-785 font-weight-bold">
@@ -63,7 +63,7 @@
     <button *ngIf="visibility && visibility?.submitContent && !bulkUploadStatus && labelConfigData?.hasChildren && !visibility.hideSubmitForReviewBtn" class="sb-btn sb-btn-normal sb-btn-primary mr-10" (click)="buttonEmitter({type:'submitContent'})" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('submit','click','submit', telemetryService.telemetryPageId)"
     >
-      <i class="{{labelConfigData.submit_collection_btn_icon}}"></i> 
+      <i class="{{labelConfigData.submit_collection_btn_icon}}"></i>
       {{labelConfigData.submit_collection_btn_label}}
     </button>
 
@@ -114,18 +114,35 @@
       {{ labelConfigData.preview_question_btn_label}}
     </button>
     <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10"
-      (click)="buttonEmitter({type: 'cancelContent'})" libTelemetryInteract
+      (click)="buttonEmitter({type: 'cancelContent'})" libTelemetryInteract *ngIf="!visibility.showSourcingStatus"
       [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('cancel','click','launch', telemetryService.telemetryPageId)">
       <i *ngIf="labelConfigData.cancel_question_btn_icon" class="{{labelConfigData.cancel_question_btn_icon}}"></i>
       {{ labelConfigData.cancel_question_btn_label}}
     </button>
-    <button class="sb-btn sb-btn-normal sb-btn-primary" (click)="buttonEmitter({type: 'saveContent'})"
+    <button class="sb-btn sb-btn-normal sb-btn-primary mr-10" (click)="buttonEmitter({type: 'saveContent'})" *ngIf="!visibility.showSourcingStatus"
       [ngClass]="!buttonLoaders?.saveButtonLoader ? '': 'sb-btn-loading-spinner sb-btn-outline-disabled'"
       libTelemetryInteract
       [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('save','click','submit', telemetryService.telemetryPageId)">
       <div class="sb-loading-spinner" *ngIf="buttonLoaders?.saveButtonLoader" role="status" aria-hidden="true"></div>
       <i *ngIf="labelConfigData.save_question_btn_icon && !buttonLoaders?.saveButtonLoader" class="{{labelConfigData.save_question_btn_icon}}"></i>
       {{ labelConfigData.save_question_btn_label}}
+    </button>
+    <button *ngIf="visibility && visibility?.submitContent && labelConfigData?.questionContribution && !visibility.hideSubmitForReviewBtn && !visibility.showSourcingStatus" class="sb-btn sb-btn-normal sb-btn-secondary" (click)="buttonEmitter({type:'submitContent'})" libTelemetryInteract
+    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('submit','click','submit', telemetryService.telemetryPageId)"
+    > 
+      <i class="{{labelConfigData.submit_collection_btn_icon}}"></i>
+      {{labelConfigData.submit_collection_btn_label}}
+    </button>
+    <button *ngIf="visibility && visibility?.rejectContent && labelConfigData?.questionContribution" class="sb-btn sb-btn-outline-error sb-btn-normal ripple mr-10" (click)="openRequestChangePopup('rejectContent')" libTelemetryInteract
+    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('reject','click','submit', telemetryService.telemetryPageId)">
+      <i class="{{labelConfigData.reject_collection_btn_icon}}"></i> 
+      {{labelConfigData.reject_collection_btn_label}}
+    </button>
+
+    <button *ngIf="visibility && visibility?.publishContent && labelConfigData?.questionContribution" class="sb-btn sb-btn-secondary sb-btn-normal ripple" (click)="openPublishCheckListPopup('publishContent')" libTelemetryInteract
+    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('publish','click','submit', telemetryService.telemetryPageId)">
+      <i class="{{labelConfigData.publish_collection_btn_icon}}"></i> 
+      {{labelConfigData.publish_collection_btn_label}}
     </button>
   </div> 
 </div>
@@ -145,7 +162,6 @@
               <textarea type="text" class="wmd-input width-100 sb-form-control" id="wmd-input" [(ngModel)]="rejectComment" placeholder="Add comment" name="rejectComment" required maxlength="{{configService?.editorConfig?.rejectCommentsMaxLength}}"></textarea>
               <label class="ui basic red error label pt-1 mt-5 width-100"
                   *ngIf="FormControl.form.controls.rejectComment?.touched && !FormControl.form.valid">{{configService.labelConfig?.lbl?.fillComments}} </label>
-
               <!-- <textarea rows="4" name="moretext" class="sb-form-control" placeholder="Type here..."></textarea>
               <span class="characters-left">1000 Characters left</span> -->
           </div>

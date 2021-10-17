@@ -33,8 +33,7 @@ export class QuestionService {
   }
 
   upsertQuestion(questionId, questionBody) {  
-    let mode = questionId ? 'UPDATE' : 'CREATE';
-    questionId = questionId ? questionId : UUID.UUID(); 
+    let mode = questionId ? 'UPDATE' : 'CREATE';  
     const req = {
       url: `${this.configService.urlConFig.URLS[this.editorService.editorConfig.config.objectType][mode]}${mode === 'UPDATE' ? questionId : ''}`,
       data: {

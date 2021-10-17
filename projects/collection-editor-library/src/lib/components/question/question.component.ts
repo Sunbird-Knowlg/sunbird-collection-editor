@@ -15,6 +15,7 @@ import { FrameworkService } from '../../services/framework/framework.service';
 import { TreeService } from '../../services/tree/tree.service';
 import { EditorCursor } from '../../collection-editor-cursor.service';
 import { filter, finalize, take, takeUntil } from 'rxjs/operators';
+import { ICreationContext } from '../../interfaces/CreationContext';
 @Component({
   selector: 'lib-question',
   templateUrl: './question.component.html',
@@ -30,11 +31,13 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() questionEmitter = new EventEmitter<any>();
   private onComponentDestroy$ = new Subject<any>();
   toolbarConfig: any = {};
+  public terms = false;
   public editorState: any = {};
   public showPreview = false;
   public mediaArr: any = [];
   public videoShow = false;
   public showFormError = false;
+  public actionType: string;
   selectedSolutionType: string;
   selectedSolutionTypeIndex: string;
   showSolutionDropDown = true;
@@ -55,13 +58,17 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   questionMetaData: any;
   questionInteractionType;
   questionId;
-  creationContext;
+  creationContext: ICreationContext;
   tempQuestionId;
   questionSetId;
   public setCharacterLimit = 160;
   public showLoader = true;
+  public isReadOnlyMode = false;
+  public contentComment : string;
+  public showReviewModal: boolean = false;
   questionSetHierarchy: any;
   showConfirmPopup = false;
+  showSubmitConfirmPopup = false;
   validQuestionData = false;
   questionPrimaryCategory: string;
   pageId = 'question';
@@ -69,7 +76,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   public framework;
   public frameworkDetails: any = {};
   public buttonLoaders = {
-    saveButtonLoader: false
+    saveButtonLoader: false,
+    'review': false
   };
   constructor(
     private questionService: QuestionService, private editorService: EditorService, public telemetryService: EditorTelemetryService,
@@ -87,8 +95,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.questionId = questionId;
     this.questionSetId = questionSetId;
     this.creationContext = creationContext;
+    this.isReadOnlyMode = this.creationContext?.isReadOnlyMode;
     this.toolbarConfig = this.editorService.getToolbarConfig();
     this.toolbarConfig.showPreview = false;
+    if(_.get(this.creationContext, 'objectType') === 'question') this.toolbarConfig.questionContribution = true;
     this.solutionUUID = UUID.UUID();
     this.telemetryService.telemetryPageId = this.pageId;
     this.initialLeafFormConfig = _.cloneDeep(this.leafFormConfig);
@@ -174,9 +184,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
                   this.editorState.solutions = this.editorState.solutions[0].value;
                 }
               }
-              if (this.questionMetaData.media) {
+            if (this.questionMetaData.media) {
                 this.mediaArr = this.questionMetaData.media;
               }
+              this.contentComment = _.get(this.creationContext, 'correctionComments');              
               this.showLoader = false;
             }
           }, (err: ServerResponse) => {
@@ -206,14 +217,27 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  get contentPolicyUrl() {
+    return this.editorService.contentPolicyUrl;
+  }
+
   toolbarEventListener(event) {
+    this.actionType = event.button;
     switch (event.button) {
       case 'saveContent':
         this.saveContent();
         break;
+      case 'submitContent':        
+        this.submitHandler();
+        break;
       case 'cancelContent':
         this.handleRedirectToQuestionset();
         break;
+      case 'rejectContent':
+        this.rejectQuestion(event.comment);
+        break;
+      case 'publishContent':
+        this.publishQuestion(event);
       case 'backContent':
         this.handleRedirectToQuestionset();
         break;
@@ -224,6 +248,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         this.previewFormData(true);
         this.showPreview = false;
         this.toolbarConfig.showPreview = false;
+        break;
+      case 'showReviewcomments':
+        this.showReviewModal = !this.showReviewModal;
         break;
       default:
         break;
@@ -238,11 +265,86 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  handleRedirectToChapterList() {
+    if (_.isUndefined(this.questionId)) {
+      this.showConfirmPopup = true;
+    } else {
+      this.redirectToChapterList();
+    }
+  }
+
+  submitHandler() {
+    this.validateQuestionData();
+    this.validateFormFields();
+    if(this.showFormError === false)  this.showSubmitConfirmPopup = true;    
+  }
+
   saveContent() {
     this.validateQuestionData();
     this.validateFormFields();
-    if (this.showFormError === false) {
+    if (this.showFormError === false) {      
       this.saveQuestion();
+    }
+  }
+
+  sendForReview() {    
+    let callback = function () {
+      this.editorService.reviewContent(this.questionId).subscribe(data => {
+        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.002'));
+        this.redirectToChapterList();
+      }, err => {
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.002'));
+      });    
+    }   
+    callback = callback.bind(this); 
+    this.upsertQuestion(callback);
+  }
+
+  requestForChanges(comment) {    
+      this.editorService.submitRequestChanges(this.questionId, comment).subscribe(res => {
+        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.003'));
+        this.redirectToChapterList();
+      }, err => {
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.003'));
+      });    
+  }
+
+  sendQuestionForPublish(event) {
+    this.editorService.publishContent(this.questionId, event).subscribe(res => {
+      this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.004'));
+      this.redirectToChapterList();
+    }, err => {
+      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.004'));
+    });
+  }
+
+  rejectQuestion(comment) {
+    const editableFields = _.get(this.creationContext, 'editableFields');    
+    if (_.get(this.creationContext, 'mode') === 'orgreview' && editableFields && !_.isEmpty(editableFields[_.get(this.creationContext, 'mode')])) {
+      this.validateFormFields();
+      if(this.showFormError === true) {
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
+        return false;
+      }      
+      let callback = this.requestForChanges.bind(this, [comment]);
+      this.upsertQuestion(callback);
+    } else {
+      this.requestForChanges(comment);
+    }
+  }
+
+  publishQuestion(event) {
+    const editableFields = _.get(this.creationContext, 'editableFields');    
+    if (_.get(this.creationContext, 'mode') === 'orgreview' && editableFields && !_.isEmpty(editableFields[_.get(this.creationContext, 'mode')])) {
+      this.validateFormFields();
+      if(this.showFormError === true) {
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
+        return false;
+      }      
+      let callback = this.sendQuestionForPublish.bind(this, [event]);
+      this.upsertQuestion(callback);
+    } else {
+      this.sendQuestionForPublish(event);
     }
   }
 
@@ -283,6 +385,13 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     }, 100);
   }
 
+  redirectToChapterList() {
+    this.showConfirmPopup = false;
+    setTimeout(() => {
+      this.questionEmitter.emit({ type: 'close', actionType: this.actionType, identifier: this.questionId });
+    }, 100);
+  }
+
   editorDataHandler(event, type?) {
     if (type === 'question') {
       this.editorState.question = event.body;
@@ -311,14 +420,20 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   saveQuestion() {
     if(_.get(this.creationContext, 'objectType') === 'question') {
-      this.upsertQuestion();
+      if(_.get(this.creationContext, 'mode') === 'edit') {
+        let callback = this.redirectToChapterList.bind(this);
+        this.upsertQuestion(callback);
+      }
+      else this.upsertQuestion(undefined);
     }
-    if (_.isUndefined(this.questionId)) {
-      this.createQuestion();
-    }
-    if (!_.isUndefined(this.questionId)) {
-      this.updateQuestion();
-    }
+    else {
+      if (_.isUndefined(this.questionId)) {
+        this.createQuestion();
+      }
+      if (!_.isUndefined(this.questionId)) {
+        this.updateQuestion();
+      }
+  }
   }
 
   videoDataOutput(event) {
@@ -463,18 +578,30 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     };
   }
 
-  upsertQuestion() {
-    const requestBody = 
-      {
-        question: this.getQuestionMetadata()
+  prepareQuestionBody () {
+    const requestBody = this.questionId ?
+    {
+      question: _.omit(this.getQuestionMetadata(), ['mimeType'])     
+    } : 
+    {
+      question: {
+        code: UUID.UUID(),
+        ...this.getQuestionMetadata()
       }
+    }
+    return requestBody;
+  }
+
+  upsertQuestion(callback) {
+    const requestBody = this.prepareQuestionBody();
     this.showHideSpinnerLoader(true);
     this.questionService.upsertQuestion(this.questionId, requestBody).pipe(
       finalize(() => {
         this.showHideSpinnerLoader(false);
       })).subscribe((response: ServerResponse) => {
         this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.013'));
-        this.redirectToQuestionset();
+        this.setQuestionId(_.get(response, 'result.identifier'));
+        if (callback) callback();
       }, (err: ServerResponse) => {
           const errInfo = {
             errorMsg: 'Failed to save question. Please try again...',
@@ -517,8 +644,11 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  showHideSpinnerLoader(status: boolean) {
+  showHideSpinnerLoader(status: boolean, type?) {
     this.buttonLoaders.saveButtonLoader = status;
+    if(type) {
+      this.buttonLoaders[type] = status;
+    }
   }
 
   previewContent() {
@@ -547,6 +677,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getTelemetryEvents(event) {
     console.log('event is for telemetry', JSON.stringify(event));
+  }
+
+  setQuestionId(questionId) {
+    this.questionId = questionId;
   }
 
   setQuestionTitle(questionId?) {
