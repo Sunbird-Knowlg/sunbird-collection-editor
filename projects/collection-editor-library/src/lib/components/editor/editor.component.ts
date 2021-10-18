@@ -670,9 +670,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.setChildQuestion = event.isChildQuestion;
         if (this.editorService.checkIfContentsCanbeAdded()) {
           this.buttonLoaders.addFromLibraryButtonLoader = true;
-          console.log("createNewContent called");
           this.templateList=this.editorService.templateList;
-          console.log(this.templateList);
           this.saveContent().then((message: string) => {
             this.buttonLoaders.addFromLibraryButtonLoader = false;
             this.showQuestionTemplatePopup = true;
