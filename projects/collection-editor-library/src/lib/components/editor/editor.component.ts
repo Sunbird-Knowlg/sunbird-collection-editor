@@ -670,6 +670,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.setChildQuestion = event.isChildQuestion;
         if (this.editorService.checkIfContentsCanbeAdded()) {
           this.buttonLoaders.addFromLibraryButtonLoader = true;
+          this.templateList=this.editorService.templateList;
           this.saveContent().then((message: string) => {
             this.buttonLoaders.addFromLibraryButtonLoader = false;
             this.showQuestionTemplatePopup = true;
@@ -692,6 +693,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         _.get(this.editorService.editorConfig.config, `hierarchy.level${this.selectedNodeData.getLevel() - 1}.children`)
       );
     }
+    this.editorService.templateList=this.templateList;
   }
 
   deleteNode() {
@@ -786,7 +788,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       questionSetId: this.collectionId,
       questionId: mode === 'edit' ? this.selectedNodeData.data.metadata.identifier : undefined,
       type: interactionType,
-      setChildQueston:this.setChildQuestion
+      setChildQueston:mode === 'edit' ? false : this.setChildQuestion
     };
     if(mode === 'edit'){
       this.editorService.selectedChildren = {

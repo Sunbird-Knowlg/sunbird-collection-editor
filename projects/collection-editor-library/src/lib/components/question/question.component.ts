@@ -85,6 +85,11 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   hints: any;
   categoryLabel: any = {};
   scoreMapping: any;
+  condition:any;
+  targetOption:any;
+  responseVariable = 'response1';
+  QuestionId:any;
+  showOptions:boolean;
   constructor(
     private questionService: QuestionService, private editorService: EditorService, public telemetryService: EditorTelemetryService,
     public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,
@@ -94,6 +99,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.questionPrimaryCategory = primaryCategory;
     this.pageStartTime = Date.now();
     this.categoryLabel[primaryCategory] = _.get(this.editorService.selectedChildren, 'label');
+    
   }
 
   ngOnInit() {
@@ -242,6 +248,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       };
       this.editorService.apiErrorHandling(err, errInfo);
     });
+   
   }
 
   toolbarEventListener(event) {
@@ -505,6 +512,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   prepareRequestBody() {
     const questionId = this.questionId ? this.questionId : UUID.UUID();
+    this.QuestionId=questionId;
     const data = this.treeService.getFirstChild();
     const activeNode = this.treeService.getActiveNode();
     const selectedUnitId = _.get(activeNode, 'data.id');
@@ -550,7 +558,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       // todo add for html body also
     }
 
-    console.log(this.subMenus);
     _.forEach(this.subMenus, (el: any) => {
       console.log(el);
       if(el.id === 'addHint'){
@@ -617,6 +624,13 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       finalize(() => {
         this.showHideSpinnerLoader(false);
       })).subscribe((response: ServerResponse) => {
+        if(!this.showAddSecondaryQuestionCat){
+          console.log("dependent Question data");
+          console.log(this.QuestionId)
+          let result = _.get(response.result.identifiers,this.QuestionId)
+          console.log(result);
+          this.buildCondition(result);
+        }
         this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.007'));
         this.redirectToQuestionset();
       }, (err: ServerResponse) => {
@@ -636,6 +650,14 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       finalize(() => {
         this.showHideSpinnerLoader(false);
       })).subscribe((response: ServerResponse) => {
+        console.log("")
+        if(this.showAddSecondaryQuestionCat){
+          console.log("parent Question data");
+          let result = _.get(response.result.identifiers,this.questionId)
+          console.log(result);
+          this.editorService.parentQuestionId=result;
+        }
+
         this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.008'));
         this.redirectToQuestionset();
       }, (err: ServerResponse) => {
@@ -805,6 +827,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
   subMenuConfig() {
+    console.log("submenu called");
+    console.log(this.sourcingSettings);
     this.subMenus = [
       {
         id: 'addHint',
@@ -834,6 +858,16 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         show: _.get(this.sourcingSettings, 'showAddSecondaryQuestion') && !this.questionInput.setChildQueston
       },
     ];
+    console.log(this.questionInput);
+    console.log("submenus");
+    _.forEach(this.subMenus, (el) => {
+      if(el.id === "addDependantQuestion" && el.show === false){
+        this.showOptions=true;
+      }
+      else{
+        this.showOptions=false;
+      }
+    });
   }
   ngOnDestroy() {
     this.onComponentDestroy$.next();
@@ -865,5 +899,45 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.sliderDatas = obj;
   }
 
+
+  conditionHandler(e) {
+    this.condition = e.target.value;
+  }
+
+  optionHandler(e) {
+    this.targetOption = e.target.value;
+  }
+
+  buildCondition(dependentId:any) {
+    console.log(this.targetOption, this.condition);
+
+    let branchingLogic = {
+        [this.editorService.parentQuestionId]: {
+          target: [`${dependentId}`],
+          preCondition: {},
+        },
+        [dependentId]: {
+          target: [],
+          source: [this.editorService.parentQuestionId],
+          preCondition: {
+            and: [
+              {
+                [this.condition]: [
+                  {
+                    var: `${this.editorService.parentQuestionId}.${this.responseVariable}.value`,
+                    type: "responseDeclaration",
+                  },
+                  +this.targetOption,
+                ],
+              },
+            ],
+          },
+        },
+    };
+    console.log("branchingLogic");
+    console.log(branchingLogic);
+    this.editorService.branchingLogic = {...branchingLogic};
+    console.log(this.editorService.branchingLogic);
+  }
 
 }
