@@ -11,6 +11,7 @@ import * as _ from 'lodash-es';
 export class PublishChecklistComponent implements OnInit {
   @Input() publishchecklist: any;
   @Input() actionType: any;
+  @Input() objectType: string;
   @Output() publishEmitter = new EventEmitter<any>();
   public isButtonEnable = false;
   public fieldsAvailable: any;
@@ -21,6 +22,7 @@ export class PublishChecklistComponent implements OnInit {
 
   ngOnInit(): void {
     this.isButtonEnable = _.isEmpty(this.publishchecklist) ? true : false;
+    if(!this.objectType) this.objectType = 'collection';
   }
 
   handlePopUpEvents(type, modal) {

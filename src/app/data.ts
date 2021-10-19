@@ -445,7 +445,12 @@ export const questionEditorConfig = {
     interactionType: 'choice',
     showSourcingStatus: true,
     showCorrectionComments: true,
-    isReadOnlyMode: true
+    isReadOnlyMode: true,
+    editableFields: {
+      //sourcingreview: ['instructions'],
+      orgReview: ['name', 'learningOutcome'],
+      review: ['name', 'learningOutcome'],
+    }
   }
 };
 
