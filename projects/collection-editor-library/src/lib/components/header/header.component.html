@@ -24,7 +24,7 @@
         <i class="icon comment flex-as-baseline mr-05" aria-hidden="true"></i>{{configService.labelConfig?.lbl?.viewComments}}
       </span-->
       <span class="fs-0-92" data-title="View review comments" (click)="buttonEmitter({type: 'showReviewcomments'})" *ngIf="buttonLoaders?.showReviewComment || visibility.showCorrectionComments" libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('view_comments','click','launch', telemetryService.telemetryPageId)">
-        <i class="icon comment flex-as-baseline mr-05" aria-hidden="true"></i>{{configService.labelConfig?.lbl?.viewComments}}
+        <i class="icon comment alternate outline sb-color-primary flex-as-baseline mr-05" aria-hidden="true"></i>{{configService.labelConfig?.lbl?.viewComments}}
       </span>      
       <a *ngIf="visibility.showOriginPreviewUrl && originPreviewUrl" class="sb-color-primary mr-8 pl-10 fs-0-785 font-weight-bold"
       href="{{originPreviewUrl}}" target="_blank">{{configService.labelConfig?.lbl?.viewOnOrigin}}</a>
