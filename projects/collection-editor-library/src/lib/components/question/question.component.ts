@@ -238,6 +238,12 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         break;
       case 'publishContent':
         this.publishQuestion(event);
+      case 'sourcingApproveContent':
+        this.sourcingUpdate(event);
+        break;
+      case 'sourcingRejectContent':
+        this.sourcingUpdate(event, {comment: event.comment });
+        break;
       case 'backContent':
         this.handleRedirectToQuestionset();
         break;
@@ -347,6 +353,22 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       this.sendQuestionForPublish(event);
     }
   }
+
+  sourcingUpdate(event, comment?) {
+    const editableFields = _.get(this.creationContext, 'editableFields');   
+    if (_.get(this.creationContext, 'mode') === 'orgreview' && editableFields && !_.isEmpty(editableFields[_.get(this.creationContext, 'mode')])) {
+      this.validateFormFields();
+      if(this.showFormError === true) {
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
+        return false;
+      }   
+      this.editorService.updateCollection(this.questionId, event).subscribe(res => {
+        this.redirectToChapterList();
+      })   
+    }
+  }
+
+
 
   validateQuestionData() {
 
@@ -740,9 +762,20 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     });
     this.leafFormConfig = formvalue;
   }
+  isEditable(fieldCode) {
+    if (this.creationContext.mode === 'edit') {
+      return true;
+    }    
+    const editableFields = this.creationContext.editableFields;
+    if (editableFields && !_.isEmpty(editableFields[this.creationContext.mode]) && _.includes(editableFields[this.creationContext.mode], fieldCode)) {
+      return true;
+    }
+    return false;
+  }
   populateFormData() {
     this.childFormData = {};
     _.forEach(this.leafFormConfig, (formFieldCategory) => {
+      formFieldCategory.editable = this.isEditable(formFieldCategory.code);
       if (!_.isUndefined(this.questionId)) {
         if (this.questionMetaData && _.has(this.questionMetaData, formFieldCategory.code)) {
           formFieldCategory.default = this.questionMetaData[formFieldCategory.code];
