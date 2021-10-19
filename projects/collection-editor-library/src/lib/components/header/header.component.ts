@@ -26,6 +26,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
   public showPublishCollectionPopup: boolean;
   public rejectComment: string;
   public actionType: string;
+  public objectType: string = "collection";
   public sourcingStatusText: string;
   public sourcingStatusClass: string;
   public originPreviewUrl: string;
@@ -38,6 +39,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
   async ngOnInit() {
     await this.handleActionButtons()
     this.getSourcingData()
+    this.setObjectType();
   }
 
   async handleActionButtons() {
@@ -63,6 +65,10 @@ export class HeaderComponent implements OnDestroy, OnInit {
     this.sourcingStatusClass = (this.visibility.showSourcingStatus) ? _.get(this.editorService, 'editorConfig.context.sourcingResourceStatusClass') : '';
     this.originPreviewUrl = (this.visibility.showOriginPreviewUrl) ? _.get(this.editorService, 'editorConfig.context.originPreviewUrl') : '';
     this.correctionComments = (this.visibility.showCorrectionComments) ? _.get(this.editorService, 'editorConfig.context.correctionComments') : '';
+  }
+
+  setObjectType() {
+    if(this.labelConfigData?.questionContribution) this.objectType = 'question';
   }
 
   openRequestChangePopup(action: string) {

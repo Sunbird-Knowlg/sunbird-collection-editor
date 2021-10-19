@@ -7,6 +7,7 @@ import { SuiModule } from 'ng2-semantic-ui-v9';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { HttpClientModule } from '@angular/common/http';
 import { SanitizeHtmlPipe } from './pipes/sanitize-html.pipe';
+import { InterpolatePipe } from './pipes/interpolate.pipe';
 import { CollectionEditorLibraryComponent } from './collection-editor-library.component';
 import { ContentplayerPageComponent } from './components/contentplayer-page/contentplayer-page.component';
 import { EditorComponent } from './components/editor/editor.component';
@@ -42,7 +43,7 @@ import { CsvUploadComponent } from './components/csv-upload/csv-upload.component
 import { ManageCollaboratorComponent } from './components/manage-collaborator/manage-collaborator.component';
 import { PublishChecklistComponent } from './components/publish-checklist/publish-checklist.component';
 @NgModule({
-  declarations: [CollectionEditorLibraryComponent, SanitizeHtmlPipe, ContentplayerPageComponent, EditorComponent, QumlplayerPageComponent,
+  declarations: [CollectionEditorLibraryComponent, InterpolatePipe, SanitizeHtmlPipe, ContentplayerPageComponent, EditorComponent, QumlplayerPageComponent,
     HeaderComponent, FancyTreeComponent, MetaFormComponent, LibraryComponent, LibraryFilterComponent, LibraryListComponent,
     QuestionComponent, OptionsComponent, AnswerComponent, CkeditorToolComponent,
     LibraryPlayerComponent, ResourceReorderComponent, SkeletonLoaderComponent, TemplateComponent, TelemetryInteractDirective,
