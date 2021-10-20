@@ -90,6 +90,13 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   responseVariable = 'response1';
   QuestionId:any;
   showOptions:boolean;
+  selectedOptions:any;
+  options=[
+    { value: 0, label: 'option1' }, 
+    { value: 1, label: 'option2' },
+    { value: 2, label: 'option3' },
+    { value: 3, label: 'option4' },
+  ]
   constructor(
     private questionService: QuestionService, private editorService: EditorService, public telemetryService: EditorTelemetryService,
     public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,
@@ -517,6 +524,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     const activeNode = this.treeService.getActiveNode();
     const selectedUnitId = _.get(activeNode, 'data.id');
     this.editorService.data = {};
+    this.editorService.selectedSection=selectedUnitId;
     const metaData = this.getQuestionMetadata();
     this.setQuestionTypeVlaues(metaData);
     return {
@@ -619,18 +627,17 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   createQuestion() {
     const requestBody = this.prepareRequestBody();
+    if(this.showOptions){
+      console.log("dependent Question data");
+      console.log(this.QuestionId)
+      this.buildCondition(requestBody,this.QuestionId);
+    }
+    else{
     this.showHideSpinnerLoader(true);
     this.questionService.updateHierarchyQuestionCreate(requestBody).pipe(
       finalize(() => {
         this.showHideSpinnerLoader(false);
       })).subscribe((response: ServerResponse) => {
-        if(!this.showAddSecondaryQuestionCat){
-          console.log("dependent Question data");
-          console.log(this.QuestionId)
-          let result = _.get(response.result.identifiers,this.QuestionId)
-          console.log(result);
-          this.buildCondition(result);
-        }
         this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.007'));
         this.redirectToQuestionset();
       }, (err: ServerResponse) => {
@@ -639,6 +646,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
           };
           this.editorService.apiErrorHandling(err, errInfo);
         });
+      }
   }
 
   updateQuestion() {
@@ -908,36 +916,49 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.targetOption = e.target.value;
   }
 
-  buildCondition(dependentId:any) {
-    console.log(this.targetOption, this.condition);
 
-    let branchingLogic = {
-        [this.editorService.parentQuestionId]: {
-          target: [`${dependentId}`],
-          preCondition: {},
-        },
-        [dependentId]: {
-          target: [],
-          source: [this.editorService.parentQuestionId],
-          preCondition: {
-            and: [
-              {
-                [this.condition]: [
+  buildCondition(requestBody:any,QuestionId:any) {
+    console.log(this.targetOption, this.condition);
+    console.log(requestBody);
+    let sectionName;
+    let gethierarchy = _.get(requestBody.hierarchy,`${this.editorService.selectedSection}`);
+    sectionName=gethierarchy.name;
+
+    let branchingLogic ={
+        root:false,
+        objectType: "QuestionSet",
+        metadata: {
+          mimeType: "application/vnd.sunbird.questionset",
+          name: sectionName,
+          branchingLogic: {
+            [this.editorService.parentQuestionId]: {
+              target: [`${QuestionId}`],
+              preCondition: {},
+            },
+            [QuestionId]: {
+              target: [],
+              source: [this.editorService.parentQuestionId],
+              preCondition: {
+                and: [
                   {
-                    var: `${this.editorService.parentQuestionId}.${this.responseVariable}.value`,
-                    type: "responseDeclaration",
+                    [this.condition]: [
+                      {
+                        var: `${this.editorService.parentQuestionId}.${this.responseVariable}.value`,
+                        type: "responseDeclaration",
+                      },
+                      this.selectedOptions,
+                    ],
                   },
-                  +this.targetOption,
                 ],
               },
-            ],
-          },
-        },
-    };
+            },
+        }
+      }
+    }
     console.log("branchingLogic");
     console.log(branchingLogic);
-    this.editorService.branchingLogic = {...branchingLogic};
-    console.log(this.editorService.branchingLogic);
+    requestBody.nodesModified[this.editorService.selectedSection]=branchingLogic
+    console.log(requestBody);
   }
 
 }

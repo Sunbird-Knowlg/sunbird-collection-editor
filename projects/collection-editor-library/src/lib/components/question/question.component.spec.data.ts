@@ -79,26 +79,94 @@ export const mockData = {
     ],
   },
   questionMetaData: {
-    answer: "<p>adasd</p>",
-    body: "<p>asd</p>",
-    description: "description",
-    editorState: {
-      answer: "<p>adasd</p>",
-      editorState: { answer: "<p>adasd</p>" },
-      name: "Subjective Question",
-      primaryCategory: "Subjective Question",
-      qType: "SA",
-      question: "<p>asd</p>",
-    },
-    identifier: "do_113219577241780224147",
-    keywords: ["keyword"],
-    languageCode: ["en"],
-    media: [],
     mimeType: "application/vnd.sunbird.question",
-    name: "Mcq question ",
-    primaryCategory: "Subjective Question",
-    qType: "SA",
+    media: [],
+    editorState: {
+      options: [
+        {
+          answer: false,
+          value: {
+            body: "<p>test</p>",
+            value: 0,
+          },
+        },
+        {
+          answer: false,
+          value: {
+            body: "<p>test</p>",
+            value: 1,
+          },
+        },
+      ],
+      question: "<p>test mcq</p>",
+    },
+    templateId: "mcq-vertical",
+    name: "test mcq",
+    responseDeclaration: {
+      response1: {
+        maxScore: 1,
+        cardinality: "multiple",
+        type: "integer",
+        correctResponse: {
+          outcomes: {
+            SCORE: 1,
+          },
+        },
+        mapping: [],
+      },
+    },
+    interactionTypes: ["choice"],
+    interactions: {
+      response1: {
+        type: "choice",
+        options: [
+          {
+            label: "<p>test</p>",
+            value: 0,
+          },
+          {
+            label: "<p>test</p>",
+            value: 1,
+          },
+        ],
+      },
+      validation: {
+        required: "Yes",
+      },
+    },
+    qType: "MCQ",
+    primaryCategory: "Multiselect Multiple Choice Question",
+    body: "<div class='question-body'><div class='mcq-title'><p>test mcq</p></div><div data-choice-interaction='response1' class='mcq-vertical'></div></div>",
     solutions: [],
+    author: "check1@yopmail.com",
+    createdBy: "5a587cc1-e018-4859-a0a8-e842650b9d64",
+    board: "CBSE",
+    medium: ["English"],
+    gradeLevel: ["Class 4"],
+    subject: ["Mathematics"],
+    topic: ["Forest"],
+    channel: "01309282781705830427",
+    framework: "ekstep_ncert_k-12",
+    license: "CC BY 4.0",
+    showEvidence: "Yes",
+    evidence: {
+      required: "No",
+      mimeType: ["image"],
+      minCount: 1,
+      maxCount: 1,
+      sizeLimit: "20480",
+    },
+    showRemarks: "Yes",
+    remarks: {
+      maxLength: "100",
+      required: "No",
+    },
+    hints: {
+      en: [null],
+    },
+    instructions: {
+      en: [null],
+    },
   },
   childMetadataUpdated: {
     templateName: "",
@@ -717,6 +785,13 @@ export const mockTreeService = {
   getChildren: () => {
     return ["do_11330103476396851218", "do_233"];
   },
+  getFirstChild:()=>{
+     return {
+      data:{
+        metadata:{}
+      }
+     } 
+  },
   getActiveNode: () => {
     return {
       data: {
@@ -736,5 +811,39 @@ export const mockTreeService = {
         };
       },
     };
+  },
+};
+
+
+export const childMetaData = {
+  name: "test",
+  allowMultiSelect: "Yes",
+  showEvidence: "Yes",
+  evidenceMimeType: ["audio"],
+  showRemarks: "Yes",
+  remarksLimit: "10",
+  markAsNotMandatory: "Yes",
+};
+
+export const HierarchyMockData = {
+  do_1133610108714352641210: {
+    name: "Observation",
+    children: ["do_1133850220538183681722", "do_1133850220538019841720"],
+    root: true,
+  },
+  do_1133850220538183681722: {
+    name: "School InfraStructure",
+    children: [
+      "do_1133850224897638401724",
+      "do_1133850228043038721726",
+      "do_1133867265349795841865",
+      "d07b76a3-56e0-7660-4b49-a556376ae813",
+    ],
+    root: false,
+  },
+  do_1133850220538019841720: {
+    name: "Midday meal",
+    children: [],
+    root: false,
   },
 };

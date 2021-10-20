@@ -12,8 +12,9 @@ import { TreeService } from '../../services/tree/tree.service';
 import { SuiModule } from 'ng2-semantic-ui-v9';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
-import { collectionHierarchyMock, mockData, readQuestionMock, mockTreeService, leafFormConfigMock, sourcingSettingsMock } from './question.component.spec.data';
+import { collectionHierarchyMock, mockData, readQuestionMock, mockTreeService, leafFormConfigMock, sourcingSettingsMock, childMetaData, HierarchyMockData } from './question.component.spec.data';
 import { of } from 'rxjs';
+
 
 const mockEditorService = {
   editorConfig: {
@@ -36,12 +37,14 @@ const mockEditorService = {
     interactionType: "text"
 },
   getToolbarConfig: () => { },
+  _toFlatObj:()=>{},
   fetchCollectionHierarchy: (questionSetId) => { }
 };
 
 describe('QuestionComponent', () => {
   let component: QuestionComponent;
   let fixture: ComponentFixture<QuestionComponent>;
+  let treeService;
   class RouterStub {
     navigate = jasmine.createSpy('navigate');
   }
@@ -72,8 +75,7 @@ describe('QuestionComponent', () => {
     spyOn(editorService, 'fetchCollectionHierarchy').and.returnValue(of(collectionHierarchyMock));
     let questionService: QuestionService = TestBed.inject(QuestionService);
     spyOn(questionService, 'readQuestion').and.returnValue(of(readQuestionMock));
-    // component.leafFormConfig=leafFormConfigMock;
-    // component.sourcingSettings=sourcingSettingsMock;
+    treeService = TestBed.get(TreeService);
     fixture.detectChanges();
   });
 
@@ -304,4 +306,51 @@ describe('QuestionComponent', () => {
     spyOn(component, 'dependentQuestions').and.callThrough();
     expect( component.dependentQuestions.length).toBe(1)
   })
+
+  it('#prepareRequestBody() should call to check the dynamic form data',()=>{
+    spyOn(treeService, 'getFirstChild').and.callFake(() => { });
+    spyOn(component,"prepareRequestBody").and.callThrough();
+    component.prepareRequestBody();
+    expect(component.prepareRequestBody).toHaveBeenCalled();
+  })
+
+  it('#setQuestionTypeVlaues() should call to check the dynamic form data',()=>{
+    spyOn(component,"setQuestionTypeVlaues").and.callThrough();
+    component.childFormData=childMetaData;
+    component.subMenus =  mockData.subMenus;
+    component.setQuestionTypeVlaues(mockData.questionMetaData);
+    expect(component.setQuestionTypeVlaues).toHaveBeenCalled();
+    expect(mockData.questionMetaData.showEvidence).toEqual(component.childFormData.showEvidence)
+  })
+
+  it('#setQuestionTypeVlaues() should call to check the dynamic form data for date',()=>{
+    component.questionInteractionType="date"
+    spyOn(component,"setQuestionTypeVlaues").and.callThrough();
+    component.childFormData=childMetaData;
+    component.subMenus =  mockData.subMenus;
+    component.setQuestionTypeVlaues(mockData.questionMetaData);
+    expect(component.setQuestionTypeVlaues).toHaveBeenCalled();
+    expect(mockData.questionMetaData.showEvidence).toEqual(component.childFormData.showEvidence)
+  })
+
+  it('#setQuestionTypeVlaues() should call to check the dynamic form data for text',()=>{
+    component.questionInteractionType="text"
+    spyOn(component,"setQuestionTypeVlaues").and.callThrough();
+    component.childFormData=childMetaData;
+    component.subMenus =  mockData.subMenus;
+    component.setQuestionTypeVlaues(mockData.questionMetaData);
+    expect(component.setQuestionTypeVlaues).toHaveBeenCalled();
+    expect(mockData.questionMetaData.showEvidence).toEqual(component.childFormData.showEvidence)
+  })
+
+  it('#setQuestionTypeVlaues() should call to check the dynamic form data for slider',()=>{
+    component.questionInteractionType="slider"
+    spyOn(component,"setQuestionTypeVlaues").and.callThrough();
+    component.childFormData=childMetaData;
+    component.subMenus =  mockData.subMenus;
+    component.setQuestionTypeVlaues(mockData.questionMetaData);
+    expect(component.setQuestionTypeVlaues).toHaveBeenCalled();
+    expect(mockData.questionMetaData.showEvidence).toEqual(component.childFormData.showEvidence)
+  })
+
 });
