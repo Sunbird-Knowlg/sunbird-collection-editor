@@ -144,6 +144,18 @@
       <i class="{{labelConfigData.publish_collection_btn_icon}}"></i> 
       {{labelConfigData.publish_collection_btn_label}}
     </button>
+
+    <button *ngIf="visibility && visibility?.sourcingApproveContent && labelConfigData?.questionContribution" class="sb-btn sb-btn-secondary sb-btn-normal ripple mr-10" (click)="openPublishCheckListPopup('sourcingApprove')" libTelemetryInteract
+    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('approve','click','submit', telemetryService.telemetryPageId)">
+      <i class="{{labelConfigData.sourcing_approve_collection_btn_icon}}"></i> 
+      {{labelConfigData.sourcing_approve_collection_btn_label}}
+    </button>
+
+    <button *ngIf="visibility && visibility?.sourcingRejectContent && labelConfigData?.questionContribution" class="sb-btn sb-btn-error sb-btn-normal ripple" (click)="openRequestChangePopup('sourcingReject')" libTelemetryInteract
+    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('reject','click','submit', telemetryService.telemetryPageId)">
+      <i class="{{labelConfigData.sourcing_reject_collection_btn_icon}}"></i> 
+      {{labelConfigData.sourcing_reject_collection_btn_label}}
+    </button>
   </div> 
 </div>
 </div>

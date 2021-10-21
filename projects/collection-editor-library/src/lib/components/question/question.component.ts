@@ -16,6 +16,7 @@ import { TreeService } from '../../services/tree/tree.service';
 import { EditorCursor } from '../../collection-editor-cursor.service';
 import { filter, finalize, take, takeUntil } from 'rxjs/operators';
 import { ICreationContext } from '../../interfaces/CreationContext';
+import { request } from 'http';
 @Component({
   selector: 'lib-question',
   templateUrl: './question.component.html',
@@ -238,11 +239,11 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         break;
       case 'publishContent':
         this.publishQuestion(event);
-      case 'sourcingApproveContent':
+      case 'sourcingApprove':
         this.sourcingUpdate(event);
         break;
-      case 'sourcingRejectContent':
-        this.sourcingUpdate(event, {comment: event.comment });
+      case 'sourcingReject':
+        this.sourcingUpdate(event);
         break;
       case 'backContent':
         this.handleRedirectToQuestionset();
@@ -354,22 +355,21 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  sourcingUpdate(event, comment?) {
+  sourcingUpdate(event) {
     const editableFields = _.get(this.creationContext, 'editableFields');   
-    if (_.get(this.creationContext, 'mode') === 'orgreview' && editableFields && !_.isEmpty(editableFields[_.get(this.creationContext, 'mode')])) {
+    if (_.get(this.creationContext, 'mode') === 'sourcingreview' && editableFields && !_.isEmpty(editableFields[_.get(this.creationContext, 'mode')])) {
       this.validateFormFields();
       if(this.showFormError === true) {
         this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
-        return false;
-      }   
-      this.editorService.updateCollection(this.questionId, event).subscribe(res => {
+        return false;        }   
+      }
+      const requestBody = this.prepareSourcingUpdateBody(this.questionId, event.comment);
+      event['requestBody'] = requestBody;
+      this.editorService.updateCollection(this.questionSetId, event).subscribe(res => {
         this.redirectToChapterList();
       })   
     }
-  }
-
-
-
+  
   validateQuestionData() {
 
     if ([undefined, ''].includes(this.editorState.question)) {
@@ -612,6 +612,23 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
     return requestBody;
+  }
+
+  prepareSourcingUpdateBody (questionId, comment?) {   
+      const sourcingUpdateAttribute = this.actionType === 'sourcingApprove' ? 'acceptedContributions' 
+        : 'rejectedContributions'; 
+      let collectionObjectType = _.lowerCase(this.creationContext['collectionObjectType']);
+      const requestBody = {
+        request: {
+          [collectionObjectType]: {
+            [sourcingUpdateAttribute]: [questionId]
+          }
+        }
+      };  
+      if(this.actionType === 'sourcingReject') {
+        requestBody.request[collectionObjectType]['rejectComment'] = comment;
+      }
+      return requestBody; 
   }
 
   upsertQuestion(callback) {

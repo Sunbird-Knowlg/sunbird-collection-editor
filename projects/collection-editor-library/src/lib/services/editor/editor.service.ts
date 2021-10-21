@@ -159,19 +159,39 @@ export class EditorService {
     return formFields;
   }
 
-  updateCollection(collectionId, data?) {
+  updateCollection(collectionId, data?) {    
     let objType = this.configService.categoryConfig[this.editorConfig.config.objectType];
-    objType = objType.toLowerCase();
-    const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
-    const fieldsObj = this.getFieldsToUpdate(collectionId);
-    const requestBody = {
-      request: {
-        [objType]: {
-          ...fieldsObj,
-          lastPublishedBy: this.editorConfig.context.user.id
-        }
-      }
+    let url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
+    let requestBody = {
+      request: { }
     };
+    objType = objType.toLowerCase();
+
+    if(data.objectType === 'question') {
+      objType = this.configService.categoryConfig[this.editorConfig.config.collectionObjectType];
+      objType = objType.toLowerCase();
+
+      url = this.configService.urlConFig.URLS[this.editorConfig.config.collectionObjectType];
+      
+      requestBody = data.requestBody; 
+      requestBody.request[objType] = { 
+        ...requestBody.request[objType], 
+        lastPublishedBy: this.editorConfig.context.user.id
+      }       
+    }
+    else {
+      const fieldsObj = this.getFieldsToUpdate(collectionId);
+      requestBody = {
+        request: {
+          [objType]: {
+            ...fieldsObj,
+            lastPublishedBy: this.editorConfig.context.user.id
+          }
+        }
+      };
+      
+    }
+              
     const publishData =  _.get(data, 'publishData');
     if(publishData) { 
      requestBody.request[objType] = { ...requestBody.request[objType], ...publishData };
