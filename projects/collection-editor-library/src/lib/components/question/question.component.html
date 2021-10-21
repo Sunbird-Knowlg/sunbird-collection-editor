@@ -12,20 +12,23 @@
             </lib-quml-player>
           </div>
           <div style="display: flex;align-items: flex-end;justify-content: flex-end;" *ngIf="showOptions">
-            <div class="left" style="justify-content: flex-end;">
+            <div class="left" style="justify-content: flex-end;margin-right:10px">
               <select (change)="conditionHandler($event)">
                 <option>Select Condition</option>
                 <option value="eq">Equal to</option>
                 <option value="ne">Not equal</option>
               </select>
-          
-              <select (change)="optionHandler($event)" style="margin: 20px;">
-                <option>Select option</option>
-                <option value="0">Option 1</option>
-                <option value="1">Option 2</option>
-                <option value="2">Option 3</option>
-                <option value="4">Option 4</option>
-              </select>
+
+              <sui-multi-select class="selection multiselect"
+                          [(ngModel)]="selectedOptions"
+                          valueField="value"
+                          labelField="label"
+                          [isSearchable]="false" 
+                          #multiSelect>
+            <sui-select-option *ngFor="let option of options"
+                               [value]="option">
+            </sui-select-option>
+        </sui-multi-select>
             </div>
           </div>
           <div class="py-20 px-32 sb-bg-color-primary-0 br-4 b-1-100" *ngIf="!showPreview">
