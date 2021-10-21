@@ -51,7 +51,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   </span>
   </span>`;
   // tslint:disable-next-line:max-line-length
-  public contentMenuTemplate = `<span id="contextMenu"><span id= "removeNodeIcon"> <i class="fa fa-trash-o" type="button"></i> </span></span>`;
+  public contentMenuTemplate = `<span id="contextMenu"><span id= "removeNodeIcon" type="content" > <i class="fa fa-trash-o" type="button"></i> </span></span>`;
   constructor(public treeService: TreeService, private editorService: EditorService,
               public telemetryService: EditorTelemetryService, private helperService: HelperService,
               private toasterService: ToasterService, private cdr: ChangeDetectorRef,
@@ -348,8 +348,9 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         // event.stopPropagation();
       });
 
-      $($nodeSpan[0]).find(`#removeNodeIcon`).on('click', (ev) => {
-        this.removeNode();
+      $($nodeSpan[0]).find(`#removeNodeIcon`).on('click', (event: any) => {
+        const isContent =  event.currentTarget.getAttribute('type') && event.currentTarget.getAttribute('type') === 'content';
+        this.removeNode(isContent);
       });
     }
 
@@ -427,8 +428,8 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     return false;
   }
 
-  removeNode() {
-    this.treeEventEmitter.emit({ type: 'deleteNode' });
+  removeNode(isContent?: boolean) {
+    this.treeEventEmitter.emit({ type: 'deleteNode', isContent });
     this.telemetryService.interact({ edata: this.getTelemetryInteractEdata('delete') });
   }
 

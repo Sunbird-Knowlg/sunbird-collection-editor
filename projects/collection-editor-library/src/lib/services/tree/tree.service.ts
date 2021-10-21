@@ -73,6 +73,8 @@ export class TreeService {
     const attributions = newData.attributions;
     if (attributions && _.isString(attributions)) {
       newData.attributions = attributions.split(',');
+    } else {
+      newData.attributions = [];
     }
     const { maxTime, warningTime, copyrightYear } = newData;
 
