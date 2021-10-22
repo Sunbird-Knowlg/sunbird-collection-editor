@@ -232,7 +232,7 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
           });
         }
 
-        const ifEditable = this.ifFieldIsEditable(field.code);
+        const ifEditable = this.ifFieldIsEditable(field.code, field.editable);
         _.set(field, 'editable', ifEditable);
 
       });
@@ -244,9 +244,10 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   isReviewMode() {
     return  _.includes([ 'review', 'read', 'sourcingreview', 'orgreview' ], this.editorService.editorMode);
   }
-  ifFieldIsEditable(fieldCode) {
+  ifFieldIsEditable(fieldCode, primaryCategoryEditableConfig?) {
     const ediorMode = this.editorService.editorMode;
     if (!this.isReviewMode()) {
+      if(primaryCategoryEditableConfig === false) return false;
       return true;
     }
     const editableFields = _.get(this.editorService.editorConfig.config, 'editableFields');

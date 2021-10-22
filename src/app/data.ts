@@ -271,7 +271,6 @@ export const questionSetEditorConfig = {
     enableBulkUpload: true,
     publicStorageAccount: 'https://dockstorage.blob.core.windows.net/',
     hideSubmitForReviewBtn: true,
-    requiredMetadataFields: ['gradeLevel', 'subject', 'medium'],
     // children: {
     //   Question: [
     //     'Multiple Choice Question',
@@ -331,7 +330,7 @@ export const questionEditorConfig = {
     collectionPrimaryCategory: 'Exam Question Set',
     collectionObjectType: 'QuestionSet',
     sourcingResourceStatus: 'Review Pending',
-    sourcingResourceStatusClass: 'sb-color-warning',    
+    sourcingResourceStatusClass: 'sb-color-warning',
     authToken: ' ',
     sid: 'iYO2K6dOSdA0rwq7NeT1TDzS-dbqduvV',
     did: '7e85b4967aebd6704ba1f604f20056b6',
