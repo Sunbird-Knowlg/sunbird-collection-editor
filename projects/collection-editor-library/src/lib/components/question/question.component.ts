@@ -16,7 +16,6 @@ import { TreeService } from '../../services/tree/tree.service';
 import { EditorCursor } from '../../collection-editor-cursor.service';
 import { filter, finalize, take, takeUntil } from 'rxjs/operators';
 import { ICreationContext } from '../../interfaces/CreationContext';
-import { request } from 'http';
 @Component({
   selector: 'lib-question',
   templateUrl: './question.component.html',
@@ -228,21 +227,21 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       case 'saveContent':
         this.saveContent();
         break;
-      case 'submitContent':        
+      case 'submitQuestion':        
         this.submitHandler();
         break;
       case 'cancelContent':
         this.handleRedirectToQuestionset();
         break;
-      case 'rejectContent':
+      case 'rejectQuestion':
         this.rejectQuestion(event.comment);
         break;
-      case 'publishContent':
+      case 'publishQuestion':
         this.publishQuestion(event);
-      case 'sourcingApprove':
+      case 'sourcingApproveQuestion':
         this.sourcingUpdate(event);
         break;
-      case 'sourcingReject':
+      case 'sourcingRejectQuestion':
         this.sourcingUpdate(event);
         break;
       case 'backContent':
@@ -615,9 +614,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   prepareSourcingUpdateBody (questionId, comment?) {   
-      const sourcingUpdateAttribute = this.actionType === 'sourcingApprove' ? 'acceptedContributions' 
+      const sourcingUpdateAttribute = this.actionType === 'sourcingApproveQuestion' ? 'acceptedContributions' 
         : 'rejectedContributions'; 
-      let collectionObjectType = _.lowerCase(this.creationContext['collectionObjectType']);
+      let collectionObjectType = _.replace(_.lowerCase(this.creationContext['collectionObjectType']), ' ', '');
       const requestBody = {
         request: {
           [collectionObjectType]: {
@@ -625,7 +624,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         }
       };  
-      if(this.actionType === 'sourcingReject') {
+      if(this.actionType === 'sourcingRejectQuestion') {
         requestBody.request[collectionObjectType]['rejectComment'] = comment;
       }
       return requestBody; 

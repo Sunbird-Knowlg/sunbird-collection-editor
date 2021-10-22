@@ -139,7 +139,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           this.toolbarConfig.showDialcode = dialcode ? dialcode.toLowerCase() : 'no';
           this.helperService.channelData$.subscribe(
             (channelResponse) => {
-              this.primaryCategoryDef = response;             
+              this.primaryCategoryDef = response;     
+              this.getFrameworkDetails(this.primaryCategoryDef);       
               if(this.objectType !== 'question') this.sethierarchyConfig(response);              
             }
           );
@@ -156,7 +157,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe(item => this.showLibraryComponentPage());
     this.treeService.treeStatus$.pipe(takeUntil(this.unsubscribe$)).subscribe((status) => {
       if (status === 'loaded') {
-        this.getFrameworkDetails(this.primaryCategoryDef);
+        
       }
     });   
   }
@@ -371,6 +372,14 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           this.buttonLoaders.saveAsDraftButtonLoader = false;
           this.toasterService.success(message);
           this.isEnableCsvAction = true;
+          if(_.get(this.editorConfig, 'config.enableQuestionCreation') === false) {
+            this.mergeCollectionExternalProperties().subscribe(response => {
+              this.redirectToChapterListTab({ 
+                collection: _.get(this.collectionTreeNodes, 'data')
+              })
+            })      
+            
+          }        
         }).catch(((error: string) => {
           this.buttonLoaders.saveAsDraftButtonLoader = false;
           this.isEnableCsvAction = false;
@@ -412,15 +421,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.updateToolbarTitle(event);
         break;
       case 'backContent':
-        if(_.get(this.editorConfig, 'config.enableQuestionCreation') === false && 
-          !_.isEmpty(_.get(this.editorConfig, 'config.requiredMetadataFields'))) {
-            this.redirectToChapterListTab({ 
-              metadata: _.pick(
-                _.get(this.collectionTreeNodes, 'data'), 
-                _.get(this.editorConfig, 'config.requiredMetadataFields'))
-              })
-          }
-        else this.redirectToChapterListTab();
+        this.redirectToChapterListTab();
         break;
       case 'sendForCorrections':
         this.redirectToChapterListTab({ comment: event.comment });
@@ -490,8 +491,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       if (!this.validateFormStatus()) {
         return reject(_.get(this.configService, 'labelConfig.messages.error.029'));
       }
-      const nodesModified = _.get(this.editorService.getCollectionHierarchy(), 'nodesModified');      
-      if (this.objectType === 'questionSet') {
+      const nodesModified = _.get(this.editorService.getCollectionHierarchy(), 'nodesModified');
+      if (this.objectType.toLowerCase() === 'questionset') {
         const maxScore = await this.editorService.getMaxScore();
         this.treeService.updateMetaDataProperty('maxScore', maxScore);
       }
@@ -503,6 +504,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           if (!_.isEmpty(response.identifiers)) {
             this.treeService.replaceNodeId(response.identifiers);
           }
+                      
           this.treeService.clearTreeCache();
           this.treeService.nextTreeStatus('saved');
           resolve(_.get(this.configService, 'labelConfig.messages.success.001'));
@@ -808,6 +810,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       interactionType = _.get(this.editorConfig, 'config.interactionType');
       this.creationContext =  {
         objectType: this.objectType,
+        collectionObjectType: _.get(this.editorConfig, 'context.collectionObjectType'),
         isReadOnlyMode: _.get(this.editorConfig, 'config.isReadOnlyMode'),
         correctionComments: _.get(this.editorConfig, 'context.correctionComments'),
         mode: mode,

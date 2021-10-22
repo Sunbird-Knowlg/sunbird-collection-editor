@@ -148,7 +148,7 @@ export const questionSetEditorConfig = {
       lastName: 'Bhuva',
       orgIds: ['01309282781705830427']
     },
-    identifier: 'do_1133872840783626241899', // do_11330102570702438417
+    identifier: 'do_113393013518852096113', //do_1133872840783626241899, // do_11330102570702438417
     authToken: ' ',
     sid: 'iYO2K6dOSdA0rwq7NeT1TDzS-dbqduvV',
     did: '7e85b4967aebd6704ba1f604f20056b6',
@@ -266,7 +266,6 @@ export const questionSetEditorConfig = {
     iconClass: 'fa fa-book',
     showAddCollaborator: false,
     hideSubmitForReviewBtn: true,
-    requiredMetadataFields: ['gradeLevel', 'subject', 'medium'],
     // children: {
     //   Question: [
     //     'Multiple Choice Question',
