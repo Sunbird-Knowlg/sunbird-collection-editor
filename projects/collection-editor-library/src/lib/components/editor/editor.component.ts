@@ -139,8 +139,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           this.toolbarConfig.showDialcode = dialcode ? dialcode.toLowerCase() : 'no';
           this.helperService.channelData$.subscribe(
             (channelResponse) => {
-              this.primaryCategoryDef = response;     
-              this.getFrameworkDetails(this.primaryCategoryDef);       
+              this.primaryCategoryDef = response;                      
               if(this.objectType !== 'question') this.sethierarchyConfig(response);              
             }
           );
@@ -157,7 +156,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe(item => this.showLibraryComponentPage());
     this.treeService.treeStatus$.pipe(takeUntil(this.unsubscribe$)).subscribe((status) => {
       if (status === 'loaded') {
-        
+        this.getFrameworkDetails(this.primaryCategoryDef);
       }
     });   
   }
@@ -814,8 +813,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         isReadOnlyMode: _.get(this.editorConfig, 'config.isReadOnlyMode'),
         correctionComments: _.get(this.editorConfig, 'context.correctionComments'),
         mode: mode,
-        editableFields: _.get(this.editorConfig, 'config.editableFields'),
-        index: _.get(this.editorConfig, 'context.index')
+        editableFields: _.get(this.editorConfig, 'config.editableFields')        
       }
 
     }
