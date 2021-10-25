@@ -724,11 +724,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   setQuestionTitle(questionId?) {
     let index;
     let questionTitle = '';    
-    if(_.get(this.creationContext, 'objectType') === 'question') {
-      index = _.get(this.creationContext, 'index');
-      questionTitle = `Q${(index + 1).toString()} | `;
+    if(_.get(this.creationContext, 'objectType') === 'question') {      
       if (!_.isUndefined(this.questionPrimaryCategory)) {
-        questionTitle = questionTitle + this.questionPrimaryCategory;
+        questionTitle = this.questionPrimaryCategory;
       }
     }
     else {
