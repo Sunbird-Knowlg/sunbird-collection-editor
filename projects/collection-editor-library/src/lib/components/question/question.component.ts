@@ -102,15 +102,20 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,
     private frameworkService: FrameworkService, private router: Router, public configService: ConfigService,
     private editorCursor: EditorCursor) {
-    const { primaryCategory } = this.editorService.selectedChildren;
+    const { primaryCategory, label } = this.editorService.selectedChildren;
     this.questionPrimaryCategory = primaryCategory;
     this.pageStartTime = Date.now();
-    this.categoryLabel[primaryCategory] = _.get(this.editorService.selectedChildren, 'label');
-
+    this.categoryLabel = [];
+    if (!_.isUndefined(label)) {
+      this.categoryLabel[primaryCategory] = label;
+    }
   }
 
   ngOnInit() {
-    const { questionSetId, questionId, type } = this.questionInput;
+    const { questionSetId, questionId, type, setChildQueston } = this.questionInput;
+    if (_.isUndefined(setChildQueston)) {
+      this.questionInput.setChildQueston = false;
+    }
     this.questionInteractionType = type;
     this.questionId = questionId;
     this.questionSetId = questionSetId;
@@ -719,12 +724,12 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
           index =  _.findIndex(child.children, { identifier: questionId });
           const question  = child.children[index];
           // tslint:disable-next-line:max-line-length
-          questionTitle = `Q${(index + 1).toString()} | ` + _.get(this.categoryLabel, `${question.primaryCategory}`) || question.primaryCategory;
+          questionTitle = `Q${(index + 1).toString()} | ` + (_.get(this.categoryLabel, `${question.primaryCategory}`) || question.primaryCategory);
         } else {
           index =  _.findIndex(hierarchyChildren, (node) => node.data.id === questionId);
           const question  = hierarchyChildren[index];
           // tslint:disable-next-line:max-line-length
-          questionTitle = `Q${(index + 1).toString()} | ` + _.get(this.categoryLabel, `${_.get(question, 'data.primaryCategory')}`) || question.primaryCategory;
+          questionTitle = `Q${(index + 1).toString()} | ` + (_.get(this.categoryLabel, `${_.get(question, 'data.primaryCategory')}`) || question.primaryCategory);
         }
       });
 
@@ -738,7 +743,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       index = hierarchyChildren.length;
       questionTitle = `Q${(index + 1).toString()} | `;
       if (!_.isUndefined(this.questionPrimaryCategory)) {
-        questionTitle = questionTitle + _.get(this.categoryLabel, `${this.questionPrimaryCategory}`) || this.questionPrimaryCategory;
+        questionTitle = questionTitle + (_.get(this.categoryLabel, `${this.questionPrimaryCategory}`) || this.questionPrimaryCategory);
       }
     }
     this.toolbarConfig.title = questionTitle;
@@ -867,6 +872,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     ];
     console.log(this.questionInput);
     console.log('submenus');
+    if (!_.get(this.sourcingSettings, 'showAddSecondaryQuestion') && !this.questionInput.setChildQueston) {
+      this.showOptions = false;
+    } else {
     _.forEach(this.subMenus, (el) => {
       if (el.id === 'addDependantQuestion' && el.show === false) {
         this.showOptions = true;
@@ -874,6 +882,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         this.showOptions = false;
       }
     });
+  }
   }
   ngOnDestroy() {
     this.onComponentDestroy$.next();
