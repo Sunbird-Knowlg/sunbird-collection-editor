@@ -91,8 +91,8 @@ export class OptionsComponent implements OnInit {
     let index;
     const interactOptions = _.map(options, (opt, key) => {
       index = Number(key);
-      const hints  = _.get(this.editorState, `interactions.response1.options[${index}].hints`) 
-      return { label: opt.body, value: index,hints:hints };
+      const hints  = _.get(this.editorState, `interactions.response1.options[${index}].hints`)
+      return { label: opt.body, value: index, hints };
     });
     this.subMenuConfig(options);
     const interactions = {
@@ -109,30 +109,30 @@ export class OptionsComponent implements OnInit {
     this.editorDataHandler();
   }
 
-  subMenuChange({ index, value },optionIndex) {
-    _.set(this.editorState, `interactions.response1.options[${optionIndex}].hints.en`,value)
+  subMenuChange({ index, value }, optionIndex) {
+    _.set(this.editorState, `interactions.response1.options[${optionIndex}].hints.en`, value)
   }
 
   subMenuConfig(options) {
     this.subMenus = []
     options.map((opt, index) => {
-      const value  = _.get(this.editorState, `interactions.response1.options[${index}].hints.en`) 
+      const value  = _.get(this.editorState, `interactions.response1.options[${index}].hints.en`)
       this.subMenus[index] = [
         {
           id: 'addHint',
           name: 'Add Hint',
-          value: value,
+          value,
           label: 'Hint',
           enabled: value ? true : false,
           type: 'input',
-          show: this.sourcingSettings.showAddHints,
+          show: _.get(this.sourcingSettings, 'showAddHints'),
         },
       ];
     });
   }
 
   setScore(value, scoreIndex) {
-    let obj = {
+    const obj = {
       respone: scoreIndex,
       outcomes: {
         score: value,
