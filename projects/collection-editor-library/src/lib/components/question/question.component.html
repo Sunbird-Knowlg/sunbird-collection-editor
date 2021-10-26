@@ -40,74 +40,72 @@
                 [editorState]="editorState" [showFormError]="showFormError"
                 (editorDataOutput)="editorDataHandler($event)" [isReadOnlyMode]="isReadOnlyMode"></lib-options>
 
-              <ng-template *ngIf="!isReadOnlyMode; else readOnlySolutionsContainer">
-                <ng-container>
-                  <div class="d-flex flex-ai-center ckeditor-tool__solution py-10 px-16 mt-15 sb-bg-color-white">
-                    <label class="fs-0-92 mb-0 ckeditor-tool__label pb-4">
-                      <span class="sb-color-primary fs-0-785 mr-4">{{configService.labelConfig?.lbl?.solution}}</span>
-                      <span class="sb-color-gray-200 fxsmall font-weight-normal">{{configService.labelConfig?.lbl?.optional}}</span>
-                    </label>
-                    <div
-                      class="ui dropdown sb-btn sb-btn-outline-primary sb-btn-normal sb-right-icon-btn sb-btn-radius ml-auto"
-                      suiDropdown autoClose="itemClick" *ngIf="showSolutionDropDown" libTelemetryInteract
-                      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('choose_type','click','single_select', telemetryService.telemetryPageId)">
-                      <div class="text gray-200">{{configService.labelConfig?.lbl?.chooseType}}</div>
-                      <i class="dropdown icon mx-8"></i>
-                      <div class="menu" suiDropdownMenu>
-                        <div class="item" (click)="selectSolutionType('Text+Image')" libTelemetryInteract
-                          [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('solution_type','select','single_select', telemetryService.telemetryPageId, {solution_type:'Text+Image'})">
-                          {{configService.labelConfig?.lbl?.textImage}}
-                        </div>
-                        <div class="item" (click)="selectSolutionType('video')" libTelemetryInteract
-                          [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('solution_type','select','single_select', telemetryService.telemetryPageId, {solution_type:'video'})">
-                          {{configService.labelConfig?.lbl?.video}}
-                        </div>
+              <ng-container *ngIf="!isReadOnlyMode; else readOnlySolutionsContainer">                
+                <div class="d-flex flex-ai-center ckeditor-tool__solution py-10 px-16 mt-15 sb-bg-color-white">
+                  <label class="fs-0-92 mb-0 ckeditor-tool__label pb-4">
+                    <span class="sb-color-primary fs-0-785 mr-4">{{configService.labelConfig?.lbl?.solution}}</span>
+                    <span class="sb-color-gray-200 fxsmall font-weight-normal">{{configService.labelConfig?.lbl?.optional}}</span>
+                  </label>
+                  <div
+                    class="ui dropdown sb-btn sb-btn-outline-primary sb-btn-normal sb-right-icon-btn sb-btn-radius ml-auto"
+                    suiDropdown autoClose="itemClick" *ngIf="showSolutionDropDown" libTelemetryInteract
+                    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('choose_type','click','single_select', telemetryService.telemetryPageId)">
+                    <div class="text gray-200">{{configService.labelConfig?.lbl?.chooseType}}</div>
+                    <i class="dropdown icon mx-8"></i>
+                    <div class="menu" suiDropdownMenu>
+                      <div class="item" (click)="selectSolutionType('Text+Image')" libTelemetryInteract
+                        [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('solution_type','select','single_select', telemetryService.telemetryPageId, {solution_type:'Text+Image'})">
+                        {{configService.labelConfig?.lbl?.textImage}}
+                      </div>
+                      <div class="item" (click)="selectSolutionType('video')" libTelemetryInteract
+                        [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('solution_type','select','single_select', telemetryService.telemetryPageId, {solution_type:'video'})">
+                        {{configService.labelConfig?.lbl?.video}}
                       </div>
                     </div>
                   </div>
-                  <div class="solution_html" *ngIf="selectedSolutionType == 'html'">
-                    <div class="ckeditor-tool-container">
-                      <div class="sb-ckeditor relative mb-8">
-                        <button (click)="deleteSolution()" class="sb-btn sb-ckeditor-close absolute" libTelemetryInteract
-                          [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('delete_solution','click','cancel', telemetryService.telemetryPageId, {solution_type:'Text+Image'})">
+                </div>
+                <div class="solution_html" *ngIf="selectedSolutionType == 'html'">
+                  <div class="ckeditor-tool-container">
+                    <div class="sb-ckeditor relative mb-8">
+                      <button (click)="deleteSolution()" class="sb-btn sb-ckeditor-close absolute" libTelemetryInteract
+                        [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('delete_solution','click','cancel', telemetryService.telemetryPageId, {solution_type:'Text+Image'})">
+                        <i class="icon close"></i>
+                      </button>
+                      <lib-ckeditor-tool (editorDataOutput)="
+                          editorDataHandler($event, 'solution')
+                        "[editorDataInput]="editorState.solutions"
+                        class="ckeditor-tool__option"></lib-ckeditor-tool>
+                    </div>
+                  </div>
+                </div>
+                <div class="solution_video" *ngIf="selectedSolutionType == 'video' && showSolution">
+                  <div class="ckeditor-tool__solution sb-bg-color-white sb-ckeditor relative">
+                    <div class="solution-media p-16 d-flex flex-ai-center ckeditor-tool__option p-16">
+                      <div class="mcq-checkbox-answer">
+                        <button class="sb-btn sb-ckeditor-close absolute" (click)="deleteSolution()"
+                          libTelemetryInteract
+                          [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('delete_solution','click','cancel', this.telemetryService.telemetryPageId, {solution_type:'video'})">
                           <i class="icon close"></i>
                         </button>
-                        <lib-ckeditor-tool (editorDataOutput)="
-                            editorDataHandler($event, 'solution')
-                          "[editorDataInput]="editorState.solutions"
-                          class="ckeditor-tool__option"></lib-ckeditor-tool>
+                      </div>
+                      <div class="solution-media__video relative position">
+                        <div class="overlay-image" [ngStyle]="
+                            videoThumbnail
+                              ? { background: 'url(' + videoThumbnail + ')' }
+                              : { background: 'rgba(0,0,0,0.3)' }
+                          ">
+                          <i class="play circle icon"></i>
+                        </div>
+                      </div>
+                      <div class="solution-media__desc ml-16 sb-color-primary">
+                        {{ videoSolutionName
+                        }}
+                        <!-- <i class="icon ellipsis vertical sb-color-black"></i> -->
                       </div>
                     </div>
                   </div>
-                  <div class="solution_video" *ngIf="selectedSolutionType == 'video' && showSolution">
-                    <div class="ckeditor-tool__solution sb-bg-color-white sb-ckeditor relative">
-                      <div class="solution-media p-16 d-flex flex-ai-center ckeditor-tool__option p-16">
-                        <div class="mcq-checkbox-answer">
-                          <button class="sb-btn sb-ckeditor-close absolute" (click)="deleteSolution()"
-                            libTelemetryInteract
-                            [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('delete_solution','click','cancel', this.telemetryService.telemetryPageId, {solution_type:'video'})">
-                            <i class="icon close"></i>
-                          </button>
-                        </div>
-                        <div class="solution-media__video relative position">
-                          <div class="overlay-image" [ngStyle]="
-                              videoThumbnail
-                                ? { background: 'url(' + videoThumbnail + ')' }
-                                : { background: 'rgba(0,0,0,0.3)' }
-                            ">
-                            <i class="play circle icon"></i>
-                          </div>
-                        </div>
-                        <div class="solution-media__desc ml-16 sb-color-primary">
-                          {{ videoSolutionName
-                          }}
-                          <!-- <i class="icon ellipsis vertical sb-color-black"></i> -->
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </ng-container>
-              </ng-template>
+                </div>
+              </ng-container>
               <ng-template #readOnlySolutionsContainer>
                 <div class="row" *ngIf="editorState.solutions">
                   <div class="twelve wide column p-0">
