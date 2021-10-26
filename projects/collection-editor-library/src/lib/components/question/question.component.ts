@@ -61,6 +61,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   creationContext: ICreationContext;
   tempQuestionId;
   questionSetId;
+  unitId;
   public setCharacterLimit = 160;
   public showLoader = true;
   public isReadOnlyMode = false;
@@ -92,9 +93,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {
     const { questionSetId, questionId, type, creationContext } = this.questionInput;
     this.questionInteractionType = type;
-    this.questionId = questionId;
+    this.questionId = questionId;    
     this.questionSetId = questionSetId;
     this.creationContext = creationContext;
+    this.unitId = this.creationContext?.unitIdentifier;
     this.isReadOnlyMode = this.creationContext?.isReadOnlyMode;
     this.toolbarConfig = this.editorService.getToolbarConfig();
     this.toolbarConfig.showPreview = false;
@@ -439,10 +441,21 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  addResourceToQuestionset() {
+    this.editorService.addResourceToQuestionset(this.questionSetId, this.unitId, this.questionId).subscribe(res => {
+      this.redirectToChapterList();
+    }, err => {
+        const errInfo = {
+          errorMsg: 'Adding question to questionset failed. Please try again.',
+        };
+        return throwError(this.editorService.apiErrorHandling(err, errInfo));
+    })
+  }
+
   saveQuestion() {
     if(_.get(this.creationContext, 'objectType') === 'question') {
       if(_.get(this.creationContext, 'mode') === 'edit') {
-        let callback = this.redirectToChapterList.bind(this);
+        let callback = this.addResourceToQuestionset.bind(this);
         this.upsertQuestion(callback);
       }
       else this.upsertQuestion(undefined);

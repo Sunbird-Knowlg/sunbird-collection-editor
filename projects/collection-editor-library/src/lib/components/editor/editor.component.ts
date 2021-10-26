@@ -811,6 +811,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         objectType: this.objectType,
         collectionObjectType: _.get(this.editorConfig, 'context.collectionObjectType'),
         isReadOnlyMode: _.get(this.editorConfig, 'config.isReadOnlyMode'),
+        unitIdentifier: _.get(this.editorConfig, 'context.unitIdentifier'),
         correctionComments: _.get(this.editorConfig, 'context.correctionComments'),
         mode: mode,
         editableFields: _.get(this.editorConfig, 'config.editableFields')        
@@ -829,7 +830,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   questionEventListener(event: any) {
     this.selectedNodeData = undefined;
-    if(this.objectType === 'question' && event.type === 'close') {
+    if(this.objectType === 'question') {
       this.editorEmitter.emit({
         close: true, library: 'collection_editor', action: event.actionType, identifier: event.identifier        
       });

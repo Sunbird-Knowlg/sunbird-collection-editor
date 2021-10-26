@@ -325,7 +325,7 @@ export const questionEditorConfig = {
       lastName: 'Bhuva',
       orgIds: ['01309282781705830427']
     },
-    identifier: 'do_113388757019344896124', // do_113388220110217216123
+    identifier: 'do_113395509928394752193', // do_113388220110217216123
     collectionIdentifier: 'do_1133872840783626241899',
     collectionPrimaryCategory: 'Exam Question Set',
     collectionObjectType: 'QuestionSet',
@@ -376,7 +376,6 @@ export const questionEditorConfig = {
     gradeLevel: ['Class 1'],
     subject: ['Environmental Studies'],
     topic: ['Forest'],
-    index: 2,
     additionalCategories: [
       {
         value: 'Classroom Teaching Video',
@@ -437,14 +436,14 @@ export const questionEditorConfig = {
     }
   },
   config: {
-    mode: 'review', // edit / review / read / sourcingReview // orgReview
+    mode: 'edit', // edit / review / read / sourcingReview // orgReview
     objectType: 'Question',
     primaryCategory: 'Multiple Choice Question',    
     mimeType: 'application/vnd.sunbird.question',
     interactionType: 'choice',
-    showSourcingStatus: true,
-    showCorrectionComments: true,
-    isReadOnlyMode: true,
+    showSourcingStatus: false,
+    showCorrectionComments: false,
+    isReadOnlyMode: false,
     editableFields: {
       //sourcingreview: ['instructions'],
       orgReview: ['name', 'learningOutcome'],

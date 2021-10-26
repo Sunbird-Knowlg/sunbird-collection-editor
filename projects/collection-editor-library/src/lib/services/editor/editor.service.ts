@@ -267,6 +267,22 @@ export class EditorService {
     return this.publicDataService.patch(req);
   }
 
+  addResourceToQuestionset(collection, unitIdentifier, contentId) {
+    const req = {
+      url: _.get(this.configService.urlConFig, 'URLS.QuestionSet.ADD'),
+      data: {
+        'request': {
+          'questionset': {
+            'rootId': collection,
+            'collectionId': unitIdentifier,
+            'children': [contentId]
+          }
+        }
+      }  
+    };
+    return this.publicDataService.patch(req);
+  }
+
   public getQuestionStream$() {
     return this.questionStream$;
   }
