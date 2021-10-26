@@ -32,7 +32,7 @@
     "@types/jquery": "^3.5.5",
     "alphanum-sort": "^1.0.2",
     "angular2-uuid": "^1.1.1",
-    "common-form-elements-web-v9": "4.4.3",
+    "common-form-elements-web-v9": "4.4.4",
     "core-js": "^2.5.4",
     "express": "^4.17.1",
     "express-http-proxy": "^1.6.2",
