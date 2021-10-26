@@ -85,7 +85,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
   }
   publishEmitter(event) {
     this.showPublishCollectionPopup = false;
-    if (event.button === 'publishContent' || event.button === 'sourcingApprove') {
+    if (event.button === 'publishContent' || event.button === 'publishQuestion' || event.button === 'sourcingApprove' || event.button === 'sourcingApproveQuestion') {
       this.toolbarEmitter.emit(event)
     }
   }

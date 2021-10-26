@@ -154,7 +154,7 @@ export class EditorService {
     return formFields;
   }
 
-  updateCollection(collectionId, data?) {    
+  updateCollection(collectionId, event?) {    
     let objType = this.configService.categoryConfig[this.editorConfig.config.objectType];
     let url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
     let requestBody = {
@@ -162,17 +162,13 @@ export class EditorService {
     };
     objType = objType.toLowerCase();
 
-    if(data.objectType === 'question') {
-      objType = this.configService.categoryConfig[this.editorConfig.config.collectionObjectType];
+    if(event.button === 'sourcingApproveQuestion' || event.button === 'sourcingRejectQuestion') {
+      objType = this.configService.categoryConfig[this.editorConfig.context['collectionObjectType']];
       objType = objType.toLowerCase();
-
-      url = this.configService.urlConFig.URLS[this.editorConfig.config.collectionObjectType];
-      
-      requestBody = data.requestBody; 
-      requestBody.request[objType] = { 
-        ...requestBody.request[objType], 
-        lastPublishedBy: this.editorConfig.context.user.id
-      }       
+      url = this.configService.urlConFig.URLS[this.editorConfig.context['collectionObjectType']];
+             
+      requestBody = event.requestBody;
+      requestBody.request[objType]['lastPublishedBy'] = this.editorConfig.context.user.id;            
     }
     else {
       const fieldsObj = this.getFieldsToUpdate(collectionId);
@@ -187,7 +183,7 @@ export class EditorService {
       
     }
               
-    const publishData =  _.get(data, 'publishData');
+    const publishData =  _.get(event, 'publishData');
     if(publishData) { 
      requestBody.request[objType] = { ...requestBody.request[objType], ...publishData };
     }

@@ -436,14 +436,14 @@ export const questionEditorConfig = {
     }
   },
   config: {
-    mode: 'edit', // edit / review / read / sourcingReview // orgReview
+    mode: 'sourcingReview', // edit / review / read / sourcingReview // orgReview
     objectType: 'Question',
     primaryCategory: 'Multiple Choice Question',    
     mimeType: 'application/vnd.sunbird.question',
     interactionType: 'choice',
-    showSourcingStatus: false,
+    showSourcingStatus: true,
     showCorrectionComments: false,
-    isReadOnlyMode: false,
+    isReadOnlyMode: true,
     editableFields: {
       //sourcingreview: ['instructions'],
       orgReview: ['name', 'learningOutcome'],
