@@ -12,7 +12,7 @@ import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 
 interface SelectedChildren {
-  label?:string,
+  label?: string;
   primaryCategory?: string;
   mimeType?: string;
   interactionType?: string;
@@ -27,10 +27,10 @@ export class EditorService {
   private _editorMode = 'edit';
   public showLibraryPage: EventEmitter<number> = new EventEmitter();
   public contentsCount = 0;
-  templateList=[];
-  parentQuestionId:any;
-  branchingLogic={};
-  selectedSection:any;
+  templateList = [];
+  parentIdentifier: any;
+  branchingLogic = {};
+  selectedSection: any;
   constructor(public treeService: TreeService, private toasterService: ToasterService,
               public configService: ConfigService, private telemetryService: EditorTelemetryService,
               private publicDataService: PublicDataService, private dataService: DataService, public httpClient: HttpClient) {
@@ -146,7 +146,7 @@ export class EditorService {
   }
 
   getFieldsToUpdate(collectionId) {
-    let formFields = {};
+    const formFields = {};
     const editableFields = _.get(this.editorConfig.config, 'editableFields');
     if (editableFields && !_.isEmpty(editableFields[this.editorMode])) {
       const fields = editableFields[this.editorMode];
@@ -173,7 +173,7 @@ export class EditorService {
       }
     };
     const publishData =  _.get(data, 'publishData');
-    if(publishData) {
+    if (publishData) {
      requestBody.request[objType] = { ...requestBody.request[objType], ...publishData };
     }
     const option = {
@@ -227,8 +227,8 @@ export class EditorService {
         }
       }
     };
-   const publishData =  _.get(event, 'publishData');
-   if(publishData) {
+    const publishData =  _.get(event, 'publishData');
+    if (publishData) {
     requestBody.request[objType] = { ...requestBody.request[objType], ...publishData };
    }
     const option = {
@@ -287,7 +287,7 @@ export class EditorService {
     const instance = this;
     this.data = {};
     const data = this.treeService.getFirstChild();
-    let clonedNodeModified = _.cloneDeep(this.treeService.treeCache.nodesModified)
+    const clonedNodeModified = _.cloneDeep(this.treeService.treeCache.nodesModified);
     return {
       nodesModified: clonedNodeModified,
       hierarchy: instance._toFlatObj(data)

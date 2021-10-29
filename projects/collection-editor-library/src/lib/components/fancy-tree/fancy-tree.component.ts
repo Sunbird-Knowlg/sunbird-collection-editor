@@ -147,19 +147,23 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     setTimeout(() => {
       this.treeService.reloadTree(this.rootNode);
-      const prevNodeId = this.treeService.getNodeById(this.treeService.previousNode);
-      if (prevNodeId) {
-        this.treeService.setActiveNode(prevNodeId);
+      const previousNode = this.treeService.getNodeById(this.treeService.previousNode);
+      if (!_.isEmpty(previousNode)) {
+        this.treeService.setActiveNode(previousNode);
       }
-      const prevNodeParent = this.treeService.getParent();
-      this.treeService.setActiveNode(prevNodeParent);
+      if (_.get(previousNode, 'folder') !== true) {
+        const prevNodeParent = this.treeService.getParent();
+        if (!_.isEmpty(prevNodeParent.data)) {
+          this.treeService.setActiveNode(prevNodeParent);
+        }
+      }
       const rootNode = this.treeService.getFirstChild();
       rootNode.setExpanded(true);
       this.eachNodeActionButton(rootNode);
       this.dialcodeService.readExistingQrCode();
+      this.treeService.nextTreeStatus('loaded');
+      this.showTree = true;
     });
-    this.treeService.nextTreeStatus('loaded');
-    this.showTree = true;
   }
 
   getTreeConfig() {
