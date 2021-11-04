@@ -193,6 +193,7 @@ export class LibraryComponent implements OnInit, AfterViewInit, OnDestroy {
         break;
       case 'contentAdded':
         this.childNodes.push(event.data.identifier);
+        this.linkAddedContentsToChildren(event);
         this.editorService.contentsCountAddedInLibraryPage(); // contents count added from library page
         this.filterContentList(true);
         break;
@@ -202,6 +203,10 @@ export class LibraryComponent implements OnInit, AfterViewInit, OnDestroy {
       default:
         break;
     }
+  }
+  linkAddedContentsToChildren(event) {
+ // need to push added to childern array is pending
+ // if you refresh working as expected
   }
 sortContentList(status) {
   this.contentList = this.contentList.sort((a, b) => {
