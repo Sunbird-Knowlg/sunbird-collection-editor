@@ -21,7 +21,7 @@
           <label for="{{child?.identifier}}" class="sb-color-primary font-weight-bold">{{child?.name}}</label>
           <div class="textbookBtnLink"  *ngIf="child.identifier === prevUnitSelect && isContentAdded">
             <button type="button" class="sb-btn sb-btn-normal sb-btn-link sb-btn-hover-none
-             sb-btn-link-secondary sb-left-icon-btn fs-0-785"><i class="circle check icon"></i>
+             sb-btn-link-secondary sb-left-icon-btn fs-0-785"><i class="circle check icon" aria-hidden="true"></i>
              {{configService.labelConfig?.lbl?.alreadyContentPresent}}</button>
           </div>
         </div>

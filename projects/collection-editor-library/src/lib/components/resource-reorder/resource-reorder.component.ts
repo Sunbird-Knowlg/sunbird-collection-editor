@@ -39,8 +39,7 @@ export class ResourceReorderComponent implements OnInit {
       this.modal.deny();
       this.moveEvent.emit({
         action: 'contentAdded',
-        data: this.selectedContentDetails,
-        prevUnitSelect: this.prevUnitSelect
+        data: this.selectedContentDetails
       });
       this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.005'));
     }, err => {
@@ -98,9 +97,15 @@ export class ResourceReorderComponent implements OnInit {
     if (selctedUnitParents.found) {
       this.collectionUnitsBreadcrumb = [...selctedUnitParents.parents];
     }
-    this.isContentAdded = this.checkLinkingContentToCollectionChildren(_.get(this.collectionhierarcyData, 'children'));
+    // check selected content is added to collection atleast once
+    const isAdded = (_.get(this.selectedContentDetails, 'isAdded') ||
+     _.includes(this.collectionhierarcyData.childNodes, this.selectedContentDetails.identifier));
+
+    // check is content already added atleast once to collection if yes then check in children otherwise return false for isContentAdded
+    this.isContentAdded = !isAdded ? isAdded :
+    this.isContentAlreadyPresentInSelectedScetionLevel(_.get(this.collectionhierarcyData, 'children'));
   }
-  checkLinkingContentToCollectionChildren(children) {
+  isContentAlreadyPresentInSelectedScetionLevel(children) {
     const self = this;
     let isContentAdded = false;
     const selectedUnit = _.find(children, { identifier: this.prevUnitSelect });
@@ -113,7 +118,7 @@ export class ResourceReorderComponent implements OnInit {
     });
     _.forEach(children, data => {
       if (data.children) {
-        const res = self.checkLinkingContentToCollectionChildren(data.children);
+        const res = self.isContentAlreadyPresentInSelectedScetionLevel(data.children);
         if (res) {
           isContentAdded = true;
           return false;
