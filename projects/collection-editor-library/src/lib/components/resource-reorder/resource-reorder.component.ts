@@ -39,7 +39,8 @@ export class ResourceReorderComponent implements OnInit {
       this.modal.deny();
       this.moveEvent.emit({
         action: 'contentAdded',
-        data: this.selectedContentDetails
+        data: this.selectedContentDetails,
+        prevUnitSelect: this.prevUnitSelect
       });
       this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.005'));
     }, err => {
