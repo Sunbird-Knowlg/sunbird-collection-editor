@@ -71,6 +71,7 @@ describe('ResourceReorderComponent', () => {
     component.setCollectionUnitBreadcrumb();
     expect(component.getParents).toHaveBeenCalledWith(testData.collectionUnits, testData.prevUnitSelect);
     expect(component.collectionUnitsBreadcrumb).toEqual(testData.collectionUnitsBreadcrumb);
+    expect(component.isContentAdded).toBeFalsy();
   });
 
 });
