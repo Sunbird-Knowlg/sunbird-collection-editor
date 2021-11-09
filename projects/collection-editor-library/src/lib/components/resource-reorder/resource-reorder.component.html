@@ -18,7 +18,7 @@
     <sui-accordion-panel [isOpen]="child?.children && child?.children.length > 0 ? true : false">
       <div title class="sb-accordion-title d-flex flex-ai-center mt-0">
         <div class="item d-flex flex-ai-center cursor-pointer w-100">
-          <label for="{{child?.identifier}}" class="sb-color-primary font-weight-bold">{{child?.name}}</label>
+          <label for="{{child?.identifier}}" class="sb-color-primary font-weight-bold mb-0">{{child?.name}}</label>
           <div class="textbookBtnLink"  *ngIf="child.identifier === prevUnitSelect && isContentAdded">
             <button type="button" class="sb-btn sb-btn-normal sb-btn-link sb-btn-hover-none
              sb-btn-link-secondary sb-left-icon-btn fs-0-785"><i class="circle check icon" aria-hidden="true"></i>
