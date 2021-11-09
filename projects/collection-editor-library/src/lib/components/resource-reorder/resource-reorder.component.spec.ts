@@ -27,6 +27,7 @@ describe('ResourceReorderComponent', () => {
     component.prevUnitSelect = testData.addResourceData.unitIdentifier;
     component.selectedContentDetails = { identifier: testData.addResourceData.contentId };
     component.collectionUnits = testData.collectionUnits;
+    component.collectionhierarcyData = testData.collectionData;
     fixture.detectChanges();
   });
 

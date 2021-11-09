@@ -140,6 +140,9 @@ describe('LibraryComponent', () => {
     component.childNodes = [];
     const data = {action: 'contentAdded', data: {identifier: 'do_11309894061376307219743'}};
     spyOn(component, 'filterContentList');
+    spyOn(component, 'getHierarchyData').and.callFake(() => {
+      return ;
+    });
     component.showResourceTemplate(data);
     expect(component.filterContentList).toHaveBeenCalledWith(true);
   });
@@ -177,6 +180,9 @@ describe('LibraryComponent', () => {
     component.contentList = [{ identifier: '100' }]
     spyOn(component['editorService'], 'contentsCountAddedInLibraryPage');
     spyOn(component, 'filterContentList');
+    spyOn(component, 'getHierarchyData').and.callFake(() => {
+      return ;
+    });
     component.showResourceTemplate(event);
     expect(component['editorService'].contentsCountAddedInLibraryPage).toHaveBeenCalled();
     expect(component.filterContentList).toHaveBeenCalledWith(true);
