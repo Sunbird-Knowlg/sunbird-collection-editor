@@ -109,6 +109,7 @@ export class ResourceReorderComponent implements OnInit {
     const self = this;
     let isContentAdded = false;
     const selectedUnit = _.find(children, { identifier: this.prevUnitSelect });
+    if (selectedUnit && _.get(selectedUnit, 'children')) {
     _.forEach(_.get(selectedUnit, 'children'), data => {
       // tslint:disable-next-line:max-line-length
       if ((data.identifier === this.selectedContentDetails.identifier) && _.includes(this.collectionhierarcyData.childNodes, this.selectedContentDetails.identifier)) {
@@ -116,6 +117,7 @@ export class ResourceReorderComponent implements OnInit {
         return true;
       }
     });
+  }
     _.forEach(children, data => {
       if (data.children) {
         const res = self.isContentAlreadyPresentInSelectedScetionLevel(data.children);
