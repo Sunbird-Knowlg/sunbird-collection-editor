@@ -71,7 +71,38 @@ describe('ResourceReorderComponent', () => {
     component.setCollectionUnitBreadcrumb();
     expect(component.getParents).toHaveBeenCalledWith(testData.collectionUnits, testData.prevUnitSelect);
     expect(component.collectionUnitsBreadcrumb).toEqual(testData.collectionUnitsBreadcrumb);
-    expect(component.isContentAdded).toBeFalsy();
   });
 
+  it('#setCollectionUnitBreadcrumb() check selected content present in given collection and return false for suppose isAdded is false', () => {
+    component.selectedContentDetails = testData.selectedContentDetails;
+    spyOn(component, 'getParents').and.callThrough();
+    spyOn(component, 'setCollectionUnitBreadcrumb').and.callThrough();
+    component.setCollectionUnitBreadcrumb();
+    expect(component.getParents).toHaveBeenCalledWith(testData.collectionUnits, testData.prevUnitSelect);
+    expect(component.collectionUnitsBreadcrumb).toEqual(testData.collectionUnitsBreadcrumb);
+    expect(component.isContentAdded).toBeFalsy();
+  });
+  it('#setCollectionUnitBreadcrumb() check selected content present in given collection and return false for content not present in given unit', () => {
+    component.selectedContentDetails = testData.selectedContentDetails1;
+    spyOn(component, 'getParents').and.callThrough();
+    spyOn(component, 'isContentAlreadyPresentInSelectedScetionLevel').and.callThrough();
+    spyOn(component, 'setCollectionUnitBreadcrumb').and.callThrough();
+    component.setCollectionUnitBreadcrumb();
+    expect(component.getParents).toHaveBeenCalledWith(testData.collectionUnits, testData.prevUnitSelect);
+    expect(component.isContentAlreadyPresentInSelectedScetionLevel).toHaveBeenCalledWith(testData.collectionData.children);
+    expect(component.collectionUnitsBreadcrumb).toEqual(testData.collectionUnitsBreadcrumb);
+    expect(component.isContentAdded).toBeFalsy();
+  });
+  it('#setCollectionUnitBreadcrumb() check selected content present in given collection and return true for content  present in given unit', () => {
+    component.selectedContentDetails = testData.selectedContentDetails1;
+    component.prevUnitSelect = 'do_113405102167613440173';
+    spyOn(component, 'getParents').and.callThrough();
+    spyOn(component, 'isContentAlreadyPresentInSelectedScetionLevel').and.callThrough();
+    spyOn(component, 'setCollectionUnitBreadcrumb').and.callThrough();
+    component.setCollectionUnitBreadcrumb();
+    expect(component.getParents).toHaveBeenCalledWith(testData.collectionUnits, component.prevUnitSelect);
+    expect(component.isContentAlreadyPresentInSelectedScetionLevel).toHaveBeenCalledWith(testData.collectionData.children);
+    expect(component.collectionUnitsBreadcrumb).toEqual(testData.collectionUnitsBreadcrumb);
+    expect(component.isContentAdded).toBeTruthy();
+  });
 });
