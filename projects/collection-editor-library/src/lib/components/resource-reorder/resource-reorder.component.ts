@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ViewEncapsulation} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ViewEncapsulation } from '@angular/core';
 import * as _ from 'lodash-es';
 import { ConfigService } from '../../services/config/config.service';
 import { EditorService } from '../../services/editor/editor.service';
@@ -19,7 +19,9 @@ export class ResourceReorderComponent implements OnInit {
   @Input() collectionUnits;
   @Input() programContext;
   @Input() prevUnitSelect;
+  @Input() collectionhierarcyData;
   showMoveButton = false;
+  isContentAdded = false;
   @ViewChild('modal', {static: true}) modal;
   @Output() moveEvent = new EventEmitter<any>();
   collectionUnitsBreadcrumb: any = [];
@@ -95,5 +97,36 @@ export class ResourceReorderComponent implements OnInit {
     if (selctedUnitParents.found) {
       this.collectionUnitsBreadcrumb = [...selctedUnitParents.parents];
     }
+    // check selected content is added to collection atleast once
+    const isAdded = (_.get(this.selectedContentDetails, 'isAdded') ||
+     _.includes(this.collectionhierarcyData.childNodes, this.selectedContentDetails.identifier));
+
+    // check is content already added atleast once to collection if yes then check in children otherwise return false for isContentAdded
+    this.isContentAdded = !isAdded ? isAdded :
+    this.isContentAlreadyPresentInSelectedScetionLevel(_.get(this.collectionhierarcyData, 'children'));
+  }
+  isContentAlreadyPresentInSelectedScetionLevel(children) {
+    const self = this;
+    let isContentAdded = false;
+    const selectedUnit = _.find(children, { identifier: this.prevUnitSelect });
+    if (selectedUnit && _.get(selectedUnit, 'children')) {
+    _.forEach(_.get(selectedUnit, 'children'), data => {
+      // tslint:disable-next-line:max-line-length
+      if ((data.identifier === this.selectedContentDetails.identifier) && _.includes(this.collectionhierarcyData.childNodes, this.selectedContentDetails.identifier)) {
+        isContentAdded = true;
+        return true;
+      }
+    });
+  }
+    _.forEach(children, data => {
+      if (data.children) {
+        const res = self.isContentAlreadyPresentInSelectedScetionLevel(data.children);
+        if (res) {
+          isContentAdded = true;
+          return false;
+        }
+      }
+    });
+    return isContentAdded;
   }
 }

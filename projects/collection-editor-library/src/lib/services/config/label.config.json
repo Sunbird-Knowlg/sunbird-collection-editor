@@ -180,8 +180,9 @@
        "stepSize":"Step size",
        "right":"Right",
        "translation":"Translation",
-       "publishchecklistTitle": "Please confirm that ALL the following items are verified (by ticking the check-boxes) before you can publish:"
-    },
+       "publishchecklistTitle": "Please confirm that ALL the following items are verified (by ticking the check-boxes) before you can publish:",
+       "alreadyContentPresent": "Already present in this folder"
+      },
     "err":{
        "somethingWentWrong":"Something went wrong",
        "contentNotFoundonOrigin": "The content not found in consumption",
@@ -228,7 +229,7 @@
          "032": "Cannot add content. reached limit of maximum number of contents allowed.",
          "033": "failed to convert url to blob ",
          "034": "failed to download {FILE_TYPE} file using blob url "
-      }, 
+      },
       "success": {
          "001": "Content is saved",
          "002": "Content is sent for review",
@@ -241,7 +242,7 @@
          "009": "QR code(s) updated successfully",
          "010": "QR code generated.",
          "011": "QR codes downloaded" ,
-         "012": "Collaborators updated successfully" 
+         "012": "Collaborators updated successfully"
       },
       "warning" : {
          "001" : "Errors found in linked QR Codes. Please check and correct.",

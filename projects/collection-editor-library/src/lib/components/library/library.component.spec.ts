@@ -8,6 +8,8 @@ import {mockData} from './library.component.spec.data';
 import { Router } from '@angular/router';
 import { TreeService } from '../../services/tree/tree.service';
 import { EditorService } from '../../services/editor/editor.service';
+import { of, throwError } from 'rxjs';
+import { ConfigService } from '../../services/config/config.service';
 describe('LibraryComponent', () => {
   let component: LibraryComponent;
   let fixture: ComponentFixture<LibraryComponent>;
@@ -16,7 +18,7 @@ describe('LibraryComponent', () => {
   }
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      providers: [EditorTelemetryService,TreeService, EditorService, { provide: Router, useClass: RouterStub }],
+      providers: [EditorTelemetryService,TreeService, EditorService, { provide: Router, useClass: RouterStub }, ConfigService],
       imports: [HttpClientTestingModule],
       declarations: [ LibraryComponent, TelemetryInteractDirective ],
       schemas: [NO_ERRORS_SCHEMA]
@@ -140,8 +142,12 @@ describe('LibraryComponent', () => {
     component.childNodes = [];
     const data = {action: 'contentAdded', data: {identifier: 'do_11309894061376307219743'}};
     spyOn(component, 'filterContentList');
+    spyOn(component, 'getHierarchyData').and.callFake(() => {
+      return ;
+    });
     component.showResourceTemplate(data);
     expect(component.filterContentList).toHaveBeenCalledWith(true);
+    expect(component.getHierarchyData).toHaveBeenCalled();
   });
   it('#showResourceTemplate() should call showResourceTemplate for sortContentList', () => {
     const data = {action: 'sortContentList', status: true};
@@ -177,6 +183,9 @@ describe('LibraryComponent', () => {
     component.contentList = [{ identifier: '100' }]
     spyOn(component['editorService'], 'contentsCountAddedInLibraryPage');
     spyOn(component, 'filterContentList');
+    spyOn(component, 'getHierarchyData').and.callFake(() => {
+      return ;
+    });
     component.showResourceTemplate(event);
     expect(component['editorService'].contentsCountAddedInLibraryPage).toHaveBeenCalled();
     expect(component.filterContentList).toHaveBeenCalledWith(true);
@@ -185,5 +194,21 @@ describe('LibraryComponent', () => {
     spyOn(component['editorService'], 'contentsCountAddedInLibraryPage');
     component.ngOnDestroy();
     expect(component['editorService'].contentsCountAddedInLibraryPage).toHaveBeenCalledWith(true);
+  });
+  it('#getHierarchyData() should call getHierarchyData', () => {
+    const response = {
+      result: {
+        content: mockData.collectionHierarchyData
+      }
+    };
+    spyOn(component['editorService'], 'fetchCollectionHierarchy').and.returnValue(of(response));
+    component.getHierarchyData();
+    expect(component.collectionhierarcyData).toBeDefined();
+  });
+  it('#getHierarchyData() should call getHierarchyData and error case', () => {
+    spyOn(component['toasterService'], 'error');
+    spyOn(component['editorService'], 'fetchCollectionHierarchy').and.returnValue(throwError(false));
+    component.getHierarchyData();
+    expect(component['toasterService'].error).toHaveBeenCalled();
   });
 });
