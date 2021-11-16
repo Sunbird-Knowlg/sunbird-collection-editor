@@ -193,6 +193,7 @@ export class LibraryComponent implements OnInit, AfterViewInit, OnDestroy {
         break;
       case 'contentAdded':
         this.childNodes.push(event.data.identifier);
+        this.getHierarchyData();
         this.editorService.contentsCountAddedInLibraryPage(); // contents count added from library page
         this.filterContentList(true);
         break;
@@ -202,6 +203,13 @@ export class LibraryComponent implements OnInit, AfterViewInit, OnDestroy {
       default:
         break;
     }
+  }
+  getHierarchyData() {
+    this.editorService.fetchCollectionHierarchy(this.collectionId).subscribe((response: any) => {
+      this.collectionhierarcyData = response.result.content;
+    }, err => {
+      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.001'));
+    });
   }
 sortContentList(status) {
   this.contentList = this.contentList.sort((a, b) => {
