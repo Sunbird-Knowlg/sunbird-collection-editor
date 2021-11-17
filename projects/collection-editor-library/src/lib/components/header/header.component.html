@@ -40,6 +40,7 @@
       <i class="icon user plus mr-0" aria-hidden="true"></i>
     </div>
     <lib-dialcode *ngIf="visibility && visibility?.dialcode && labelConfigData?.showDialcode === 'yes'" class="d-flex flex-ai-center"></lib-dialcode>
+    <lib-bulk-upload *ngIf="visibility && visibility?.bulkUpload" class="d-flex flex-ai-center mr-10" (bulkUploadEmitter)="bulkUploadListener($event)" ></lib-bulk-upload>
     <button *ngIf="visibility && visibility?.previewContent  && labelConfigData?.hasChildren" class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10"
       [ngClass]="!buttonLoaders?.previewButtonLoader ? '': 'sb-btn-loading-spinner sb-btn-outline-disabled'"
       (click)="buttonEmitter({type: 'previewContent'})" libTelemetryInteract

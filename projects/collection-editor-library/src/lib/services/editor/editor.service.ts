@@ -10,7 +10,7 @@ import { EditorTelemetryService } from '../../services/telemetry/telemetry.servi
 import { DataService } from '../data/data.service';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-
+import { ExportToCsv } from 'export-to-csv';
 interface SelectedChildren {
   primaryCategory?: string;
   mimeType?: string;
@@ -466,4 +466,25 @@ export class EditorService {
       console.error( _.replace(_.get(this.configService, 'labelConfig.messages.error.033'), '{FILE_TYPE}', config.fileType ) + error);
     }
   }
+
+  generateCSV(config) {
+    const tableData = config.tableData;
+    delete config.tableData;
+    let options = {
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalSeparator: '.',
+      showLabels: true,
+      useTextFile: false,
+      useBom: true,
+      showTitle: true,
+      title: '',
+      filename: '',
+      headers: []
+    };
+    options = _.merge(options, config);
+    const csvExporter = new ExportToCsv(options);
+    csvExporter.generateCsv(tableData);
+  }
+
 }

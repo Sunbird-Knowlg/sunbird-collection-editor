@@ -18,6 +18,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
   @Input() showComment: any;
   @Input() publishchecklist: any;
   @Output() toolbarEmitter = new EventEmitter<any>();
+  @Output() bulkUploadEmitter = new EventEmitter<any>();
   @ViewChild('FormControl') FormControl: NgForm;
   @ViewChild('modal') public modal;
   public visibility: any;
@@ -36,8 +37,8 @@ export class HeaderComponent implements OnDestroy, OnInit {
     public configService: ConfigService) { }
 
   async ngOnInit() {
-    await this.handleActionButtons()
-    this.getSourcingData()
+    await this.handleActionButtons();
+    this.getSourcingData();
   }
 
   async handleActionButtons() {
@@ -51,6 +52,8 @@ export class HeaderComponent implements OnDestroy, OnInit {
     this.visibility.sourcingRejectContent = this.editorService.editorMode === 'sourcingreview';
     this.visibility.previewContent = _.get(this.editorService, 'editorConfig.config.objectType') === 'QuestionSet';
     this.visibility.dialcode = this.editorService.editorMode === 'edit';
+    // tslint:disable-next-line:max-line-length
+    this.visibility.bulkUpload = _.get(this.editorService, 'editorConfig.config.objectType') === 'QuestionSet' && _.get(this.editorService, 'editorConfig.config.enableBulkUpload') && this.editorService.editorMode === 'edit';
     this.visibility.showOriginPreviewUrl = _.get(this.editorService, 'editorConfig.config.showOriginPreviewUrl');
     this.visibility.showSourcingStatus = _.get(this.editorService, 'editorConfig.config.showSourcingStatus');
     //this.visibility.showCorrectionComments = _.get(this.editorService, 'editorConfig.config.showCorrectionComments');
@@ -83,6 +86,11 @@ export class HeaderComponent implements OnDestroy, OnInit {
       this.toolbarEmitter.emit(event)
     }
   }
+
+  bulkUploadListener(event) {
+    this.bulkUploadEmitter.emit(event);
+  }
+
   ngOnDestroy() {
     if (this.modal && this.modal.deny) {
       this.modal.deny();
