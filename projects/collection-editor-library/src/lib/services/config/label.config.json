@@ -211,7 +211,8 @@
        "close": "Close",
        "bulkUploadNoticeLine1": "Uploading in bulk may take some time, click on",
        "bulkUploadNoticeLine2": "to continue using Vidyadaan.",
-       "bulkUploadNoticeLine3": "Your upload will keep running in the background."
+       "bulkUploadNoticeLine3": "Your upload will keep running in the background.",
+       "alreadyContentPresent": "Already present in this folder"
       },
     "err":{
        "somethingWentWrong":"Something went wrong",
