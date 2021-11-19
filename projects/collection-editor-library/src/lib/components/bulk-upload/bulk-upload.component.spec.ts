@@ -37,7 +37,7 @@ describe('BulkUploadComponent', () => {
     expect(component.showBulkUploadModal).toBeFalsy();
     expect(component.bulkUploadState).toBe(0);
   });
-  it('should call openBulkUploadModal', () => {
+  xit('should call openBulkUploadModal', () => {
     spyOn(component, 'updateBulkUploadState').and.callThrough();
     component.openBulkUploadModal();
     expect(component.showBulkUploadModal).toBeTruthy();
