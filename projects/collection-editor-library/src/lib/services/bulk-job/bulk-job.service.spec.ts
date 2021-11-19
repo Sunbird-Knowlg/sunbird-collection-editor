@@ -1,17 +1,44 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { BulkJobService } from './bulk-job.service';
-import { APP_BASE_HREF } from '@angular/common';
-
+import { ConfigService } from '../config/config.service';
+import * as urlConfig from '../config/url.config.json';
+import * as labelConfig from '../config/label.config.json';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { PublicDataService } from '../public-data/public-data.service';
+import { of, throwError } from 'rxjs';
+import * as _ from 'lodash-es';
 describe('BulkJobService', () => {
-  beforeEach(() => TestBed.configureTestingModule({
-    imports: [HttpClientTestingModule, RouterTestingModule],
-    providers: [{provide: APP_BASE_HREF, useValue: '/'}]
-  }));
+  const configStub = {
+    urlConFig: (urlConfig as any).default,
+    labelConfig: (labelConfig as any).default
+  };
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [HttpClientModule],
+      providers: [HttpClient, PublicDataService, { provide: ConfigService, useValue: configStub }]
+    });
+  });
 
   it('should be created', () => {
     const service: BulkJobService = TestBed.get(BulkJobService);
     expect(service).toBeTruthy();
+  });
+  it('#getBulkOperationStatus() should get bulk operation status', () => {
+    const publicDataService: PublicDataService = TestBed.get(PublicDataService);
+    spyOn(publicDataService, 'post').and.returnValue(of({}));
+    const service: BulkJobService = TestBed.get(BulkJobService);
+    const observable = service.getBulkOperationStatus('do_123');
+    observable.subscribe((data) => {
+      expect(data).toEqual({});
+    });
+  });
+  it('#createBulkJob() should get bulk operation status', () => {
+    const publicDataService: PublicDataService = TestBed.get(PublicDataService);
+    spyOn(publicDataService, 'post').and.returnValue(of({}));
+    const service: BulkJobService = TestBed.get(BulkJobService);
+    const observable = service.createBulkJob('do_123');
+    observable.subscribe((data) => {
+      expect(data).toEqual({});
+    });
   });
 });
