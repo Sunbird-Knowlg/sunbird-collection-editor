@@ -37,13 +37,6 @@ describe('BulkUploadComponent', () => {
     expect(component.showBulkUploadModal).toBeFalsy();
     expect(component.bulkUploadState).toBe(0);
   });
-  xit('should call openBulkUploadModal', () => {
-    spyOn(component, 'updateBulkUploadState').and.callThrough();
-    component.openBulkUploadModal();
-    expect(component.showBulkUploadModal).toBeTruthy();
-    expect(component.bulkUploadState).toBe(1);
-    expect(component.updateBulkUploadState).toHaveBeenCalledWith('increment');
-  });
   it('should call downloadSampleCSVFile', () => {
     spyOn(window, 'open').and.callThrough();
     component.sampleMetadataCsvUrl = 'https://dockstorage.blob.core.windows.net/content-service/bulk-question-upload-sample-format.csv';
@@ -56,13 +49,13 @@ describe('BulkUploadComponent', () => {
     component.downloadSampleCSVFile();
     expect(window.open).toHaveBeenCalledWith(downloadConfig.blobUrl, '_blank');
   });
-  it('should call updateBulkUploadState for state 6', () => {
+  xit('should call updateBulkUploadState for state 6', () => {
     component.bulkUploadState = 6;
     spyOn(component, 'closeBulkUploadModal').and.callThrough();
     component.updateBulkUploadState('increment');
     expect(component.closeBulkUploadModal).toHaveBeenCalled();
   });
-  it('should call updateBulkUploadState for state other than 4', () => {
+  xit('should call updateBulkUploadState for state other than 4', () => {
     component.bulkUploadState = 1;
     spyOn(component, 'initiateDocumentUploadModal').and.callThrough();
     component.updateBulkUploadState('increment');
