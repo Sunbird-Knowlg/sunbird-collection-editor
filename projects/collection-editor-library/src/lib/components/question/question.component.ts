@@ -83,7 +83,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private questionService: QuestionService, private editorService: EditorService, public telemetryService: EditorTelemetryService,
     public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,
-    private frameworkService: FrameworkService, private router: Router, public configService: ConfigService, 
+    private frameworkService: FrameworkService, private router: Router, public configService: ConfigService,
     private editorCursor: EditorCursor) {
     const { primaryCategory } = this.editorService.selectedChildren;
     this.questionPrimaryCategory = primaryCategory;
@@ -93,7 +93,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {
     const { questionSetId, questionId, type, creationContext } = this.questionInput;
     this.questionInteractionType = type;
-    this.questionId = questionId;    
+    this.questionId = questionId;
     this.questionSetId = questionSetId;
     this.creationContext = creationContext;
     this.unitId = this.creationContext?.unitIdentifier;
@@ -189,7 +189,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
             if (this.questionMetaData.media) {
                 this.mediaArr = this.questionMetaData.media;
               }
-              this.contentComment = _.get(this.creationContext, 'correctionComments');              
+              this.contentComment = _.get(this.creationContext, 'correctionComments');
               this.showLoader = false;
             }
           }, (err: ServerResponse) => {
@@ -229,7 +229,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       case 'saveContent':
         this.saveContent();
         break;
-      case 'submitQuestion':        
+      case 'submitQuestion':
         this.submitHandler();
         break;
       case 'cancelContent':
@@ -284,37 +284,47 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   submitHandler() {
     this.validateQuestionData();
     this.validateFormFields();
-    if(this.showFormError === false)  this.showSubmitConfirmPopup = true;    
+    if(this.showFormError === false)  this.showSubmitConfirmPopup = true;
   }
 
   saveContent() {
     this.validateQuestionData();
     this.validateFormFields();
-    if (this.showFormError === false) {      
+    if (this.showFormError === false) {
       this.saveQuestion();
     }
   }
 
-  sendForReview() {    
+  sendForReview() {
     let callback = function () {
       this.editorService.reviewContent(this.questionId).subscribe(data => {
         this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.002'));
         this.redirectToChapterList();
       }, err => {
         this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.002'));
-      });    
-    }   
-    callback = callback.bind(this); 
+      });
+    };
+    if (!this.questionId) {
+      callback = function () {
+        this.editorService.reviewContent(this.questionId).subscribe(data => {
+          this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.002'));
+          this.addResourceToQuestionset();
+        }, err => {
+          this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.002'));
+        });
+      };
+    }
+    callback = callback.bind(this);
     this.upsertQuestion(callback);
   }
 
-  requestForChanges(comment) {    
+  requestForChanges(comment) {
       this.editorService.submitRequestChanges(this.questionId, comment).subscribe(res => {
         this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.003'));
         this.redirectToChapterList();
       }, err => {
         this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.003'));
-      });    
+      });
   }
 
   sendQuestionForPublish(event) {
@@ -327,13 +337,13 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   rejectQuestion(comment) {
-    const editableFields = _.get(this.creationContext, 'editableFields');    
+    const editableFields = _.get(this.creationContext, 'editableFields');
     if (_.get(this.creationContext, 'mode') === 'orgreview' && editableFields && !_.isEmpty(editableFields[_.get(this.creationContext, 'mode')])) {
       this.validateFormFields();
       if(this.showFormError === true) {
         this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
         return false;
-      }      
+      }
       let callback = this.requestForChanges.bind(this, [comment]);
       this.upsertQuestion(callback);
     } else {
@@ -342,13 +352,13 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   publishQuestion(event) {
-    const editableFields = _.get(this.creationContext, 'editableFields');    
+    const editableFields = _.get(this.creationContext, 'editableFields');
     if (_.get(this.creationContext, 'mode') === 'orgreview' && editableFields && !_.isEmpty(editableFields[_.get(this.creationContext, 'mode')])) {
       this.validateFormFields();
       if(this.showFormError === true) {
         this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
         return false;
-      }      
+      }
       let callback = this.sendQuestionForPublish.bind(this, [event]);
       this.upsertQuestion(callback);
     } else {
@@ -357,20 +367,20 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   sourcingUpdate(event) {
-    const editableFields = _.get(this.creationContext, 'editableFields');   
+    const editableFields = _.get(this.creationContext, 'editableFields');
     if (_.get(this.creationContext, 'mode') === 'sourcingreview' && editableFields && !_.isEmpty(editableFields[_.get(this.creationContext, 'mode')])) {
       this.validateFormFields();
       if(this.showFormError === true) {
         this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
-        return false;        }   
+        return false;        }
       }
       const requestBody = this.prepareSourcingUpdateBody(this.questionId, event.comment);
       event['requestBody'] = requestBody;
       this.editorService.updateCollection(this.questionSetId, event).subscribe(res => {
         this.redirectToChapterList();
-      })   
+      })
     }
-  
+
   validateQuestionData() {
 
     if ([undefined, ''].includes(this.editorState.question)) {
@@ -615,8 +625,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   prepareQuestionBody () {
     const requestBody = this.questionId ?
     {
-      question: _.omit(this.getQuestionMetadata(), ['mimeType'])     
-    } : 
+      question: _.omit(this.getQuestionMetadata(), ['mimeType'])
+    } :
     {
       question: {
         code: UUID.UUID(),
@@ -626,9 +636,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     return requestBody;
   }
 
-  prepareSourcingUpdateBody (questionId, comment?) {   
-      const sourcingUpdateAttribute = this.actionType === 'sourcingApproveQuestion' ? 'acceptedContributions' 
-        : 'rejectedContributions'; 
+  prepareSourcingUpdateBody (questionId, comment?) {
+      const sourcingUpdateAttribute = this.actionType === 'sourcingApproveQuestion' ? 'acceptedContributions'
+        : 'rejectedContributions';
       let collectionObjectType = _.replace(_.lowerCase(this.creationContext['collectionObjectType']), ' ', '');
       const requestBody = {
         request: {
@@ -636,11 +646,11 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
             [sourcingUpdateAttribute]: [questionId]
           }
         }
-      };  
+      };
       if(this.actionType === 'sourcingRejectQuestion') {
         requestBody.request[collectionObjectType]['rejectComment'] = comment;
       }
-      return requestBody; 
+      return requestBody;
   }
 
   upsertQuestion(callback) {
@@ -736,8 +746,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   setQuestionTitle(questionId?) {
     let index;
-    let questionTitle = '';    
-    if(_.get(this.creationContext, 'objectType') === 'question') {      
+    let questionTitle = '';
+    if(_.get(this.creationContext, 'objectType') === 'question') {
       if (!_.isUndefined(this.questionPrimaryCategory)) {
         questionTitle = this.questionPrimaryCategory;
       }
@@ -792,7 +802,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   isEditable(fieldCode) {
     if (this.creationContext.mode === 'edit') {
       return true;
-    }    
+    }
     const editableFields = this.creationContext.editableFields;
     if (editableFields && !_.isEmpty(editableFields[this.creationContext.mode]) && _.includes(editableFields[this.creationContext.mode], fieldCode)) {
       return true;
