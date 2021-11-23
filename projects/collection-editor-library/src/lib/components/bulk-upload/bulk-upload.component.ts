@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import { FineUploader } from 'fine-uploader';
 import * as _ from 'lodash-es';
 import { throwError } from 'rxjs';
@@ -101,7 +101,6 @@ export class BulkUploadComponent implements OnInit {
 
   searchContentWithProcessId() {
     this.bulkJobService.searchContentWithProcessId(this.process.process_id).subscribe((searchResponse) => {
-      // console.log('searchResponse res', JSON.stringify(searchResponse));
       this.process.overall_stats.upload_failed = 0;
       this.process.overall_stats.upload_success = 0;
       this.process.overall_stats.upload_pending = 0;
@@ -140,7 +139,6 @@ export class BulkUploadComponent implements OnInit {
           response.result.questionSet.children = children;
           this.storedCollectionData = response.result.questionSet;
           this.calculateCompletionPercentage();
-          // console.log('updated process:', JSON.stringify(this.process));
           if (this.oldProcessStatus !== this.process.status) {
             this.updateJob();
           }
@@ -201,7 +199,6 @@ export class BulkUploadComponent implements OnInit {
         headers,
         showTitle: false
       };
-      // console.log('csvDownloadConfig:', JSON.stringify(csvDownloadConfig));
       this.editorService.generateCSV(csvDownloadConfig);
     } catch (err) {
       console.log(err);
