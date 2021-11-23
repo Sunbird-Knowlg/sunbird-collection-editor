@@ -15,6 +15,7 @@ import {  DialcodeService } from '../../services/dialcode/dialcode.service';
 
 import { Subject } from 'rxjs';
 import { UUID } from 'angular2-uuid';
+import { takeUntil } from 'rxjs/operators';
 declare var $: any;
 
 @Component({
@@ -36,6 +37,8 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   public showAddSiblingButton: boolean;
   public rootNode: any;
   public showLibraryButton = false;
+  public unsubscribe$ = new Subject<void>();
+  public bulkUploadProcessingStatus = false;
   public rootMenuTemplate = `<span class="ui dropdown sb-dotted-dropdown" autoclose="itemClick" suidropdown="" tabindex="0">
   <span id="contextMenu" class="p-0 w-auto"><i class="icon ellipsis vertical sb-color-black"></i></span>
   <span id= "contextMenuDropDown" class="menu transition hidden" suidropdownmenu="" style="">
@@ -64,6 +67,13 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!_.has(this.config, 'maxDepth')) { // TODO:: rethink this
       this.config.maxDepth = 4;
     }
+    this.editorService.bulkUploadStatus$.subscribe((status) => {
+      if (status === 'processing') {
+        this.bulkUploadProcessingStatus = true;
+      } else {
+        this.bulkUploadProcessingStatus = false;
+      }
+    });
     this.initialize();
   }
 
@@ -251,16 +261,19 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   eachNodeActionButton(node) {
     this.visibility = {};
     const nodeLevel = node.getLevel() - 1;
-    this.visibility.addChild = ((node.folder === false) || (nodeLevel >= this.config.maxDepth)) ? false : true;
     // tslint:disable-next-line:max-line-length
-    this.visibility.addSibling = ((node.folder === true) && (!node.data.root) && !((node.getLevel() - 1) > this.config.maxDepth)) ? true : false;
+    this.visibility.addChild = this.bulkUploadProcessingStatus ? false : ((node.folder === false) || (nodeLevel >= this.config.maxDepth)) ? false : true;
+    // tslint:disable-next-line:max-line-length
+    this.visibility.addSibling = this.bulkUploadProcessingStatus ? false : ((node.folder === true) && (!node.data.root) && !((node.getLevel() - 1) > this.config.maxDepth)) ? true : false;
     if (nodeLevel === 0) {
-      this.visibility.addFromLibrary = _.isEmpty(_.get(this.config, 'children')) ? false : true;
-      this.visibility.createNew = _.isEmpty(_.get(this.config, 'children')) ? false : true;
+      this.visibility.addFromLibrary = this.bulkUploadProcessingStatus ? false : _.isEmpty(_.get(this.config, 'children')) ? false : true;
+      this.visibility.createNew = this.bulkUploadProcessingStatus ? false : _.isEmpty(_.get(this.config, 'children')) ? false : true;
     } else {
       const hierarchylevelData = this.config.hierarchy[`level${nodeLevel}`];
-      this.visibility.addFromLibrary = ((node.folder === false) || _.isEmpty(_.get(hierarchylevelData, 'children'))) ? false : true;
-      this.visibility.createNew = ((node.folder === false) || _.isEmpty(_.get(hierarchylevelData, 'children'))) ? false : true;
+      // tslint:disable-next-line:max-line-length
+      this.visibility.addFromLibrary = this.bulkUploadProcessingStatus ? false : ((node.folder === false) || _.isEmpty(_.get(hierarchylevelData, 'children'))) ? false : true;
+      // tslint:disable-next-line:max-line-length
+      this.visibility.createNew = this.bulkUploadProcessingStatus ? false : ((node.folder === false) || _.isEmpty(_.get(hierarchylevelData, 'children'))) ? false : true;
     }
     this.cdr.detectChanges();
   }
@@ -293,7 +306,8 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   attachContextMenu(node, activeNode?) {
-    if (_.get(this.config, 'mode') !== 'edit' || (node.data.root === true && _.isEmpty(this.config.hierarchy) )) {
+    // tslint:disable-next-line:max-line-length
+    if (this.bulkUploadProcessingStatus || _.get(this.config, 'mode') !== 'edit' || (node.data.root === true && _.isEmpty(this.config.hierarchy) )) {
       return;
     }
     const $nodeSpan = $(node.span);

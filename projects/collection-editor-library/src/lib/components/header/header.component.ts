@@ -4,6 +4,8 @@ import { EditorTelemetryService } from '../../services/telemetry/telemetry.servi
 import { ConfigService } from '../../services/config/config.service';
 import * as _ from 'lodash-es';
 import { NgForm } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'lib-header',
@@ -31,12 +33,21 @@ export class HeaderComponent implements OnDestroy, OnInit {
   public sourcingStatusClass: string;
   public originPreviewUrl: string;
   public correctionComments: string;
+  public unsubscribe$ = new Subject<void>();
+  public bulkUploadStatus = false;
 
   constructor(private editorService: EditorService,
     public telemetryService: EditorTelemetryService,
     public configService: ConfigService) { }
 
   async ngOnInit() {
+    this.editorService.bulkUploadStatus$.pipe(takeUntil(this.unsubscribe$)).subscribe((status) => {
+      if (status === 'processing') {
+        this.bulkUploadStatus = true;
+      } else {
+        this.bulkUploadStatus = false;
+      }
+    });
     await this.handleActionButtons();
     this.getSourcingData();
   }
@@ -95,5 +106,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
     if (this.modal && this.modal.deny) {
       this.modal.deny();
     }
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

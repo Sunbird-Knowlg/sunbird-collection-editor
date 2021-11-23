@@ -146,6 +146,11 @@ export class BulkUploadComponent implements OnInit {
           }
 
         });
+        if (this.process.status === 'completed') {
+          this.editorService.nextBulkUploadStatus('completed');
+        } else {
+        this.editorService.nextBulkUploadStatus('processing');
+        }
         this.bulkUploadEmitter.emit({ status: true, type: 'updateHierarchy' });
       }
     }, (error) => {
@@ -311,6 +316,8 @@ export class BulkUploadComponent implements OnInit {
         this.process = _.get(jobResponse, 'result');
         this.oldProcessStatus = this.process.status;
         this.calculateCompletionPercentage();
+        this.editorService.nextBulkUploadStatus('processing');
+        this.bulkUploadEmitter.emit({ status: true, type: 'updateHierarchy' });
         console.log('response ::', jobResponse);
     });
   }
