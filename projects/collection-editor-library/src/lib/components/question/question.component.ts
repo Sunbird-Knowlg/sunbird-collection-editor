@@ -207,7 +207,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
           this.editorState = { question: '', answer: '', solutions: '' };
         }
         if (this.questionInteractionType === 'choice') {
-          this.editorState = new McqForm({ question: '', options: [] }, {});
+          this.editorState = new McqForm({ question: '', options: [] }, {numberOfOptions: 4});
         }
         this.showLoader = false;
       }
@@ -240,6 +240,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         break;
       case 'publishQuestion':
         this.publishQuestion(event);
+        break;
       case 'sourcingApproveQuestion':
         this.sourcingUpdate(event);
         break;
