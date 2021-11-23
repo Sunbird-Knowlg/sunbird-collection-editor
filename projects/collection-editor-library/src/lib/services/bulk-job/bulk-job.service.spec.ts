@@ -7,7 +7,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { PublicDataService } from '../public-data/public-data.service';
 import { of, throwError } from 'rxjs';
 import * as _ from 'lodash-es';
-describe('BulkJobService', () => {
+xdescribe('BulkJobService', () => {
   const configStub = {
     urlConFig: (urlConfig as any).default,
     labelConfig: (labelConfig as any).default
