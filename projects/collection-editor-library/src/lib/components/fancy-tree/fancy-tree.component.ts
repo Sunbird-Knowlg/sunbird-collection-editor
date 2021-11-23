@@ -15,7 +15,6 @@ import {  DialcodeService } from '../../services/dialcode/dialcode.service';
 
 import { Subject } from 'rxjs';
 import { UUID } from 'angular2-uuid';
-import { takeUntil } from 'rxjs/operators';
 declare var $: any;
 
 @Component({
@@ -260,20 +259,24 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   eachNodeActionButton(node) {
     this.visibility = {};
-    const nodeLevel = node.getLevel() - 1;
-    // tslint:disable-next-line:max-line-length
-    this.visibility.addChild = this.bulkUploadProcessingStatus ? false : ((node.folder === false) || (nodeLevel >= this.config.maxDepth)) ? false : true;
-    // tslint:disable-next-line:max-line-length
-    this.visibility.addSibling = this.bulkUploadProcessingStatus ? false : ((node.folder === true) && (!node.data.root) && !((node.getLevel() - 1) > this.config.maxDepth)) ? true : false;
-    if (nodeLevel === 0) {
-      this.visibility.addFromLibrary = this.bulkUploadProcessingStatus ? false : _.isEmpty(_.get(this.config, 'children')) ? false : true;
-      this.visibility.createNew = this.bulkUploadProcessingStatus ? false : _.isEmpty(_.get(this.config, 'children')) ? false : true;
+    if (this.bulkUploadProcessingStatus) {
+    this.visibility.addChild = false;
+    this.visibility.addSibling =  false;
+    this.visibility.addFromLibrary =  false;
+    this.visibility.createNew =  false;
     } else {
-      const hierarchylevelData = this.config.hierarchy[`level${nodeLevel}`];
+      const nodeLevel = node.getLevel() - 1;
+      this.visibility.addChild = ((node.folder === false) || (nodeLevel >= this.config.maxDepth)) ? false : true;
       // tslint:disable-next-line:max-line-length
-      this.visibility.addFromLibrary = this.bulkUploadProcessingStatus ? false : ((node.folder === false) || _.isEmpty(_.get(hierarchylevelData, 'children'))) ? false : true;
-      // tslint:disable-next-line:max-line-length
-      this.visibility.createNew = this.bulkUploadProcessingStatus ? false : ((node.folder === false) || _.isEmpty(_.get(hierarchylevelData, 'children'))) ? false : true;
+      this.visibility.addSibling = ((node.folder === true) && (!node.data.root) && !((node.getLevel() - 1) > this.config.maxDepth)) ? true : false;
+      if (nodeLevel === 0) {
+        this.visibility.addFromLibrary = _.isEmpty(_.get(this.config, 'children')) ? false : true;
+        this.visibility.createNew = _.isEmpty(_.get(this.config, 'children')) ? false : true;
+      } else {
+        const hierarchylevelData = this.config.hierarchy[`level${nodeLevel}`];
+        this.visibility.addFromLibrary = ((node.folder === false) || _.isEmpty(_.get(hierarchylevelData, 'children'))) ? false : true;
+        this.visibility.createNew = ((node.folder === false) || _.isEmpty(_.get(hierarchylevelData, 'children'))) ? false : true;
+      }
     }
     this.cdr.detectChanges();
   }
