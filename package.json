@@ -53,11 +53,14 @@
     "ngx-bootstrap": "^5.6.2",
     "ngx-chips": "^2.0.2",
     "ngx-infinite-scroll": "^6.0.0",
+    "export-to-csv": "^0.2.1",
     "rxjs": "~6.6.3",
     "svg2img": "^0.6.1",
     "tslib": "^1.10.0",
     "video.js": "^7.10.2",
-    "zone.js": "~0.10.2"
+    "zone.js": "~0.10.2",
+    "videojs-contrib-quality-levels": "^2.1.0",
+    "videojs-http-source-selector": "^1.1.6"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.901.15",
