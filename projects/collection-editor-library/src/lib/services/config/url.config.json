@@ -57,7 +57,7 @@
       "SEARCH": "program/v1/process/search",
       "UPLOAD": "question/v1/bulkUpload",
       "STATUS": "question/v1/bulkUploadStatus",
-      "SAMPLE_QUESTION_FILE" : "content-service/bulk-question-upload-sample-format.csv"
+      "SAMPLE_QUESTION_FILE" : "bulk-question-upload-sample-format.csv"
     },
     "USER": {
       "SEARCH":"user/v1/search"
