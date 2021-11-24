@@ -1,6 +1,6 @@
 <div class="d-flex">
   <button type="button" class="sb-btn sb-btn-normal sb-btn-primary text-inherit mt-2" suiPopup
-    popupText="Bulk upload multiple content at one time using a CSV file" (click)="openBulkUploadModal()"
+    popupText="Bulk upload multiple question at one time using a CSV file" (click)="openBulkUploadModal()"
     *ngIf="['completed', ''].includes(process?.status)"
     libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('bulk_upload_question','click','launch',
@@ -11,7 +11,7 @@
     <div *ngIf="process?.status === 'processing'" class="relative">
       <span class="sb-loader sb-success-loader"></span>
       <span class="sb-color-warning fs-1" suiPopup
-        popupText="Bulk upload of content is in progress, once finished you can initiate another batch">{{configService.labelConfig?.lbl?.bulkInProgress}}</span>
+        popupText="Bulk upload of question is in progress, once finished you can initiate another batch">{{configService.labelConfig?.lbl?.bulkInProgress}}</span>
     </div>
     <a href="#" class="text-decor-none" *ngIf="['completed', 'processing'].includes(process?.status)" (click)="viewDetails($event)"
     libTelemetryInteract
@@ -22,7 +22,7 @@
 
 
 <sui-modal *ngIf="showBulkUploadModal" [mustScroll]="true" [isClosable]="true" [transitionDuration]="0"
-  [size]="'normal'" class="sb-modal overflow-modal" appBodyScroll (dismissed)="closeBulkUploadModal()" #modal>
+  [size]="'normal'" class="sb-modal overflow-modal sb-bk-upload" appBodyScroll (dismissed)="closeBulkUploadModal()" #modal>
   <div class="sb-modal-header">
     {{configService.labelConfig?.lbl?.bulkUploadQuestion}}
   </div>
