@@ -20,8 +20,6 @@ export class BulkUploadComponent implements OnInit {
   @ViewChild('fineUploaderUI') fineUploaderUI: ElementRef;
   @Output() bulkUploadEmitter = new EventEmitter<any>();
   public storedCollectionData;
-  public unitsInLevel: Array<any> = [];
-  public unitGroup: any;
   public process: any = {
     process_id: '',
     status: '',
@@ -113,7 +111,7 @@ export class BulkUploadComponent implements OnInit {
           status = 'Draft';
         }
         _.each(this.contents, (content) => {
-          if (content.status === 'Failed') {
+          if (content.status === 'Retired') {
             this.process.overall_stats.upload_failed++;
           } else if (content.status === status) {
             this.process.overall_stats.upload_success++;
@@ -129,15 +127,6 @@ export class BulkUploadComponent implements OnInit {
           this.process.status = 'completed';
         }
         this.editorService.fetchCollectionHierarchy(this.collectionId).subscribe((response) => {
-          const children = [];
-          _.forEach(response.result.questionSet.children, (child) => {
-            if (child.mimeType !== 'application/vnd.sunbird.questionset' ||
-            (child.mimeType === 'application/vnd.sunbird.questionset' && child.openForContribution === true)) {
-              children.push(child);
-            }
-          });
-
-          response.result.questionSet.children = children;
           this.storedCollectionData = response.result.questionSet;
           this.calculateCompletionPercentage();
           // console.log('updated process:', JSON.stringify(this.process));
@@ -154,9 +143,6 @@ export class BulkUploadComponent implements OnInit {
   }
 
   downloadReport() {
-    this.unitsInLevel = _.map(this.contents, content => {
-      return this.findFolderLevel(this.storedCollectionData, content.identifier);
-    });
     const headers = ['Name of the Question', 'Level 1 Question Set Section', 'Keywords', 'Audience',
     'Author', 'Copyright', 'License', 'Attributions'];
     try {
@@ -168,21 +154,20 @@ export class BulkUploadComponent implements OnInit {
         result.name = _.get(content, 'name', '');
         result.level1 = '';
         result.keywords = _.join(_.get(content, 'keywords', []), ', ');
-        result.audience = _.first(_.get(content, 'audience', ''));
+        result.audience = _.join(_.get(content, 'audience', []), ', ');
         result.creator = _.get(content, 'author', '');
         result.copyright = _.get(content, 'copyright', '');
         result.license = _.get(content, 'license', '');
         result.attributions = _.join(_.get(content, 'attributions', []), ', ');
-        const folderStructure = this.unitsInLevel[i];
-        this.unitGroup = [];
-        this.tree(folderStructure);
-        if (this.unitGroup.length > 0) {
-          result.level1 = _.get(this.unitGroup, '[0].name', '');
+        const selctedUnitParents: any = this.getParents(this.storedCollectionData.children, content.identifier);
+        if (selctedUnitParents.found && !_.isEmpty(selctedUnitParents.parents)) {
+          result.level1 = selctedUnitParents.parents;
         }
-
         let status = _.get(content, 'status', '');
         if ((this.stageStatus === 'draft' && status === 'Draft')) {
           status = 'Success';
+        } else if (status === 'Retired') {
+          status = 'Failure';
         }
 
         result.status = status;
@@ -202,25 +187,6 @@ export class BulkUploadComponent implements OnInit {
       console.log(err);
       this.toasterService.error(_.get(this.configService.labelConfig, 'messages.error.001'));
     }
-  }
-
-  findFolderLevel({ children = [], ...object }, identifier) {
-    let result;
-    if (object.identifier === identifier) {
-      return object;
-    }
-    return children.some(o => result = this.findFolderLevel(o, identifier)) && Object.assign({}, object, { chi: [result] });
-  }
-
-  tree(ob) {
-    _.forEach(ob.chi, bb => {
-      if (bb.objectType === 'QuestionSet') {
-        this.unitGroup.push({ name: bb.name, identifier: bb.identifier });
-      }
-      if (bb.chi) {
-        this.tree(bb);
-      }
-    });
   }
 
   updateJob() {
@@ -448,6 +414,40 @@ export class BulkUploadComponent implements OnInit {
     if (this.bulkUploadState === 2) {
       this.initiateDocumentUploadModal();
     }
+  }
+
+  getParentsHelper(tree: any, id: string, parents: string = '') {
+    const self = this;
+    if (tree.identifier === id) {
+      return {
+        found: true,
+        parents
+      };
+    }
+    let result = {
+      found: false,
+    };
+    if (tree.children) {
+      _.forEach(tree.children, (subtree, key) => {
+        let maybeParents = parents;
+        if (tree.identifier !== undefined) {
+          maybeParents = tree.name;
+        }
+        const maybeResult: any = self.getParentsHelper(subtree, id, maybeParents);
+        if (maybeResult.found) {
+          result = maybeResult;
+          return false;
+        }
+      });
+    }
+    return result;
+  }
+
+  getParents(data: Array<any>, id: string) {
+    const tree = {
+      children: data
+    };
+    return this.getParentsHelper(tree, id);
   }
 
   downloadSampleCSVFile() {

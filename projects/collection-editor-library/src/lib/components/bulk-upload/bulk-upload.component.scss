@@ -12,3 +12,25 @@
     align-items: center;
   }
   
+
+.sb-bk-upload h6 {
+    line-height: 22px;
+}
+
+@media screen and (min-width: 768px) {
+  .sb-bk-upload .my--20 {
+      margin: -1.25rem 0!important;
+  }
+}
+
+.sb-bk-upload .sb-circle-download-icon {
+  background: var(--secondary-100);
+  display: inline-block;
+  width: 1.8rem;
+  height: 1.8rem;
+  line-height: 1.8rem;
+  color: var(--white);
+  border-radius: 100%;
+  text-align: center;
+  font-size: .8rem;
+}
