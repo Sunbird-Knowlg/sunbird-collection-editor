@@ -32,3 +32,9 @@
   text-align: center;
   font-size: 0.8rem;
 }
+
+.sb-loader-with-lbl{
+  .sb-loader{
+    position: relative !important;
+  }
+}
