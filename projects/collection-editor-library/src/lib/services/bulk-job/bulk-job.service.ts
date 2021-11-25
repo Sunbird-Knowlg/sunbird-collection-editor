@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { DataService } from '../data/data.service';
+import { PublicDataService } from '../public-data/public-data.service';
 import { ConfigService } from '../config/config.service';
 
 @Injectable({
@@ -8,7 +8,7 @@ import { ConfigService } from '../config/config.service';
 })
 export class BulkJobService {
 
-  constructor(private dataService: DataService, public configService: ConfigService) { }
+  constructor(private publicDataService: PublicDataService, public configService: ConfigService) { }
 
   getBulkOperationStatus(reqData): Observable<any> {
     const req = {
@@ -17,7 +17,7 @@ export class BulkJobService {
         request: reqData
       }
     };
-    return this.dataService.post(req);
+    return this.publicDataService.post(req);
   }
 
   searchContentWithProcessId(processId) {
@@ -29,7 +29,7 @@ export class BulkJobService {
         }
       }
     };
-    return this.dataService.post(reqData);
+    return this.publicDataService.post(reqData);
   }
 
   createBulkJob(reqData): Observable<any> {
@@ -39,7 +39,7 @@ export class BulkJobService {
         request: reqData
       }
     };
-    return this.dataService.post(req);
+    return this.publicDataService.post(req);
   }
 
   updateBulkJob(reqData): Observable<any> {
@@ -49,7 +49,7 @@ export class BulkJobService {
         request: reqData
       }
     };
-    return this.dataService.patch(req);
+    return this.publicDataService.patch(req);
   }
 
   createBulkImport(reqData, headers): Observable<any> {
@@ -60,6 +60,6 @@ export class BulkJobService {
       },
       header: headers
     };
-    return this.dataService.post(req);
+    return this.publicDataService.post(req);
   }
 }

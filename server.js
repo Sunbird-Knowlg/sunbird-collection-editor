@@ -60,9 +60,9 @@ app.use(['/action/questionset/v1/*',
     }
 }));
 
-app.use(['/api/program/v1/*',
-    '/api/question/v1/bulkUpload',
-    '/api/question/v1/bulkUploadStatus'
+app.use(['/action/program/v1/*',
+    '/action/question/v1/bulkUpload',
+    '/action/question/v1/bulkUploadStatus'
     ], proxy(BASE_URL, {
     https: true,
     limit: '30mb',

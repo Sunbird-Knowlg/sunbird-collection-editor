@@ -1,17 +1,17 @@
 {
-    "/api/question/v1/bulkUpload": {
+    "/action/question/v1/bulkUpload": {
         "target": "http://localhost:3000",
         "secure": false,
         "logLevel": "debug",
         "changeOrigin": true
     },
-    "/api/question/v1/bulkUploadStatus": {
+    "/action/question/v1/bulkUploadStatus": {
         "target": "http://localhost:3000",
         "secure": false,
         "logLevel": "debug",
         "changeOrigin": true
     },
-    "/api/program/v1": {
+    "/action/program/v1": {
         "target": "http://localhost:3000",
         "secure": false,
         "logLevel": "debug",
