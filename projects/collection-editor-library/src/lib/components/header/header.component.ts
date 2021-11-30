@@ -64,7 +64,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
     this.visibility.previewContent = _.get(this.editorService, 'editorConfig.config.objectType') === 'QuestionSet';
     this.visibility.dialcode = this.editorService.editorMode === 'edit';
     // tslint:disable-next-line:max-line-length
-    this.visibility.bulkUpload = _.get(this.editorService, 'editorConfig.config.objectType') === 'QuestionSet' && _.get(this.editorService, 'editorConfig.config.enableBulkUpload') && this.editorService.editorMode === 'edit';
+    this.visibility.bulkUpload = _.get(this.editorService, 'editorConfig.config.objectType') === 'QuestionSet' && this.editorService.editorMode === 'edit';
     this.visibility.showOriginPreviewUrl = _.get(this.editorService, 'editorConfig.config.showOriginPreviewUrl');
     this.visibility.showSourcingStatus = _.get(this.editorService, 'editorConfig.config.showSourcingStatus');
     //this.visibility.showCorrectionComments = _.get(this.editorService, 'editorConfig.config.showCorrectionComments');
