@@ -1,5 +1,5 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import * as _ from 'lodash-es';
 import { TreeService } from '../tree/tree.service';
 import { PublicDataService } from '../public-data/public-data.service';
@@ -10,7 +10,7 @@ import { EditorTelemetryService } from '../../services/telemetry/telemetry.servi
 import { DataService } from '../data/data.service';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-
+import { ExportToCsv } from 'export-to-csv';
 interface SelectedChildren {
   label?: string;
   primaryCategory?: string;
@@ -26,6 +26,8 @@ export class EditorService {
   private _editorConfig: IEditorConfig;
   private _editorMode = 'edit';
   public showLibraryPage: EventEmitter<number> = new EventEmitter();
+  private _bulkUploadStatus$ = new BehaviorSubject<any>(undefined);
+  public readonly bulkUploadStatus$: Observable<any> = this._bulkUploadStatus$
   public contentsCount = 0;
   templateList = [];
   parentIdentifier: any;
@@ -77,6 +79,9 @@ export class EditorService {
     return _.cloneDeep(_.merge(this.configService.labelConfig.button_labels, _.get(this.editorConfig, 'context.labels')));
   }
 
+  nextBulkUploadStatus(status) {
+    this._bulkUploadStatus$.next(status);
+  }
   emitshowLibraryPageEvent(page) {
     this.showLibraryPage.emit(page);
   }
@@ -474,4 +479,25 @@ export class EditorService {
       console.error( _.replace(_.get(this.configService, 'labelConfig.messages.error.033'), '{FILE_TYPE}', config.fileType ) + error);
     }
   }
+
+  generateCSV(config) {
+    const tableData = config.tableData;
+    delete config.tableData;
+    let options = {
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalSeparator: '.',
+      showLabels: true,
+      useTextFile: false,
+      useBom: true,
+      showTitle: true,
+      title: '',
+      filename: '',
+      headers: []
+    };
+    options = _.merge(options, config);
+    const csvExporter = new ExportToCsv(options);
+    csvExporter.generateCsv(tableData);
+  }
+
 }

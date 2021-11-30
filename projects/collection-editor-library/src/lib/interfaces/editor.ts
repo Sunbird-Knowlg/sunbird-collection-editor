@@ -1,4 +1,6 @@
 export interface Context {
+    programId?: string;
+    contributionOrgId?: string;
     user: User;
     identifier: string;
     mode: string;

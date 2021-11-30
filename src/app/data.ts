@@ -72,6 +72,7 @@ export const courseEditorConfig = {
     dialcodeMaxLength: 250,
     iconClass: 'fa fa-book',
     showAddCollaborator: true,
+    enableBulkUpload: false,
     children: {},
     hierarchy: {
       level1: {
@@ -141,6 +142,8 @@ export const courseEditorConfig = {
 
 export const questionEditorConfig = {
   context: {
+    programId: 'f72ad8b0-36df-11ec-a56f-4b503455085f',
+    contributionOrgId: '',
     user: {
       id: '5a587cc1-e018-4859-a0a8-e842650b9d64',
       fullName: 'Vaibahv Bhuva',
@@ -148,7 +151,7 @@ export const questionEditorConfig = {
       lastName: 'Bhuva',
       orgIds: ['01309282781705830427']
     },
-    identifier: 'do_1133610108714352641210', // 'do_1132393548335759361558', // do_11330102570702438417
+    identifier: 'do_1134057882352517121105', // do_11330102570702438417
     authToken: ' ',
     sid: 'iYO2K6dOSdA0rwq7NeT1TDzS-dbqduvV',
     did: '7e85b4967aebd6704ba1f604f20056b6',
@@ -265,35 +268,33 @@ export const questionEditorConfig = {
     isRoot: true,
     iconClass: 'fa fa-book',
     showAddCollaborator: false,
-    children: {},
+    enableBulkUpload: true,
+    publicStorageAccount: 'https://dockstorage.blob.core.windows.net/',
+    children: {
+      Question: [
+        'Multiple Choice Question',
+        'Subjective Question'
+      ]
+    },
     hierarchy: {
       level1: {
         name: 'Section',
         type: 'Unit',
         mimeType: 'application/vnd.sunbird.questionset',
-        primaryCategory: 'Survey',
+        primaryCategory: 'Practice Question Set',
         iconClass: 'fa fa-folder-o',
-        children: {
-          Question: [
-            'Multiple Choice Question',
-            'Slider',
-            'Text',
-            'Date'
-          ]
-        }
+        children: {}
       },
       level2: {
         name: 'Sub Section',
         type: 'Unit',
         mimeType: 'application/vnd.sunbird.questionset',
-        primaryCategory: 'Survey',
+        primaryCategory: 'Practice Question Set',
         iconClass: 'fa fa-folder-o',
         children: {
           Question: [
             'Multiple Choice Question',
-            'Slider',
-            'Text',
-            'Date'
+            'Subjective Question'
           ]
         }
       },
@@ -301,14 +302,11 @@ export const questionEditorConfig = {
         name: 'Sub Section',
         type: 'Unit',
         mimeType: 'application/vnd.sunbird.questionset',
-        primaryCategory: 'Survey',
+        primaryCategory: 'Practice Question Set',
         iconClass: 'fa fa-folder-o',
         children: {
           Question: [
-            'Multiple Choice Question',
-            'Slider',
-            'Text',
-            'Date'
+            'Subjective Question'
           ]
         }
       }
@@ -319,7 +317,7 @@ export const questionEditorConfig = {
 
 export const collectionEditorConfig = {
   context: {
-      identifier: 'do_113345692849029120131',
+      identifier: 'do_113367576496021504151',
       channel: '01309282781705830427',
       authToken: '',
       sid: 'vLpZ1rFl6-sxMVHi4RrmrlHw0HsX9ggC',
@@ -363,6 +361,7 @@ export const collectionEditorConfig = {
   config: {
       mode: 'edit',
       showAddCollaborator: true,
+      enableBulkUpload: false,
       maxDepth: 4,
       objectType: 'Collection',
       primaryCategory: 'Digital Textbook',
