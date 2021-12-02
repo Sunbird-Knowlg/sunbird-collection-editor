@@ -29,6 +29,7 @@ import { SunbirdVideoPlayerModule } from '@project-sunbird/sunbird-video-player-
 import { QumlLibraryModule } from '@project-sunbird/sunbird-quml-player-v9';
 import {CarouselModule} from 'ngx-bootstrap/carousel';
 import { TelemetryInteractDirective } from './directives/telemetry-interact/telemetry-interact.directive';
+import { DateFormatPipe } from './directives/date-format/date-format.pipe';
 import { AssetBrowserComponent } from './components/asset-browser/asset-browser.component';
 import { CollectionIconComponent } from './components/collection-icon/collection-icon.component';
 import { CacheService } from 'ng2-cache-service';
@@ -44,13 +45,15 @@ import { ManageCollaboratorComponent } from './components/manage-collaborator/ma
 import { SliderComponent } from './components/slider/slider.component';
 import { TranslationsComponent } from './components/translations/translations.component';
 import { PublishChecklistComponent } from './components/publish-checklist/publish-checklist.component';
+import { BulkUploadComponent  } from './components/bulk-upload/bulk-upload.component';
 @NgModule({
   declarations: [CollectionEditorLibraryComponent, ContentplayerPageComponent, EditorComponent, QumlplayerPageComponent,
     HeaderComponent, FancyTreeComponent, MetaFormComponent, LibraryComponent, LibraryFilterComponent, LibraryListComponent,
     QuestionComponent, OptionsComponent, AnswerComponent, CkeditorToolComponent,
     LibraryPlayerComponent, ResourceReorderComponent, SkeletonLoaderComponent, TemplateComponent, TelemetryInteractDirective,
     AssetBrowserComponent, CollectionIconComponent,
-    QumlPlayerComponent, DialcodeComponent, CsvUploadComponent, ManageCollaboratorComponent, PublishChecklistComponent,AnswerDateComponent,QuestionOptionSubMenuComponent,SliderComponent, TranslationsComponent],
+    QumlPlayerComponent, DialcodeComponent, DateFormatPipe, BulkUploadComponent, CsvUploadComponent, ManageCollaboratorComponent,
+    PublishChecklistComponent, AnswerDateComponent, QuestionOptionSubMenuComponent, SliderComponent, TranslationsComponent],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule.forChild([]), SuiModule,
   CommonFormElementsModule, InfiniteScrollModule, HttpClientModule, SunbirdPdfPlayerModule, SunbirdVideoPlayerModule,
   QumlLibraryModule, CarouselModule],

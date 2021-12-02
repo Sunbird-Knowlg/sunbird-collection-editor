@@ -173,7 +173,13 @@ sb-icon-dropdown {
   font-weight: 500 !important;
 }
 
-
+lib-meta-form{
+  sb-dynamic-form{
+    .dynamic-form{
+      min-height: 1100px;
+    }
+  }
+}
 .text-center { text-align: center }
 .text-left { text-align: left }
 .text-right { text-align: right }

@@ -1,5 +1,5 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import * as _ from 'lodash-es';
 import { TreeService } from '../tree/tree.service';
 import { PublicDataService } from '../public-data/public-data.service';
@@ -10,9 +10,9 @@ import { EditorTelemetryService } from '../../services/telemetry/telemetry.servi
 import { DataService } from '../data/data.service';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-
+import { ExportToCsv } from 'export-to-csv';
 interface SelectedChildren {
-  label?:string,
+  label?: string;
   primaryCategory?: string;
   mimeType?: string;
   interactionType?: string;
@@ -26,11 +26,13 @@ export class EditorService {
   private _editorConfig: IEditorConfig;
   private _editorMode = 'edit';
   public showLibraryPage: EventEmitter<number> = new EventEmitter();
+  private _bulkUploadStatus$ = new BehaviorSubject<any>(undefined);
+  public readonly bulkUploadStatus$: Observable<any> = this._bulkUploadStatus$
   public contentsCount = 0;
-  templateList=[];
-  parentQuestionId:any;
-  branchingLogic={};
-  selectedSection:any;
+  templateList = [];
+  parentIdentifier: any;
+  branchingLogic = {};
+  selectedSection: any;
   constructor(public treeService: TreeService, private toasterService: ToasterService,
               public configService: ConfigService, private telemetryService: EditorTelemetryService,
               private publicDataService: PublicDataService, private dataService: DataService, public httpClient: HttpClient) {
@@ -77,6 +79,9 @@ export class EditorService {
     return _.cloneDeep(_.merge(this.configService.labelConfig.button_labels, _.get(this.editorConfig, 'context.labels')));
   }
 
+  nextBulkUploadStatus(status) {
+    this._bulkUploadStatus$.next(status);
+  }
   emitshowLibraryPageEvent(page) {
     this.showLibraryPage.emit(page);
   }
@@ -146,7 +151,7 @@ export class EditorService {
   }
 
   getFieldsToUpdate(collectionId) {
-    let formFields = {};
+    const formFields = {};
     const editableFields = _.get(this.editorConfig.config, 'editableFields');
     if (editableFields && !_.isEmpty(editableFields[this.editorMode])) {
       const fields = editableFields[this.editorMode];
@@ -173,7 +178,7 @@ export class EditorService {
       }
     };
     const publishData =  _.get(data, 'publishData');
-    if(publishData) {
+    if (publishData) {
      requestBody.request[objType] = { ...requestBody.request[objType], ...publishData };
     }
     const option = {
@@ -227,8 +232,8 @@ export class EditorService {
         }
       }
     };
-   const publishData =  _.get(event, 'publishData');
-   if(publishData) {
+    const publishData =  _.get(event, 'publishData');
+    if (publishData) {
     requestBody.request[objType] = { ...requestBody.request[objType], ...publishData };
    }
     const option = {
@@ -287,7 +292,7 @@ export class EditorService {
     const instance = this;
     this.data = {};
     const data = this.treeService.getFirstChild();
-    let clonedNodeModified = _.cloneDeep(this.treeService.treeCache.nodesModified)
+    const clonedNodeModified = _.cloneDeep(this.treeService.treeCache.nodesModified);
     return {
       nodesModified: clonedNodeModified,
       hierarchy: instance._toFlatObj(data)
@@ -474,4 +479,25 @@ export class EditorService {
       console.error( _.replace(_.get(this.configService, 'labelConfig.messages.error.033'), '{FILE_TYPE}', config.fileType ) + error);
     }
   }
+
+  generateCSV(config) {
+    const tableData = config.tableData;
+    delete config.tableData;
+    let options = {
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalSeparator: '.',
+      showLabels: true,
+      useTextFile: false,
+      useBom: true,
+      showTitle: true,
+      title: '',
+      filename: '',
+      headers: []
+    };
+    options = _.merge(options, config);
+    const csvExporter = new ExportToCsv(options);
+    csvExporter.generateCsv(tableData);
+  }
+
 }

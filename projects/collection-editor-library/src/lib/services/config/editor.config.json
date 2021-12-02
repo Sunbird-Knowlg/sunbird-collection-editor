@@ -27,5 +27,6 @@
     "collection": {
       "maxContentsLimit": "1200"
     },
-    "showAddCollaborator": false
+    "showAddCollaborator": false,
+    "enableBulkUpload": false
 }

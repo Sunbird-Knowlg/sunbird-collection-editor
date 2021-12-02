@@ -85,36 +85,36 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   hints: any;
   categoryLabel: any = {};
   scoreMapping: any;
-  condition:any;
-  targetOption:any;
+  condition: any;
+  targetOption: any;
   responseVariable = 'response1';
-  QuestionId:any;
-  showOptions:boolean;
-  selectedOptions:any;
-  options=[
-    { value: 0, label: 'option1' }, 
+  dependentQuestionID: any;
+  showOptions: boolean;
+  selectedOptions: any;
+  options = [
+    { value: 0, label: 'option1' },
     { value: 1, label: 'option2' },
     { value: 2, label: 'option3' },
     { value: 3, label: 'option4' },
-  ]
+  ];
   constructor(
     private questionService: QuestionService, private editorService: EditorService, public telemetryService: EditorTelemetryService,
     public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,
     private frameworkService: FrameworkService, private router: Router, public configService: ConfigService,
     private editorCursor: EditorCursor) {
-    const { primaryCategory,label } = this.editorService.selectedChildren;
+    const { primaryCategory, label } = this.editorService.selectedChildren;
     this.questionPrimaryCategory = primaryCategory;
     this.pageStartTime = Date.now();
-    this.categoryLabel=[];
-    if(!_.isUndefined(label)){
+    this.categoryLabel = [];
+    if (!_.isUndefined(label)) {
       this.categoryLabel[primaryCategory] = label;
     }
   }
 
   ngOnInit() {
-    const { questionSetId, questionId, type,setChildQueston } = this.questionInput;
-    if(_.isUndefined(setChildQueston)){
-      this.questionInput.setChildQueston=false;
+    const { questionSetId, questionId, type, setChildQueston } = this.questionInput;
+    if (_.isUndefined(setChildQueston)) {
+      this.questionInput.setChildQueston = false;
     }
     this.questionInteractionType = type;
     this.questionId = questionId;
@@ -124,7 +124,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.toolbarConfig.add_translation = true;
     this.solutionUUID = UUID.UUID();
     this.telemetryService.telemetryPageId = this.pageId;
-    if(this.leafFormConfig){
+    if (this.leafFormConfig) {
     this.initialLeafFormConfig = _.cloneDeep(this.leafFormConfig);
     }
     this.initialize();
@@ -169,7 +169,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
             if (res.result) {
               this.questionMetaData = res.result.question;
               this.populateFormData();
-              this.subMenuConfig()
+              this.subMenuConfig();
               if (_.isUndefined(this.questionPrimaryCategory)) {
                 this.questionPrimaryCategory = this.questionMetaData.primaryCategory;
               }
@@ -199,18 +199,18 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
               if (this.questionInteractionType === 'choice') {
                 const responseDeclaration = this.questionMetaData.responseDeclaration;
-                this.scoreMapping = _.get(responseDeclaration,"response1.mapping")
+                this.scoreMapping = _.get(responseDeclaration, 'response1.mapping');
                 const templateId = this.questionMetaData.templateId;
                 this.questionMetaData.editorState = this.questionMetaData.editorState;
                 const numberOfOptions = this.questionMetaData.editorState.options.length;
                 const options = _.map(this.questionMetaData.editorState.options, option => ({ body: option.value.body }));
                 const question = this.questionMetaData.editorState.question;
-                const interactions = this.questionMetaData.interactions
+                const interactions = this.questionMetaData.interactions;
                 this.editorState = new McqForm({
                   question, options, answer: _.get(responseDeclaration, 'response1.correctResponse.value')
                 }, { templateId, numberOfOptions });
                 this.editorState.solutions = this.questionMetaData.editorState.solutions;
-                this.editorState.interactions = interactions
+                this.editorState.interactions = interactions;
               }
               this.setQuestionTitle(this.questionId);
               if (!_.isEmpty(this.editorState.solutions)) {
@@ -251,7 +251,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.questionInteractionType === 'choice') {
           this.editorState = new McqForm({ question: '', options: [] }, {});
         }
-        this.subMenuConfig()
+        this.subMenuConfig();
         this.showLoader = false;
       }
     }, (err: ServerResponse) => {
@@ -260,7 +260,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       };
       this.editorService.apiErrorHandling(err, errInfo);
     });
-   
+
   }
 
   toolbarEventListener(event) {
@@ -358,7 +358,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   redirectToQuestionset() {
     this.showConfirmPopup = false;
     setTimeout(() => {
-      this.showAddSecondaryQuestionCat ? this.questionEmitter.emit({ type: 'createNewContent', isChildQuestion: true }) : this.questionEmitter.emit({ status: false });
+      this.showAddSecondaryQuestionCat ?
+      this.questionEmitter.emit({ type: 'createNewContent', isChildQuestion: true }) :
+      this.questionEmitter.emit({ status: false });
+
       this.showAddSecondaryQuestionCat = false;
     }, 100);
   }
@@ -524,12 +527,12 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   prepareRequestBody() {
     const questionId = this.questionId ? this.questionId : UUID.UUID();
-    this.QuestionId=questionId;
+    this.dependentQuestionID = questionId;
     const data = this.treeService.getFirstChild();
     const activeNode = this.treeService.getActiveNode();
     const selectedUnitId = _.get(activeNode, 'data.id');
     this.editorService.data = {};
-    this.editorService.selectedSection=selectedUnitId;
+    this.editorService.selectedSection = selectedUnitId;
     const metaData = this.getQuestionMetadata();
     this.setQuestionTypeVlaues(metaData);
     return {
@@ -573,15 +576,15 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
     _.forEach(this.subMenus, (el: any) => {
       console.log(el);
-      if(el.id === 'addHint'){
-        metaData['hints']={
-          en:[el.value]
-        }
-      };
-      if(el.id === 'addTip'){
-        metaData['instructions']={
-          en:[el.value]
-        }
+      if (el.id === 'addHint') {
+        metaData.hints = {
+          en: [el.value]
+        };
+      }
+      if (el.id === 'addTip') {
+        metaData.instructions = {
+          en: [el.value]
+        };
       }
     });
 
@@ -632,12 +635,11 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   createQuestion() {
     const requestBody = this.prepareRequestBody();
-    if(this.showOptions){
-      console.log("dependent Question data");
-      console.log(this.QuestionId)
-      this.buildCondition(requestBody,this.QuestionId);
-    }
-    else{
+    if (this.showOptions) {
+      console.log('dependent Question data');
+      console.log(this.dependentQuestionID);
+      this.buildCondition(requestBody, this.dependentQuestionID);
+    } else {
     this.showHideSpinnerLoader(true);
     this.questionService.updateHierarchyQuestionCreate(requestBody).pipe(
       finalize(() => {
@@ -663,12 +665,12 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       finalize(() => {
         this.showHideSpinnerLoader(false);
       })).subscribe((response: ServerResponse) => {
-        console.log("")
-        if(this.showAddSecondaryQuestionCat){
-          console.log("parent Question data");
-          let result = _.get(response.result.identifiers,this.questionId)
+        console.log('');
+        if (this.showAddSecondaryQuestionCat) {
+          console.log('parent Question data');
+          const result = _.get(response.result.identifiers, this.questionId);
           console.log(result);
-          this.editorService.parentQuestionId=result;
+          this.editorService.parentIdentifier = result;
         }
 
         this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.008'));
@@ -840,24 +842,24 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
   subMenuConfig() {
-    console.log("submenu called");
+    console.log('submenu called');
     console.log(this.sourcingSettings);
     this.subMenus = [
       {
         id: 'addHint',
         name: 'Add Hint',
-        value: _.get(this.questionMetaData,'hints.en[0]'),
-        label:'Hint',
-        enabled: _.get(this.questionMetaData,'hints.en[0]') ? true : false,
+        value: _.get(this.questionMetaData, 'hints.en[0]'),
+        label: 'Hint',
+        enabled: _.get(this.questionMetaData, 'hints.en[0]') ? true : false,
         type: 'input',
         show: _.get(this.sourcingSettings, 'showAddHints')
       },
       {
         id: 'addTip',
         name: 'Add Tip',
-        value: _.get(this.questionMetaData,'instructions.en[0]'),
-        label:'Tip',
-        enabled: _.get(this.questionMetaData,'instructions.en[0]') ? true : false,
+        value: _.get(this.questionMetaData, 'instructions.en[0]'),
+        label: 'Tip',
+        enabled: _.get(this.questionMetaData, 'instructions.en[0]') ? true : false,
         type: 'input',
         show: _.get(this.sourcingSettings, 'showAddTips')
       },
@@ -872,16 +874,15 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       },
     ];
     console.log(this.questionInput);
-    console.log("submenus");
-    if(!_.get(this.sourcingSettings, 'showAddSecondaryQuestion') && !this.questionInput.setChildQueston){
-      this.showOptions=false;
-    }else{
+    console.log('submenus');
+    if (!_.get(this.sourcingSettings, 'showAddSecondaryQuestion') && !this.questionInput.setChildQueston) {
+      this.showOptions = false;
+    } else {
     _.forEach(this.subMenus, (el) => {
-      if(el.id === "addDependantQuestion" && el.show === false){
-        this.showOptions=true;
-      }
-      else{
-        this.showOptions=false;
+      if (el.id === 'addDependantQuestion' && el.show === false) {
+        this.showOptions = true;
+      } else {
+        this.showOptions = false;
       }
     });
   }
@@ -926,47 +927,76 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
 
-  buildCondition(requestBody:any,QuestionId:any) {
+  buildCondition(requestBody: any, dependentQuestionID: any) {
     console.log(this.targetOption, this.condition);
     console.log(requestBody);
     let sectionName;
-    let gethierarchy = _.get(requestBody.hierarchy,`${this.editorService.selectedSection}`);
-    sectionName=gethierarchy.name;
+    const hierarchy = _.get(requestBody.hierarchy, `${this.editorService.selectedSection}`);
+    sectionName = hierarchy.name;
 
-    let branchingLogic ={
-        root:false,
-        objectType: "QuestionSet",
-        metadata: {
-          mimeType: "application/vnd.sunbird.questionset",
-          name: sectionName,
-          branchingLogic: {
-            [this.editorService.parentQuestionId]: {
-              target: [`${QuestionId}`],
-              preCondition: {},
+    // const branchingLogic = {
+    //     root: false,
+    //     objectType: 'QuestionSet',
+    //     metadata: {
+    //       mimeType: 'application/vnd.sunbird.questionset',
+    //       name: sectionName,
+    //       branchingLogic: {
+    //         [this.editorService.parentIdentifier]: {
+    //           target: [`${dependentQuestionID}`],
+    //           preCondition: {},
+    //         },
+    //         [dependentQuestionID]: {
+    //           target: [],
+    //           source: [this.editorService.parentIdentifier],
+    //           preCondition: {
+    //             and: [
+    //               {
+    //                 [this.condition]: [
+    //                   {
+    //                     var: `${this.editorService.parentIdentifier}.${this.responseVariable}.value`,
+    //                     type: 'responseDeclaration',
+    //                   },
+    //                   this.selectedOptions,
+    //                 ],
+    //               },
+    //             ],
+    //           },
+    //         },
+    //     }
+    //   }
+    // };
+    const branchingLogic = {
+      [this.editorService.parentIdentifier]: {
+        target: [`${dependentQuestionID}`],
+        preCondition: {},
+      },
+      [dependentQuestionID]: {
+        target: [],
+        source: [this.editorService.parentIdentifier],
+        preCondition: {
+          and: [
+            {
+              [this.condition]: [
+                {
+                  var: `${this.editorService.parentIdentifier}.${this.responseVariable}.value`,
+                  type: 'responseDeclaration',
+                },
+                this.selectedOptions,
+              ],
             },
-            [QuestionId]: {
-              target: [],
-              source: [this.editorService.parentQuestionId],
-              preCondition: {
-                and: [
-                  {
-                    [this.condition]: [
-                      {
-                        var: `${this.editorService.parentQuestionId}.${this.responseVariable}.value`,
-                        type: "responseDeclaration",
-                      },
-                      this.selectedOptions,
-                    ],
-                  },
-                ],
-              },
-            },
-        }
-      }
-    }
-    console.log("branchingLogic");
+          ],
+        },
+      },
+  };
+    console.log('branchingLogic');
     console.log(branchingLogic);
-    requestBody.nodesModified[this.editorService.selectedSection]=branchingLogic
+    const metadata = {
+      name: sectionName,
+      allowBranching: 'Yes',
+      branchingLogic
+    };
+    this.treeService.updateNode(metadata, this.editorService.selectedSection);
+    // requestBody.nodesModified[this.editorService.selectedSection] = branchingLogic;
     console.log(requestBody);
   }
 

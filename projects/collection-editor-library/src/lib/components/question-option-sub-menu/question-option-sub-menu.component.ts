@@ -10,7 +10,7 @@ export interface SubMenu {
   value: string|any[];
   enabled: boolean;
   type: string;
-  show:boolean
+  show: boolean;
 }
 @Component({
   selector: 'lib-question-option-sub-menu',
@@ -28,14 +28,14 @@ export class QuestionOptionSubMenuComponent implements OnInit {
   onMenuClick(index) {
     const selectedMenu = this.subMenus[index];
     selectedMenu.enabled = !selectedMenu.enabled;
-    if (selectedMenu.enabled && selectedMenu.type != 'input' && Array.isArray(selectedMenu.value)) {
+    if (selectedMenu.enabled && selectedMenu.type !== 'input' && Array.isArray(selectedMenu.value)) {
       // selectedMenu.value.push({ index: selectedMenu.value.length });
-      this.onChange.emit({index:index,value:undefined})
+      this.onChange.emit({index, value: undefined});
     }
   }
 
   onValueChange(event, index) {
-    if (this.subMenus[index].type === 'input') this.subMenus[index].value = event.target.value;
-    this.onChange.emit({ index: index, value: event.target.value});
+    if (this.subMenus[index].type === 'input') { this.subMenus[index].value = event.target.value; }
+    this.onChange.emit({ index, value: event.target.value});
   }
 }

@@ -41,9 +41,9 @@ export class TreeService {
     this.treeNativeElement = el;
   }
 
-  updateNode(metadata) {
+  updateNode(metadata, nodeToBeUpdated?) {
     this.setNodeTitle(metadata.name);
-    this.updateTreeNodeMetadata(metadata);
+    this.updateTreeNodeMetadata(metadata, nodeToBeUpdated);
   }
 
   updateAppIcon(appIconUrl) {
@@ -60,9 +60,9 @@ export class TreeService {
     this.setTreeCache(nodeId, _.merge({}, {[key] : value}, _.pick(node.data.metadata, ['objectType'])));
   }
 
-  updateTreeNodeMetadata(newData: any) {
+  updateTreeNodeMetadata(newData: any, nodeToBeUpdated?: any) {
     const activeNode = this.getActiveNode();
-    const nodeId = activeNode.data.id;
+    const nodeId = nodeToBeUpdated  || activeNode.data.id;
     if (newData.instructions) {
       newData.instructions = { default: newData.instructions };
      }
