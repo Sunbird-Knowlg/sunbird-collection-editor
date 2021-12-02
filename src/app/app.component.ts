@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { questionEditorConfig, collectionEditorConfig, courseEditorConfig } from './data';
+import { questionEditorConfig, collectionEditorConfig, courseEditorConfig, observationEditorConfig } from './data';
 
 const configMapper = {
   question: questionEditorConfig,
+  observation: observationEditorConfig,
   collection : collectionEditorConfig,
   course: courseEditorConfig
 };
@@ -26,6 +27,8 @@ export class AppComponent {
   setType(editorType) {
     if (editorType === 'question') {
       localStorage.setItem('editorType', 'question');
+    } else if (editorType === 'observation') {
+      localStorage.setItem('editorType', 'observation');
     } else if (editorType === 'course') {
       localStorage.setItem('editorType', 'course');
     }  else if (editorType === 'collection') {
