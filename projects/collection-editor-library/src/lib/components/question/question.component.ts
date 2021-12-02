@@ -247,6 +247,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       case 'sourcingRejectQuestion':
         this.sourcingUpdate(event);
         break;
+      case 'sendForCorrectionsQuestion':
+        this.sendBackQuestion(event);
+        break;
       case 'backContent':
         this.handleRedirectToQuestionset();
         break;
@@ -402,6 +405,18 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         })
       })
     }
+
+  sendBackQuestion(event) {
+    const requestBody = {
+      'question': {
+  			"requestChanges": event.comment,
+  			"status": "Draft"
+  		}
+  	}
+    this.questionService.upsertQuestion(this.questionId, requestBody).subscribe(res => {
+        this.redirectToChapterList();
+      })
+  }
 
   validateQuestionData() {
 
