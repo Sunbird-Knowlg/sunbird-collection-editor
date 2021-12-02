@@ -375,10 +375,31 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
         return false;        }
       }
-      const requestBody = this.prepareSourcingUpdateBody(this.questionId, event.comment);
-      event['requestBody'] = requestBody;
-      this.editorService.updateCollection(this.questionSetId, event).subscribe(res => {
-        this.redirectToChapterList();
+      let questionIds = [];
+      //let comments = {};
+      let comments = event.comment
+      this.editorService.fetchCollectionHierarchy(this.questionSetId).subscribe(res => {
+        const questionSet = res.result['questionSet'];
+        switch (event.button) {
+          case 'sourcingApproveQuestion':
+            questionIds = questionSet.acceptedContributions || [];
+            break;
+          case 'sourcingRejectQuestion':
+            questionIds = questionSet.rejectedContributions || [];
+            /*
+            comments = questionSet.sourcingRejectedComments || {};
+            comments[this.questionId] = event.comment;
+            */
+            break;
+          default:
+            break;
+        }
+        questionIds.push(this.questionId);
+        const requestBody = this.prepareSourcingUpdateBody(questionIds, comments);
+        event['requestBody'] = requestBody;
+        this.editorService.updateCollection(this.questionSetId, event).subscribe(res => {
+          this.redirectToChapterList();
+        })
       })
     }
 
@@ -637,19 +658,20 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     return requestBody;
   }
 
-  prepareSourcingUpdateBody (questionId, comment?) {
+  prepareSourcingUpdateBody (questionIds, comments?) {
       const sourcingUpdateAttribute = this.actionType === 'sourcingApproveQuestion' ? 'acceptedContributions'
         : 'rejectedContributions';
       let collectionObjectType = _.replace(_.lowerCase(this.creationContext['collectionObjectType']), ' ', '');
       const requestBody = {
         request: {
           [collectionObjectType]: {
-            [sourcingUpdateAttribute]: [questionId]
+            [sourcingUpdateAttribute]: questionIds
           }
         }
       };
       if(this.actionType === 'sourcingRejectQuestion') {
-        requestBody.request[collectionObjectType]['rejectComment'] = comment;
+        //requestBody.request[collectionObjectType]['sourcingRejectedComments'] = comments;
+        requestBody.request[collectionObjectType]['rejectComment'] = comments;
       }
       return requestBody;
   }
@@ -834,4 +856,3 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.editorCursor.clearQuestionMap();
   }
 }
-
