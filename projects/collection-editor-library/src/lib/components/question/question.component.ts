@@ -293,7 +293,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   saveContent() {
     this.validateQuestionData();
-    this.validateFormFields();
     if (this.showFormError === false) {
       this.saveQuestion();
     }
