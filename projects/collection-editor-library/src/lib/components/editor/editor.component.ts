@@ -119,6 +119,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           // tslint:disable-next-line:max-line-length
           const dialcode = _.get(response, 'result.objectCategoryDefinition.objectMetadata.schema.properties.generateDIALCodes.default');
           this.toolbarConfig.showDialcode = dialcode ? dialcode.toLowerCase() : 'no';
+          // tslint:disable-next-line:max-line-length
+          const enableBulkUpload = _.get(response, 'result.objectCategoryDefinition.objectMetadata.config.sourcingSettings.collection.enableBulkUpload');
+          this.toolbarConfig.showBulkUploadBtn = enableBulkUpload ? enableBulkUpload : false;
           this.helperService.channelData$.subscribe(
             (channelResponse) => {
               this.sethierarchyConfig(response);
