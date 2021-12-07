@@ -91,12 +91,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   dependentQuestionID: any;
   showOptions: boolean;
   selectedOptions: any;
-  options = [
-    { value: 0, label: 'option1' },
-    { value: 1, label: 'option2' },
-    { value: 2, label: 'option3' },
-    { value: 3, label: 'option4' },
-  ];
+  options = [];
+  isChildQuestion:boolean=false;
   constructor(
     private questionService: QuestionService, private editorService: EditorService, public telemetryService: EditorTelemetryService,
     public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,
@@ -108,6 +104,12 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.categoryLabel = [];
     if (!_.isUndefined(label)) {
       this.categoryLabel[primaryCategory] = label;
+    }
+   
+    if(this.editorService.optionsLength){
+      Array.from({length:this.editorService.optionsLength}, (x, i) =>{
+        this.options.push({value:i,label:i})
+      });
     }
   }
 
@@ -162,12 +164,25 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   initialize() {
     this.editorService.fetchCollectionHierarchy(this.questionSetId).subscribe((response) => {
       this.questionSetHierarchy = _.get(response, 'result.questionSet');
+      console.log("question edit data");
+      const activeNode = this.treeService.getActiveNode();
+      const selectedUnitId = _.get(activeNode, 'data.metadata.parent');
+      const childerns =_.get(response, 'result.questionSet.children');
+      _.forEach(childerns,(data) => {
+        if(data.identifier === selectedUnitId){
+          if(data.branchingLogic){
+            // this.isChildQuestion=true
+          }
+        }
+      });
       const leafFormConfigfields = _.join(_.map(this.leafFormConfig, value => (value.code)), ',');
       if (!_.isUndefined(this.questionId)) {
         this.questionService.readQuestion(this.questionId, leafFormConfigfields)
           .subscribe((res) => {
             if (res.result) {
               this.questionMetaData = res.result.question;
+              console.log("questionMetaData");
+              console.log(this.questionMetaData);
               this.populateFormData();
               this.subMenuConfig();
               if (_.isUndefined(this.questionPrimaryCategory)) {
@@ -203,6 +218,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
                 const templateId = this.questionMetaData.templateId;
                 this.questionMetaData.editorState = this.questionMetaData.editorState;
                 const numberOfOptions = this.questionMetaData.editorState.options.length;
+                this.editorService.optionsLength = numberOfOptions;
                 const options = _.map(this.questionMetaData.editorState.options, option => ({ body: option.value.body }));
                 const question = this.questionMetaData.editorState.question;
                 const interactions = this.questionMetaData.interactions;
@@ -634,12 +650,17 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   createQuestion() {
-    const requestBody = this.prepareRequestBody();
     if (this.showOptions) {
       console.log('dependent Question data');
-      console.log(this.dependentQuestionID);
-      this.buildCondition(requestBody, this.dependentQuestionID);
+      this.buildCondition();
     } else {
+      const requestBody = this.prepareRequestBody();
+      this.saveQuestions(requestBody);
+  }
+}
+
+
+  saveQuestions(requestBody){
     this.showHideSpinnerLoader(true);
     this.questionService.updateHierarchyQuestionCreate(requestBody).pipe(
       finalize(() => {
@@ -653,8 +674,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
           };
           this.editorService.apiErrorHandling(err, errInfo);
         });
-      }
   }
+  
 
   updateQuestion() {
     console.log('question update called');
@@ -927,50 +948,20 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
 
-  buildCondition(requestBody: any, dependentQuestionID: any) {
-    console.log(this.targetOption, this.condition);
-    console.log(requestBody);
-    let sectionName;
-    const hierarchy = _.get(requestBody.hierarchy, `${this.editorService.selectedSection}`);
-    sectionName = hierarchy.name;
-
-    // const branchingLogic = {
-    //     root: false,
-    //     objectType: 'QuestionSet',
-    //     metadata: {
-    //       mimeType: 'application/vnd.sunbird.questionset',
-    //       name: sectionName,
-    //       branchingLogic: {
-    //         [this.editorService.parentIdentifier]: {
-    //           target: [`${dependentQuestionID}`],
-    //           preCondition: {},
-    //         },
-    //         [dependentQuestionID]: {
-    //           target: [],
-    //           source: [this.editorService.parentIdentifier],
-    //           preCondition: {
-    //             and: [
-    //               {
-    //                 [this.condition]: [
-    //                   {
-    //                     var: `${this.editorService.parentIdentifier}.${this.responseVariable}.value`,
-    //                     type: 'responseDeclaration',
-    //                   },
-    //                   this.selectedOptions,
-    //                 ],
-    //               },
-    //             ],
-    //           },
-    //         },
-    //     }
-    //   }
-    // };
+  buildCondition() {
+    const questionId = this.questionId ? this.questionId : UUID.UUID();
+    const data = this.treeService.getFirstChild();
+    const activeNode = this.treeService.getActiveNode();
+    const selectedUnitId = _.get(activeNode, 'data.id');
+    const hireachy = this.editorService._toFlatObj(data,'',selectedUnitId);
+    const hierarchy = _.get(hireachy,`${selectedUnitId}`);
+    let sectionName = hierarchy.name;
     const branchingLogic = {
       [this.editorService.parentIdentifier]: {
-        target: [`${dependentQuestionID}`],
+        target: [`${questionId}`],
         preCondition: {},
       },
-      [dependentQuestionID]: {
+      [questionId]: {
         target: [],
         source: [this.editorService.parentIdentifier],
         preCondition: {
@@ -988,16 +979,38 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         },
       },
   };
-    console.log('branchingLogic');
-    console.log(branchingLogic);
     const metadata = {
       name: sectionName,
       allowBranching: 'Yes',
       branchingLogic
     };
     this.treeService.updateNode(metadata, this.editorService.selectedSection);
+    const metaData = this.getQuestionMetadata();
+    this.setQuestionTypeVlaues(metaData);
+    let finalResult={
+      nodesModified: {
+        [questionId]: {
+          metadata: metaData,
+          objectType: 'Question',
+          root: false,
+          isNew: this.questionId ? false : true
+        },
+        [selectedUnitId]:{
+          metadata: this.treeService.treeCache.nodesModified[this.editorService.parentIdentifier].metadata,
+          isNew: this.treeService.treeCache.nodesModified[this.editorService.parentIdentifier].isNew,
+          objectType: 'QuestionSet',
+          root: false,
+        }
+      },
+      hierarchy: this.editorService._toFlatObj(data, questionId, selectedUnitId)
+    };
+      console.log(finalResult);
+      this.saveQuestions(finalResult);
+    //section id and treecache metadata need to add by tommorrow
+    // console.log("old requestbody");
+    // console.log(requestBody);
+
     // requestBody.nodesModified[this.editorService.selectedSection] = branchingLogic;
-    console.log(requestBody);
   }
 
 }

@@ -236,6 +236,8 @@ export class TreeService {
       };
       this.treeCache.nodes.push(nodeId); // To track sequence of modifiation
     }
+    console.log("tree cache");
+    console.log(this.treeCache);
   }
 
   clearTreeCache(node?) {

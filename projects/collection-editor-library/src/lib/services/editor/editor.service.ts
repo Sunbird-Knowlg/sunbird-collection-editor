@@ -33,6 +33,7 @@ export class EditorService {
   parentIdentifier: any;
   branchingLogic = {};
   selectedSection: any;
+  optionsLength:any;
   constructor(public treeService: TreeService, private toasterService: ToasterService,
               public configService: ConfigService, private telemetryService: EditorTelemetryService,
               private publicDataService: PublicDataService, private dataService: DataService, public httpClient: HttpClient) {
