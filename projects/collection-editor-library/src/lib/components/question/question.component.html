@@ -11,7 +11,7 @@
             <lib-quml-player [questionSetHierarchy]="questionSetHierarchy" [isSingleQuestionPreview]="true">
             </lib-quml-player>
           </div>
-          <div style="display: flex;align-items: flex-end;justify-content: flex-end;" *ngIf="showOptions">
+          <div style="display: flex;align-items: flex-end;justify-content: flex-end;" *ngIf="showOptions || isChildQuestion ">
             <div class="left" style="justify-content: flex-end;margin-right:10px">
               <select (change)="conditionHandler($event)">
                 <option>Select Condition</option>
