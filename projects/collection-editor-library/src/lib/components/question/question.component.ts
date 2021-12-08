@@ -105,12 +105,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!_.isUndefined(label)) {
       this.categoryLabel[primaryCategory] = label;
     }
-   
-    if(this.editorService.optionsLength){
-      Array.from({length:this.editorService.optionsLength}, (x, i) =>{
-        this.options.push({value:i,label:i})
-      });
-    }
+    this.getOptions();
   }
 
   ngOnInit() {
@@ -170,8 +165,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       const childerns =_.get(response, 'result.questionSet.children');
       _.forEach(childerns,(data) => {
         if(data.identifier === selectedUnitId){
-          if(data.branchingLogic){
-            // this.isChildQuestion=true
+            if (_.get(data?.branchingLogic,`${this.questionId}.source[0]`)) {
+              console.log(_.get(data.branchingLogic,`${this.questionId}`));
+              this.isChildQuestion=true  
+              this.getParentQuestionOtions(data.branchingLogic[this.questionId].source[0]);
           }
         }
       });
@@ -1011,6 +1008,30 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     // console.log(requestBody);
 
     // requestBody.nodesModified[this.editorService.selectedSection] = branchingLogic;
+  }
+
+  getOptions(){
+    if(this.editorService.optionsLength){
+      this.options=[];
+      Array.from({length:this.editorService.optionsLength}, (x, i) =>{
+        this.options.push({value:i,label:i})
+      });
+    }
+  }
+
+  getParentQuestionOtions(questionId){
+    this.questionService.readQuestion(questionId)
+    .subscribe((res) => {
+      if(res.responseCode === 'OK'){
+        const result = res.result.question;
+        if (result.interactionTypes[0] === 'choice') {
+          const numberOfOptions = result.editorState.options.length;
+          this.editorService.optionsLength = numberOfOptions;
+          console.log(numberOfOptions);
+          this.getOptions();
+        }
+      }
+    });
   }
 
 }
