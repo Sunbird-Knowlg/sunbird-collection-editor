@@ -128,7 +128,8 @@ export class LibraryComponent implements OnInit, AfterViewInit, OnDestroy {
       if (!(_.get(response, 'result.count'))) {
         this.contentList = [];
       } else {
-        this.contentList = _.compact(_.concat(_.get(response.result, 'content'), _.get(response.result, 'QuestionSet')));
+        this.contentList = _.filter(_.compact(_.concat(_.get(response.result, 'content'), _.get(response.result, 'QuestionSet'))),
+         (item: any) => item.identifier !== this.collectionId);
         this.filterContentList();
       }
     });

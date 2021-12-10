@@ -1,6 +1,9 @@
 <div class="aspectratio" data-ratio="16:9" #aspectRatio>
 
-<iframe #contentIframe id="contentPlayer" *ngIf="playerType === 'default-player'" class="contentViewerIframeShadow" name="contentPlayer"></iframe>
+<iframe #contentIframe id="contentPlayer" *ngIf="playerType === 'default-player'"  class="contentViewerIframeShadow" name="contentPlayer"></iframe>
+
+<sunbird-epub-player *ngIf="playerType === 'epub-player'" [playerConfig]="playerConfig"
+        (playerEvent)="eventHandler($event)" (telemetryEvent)="generateContentReadEvent($event, true)"></sunbird-epub-player>
 
 <sunbird-pdf-player *ngIf="playerType === 'pdf-player'" [playerConfig]="playerConfig"
     (playerEvent)="eventHandler($event)" (telemetryEvent)="generateContentReadEvent($event, true)"></sunbird-pdf-player>
