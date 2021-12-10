@@ -1027,7 +1027,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateTarget(questionId){
-    if (!_.isEmpty(this.branchingLogic)) {
+    if (!_.isEmpty(this.branchingLogic) && _.get(this.branchingLogic,`${this.editorService.parentIdentifier}.target`)) {
       if (this.branchingLogic[this.editorService.parentIdentifier].target.includes(questionId)) {
         return [...this.branchingLogic[this.editorService.parentIdentifier].target];
       }
