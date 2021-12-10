@@ -85,10 +85,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   hints: any;
   categoryLabel: any = {};
   scoreMapping: any;
-  condition: any;
+  condition ="default";
   targetOption: any;
   responseVariable = 'response1';
-  dependentQuestionID: any;
+  newQuestionID: any;
   showOptions: boolean;
   selectedOptions: any;
   options = [];
@@ -164,17 +164,22 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       this.questionSetHierarchy = _.get(response, 'result.questionSet');
       console.log("question edit data");
       const parentId=this.editorService.parentIdentifier ? this.editorService.parentIdentifier : this.questionId;
+      console.log(parentId ," : parentId");
       const sectionData=this.treeService.getNodeById(parentId);
       const childerns =_.get(response, 'result.questionSet.children');
       this.sectionPrimaryCategory = _.get(response, 'result.questionSet.primaryCategory');
       this.selectedSectionId = _.get(sectionData, 'data.metadata.parent');
       console.log("selectedUnitId :",this.selectedSectionId);
+      if(parentId){
+        this.getParentQuestionOtions(parentId);
+      }
       _.forEach(childerns,(data) => {
         if(data.identifier === this.selectedSectionId){
           this.branchingLogic = data?.branchingLogic ? data?.branchingLogic :{};
           if (_.get(data?.branchingLogic, `${this.questionId}.source[0]`)) {
             this.isChildQuestion = true;
             this.getParentQuestionOtions(data.branchingLogic[this.questionId].source[0]);
+            this.setCondition(data);
           }
         }
       });
@@ -209,6 +214,12 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
               }
 
               if (this.questionInteractionType === 'text') {
+                if (this.questionMetaData.editorState) {
+                  this.editorState = this.questionMetaData.editorState;
+                }
+              }
+
+              if (this.questionInteractionType === 'date') {
                 if (this.questionMetaData.editorState) {
                   this.editorState = this.questionMetaData.editorState;
                 }
@@ -375,13 +386,12 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   redirectToQuestionset() {
     this.showConfirmPopup = false;
-    this.editorService.parentIdentifier="";
     setTimeout(() => {
       this.showAddSecondaryQuestionCat ?
       this.questionEmitter.emit({ type: 'createNewContent', isChildQuestion: true }) :
-      this.questionEmitter.emit({ status: false });
-
+      this.editorService.parentIdentifier="";
       this.showAddSecondaryQuestionCat = false;
+      this.questionEmitter.emit({ status: false });
     }, 100);
   }
 
@@ -546,7 +556,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   prepareRequestBody() {
     const questionId = this.questionId ? this.questionId : UUID.UUID();
-    this.dependentQuestionID = questionId;
+    this.newQuestionID = questionId;
     const data = this.treeService.getFirstChild();
     const activeNode = this.treeService.getActiveNode();
     const selectedUnitId = _.get(activeNode, 'data.id');
@@ -667,6 +677,11 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       finalize(() => {
         this.showHideSpinnerLoader(false);
       })).subscribe((response: ServerResponse) => {
+        if (this.showAddSecondaryQuestionCat) {
+          const result = _.get(response.result.identifiers, this.newQuestionID);
+          this.editorService.parentIdentifier = result;
+        }
+
         if (type === 'create') {
           this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.007'));
         }
@@ -701,9 +716,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       })).subscribe((response: ServerResponse) => {
         console.log('');
         if (this.showAddSecondaryQuestionCat) {
-          console.log('parent Question data');
           const result = _.get(response.result.identifiers, this.questionId);
-          console.log(result);
           this.editorService.parentIdentifier = result;
         }
 
@@ -1014,10 +1027,13 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateTarget(questionId){
-    if(this.branchingLogic[this.editorService.parentIdentifier].target.includes(questionId)){
-      return [...this.branchingLogic[this.editorService.parentIdentifier].target];
+    if (!_.isEmpty(this.branchingLogic)) {
+      if (this.branchingLogic[this.editorService.parentIdentifier].target.includes(questionId)) {
+        return [...this.branchingLogic[this.editorService.parentIdentifier].target];
+      }
+      return [...this.branchingLogic[this.editorService.parentIdentifier].target, `${questionId}`]
     }
-    return [...this.branchingLogic[this.editorService.parentIdentifier].target,`${questionId}`]
+    return [`${questionId}`];
   }
 
   getOptions(){
@@ -1053,6 +1069,13 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     };
     this.treeService.updateNode(metadata, selectedSection,this.sectionPrimaryCategory);
     console.log(this.treeService.treeCache);
+  }
+
+  setCondition(data){
+    let Condition = _.get(data?.branchingLogic, `${this.questionId}.preCondition.and[0]`);
+    let getCondition = Object.keys(Condition);
+    this.condition = getCondition[0];
+    this.selectedOptions=Condition[getCondition][1];
   }
 
 }
