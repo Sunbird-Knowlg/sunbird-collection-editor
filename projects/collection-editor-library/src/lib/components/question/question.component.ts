@@ -388,17 +388,14 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
             break;
           case 'sourcingRejectQuestion':
             questionIds = questionSet.rejectedContributions || [];
-            /*
-            comments = questionSet.sourcingRejectedComments || {};
+            comments = questionSet.rejectedContributionComments || {};
             comments[this.questionId] = event.comment;
-            */
             break;
           default:
             break;
         }
         questionIds.push(this.questionId);
-        const requestBody = this.prepareSourcingUpdateBody(questionIds, comments);
-        event['requestBody'] = requestBody;
+        event['requestBody'] = this.prepareSourcingUpdateBody(questionIds, comments);
         this.editorService.updateCollection(this.questionSetId, event).subscribe(res => {
           this.redirectToChapterList();
         })
@@ -675,7 +672,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   prepareSourcingUpdateBody (questionIds, comments?) {
       const sourcingUpdateAttribute = this.actionType === 'sourcingApproveQuestion' ? 'acceptedContributions'
         : 'rejectedContributions';
-      let collectionObjectType = _.replace(_.lowerCase(this.creationContext['collectionObjectType']), ' ', '');
+      const collectionObjectType = _.replace(_.lowerCase(this.creationContext['collectionObjectType']), ' ', '');
       const requestBody = {
         request: {
           [collectionObjectType]: {
@@ -683,9 +680,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         }
       };
-      if(this.actionType === 'sourcingRejectQuestion') {
-        //requestBody.request[collectionObjectType]['sourcingRejectedComments'] = comments;
-        requestBody.request[collectionObjectType]['rejectComment'] = comments;
+      if (this.actionType === 'sourcingRejectQuestion') {
+        requestBody.request[collectionObjectType]['rejectedContributionComments'] = comments;
+        // requestBody.request[collectionObjectType]['rejectComment'] = comments;
       }
       return requestBody;
   }
