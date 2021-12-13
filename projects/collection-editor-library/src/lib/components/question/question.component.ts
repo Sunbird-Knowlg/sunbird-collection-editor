@@ -85,17 +85,17 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   hints: any;
   categoryLabel: any = {};
   scoreMapping: any;
-  condition ="default";
+  condition = 'default';
   targetOption: any;
   responseVariable = 'response1';
   newQuestionID: any;
   showOptions: boolean;
   selectedOptions: any;
   options = [];
-  isChildQuestion:boolean=false;
-  branchingLogic:any;
-  selectedSectionId:any;
-  sectionPrimaryCategory:any;
+  isChildQuestion = false;
+  branchingLogic: any;
+  selectedSectionId: any;
+  sectionPrimaryCategory: any;
   constructor(
     private questionService: QuestionService, private editorService: EditorService, public telemetryService: EditorTelemetryService,
     public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,
@@ -162,34 +162,34 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   initialize() {
     this.editorService.fetchCollectionHierarchy(this.questionSetId).subscribe((response) => {
       this.questionSetHierarchy = _.get(response, 'result.questionSet');
-      console.log("question edit data");
-      const parentId=this.editorService.parentIdentifier ? this.editorService.parentIdentifier : this.questionId;
-      console.log(parentId ," : parentId");
-      const sectionData=this.treeService.getNodeById(parentId);
-      const childerns =_.get(response, 'result.questionSet.children');
+      console.log('question edit data');
+      const parentId = this.editorService.parentIdentifier ? this.editorService.parentIdentifier : this.questionId;
+      console.log(parentId , ' : parentId');
+      const sectionData = this.treeService.getNodeById(parentId);
+      const childerns = _.get(response, 'result.questionSet.children');
       this.sectionPrimaryCategory = _.get(response, 'result.questionSet.primaryCategory');
       this.selectedSectionId = _.get(sectionData, 'data.metadata.parent');
-      console.log("selectedUnitId :",this.selectedSectionId);
-      if(parentId){
-        this.getParentQuestionOtions(parentId);
+      console.log('selectedUnitId :', this.selectedSectionId);
+      if (parentId) {
+        this.getParentQuestionOptions(parentId);
       }
-      _.forEach(childerns,(data) => {
-        if(data.identifier === this.selectedSectionId){
-          this.branchingLogic = data?.branchingLogic ? data?.branchingLogic :{};
+      _.forEach(childerns, (data) => {
+        if (data.identifier === this.selectedSectionId) {
+          this.branchingLogic = data?.branchingLogic ? data?.branchingLogic : {};
           if (_.get(data?.branchingLogic, `${this.questionId}.source[0]`)) {
             this.isChildQuestion = true;
-            this.getParentQuestionOtions(data.branchingLogic[this.questionId].source[0]);
+            this.getParentQuestionOptions(data.branchingLogic[this.questionId].source[0]);
             this.setCondition(data);
           }
         }
       });
-      const leafFormConfigfields = _.join(_.map(this.leafFormConfig, value => (value.code)), ',');
+      const leafFormConfigFields = _.join(_.map(this.leafFormConfig, value => (value.code)), ',');
       if (!_.isUndefined(this.questionId)) {
-        this.questionService.readQuestion(this.questionId, leafFormConfigfields)
+        this.questionService.readQuestion(this.questionId, leafFormConfigFields)
           .subscribe((res) => {
             if (res.result) {
               this.questionMetaData = res.result.question;
-              console.log("questionMetaData");
+              console.log('questionMetaData');
               console.log(this.questionMetaData);
               this.populateFormData();
               this.subMenuConfig();
@@ -389,7 +389,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     setTimeout(() => {
       this.showAddSecondaryQuestionCat ?
       this.questionEmitter.emit({ type: 'createNewContent', isChildQuestion: true }) :
-      this.editorService.parentIdentifier="";
+      this.editorService.parentIdentifier = '';
       this.showAddSecondaryQuestionCat = false;
       this.questionEmitter.emit({ status: false });
     }, 100);
@@ -563,7 +563,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.editorService.data = {};
     this.editorService.selectedSection = selectedUnitId;
     const metaData = this.getQuestionMetadata();
-    this.setQuestionTypeVlaues(metaData);
+    this.setQuestionTypeValues(metaData);
     return {
       nodesModified: {
         [questionId]: {
@@ -577,7 +577,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     };
   }
 
-  setQuestionTypeVlaues(metaData) {
+  setQuestionTypeValues(metaData) {
     metaData.showEvidence = this.childFormData.showEvidence;
     if (metaData.showEvidence === 'Yes') {
         metaData.evidence = {
@@ -666,12 +666,12 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       this.buildCondition('create');
     } else {
       const requestBody = this.prepareRequestBody();
-      this.saveQuestions(requestBody,'create');
+      this.saveQuestions(requestBody, 'create');
   }
 }
 
 
-  saveQuestions(requestBody,type){
+  saveQuestions(requestBody, type) {
     this.showHideSpinnerLoader(true);
     this.questionService.updateHierarchyQuestionCreate(requestBody).pipe(
       finalize(() => {
@@ -684,8 +684,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
         if (type === 'create') {
           this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.007'));
-        }
-        else {
+        } else {
           this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.008'));
         }
         this.redirectToQuestionset();
@@ -696,7 +695,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
           this.editorService.apiErrorHandling(err, errInfo);
         });
   }
-  
+
 
   updateQuestion() {
     if (this.isChildQuestion) {
@@ -707,7 +706,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
- saveUpdateQuestions(){
+ saveUpdateQuestions() {
     const requestBody = this.prepareRequestBody();
     this.showHideSpinnerLoader(true);
     this.questionService.updateHierarchyQuestionUpdate(requestBody).pipe(
@@ -819,17 +818,19 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     });
     return true;
   }
+
   previewFormData(status) {
-    const formvalue = _.cloneDeep(this.leafFormConfig);
+    const formConfig = _.cloneDeep(this.leafFormConfig);
     this.leafFormConfig = null;
-    _.forEach(formvalue, (formFieldCategory) => {
+    _.forEach(formConfig, (formFieldCategory) => {
       if (_.has(formFieldCategory, 'editable')) {
         formFieldCategory.editable = status ? _.find(this.initialLeafFormConfig, { code: formFieldCategory.code }).editable : status;
         formFieldCategory.default = this.childFormData[formFieldCategory.code];
       }
     });
-    this.leafFormConfig = formvalue;
+    this.leafFormConfig = formConfig;
   }
+
   populateFormData() {
     this.childFormData = {};
     _.forEach(this.leafFormConfig, (formFieldCategory) => {
@@ -977,15 +978,15 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   buildCondition(type) {
     const questionId = this.questionId ? this.questionId : UUID.UUID();
     const data = this.treeService.getFirstChild();
-    const hireachy = this.editorService._toFlatObj(data,'',this.selectedSectionId);
-    const hierarchy = _.get(hireachy,`${this.selectedSectionId}`);
-    let sectionName = hierarchy.name;
+    const hierarchyData = this.editorService._toFlatObj(data, '', this.selectedSectionId);
+    const sectionData = _.get(hierarchyData, `${this.selectedSectionId}`);
+    const sectionName = sectionData.name;
     const branchingLogic = {
       ...this.branchingLogic,
       [this.editorService.parentIdentifier]: {
         target: this.updateTarget(questionId),
         preCondition: {},
-        source:[]
+        source: []
       },
       [questionId]: {
         target: [],
@@ -1005,10 +1006,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         },
       },
   };
-    this.updateTreeCache(sectionName,branchingLogic,this.selectedSectionId);
+    this.updateTreeCache(sectionName, branchingLogic, this.selectedSectionId);
     const metaData = this.getQuestionMetadata();
-    this.setQuestionTypeVlaues(metaData);
-    let finalResult={ 
+    this.setQuestionTypeValues(metaData);
+    const finalResult = {
       nodesModified: {
         [questionId]: {
           metadata: metaData,
@@ -1016,40 +1017,40 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
           root: false,
           isNew: this.questionId ? false : true
         },
-        [this.selectedSectionId]:{
+        [this.selectedSectionId]: {
           ...this.treeService.treeCache.nodesModified[this.selectedSectionId]
         }
       },
       hierarchy: this.editorService._toFlatObj(data, questionId, this.selectedSectionId)
     };
     console.log(finalResult);
-    this.saveQuestions(finalResult,type);
+    this.saveQuestions(finalResult, type);
   }
 
-  updateTarget(questionId){
-    if (!_.isEmpty(this.branchingLogic) && _.get(this.branchingLogic,`${this.editorService.parentIdentifier}.target`)) {
+  updateTarget(questionId) {
+    if (!_.isEmpty(this.branchingLogic) && _.get(this.branchingLogic, `${this.editorService.parentIdentifier}.target`)) {
       if (this.branchingLogic[this.editorService.parentIdentifier].target.includes(questionId)) {
         return [...this.branchingLogic[this.editorService.parentIdentifier].target];
       }
-      return [...this.branchingLogic[this.editorService.parentIdentifier].target, `${questionId}`]
+      return [...this.branchingLogic[this.editorService.parentIdentifier].target, `${questionId}`];
     }
     return [`${questionId}`];
   }
 
-  getOptions(){
-    if(this.editorService.optionsLength){
-      this.options=[];
-      Array.from({length:this.editorService.optionsLength}, (x, i) =>{
-        this.options.push({value:i,label:i})
+  getOptions() {
+    if (this.editorService.optionsLength) {
+      this.options = [];
+      Array.from({length: this.editorService.optionsLength}, (x, i) => {
+        this.options.push({value: i, label: i});
       });
     }
   }
 
-  getParentQuestionOtions(questionId){
-    this.editorService.parentIdentifier=questionId;
+  getParentQuestionOptions(questionId) {
+    this.editorService.parentIdentifier = questionId;
     this.questionService.readQuestion(questionId)
     .subscribe((res) => {
-      if(res.responseCode === 'OK'){
+      if (res.responseCode === 'OK') {
         const result = res.result.question;
         if (result.interactionTypes[0] === 'choice') {
           const numberOfOptions = result.editorState.options.length;
@@ -1060,22 +1061,22 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  updateTreeCache(sectionName,branchingLogic,selectedSection){
+  updateTreeCache(sectionName, branchingLogic, selectedSection) {
     const metadata = {
       name: sectionName,
-      primaryCategory:"Observation",
+      primaryCategory: 'Observation',
       allowBranching: 'Yes',
       branchingLogic
     };
-    this.treeService.updateNode(metadata, selectedSection,this.sectionPrimaryCategory);
+    this.treeService.updateNode(metadata, selectedSection, this.sectionPrimaryCategory);
     console.log(this.treeService.treeCache);
   }
 
-  setCondition(data){
-    let Condition = _.get(data?.branchingLogic, `${this.questionId}.preCondition.and[0]`);
-    let getCondition = Object.keys(Condition);
+  setCondition(data) {
+    const Condition = _.get(data?.branchingLogic, `${this.questionId}.preCondition.and[0]`);
+    const getCondition = Object.keys(Condition);
     this.condition = getCondition[0];
-    this.selectedOptions=Condition[getCondition][1];
+    this.selectedOptions = Condition[getCondition][1];
   }
 
 }
