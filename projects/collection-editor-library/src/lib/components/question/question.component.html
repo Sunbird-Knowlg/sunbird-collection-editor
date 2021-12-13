@@ -13,8 +13,8 @@
           </div>
           <div style="display: flex;align-items: flex-end;justify-content: flex-end;" *ngIf="showOptions || isChildQuestion ">
             <div class="left" style="justify-content: flex-end;margin-right:10px">
-              <select (change)="conditionHandler($event)">
-                <option>Select Condition</option>
+              <select (change)="conditionHandler($event)" [value]='condition'>
+                <option value="default">Select Condition</option>
                 <option value="eq">Equal to</option>
                 <option value="ne">Not equal</option>
               </select>
