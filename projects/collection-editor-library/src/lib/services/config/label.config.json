@@ -267,7 +267,8 @@
          "033": "failed to convert url to blob ",
          "034": "failed to download {FILE_TYPE} file using blob url ",
          "035": "Unable to get pre_signed_url and Question bulk upload Failed, Please Try Again",
-         "036": "Unable to upload to Blob and Question bulk upload Failed, Please Try Again"
+         "036": "Unable to upload to Blob and Question bulk upload Failed, Please Try Again",
+         "037": "Please select the condition and option for the dependent question"
       },
       "success": {
          "001": "Content is saved",
