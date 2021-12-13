@@ -386,6 +386,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   redirectToQuestionset() {
     this.showConfirmPopup = false;
+    this.treeService.clearTreeCache();
     setTimeout(() => {
       this.showAddSecondaryQuestionCat ?
       this.questionEmitter.emit({ type: 'createNewContent', isChildQuestion: true }) :
@@ -975,6 +976,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   buildCondition(type) {
+    if(this.condition ==='default' || _.isEmpty(this.selectedOptions) ){
+      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.037'));
+      return; 
+    }
     const questionId = this.questionId ? this.questionId : UUID.UUID();
     const data = this.treeService.getFirstChild();
     const hireachy = this.editorService._toFlatObj(data,'',this.selectedSectionId);
