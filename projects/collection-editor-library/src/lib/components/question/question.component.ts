@@ -1026,7 +1026,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
           ...this.treeService.treeCache.nodesModified[this.selectedSectionId]
         }
       },
-      hierarchy: this.editorService._toFlatObj(data, questionId, this.selectedSectionId)
+      hierarchy: this.editorService._toFlatObj(data, questionId, this.selectedSectionId,this.editorService.parentIdentifier)
     };
     console.log(finalResult);
     this.saveQuestions(finalResult, type);
