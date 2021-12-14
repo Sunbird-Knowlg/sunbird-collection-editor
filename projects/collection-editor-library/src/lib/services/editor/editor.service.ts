@@ -300,7 +300,7 @@ export class EditorService {
     };
   }
 
-  _toFlatObj(data, questionId?, selectUnitId?) {
+  _toFlatObj(data, questionId?, selectUnitId?,parentId?) {
     const instance = this;
     if (data && data.data) {
       instance.data[data.data.id] = {
@@ -311,13 +311,23 @@ export class EditorService {
         root: data.data.root
       };
       if (questionId && selectUnitId && selectUnitId === data.data.id) {
-          instance.data[data.data.id].children.push(questionId);
+          if(parentId){
+            let childerns = instance.data[data.data.id].children;
+            let index = _.findIndex(childerns, (e) => {
+              return e == parentId;
+            }, 0);
+            let setIndex = +index + 1;
+            childerns.splice(setIndex,0,questionId)
+          }
+          else{
+            instance.data[data.data.id].children.push(questionId);
+          }
       }
       if (questionId && selectUnitId && data.folder === false) {
           delete instance.data[data.data.id];
       }
       _.forEach(data.children, (collection) => {
-        instance._toFlatObj(collection, questionId, selectUnitId);
+        instance._toFlatObj(collection, questionId, selectUnitId,parentId);
       });
     }
     return instance.data;
