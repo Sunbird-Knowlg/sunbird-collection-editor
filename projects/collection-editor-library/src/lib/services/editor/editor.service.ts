@@ -27,13 +27,13 @@ export class EditorService {
   private _editorMode = 'edit';
   public showLibraryPage: EventEmitter<number> = new EventEmitter();
   private _bulkUploadStatus$ = new BehaviorSubject<any>(undefined);
-  public readonly bulkUploadStatus$: Observable<any> = this._bulkUploadStatus$
+  public readonly bulkUploadStatus$: Observable<any> = this._bulkUploadStatus$;
   public contentsCount = 0;
   templateList = [];
   parentIdentifier: any;
   branchingLogic = {};
   selectedSection: any;
-  optionsLength:any;
+  optionsLength: any;
   constructor(public treeService: TreeService, private toasterService: ToasterService,
               public configService: ConfigService, private telemetryService: EditorTelemetryService,
               private publicDataService: PublicDataService, private dataService: DataService, public httpClient: HttpClient) {
@@ -300,7 +300,7 @@ export class EditorService {
     };
   }
 
-  _toFlatObj(data, questionId?, selectUnitId?,parentId?) {
+  _toFlatObj(data, questionId?, selectUnitId?, parentId?) {
     const instance = this;
     if (data && data.data) {
       instance.data[data.data.id] = {
@@ -311,15 +311,14 @@ export class EditorService {
         root: data.data.root
       };
       if (questionId && selectUnitId && selectUnitId === data.data.id) {
-          if(parentId){
-            let childerns = instance.data[data.data.id].children;
-            let index = _.findIndex(childerns, (e) => {
-              return e == parentId;
+          if (parentId) {
+            const children = instance.data[data.data.id].children;
+            const index = _.findIndex(children, (e) => {
+              return e === parentId;
             }, 0);
-            let setIndex = +index + 1;
-            childerns.splice(setIndex,0,questionId)
-          }
-          else{
+            const setIndex = index + 1;
+            children.splice(setIndex, 0, questionId);
+          } else {
             instance.data[data.data.id].children.push(questionId);
           }
       }
@@ -327,7 +326,7 @@ export class EditorService {
           delete instance.data[data.data.id];
       }
       _.forEach(data.children, (collection) => {
-        instance._toFlatObj(collection, questionId, selectUnitId,parentId);
+        instance._toFlatObj(collection, questionId, selectUnitId, parentId);
       });
     }
     return instance.data;
@@ -509,6 +508,26 @@ export class EditorService {
     options = _.merge(options, config);
     const csvExporter = new ExportToCsv(options);
     csvExporter.generateCsv(tableData);
+  }
+
+  getBranchingLogicByFolder(identifier) {
+    const nodeData = this.treeService.getNodeById(identifier);
+    const branchingLogic = _.get(nodeData, 'data.metadata.branchingLogic');
+    return branchingLogic || {};
+  }
+
+  getDependentNodes(identifier) {
+    const leafNode = this.treeService.getNodeById(identifier);
+    const parentIdentifier = _.get(leafNode, 'data.metadata.parent');
+    const parentBranchingLogic = this.getBranchingLogicByFolder(parentIdentifier);
+    if (!_.isEmpty(parentBranchingLogic)) {
+     const branchingEntry = _.find(parentBranchingLogic, (logic, key) => {
+        return key === identifier;
+      });
+     return !_.isEmpty(branchingEntry) ? { source: branchingEntry.source, target: branchingEntry.target } :
+     {};
+    }
+
   }
 
 }
