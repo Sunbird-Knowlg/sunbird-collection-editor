@@ -394,6 +394,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     if (dropAllowed) {
         currentNode.otherNode.moveTo(targetNode, currentNode.hitMode);
         this.treeService.nextTreeStatus('reorder');
+        this.moveDependentNodes(targetNode, currentNode);
         return true;
     } else {
         this.toasterService.warning(`${currentNode.otherNode.title} cannot be added to ${currentNode.node.title}`);
@@ -490,6 +491,16 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   createNewContent() {
     this.treeEventEmitter.emit({ type: 'createNewContent' });
+  }
+
+  moveDependentNodes(targetNode, currentNode) {
+    const currentNodeDependency = this.editorService.getDependentNodes(currentNode.otherNode.data.id);
+    if (!_.isEmpty(currentNodeDependency.target)) {
+      _.forEach(currentNodeDependency.target, id => {
+        const dependentNode = this.treeService.getNodeById(id);
+        dependentNode.moveTo(targetNode, currentNode.hitMode);
+      });
+    }
   }
 
   ngOnDestroy() {

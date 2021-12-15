@@ -510,4 +510,24 @@ export class EditorService {
     csvExporter.generateCsv(tableData);
   }
 
+  getBranchingLogicByFolder(identifier) {
+    const nodeData = this.treeService.getNodeById(identifier);
+    const branchingLogic = _.get(nodeData, 'data.metadata.branchingLogic');
+    return branchingLogic || {};
+  }
+
+  getDependentNodes(identifier) {
+    const leafNode = this.treeService.getNodeById(identifier);
+    const parentIdentifier = _.get(leafNode, 'data.metadata.parent');
+    const parentBranchingLogic = this.getBranchingLogicByFolder(parentIdentifier);
+    if (!_.isEmpty(parentBranchingLogic)) {
+     const branchingEntry = _.find(parentBranchingLogic, (logic, key) => {
+        return key === identifier;
+      });
+     return !_.isEmpty(branchingEntry) ? { source: branchingEntry.source, target: branchingEntry.target } :
+     {};
+    }
+
+  }
+
 }
