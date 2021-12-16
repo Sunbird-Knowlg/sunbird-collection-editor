@@ -38,6 +38,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   public showLibraryButton = false;
   public unsubscribe$ = new Subject<void>();
   public bulkUploadProcessingStatus = false;
+  public nodeParentDependentMap = {};
   public rootMenuTemplate = `<span class="ui dropdown sb-dotted-dropdown" autoclose="itemClick" suidropdown="" tabindex="0">
   <span id="contextMenu" class="p-0 w-auto"><i class="icon ellipsis vertical sb-color-black"></i></span>
   <span id= "contextMenuDropDown" class="menu transition hidden" suidropdownmenu="" style="">
@@ -83,6 +84,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   private initialize() {
     const data = this.nodes.data;
     const treeData = this.buildTree(this.nodes.data);
+    this.nodeParentDependentMap = this.editorService.getParentDependentMap(this.nodes.data);
     this.rootNode = [{
       id: data.identifier || UUID.UUID(),
       title: data.name,
@@ -256,11 +258,17 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         const node = data.node;
         const $nodeSpan = $(node.span);
 
+        const nodeStatus = this.nodeParentDependentMap[node.data.id];
+        if (!_.isEmpty(nodeStatus)) {
+          $nodeSpan.addClass(nodeStatus);
+        }
         // check if span of node already rendered
         if (!$nodeSpan.data('rendered')) {
           this.attachContextMenu(node);
+
           // span rendered
           $nodeSpan.data('rendered', true);
+
         }
       }
     };
