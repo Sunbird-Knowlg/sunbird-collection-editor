@@ -332,6 +332,24 @@ export class EditorService {
     return instance.data;
   }
 
+
+  _toFlatObjFromHierarchy(data) {
+    const instance = this;
+    if (data && data.children) {
+      instance.data[data.identifier] = {
+        name: data.name,
+        children: _.map(data.children, (child) => {
+          return child.identifier;
+        }),
+        branchingLogic: data.branchingLogic
+      };
+      _.forEach(data.children, (collection) => {
+        instance._toFlatObjFromHierarchy(collection);
+      });
+    }
+    return instance.data;
+  }
+
   getCategoryDefinition(categoryName, channel, objectType?: any) {
     const req = {
       url: _.get(this.configService.urlConFig, 'URLS.getCategoryDefinition'),
@@ -528,7 +546,6 @@ export class EditorService {
       return !_.isEmpty(branchingEntry) ? { source: branchingEntry.source, target: branchingEntry.target } :{};
      }
     }
-
   }
 
   getParentIdentifier(identifier){
@@ -543,6 +560,23 @@ export class EditorService {
       return key === identifier;
     });
     return branchingEntry;
+  }
+
+  getFlattenedBranchingLogic(data) {
+    const flatHierarchy = this._toFlatObjFromHierarchy(data);
+    const branchingLogics = _.compact(_.map(flatHierarchy, 'branchingLogic'));
+    return _.reduce(branchingLogics, (acc, val) => {
+      return  _.assign(acc, val);
+    }, {});
+  }
+
+  getParentDependentMap(data) {
+    const branchingLogic = this.getFlattenedBranchingLogic(data);
+    const obj = {};
+    _.forEach(_.keys(branchingLogic), item => {
+      obj[item] = !_.isEmpty(branchingLogic[item].source) ? 'dependent' : !_.isEmpty(branchingLogic[item].target) ? 'parent' : '';
+    });
+    return obj;
   }
 
 }
