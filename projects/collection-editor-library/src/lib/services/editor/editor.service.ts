@@ -517,17 +517,32 @@ export class EditorService {
   }
 
   getDependentNodes(identifier) {
+    const parentBranchingLogic=this.getParentIdentifier(identifier);
+    if (!_.isEmpty(parentBranchingLogic)) {
+     const branchingEntry = this.getBranchingLogicEntry(parentBranchingLogic,identifier);
+     if(!_.isEmpty(branchingEntry.source[0])) {
+       const parentBranchingLogic=this.getParentIdentifier(branchingEntry.source[0]);
+       const branchingEntrys =this.getBranchingLogicEntry(parentBranchingLogic,branchingEntry.source[0]);
+       return !_.isEmpty(branchingEntrys) ? { source:branchingEntry.source, target: branchingEntrys.target } :{};
+     }else{
+      return !_.isEmpty(branchingEntry) ? { source: branchingEntry.source, target: branchingEntry.target } :{};
+     }
+    }
+
+  }
+
+  getParentIdentifier(identifier){
     const leafNode = this.treeService.getNodeById(identifier);
     const parentIdentifier = _.get(leafNode, 'data.metadata.parent');
     const parentBranchingLogic = this.getBranchingLogicByFolder(parentIdentifier);
-    if (!_.isEmpty(parentBranchingLogic)) {
-     const branchingEntry = _.find(parentBranchingLogic, (logic, key) => {
-        return key === identifier;
-      });
-     return !_.isEmpty(branchingEntry) ? { source: branchingEntry.source, target: branchingEntry.target } :
-     {};
-    }
+    return parentBranchingLogic;
+  }
 
+  getBranchingLogicEntry(parentBranchingLogic,identifier){
+    const branchingEntry =  _.find(parentBranchingLogic, (logic, key) => {
+      return key === identifier;
+    });
+    return branchingEntry;
   }
 
 }

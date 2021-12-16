@@ -495,11 +495,27 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   moveDependentNodes(targetNode, currentNode) {
     const currentNodeDependency = this.editorService.getDependentNodes(currentNode.otherNode.data.id);
+    let nodeArray = [];
     if (!_.isEmpty(currentNodeDependency.target)) {
-      _.forEach(currentNodeDependency.target, id => {
+      let nodeId = !_.isEmpty(currentNodeDependency.source) ? _.get(currentNodeDependency, 'source[0]') : _.get(currentNode, 'otherNode.data.id');
+      if (currentNode.hitMode === 'after') {
+        const dependentNode = this.treeService.getNodeById(nodeId);
+        dependentNode.moveTo(targetNode, currentNode.hitMode);
+        _.forEach(currentNodeDependency.target, id => {
+          const dependentNode = this.treeService.getNodeById(id);
+          dependentNode.moveTo(currentNode.otherNode, currentNode.hitMode);
+        });
+      }
+      else {
+        nodeArray.push(nodeId); 
+       _.forEach(currentNodeDependency.target,id => {
+         nodeArray.push(id);
+       });
+       _.forEach(nodeArray, id => {
         const dependentNode = this.treeService.getNodeById(id);
         dependentNode.moveTo(targetNode, currentNode.hitMode);
       });
+      }
     }
   }
 
