@@ -7,6 +7,8 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
 import { EditorService } from '../../services/editor/editor.service';
 import {mockData} from './publish-checklist.component.spec.data';
+import {InterpolatePipe} from '../../pipes/interpolate.pipe';
+
 describe('PublishChecklistComponent', () => {
   let component: PublishChecklistComponent;
   let fixture: ComponentFixture<PublishChecklistComponent>;
@@ -15,7 +17,7 @@ describe('PublishChecklistComponent', () => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
       providers: [EditorService],
-      declarations: [PublishChecklistComponent, TelemetryInteractDirective],
+      declarations: [PublishChecklistComponent, TelemetryInteractDirective, InterpolatePipe],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();

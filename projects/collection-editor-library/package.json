@@ -1,5 +1,5 @@
 {
-  "name": "@project-sunbird/sunbird-collection-editor-v9",
+  "name": "@samagra-x/sunbird-collection-editor-v9",
   "version": "4.5.15",
   "peerDependencies": {
     "@angular/common": "~9.1.13",
