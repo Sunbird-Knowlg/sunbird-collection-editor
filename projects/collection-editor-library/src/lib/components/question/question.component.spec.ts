@@ -12,7 +12,7 @@ import { TreeService } from '../../services/tree/tree.service';
 import { SuiModule } from 'ng2-semantic-ui-v9';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
-import { collectionHierarchyMock, mockData, readQuestionMock, mockTreeService } from './question.component.spec.data';
+import { collectionHierarchyMock, creationContextMock, mockData, readQuestionMock, mockTreeService } from './question.component.spec.data';
 import { of } from 'rxjs';
 
 const mockEditorService = {
@@ -31,8 +31,9 @@ const mockEditorService = {
     }
   },
   selectedChildren: {},
-  getToolbarConfig: () => { },
-  fetchCollectionHierarchy: (questionSetId) => { }
+  getToolbarConfig: () => {},
+  fetchCollectionHierarchy: (questionSetId) => { subscribe: (fn) => fn(collectionHierarchyMock) },
+  updateCollection: (questionSetId, event) => { subscribe: () => {} }
 };
 
 describe('QuestionComponent', () => {
@@ -65,7 +66,8 @@ describe('QuestionComponent', () => {
     spyOn(telemetryService, 'impression').and.callFake(() => { });
     spyOn(component, 'initialize').and.callThrough();
     spyOn(editorService, 'getToolbarConfig').and.returnValue({ title: 'abcd', showDialcode: 'No', showPreview: '' });
-    spyOn(editorService, 'fetchCollectionHierarchy').and.returnValue(of(collectionHierarchyMock));
+    spyOn(editorService, 'fetchCollectionHierarchy').and.returnValue({ subscribe: (fn) => fn(collectionHierarchyMock) });
+    spyOn(editorService, 'updateCollection').and.returnValue({ subscribe: ()=>{} });
     let questionService: QuestionService = TestBed.inject(QuestionService);
     spyOn(questionService, 'readQuestion').and.returnValue(of(readQuestionMock));
     fixture.detectChanges();
@@ -153,12 +155,60 @@ describe('QuestionComponent', () => {
     expect(component.showPreview).toBeFalsy();
     expect(component.toolbarConfig.showPreview).toBeFalsy();
   });
+  it('#toolbarEventListener() should call toolbarEventListener for submitQuestion', () => {
+    const data = { button: 'submitQuestion' };
+    spyOn(component, 'submitHandler');
+    component.toolbarEventListener(data);
+    expect(component.submitHandler).toHaveBeenCalledWith();
+  });//$4.6
+  it('#toolbarEventListener() should call toolbarEventListener for rejectQuestion', () => {
+    const data = { button: 'rejectQuestion', comment: 'test comment' };
+    spyOn(component, 'rejectQuestion');
+    component.toolbarEventListener(data);
+    expect(component.rejectQuestion).toHaveBeenCalledWith(data.comment);
+  });//$4.6
+  it('#toolbarEventListener() should call toolbarEventListener for publishQuestion', () => {
+    const data = { button: 'publishQuestion' };
+    spyOn(component, 'publishQuestion');
+    component.toolbarEventListener(data);
+    expect(component.publishQuestion).toHaveBeenCalledWith(data);
+  });//$4.6
+  it('#toolbarEventListener() should call toolbarEventListener for sourcingApproveQuestion', () => {
+    const data = { button: 'sourcingApproveQuestion' };
+    spyOn(component, 'sourcingUpdate');
+    component.toolbarEventListener(data);
+    expect(component.sourcingUpdate).toHaveBeenCalledWith(data);
+  });//$4.6
+  it('#toolbarEventListener() should call toolbarEventListener for sourcingRejectQuestion', () => {
+    const data = { button: 'sourcingRejectQuestion' };
+    spyOn(component, 'sourcingUpdate');
+    component.toolbarEventListener(data);
+    expect(component.sourcingUpdate).toHaveBeenCalledWith(data);
+  });//$4.6
+  it('#toolbarEventListener() should call toolbarEventListener for showReviewcomments', () => {
+    const data = { button: 'showReviewcomments' };
+    component.toolbarEventListener(data);
+    expect(component.showReviewModal).toBeTruthy();
+  });//$4.6
+  it('#toolbarEventListener() should call toolbarEventListener for sendForCorrectionsQuestion', () => {
+    const data = { button: 'sendForCorrectionsQuestion' };
+    spyOn(component, 'sendBackQuestion')
+    component.toolbarEventListener(data);
+    expect(component.sendBackQuestion).toHaveBeenCalledWith(data);
+  });//$4.6
   it('#toolbarEventListener() should call toolbarEventListener for default case', () => {
     const data = { button: '' };
     spyOn(component, 'toolbarEventListener');
     component.toolbarEventListener(data);
     expect(component.toolbarEventListener).toHaveBeenCalledWith(data);
   });
+  it('#submitHandler() should call #validateQuestionData and #validateFormFields', () => {
+    spyOn(component, 'validateQuestionData');
+    spyOn(component, 'validateFormFields');
+    component.submitHandler();
+    expect(component.validateQuestionData).toHaveBeenCalledWith();
+    expect(component.validateFormFields).toHaveBeenCalledWith();
+  });//$4.6
   it('#handleRedirectToQuestionset() should call handleRedirectToQuestionset and redirectToQuestionset to be called ', () => {
     component.questionId = 'do_11326368076523929611';
     spyOn(component, 'redirectToQuestionset');
@@ -262,6 +312,50 @@ describe('QuestionComponent', () => {
     component.validateQuestionData();
     expect(component.showFormError).toBeTruthy();
   });
+  it('call #sourcingUpdate() for sourcingRejectQuestion to verify inputs for #editorService.updateCollection', () => {
+    component.creationContext = creationContextMock;
+    const questionSet = collectionHierarchyMock.result['questionSet'];
+    component.questionId = 'do_11326368076523929611';
+    component.actionType = 'sourcingRejectQuestion';
+    const data = { button: 'sourcingRejectQuestion', comment: 'test comment for rejection' };
+    const editorService = TestBed.inject(EditorService);
+    const requestBody = {
+      request: {
+        questionset: {
+          'rejectedContributions': [
+              ...questionSet.rejectedContributions,
+              component.questionId
+          ],
+          'rejectedContributionComments': {
+              ...questionSet.rejectedContributionComments,
+              "do_11326368076523929611": data.comment
+          }
+        }
+      }
+    };
+    component.sourcingUpdate(data);
+    expect(editorService.updateCollection).toHaveBeenCalledWith("do_11330102570702438417", { ...data, requestBody });
+  });//$4.6
+  it('call #sourcingUpdate() for sourcingApproveQuestion to verify inputs for #editorService.updateCollection', () => {
+    component.creationContext = creationContextMock;
+    const questionSet = collectionHierarchyMock.result['questionSet'];
+    component.questionId = 'do_11326368076523929611';
+    component.actionType = 'sourcingApproveQuestion';
+    const data = { button: 'sourcingApproveQuestion' };
+    const editorService = TestBed.inject(EditorService);
+    const requestBody = {
+      request: {
+        questionset: {
+          'acceptedContributions': [
+              ...questionSet.acceptedContributions,
+              component.questionId
+          ],
+        }
+      }
+    };
+    component.sourcingUpdate(data);
+    expect(editorService.updateCollection).toHaveBeenCalledWith("do_11330102570702438417", { ...data, requestBody });
+  });//$4.6
   it('#videoDataOutput() should call videoDataOutput and event data is empty', () => {
     const event = '';
     spyOn(component, 'deleteSolution');
