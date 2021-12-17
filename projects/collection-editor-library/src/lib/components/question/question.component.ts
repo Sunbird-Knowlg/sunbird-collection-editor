@@ -810,7 +810,12 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   valueChanges(event) {
-    this.childFormData = event;
+    try {
+      event.maxScore = parseInt(event.maxScore);
+      this.childFormData = event;
+    } catch (error) {
+      console.log("Invalid value for maxScore.");
+    }
   }
   validateFormFields() {
     _.forEach(this.leafFormConfig, (formFieldCategory) => {
