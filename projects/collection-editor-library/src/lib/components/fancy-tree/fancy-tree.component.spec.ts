@@ -5,7 +5,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
-import { config, treeData, tree, editorConfig } from './fancy-tree.component.spec.data';
+import { mockData, config, treeData, tree, editorConfig } from './fancy-tree.component.spec.data';
 import { Router } from '@angular/router';
 import { TreeService } from '../../services/tree/tree.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
@@ -74,6 +74,71 @@ describe('FancyTreeComponent', () => {
     component.ngAfterViewInit();
     expect(component.getTreeConfig).toHaveBeenCalled();
     expect(component.renderTree).toHaveBeenCalled();
+  });
+
+  it('call #eachNodeActionButton() to verify #visibility for root node', () => {
+    component.config = mockData.config;
+    const rootNode = {
+      getLevel: () => 1,
+      folder: true,
+      data: { root: true },
+    };
+    component.eachNodeActionButton(rootNode);
+    expect(component.visibility).toEqual({
+      addChild: true,
+      addSibling: false,
+      addFromLibrary: false,
+      createNew: false
+    });
+  });
+
+  it('call #eachNodeActionButton() to verify #visibility for child node', () => {
+    component.config = mockData.config;
+    const node = {
+      getLevel: () => 2,
+      folder: true,
+      data: { root: false },
+    };
+    component.eachNodeActionButton(node);
+    expect(component.visibility).toEqual({
+      addChild: true,
+      addSibling: true,
+      addFromLibrary: false,
+      createNew: false
+    });
+  });
+
+  it('call #eachNodeActionButton() to verify #visibility for leaf node', () => {
+    component.config = mockData.config;
+    const node = {
+      getLevel: () => 3,
+      folder: true,
+      data: { root: false },
+    };
+    component.eachNodeActionButton(node);
+    expect(component.visibility).toEqual({
+      addChild: false,
+      addSibling: true,
+      addFromLibrary: true,
+      createNew: true
+    });
+  });
+
+  it('call #eachNodeActionButton() to verify #visibility when #bulkUploadProcessingStatus is true', () => {
+    component.config = mockData.config;
+    component.bulkUploadProcessingStatus = true;
+    const node = {
+      getLevel: () => 2,
+      folder: true,
+      data: { root: false },
+    };
+    component.eachNodeActionButton(node);
+    expect(component.visibility).toEqual({
+      addChild: false,
+      addSibling: false,
+      addFromLibrary: false,
+      createNew: false
+    });
   });
 
   it('#addFromLibrary() should call #emitshowLibraryPageEvent()', () => {
