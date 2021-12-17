@@ -507,6 +507,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   moveDependentNodes(targetNode, currentNode) {
     const currentNodeDependency = this.editorService.getDependentNodes(currentNode.otherNode.data.id);
     let nodeArray = [];
+    if(!_.isUndefined(currentNodeDependency)){
     let nodeId = !_.isEmpty(currentNodeDependency.source) ? _.get(currentNodeDependency, 'source[0]') : _.get(currentNode, 'otherNode.data.id');
     if (!_.isEmpty(currentNodeDependency.target)) {
       if (currentNode.hitMode === 'after') {
@@ -529,6 +530,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
     this.updateBranchingLogic(_.get(targetNode,'data.metadata.parent'),nodeId);
+   }
   }
 
   updateBranchingLogic(targetId,nodeId){
