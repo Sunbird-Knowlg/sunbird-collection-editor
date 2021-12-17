@@ -550,13 +550,13 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         let data = this.editorService.getBranchingLogicByFolder(id);
         let MyArray = Object.keys(data);
         if(hierarchyData[id].children.length != MyArray.length){
-          this.createBranchinglogic(hierarchyData,id,data);
+          this.createBranchingLogic(hierarchyData,id,data);
         }
       }
     });
   }
 
-  createBranchinglogic(hierarchyData, nodeId, data) {
+  createBranchingLogic(hierarchyData, nodeId, data) {
     let children = hierarchyData[nodeId].children;
     let sectionName = hierarchyData[nodeId].name;
     let dataArray=Object.keys(data);
@@ -602,14 +602,15 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
   
-  updateTreeCache(SectionName,branchingLogic,id){
+  updateTreeCache(sectionName,branchingLogic,id){
+    const primaryCategoryName = this.editorService.getPrimaryCategoryName(id);
     const metadata = {
-      name: SectionName,
-      primaryCategory: this.editorService.selectedPrimaryCategory,
+      name: sectionName,
+      primaryCategory: primaryCategoryName,
       allowBranching: 'Yes',
       branchingLogic
     };
-    this.treeService.updateNode(metadata, id, this.editorService.selectedPrimaryCategory);
+    this.treeService.updateNode(metadata, id, primaryCategoryName);
     console.log(this.treeService.treeCache);
   }
 
