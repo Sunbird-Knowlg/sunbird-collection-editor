@@ -34,6 +34,8 @@ export class EditorService {
   branchingLogic = {};
   selectedSection: any;
   optionsLength: any;
+  selectedPrimaryCategory:any;
+  leafParentIdentifier:any;
   constructor(public treeService: TreeService, private toasterService: ToasterService,
               public configService: ConfigService, private telemetryService: EditorTelemetryService,
               private publicDataService: PublicDataService, private dataService: DataService, public httpClient: HttpClient) {
@@ -530,6 +532,7 @@ export class EditorService {
 
   getBranchingLogicByFolder(identifier) {
     const nodeData = this.treeService.getNodeById(identifier);
+    this.selectedPrimaryCategory=_.get(nodeData,'data.primaryCategory');
     const branchingLogic = _.get(nodeData, 'data.metadata.branchingLogic');
     return branchingLogic || {};
   }
