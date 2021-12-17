@@ -34,6 +34,8 @@ export class EditorService {
   branchingLogic = {};
   selectedSection: any;
   optionsLength: any;
+  selectedPrimaryCategory:any;
+  leafParentIdentifier:any;
   constructor(public treeService: TreeService, private toasterService: ToasterService,
               public configService: ConfigService, private telemetryService: EditorTelemetryService,
               private publicDataService: PublicDataService, private dataService: DataService, public httpClient: HttpClient) {
@@ -535,16 +537,31 @@ export class EditorService {
   }
 
   getDependentNodes(identifier) {
+    const parentBranchingLogic=this.getBranchingLogicByNodeId(identifier);
+    if (!_.isEmpty(parentBranchingLogic)) {
+     const branchingEntry = this.getBranchingLogicEntry(parentBranchingLogic,identifier);
+     if(!_.isEmpty(branchingEntry.source[0])) {
+       const parentBranchingLogic=this.getBranchingLogicByNodeId(branchingEntry.source[0]);
+       const branchingEntrys =this.getBranchingLogicEntry(parentBranchingLogic,branchingEntry.source[0]);
+       return !_.isEmpty(branchingEntrys) ? { source:branchingEntry.source, target: branchingEntrys.target } :{};
+     }else{
+      return !_.isEmpty(branchingEntry) ? { source: branchingEntry.source, target: branchingEntry.target } :{};
+     }
+    }
+  }
+
+  getBranchingLogicByNodeId(identifier){
     const leafNode = this.treeService.getNodeById(identifier);
     const parentIdentifier = _.get(leafNode, 'data.metadata.parent');
-    const parentBranchingLogic = this.getBranchingLogicByFolder(parentIdentifier);
-    if (!_.isEmpty(parentBranchingLogic)) {
-     const branchingEntry = _.find(parentBranchingLogic, (logic, key) => {
-        return key === identifier;
-      });
-     return !_.isEmpty(branchingEntry) ? { source: branchingEntry.source, target: branchingEntry.target } :
-     {};
-    }
+    const branchingLogic = this.getBranchingLogicByFolder(parentIdentifier);
+    return branchingLogic;
+  }
+
+  getBranchingLogicEntry(parentBranchingLogic,identifier){
+    const branchingEntry =  _.find(parentBranchingLogic, (logic, key) => {
+      return key === identifier;
+    });
+    return branchingEntry;
   }
 
   getFlattenedBranchingLogic(data) {
@@ -563,5 +580,12 @@ export class EditorService {
     });
     return obj;
   }
+
+  getPrimaryCategoryName(sectionId){
+    const nodeData = this.treeService.getNodeById(sectionId);  
+    const primaryCategory=_.get(nodeData,'data.primaryCategory');
+    return primaryCategory
+  }
+
 
 }

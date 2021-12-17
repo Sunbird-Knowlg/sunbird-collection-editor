@@ -1069,7 +1069,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   updateTreeCache(sectionName, branchingLogic, selectedSection) {
     const metadata = {
       name: sectionName,
-      primaryCategory: 'Observation',
+      primaryCategory: this.sectionPrimaryCategory,
       allowBranching: 'Yes',
       branchingLogic
     };
