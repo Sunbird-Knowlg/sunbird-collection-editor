@@ -685,6 +685,7 @@ describe('EditorComponent', () => {
       {
         questionSetId: component.collectionId,
         questionId: undefined,
+        creationContext: undefined,
         type: interactionType
       }
     );
