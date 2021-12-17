@@ -41,14 +41,23 @@ describe('FancyTreeComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('#ngOnInit() should call #buildTree()', () => {
+  it('#ngOnInit() should call #initialize()', () => {
     const editorService = TestBed.get(EditorService);
     component.nodes = {
       data: treeData
     };
     spyOnProperty(editorService, 'editorConfig', 'get').and.returnValue(editorConfig);
-    spyOn(component, 'buildTree');
+    spyOn(component, 'initialize');
     component.ngOnInit();
+    expect(component.initialize).toHaveBeenCalled();
+  });
+
+  it('#initialize() should call #buildTree()', () => {
+    component.nodes = {
+      data: treeData
+    };
+    spyOn(component, 'buildTree');
+    component.initialize();
     expect(component.buildTree).toHaveBeenCalled();
   });
 
