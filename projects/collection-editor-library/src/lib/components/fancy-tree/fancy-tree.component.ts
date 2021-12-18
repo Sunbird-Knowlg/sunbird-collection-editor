@@ -80,7 +80,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.renderTree(this.getTreeConfig());
   }
 
-  private initialize() {
+  initialize() {
     const data = this.nodes.data;
     const treeData = this.buildTree(this.nodes.data);
     this.rootNode = [{

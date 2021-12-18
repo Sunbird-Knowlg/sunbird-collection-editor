@@ -12,7 +12,7 @@ import { TreeService } from '../../services/tree/tree.service';
 import { SuiModule } from 'ng2-semantic-ui-v9';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
-import { collectionHierarchyMock, mockData, readQuestionMock, mockTreeService } from './question.component.spec.data';
+import { collectionHierarchyMock, creationContextMock, mockData, readQuestionMock, mockTreeService } from './question.component.spec.data';
 import { of } from 'rxjs';
 
 const mockEditorService = {
@@ -31,8 +31,9 @@ const mockEditorService = {
     }
   },
   selectedChildren: {},
-  getToolbarConfig: () => { },
-  fetchCollectionHierarchy: (questionSetId) => { }
+  getToolbarConfig: () => {},
+  fetchCollectionHierarchy: (questionSetId) => { subscribe: (fn) => fn(collectionHierarchyMock) },
+  updateCollection: (questionSetId, event) => { subscribe: (fn) => fn({}) }
 };
 
 describe('QuestionComponent', () => {
@@ -58,14 +59,15 @@ describe('QuestionComponent', () => {
     component = fixture.componentInstance;
     component.questionInput = {
       "questionSetId": "do_11330102570702438417",
-      "questionId": "do_11330103476396851218"
+      "questionId": "do_11330103476396851218",
     };
     let editorService: EditorService = TestBed.inject(EditorService);
     let telemetryService: EditorTelemetryService = TestBed.inject(EditorTelemetryService);
     spyOn(telemetryService, 'impression').and.callFake(() => { });
     spyOn(component, 'initialize').and.callThrough();
     spyOn(editorService, 'getToolbarConfig').and.returnValue({ title: 'abcd', showDialcode: 'No', showPreview: '' });
-    spyOn(editorService, 'fetchCollectionHierarchy').and.returnValue(of(collectionHierarchyMock));
+    spyOn(editorService, 'fetchCollectionHierarchy').and.returnValue({ subscribe: (fn) => fn(collectionHierarchyMock) });
+    spyOn(editorService, 'updateCollection').and.returnValue({ subscribe: (fn) => fn({}) });
     let questionService: QuestionService = TestBed.inject(QuestionService);
     spyOn(questionService, 'readQuestion').and.returnValue(of(readQuestionMock));
     fixture.detectChanges();
@@ -121,6 +123,18 @@ describe('QuestionComponent', () => {
     component.ngAfterViewInit();
     expect(component.telemetryService.impression).toHaveBeenCalled();
   });
+  it('#setQuestionTitle() should set #toolbarConfig.title', () => {
+    component.creationContext = creationContextMock;
+    component.questionPrimaryCategory = "Subjective Question"
+    component.setQuestionTitle();
+    expect(component.toolbarConfig.title).toBe("Subjective Question")
+  });
+  it('call #getMcqQuestionHtmlBody() to verify questionBody', () => {
+    const question = "<p>Objective 1</p>";
+    const templateId = "mcq-vertical";
+    let result = component.getMcqQuestionHtmlBody(question, templateId);
+    expect(result).toBe("<div class='question-body'><div class='mcq-title'><p>Objective 1</p></div><div data-choice-interaction='response1' class='mcq-vertical'></div></div>");
+  });
   it('#toolbarEventListener() should call toolbarEventListener for saveContent', () => {
     const data = { button: 'saveContent' };
     spyOn(component, 'saveContent');
@@ -153,11 +167,65 @@ describe('QuestionComponent', () => {
     expect(component.showPreview).toBeFalsy();
     expect(component.toolbarConfig.showPreview).toBeFalsy();
   });
+  it('#toolbarEventListener() should call toolbarEventListener for submitQuestion', () => {
+    const data = { button: 'submitQuestion' };
+    spyOn(component, 'submitHandler');
+    component.toolbarEventListener(data);
+    expect(component.submitHandler).toHaveBeenCalledWith();
+  });
+  it('#toolbarEventListener() should call toolbarEventListener for rejectQuestion', () => {
+    const data = { button: 'rejectQuestion', comment: 'test comment' };
+    spyOn(component, 'rejectQuestion');
+    component.toolbarEventListener(data);
+    expect(component.rejectQuestion).toHaveBeenCalledWith(data.comment);
+  });
+  it('#toolbarEventListener() should call toolbarEventListener for publishQuestion', () => {
+    const data = { button: 'publishQuestion' };
+    spyOn(component, 'publishQuestion');
+    component.toolbarEventListener(data);
+    expect(component.publishQuestion).toHaveBeenCalledWith(data);
+  });
+  it('#toolbarEventListener() should call toolbarEventListener for sourcingApproveQuestion', () => {
+    const data = { button: 'sourcingApproveQuestion' };
+    spyOn(component, 'sourcingUpdate');
+    component.toolbarEventListener(data);
+    expect(component.sourcingUpdate).toHaveBeenCalledWith(data);
+  });
+  it('#toolbarEventListener() should call toolbarEventListener for sourcingRejectQuestion', () => {
+    const data = { button: 'sourcingRejectQuestion' };
+    spyOn(component, 'sourcingUpdate');
+    component.toolbarEventListener(data);
+    expect(component.sourcingUpdate).toHaveBeenCalledWith(data);
+  });
+  it('#toolbarEventListener() should call toolbarEventListener for showReviewcomments', () => {
+    const data = { button: 'showReviewcomments' };
+    component.toolbarEventListener(data);
+    expect(component.showReviewModal).toBeTruthy();
+  });
+  it('#toolbarEventListener() should call toolbarEventListener for sendForCorrectionsQuestion', () => {
+    const data = { button: 'sendForCorrectionsQuestion' };
+    spyOn(component, 'sendBackQuestion')
+    component.toolbarEventListener(data);
+    expect(component.sendBackQuestion).toHaveBeenCalledWith(data);
+  });
   it('#toolbarEventListener() should call toolbarEventListener for default case', () => {
     const data = { button: '' };
     spyOn(component, 'toolbarEventListener');
     component.toolbarEventListener(data);
     expect(component.toolbarEventListener).toHaveBeenCalledWith(data);
+  });
+  it('#submitHandler() should call #validateQuestionData and #validateFormFields', () => {
+    spyOn(component, 'validateQuestionData');
+    spyOn(component, 'validateFormFields');
+    component.submitHandler();
+    expect(component.validateQuestionData).toHaveBeenCalledWith();
+    expect(component.validateFormFields).toHaveBeenCalledWith();
+  });
+  it('#rejectQuestion() should call #requestForChanges', () => {
+    const comment = "test comment";
+    spyOn(component, 'requestForChanges');
+    component.rejectQuestion(comment);
+    expect(component.requestForChanges).toHaveBeenCalledWith(comment);
   });
   it('#handleRedirectToQuestionset() should call handleRedirectToQuestionset and redirectToQuestionset to be called ', () => {
     component.questionId = 'do_11326368076523929611';
@@ -261,6 +329,68 @@ describe('QuestionComponent', () => {
     component.questionInteractionType = 'choice';
     component.validateQuestionData();
     expect(component.showFormError).toBeTruthy();
+  });
+  it('call #sourcingUpdate() for sourcingRejectQuestion to verify inputs for #editorService.updateCollection', () => {
+    component.creationContext = creationContextMock;
+    const questionSet = collectionHierarchyMock.result['questionSet'];
+    component.questionId = 'do_11326368076523929611';
+    component.actionType = 'sourcingRejectQuestion';
+    const data = { button: 'sourcingRejectQuestion', comment: 'test comment for rejection' };
+    const editorService = TestBed.inject(EditorService);
+    const requestBody = {
+      request: {
+        questionset: {
+          'rejectedContributions': [
+              ...questionSet.rejectedContributions,
+              component.questionId
+          ],
+          'rejectedContributionComments': {
+              ...questionSet.rejectedContributionComments,
+              "do_11326368076523929611": data.comment
+          }
+        }
+      }
+    };
+    component.sourcingUpdate(data);
+    expect(editorService.updateCollection).toHaveBeenCalledWith("do_11330102570702438417", { ...data, requestBody });
+  });
+  it('call #sourcingUpdate() for sourcingApproveQuestion to verify inputs for #editorService.updateCollection', () => {
+    component.creationContext = creationContextMock;
+    const questionSet = collectionHierarchyMock.result['questionSet'];
+    component.questionId = 'do_11326368076523929611';
+    component.actionType = 'sourcingApproveQuestion';
+    const data = { button: 'sourcingApproveQuestion' };
+    const editorService = TestBed.inject(EditorService);
+    const requestBody = {
+      request: {
+        questionset: {
+          'acceptedContributions': [
+              ...questionSet.acceptedContributions,
+              component.questionId
+          ],
+        }
+      }
+    };
+    component.sourcingUpdate(data);
+    expect(editorService.updateCollection).toHaveBeenCalledWith("do_11330102570702438417", { ...data, requestBody });
+  });
+  it('#sourcingUpdate() should call #redirectToChapterList() for sourcingApproveQuestion', () => {
+    component.creationContext = creationContextMock;
+    component.questionId = 'do_11326368076523929611';
+    component.actionType = 'sourcingApproveQuestion';
+    const data = { button: 'sourcingApproveQuestion' };
+    spyOn(component, 'redirectToChapterList');
+    component.sourcingUpdate(data);
+    expect(component.redirectToChapterList).toHaveBeenCalled();
+  });
+  it('#sourcingUpdate() should call #redirectToChapterList() for sourcingRejectQuestion', () => {
+    component.creationContext = creationContextMock;
+    component.questionId = 'do_11326368076523929611';
+    component.actionType = 'sourcingRejectQuestion';
+    const data = { button: 'sourcingRejectQuestion', comment: 'test comment for rejection' };
+    spyOn(component, 'redirectToChapterList');
+    component.sourcingUpdate(data);
+    expect(component.redirectToChapterList).toHaveBeenCalled();
   });
   it('#videoDataOutput() should call videoDataOutput and event data is empty', () => {
     const event = '';
