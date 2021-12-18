@@ -57,6 +57,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }];
   questionMetaData: any;
   questionInteractionType;
+  questionCategory;
   questionId;
   creationContext: ICreationContext;
   tempQuestionId;
@@ -91,8 +92,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
-    const { questionSetId, questionId, type, creationContext } = this.questionInput;
+    const { questionSetId, questionId, type, category, creationContext } = this.questionInput;
     this.questionInteractionType = type;
+    this.questionCategory = category;
     this.questionId = questionId;
     this.questionSetId = questionSetId;
     this.creationContext = creationContext;
@@ -204,7 +206,12 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         this.populateFormData();
         this.setQuestionTitle();
         if (this.questionInteractionType === 'default') {
-          this.editorState = { question: '', answer: '', solutions: '' };
+          if (this.questionCategory) {
+            this.editorState = _.get(this.configService, `editorConfig.defaultStates.nonInteractiveQuestions.${this.questionCategory}`);
+          }
+          else {
+            this.editorState = { question: "", answer: "", solutions: "" };
+          }
         }
         if (this.questionInteractionType === 'choice') {
           this.editorState = new McqForm({ question: '', options: [] }, {numberOfOptions: 4});

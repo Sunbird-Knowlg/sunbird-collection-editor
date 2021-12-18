@@ -94,8 +94,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit() {
     this.editorService.initialize(this.editorConfig);
     this.editorMode = this.editorService.editorMode;
-    this.treeService.initialize(this.editorConfig);    
-    this.objectType = this.configService.categoryConfig[this.editorConfig.config.objectType];  
+    this.treeService.initialize(this.editorConfig);
+    this.objectType = this.configService.categoryConfig[this.editorConfig.config.objectType];
     this.collectionId = _.get(this.editorConfig, 'context.identifier');
     this.toolbarConfig = this.editorService.getToolbarConfig();
     this.isObjectTypeCollection = this.objectType === 'questionSet' ? false : true;
@@ -103,8 +103,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
     if(this.objectType === 'question') {
       this.collectionId = _.get(this.editorConfig, 'context.collectionIdentifier');
-      this.initializeFrameworkAndChannel();      
-      this.editorService.getCategoryDefinition(_.get(this.editorConfig, 'context.collectionPrimaryCategory'), 
+      this.initializeFrameworkAndChannel();
+      this.editorService.getCategoryDefinition(_.get(this.editorConfig, 'context.collectionPrimaryCategory'),
       this.editorConfig.context.channel, _.get(this.editorConfig, 'context.collectionObjectType'))
       .subscribe(
         (response) => {
@@ -115,9 +115,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
             mimeType: _.get(this.editorConfig, 'config.mimeType'),
             interactionType: _.get(this.editorConfig, 'config.interactionType')
           };
-        this.redirectToQuestionTab(_.get(this.editorConfig, 'config.mode'));  
+        this.redirectToQuestionTab(_.get(this.editorConfig, 'config.mode'));
         }
-      )                
+      )
     }
     else {
       this.mergeCollectionExternalProperties().subscribe(
@@ -142,15 +142,15 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           this.toolbarConfig.showBulkUploadBtn = enableBulkUpload ? enableBulkUpload : false;
           this.helperService.channelData$.subscribe(
             (channelResponse) => {
-              this.primaryCategoryDef = response;                      
-              if(this.objectType !== 'question') this.sethierarchyConfig(response);              
+              this.primaryCategoryDef = response;
+              if(this.objectType !== 'question') this.sethierarchyConfig(response);
             }
           );
         },
         (error) => {
           console.log(error);
         }
-      );       
+      );
     this.pageStartTime = Date.now();
     this.telemetryService.initializeTelemetry(this.editorConfig);
     this.telemetryService.telemetryPageId = this.pageId;
@@ -161,7 +161,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       if (status === 'loaded') {
         this.getFrameworkDetails(this.primaryCategoryDef);
       }
-    });   
+    });
   }
 
   initializeFrameworkAndChannel(collection?: any) {
@@ -289,7 +289,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   mergeCollectionExternalProperties(): Observable<any> {
     const requests = [];
     this.collectionTreeNodes = null;
-    this.isTreeInitialized = true;    
+    this.isTreeInitialized = true;
     requests.push(this.editorService.fetchCollectionHierarchy(this.collectionId));
     if (this.objectType === 'questionSet') {
       requests.push(this.editorService.readQuestionSet(this.collectionId));
@@ -338,7 +338,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       if (_.isEmpty(value)) {
         switch (key) {
           case 'Question':
-            childrenData[key] = _.map(this.helperService.questionPrimaryCategories, 'name') || this.editorConfig.config.questionPrimaryCategories;; 
+            childrenData[key] = _.map(this.helperService.questionPrimaryCategories, 'name') || this.editorConfig.config.questionPrimaryCategories;;
             break;
           case 'Content':
             childrenData[key] = _.map(this.helperService.contentPrimaryCategories, 'name') || [];
@@ -376,12 +376,12 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           this.isEnableCsvAction = true;
           if(_.get(this.editorConfig, 'config.enableQuestionCreation') === false) {
             this.mergeCollectionExternalProperties().subscribe(response => {
-              this.redirectToChapterListTab({ 
+              this.redirectToChapterListTab({
                 collection: _.get(this.collectionTreeNodes, 'data')
               })
-            })      
-            
-          }        
+            })
+
+          }
         }).catch(((error: string) => {
           this.buttonLoaders.saveAsDraftButtonLoader = false;
           this.isEnableCsvAction = false;
@@ -506,7 +506,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           if (!_.isEmpty(response.identifiers)) {
             this.treeService.replaceNodeId(response.identifiers);
           }
-                      
+
           this.treeService.clearTreeCache();
           this.treeService.nextTreeStatus('saved');
           resolve(_.get(this.configService, 'labelConfig.messages.success.001'));
@@ -806,10 +806,12 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   redirectToQuestionTab(mode, interactionType?) {
 
     let questionId = this.selectedNodeData?.data?.metadata?.identifier;
+    let questionCategory = '';
 
     if(this.objectType === 'question') {
       questionId = _.get(this.editorConfig, 'context.identifier');
       interactionType = _.get(this.editorConfig, 'config.interactionType');
+      questionCategory = _.get(this.editorConfig, 'config.questionCategory');
       this.creationContext =  {
         objectType: this.objectType,
         collectionObjectType: _.get(this.editorConfig, 'context.collectionObjectType'),
@@ -817,16 +819,17 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         unitIdentifier: _.get(this.editorConfig, 'context.unitIdentifier'),
         correctionComments: _.get(this.editorConfig, 'context.correctionComments'),
         mode: mode,
-        editableFields: _.get(this.editorConfig, 'config.editableFields')        
+        editableFields: _.get(this.editorConfig, 'config.editableFields')
       }
 
     }
-    
+
     this.questionComponentInput = {
       questionSetId: this.collectionId,
       questionId: questionId,
+      type: interactionType,
+      category: questionCategory,
       creationContext: this.creationContext, // Pass the creation context to the question-component
-      type: interactionType
     };
     this.pageId = 'question';
   }
@@ -835,9 +838,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.selectedNodeData = undefined;
     if(this.objectType === 'question') {
       this.editorEmitter.emit({
-        close: true, library: 'collection_editor', action: event.actionType, identifier: event.identifier        
+        close: true, library: 'collection_editor', action: event.actionType, identifier: event.identifier
       });
-    }    
+    }
     else {
       this.mergeCollectionExternalProperties().subscribe((res: any) => {
         this.pageId = 'collection_editor';
