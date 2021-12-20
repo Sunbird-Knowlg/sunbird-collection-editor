@@ -19,8 +19,8 @@
                     (editorDataOutput)="editorDataHandler($event, 'question')"
                     [editorDataInput]="editorState.question"
                     (videoDataOutput)="videoDataOutput($event)" [videoShow]="videoShow"></lib-ckeditor-tool>
-                  <ng-container *ngIf="isReadOnlyMode">    
-                    <label class="px-16 py-8 fs-0-92 mb-0 ckeditor-tool__label width-100">{{configService.labelConfig?.lbl?.question}}</label>                
+                  <ng-container *ngIf="isReadOnlyMode">
+                    <label class="px-16 py-8 fs-0-92 mb-0 ckeditor-tool__label width-100">{{configService.labelConfig?.lbl?.question}}</label>
                     <div class="ckeditor-tool__solution__body">
                       <p class="fs-0-785 p-16" [innerHTML]="editorState.question | sanitizeHtml"></p>
                     </div>
@@ -40,7 +40,7 @@
                 [editorState]="editorState" [showFormError]="showFormError"
                 (editorDataOutput)="editorDataHandler($event)" [isReadOnlyMode]="isReadOnlyMode"></lib-options>
 
-              <ng-container *ngIf="!isReadOnlyMode; else readOnlySolutionsContainer">                
+              <ng-container *ngIf="!isReadOnlyMode; else readOnlySolutionsContainer">
                 <div class="d-flex flex-ai-center ckeditor-tool__solution py-10 px-16 mt-15 sb-bg-color-white">
                   <label class="fs-0-92 mb-0 ckeditor-tool__label pb-4">
                     <span class="sb-color-primary fs-0-785 mr-4">{{configService.labelConfig?.lbl?.solution}}</span>
@@ -131,14 +131,14 @@
               </div>
               </ng-template>
             </div>
-          </div>         
+          </div>
           <hr>
           <div *ngIf="leafFormConfig">
             <div class="pl-5 py-10 font-weight-bold fs-0-92">
               {{configService.labelConfig?.lbl?.Questiondetails}}
             </div>
-            <div class="form-container   px-30">
-              <sb-dynamic-form [config]="leafFormConfig" (initialize)="output($event)"
+            <div class="form-container   px-30" *ngIf="questionFormConfig">
+              <sb-dynamic-form [config]="questionFormConfig" (initialize)="output($event)"
                 (statusChanges)="onStatusChanges($event)" (valueChanges)="valueChanges($event)"></sb-dynamic-form>
             </div>
           </div>
@@ -178,7 +178,7 @@ class="sb-modal overflow-modal" appBodyScroll (dismissed)="showSubmitConfirmPopu
             class="font-weight-bold mb-4 d-block">"{{configService.labelConfig?.lbl?.iAgreeSubmit}}</span>
           <div class="sb-color-gray-300">{{configService.labelConfig?.lbl?.iconfirmContent}}<a
               class="sb-color-primary font-weight-bold cursor-pointer" href="https://creativecommons.org/licenses" target="_blank" > {{configService.labelConfig?.lbl?.createCommonFramework}}</a>
-              {{configService.labelConfig?.lbl?.accordance}} 
+              {{configService.labelConfig?.lbl?.accordance}}
            <a class="sb-color-primary font-weight-bold cursor-pointer" href="{{contentPolicyUrl}}" target="_blank" >{{configService.labelConfig?.lbl?.contentPolicy}}</a> {{configService.labelConfig?.lbl?.privacyRights}}"</div>
         </label>
       </div>

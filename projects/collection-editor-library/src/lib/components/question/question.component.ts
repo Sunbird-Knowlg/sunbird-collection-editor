@@ -81,6 +81,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     saveButtonLoader: false,
     'review': false
   };
+  public questionFormConfig: any;
+
   constructor(
     private questionService: QuestionService, private editorService: EditorService, public telemetryService: EditorTelemetryService,
     public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,
@@ -106,6 +108,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.solutionUUID = UUID.UUID();
     this.telemetryService.telemetryPageId = this.pageId;
     this.initialLeafFormConfig = _.cloneDeep(this.leafFormConfig);
+    this.questionFormConfig = _.cloneDeep(this.leafFormConfig);
     this.initialize();
     this.framework = _.get(this.editorService.editorConfig, 'context.framework');
     this.fetchFrameWorkDetails().subscribe((frameworkDetails: any) => {
@@ -121,16 +124,18 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.frameworkService.frameworkData$.pipe(takeUntil(this.onComponentDestroy$),
       filter(data => _.get(data, `frameworkdata.${this.framework}`)), take(1));
   }
+
   populateFrameworkData() {
     const categoryMasterList = this.frameworkDetails.frameworkData;
     _.forEach(categoryMasterList, (category) => {
-      _.forEach(this.leafFormConfig, (formFieldCategory) => {
+      _.forEach(this.questionFormConfig, (formFieldCategory) => {
         if (category.code === formFieldCategory.code) {
           formFieldCategory.terms = category.terms;
         }
       });
     });
   }
+
   ngAfterViewInit() {
     this.telemetryService.impression({
       type: 'edit', pageid: this.telemetryService.telemetryPageId, uri: this.router.url,
@@ -141,7 +146,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   initialize() {
     this.editorService.fetchCollectionHierarchy(this.questionSetId).subscribe((response) => {
       this.questionSetHierarchy = _.get(response, 'result.questionSet');
-      const leafFormConfigfields = _.join(_.map(this.leafFormConfig, value => (value.code)), ',');
+      const leafFormConfigfields = _.join(_.map(this.questionFormConfig, value => (value.code)), ',');
       if (!_.isUndefined(this.questionId)) {
         this.questionService.readQuestion(this.questionId, leafFormConfigfields)
           .subscribe((res) => {
@@ -162,7 +167,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
               if (this.questionInteractionType === 'choice') {
                 const responseDeclaration = this.questionMetaData.responseDeclaration;
                 const templateId = this.questionMetaData.templateId;
-                this.questionMetaData.editorState = this.questionMetaData.editorState;
+                // this.questionMetaData.editorState = this.questionMetaData.editorState;
                 const numberOfOptions = this.questionMetaData.editorState.options.length;
                 const options = _.map(this.questionMetaData.editorState.options, option => ({ body: option.value.body }));
                 const question = this.questionMetaData.editorState.question;
@@ -825,7 +830,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
   validateFormFields() {
-    _.forEach(this.leafFormConfig, (formFieldCategory) => {
+    _.forEach(this.questionFormConfig, (formFieldCategory) => {
       if (formFieldCategory.required && !this.childFormData[formFieldCategory.code]) {
         this.showFormError = true;
         this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.008'));
@@ -835,15 +840,15 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     return true;
   }
   previewFormData(status) {
-    const formvalue = _.cloneDeep(this.leafFormConfig);
-    this.leafFormConfig = null;
+    const formvalue = _.cloneDeep(this.questionFormConfig);
+    this.questionFormConfig = null;
     _.forEach(formvalue, (formFieldCategory) => {
       if (_.has(formFieldCategory, 'editable')) {
         formFieldCategory.editable = status ? _.find(this.initialLeafFormConfig, { code: formFieldCategory.code }).editable : status;
         formFieldCategory.default = this.childFormData[formFieldCategory.code];
       }
     });
-    this.leafFormConfig = formvalue;
+    this.questionFormConfig = formvalue;
   }
   isEditable(fieldCode) {
     if (this.creationContext.mode === 'edit') {
@@ -857,7 +862,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   populateFormData() {
     this.childFormData = {};
-    _.forEach(this.leafFormConfig, (formFieldCategory) => {
+    _.forEach(this.questionFormConfig, (formFieldCategory) => {
       formFieldCategory.editable = this.isEditable(formFieldCategory.code);
       if (!_.isUndefined(this.questionId)) {
         if (this.questionMetaData && _.has(this.questionMetaData, formFieldCategory.code)) {
