@@ -514,18 +514,22 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     const nodeId =  _.get(currentNode, 'otherNode.data.id');
     if (!_.isEmpty(currentNodeDependency.target) || !_.isEmpty(currentNodeDependency.sourceTarget)) {
       if (currentNode.hitMode === 'after') {
-        return false;
+        // tslint:disable-next-line:max-line-length
+        movingNodeIds = _.uniq(_.compact(_.concat(currentNodeDependency.source, currentNodeDependency.target, currentNodeDependency.sourceTarget,nodeId)));
       } else {
         // tslint:disable-next-line:max-line-length
         movingNodeIds = _.uniq(_.compact(_.concat(nodeId, currentNodeDependency.source, currentNodeDependency.target, currentNodeDependency.sourceTarget)));
-        _.forEach(movingNodeIds, id => {
-          const dependentNode = this.treeService.getNodeById(id);
-          dependentNode.moveTo(targetNode, currentNode.hitMode);
-        });
       }
+      _.forEach(movingNodeIds, id => {
+        const dependentNode = this.treeService.getNodeById(id);
+        dependentNode.moveTo(targetNode, currentNode.hitMode);
+      });
     }
+    let isFolder:boolean = _.get(targetNode, 'folder')
+    let targetNodeId = isFolder ? _.get(targetNode, 'data.id') : _.get(targetNode, 'data.metadata.parent')
+    
     // tslint:disable-next-line:max-line-length
-    this.rearrangeBranchingLogic(nodeId, _.get(currentNode, 'otherNode.data.metadata.parent'), _.get(targetNode, 'data.id'), currentNodeDependency, movingNodeIds);
+    this.rearrangeBranchingLogic(nodeId, _.get(currentNode, 'otherNode.data.metadata.parent'), targetNodeId, currentNodeDependency, movingNodeIds);
    }
   }
 

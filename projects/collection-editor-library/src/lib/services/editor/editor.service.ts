@@ -548,8 +548,8 @@ getDependentNodes(identifier) {
 
     if (!_.isEmpty(sectionBranchingLogic)) {
      const branchingEntry = this.getBranchingLogicEntry(sectionBranchingLogic, identifier);
-
-     if (!_.isEmpty(branchingEntry.source)) { // if the node is a dependent node
+     let getSource = _.get(branchingEntry,'source')
+     if (!_.isEmpty(getSource)) { // if the node is a dependent node
 
        const sourceBranchingEntry = this.getBranchingLogicEntry(sectionBranchingLogic, _.first(branchingEntry.source));
 
