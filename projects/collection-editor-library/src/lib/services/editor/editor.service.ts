@@ -34,8 +34,8 @@ export class EditorService {
   branchingLogic = {};
   selectedSection: any;
   optionsLength: any;
-  selectedPrimaryCategory:any;
-  leafParentIdentifier:any;
+  selectedPrimaryCategory: any;
+  leafParentIdentifier: any;
   constructor(public treeService: TreeService, private toasterService: ToasterService,
               public configService: ConfigService, private telemetryService: EditorTelemetryService,
               private publicDataService: PublicDataService, private dataService: DataService, public httpClient: HttpClient) {
@@ -536,28 +536,47 @@ export class EditorService {
     return branchingLogic || {};
   }
 
-  getDependentNodes(identifier) {
-    const parentBranchingLogic=this.getBranchingLogicByNodeId(identifier);
-    if (!_.isEmpty(parentBranchingLogic)) {
-     const branchingEntry = this.getBranchingLogicEntry(parentBranchingLogic,identifier);
-     if(!_.isEmpty(branchingEntry.source[0])) {
-       const parentBranchingLogic=this.getBranchingLogicByNodeId(branchingEntry.source[0]);
-       const branchingEntrys =this.getBranchingLogicEntry(parentBranchingLogic,branchingEntry.source[0]);
-       return !_.isEmpty(branchingEntrys) ? { source:branchingEntry.source, target: branchingEntrys.target } :{};
-     }else{
-      return !_.isEmpty(branchingEntry) ? { source: branchingEntry.source, target: branchingEntry.target } :{};
+/**
+ *
+ * @public
+ * @param identifier identifier of the node
+ * @returns { source: [], target: [], sourceTarget?: [] }
+ * @memberof EditorService
+ */
+getDependentNodes(identifier) {
+    const sectionBranchingLogic = this.getBranchingLogicByNodeId(identifier);
+
+    if (!_.isEmpty(sectionBranchingLogic)) {
+     const branchingEntry = this.getBranchingLogicEntry(sectionBranchingLogic, identifier);
+
+     if (!_.isEmpty(branchingEntry.source)) { // if the node is a dependent node
+
+       const sourceBranchingEntry = this.getBranchingLogicEntry(sectionBranchingLogic, _.first(branchingEntry.source));
+
+       return !_.isEmpty(sourceBranchingEntry) ? { source: branchingEntry.source, target: branchingEntry.target,
+        sourceTarget: sourceBranchingEntry.target } : {};
+
+     } else { // if the node is a parent node
+       return !_.isEmpty(branchingEntry) ? { source: branchingEntry.source, target: branchingEntry.target } : {};
      }
     }
   }
 
-  getBranchingLogicByNodeId(identifier){
+/**
+ *
+ * @public
+ * @param identifier identifier of the node
+ * @returns {"do_id": { "target": [ "do_id123", "do_id456" ], "preCondition": {}, "source": [] }}
+ * @memberof EditorService
+ */
+  getBranchingLogicByNodeId(identifier) {
     const leafNode = this.treeService.getNodeById(identifier);
     const parentIdentifier = _.get(leafNode, 'data.metadata.parent');
     const branchingLogic = this.getBranchingLogicByFolder(parentIdentifier);
     return branchingLogic;
   }
 
-  getBranchingLogicEntry(parentBranchingLogic,identifier){
+  getBranchingLogicEntry(parentBranchingLogic, identifier) {
     const branchingEntry =  _.find(parentBranchingLogic, (logic, key) => {
       return key === identifier;
     });
@@ -581,10 +600,10 @@ export class EditorService {
     return obj;
   }
 
-  getPrimaryCategoryName(sectionId){
-    const nodeData = this.treeService.getNodeById(sectionId);  
-    const primaryCategory=_.get(nodeData,'data.primaryCategory');
-    return primaryCategory
+  getPrimaryCategoryName(sectionId) {
+    const nodeData = this.treeService.getNodeById(sectionId);
+    const primaryCategory = _.get(nodeData, 'data.primaryCategory');
+    return primaryCategory;
   }
 
 

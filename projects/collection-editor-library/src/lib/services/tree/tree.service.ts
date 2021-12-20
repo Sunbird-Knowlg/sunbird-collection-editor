@@ -41,9 +41,9 @@ export class TreeService {
     this.treeNativeElement = el;
   }
 
-  updateNode(metadata, nodeToBeUpdated?,primaryCategory?:any) {
+  updateNode(metadata, nodeToBeUpdated?, primaryCategory?: any) {
     this.setNodeTitle(metadata.name);
-    this.updateTreeNodeMetadata(metadata, nodeToBeUpdated,primaryCategory);
+    this.updateTreeNodeMetadata(metadata, nodeToBeUpdated, primaryCategory);
   }
 
   updateAppIcon(appIconUrl) {
@@ -60,8 +60,8 @@ export class TreeService {
     this.setTreeCache(nodeId, _.merge({}, {[key] : value}, _.pick(node.data.metadata, ['objectType'])));
   }
 
-  updateTreeNodeMetadata(newData: any, nodeToBeUpdated?: any,primaryCategory?:any) {
-    const activeNode = this.getActiveNode();
+  updateTreeNodeMetadata(newData: any, nodeToBeUpdated?: any, primaryCategory?: any) {
+    const activeNode = !_.isUndefined(nodeToBeUpdated) ? this.getNodeById(nodeToBeUpdated) : this.getActiveNode();
     const nodeId = nodeToBeUpdated  || activeNode.data.id;
     if (newData.instructions) {
       newData.instructions = { default: newData.instructions };
@@ -93,8 +93,8 @@ export class TreeService {
     }
     delete newData.maxTime;
     delete newData.warningTime;
-    if(primaryCategory){
-      newData.primaryCategory=primaryCategory
+    if (primaryCategory) {
+      newData.primaryCategory = primaryCategory;
     }
     this.setTreeCache(nodeId, newData, activeNode.data);
   }
