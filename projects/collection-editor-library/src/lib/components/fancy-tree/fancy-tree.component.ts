@@ -513,48 +513,21 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     // tslint:disable-next-line:max-line-length
     const nodeId =  _.get(currentNode, 'otherNode.data.id');
     if (!_.isEmpty(currentNodeDependency.target) || !_.isEmpty(currentNodeDependency.sourceTarget)) {
-      if (currentNode.hitMode === 'after') {
-        // tslint:disable-next-line:max-line-length
-        movingNodeIds = _.uniq(_.compact(_.concat(currentNodeDependency.source, currentNodeDependency.target, currentNodeDependency.sourceTarget,nodeId)));
-      } else {
         // tslint:disable-next-line:max-line-length
         movingNodeIds = _.uniq(_.compact(_.concat(nodeId, currentNodeDependency.source, currentNodeDependency.target, currentNodeDependency.sourceTarget)));
-      }
-      _.forEach(movingNodeIds, id => {
-        const dependentNode = this.treeService.getNodeById(id);
-        dependentNode.moveTo(targetNode, currentNode.hitMode);
+        _.forEach(movingNodeIds, id => {
+          const dependentNode = this.treeService.getNodeById(id);
+          dependentNode.moveTo(targetNode, currentNode.hitMode);
       });
     }
-    let isFolder:boolean = _.get(targetNode, 'folder')
-    let targetNodeId = isFolder ? _.get(targetNode, 'data.id') : _.get(targetNode, 'data.metadata.parent')
-    
+    const isFolder: boolean = _.get(targetNode, 'folder');
+    const targetNodeId = isFolder ? _.get(targetNode, 'data.id') : _.get(targetNode, 'data.metadata.parent');
+
     // tslint:disable-next-line:max-line-length
     this.rearrangeBranchingLogic(nodeId, _.get(currentNode, 'otherNode.data.metadata.parent'), targetNodeId, currentNodeDependency, movingNodeIds);
    }
   }
 
-  // updateBranchingLogic(nodeId, currentSectionId, targetSectionId, dependentNodeIDs, movingNodeIds) {
-  //   const data = this.treeService.getFirstChild();
-  //   const hierarchyData = this.editorService._toFlatObj(data);
-  //   console.log(hierarchyData);
-  //   let sectionList = [];
-  //   this.branchingObject = {};
-  //   this.treeData = Object.keys(hierarchyData);
-  //   _.forEach(this.treeData, id => {
-  //     if (hierarchyData[id].root === true) {
-  //       sectionList = hierarchyData[id].children;
-  //       console.log(sectionList);
-  //     }
-  //     if (sectionList.includes(id)) {
-  //       const data = this.editorService.getBranchingLogicByFolder(id);
-  //       const MyArray = Object.keys(data);
-  //       if (hierarchyData[id].children.length !== MyArray.length) {
-  //         this.createBranchingLogic(id, data);
-  //       }
-  //     }
-  //   });
-  //   this.rearrangeBranchingLogic(nodeId, currentSectionId, targetSectionId, dependentNodeIDs, movingNodeIds);
-  // }
 
   rearrangeBranchingLogic(nodeId, currentSectionId, targetSectionId, dependentNodeIDs, movingNodeIds) {
     const currentSectionBranchingLogic = this.editorService.getBranchingLogicByFolder(currentSectionId);
@@ -566,62 +539,20 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     const targetSectionName = _.get(this.treeService.getNodeById(targetSectionId), 'data.metadata.name');
     this.updateTreeCache(currentSectionName, updateCurrentSectionBranchingLogic, currentSectionId);
     this.updateTreeCache(targetSectionName, updateTargetSectionBranchingLogic, targetSectionId);
+    _.forEach(movingNodeIds, id => {
+      const movingNodeName = _.get(this.treeService.getNodeById(id), 'data.metadata.name');
+      this.updateTreeCache(movingNodeName, undefined, id, {parent: targetSectionId});
+    });
   }
 
-  // createBranchingLogic(nodeId, data) {
-  //   const treeData = this.treeService.getFirstChild();
-  //   const hierarchyData = this.editorService._toFlatObj(treeData);
-  //   const children = hierarchyData[nodeId].children;
-  //   const sectionName = hierarchyData[nodeId].name;
-  //   const dataArray = Object.keys(data || {});
-  //   console.log('createBranchinglogic');
-  //   let commonArray = [];
-  //   if (dataArray.length > children.length) {
-  //    commonArray = dataArray.filter(e => !children.includes(e));
-  //    _.forEach(commonArray, id => {
-  //      const obj = {
-  //        [id]: data[id]
-  //      };
-  //      Object.assign(this.branchingObject, obj);
-  //      delete data[id];
-  //    });
-  //    this.updateTreeCache(sectionName, data, nodeId);
-  //   } else {
-  //     if (_.isEmpty(data) && !_.isEmpty(this.branchingObject)) {
-  //     this.updateTreeCache(sectionName, this.branchingObject, nodeId);
-  //     }
-
-  //     if (!_.isEmpty(data) && !_.isEmpty(this.branchingObject)) {
-  //       const branchingLogic = {
-  //         ...data,
-  //         ...this.branchingObject
-  //       };
-  //       this.updateTreeCache(sectionName, branchingLogic, nodeId);
-  //     }
-
-  //     if (!_.isEmpty(data)) {
-  //       commonArray = children.filter(e => !dataArray.includes(e));
-  //       console.log(commonArray);
-  //       console.log(this.branchingObject);
-  //       _.forEach(commonArray, id => {
-  //         const obj = {
-  //           [id]: data[id]
-  //         };
-  //         Object.assign(this.branchingObject, obj);
-  //         delete data[id];
-  //       });
-  //       this.updateTreeCache(sectionName, data, nodeId);
-  //     }
-  //   }
-  // }
-
-  updateTreeCache(sectionName, branchingLogic, id) {
+  updateTreeCache(name, branchingLogic, id, additionalMetadata?) {
     const primaryCategoryName = this.editorService.getPrimaryCategoryName(id);
     const metadata = {
-      name: sectionName,
+      name,
       primaryCategory: primaryCategoryName,
+      ...( !_.isUndefined(additionalMetadata) &&  {...additionalMetadata}),
       allowBranching: 'Yes',
-      branchingLogic
+      ...(!_.isUndefined(branchingLogic) && {branchingLogic})
     };
     this.treeService.updateTreeNodeMetadata(metadata, id, primaryCategoryName);
     console.log(this.treeService.treeCache);
