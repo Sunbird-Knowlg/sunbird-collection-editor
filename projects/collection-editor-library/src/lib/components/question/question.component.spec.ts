@@ -32,8 +32,10 @@ const mockEditorService = {
   },
   selectedChildren: {},
   getToolbarConfig: () => {},
-  fetchCollectionHierarchy: (questionSetId) => { subscribe: (fn) => fn(collectionHierarchyMock) },
-  updateCollection: (questionSetId, event) => { subscribe: (fn) => fn({}) }
+  fetchCollectionHierarchy: (questionSetId) => {
+    subscribe: fn => fn(collectionHierarchyMock);
+  },
+  updateCollection: (questionSetId, event) => { subscribe: fn => fn({}) }
 };
 
 describe('QuestionComponent', () => {
@@ -66,8 +68,8 @@ describe('QuestionComponent', () => {
     spyOn(telemetryService, 'impression').and.callFake(() => { });
     spyOn(component, 'initialize').and.callThrough();
     spyOn(editorService, 'getToolbarConfig').and.returnValue({ title: 'abcd', showDialcode: 'No', showPreview: '' });
-    spyOn(editorService, 'fetchCollectionHierarchy').and.returnValue({ subscribe: (fn) => fn(collectionHierarchyMock) });
-    spyOn(editorService, 'updateCollection').and.returnValue({ subscribe: (fn) => fn({}) });
+    spyOn(editorService, 'fetchCollectionHierarchy').and.returnValue({ subscribe: fn => fn(collectionHierarchyMock) });
+    spyOn(editorService, 'updateCollection').and.returnValue({ subscribe: fn => fn({}) });
     let questionService: QuestionService = TestBed.inject(QuestionService);
     spyOn(questionService, 'readQuestion').and.returnValue(of(readQuestionMock));
     fixture.detectChanges();

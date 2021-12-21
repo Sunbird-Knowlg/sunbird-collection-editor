@@ -5,6 +5,6 @@ export interface ICreationContext {
     isReadOnlyMode?: boolean | undefined;
     mode?: string;
     correctionComments?: string,
-    editableFields?: string[] | undefined;
+    editableFields?: any;
     index?: number;
   }

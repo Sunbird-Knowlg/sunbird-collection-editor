@@ -9,7 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TreeService } from '../../services/tree/tree.service';
 import {
-  editorConfig, nativeElement, getCategoryDefinitionResponse, hierarchyResponse,
+  editorConfig, editorConfig_question, toolbarConfig_question, nativeElement, getCategoryDefinitionResponse, hierarchyResponse,
   categoryDefinition, categoryDefinitionData, csvExport, hirearchyGet
 } from './editor.component.spec.data';
 import { ConfigService } from '../../services/config/config.service';
@@ -74,7 +74,7 @@ describe('EditorComponent', () => {
     expect(component.buttonLoaders.showReviewComment).toBeFalsy();
   });
 
-  it('#ngOnInit() should call all methods inside it', () => {
+  it('#ngOnInit() should call all methods inside it (for objectType Collection)', () => {
     const editorService = TestBed.inject(EditorService);
     const configService = TestBed.inject(ConfigService);
     component.editorConfig = editorConfig;
@@ -120,6 +120,69 @@ describe('EditorComponent', () => {
     expect(component.isStatusReviewMode).toBeTruthy();
   });
 
+  it('#ngOnInit() should call all methods inside it (for objectType Question)', () => {
+    const editorService = TestBed.inject(EditorService);
+    const configService = TestBed.inject(ConfigService);
+    component.editorConfig = editorConfig_question;
+    spyOn(editorService, 'initialize');
+    spyOn(component, 'isReviewMode').and.returnValue(true);
+    spyOn(editorService, 'getToolbarConfig').and.returnValue(toolbarConfig_question);
+    const treeService = TestBed.inject(TreeService);
+    spyOn(treeService, 'initialize').and.callFake(() => { });
+    const frameworkService = TestBed.inject(FrameworkService);
+    spyOn(frameworkService, 'initialize').and.callFake(() => { });
+    const helperService = TestBed.inject(HelperService);
+    spyOn(helperService, 'initialize').and.callFake(() => { });
+    spyOn(editorService, 'getCategoryDefinition').and.returnValue(of(getCategoryDefinitionResponse));
+    const telemetryService = TestBed.inject(EditorTelemetryService);
+    spyOn(telemetryService, 'initializeTelemetry').and.callFake(() => { });
+    spyOn(telemetryService, 'start').and.callFake(() => { });
+    component.ngOnInit();
+    expect(editorService.editorMode).toEqual('edit');
+    expect(editorService.initialize).toHaveBeenCalledWith(editorConfig_question);
+    expect(component.editorMode).toEqual('edit');
+    expect(treeService.initialize).toHaveBeenCalled();
+    expect(component.collectionId).toBeDefined();
+    expect(editorService.getToolbarConfig).toHaveBeenCalled();
+    expect(component.organisationFramework).toBeDefined();
+    expect(frameworkService.initialize).toHaveBeenCalledWith("ekstep_ncert_k-12");
+    expect(helperService.initialize).toHaveBeenCalled();
+    expect(editorService.getCategoryDefinition).toHaveBeenCalledWith('Exam Question Set', '01309282781705830427', 'QuestionSet');
+    expect(component.toolbarConfig.showDialcode).toEqual('yes');
+    expect(editorService.getCategoryDefinition).toHaveBeenCalledWith('Subjective Question', '01309282781705830427', 'Question');
+    expect(telemetryService.initializeTelemetry).toHaveBeenCalled();
+    expect(telemetryService.telemetryPageId).toEqual('question');
+    expect(telemetryService.start).toHaveBeenCalled();
+    expect(component.isObjectTypeCollection).toBeTruthy();
+    expect(component.isStatusReviewMode).toBeTruthy();
+  })
+
+  it('#ngOnInit() should call not call some methods (for objectType Question)', () => {
+    const editorService = TestBed.inject(EditorService);
+    const configService = TestBed.inject(ConfigService);
+    component.editorConfig = editorConfig_question;
+    spyOn(component, 'isReviewMode').and.returnValue(true);
+    spyOn(editorService, 'getToolbarConfig').and.returnValue(toolbarConfig_question);
+    const treeService = TestBed.inject(TreeService);
+    spyOn(treeService, 'initialize').and.callFake(() => { });
+    const frameworkService = TestBed.inject(FrameworkService);
+    spyOn(frameworkService, 'initialize').and.callFake(() => { });
+    const helperService = TestBed.inject(HelperService);
+    spyOn(helperService, 'initialize').and.callFake(() => { });
+    spyOn(editorService, 'getCategoryDefinition').and.returnValue(of(getCategoryDefinitionResponse));
+    const telemetryService = TestBed.inject(EditorTelemetryService);
+    spyOn(telemetryService, 'initializeTelemetry').and.callFake(() => { });
+    spyOn(telemetryService, 'start').and.callFake(() => { });
+    spyOn(component, 'mergeCollectionExternalProperties');
+    spyOn(frameworkService, 'getTargetFrameworkCategories');
+    component.ngOnInit();
+    expect(component.toolbarConfig.title).toBeUndefined();
+    expect(component.mergeCollectionExternalProperties).not.toHaveBeenCalled();
+    expect(component.targetFramework).toBeUndefined();
+    expect(frameworkService.getTargetFrameworkCategories).not.toHaveBeenCalled();
+
+  })
+
   xit('#ngOnInit() should not call some methods', () => {
     const editorService = TestBed.inject(EditorService);
     const configService = TestBed.inject(ConfigService);
@@ -153,6 +216,42 @@ describe('EditorComponent', () => {
     expect(component.targetFramework.length).toEqual(0);
     expect(frameworkService.initialize).not.toHaveBeenCalled();
     expect(frameworkService.getTargetFrameworkCategories).not.toHaveBeenCalled();
+  });
+
+  it('call #redirectToQuestionTab() to verify #creationContext and #questionComponentInput', () => {
+    component.editorConfig = editorConfig_question;
+    component.objectType = 'question';
+    component.collectionId = 'do_113431883451195392169';
+    component.redirectToQuestionTab('edit');
+    let expected_creationContext = {
+        "objectType": "question",
+        "collectionObjectType": "QuestionSet",
+        "isReadOnlyMode": false,
+        "unitIdentifier": "do_113431884671442944170",
+        "correctionComments": "",
+        "mode": "edit",
+        "editableFields": {
+          "orgreview": [
+            "name",
+            "learningOutcome"
+          ],
+          "sourcingreview": [
+            "name",
+            "learningOutcome"
+          ]
+        }
+    }
+    expect(component.creationContext).toEqual(expected_creationContext);
+    expect(component.questionComponentInput).toEqual(
+      {
+        "questionSetId": "do_113431883451195392169",
+        "questionId": undefined,
+        "type": "default",
+        "category": "VSA",
+        "creationContext": expected_creationContext
+      }
+    );
+    expect(component.pageId).toEqual('question');
   });
 
   it('#getFrameworkDetails() test case', () => {
@@ -686,7 +785,8 @@ describe('EditorComponent', () => {
         questionSetId: component.collectionId,
         questionId: undefined,
         creationContext: undefined,
-        type: interactionType
+        type: interactionType,
+        category: '',
       }
     );
     expect(component.pageId).toEqual('question');
@@ -928,4 +1028,3 @@ describe('EditorComponent', () => {
     expect(component.setCsvDropDownOptionsDisable).toHaveBeenCalledWith(true);
   });
 });
-
