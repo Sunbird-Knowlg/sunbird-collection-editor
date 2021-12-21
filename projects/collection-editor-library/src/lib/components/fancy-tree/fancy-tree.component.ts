@@ -539,10 +539,6 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     const targetSectionName = _.get(this.treeService.getNodeById(targetSectionId), 'data.metadata.name');
     this.updateTreeCache(currentSectionName, updateCurrentSectionBranchingLogic, currentSectionId);
     this.updateTreeCache(targetSectionName, updateTargetSectionBranchingLogic, targetSectionId);
-    _.forEach(movingNodeIds, id => {
-      const movingNodeName = _.get(this.treeService.getNodeById(id), 'data.metadata.name');
-      this.updateTreeCache(movingNodeName, undefined, id, {parent: targetSectionId});
-    });
   }
 
   updateTreeCache(name, branchingLogic, id, additionalMetadata?) {
