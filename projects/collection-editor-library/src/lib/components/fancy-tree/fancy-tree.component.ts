@@ -514,7 +514,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     const nodeId =  _.get(currentNode, 'otherNode.data.id');
     if (!_.isEmpty(currentNodeDependency.target) || !_.isEmpty(currentNodeDependency.sourceTarget)) {
         // tslint:disable-next-line:max-line-length
-        movingNodeIds = _.uniq(_.compact(_.concat(nodeId, currentNodeDependency.source, currentNodeDependency.target, currentNodeDependency.sourceTarget)));
+        movingNodeIds = _.uniq(_.compact(_.concat(currentNodeDependency.source, nodeId, currentNodeDependency.target, currentNodeDependency.sourceTarget)));
         _.forEach(movingNodeIds, id => {
           const dependentNode = this.treeService.getNodeById(id);
           dependentNode.moveTo(targetNode, currentNode.hitMode);
