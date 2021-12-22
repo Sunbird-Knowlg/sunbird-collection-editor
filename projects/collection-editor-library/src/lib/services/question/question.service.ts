@@ -85,7 +85,7 @@ export class QuestionService {
       data: {
         request: {
           asset: {
-            primaryCategory: 'Asset',
+            primaryCategory: 'asset',
             language: ['English'],
             code: UUID.UUID(),
           }
