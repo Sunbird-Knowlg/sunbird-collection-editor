@@ -606,5 +606,4 @@ getDependentNodes(identifier) {
     return primaryCategory;
   }
 
-
 }
