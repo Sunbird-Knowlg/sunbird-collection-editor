@@ -508,11 +508,11 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   moveDependentNodes(targetNode, currentNode) {
     const currentNodeDependency = this.editorService.getDependentNodes(currentNode.otherNode.data.id);
+    const currentSectionId = _.get(currentNode, 'otherNode.parent.data.id');
     let movingNodeIds = [];
     if (!_.isEmpty(currentNodeDependency)) {
     // tslint:disable-next-line:max-line-length
     const nodeId =  _.get(currentNode, 'otherNode.data.id');
-    const currentNodeId = _.get(currentNode, 'otherNode.parent.data.id');
     if (!_.isEmpty(currentNodeDependency.target) || !_.isEmpty(currentNodeDependency.sourceTarget)) {
       if (currentNode.hitMode === 'after') {
         // tslint:disable-next-line:max-line-length
@@ -531,7 +531,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     const targetNodeId = isFolder ? _.get(targetNode, 'data.id') : _.get(targetNode, 'parent.data.id');
 
     // tslint:disable-next-line:max-line-length
-    this.rearrangeBranchingLogic(nodeId, currentNodeId, targetNodeId, currentNodeDependency, movingNodeIds);
+    this.rearrangeBranchingLogic(nodeId, currentSectionId, targetNodeId, currentNodeDependency, movingNodeIds);
    }
   }
 
