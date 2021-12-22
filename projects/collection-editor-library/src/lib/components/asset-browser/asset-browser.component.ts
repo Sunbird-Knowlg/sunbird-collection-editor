@@ -243,6 +243,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
             return throwError(this.editorService.apiErrorHandling(err, errInfo));
           })).subscribe((response1) => {
             this.addImageInEditor(response1.result.content_url, response1.result.node_id);
+            this.showImageUploadModal = false;
             this.dismissPops(modal);
           });
         });
