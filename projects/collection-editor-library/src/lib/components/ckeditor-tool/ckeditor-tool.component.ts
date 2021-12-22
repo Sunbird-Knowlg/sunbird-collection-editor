@@ -582,8 +582,15 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     this.formConfig = formvalue;
   }
   uploadAndUseImage(modal) {
+    this.isClosable = false;
+    this.loading = true;
+    this.showErrorMsg = false;
+    this.imageFormValid = false;
     this.questionService.createMediaAsset({ asset: this.assestData }).pipe(catchError(err => {
       const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.019') };
+      this.loading = false;
+      this.isClosable = true;
+      this.imageFormValid = true;
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     })).subscribe((res) => {
       const imgId = res.result.node_id;
@@ -594,6 +601,9 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       };
       this.questionService.generatePreSignedUrl(preSignedRequest, imgId).pipe(catchError(err => {
         const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.026') };
+        this.loading = false;
+        this.isClosable = true;
+        this.imageFormValid = true;
         return throwError(this.editorService.apiErrorHandling(err, errInfo));
       })).subscribe((response) => {
         const signedURL = response.result.pre_signed_url;
@@ -621,6 +631,9 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
           };
           this.questionService.uploadMedia(uploadMediaConfig, imgId).pipe(catchError(err => {
             const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.019') };
+            this.isClosable = true;
+            this.loading = false;
+            this.imageFormValid = true;
             return throwError(this.editorService.apiErrorHandling(err, errInfo));
           })).subscribe((response1) => {
             this.addImageInEditor(response1.result.content_url, response1.result.node_id);

@@ -201,8 +201,15 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     this.formConfig = formvalue;
   }
   uploadAndUseImage(modal) {
+    this.isClosable = false;
+    this.loading = true;
+    this.showErrorMsg = false;
+    this.imageFormValid = false;
     this.questionService.createMediaAsset({ asset: this.assestData }).pipe(catchError(err => {
       const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.019') };
+      this.loading = false;
+      this.isClosable = true;
+      this.imageFormValid = true;
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     })).subscribe((res) => {
       const imgId = res.result.node_id;
@@ -213,6 +220,9 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
       };
       this.questionService.generatePreSignedUrl(preSignedRequest, imgId).pipe(catchError(err => {
         const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.026') };
+        this.loading = false;
+        this.isClosable = true;
+        this.imageFormValid = true;
         return throwError(this.editorService.apiErrorHandling(err, errInfo));
       })).subscribe((response) => {
         const signedURL = response.result.pre_signed_url;
@@ -228,7 +238,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
           const data = new FormData();
           data.append('fileUrl', fileURL);
           data.append('mimeType', this.imageFile.type);
-          const params = {
+          const config1 = {
             enctype: 'multipart/form-data',
             processData: false,
             contentType: false,
@@ -236,10 +246,13 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
           };
           const uploadMediaConfig = {
             data,
-            param: params
+            param: config1
           };
           this.questionService.uploadMedia(uploadMediaConfig, imgId).pipe(catchError(err => {
             const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.019') };
+            this.isClosable = true;
+            this.loading = false;
+            this.imageFormValid = true;
             return throwError(this.editorService.apiErrorHandling(err, errInfo));
           })).subscribe((response1) => {
             this.addImageInEditor(response1.result.content_url, response1.result.node_id);
