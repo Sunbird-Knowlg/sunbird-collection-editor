@@ -571,7 +571,7 @@ getDependentNodes(identifier) {
  */
   getBranchingLogicByNodeId(identifier) {
     const leafNode = this.treeService.getNodeById(identifier);
-    const parentIdentifier = _.get(leafNode, 'data.metadata.parent');
+    const parentIdentifier = _.get(leafNode, 'parent.data.id');
     const branchingLogic = this.getBranchingLogicByFolder(parentIdentifier);
     return branchingLogic;
   }
@@ -605,6 +605,5 @@ getDependentNodes(identifier) {
     const primaryCategory = _.get(nodeData, 'data.primaryCategory');
     return primaryCategory;
   }
-
 
 }

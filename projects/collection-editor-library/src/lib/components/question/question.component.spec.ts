@@ -12,7 +12,7 @@ import { TreeService } from '../../services/tree/tree.service';
 import { SuiModule } from 'ng2-semantic-ui-v9';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
-import { collectionHierarchyMock, mockData, readQuestionMock, mockTreeService, leafFormConfigMock, sourcingSettingsMock, childMetaData, HierarchyMockData } from './question.component.spec.data';
+import { collectionHierarchyMock, mockData, readQuestionMock, mockTreeService, leafFormConfigMock, sourcingSettingsMock, childMetaData, HierarchyMockData, BranchingLogic } from './question.component.spec.data';
 import { of } from 'rxjs';
 
 
@@ -67,6 +67,8 @@ describe('QuestionComponent', () => {
       "questionSetId": "do_11330102570702438417",
       "questionId": "do_11330103476396851218"
     };
+    component.questionPrimaryCategory="Multiselect Multiple Choice Question";
+    component.questionInteractionType = 'choice'
     let editorService: EditorService = TestBed.inject(EditorService);
     let telemetryService: EditorTelemetryService = TestBed.inject(EditorTelemetryService);
     spyOn(telemetryService, 'impression').and.callFake(() => { });
@@ -314,43 +316,128 @@ describe('QuestionComponent', () => {
     expect(component.prepareRequestBody).toHaveBeenCalled();
   })
 
-  it('#setQuestionTypeVlaues() should call to check the dynamic form data',()=>{
-    spyOn(component,"setQuestionTypeVlaues").and.callThrough();
+  it('#setQuestionTypeValues() should call to check the dynamic form data',()=>{
+    spyOn(component,"setQuestionTypeValues").and.callThrough();
     component.childFormData=childMetaData;
     component.subMenus =  mockData.subMenus;
-    component.setQuestionTypeVlaues(mockData.questionMetaData);
-    expect(component.setQuestionTypeVlaues).toHaveBeenCalled();
+    component.setQuestionTypeValues(mockData.questionMetaData);
+    expect(component.setQuestionTypeValues).toHaveBeenCalled();
     expect(mockData.questionMetaData.showEvidence).toEqual(component.childFormData.showEvidence)
   })
 
-  it('#setQuestionTypeVlaues() should call to check the dynamic form data for date',()=>{
+  it('#setQuestionTypeValues() should call to check the dynamic form data for date',()=>{
     component.questionInteractionType="date"
-    spyOn(component,"setQuestionTypeVlaues").and.callThrough();
+    spyOn(component,"setQuestionTypeValues").and.callThrough();
     component.childFormData=childMetaData;
     component.subMenus =  mockData.subMenus;
-    component.setQuestionTypeVlaues(mockData.questionMetaData);
-    expect(component.setQuestionTypeVlaues).toHaveBeenCalled();
+    component.setQuestionTypeValues(mockData.questionMetaData);
+    expect(component.setQuestionTypeValues).toHaveBeenCalled();
     expect(mockData.questionMetaData.showEvidence).toEqual(component.childFormData.showEvidence)
   })
 
-  it('#setQuestionTypeVlaues() should call to check the dynamic form data for text',()=>{
+  it('#setQuestionTypeValues() should call to check the dynamic form data for text',()=>{
     component.questionInteractionType="text"
-    spyOn(component,"setQuestionTypeVlaues").and.callThrough();
+    spyOn(component,"setQuestionTypeValues").and.callThrough();
     component.childFormData=childMetaData;
     component.subMenus =  mockData.subMenus;
-    component.setQuestionTypeVlaues(mockData.questionMetaData);
-    expect(component.setQuestionTypeVlaues).toHaveBeenCalled();
+    component.setQuestionTypeValues(mockData.questionMetaData);
+    expect(component.setQuestionTypeValues).toHaveBeenCalled();
     expect(mockData.questionMetaData.showEvidence).toEqual(component.childFormData.showEvidence)
   })
 
-  it('#setQuestionTypeVlaues() should call to check the dynamic form data for slider',()=>{
+  it('#setQuestionTypeValues() should call to check the dynamic form data for slider',()=>{
     component.questionInteractionType="slider"
-    spyOn(component,"setQuestionTypeVlaues").and.callThrough();
+    spyOn(component,"setQuestionTypeValues").and.callThrough();
     component.childFormData=childMetaData;
     component.subMenus =  mockData.subMenus;
-    component.setQuestionTypeVlaues(mockData.questionMetaData);
-    expect(component.setQuestionTypeVlaues).toHaveBeenCalled();
+    component.setQuestionTypeValues(mockData.questionMetaData);
+    expect(component.setQuestionTypeValues).toHaveBeenCalled();
     expect(mockData.questionMetaData.showEvidence).toEqual(component.childFormData.showEvidence)
   })
+
+  it('#saveContent() should call saveContent when questionId exits ', () => {
+    spyOn(component, 'validateQuestionData');
+    spyOn(component, 'validateFormFields');
+    spyOn(component, 'saveQuestion');
+    spyOn(component,"updateQuestion");
+    spyOn(component,"buildCondition");
+    component.questionId="do_1134355571590184961168";
+    component.selectedSectionId="do_1134347209749299201119";
+    component.showFormError = false;
+    component.showOptions=true;
+    component.isChildQuestion=true;
+    component.condition='eq';
+    component.selectedOptions=1;
+    component.saveContent();
+    component.updateQuestion();
+    component.buildCondition('update');
+    component.updateTreeCache("Mid-day Meals",BranchingLogic,component.selectedSectionId)
+    expect(component.saveQuestion).toHaveBeenCalled();
+    expect(component.updateQuestion).toHaveBeenCalled();
+    expect(component.buildCondition).toHaveBeenCalled();
+  });
+
+
+  it('#buildCondition() should call when it is a child question ', () => {
+    spyOn(component,"buildCondition");
+    component.questionId="do_1134355571590184961168";
+    component.selectedSectionId="do_1134347209749299201119";
+    component.condition='eq';
+    component.selectedOptions=1;
+    component.branchingLogic=BranchingLogic;
+    component.buildCondition('update');
+    component.updateTreeCache("Mid-day Meals",BranchingLogic,component.selectedSectionId);
+    expect(component.buildCondition).toHaveBeenCalled();
+  });
+
+  it('#updateTarget() should call when buildcondition is called ', () => {
+    spyOn(component,"updateTarget").and.callThrough();
+    component.questionId="do_1134355571590184961168";
+    component.branchingLogic=BranchingLogic;
+    component.updateTarget(component.questionId);
+    expect(component.updateTarget).toHaveBeenCalledWith(component.questionId)
+  });
+
+  it('#getOptions() should call when child question is edited when option exits', () => {
+    spyOn(component,"getOptions").and.callThrough();
+    let editorService = TestBed.get(EditorService);
+    editorService.optionsLength = 4;
+    component.getOptions();
+    expect(component.getOptions).toHaveBeenCalled()
+  });
+  it('#getOptions() should call when child question is edited when option not exits', () => {
+    spyOn(component,"getOptions").and.callThrough();
+    let editorService = TestBed.get(EditorService);
+    editorService.optionsLength = undefined;
+    component.getOptions();
+    expect(component.getOptions).toHaveBeenCalled()
+  });
+
+  it('#getParentQuestionOptions() should call when add dependent question clicked', () => {
+    spyOn(component,"getParentQuestionOptions").and.callThrough();
+    component.questionId="do_1134355571590184961168";
+    let editorService = TestBed.get(EditorService);
+    editorService.parentIdentifier = component.questionId;
+    component.getParentQuestionOptions(component.questionId);
+    expect(component.getParentQuestionOptions).toHaveBeenCalledWith(component.questionId);
+  });
+
+  it('#updateTreeCache() should call when buildcondition is called ', () => {
+    spyOn(component,'updateTreeCache').and.callThrough();
+    component.updateTreeCache("Mid-day Meals",BranchingLogic,component.selectedSectionId);
+    expect(component.updateTreeCache).toHaveBeenCalled();
+  });
+
+  it('#setCondition() should call when buildcondition is called ', () => {
+    spyOn(component,'setCondition').and.callThrough();
+    component.questionId='do_1134355571590184961168';
+    let data ={
+      branchingLogic:BranchingLogic
+    }
+    component.setCondition(data);
+    expect(component.setCondition).toHaveBeenCalledWith(data);
+  });
+
+
 
 });
