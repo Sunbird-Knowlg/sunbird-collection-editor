@@ -41,9 +41,7 @@
     "ASSET": {
       "READ":"asset/v1/read/",
       "CREATE":"asset/v1/create",
-      "UPDATE": "asset/v1/update",
-      "UPLOAD":"asset/v1/upload/",
-      "UPLOAD_URL":"asset/v1/upload/url/"
+      "UPLOAD":"asset/v1/upload/"
       },
     "QUESTION": {
       "LIST":"question/v1/list",
