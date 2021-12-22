@@ -512,19 +512,26 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!_.isEmpty(currentNodeDependency)) {
     // tslint:disable-next-line:max-line-length
     const nodeId =  _.get(currentNode, 'otherNode.data.id');
+    const currentNodeId = _.get(currentNode, 'otherNode.parent.data.id');
     if (!_.isEmpty(currentNodeDependency.target) || !_.isEmpty(currentNodeDependency.sourceTarget)) {
+      if (currentNode.hitMode === 'after') {
+        // tslint:disable-next-line:max-line-length
+        movingNodeIds = _.uniq(_.compact(_.concat(currentNodeDependency.source, currentNodeDependency.target, currentNodeDependency.sourceTarget,nodeId)));
+      }
+      else {
         // tslint:disable-next-line:max-line-length
         movingNodeIds = _.uniq(_.compact(_.concat(currentNodeDependency.source, nodeId, currentNodeDependency.target, currentNodeDependency.sourceTarget)));
-        _.forEach(movingNodeIds, id => {
-          const dependentNode = this.treeService.getNodeById(id);
-          dependentNode.moveTo(targetNode, currentNode.hitMode);
+      }
+      _.forEach(movingNodeIds, id => {
+        const dependentNode = this.treeService.getNodeById(id);
+        dependentNode.moveTo(targetNode, currentNode.hitMode);
       });
     }
     const isFolder: boolean = _.get(targetNode, 'folder');
-    const targetNodeId = isFolder ? _.get(targetNode, 'data.id') : _.get(targetNode, 'data.metadata.parent');
+    const targetNodeId = isFolder ? _.get(targetNode, 'data.id') : _.get(targetNode, 'parent.data.id');
 
     // tslint:disable-next-line:max-line-length
-    this.rearrangeBranchingLogic(nodeId, _.get(currentNode, 'otherNode.data.metadata.parent'), targetNodeId, currentNodeDependency, movingNodeIds);
+    this.rearrangeBranchingLogic(nodeId, currentNodeId, targetNodeId, currentNodeDependency, movingNodeIds);
    }
   }
 
