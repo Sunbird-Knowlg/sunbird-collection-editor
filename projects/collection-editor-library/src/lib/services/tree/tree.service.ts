@@ -8,7 +8,7 @@ import { ToasterService } from '../toaster/toaster.service';
 import { HelperService } from '../helper/helper.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { skipWhile } from 'rxjs/operators';
-
+import { ConfigService } from '../config/config.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -19,16 +19,17 @@ export class TreeService {
     nodes: []
   };
   treeNativeElement: any;
-  omitFalseyProps = ['topic', 'topicsIds', 'targetTopicIds', 'keywords'];
+  omitFalseyProps: any;
   // tslint:disable-next-line:variable-name
   private _treeStatus$ = new BehaviorSubject<any>(undefined);
   public readonly treeStatus$: Observable<any> = this._treeStatus$
   .asObservable().pipe(skipWhile(status => status === undefined || status === null));
 
-  constructor(private toasterService: ToasterService, private helperService: HelperService) { }
+  constructor(private toasterService: ToasterService, private helperService: HelperService, public configService: ConfigService) { }
 
   public initialize(editorConfig: IEditorConfig) {
     this.config = editorConfig.config;
+    this.omitFalseyProps = _.get(this.configService.editorConfig, 'omitFalseyProperties');
   }
 
   nextTreeStatus(status) {
@@ -71,6 +72,8 @@ export class TreeService {
     const attributions = newData.attributions;
     if (attributions && _.isString(attributions)) {
       newData.attributions = attributions.split(',');
+    } else {
+      newData.attributions = [];
     }
     const { maxTime, warningTime, copyrightYear } = newData;
 
@@ -84,7 +87,9 @@ export class TreeService {
     if (warningTime) {
       timeLimits.warningTime = this.helperService.hmsToSeconds(warningTime);
     }
-    newData.timeLimits = timeLimits;
+    if (!_.isEmpty(timeLimits)) {
+      newData.timeLimits = timeLimits;
+    }
     delete newData.maxTime;
     delete newData.warningTime;
     this.setTreeCache(nodeId, newData, activeNode.data);
@@ -110,7 +115,8 @@ export class TreeService {
       metadata: {
         mimeType: _.get(nodeConfig, 'mimeType'),
         code: uniqueId,
-        name: nodeTitle
+        name: nodeTitle,
+        visibility: 'Parent'
       }
     };
     node.metadata = _.merge({}, node.metadata, _.pick(node, ['contentType', 'objectType', 'primaryCategory']));

@@ -281,3 +281,80 @@ export const mockData = {
         mediaobj: undefined
     }
 };
+
+export const readQuestionMock = {
+    "responseCode": "OK",
+    "result": {
+        "question": {
+            "media": [],
+            "editorState": {
+                "answer": "<p>This is anwser</p>",
+                "question": "<figure class=\"table\"><table><tbody><tr><td>adssa</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>dasd</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>dsadas</td></tr></tbody></table></figure><ul><li>dasdasdasd</li></ul>",
+                "solutions": [
+                    {
+                        "id": "07c3e152-374c-5430-ddb0-e4001c84c573",
+                        "type": "html",
+                        "value": "<p>Solution for the subjectiove question</p>"
+                    }
+                ]
+            },
+            "primaryCategory": "Subjective Question",
+            "identifier": "do_11330103476396851218",
+            "solutions": [
+                {
+                    "id": "07c3e152-374c-5430-ddb0-e4001c84c573",
+                    "type": "html",
+                    "value": "<p>Solution for the subjectiove question</p>"
+                }
+            ],
+            "qType": "SA",
+            "answer": "<p>This is anwser</p>",
+            "name": "Subjective Question ",
+        }
+    }
+};
+
+export const collectionHierarchyMock = {
+    "responseCode": "OK",
+    "result": {
+        "questionSet": {
+            "copyright": "NIT123",
+            "primaryCategory": "Practice Question Set",
+            "children": [
+                {
+                    "parent": "do_11330102570702438417",
+                    "copyright": "NIT123",
+                    "code": "0b145869-f65e-0303-0994-c4b82560bdb6",
+                    "prevStatus": "Review",
+                    "objectType": "Question",
+                    "primaryCategory": "Subjective Question",
+                    "identifier": "do_11330103476396851218",
+                }
+            ]
+        }
+    }
+};
+
+export const mockTreeService = {
+    getChildren: () => {
+        return ['do_11330103476396851218', 'do_233'];
+    },
+    getActiveNode: () => {
+        return {
+            data: {
+                id : 'do_11330103476396851218'
+            },
+            getParent: () => {
+                return {
+                    getChildren: () => {
+                        return [{
+                            data: {
+                                id : 'do_11330103476396851218'
+                            }
+                        }];
+                    }
+                };
+            }
+        };
+    }
+};

@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewEncapsul
 import * as _ from 'lodash-es';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { EditorService } from '../../services/editor/editor.service';
+import { ConfigService } from '../../services/config/config.service';
+import { TreeService } from '../../services/tree/tree.service';
 @Component({
   selector: 'lib-qumlplayer-page',
   templateUrl: './qumlplayer-page.component.html',
@@ -18,7 +20,8 @@ export class QumlplayerPageComponent implements OnChanges {
   showPotrait = false;
   hierarchy: any;
 
-  constructor(public telemetryService: EditorTelemetryService, public editorService: EditorService) { }
+  constructor(public telemetryService: EditorTelemetryService, public configService: ConfigService, public editorService: EditorService,
+              private treeService: TreeService) { }
 
   ngOnChanges() {
     this.initQumlPlayer();
@@ -30,7 +33,8 @@ export class QumlplayerPageComponent implements OnChanges {
     const newQuestionId = _.get(this.questionMetaData, 'identifier');
     if (newQuestionId && this.prevQuestionId !== newQuestionId) {
       this.hierarchy = _.cloneDeep(this.questionSetHierarchy);
-      this.hierarchy.children = _.filter(this.hierarchy.children, (question) => question.identifier === newQuestionId);
+      const selectedNode = this.treeService.getNodeById(newQuestionId);
+      this.hierarchy.children = _.castArray(_.get(selectedNode, 'data.metadata'));
       this.hierarchy.childNodes = [newQuestionId];
       this.prevQuestionId = newQuestionId;
       setTimeout(() => {
@@ -45,7 +49,7 @@ export class QumlplayerPageComponent implements OnChanges {
   switchToLandscapeMode() {
     this.showPotrait = false;
   }
-  
+
   removeQuestion() {
     this.toolbarEmitter.emit({button: 'removeContent'});
   }

@@ -1,4 +1,7 @@
 .sb-collectionTree-fancyTreelist {
+  ul {
+    padding: 0 !important;
+  }
     .ui-fancytree {
       margin-bottom: 1rem !important;
       &:before {
@@ -17,6 +20,7 @@
           font-size: 0.9286rem !important;
           font-weight: 700 !important;
           padding-left: 5px;
+          width: inherit !important;
         }
         .highlightNode {
           color: red !important;
@@ -68,9 +72,10 @@
               &::before {
                 // content: url("/assets/images/writing.png");
                 color: var(--primary-color) !important;
-                margin-top: 5px;
+                margin-top: 2px;
                 float: left;
-                margin-left: 11px;
+                margin-left: 6px;
+                font-size: 16px;
               }
   
               &:last-child {
@@ -114,12 +119,14 @@
       }
   
       .fa-caret-down {
+        margin-top: 6px;
         display: block;
         width: 10px;
         padding-left: 2px;
       }
   
       .fa-caret-right {
+        margin-top: 6px;
         display: block;
         width: 10px;
         padding-left: 6px;
@@ -158,10 +165,14 @@
     }
   }
   .sb-dotted-dropdown{
-    line-height: 1.4rem;
+    position: absolute !important;
+    right: 6px;
+    padding-left: 33px;
     .menu{
+      right: 0 !important;
+      left: inherit !important;
       .item{
-        font-size: 0.785rem !important;
+      font-size: 0.785rem !important;
       }
     }
   }
@@ -176,3 +187,7 @@
     width: 25.1%;
     max-width: 25.1%;
   }
+  #removeNodeIcon{
+    padding-right: 24px;
+  }
+

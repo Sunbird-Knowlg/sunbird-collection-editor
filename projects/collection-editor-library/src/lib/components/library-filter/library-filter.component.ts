@@ -20,7 +20,7 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
   @Input() filterValues: any;
   @Input() filterOpenStatus: boolean;
   @Input() searchFormConfig: any;
-  @Input() targetFrameworkId: any;
+  @Input() frameworkId: any;
   @Output() filterChangeEvent: EventEmitter<any> = new EventEmitter();
   public filterConfig: any;
   public isFilterShow = false;
@@ -47,7 +47,7 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
     }));
 
     if (_.isEmpty(contentTypes)) {
-      contentTypes = this.helperService.contentPrimaryCategories;
+      contentTypes = _.map(this.helperService.contentPrimaryCategories, 'name');
     }
 
     this.currentFilters = {
@@ -73,15 +73,14 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
     this.isFilterShow = this.filterOpenStatus;
   }
 
-
   fetchFrameWorkDetails() {
     this.frameworkService.frameworkData$.pipe(
       takeUntil(this.onComponentDestroy$),
-      filter(data => _.get(data, `frameworkdata.${this.targetFrameworkId}`)),
+      filter(data => _.get(data, `frameworkdata.${this.frameworkId}`)),
       take(1)
     ).subscribe((frameworkDetails: any) => {
       if (frameworkDetails && !frameworkDetails.err) {
-        const frameworkData = frameworkDetails.frameworkdata[this.targetFrameworkId].categories;
+        const frameworkData = frameworkDetails.frameworkdata[this.frameworkId].categories;
         this.frameworkDetails.frameworkData = frameworkData;
         this.frameworkDetails.topicList = _.get(_.find(frameworkData, {
           code: 'topic'
@@ -92,42 +91,6 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
         this.populateFilters();
       }
     });
-  }
-  /**
-   * Get the association data for B M G S
-   */
-  getAssociationData(selectedData: Array<any>, category: string, frameworkCategories) {
-    // Getting data for selected parent, eg: If board is selected it will get the medium data from board array
-    let selectedCategoryData = [];
-    _.forEach(selectedData, (data) => {
-      const categoryData = _.filter(data.associations, (o) => {
-        return o.category === category;
-      });
-      if (categoryData) {
-        selectedCategoryData = _.concat(selectedCategoryData, categoryData);
-      }
-    });
-
-    // Getting associated data from next category, eg: If board is selected it will get the association data for medium
-    let associationData;
-    _.forEach(frameworkCategories, (data) => {
-      if (data.code === category) {
-        associationData = data.terms;
-      }
-    });
-
-    // Mapping the final data for next drop down
-    let resultArray = [];
-    _.forEach(selectedCategoryData, (data) => {
-      const codeData = _.find(associationData, (element) => {
-        return element.code === data.code;
-      });
-      if (codeData) {
-        resultArray = _.concat(resultArray, codeData);
-      }
-    });
-
-    return _.sortBy(_.unionBy(resultArray, 'identifier'), 'index');
   }
 
   populateFilters() {
@@ -151,23 +114,6 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
     }];
   }
 
-  // should get applied association data from framework details
-  getOnChangeAssociationValues(selectedFilter, caterory) {
-    const mediumData = _.find(this.frameworkDetails.frameworkData, (element) => {
-      return element.name === caterory;
-    });
-    let getAssociationsData = [];
-    _.forEach(selectedFilter, (value) => {
-      const getAssociationData = _.map(_.get(mediumData, 'terms'), (framework) => {
-        if (framework.name === value) {
-          return framework;
-        }
-      });
-      getAssociationsData = _.compact(_.concat(getAssociationsData, getAssociationData));
-    });
-    return getAssociationsData;
-  }
-
   onQueryEnter(event) {
     this.emitApplyFilter();
     return false;
@@ -183,7 +129,7 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
 
   resetFilter() {
     this.filterValues = {
-      primaryCategory: this.helperService.contentPrimaryCategories
+      primaryCategory: _.map(this.helperService.contentPrimaryCategories, 'name')
     };
     this.searchQuery = '';
     _.forEach(this.filterFields, (field) => {
@@ -210,13 +156,10 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
       query: this.searchQuery
     });
   }
-
   outputData($event) {
   }
-
   onStatusChanges($event) {
   }
-
   valueChanges($event) {
     this.filterValues = $event;
   }

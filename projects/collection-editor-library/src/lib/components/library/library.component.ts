@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, AfterViewInit, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, AfterViewInit, ViewEncapsulation, OnDestroy } from '@angular/core';
 import * as _ from 'lodash-es';
 import { TreeService } from '../../services/tree/tree.service';
 import { EditorService } from '../../services/editor/editor.service';
@@ -14,7 +14,7 @@ import { HelperService } from '../../services/helper/helper.service';
   styleUrls: ['./library.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class LibraryComponent implements OnInit, AfterViewInit {
+export class LibraryComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() libraryInput: any;
   @Output() libraryEmitter = new EventEmitter<any>();
   public searchFormConfig: any;
@@ -33,7 +33,7 @@ export class LibraryComponent implements OnInit, AfterViewInit {
   public defaultFilters: any;
   pageStartTime: any;
   selectedUnit: string;
-  public targetFrameworkId: any;
+  public frameworkId: any;
   constructor(public telemetryService: EditorTelemetryService,
               private editorService: EditorService,
               private router: Router,
@@ -52,7 +52,11 @@ export class LibraryComponent implements OnInit, AfterViewInit {
     this.editorService.fetchCollectionHierarchy(this.collectionId).subscribe((response: any) => {
       this.collectionhierarcyData = response.result.content;
       this.collectionHierarchy = this.getUnitWithChildren(this.collectionhierarcyData, this.collectionId);
-      this.targetFrameworkId = this.collectionhierarcyData.targetFWIds[0];
+      if (_.has(this.collectionhierarcyData, 'targetFWIds')) {
+        this.frameworkId = _.first(_.castArray(this.collectionhierarcyData.targetFWIds));
+      } else {
+        this.frameworkId = _.first(_.castArray(this.collectionhierarcyData.framework));
+      }
       this.setDefaultFilters();
       this.fetchContentList();
       this.telemetryService.telemetryPageId = this.pageId;
@@ -71,6 +75,7 @@ export class LibraryComponent implements OnInit, AfterViewInit {
 
   back() {
     this.libraryEmitter.emit({});
+    this.editorService.contentsCountAddedInLibraryPage(true); // contents count updated from library page to zero
   }
 
   onFilterChange(event: any) {
@@ -92,7 +97,7 @@ export class LibraryComponent implements OnInit, AfterViewInit {
     }));
 
     if (_.isEmpty(contentTypes)) {
-      contentTypes = this.helperService.contentPrimaryCategories;
+      contentTypes = _.map(this.helperService.contentPrimaryCategories, 'name');
     }
 
     this.defaultFilters = _.pickBy({
@@ -188,6 +193,8 @@ export class LibraryComponent implements OnInit, AfterViewInit {
         break;
       case 'contentAdded':
         this.childNodes.push(event.data.identifier);
+        this.getHierarchyData();
+        this.editorService.contentsCountAddedInLibraryPage(); // contents count added from library page
         this.filterContentList(true);
         break;
         case 'sortContentList':
@@ -196,6 +203,13 @@ export class LibraryComponent implements OnInit, AfterViewInit {
       default:
         break;
     }
+  }
+  getHierarchyData() {
+    this.editorService.fetchCollectionHierarchy(this.collectionId).subscribe((response: any) => {
+      this.collectionhierarcyData = response.result.content;
+    }, err => {
+      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.001'));
+    });
   }
 sortContentList(status) {
   this.contentList = this.contentList.sort((a, b) => {
@@ -228,5 +242,8 @@ sortContentList(status) {
       }
       this.selectedContent = this.contentList[selectedContentIndex];
     }
+  }
+  ngOnDestroy() {
+    this.editorService.contentsCountAddedInLibraryPage(true); // contents count updated from library page to zero
   }
 }

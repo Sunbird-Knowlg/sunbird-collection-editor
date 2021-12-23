@@ -13,6 +13,7 @@
   &:last-child {
     border-bottom: none;
   }
+  /*
   &.formSection:first-child {
     .sb-g-col-lg-1 {
       &:first-child {
@@ -26,7 +27,7 @@
         }
       }
     }
-  }
+  }*/
 }
 
 .three-column-grid {
@@ -171,3 +172,28 @@ sb-icon-dropdown {
   opacity: 0.3 !important;
   font-weight: 500 !important;
 }
+
+lib-meta-form{
+  sb-dynamic-form{
+    .dynamic-form{
+      min-height: 1100px;
+    }
+  }
+}
+.text-center { text-align: center }
+.text-left { text-align: left }
+.text-right { text-align: right }
+
+.fs-8 { font-size:  0.5rem; }
+.fs-10 { font-size: 0.625rem;  }
+.fs-12 { font-size: 0.75rem;  }
+.fs-14 { font-size: 0.875rem;  }
+.fs-16 { font-size: 1rem;  }
+.fs-18 { font-size: 1.125rem;  }
+.fs-20 { font-size: 1.25rem;  }
+.fs-22 { font-size: 1.375rem;  }
+.fs-24 { font-size: 1.5rem;  }
+.fs-26 { font-size: 1.625rem;  }
+.fs-28 { font-size: 1.75rem;  }
+.fs-30 { font-size: 1.875rem;  }
+.fs-36 { font-size: 2.25rem;  }

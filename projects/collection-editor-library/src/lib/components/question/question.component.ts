@@ -155,8 +155,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
                 }, { templateId, numberOfOptions });
                 this.editorState.solutions = this.questionMetaData.editorState.solutions;
               }
-              const hierarchyChildren = this.questionSetHierarchy.children ? this.questionSetHierarchy.children : [];
-              this.setQuestionTitle(hierarchyChildren, this.questionId);
+              this.setQuestionTitle(this.questionId);
               if (!_.isEmpty(this.editorState.solutions)) {
                 this.selectedSolutionType = this.editorState.solutions[0].type;
                 this.solutionUUID = this.editorState.solutions[0].id;
@@ -188,8 +187,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       if (_.isUndefined(this.questionId)) {
         this.tempQuestionId = UUID.UUID();
         this.populateFormData();
-        const hierarchyChildren = this.questionSetHierarchy.children ? this.questionSetHierarchy.children : [];
-        this.setQuestionTitle(hierarchyChildren);
+        this.setQuestionTitle();
         if (this.questionInteractionType === 'default') {
           this.editorState = { question: '', answer: '', solutions: '' };
         }
@@ -512,7 +510,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   setQumlPlayerData(questionId: string) {
-    const questionMetadata: any = this.getQuestionMetadata();
+    const questionMetadata: any = _.cloneDeep(this.getQuestionMetadata());
     questionMetadata.identifier = questionId;
     this.questionSetHierarchy.children = [questionMetadata];
     this.editorCursor.setQuestionMap(questionId, questionMetadata);
@@ -526,13 +524,16 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log('event is for telemetry', JSON.stringify(event));
   }
 
-  setQuestionTitle(hierarchyChildren, questionId?) {
+  setQuestionTitle(questionId?) {
     let index;
     let questionTitle = '';
+    let hierarchyChildren = this.treeService.getChildren();
     if (!_.isUndefined(questionId)) {
-      index =  _.findIndex(hierarchyChildren, { 'identifier': questionId });
+      const parentNode = this.treeService.getActiveNode().getParent();
+      hierarchyChildren = parentNode.getChildren();
+      index =  _.findIndex(hierarchyChildren, (node) => node.data.id === questionId);
       const question  = hierarchyChildren[index];
-      questionTitle = `Q${(index + 1).toString()} | ` + question.primaryCategory;
+      questionTitle = `Q${(index + 1).toString()} | ` + question.data.primaryCategory;
     } else {
       index = hierarchyChildren.length;
       questionTitle = `Q${(index + 1).toString()} | `;

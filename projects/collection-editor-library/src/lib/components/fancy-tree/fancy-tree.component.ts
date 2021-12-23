@@ -10,6 +10,7 @@ import { HelperService } from '../../services/helper/helper.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
 import { ConfigService } from '../../services/config/config.service';
+import {  DialcodeService } from '../../services/dialcode/dialcode.service';
 
 
 import { Subject } from 'rxjs';
@@ -23,7 +24,7 @@ declare var $: any;
   encapsulation: ViewEncapsulation.None,
 })
 export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('fancyTree', { static: false }) public tree: ElementRef;
+  @ViewChild('fancyTree') public tree: ElementRef;
   @Input() public nodes: any;
   @Input() public options: any;
   @Input( ) buttonLoaders: any;
@@ -41,21 +42,20 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     <div id="addchild" class="item">Add Child</div>
   </span>
   </span>`;
-  public folderMenuTemplate = `<span class="ui dropdown sb-dotted-dropdown" autoclose="itemClick" suidropdown="" tabindex="0">
+  public folderMenuTemplate = `<span id= "removeNodeIcon"> <i class="fa fa-trash-o" type="button"></i> </span><span class="ui dropdown sb-dotted-dropdown" autoclose="itemClick" suidropdown="" tabindex="0">
   <span id="contextMenu" class="p-0 w-auto"><i class="icon ellipsis vertical sb-color-black"></i></span>
   <span id= "contextMenuDropDown" class="menu transition hidden" suidropdownmenu="" style="">
     <div id="addsibling" class="item">Add Sibling</div>
     <div id="addchild" class="item">Add Child</div>
     <div id="delete" class="item">Delete</div>
   </span>
-  </span>
-  <span id= "removeNodeIcon"> <i class="fa fa-trash-o" type="button"></i> </span>`;
+  </span>`;
   // tslint:disable-next-line:max-line-length
-  public contentMenuTemplate = `<span id="contextMenu"><span id= "removeNodeIcon"> <i class="fa fa-trash-o" type="button"></i> </span></span>`;
+  public contentMenuTemplate = `<span id="contextMenu"><span id= "removeNodeIcon" type="content" > <i class="fa fa-trash-o" type="button"></i> </span></span>`;
   constructor(public treeService: TreeService, private editorService: EditorService,
               public telemetryService: EditorTelemetryService, private helperService: HelperService,
               private toasterService: ToasterService, private cdr: ChangeDetectorRef,
-              public configService: ConfigService) { }
+              public configService: ConfigService, private dialcodeService: DialcodeService) { }
   private onComponentDestroy$ = new Subject<any>();
 
   ngOnInit() {
@@ -151,6 +151,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       const rootNode = this.treeService.getFirstChild();
       rootNode.setExpanded(true);
       this.eachNodeActionButton(rootNode);
+      this.dialcodeService.readExistingQrCode();
     });
     this.treeService.nextTreeStatus('loaded');
     this.showTree = true;
@@ -341,37 +342,50 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         // event.stopPropagation();
       });
 
-      $($nodeSpan[0]).find(`#removeNodeIcon`).on('click', (ev) => {
-        this.removeNode();
+      $($nodeSpan[0]).find(`#removeNodeIcon`).on('click', (event: any) => {
+        const isContent =  event.currentTarget.getAttribute('type') && event.currentTarget.getAttribute('type') === 'content';
+        this.removeNode(isContent);
       });
     }
 
   }
 
-  dropNode(node, data) {
+  dropNode(targetNode, currentNode) {
+
+    let dropAllowed;
+    dropAllowed = true;
     // tslint:disable-next-line:max-line-length
-    if (data.otherNode.folder === true && (this.maxTreeDepth(data.otherNode) + (node.getLevel() - 1)) > _.get(this.config, 'maxDepth')) {
+    if (currentNode.otherNode.getLevel() === targetNode.getLevel() && currentNode.otherNode.folder === true &&  currentNode.hitMode !== 'over') {
+      dropAllowed = true;
+    // tslint:disable-next-line:max-line-length
+    } else if (currentNode.otherNode.folder === true && (this.maxTreeDepth(currentNode.otherNode) + (targetNode.getLevel() - 1)) > _.get(this.config, 'maxDepth')) {
       return this.dropNotAllowed();
+    } else if (currentNode.otherNode.folder === false && !this.checkContentAddition(targetNode, currentNode)) {
+      dropAllowed = false;
     }
-    if (data.otherNode.folder === false && !this.checkContentAddition(node, data.otherNode)) {
-      return this.dropNotAllowed();
+
+    if (dropAllowed) {
+        currentNode.otherNode.moveTo(targetNode, currentNode.hitMode);
+        this.treeService.nextTreeStatus('reorder');
+        return true;
+    } else {
+        this.toasterService.warning(`${currentNode.otherNode.title} cannot be added to ${currentNode.node.title}`);
+        return false;
     }
-    data.otherNode.moveTo(node, data.hitMode);
-    this.treeService.nextTreeStatus('reorder');
-    return true;
+
   }
 
   dragDrop(node, data) {
     if ((data.hitMode === 'before' || data.hitMode === 'after' || data.hitMode === 'over') && data.node.data.root) {
       return this.dropNotAllowed();
     }
-    if (_.get(this.config, 'maxDepth')) {
+    if (_.has(this.config, 'maxDepth')) {
       return this.dropNode(node, data);
     }
   }
 
   dropNotAllowed() {
-    this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.007'));
+    this.toasterService.warning(_.get(this.configService, 'labelConfig.messages.error.007'));
     return false;
   }
 
@@ -394,19 +408,22 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   checkContentAddition(targetNode, contentNode): boolean {
-    if (targetNode.folder === false) {
+    if (targetNode.folder === false && (contentNode.hitMode === 'before' || contentNode.hitMode === 'after')) {
+      return true;
+    }
+    if (targetNode.folder === false && contentNode.hitMode === 'over') {
       return false;
     }
     const nodeConfig = this.config.hierarchy[`level${targetNode.getLevel() - 1}`];
     const contentPrimaryCategories = _.flatMap(_.get(nodeConfig, 'children'));
     if (!_.isEmpty(contentPrimaryCategories)) {
-      return _.includes(contentPrimaryCategories, _.get(contentNode, 'data.metadata.primaryCategory')) ? true : false;
+      return _.includes(contentPrimaryCategories, _.get(contentNode, 'otherNode.data.metadata.primaryCategory')) ? true : false;
     }
     return false;
   }
 
-  removeNode() {
-    this.treeEventEmitter.emit({ type: 'deleteNode' });
+  removeNode(isContent?: boolean) {
+    this.treeEventEmitter.emit({ type: 'deleteNode', isContent });
     this.telemetryService.interact({ edata: this.getTelemetryInteractEdata('delete') });
   }
 

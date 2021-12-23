@@ -4,14 +4,28 @@
     "showOriginPreviewUrl": false, 
     "showSourcingStatus": false, 
     "showCorrectionComments": false,
+    "publicStorageAccount": "",
     "assetConfig": {
         "image": {
             "size": "1",
+            "sizeType": "MB",
             "accepted": "png, jpeg"
           },
           "video": {
             "size": "50",
+            "sizeType": "MB",
             "accepted": "mp4, webm"
           }
-    }
+    },
+    "questionPrimaryCategories": ["Multiple Choice Question", "Subjective Question"], 
+    "contentPrimaryCategories": ["Course Assessment", "eTextbook", "Explanation Content", "Learning Resource", "Practice Question Set"],
+    "readQuestionFields": "body,primaryCategory,mimeType,qType,answer,templateId,responseDeclaration,interactionTypes,interactions,name,solutions,editorState,media,",
+    "omitFalseyProperties":["topic", "topicsIds", "targetTopicIds", "keywords"],
+    "questionSet": {
+      "maxQuestionsLimit": "500"
+    },
+    "collection": {
+      "maxContentsLimit": "1200"
+    },
+    "showAddCollaborator": false
 }

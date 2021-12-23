@@ -5,9 +5,9 @@ import { FormsModule } from '@angular/forms';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { Router } from '@angular/router';
-import { CommonFormElementsModule } from 'common-form-elements';
+import { CommonFormElementsModule } from 'common-form-elements-web-v9';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { SuiModule } from 'ng2-semantic-ui/dist';
+import { SuiModule } from 'ng2-semantic-ui-v9';
 import * as $ from 'jquery';
 import 'jquery.fancytree';
 import { EditorService } from '../../services/editor/editor.service';
@@ -58,6 +58,10 @@ describe('LibraryFilterComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('#isFilterShow should be false by default', () => {
+    expect(component.isFilterShow).toBeFalsy()
   });
 
   it('#ngOnInit should call method #setFilterDefaultValues', () => {
@@ -112,6 +116,11 @@ describe('LibraryFilterComponent', () => {
     expect(component.onQueryEnter).toHaveBeenCalled();
   });
 
+  it('#onQueryEnter should return false', () => {
+    let result = component.onQueryEnter({});
+    expect(result).toBe(false)
+  });
+
   it('#resetFilter should remove filters values and call method #emitApplyFilter', () => {
     spyOn(component, 'emitApplyFilter');
     component.resetFilter();
@@ -119,7 +128,6 @@ describe('LibraryFilterComponent', () => {
     expect(component.searchQuery).toEqual('');
     expect(component.emitApplyFilter).toHaveBeenCalled();
   });
-
   it('#valueChanges should set value in #filterValues', () => {
     component.valueChanges({});
     expect(component.filterValues).toBeDefined();

@@ -56,6 +56,7 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
     } else {
       this.appIconConfig = {...this.appIconConfig , ... {isAppIconEditable: true}};
     }
+    const ifEditable = this.ifFieldIsEditable('appIcon');
   }
 
   fetchFrameWorkDetails() {
@@ -105,7 +106,8 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
     const categoryMasterList = this.frameworkDetails.frameworkData ||
     !isRoot && this.frameworkService.selectedOrganisationFramework &&
      _.get(this.frameworkService.selectedOrganisationFramework, 'framework.categories');
-    let formConfig: any = (metaDataFields.visibility === 'Default') ? _.cloneDeep(this.rootFormConfig) : _.cloneDeep(this.unitFormConfig);
+    // tslint:disable-next-line:max-line-length
+    let formConfig: any = (_.get(metaDataFields, 'visibility') === 'Default') ? _.cloneDeep(this.rootFormConfig) : _.cloneDeep(this.unitFormConfig);
     formConfig = formConfig && _.has(_.first(formConfig), 'fields') ? formConfig : [{name: '', fields: formConfig}];
     if (!_.isEmpty(this.frameworkDetails.targetFrameworks)) {
       _.forEach(this.frameworkDetails.targetFrameworks, (framework) => {
@@ -182,10 +184,16 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         if (field.code === 'maxQuestions') {
-          const rootFirstChildNode = this.treeService.getFirstChild();
-          if (rootFirstChildNode && rootFirstChildNode.children) {
-            field.range = _.times(_.size(rootFirstChildNode.children), index => index + 1);
+          const activeNode = this.treeService.getActiveNode();
+          const rootFirstChildNode = this.editorService.getContentChildrens(activeNode);
+          if (rootFirstChildNode && rootFirstChildNode.length > 0) {
+            field.range = _.times(_.size(rootFirstChildNode), index => index + 1);
           }
+        }
+
+        if (field.code === 'author') {
+          const defaultAuthor = _.get(metaDataFields, field.code);
+          field.default = !_.isEmpty(defaultAuthor) ? defaultAuthor :  _.get(this.editorService.editorConfig, 'context.user.fullName');
         }
 
         if (field.code === 'showTimer') {
@@ -223,9 +231,8 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
           });
         }
 
-        if (this.isReviewMode()) {
-          _.set(field, 'editable', false);
-        }
+        const ifEditable = this.ifFieldIsEditable(field.code); 
+        _.set(field, 'editable', ifEditable);
 
       });
     });
@@ -233,9 +240,20 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
     this.formFieldProperties = _.cloneDeep(formConfig);
     console.log(this.formFieldProperties);
   }
- isReviewMode() {
-  return  _.includes(['review', 'read', 'sourcingreview' ], this.editorService.editorMode);
- }
+  isReviewMode() {
+    return  _.includes([ 'review', 'read', 'sourcingreview', 'orgreview' ], this.editorService.editorMode);
+  }
+  ifFieldIsEditable(fieldCode) {
+    const ediorMode = this.editorService.editorMode;
+    if (!this.isReviewMode()) {
+      return true;
+    }
+    const editableFields = _.get(this.editorService.editorConfig.config, 'editableFields');
+    if (editableFields && !_.isEmpty(editableFields[ediorMode]) && _.includes(editableFields[ediorMode], fieldCode)) {
+      return true;
+    }
+    return false;
+  }
   outputData(eventData: any) { }
 
   onStatusChanges(event) {

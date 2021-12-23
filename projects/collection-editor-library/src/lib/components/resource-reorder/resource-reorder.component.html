@@ -18,7 +18,12 @@
     <sui-accordion-panel [isOpen]="child?.children && child?.children.length > 0 ? true : false">
       <div title class="sb-accordion-title d-flex flex-ai-center mt-0">
         <div class="item d-flex flex-ai-center cursor-pointer w-100">
-          <label for="{{child?.identifier}}" class="sb-color-primary font-weight-bold">{{child?.name}}</label>
+          <label for="{{child?.identifier}}" class="sb-color-primary font-weight-bold mb-0">{{child?.name}}</label>
+          <div class="textbookBtnLink"  *ngIf="child.identifier === prevUnitSelect && isContentAdded">
+            <button type="button" class="sb-btn sb-btn-normal sb-btn-link sb-btn-hover-none
+             sb-btn-link-secondary sb-left-icon-btn fs-0-785"><i class="circle check icon" aria-hidden="true"></i>
+             {{configService.labelConfig?.lbl?.alreadyContentPresent}}</button>
+          </div>
         </div>
         <div class="sb-radio-btn-checkbox sb-radio-btn-primary" [ngClass]="{'sb-disabled': child?.showButton}">
           <input type="radio" disabled="{{child?.showButton}}" id="{{child?.identifier}}" value="{{child?.identifier}}"
@@ -49,15 +54,15 @@
   <div class="sb-modal-actions flex-dr flex-jc-space-between py-10" *ngIf="selectedContentDetails">
     <div class="ui tiny breadcrumb fxsmall line-height-1-3 w-80 d-flex sb-content-breadcrumb"
       [style.visibility]="(collectionUnitsBreadcrumb.length > 0? 'visible' : 'hidden')">
-      Adding <span class="font-weight-bold px-10  section">{{selectedContentDetails?.name}}</span>
-      to
+       {{configService.labelConfig?.lbl?.addingTo}}<span class="font-weight-bold px-10  section">{{selectedContentDetails?.name}}</span>
       <span class="section ml-10" *ngFor="let unit of collectionUnitsBreadcrumb;first as first;last as last;">
         <i class="right chevron icon divider b-0" [hidden]="first"></i>
         <span [class.font-weight-bold]="first"> {{ unit }}</span>
       </span>
     </div>
     <div class="w-20 text-right">
-      <button id="addResource" class="sb-btn sb-btn-normal text-inherit sb-btn-primary text-right"
+      <button id="addResource" [disabled] = "isContentAdded" class="sb-btn sb-btn-normal text-inherit text-right"
+      [ngClass]="{'sb-btn-primary': !isContentAdded, 'sb-btn-disabled': isContentAdded}"
         (click)="addResource()" libTelemetryInteract
         [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('add_content','click','submit', telemetryService?.telemetryPageId, {key:'dialog_id',value:'add_to'})">
         {{configService.labelConfig?.lbl?.addContent}}

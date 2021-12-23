@@ -29,18 +29,20 @@ describe('HeaderComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  
-  it('Should call the component initialization', () => {
-    spyOn(component, 'ngOnInit');
+
+  xit('#ngOnInit() should call handleActionButtons on ngoninit', () => {
+    spyOn(component, 'handleActionButtons');
+    spyOn(component, 'getSourcingData').and.callFake(() => {});
     component.ngOnInit();
     expect(component).toBeTruthy();
     expect(component.ngOnInit).toHaveBeenCalled();
-  })
+  });
 
-  it('should call handleActionButtons method', () => {
+  xit('should call handleActionButtons method', () => {
     spyOn(component, 'handleActionButtons');
     component.handleActionButtons();
     expect(component.handleActionButtons).toHaveBeenCalled();
+    expect(component.getSourcingData).toHaveBeenCalled();
   });
 
   it('Should call the getSourcingData method', () => {
@@ -73,5 +75,26 @@ describe('HeaderComponent', () => {
     };
     component.ngOnDestroy();
     expect(component.modal.deny).toHaveBeenCalled();
+  });
+  it('#publishEmitter() should call publishEmitter for close modal', () => {
+    const data = { button: 'closeModal' };
+    component.showPublishCollectionPopup = true;
+    spyOn(component.toolbarEmitter, 'emit');
+    component.publishEmitter(data);
+    expect(component.showPublishCollectionPopup).toBeFalsy();
+  });
+  it('#publishEmitter() should call publishEmitter for publish event', () => {
+    const data = { button: 'publishContent', publishCheckList: [] };
+    component.showPublishCollectionPopup = true;
+    spyOn(component.toolbarEmitter, 'emit');
+    component.publishEmitter(data);
+    expect(component.showPublishCollectionPopup).toBeFalsy();
+    expect(component.toolbarEmitter.emit).toHaveBeenCalledWith(data);
+  });
+  it('#openPublishCheckListPopup() should open showPublishCollectionPopup', () => {
+    component.showPublishCollectionPopup = false;
+    component.openPublishCheckListPopup('publishContent');
+    expect(component.showPublishCollectionPopup).toBeTruthy();
+    expect(component.actionType).toBeDefined();
   });
 });
