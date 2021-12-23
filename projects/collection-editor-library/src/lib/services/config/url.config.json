@@ -11,10 +11,11 @@
       "SYSYTEM_UPDATE": "questionset/v4/system/update/"
     },
     "Collection": {
-      "HIERARCHY_READ": "content/v3/hierarchy",
-      "HIERARCHY_UPDATE": "content/v3/hierarchy/update",
-      "CONTENT_REVIEW" : "content/v3/review/",
-      "CONTENT_REJECT" : "content/v3/reject/",
+      "HIERARCHY_ADD":"collection/v4/hierarchy/add",
+      "HIERARCHY_READ": "collection/v4/hierarchy",
+      "HIERARCHY_UPDATE": "collection/v4/hierarchy/update",
+      "CONTENT_REVIEW" : "content/v4/review/",
+      "CONTENT_REJECT" : "collection/v4/reject/",
       "CONTENT_PUBLISH" : "content/v3/publish/",
       "SYSYTEM_UPDATE": "system/v3/content/update/"
     },
@@ -30,14 +31,14 @@
     "ContentPolicyUrl" : "/term-of-use.html",
     "assetProxyUrl": "/assets/public/",
     "getCategoryDefinition": "object/category/definition/v1/read?fields=objectMetadata,forms,name",
+
     "CONTENT": {
-    "HIERARCHY_ADD":"content/v3/hierarchy/add",
-    "READ":"content/v3/read/",
-    "CREATE":"content/v3/create",
-    "UPLOAD":"content/v3/upload/",
-    "UPLOAD_URL":"content/v3/upload/url/",
-    "UPDATE_COLLABORATOR":"content/v1/collaborator/update/"
-    },
+      "READ":"content/v4/read/",
+      "CREATE":"content/v4/create",
+      "UPLOAD":"content/v4/upload/",
+      "UPLOAD_URL":"content/v4/upload/url/",
+      "UPDATE_COLLABORATOR":"content/v1/collaborator/update/"
+      },
     "ASSET": {
       "READ":"asset/v1/read/",
       "CREATE":"asset/v1/create",

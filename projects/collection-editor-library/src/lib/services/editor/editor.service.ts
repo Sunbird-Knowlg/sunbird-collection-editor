@@ -240,7 +240,7 @@ export class EditorService {
 
   addResourceToHierarchy(collection, unitIdentifier, contentId): Observable<any> {
     const req = {
-      url: _.get(this.configService.urlConFig, 'URLS.CONTENT.HIERARCHY_ADD'),
+      url: _.get(this.configService.urlConFig, 'URLS.Collection.HIERARCHY_ADD'),
       data: {
         request: {
           rootId: collection,
