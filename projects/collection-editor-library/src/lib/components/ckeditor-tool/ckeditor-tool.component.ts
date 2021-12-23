@@ -176,11 +176,15 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     this.videoDataOutput.emit(false);
   }
   dismissImageUploadModal() {
+    if (this.isClosable) {
     this.showImageUploadModal = false;
+  }
   }
   initiateImageUploadModal() {
     this.showImagePicker = false;
     this.showImageUploadModal = true;
+    this.loading = false;
+    this.isClosable = true;
   }
 
   dismissVideoUploadModal() {
@@ -629,16 +633,16 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
             data,
             param: config1
           };
-          this.questionService.uploadMedia(uploadMediaConfig, imgId).pipe(catchError(err => {
-            const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.019') };
-            this.isClosable = true;
-            this.loading = false;
-            this.imageFormValid = true;
-            return throwError(this.editorService.apiErrorHandling(err, errInfo));
-          })).subscribe((response1) => {
-            this.addImageInEditor(response1.result.content_url, response1.result.node_id);
+          // this.questionService.uploadMedia(uploadMediaConfig, imgId).pipe(catchError(err => {
+          //   const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.019') };
+          //   this.isClosable = true;
+          //   this.loading = false;
+          //   this.imageFormValid = true;
+          //   return throwError(this.editorService.apiErrorHandling(err, errInfo));
+          // })).subscribe((response1) => {
+          //   this.addImageInEditor(response1.result.content_url, response1.result.node_id);
             this.dismissPops(modal);
-          });
+          // });
         });
       });
 

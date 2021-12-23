@@ -286,8 +286,10 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
 
 
   dismissImageUploadModal() {
+    if (this.isClosable) {
     this.showImagePicker = true;
     this.showImageUploadModal = false;
+    }
   }
   openImageUploadModal() {
     this.showImageUploadModal = true;
@@ -296,6 +298,8 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
     this.imageUploadLoader = false;
     this.imageFormValid = false;
     this.showErrorMsg = false;
+    this.loading = false;
+    this.isClosable = true;
   }
   dismissPops(modal) {
     this.dismissImagePicker();
