@@ -22,7 +22,6 @@ export class PublishChecklistComponent implements OnInit {
 
   ngOnInit(): void {
     this.isButtonEnable = _.isEmpty(this.publishchecklist) ? true : false;
-    if(!this.objectType) this.objectType = 'collection';
   }
 
   handlePopUpEvents(type, modal) {

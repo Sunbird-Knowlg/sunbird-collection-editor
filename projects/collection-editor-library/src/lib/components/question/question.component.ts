@@ -289,13 +289,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  handleRedirectToChapterList() {
-    if (_.isUndefined(this.questionId)) {
-      this.showConfirmPopup = true;
-    } else {
-      this.redirectToChapterList();
-    }
-  }
 
   submitHandler() {
     this.validateQuestionData();
@@ -822,12 +815,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   valueChanges(event) {
-    try {
-      event.maxScore = parseInt(event.maxScore);
-      this.childFormData = event;
-    } catch (error) {
-      console.log("Invalid value for maxScore.");
+    if(_.get(this.creationContext, 'objectType') === 'question') {
+      event.maxScore = event.maxScore? parseInt(event.maxScore) : null;
     }
+    this.childFormData = event;
   }
   validateFormFields() {
     _.forEach(this.questionFormConfig, (formFieldCategory) => {
@@ -854,10 +845,12 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.creationContext.mode === 'edit') {
       return true;
     }
+    /*
     const editableFields = this.creationContext.editableFields;
     if (editableFields && !_.isEmpty(editableFields[this.creationContext.mode]) && _.includes(editableFields[this.creationContext.mode], fieldCode)) {
       return true;
     }
+    */
     return false;
   }
   populateFormData() {
