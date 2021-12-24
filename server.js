@@ -119,7 +119,7 @@ app.use(['/action/content/*'], proxy(BASE_URL, {
 app.use(['/content/preview/*', '/content-plugins/*', '/assets/public/*'], proxy(BASE_URL, {
     https: true,
     proxyReqPathResolver: function(req) {
-        return require('url').parse(`https://${host}` + req.originalUrl).path
+        return require('url').parse(`https://${BASE_URL}` + req.originalUrl).path
     },
     proxyReqOptDecorator: function(proxyReqOpts, srcReq) {
         console.log('proxyReqOptDecorator 5')
