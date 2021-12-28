@@ -27,6 +27,7 @@ import { AnswerComponent } from './components/answer/answer.component';
 import { CkeditorToolComponent } from './components/ckeditor-tool/ckeditor-tool.component';
 import { QuestionComponent } from './components/question/question.component';
 import {SunbirdPdfPlayerModule} from '@project-sunbird/sunbird-pdf-player-v9';
+import { SunbirdEpubPlayerModule } from '@project-sunbird/sunbird-epub-player-v9';
 import { SunbirdVideoPlayerModule } from '@project-sunbird/sunbird-video-player-v9';
 import { QumlLibraryModule } from '@project-sunbird/sunbird-quml-player-v9';
 import {CarouselModule} from 'ngx-bootstrap/carousel';
@@ -54,7 +55,7 @@ import { BulkUploadComponent  } from './components/bulk-upload/bulk-upload.compo
      PublishChecklistComponent],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule.forChild([]), SuiModule,
   CommonFormElementsModule, InfiniteScrollModule, HttpClientModule, SunbirdPdfPlayerModule, SunbirdVideoPlayerModule,
-  QumlLibraryModule, CarouselModule],
+  QumlLibraryModule, CarouselModule, SunbirdEpubPlayerModule],
   providers: [
     CacheService,
     { provide: CacheStorageAbstract, useClass: CacheSessionStorage },

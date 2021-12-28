@@ -89,6 +89,9 @@
        "video-player":[
           "video/mp4",
           "video/webm"
+       ],
+       "epub-player": [
+          "application/epub"
        ]
     },
     "baseURL":"/content/preview/preview.html?webview=true",
