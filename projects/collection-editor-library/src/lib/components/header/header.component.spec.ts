@@ -5,7 +5,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
 import { EditorService } from '../../services/editor/editor.service';
-import { labelConfigDataMock } from "./header.component.spec.data";
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -50,12 +49,6 @@ describe('HeaderComponent', () => {
     spyOn(component, 'getSourcingData');
     component.getSourcingData();
     expect(component.getSourcingData).toHaveBeenCalled();
-  });
-
-  it('call #setObjectType() to verify objectType', () => {
-    component.labelConfigData = labelConfigDataMock;
-    component.setObjectType();
-    expect(component.objectType).toBe('question');
   });
 
   it('#handleActionButtons() visibility should be defined ', () => {
