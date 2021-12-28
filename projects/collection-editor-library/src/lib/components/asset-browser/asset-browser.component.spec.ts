@@ -143,8 +143,8 @@ describe('AssetBrowserComponent', () => {
         pre_signed_url: '/test'
       }
     }));
-    spyOn(component, 'addImageInEditor');
-    spyOn(component, 'dismissPops');
+    spyOn(component, 'addImageInEditor').and.callThrough();
+    spyOn(component, 'dismissPops').and.callThrough();
     component.uploadAndUseImage(modal);
     expect(questionService.createMediaAsset).toHaveBeenCalled();
     expect(component.loading).toEqual(true);
@@ -173,7 +173,7 @@ describe('AssetBrowserComponent', () => {
         content_url: '/test'
       }
     }));
-    spyOn(component, 'addImageInEditor');
+    spyOn(component, 'addImageInEditor').and.callThrough();
     spyOn(component, 'dismissPops').and.callThrough();
     component.uploadAndUseImage(modal);
     expect(questionService.createMediaAsset).toHaveBeenCalled();

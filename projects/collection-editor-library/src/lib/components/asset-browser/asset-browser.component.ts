@@ -237,7 +237,7 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
           const fileURL = signedURL.split('?')[0];
           const data = new FormData();
           data.append('fileUrl', fileURL);
-          data.append('mimeType', this.imageFile.type);
+          data.append('mimeType', _.get(this.imageFile, 'type'));
           const config1 = {
             enctype: 'multipart/form-data',
             processData: false,
@@ -303,7 +303,9 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
   }
   dismissPops(modal) {
     this.dismissImagePicker();
-    modal.deny();
+    if (modal && modal.deny) {
+      modal.deny();
+    }
   }
   dismissImagePicker() {
     this.showImagePicker = false;
