@@ -94,7 +94,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
-    const { questionSetId, questionId, type, category, creationContext } = this.questionInput;
+    const { questionSetId, questionId, type, category, config, creationContext } = this.questionInput;
     this.questionInteractionType = type;
     this.questionCategory = category;
     this.questionId = questionId;
@@ -219,7 +219,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         }
         if (this.questionInteractionType === 'choice') {
-          this.editorState = new McqForm({ question: '', options: [] }, {numberOfOptions: 4});
+          this.editorState = new McqForm({ question: '', options: [] }, {numberOfOptions: _.get(this.questionInput, 'config.numberOfOptions')});
         }
         this.showLoader = false;
       }
