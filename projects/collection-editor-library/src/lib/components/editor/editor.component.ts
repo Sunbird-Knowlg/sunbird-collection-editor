@@ -115,7 +115,11 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
             mimeType: _.get(this.editorConfig, 'config.mimeType'),
             interactionType: _.get(this.editorConfig, 'config.interactionType')
           };
-        this.redirectToQuestionTab(_.get(this.editorConfig, 'config.mode'));
+          const objectMetadata = _.get(response, "result.objectCategoryDefinition.objectMetadata");
+          if (objectMetadata.childrenConfig) {
+            this.questionComponentInput.config = objectMetadata.childrenConfig[_.get(this.editorConfig, 'config.interactionType')] || {};
+          }
+          this.redirectToQuestionTab(_.get(this.editorConfig, 'config.mode'));
         }
       )
     }
@@ -830,6 +834,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       type: interactionType,
       category: questionCategory,
       creationContext: this.creationContext, // Pass the creation context to the question-component
+      ...this.questionComponentInput
     };
     this.pageId = 'question';
   }
