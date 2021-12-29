@@ -221,6 +221,14 @@ describe('EditorComponent', () => {
     expect(frameworkService.getTargetFrameworkCategories).not.toHaveBeenCalled();
   });
 
+  it('#initializeFrameworkAndChannel() should call #helperService.initialize', () => {
+    component.editorConfig = editorConfig_question;
+    const helperService = TestBed.inject(HelperService);
+    spyOn(helperService, 'initialize').and.callFake(() => { });
+    component.initializeFrameworkAndChannel();
+    expect(helperService.initialize).toHaveBeenCalledWith('01309282781705830427');
+  });
+
   it('call #redirectToQuestionTab() to verify #creationContext and #questionComponentInput', () => {
     component.editorConfig = editorConfig_question;
     component.objectType = 'question';
@@ -805,6 +813,15 @@ describe('EditorComponent', () => {
   it('#questionEventListener() should set #pageId to collection_editor', async () => {
     spyOn(component, 'mergeCollectionExternalProperties').and.returnValue(of({}));
     expect(component.pageId).toEqual('collection_editor');
+  });
+
+  it('#questionEventListener() should emit event for objectType question', async () => {
+    const event = { actionType: 'test', identifier: 'test' };
+    const expectedParams = {close: true, library: 'collection_editor', action: event.actionType, identifier: event.identifier};
+    spyOn(component.editorEmitter, 'emit').and.returnValue(of({}));
+    component.objectType = 'question';
+    component.questionEventListener(event);
+    expect(component.editorEmitter.emit).toHaveBeenCalledWith(expectedParams);
   });
 
   it('#showCommentAddedAgainstContent should return false', async () => {

@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MetaFormComponent } from './meta-form.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { EditorService } from '../../services/editor/editor.service';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { mockData } from './meta-form.component.spec.data';
 describe('MetaFormComponent', () => {
@@ -11,7 +12,8 @@ describe('MetaFormComponent', () => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       declarations: [MetaFormComponent],
-      schemas: [NO_ERRORS_SCHEMA]
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [EditorService]
     })
       .compileComponents();
   }));
@@ -31,6 +33,16 @@ describe('MetaFormComponent', () => {
     component.ngOnChanges();
     expect(component.fetchFrameWorkDetails).toHaveBeenCalled();
     expect(component.setAppIconData).toHaveBeenCalled();
+  });
+
+  it('#setAppIconData() should define #isAppIconEditable', () => {
+    component.appIconConfig = {
+      isAppIconEditable: ''
+    };
+    spyOn(component, 'isReviewMode');
+    component.isReviewMode();
+    expect(component.isReviewMode).toHaveBeenCalled();
+    expect(component.appIconConfig.isAppIconEditable).toBeDefined();
   });
 
   it('#onStatusChanges() should emit toolbarEmitter event', () => {
@@ -60,6 +72,10 @@ describe('MetaFormComponent', () => {
     };
     component.setAppIconData();
     expect(component.appIcon).toBeDefined();
+  });
+  it('call #ifFieldIsEditable() verify returning value', () => {
+    spyOn(component, 'isReviewMode').and.returnValue(false);
+    expect(component.ifFieldIsEditable('bloomsLevel', false)).toEqual(false);
   });
   it('#valueChanges() should call updateNode and emit toolbarEmitter', () => {
     const data = {
