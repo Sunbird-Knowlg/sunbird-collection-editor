@@ -175,6 +175,9 @@ editorConfig_question = {
       "lastName": "",
       "isRootOrgAdmin": false
     },
+    "targetFWIds": [
+      "nit_k-12"
+    ],
     "channelData": {
       "code": "01309282781705830427",
       "frameworks": [],

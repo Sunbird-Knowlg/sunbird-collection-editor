@@ -41,6 +41,7 @@ export interface Context {
     unitIdentifier?: string;
     collectionObjectType?: string;
     collectionPrimaryCategory?: string;
+    targetFWIds?: string[];
 }
 export interface User {
     id: string;
