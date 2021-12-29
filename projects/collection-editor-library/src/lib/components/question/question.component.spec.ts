@@ -79,7 +79,29 @@ describe('QuestionComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  xit('should call populateFormData ', () => {
+  it('Unit test for #ngOnInit()', () => {
+    component.questionInput = {
+      "questionSetId": "do_11330102570702438417",
+      "questionId": "do_11330103476396851218",
+      "type": "default",
+      "category": "MTF",
+      "config": {},
+      "creationContext": creationContextMock
+    }
+    const editorService = TestBed.get(EditorService);
+    component.ngOnInit();
+    expect(component.questionInteractionType).toEqual("default");
+    expect(component.questionCategory).toEqual("MTF");
+    expect(component.questionId).toEqual("do_11330103476396851218");
+    expect(component.questionSetId).toEqual("do_11330102570702438417");
+    expect(component.creationContext).toEqual(creationContextMock);
+    expect(component.unitId).toEqual(creationContextMock.unitIdentifier);
+    expect(component.isReadOnlyMode).toEqual(creationContextMock.isReadOnlyMode);
+    expect(component.toolbarConfig).toBeDefined();
+    expect(component.toolbarConfig.showPreview).toBeFalsy();
+  });
+
+  it('Unit test for #populateFormData ', () => {
     component.leafFormConfig = mockData.childMetadata;
     component.questionMetaData = mockData.questionMetaData;
     component.populateFormData();
@@ -216,6 +238,13 @@ describe('QuestionComponent', () => {
     component.toolbarEventListener(data);
     expect(component.toolbarEventListener).toHaveBeenCalledWith(data);
   });
+
+  it('Unit test for #sendForReview', () => {
+    spyOn(component, 'upsertQuestion');
+    component.sendForReview();
+    expect(component.upsertQuestion).toHaveBeenCalled();
+  });
+
   it('#submitHandler() should call #validateQuestionData and #validateFormFields', () => {
     spyOn(component, 'validateQuestionData');
     spyOn(component, 'validateFormFields');
