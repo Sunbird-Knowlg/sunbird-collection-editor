@@ -271,6 +271,29 @@ describe('QuestionComponent', () => {
     component.handleRedirectToQuestionset();
     expect(component.showConfirmPopup).toBeTruthy();
   });
+  it('Unit test for #showHideSpinnerLoader', () => {
+    component.showHideSpinnerLoader(true, 'review')
+    expect(component.buttonLoaders.saveButtonLoader).toEqual(true);
+    expect(component.buttonLoaders.review).toEqual(true);
+  });
+  it('Unit test for #isEditable', () => {
+    component.creationContext = creationContextMock;
+    expect(component.isEditable('bloomsLevel')).toBeFalsy();
+  });
+  it('Unit test for #prepareQuestionBody', () => {
+    expect(component.prepareQuestionBody()).toEqual({
+      question: {
+        media: [  ],
+        editorState: {
+           question: '<figure class="table"><table><tbody><tr><td>adssa</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>dasd</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>dsadas</td></tr></tbody></table></figure><ul><li>dasdasdasd</li></ul>'
+        },
+        answer: '<p>This is anwser</p>',
+        solutions: '<p>Solution for the subjectiove question</p>',
+        body: '<figure class="table"><table><tbody><tr><td>adssa</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>dasd</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>dsadas</td></tr></tbody></table></figure><ul><li>dasdasdasd</li></ul>',
+        copyright: 'NIT123'
+      }
+    });
+  });
   it('#saveContent() should call saveContent and set showFormError ', () => {
     spyOn(component, 'validateQuestionData');
     spyOn(component, 'validateFormFields');
