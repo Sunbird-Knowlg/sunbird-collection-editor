@@ -305,6 +305,12 @@ describe('EditorComponent', () => {
     expect(editorService.readQuestionSet).not.toHaveBeenCalled();
   });
 
+  it('#sethierarchyConfig() should set #ishierarchyConfigSet', () => {
+    component.editorConfig = editorConfig;
+    component.sethierarchyConfig(categoryDefinitionData);
+    expect(component.ishierarchyConfigSet).toBeTruthy();
+  });
+
   it('#toggleCollaboratorModalPoup() should set addCollaborator to true', () => {
     // component.addCollaborator = false;
     spyOn(component, 'toggleCollaboratorModalPoup').and.callThrough();
@@ -667,10 +673,14 @@ describe('EditorComponent', () => {
 
   it('#toolbarEventListener() should call #redirectToChapterListTab() if event is sourcingReject', () => {
     const editorService = TestBed.inject(EditorService);
-    spyOn(component, 'redirectToChapterListTab');
+    const event = {
+      button: 'sourcingReject',
+      comment: 'test',
+    };
+    spyOn(component, 'sourcingRejectContent');
     component.editorConfig = editorConfig;
-    component.sourcingRejectContent({'comment': 'abc'});
-    expect(component.redirectToChapterListTab).toHaveBeenCalled();
+    component.toolbarEventListener(event);
+    expect(component.sourcingRejectContent).toHaveBeenCalledWith({ comment:'test' });
   });
   xit('#showLibraryComponentPage() should set #addFromLibraryButtonLoader to true and call #saveContent()', () => {
     spyOn(component, 'saveContent').and.callFake(() => {
