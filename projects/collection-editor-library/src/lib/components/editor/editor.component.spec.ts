@@ -68,8 +68,8 @@ describe('EditorComponent', () => {
     expect(component.showQuestionTemplatePopup).toBeFalsy();
     expect(component.showDeleteConfirmationPopUp).toBeFalsy();
     expect(component.showPreview).toBeFalsy();
+    expect(component.buttonLoaders.previewButtonLoader).toBeFalsy();
     expect(component.buttonLoaders.saveAsDraftButtonLoader).toBeFalsy();
-    expect(component.buttonLoaders.addFromLibraryButtonLoader).toBeFalsy();
     expect(component.buttonLoaders.addFromLibraryButtonLoader).toBeFalsy();
     expect(component.buttonLoaders.showReviewComment).toBeFalsy();
   });
@@ -101,9 +101,10 @@ describe('EditorComponent', () => {
     expect(editorService.editorMode).toEqual('edit');
     expect(editorService.initialize).toHaveBeenCalledWith(editorConfig);
     expect(component.editorMode).toEqual('edit');
-    expect(treeService.initialize).toHaveBeenCalled();
+    expect(treeService.initialize).toHaveBeenCalledWith(editorConfig);
     expect(component.collectionId).toBeDefined();
     expect(editorService.getToolbarConfig).toHaveBeenCalled();
+    expect(component.toolbarConfig).toBeDefined();
     expect(component.mergeCollectionExternalProperties).toHaveBeenCalled();
     expect(component.toolbarConfig.title).toEqual(hierarchyResponse[0].result.content.name);
     expect(component.organisationFramework).toBeDefined();
@@ -141,6 +142,7 @@ describe('EditorComponent', () => {
     expect(editorService.editorMode).toEqual('edit');
     expect(editorService.initialize).toHaveBeenCalledWith(editorConfig_question);
     expect(component.editorMode).toEqual('edit');
+    expect(component.isReviewMode).toHaveBeenCalled();
     expect(treeService.initialize).toHaveBeenCalled();
     expect(component.collectionId).toBeDefined();
     expect(editorService.getToolbarConfig).toHaveBeenCalled();
@@ -155,6 +157,7 @@ describe('EditorComponent', () => {
     expect(telemetryService.start).toHaveBeenCalled();
     expect(component.isObjectTypeCollection).toBeTruthy();
     expect(component.isStatusReviewMode).toBeTruthy();
+    expect(editorService.selectedChildren).toBeDefined();
   })
 
   it('#ngOnInit() should call not call some methods (for objectType Question)', () => {
@@ -363,12 +366,9 @@ describe('EditorComponent', () => {
     expect(component.showDeleteConfirmationPopUp).toBeTruthy();
   });
 
-  it('#toolbarEventListener() should call #rejectContent() if event is rejectContent', () => {
+  it('#toolbarEventListener() should call #redirectToQuestionTab() if event is editContent', () => {
     spyOn(component, 'redirectToQuestionTab').and.callFake(() => { });
-    const event = {
-      button: 'editContent',
-      comment: 'abcd'
-    };
+    const event = { button: 'editContent' };
     component.toolbarEventListener(event);
     expect(component.redirectToQuestionTab).toHaveBeenCalled();
   });
@@ -381,7 +381,7 @@ describe('EditorComponent', () => {
       comment: 'abcd'
     };
     component.toolbarEventListener(event);
-    expect(component.rejectContent).toHaveBeenCalled();
+    expect(component.rejectContent).toHaveBeenCalledWith(event.comment);
   });
 
   it('#toolbarEventListener() should call #publishContent() if event is publishContent', () => {
