@@ -6,7 +6,6 @@ import { ServerResponse } from '../../interfaces/serverResponse';
 import * as _ from 'lodash-es';
 import { UUID } from 'angular2-uuid';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
 import { ConfigService } from '../config/config.service';
 import { EditorService } from '../editor/editor.service';
 @Injectable({
@@ -81,11 +80,11 @@ export class QuestionService {
 
   createMediaAsset(req?: object) {
     const reqParam = {
-      url: _.get(this.configService.urlConFig, 'URLS.CONTENT.CREATE'),
+      url: _.get(this.configService.urlConFig, 'URLS.ASSET.CREATE'),
       data: {
         request: {
-          content: {
-            contentType: 'Asset',
+          asset: {
+            primaryCategory: 'asset',
             language: ['English'],
             code: UUID.UUID(),
           }
@@ -98,7 +97,7 @@ export class QuestionService {
 
   uploadMedia(req, assetId: any) {
     let reqParam = {
-      url: `${this.configService.urlConFig.URLS.CONTENT.UPLOAD}${assetId}`,
+      url: `${this.configService.urlConFig.URLS.ASSET.UPLOAD}${assetId}`,
       data: req.data
     };
     reqParam = req ? _.merge({}, reqParam, req) : reqParam;
@@ -117,7 +116,7 @@ export class QuestionService {
 
   getVideo(videoId) {
     const reqParam = {
-      url: `${this.configService.urlConFig.URLS.CONTENT.READ}${videoId}`
+      url: `${this.configService.urlConFig.URLS.ASSET.READ}${videoId}`
     };
     return this.publicDataService.get(reqParam);
   }
