@@ -690,6 +690,8 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     this.formConfig = this.initialFormConfig;
     this.imageUploadLoader = false;
     this.imageFormValid = false;
+    this.loading = false;
+    this.isClosable = true;
   }
   /**
    * function to upload video
