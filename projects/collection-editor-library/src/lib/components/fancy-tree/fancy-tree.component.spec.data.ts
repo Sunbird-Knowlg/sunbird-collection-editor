@@ -6,7 +6,9 @@ export const mockData  = {
     primaryCategory: 'Course',
     isRoot: true,
     iconClass: 'fa fa-book',
-    children: {},
+    children: [
+      'do_123'
+    ],
     enableQuestionCreation: false,
     hierarchy: {
         level1: {
@@ -15,7 +17,15 @@ export const mockData  = {
             mimeType: 'application/vnd.ekstep.content-collection',
             contentType: 'Course Unit',
             iconClass: 'fa fa-folder-o',
-            children: {}
+            children: {
+              Content: [
+                  'Explanation Content',
+                  'Learning Resource',
+                  'eTextbook',
+                  'Teacher Resource',
+                  'Course Assessment'
+              ]
+            }
         },
         level2: {
             name: 'Sub-Module',
