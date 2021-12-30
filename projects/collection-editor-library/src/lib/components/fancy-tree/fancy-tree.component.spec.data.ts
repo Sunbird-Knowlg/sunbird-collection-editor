@@ -7,6 +7,7 @@ export const mockData  = {
     isRoot: true,
     iconClass: 'fa fa-book',
     children: {},
+    enableQuestionCreation: false,
     hierarchy: {
         level1: {
             name: 'Module',

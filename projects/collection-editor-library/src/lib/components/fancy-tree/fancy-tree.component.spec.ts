@@ -84,12 +84,10 @@ describe('FancyTreeComponent', () => {
       data: { root: true },
     };
     component.eachNodeActionButton(rootNode);
-    expect(component.visibility).toEqual({
-      addChild: true,
-      addSibling: false,
-      addFromLibrary: false,
-      createNew: false
-    });
+    expect(component.visibility.addChild).toBeTruthy();
+    expect(component.visibility.addSibling).toBeFalsy();
+    expect(component.visibility.addFromLibrary).toBeFalsy();
+    expect(component.visibility.createNew).toBeFalsy();
   });
 
   it('call #eachNodeActionButton() to verify #visibility for child node', () => {
@@ -100,12 +98,10 @@ describe('FancyTreeComponent', () => {
       data: { root: false },
     };
     component.eachNodeActionButton(node);
-    expect(component.visibility).toEqual({
-      addChild: true,
-      addSibling: true,
-      addFromLibrary: false,
-      createNew: false
-    });
+    expect(component.visibility.addChild).toBeTruthy();
+    expect(component.visibility.addSibling).toBeTruthy();
+    expect(component.visibility.addFromLibrary).toBeFalsy();
+    expect(component.visibility.createNew).toBeFalsy();
   });
 
   it('call #eachNodeActionButton() to verify #visibility for leaf node', () => {
@@ -116,12 +112,10 @@ describe('FancyTreeComponent', () => {
       data: { root: false },
     };
     component.eachNodeActionButton(node);
-    expect(component.visibility).toEqual({
-      addChild: false,
-      addSibling: true,
-      addFromLibrary: true,
-      createNew: true
-    });
+    expect(component.visibility.addChild).toBeFalsy();
+    expect(component.visibility.addSibling).toBeTruthy();
+    expect(component.visibility.addFromLibrary).toBeFalsy();
+    expect(component.visibility.createNew).toBeFalsy();
   });
 
   it('call #eachNodeActionButton() to verify #visibility when #bulkUploadProcessingStatus is true', () => {
