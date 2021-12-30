@@ -75,6 +75,18 @@ describe('QuestionComponent', () => {
     fixture.detectChanges();
   });
 
+  it('check default values', () => {
+    expect(component.terms).toEqual(false);
+    expect(component.actionType).not.toBeDefined();
+    expect(component.questionCategory).not.toBeDefined();
+    expect(component.creationContext).not.toBeDefined();
+    expect(component.unitId).not.toBeDefined();
+    expect(component.contentComment).not.toBeDefined();
+    expect(component.unitId).not.toBeDefined();
+    expect(component.showReviewModal).toEqual(false);
+    expect(component.showSubmitConfirmPopup).toEqual(false);
+  });
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });

@@ -2,7 +2,7 @@ import { EditorService } from './../../services/editor/editor.service';
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { FancyTreeComponent } from './fancy-tree.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA, ChangeDetectorRef } from '@angular/core';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { mockData, config, treeData, tree, editorConfig } from './fancy-tree.component.spec.data';
@@ -23,7 +23,9 @@ describe('FancyTreeComponent', () => {
     TestBed.configureTestingModule({
       providers: [EditorTelemetryService, TreeService, EditorService,
           { provide: Router, useClass: RouterStub }, ToasterService,
-          { provide: ConfigService, useValue: config }],
+          { provide: ConfigService, useValue: config },
+          { provide: ChangeDetectorRef, useValue: { detectChanges: ()=>{} } }
+      ],
       imports: [HttpClientTestingModule, SuiModule],
       declarations: [ FancyTreeComponent, TelemetryInteractDirective ],
       schemas: [NO_ERRORS_SCHEMA]
