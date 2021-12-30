@@ -86,10 +86,17 @@ describe('FancyTreeComponent', () => {
       data: { root: true },
     };
     component.eachNodeActionButton(rootNode);
-    expect(component.visibility.addChild).toBeTruthy();
-    expect(component.visibility.addSibling).toBeFalsy();
-    expect(component.visibility.addFromLibrary).toBeFalsy();
-    expect(component.visibility.createNew).toBeFalsy();
+    if (rootNode.getLevel() - 1 === 0) {
+      // tslint:disable-next-line:max-line-length
+      const isAddFromLibraryVisible = ((component.config.hasOwnProperty('children') && !component.config.children.length) || component.config.enableQuestionCreation) !== false;
+      // tslint:disable-next-line:max-line-length
+      const isCreateNew = ((component.config.hasOwnProperty('children') && !component.config.children.length) || component.config.enableQuestionCreation) !== false;
+      expect(component.visibility.addFromLibrary).toEqual(isAddFromLibraryVisible);
+      expect(component.visibility.createNew).toEqual(isCreateNew);
+    } else {
+      expect(component.visibility.addFromLibrary).toBeFalsy();
+      expect(component.visibility.createNew).toBeFalsy();
+    }
   });
 
   it('call #eachNodeActionButton() to verify #visibility for child node', () => {
