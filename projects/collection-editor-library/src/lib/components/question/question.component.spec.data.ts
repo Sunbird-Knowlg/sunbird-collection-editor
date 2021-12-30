@@ -314,6 +314,25 @@ export const readQuestionMock = {
     }
 };
 
+export const creationContextMock: any = {
+  "objectType": "question",
+  "collectionObjectType": "QuestionSet",
+  "isReadOnlyMode": true,
+  "unitIdentifier": "do_11330102570702438417",
+  "correctionComments": "",
+  "mode": "sourcingreview",
+  "editableFields": {
+    "orgreview": [
+      "name",
+      "learningOutcome"
+    ],
+    "sourcingreview": [
+      "name",
+      "learningOutcome"
+    ]
+  }
+};
+
 export const collectionHierarchyMock = {
     "responseCode": "OK",
     "result": {
@@ -330,7 +349,19 @@ export const collectionHierarchyMock = {
                     "primaryCategory": "Subjective Question",
                     "identifier": "do_11330103476396851218",
                 }
-            ]
+            ],
+            "acceptedContributions": [
+              "do_11326368076523929623",
+              "do_11326368076523929635",
+            ],
+            "rejectedContributions": [
+              "do_11326368076523929647",
+              "do_11326368076523929659",
+            ],
+            "rejectedContributionComments": {
+              "do_11326368076523929647": "test comment 1",
+              "do_11326368076523929659": "test comment 2",
+            }
         }
     }
 };

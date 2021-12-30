@@ -15,6 +15,7 @@ import { FrameworkService } from '../../services/framework/framework.service';
 import { TreeService } from '../../services/tree/tree.service';
 import { EditorCursor } from '../../collection-editor-cursor.service';
 import { filter, finalize, take, takeUntil } from 'rxjs/operators';
+import { ICreationContext } from '../../interfaces/CreationContext';
 @Component({
   selector: 'lib-question',
   templateUrl: './question.component.html',
@@ -30,11 +31,13 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() questionEmitter = new EventEmitter<any>();
   private onComponentDestroy$ = new Subject<any>();
   toolbarConfig: any = {};
+  public terms = false;
   public editorState: any = {};
   public showPreview = false;
   public mediaArr: any = [];
   public videoShow = false;
   public showFormError = false;
+  public actionType: string;
   selectedSolutionType: string;
   selectedSolutionTypeIndex: string;
   showSolutionDropDown = true;
@@ -54,13 +57,20 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }];
   questionMetaData: any;
   questionInteractionType;
+  questionCategory;
   questionId;
+  creationContext: ICreationContext;
   tempQuestionId;
   questionSetId;
+  unitId;
   public setCharacterLimit = 160;
   public showLoader = true;
+  public isReadOnlyMode = false;
+  public contentComment : string;
+  public showReviewModal: boolean = false;
   questionSetHierarchy: any;
   showConfirmPopup = false;
+  showSubmitConfirmPopup = false;
   validQuestionData = false;
   questionPrimaryCategory: string;
   pageId = 'question';
@@ -68,12 +78,15 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   public framework;
   public frameworkDetails: any = {};
   public buttonLoaders = {
-    saveButtonLoader: false
+    saveButtonLoader: false,
+    'review': false
   };
+  public questionFormConfig: any;
+
   constructor(
     private questionService: QuestionService, private editorService: EditorService, public telemetryService: EditorTelemetryService,
     public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,
-    private frameworkService: FrameworkService, private router: Router, public configService: ConfigService, 
+    private frameworkService: FrameworkService, private router: Router, public configService: ConfigService,
     private editorCursor: EditorCursor) {
     const { primaryCategory } = this.editorService.selectedChildren;
     this.questionPrimaryCategory = primaryCategory;
@@ -81,15 +94,21 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
-    const { questionSetId, questionId, type } = this.questionInput;
+    const { questionSetId, questionId, type, category, config, creationContext } = this.questionInput;
     this.questionInteractionType = type;
+    this.questionCategory = category;
     this.questionId = questionId;
     this.questionSetId = questionSetId;
+    this.creationContext = creationContext;
+    this.unitId = this.creationContext?.unitIdentifier;
+    this.isReadOnlyMode = this.creationContext?.isReadOnlyMode;
     this.toolbarConfig = this.editorService.getToolbarConfig();
     this.toolbarConfig.showPreview = false;
+    if(_.get(this.creationContext, 'objectType') === 'question') this.toolbarConfig.questionContribution = true;
     this.solutionUUID = UUID.UUID();
     this.telemetryService.telemetryPageId = this.pageId;
     this.initialLeafFormConfig = _.cloneDeep(this.leafFormConfig);
+    this.questionFormConfig = _.cloneDeep(this.leafFormConfig);
     this.initialize();
     this.framework = _.get(this.editorService.editorConfig, 'context.framework');
     this.fetchFrameWorkDetails().subscribe((frameworkDetails: any) => {
@@ -105,16 +124,18 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.frameworkService.frameworkData$.pipe(takeUntil(this.onComponentDestroy$),
       filter(data => _.get(data, `frameworkdata.${this.framework}`)), take(1));
   }
+
   populateFrameworkData() {
     const categoryMasterList = this.frameworkDetails.frameworkData;
     _.forEach(categoryMasterList, (category) => {
-      _.forEach(this.leafFormConfig, (formFieldCategory) => {
+      _.forEach(this.questionFormConfig, (formFieldCategory) => {
         if (category.code === formFieldCategory.code) {
           formFieldCategory.terms = category.terms;
         }
       });
     });
   }
+
   ngAfterViewInit() {
     this.telemetryService.impression({
       type: 'edit', pageid: this.telemetryService.telemetryPageId, uri: this.router.url,
@@ -125,7 +146,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   initialize() {
     this.editorService.fetchCollectionHierarchy(this.questionSetId).subscribe((response) => {
       this.questionSetHierarchy = _.get(response, 'result.questionSet');
-      const leafFormConfigfields = _.join(_.map(this.leafFormConfig, value => (value.code)), ',');
+      const leafFormConfigfields = _.join(_.map(this.questionFormConfig, value => (value.code)), ',');
       if (!_.isUndefined(this.questionId)) {
         this.questionService.readQuestion(this.questionId, leafFormConfigfields)
           .subscribe((res) => {
@@ -146,7 +167,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
               if (this.questionInteractionType === 'choice') {
                 const responseDeclaration = this.questionMetaData.responseDeclaration;
                 const templateId = this.questionMetaData.templateId;
-                this.questionMetaData.editorState = this.questionMetaData.editorState;
+                // this.questionMetaData.editorState = this.questionMetaData.editorState;
                 const numberOfOptions = this.questionMetaData.editorState.options.length;
                 const options = _.map(this.questionMetaData.editorState.options, option => ({ body: option.value.body }));
                 const question = this.questionMetaData.editorState.question;
@@ -172,9 +193,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
                   this.editorState.solutions = this.editorState.solutions[0].value;
                 }
               }
-              if (this.questionMetaData.media) {
+            if (this.questionMetaData.media) {
                 this.mediaArr = this.questionMetaData.media;
               }
+              this.contentComment = _.get(this.creationContext, 'correctionComments');
               this.showLoader = false;
             }
           }, (err: ServerResponse) => {
@@ -189,10 +211,15 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         this.populateFormData();
         this.setQuestionTitle();
         if (this.questionInteractionType === 'default') {
-          this.editorState = { question: '', answer: '', solutions: '' };
+          if (this.questionCategory) {
+            this.editorState = _.get(this.configService, `editorConfig.defaultStates.nonInteractiveQuestions.${this.questionCategory}`);
+          }
+          else {
+            this.editorState = { question: "", answer: "", solutions: "" };
+          }
         }
         if (this.questionInteractionType === 'choice') {
-          this.editorState = new McqForm({ question: '', options: [] }, {});
+          this.editorState = new McqForm({ question: '', options: [] }, {numberOfOptions: _.get(this.questionInput, 'config.numberOfOptions')});
         }
         this.showLoader = false;
       }
@@ -204,13 +231,36 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  get contentPolicyUrl() {
+    return this.editorService.contentPolicyUrl;
+  }
+
   toolbarEventListener(event) {
+    this.actionType = event.button;
     switch (event.button) {
       case 'saveContent':
         this.saveContent();
         break;
+      case 'submitQuestion':
+        this.submitHandler();
+        break;
       case 'cancelContent':
         this.handleRedirectToQuestionset();
+        break;
+      case 'rejectQuestion':
+        this.rejectQuestion(event.comment);
+        break;
+      case 'publishQuestion':
+        this.publishQuestion(event);
+        break;
+      case 'sourcingApproveQuestion':
+        this.sourcingUpdate(event);
+        break;
+      case 'sourcingRejectQuestion':
+        this.sourcingUpdate(event);
+        break;
+      case 'sendForCorrectionsQuestion':
+        this.sendBackQuestion(event);
         break;
       case 'backContent':
         this.handleRedirectToQuestionset();
@@ -222,6 +272,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         this.previewFormData(true);
         this.showPreview = false;
         this.toolbarConfig.showPreview = false;
+        break;
+      case 'showReviewcomments':
+        this.showReviewModal = !this.showReviewModal;
         break;
       default:
         break;
@@ -236,12 +289,134 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  saveContent() {
+
+  submitHandler() {
     this.validateQuestionData();
     this.validateFormFields();
+    if(this.showFormError === false)  this.showSubmitConfirmPopup = true;
+  }
+
+  saveContent() {
+    this.validateQuestionData();
     if (this.showFormError === false) {
       this.saveQuestion();
     }
+  }
+
+  sendForReview() {
+    let callback = function () {
+      this.editorService.reviewContent(this.questionId).subscribe(data => {
+        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.002'));
+        this.redirectToChapterList();
+      }, err => {
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.002'));
+      });
+    };
+    if (!this.questionId) {
+      callback = function () {
+        this.editorService.reviewContent(this.questionId).subscribe(data => {
+          this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.002'));
+          this.addResourceToQuestionset();
+        }, err => {
+          this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.002'));
+        });
+      };
+    }
+    callback = callback.bind(this);
+    this.upsertQuestion(callback);
+  }
+
+  requestForChanges(comment) {
+      this.editorService.submitRequestChanges(this.questionId, comment).subscribe(res => {
+        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.003'));
+        this.redirectToChapterList();
+      }, err => {
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.003'));
+      });
+  }
+
+  sendQuestionForPublish(event) {
+    this.editorService.publishContent(this.questionId, event).subscribe(res => {
+      this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.004'));
+      this.redirectToChapterList();
+    }, err => {
+      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.004'));
+    });
+  }
+
+  rejectQuestion(comment) {
+    const editableFields = _.get(this.creationContext, 'editableFields');
+    if (_.get(this.creationContext, 'mode') === 'orgreview' && editableFields && !_.isEmpty(editableFields[_.get(this.creationContext, 'mode')])) {
+      this.validateFormFields();
+      if(this.showFormError === true) {
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
+        return false;
+      }
+      let callback = this.requestForChanges.bind(this, [comment]);
+      this.upsertQuestion(callback);
+    } else {
+      this.requestForChanges(comment);
+    }
+  }
+
+  publishQuestion(event) {
+    const editableFields = _.get(this.creationContext, 'editableFields');
+    if (_.get(this.creationContext, 'mode') === 'orgreview' && editableFields && !_.isEmpty(editableFields[_.get(this.creationContext, 'mode')])) {
+      this.validateFormFields();
+      if(this.showFormError === true) {
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
+        return false;
+      }
+      let callback = this.sendQuestionForPublish.bind(this, [event]);
+      this.upsertQuestion(callback);
+    } else {
+      this.sendQuestionForPublish(event);
+    }
+  }
+
+  sourcingUpdate(event) {
+    const editableFields = _.get(this.creationContext, 'editableFields');
+    if (_.get(this.creationContext, 'mode') === 'sourcingreview' && editableFields && !_.isEmpty(editableFields[_.get(this.creationContext, 'mode')])) {
+      this.validateFormFields();
+      if(this.showFormError === true) {
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
+        return false;        }
+      }
+      let questionIds = [];
+      //let comments = {};
+      let comments = event.comment
+      this.editorService.fetchCollectionHierarchy(this.questionSetId).subscribe(res => {
+        const questionSet = res.result['questionSet'];
+        switch (event.button) {
+          case 'sourcingApproveQuestion':
+            questionIds = questionSet.acceptedContributions || [];
+            break;
+          case 'sourcingRejectQuestion':
+            questionIds = questionSet.rejectedContributions || [];
+            comments = questionSet.rejectedContributionComments || {};
+            comments[this.questionId] = event.comment;
+            break;
+          default:
+            break;
+        }
+        questionIds.push(this.questionId);
+        event['requestBody'] = this.prepareSourcingUpdateBody(questionIds, comments);
+        this.editorService.updateCollection(this.questionSetId, event).subscribe(res => {
+          this.redirectToChapterList();
+        })
+      })
+    }
+
+  sendBackQuestion(event) {
+    const requestBody = {
+      'question': {
+  			"requestChanges": event.comment,
+  			"status": "Draft"
+  		}
+  	}
+    this.questionService.upsertQuestion(this.questionId, requestBody).subscribe(res => {
+        this.redirectToChapterList();
+      })
   }
 
   validateQuestionData() {
@@ -281,6 +456,13 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     }, 100);
   }
 
+  redirectToChapterList() {
+    this.showConfirmPopup = false;
+    setTimeout(() => {
+      this.questionEmitter.emit({ type: 'close', actionType: this.actionType, identifier: this.questionId });
+    }, 100);
+  }
+
   editorDataHandler(event, type?) {
     if (type === 'question') {
       this.editorState.question = event.body;
@@ -307,13 +489,33 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  addResourceToQuestionset() {
+    this.editorService.addResourceToQuestionset(this.questionSetId, this.unitId, this.questionId).subscribe(res => {
+      this.redirectToChapterList();
+    }, err => {
+        const errInfo = {
+          errorMsg: 'Adding question to questionset failed. Please try again.',
+        };
+        return throwError(this.editorService.apiErrorHandling(err, errInfo));
+    })
+  }
+
   saveQuestion() {
-    if (_.isUndefined(this.questionId)) {
-      this.createQuestion();
+    if(_.get(this.creationContext, 'objectType') === 'question') {
+      if(_.get(this.creationContext, 'mode') === 'edit') {
+        let callback = this.addResourceToQuestionset.bind(this);
+        this.upsertQuestion(callback);
+      }
+      else this.upsertQuestion(undefined);
     }
-    if (!_.isUndefined(this.questionId)) {
-      this.updateQuestion();
-    }
+    else {
+      if (_.isUndefined(this.questionId)) {
+        this.createQuestion();
+      }
+      if (!_.isUndefined(this.questionId)) {
+        this.updateQuestion();
+      }
+  }
   }
 
   videoDataOutput(event) {
@@ -458,6 +660,56 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     };
   }
 
+  prepareQuestionBody () {
+    const requestBody = this.questionId ?
+    {
+      question: _.omit(this.getQuestionMetadata(), ['mimeType'])
+    } :
+    {
+      question: {
+        code: UUID.UUID(),
+        ...this.getQuestionMetadata()
+      }
+    }
+    return requestBody;
+  }
+
+  prepareSourcingUpdateBody (questionIds, comments?) {
+      const sourcingUpdateAttribute = this.actionType === 'sourcingApproveQuestion' ? 'acceptedContributions'
+        : 'rejectedContributions';
+      const collectionObjectType = _.replace(_.lowerCase(this.creationContext['collectionObjectType']), ' ', '');
+      const requestBody = {
+        request: {
+          [collectionObjectType]: {
+            [sourcingUpdateAttribute]: questionIds
+          }
+        }
+      };
+      if (this.actionType === 'sourcingRejectQuestion') {
+        requestBody.request[collectionObjectType]['rejectedContributionComments'] = comments;
+        // requestBody.request[collectionObjectType]['rejectComment'] = comments;
+      }
+      return requestBody;
+  }
+
+  upsertQuestion(callback) {
+    const requestBody = this.prepareQuestionBody();
+    this.showHideSpinnerLoader(true);
+    this.questionService.upsertQuestion(this.questionId, requestBody).pipe(
+      finalize(() => {
+        this.showHideSpinnerLoader(false);
+      })).subscribe((response: ServerResponse) => {
+        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.013'));
+        this.setQuestionId(_.get(response, 'result.identifier'));
+        if (callback) callback();
+      }, (err: ServerResponse) => {
+          const errInfo = {
+            errorMsg: 'Failed to save question. Please try again...',
+          };
+          this.editorService.apiErrorHandling(err, errInfo);
+        });
+  }
+
   createQuestion() {
     const requestBody = this.prepareRequestBody();
     this.showHideSpinnerLoader(true);
@@ -492,8 +744,11 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  showHideSpinnerLoader(status: boolean) {
+  showHideSpinnerLoader(status: boolean, type?) {
     this.buttonLoaders.saveButtonLoader = status;
+    if(type) {
+      this.buttonLoaders[type] = status;
+    }
   }
 
   previewContent() {
@@ -524,21 +779,32 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log('event is for telemetry', JSON.stringify(event));
   }
 
+  setQuestionId(questionId) {
+    this.questionId = questionId;
+  }
+
   setQuestionTitle(questionId?) {
     let index;
     let questionTitle = '';
-    let hierarchyChildren = this.treeService.getChildren();
-    if (!_.isUndefined(questionId)) {
-      const parentNode = this.treeService.getActiveNode().getParent();
-      hierarchyChildren = parentNode.getChildren();
-      index =  _.findIndex(hierarchyChildren, (node) => node.data.id === questionId);
-      const question  = hierarchyChildren[index];
-      questionTitle = `Q${(index + 1).toString()} | ` + question.data.primaryCategory;
-    } else {
-      index = hierarchyChildren.length;
-      questionTitle = `Q${(index + 1).toString()} | `;
+    if(_.get(this.creationContext, 'objectType') === 'question') {
       if (!_.isUndefined(this.questionPrimaryCategory)) {
-        questionTitle = questionTitle + this.questionPrimaryCategory;
+        questionTitle = this.questionPrimaryCategory;
+      }
+    }
+    else {
+      let hierarchyChildren = this.treeService.getChildren();
+      if (!_.isUndefined(questionId)) {
+        const parentNode = this.treeService.getActiveNode().getParent();
+        hierarchyChildren = parentNode.getChildren();
+        index =  _.findIndex(hierarchyChildren, (node) => node.data.id === questionId);
+        const question  = hierarchyChildren[index];
+        questionTitle = `Q${(index + 1).toString()} | ` + question.data.primaryCategory;
+      } else {
+        index = hierarchyChildren.length;
+        questionTitle = `Q${(index + 1).toString()} | `;
+        if (!_.isUndefined(this.questionPrimaryCategory)) {
+          questionTitle = questionTitle + this.questionPrimaryCategory;
+        }
       }
     }
     this.toolbarConfig.title = questionTitle;
@@ -549,10 +815,13 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   valueChanges(event) {
+    if(_.get(this.creationContext, 'objectType') === 'question') {
+      event.maxScore = event.maxScore? parseInt(event.maxScore) : null;
+    }
     this.childFormData = event;
   }
   validateFormFields() {
-    _.forEach(this.leafFormConfig, (formFieldCategory) => {
+    _.forEach(this.questionFormConfig, (formFieldCategory) => {
       if (formFieldCategory.required && !this.childFormData[formFieldCategory.code]) {
         this.showFormError = true;
         this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.008'));
@@ -562,19 +831,32 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     return true;
   }
   previewFormData(status) {
-    const formvalue = _.cloneDeep(this.leafFormConfig);
-    this.leafFormConfig = null;
+    const formvalue = _.cloneDeep(this.questionFormConfig);
+    this.questionFormConfig = null;
     _.forEach(formvalue, (formFieldCategory) => {
       if (_.has(formFieldCategory, 'editable')) {
         formFieldCategory.editable = status ? _.find(this.initialLeafFormConfig, { code: formFieldCategory.code }).editable : status;
         formFieldCategory.default = this.childFormData[formFieldCategory.code];
       }
     });
-    this.leafFormConfig = formvalue;
+    this.questionFormConfig = formvalue;
+  }
+  isEditable(fieldCode) {
+    if (this.creationContext.mode === 'edit') {
+      return true;
+    }
+    /*
+    const editableFields = this.creationContext.editableFields;
+    if (editableFields && !_.isEmpty(editableFields[this.creationContext.mode]) && _.includes(editableFields[this.creationContext.mode], fieldCode)) {
+      return true;
+    }
+    */
+    return false;
   }
   populateFormData() {
     this.childFormData = {};
-    _.forEach(this.leafFormConfig, (formFieldCategory) => {
+    _.forEach(this.questionFormConfig, (formFieldCategory) => {
+      formFieldCategory.editable = this.isEditable(formFieldCategory.code);
       if (!_.isUndefined(this.questionId)) {
         if (this.questionMetaData && _.has(this.questionMetaData, formFieldCategory.code)) {
           formFieldCategory.default = this.questionMetaData[formFieldCategory.code];
@@ -595,4 +877,3 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.editorCursor.clearQuestionMap();
   }
 }
-

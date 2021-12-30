@@ -80,7 +80,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.renderTree(this.getTreeConfig());
   }
 
-  private initialize() {
+  initialize() {
     const data = this.nodes.data;
     const treeData = this.buildTree(this.nodes.data);
     this.rootNode = [{
@@ -270,12 +270,14 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       // tslint:disable-next-line:max-line-length
       this.visibility.addSibling = ((node.folder === true) && (!node.data.root) && !((node.getLevel() - 1) > this.config.maxDepth)) ? true : false;
       if (nodeLevel === 0) {
-        this.visibility.addFromLibrary = _.isEmpty(_.get(this.config, 'children')) ? false : true;
-        this.visibility.createNew = _.isEmpty(_.get(this.config, 'children')) ? false : true;
+        this.visibility.addFromLibrary = _.isEmpty(_.get(this.config, 'children')) || _.get(this.config, 'enableQuestionCreation') === false ? false : true;
+        this.visibility.createNew = _.isEmpty(_.get(this.config, 'children')) || _.get(this.config, 'enableQuestionCreation') === false ? false : true;
       } else {
         const hierarchylevelData = this.config.hierarchy[`level${nodeLevel}`];
-        this.visibility.addFromLibrary = ((node.folder === false) || _.isEmpty(_.get(hierarchylevelData, 'children'))) ? false : true;
-        this.visibility.createNew = ((node.folder === false) || _.isEmpty(_.get(hierarchylevelData, 'children'))) ? false : true;
+        // tslint:disable-next-line:max-line-length
+        this.visibility.addFromLibrary = ((node.folder === false) || _.isEmpty(_.get(hierarchylevelData, 'children')) || _.get(this.config, 'enableQuestionCreation') === false) ? false : true;
+        // tslint:disable-next-line:max-line-length
+        this.visibility.createNew = ((node.folder === false) || _.isEmpty(_.get(hierarchylevelData, 'children')) || _.get(this.config, 'enableQuestionCreation') === false) ? false : true;
       }
     }
     this.cdr.detectChanges();

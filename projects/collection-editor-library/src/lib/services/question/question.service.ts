@@ -31,6 +31,18 @@ export class QuestionService {
     return this.publicDataService.get(option);
   }
 
+  upsertQuestion(questionId, questionBody) {  
+    let mode = questionId ? 'UPDATE' : 'CREATE';  
+    const req = {
+      url: `${this.configService.urlConFig.URLS[this.editorService.editorConfig.config.objectType][mode]}${mode === 'UPDATE' ? questionId : ''}`,
+      data: {
+        request: questionBody
+      }
+    }
+    return mode === 'UPDATE' ? this.publicDataService.patch(req) 
+      : this.publicDataService.post(req); 
+  }
+
   updateHierarchyQuestionCreate(hierarchyBody): Observable<ServerResponse> {
     const requestObj = {
       data: hierarchyBody

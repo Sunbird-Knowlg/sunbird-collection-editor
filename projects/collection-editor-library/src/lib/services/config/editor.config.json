@@ -1,8 +1,8 @@
 {
     "rejectCommentsMaxLength": 500,
     "setDefaultCopyRight": true,
-    "showOriginPreviewUrl": false, 
-    "showSourcingStatus": false, 
+    "showOriginPreviewUrl": false,
+    "showSourcingStatus": false,
     "showCorrectionComments": false,
     "publicStorageAccount": "",
     "assetConfig": {
@@ -17,7 +17,7 @@
             "accepted": "mp4, webm"
           }
     },
-    "questionPrimaryCategories": ["Multiple Choice Question", "Subjective Question"], 
+    "questionPrimaryCategories": ["Multiple Choice Question", "Subjective Question"],
     "contentPrimaryCategories": ["Course Assessment", "eTextbook", "Explanation Content", "Learning Resource", "Practice Question Set"],
     "readQuestionFields": "body,primaryCategory,mimeType,qType,answer,templateId,responseDeclaration,interactionTypes,interactions,name,solutions,editorState,media,",
     "omitFalseyProperties":["topic", "topicsIds", "targetTopicIds", "keywords"],
@@ -28,5 +28,31 @@
       "maxContentsLimit": "1200"
     },
     "showAddCollaborator": false,
-    "enableBulkUpload": false
+    "enableBulkUpload": false,
+    "defaultStates": {
+        "nonInteractiveQuestions": {
+            "MTF": {
+                "question": "<p>Match the following:</p><table style='border-collapse: collapse; width: 100%; height: 36px;' border='1'><tbody><tr style='height: 18px;'><td style='width: 50%; height: 18px; text-align: center;'><strong>Column 1</strong></td><td style='width: 50%; height: 18px; text-align: center;'><strong>Column 2</strong></td></tr><tr style='height: 18px;'><td style='width: 50%; height: 18px; text-align: center;'></td><td style='width: 50%; height: 18px; text-align: center;'></td></tr></tbody></table>",
+                "answer": "<p>Match the following:</p><table style='border-collapse: collapse; width: 100%; height: 36px;' border='1'><tbody><tr style='height: 18px;'><td style='width: 50%; height: 18px; text-align: center;'><strong>Column 1</strong></td><td style='width: 50%; height: 18px; text-align: center;'><strong>Column 2</strong></td></tr><tr style='height: 18px;'><td style='width: 50%; height: 18px; text-align: center;'></td><td style='width: 50%; height: 18px; text-align: center;'></td></tr></tbody></table>"
+            },
+            "FTB": {
+                "question": "", "answer": "", "solutions": ""
+             },
+            "VSA": {
+                "question": "", "answer": "", "solutions": ""
+             },
+            "SA": {
+                "question": "", "answer": "", "solutions": ""
+             },
+            "LA": {
+                "question": "", "answer": "", "solutions": ""
+             },
+            "CuriosityQuestion": {
+                "question": "", "answer": "", "solutions": ""
+             },
+            "Comprehension": {
+                "question": "", "answer": "", "solutions": ""
+             }
+        }
+    }
 }
