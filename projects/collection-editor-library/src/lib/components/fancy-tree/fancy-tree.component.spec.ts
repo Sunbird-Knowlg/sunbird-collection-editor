@@ -2,10 +2,11 @@ import { EditorService } from './../../services/editor/editor.service';
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { FancyTreeComponent } from './fancy-tree.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA, ChangeDetectorRef } from '@angular/core';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
-import { config, treeData, tree, editorConfig, TargetNodeMockData, CurrentNodeMockData, mockTreeService } from './fancy-tree.component.spec.data';
+import { config, treeData, tree, editorConfig, TargetNodeMockData,
+  CurrentNodeMockData, mockTreeService, mockData } from './fancy-tree.component.spec.data';
 import { Router } from '@angular/router';
 import { TreeService } from '../../services/tree/tree.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
@@ -23,7 +24,10 @@ describe('FancyTreeComponent', () => {
     TestBed.configureTestingModule({
       providers: [EditorTelemetryService, EditorService,
           { provide: Router, useClass: RouterStub }, ToasterService,
-          { provide: ConfigService, useValue: config },{ provide: TreeService, useValue: mockTreeService }],
+          { provide: ConfigService, useValue: config },
+          { provide: TreeService, useValue: mockTreeService },
+          { provide: ChangeDetectorRef, useValue: { detectChanges: () => {} } }
+        ],
       imports: [HttpClientTestingModule, SuiModule],
       declarations: [ FancyTreeComponent, TelemetryInteractDirective ],
       schemas: [NO_ERRORS_SCHEMA]
@@ -42,14 +46,23 @@ describe('FancyTreeComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('#ngOnInit() should call #buildTree()', () => {
+  it('#ngOnInit() should call #initialize()', () => {
     const editorService = TestBed.get(EditorService);
     component.nodes = {
       data: treeData
     };
     spyOnProperty(editorService, 'editorConfig', 'get').and.returnValue(editorConfig);
-    spyOn(component, 'buildTree');
+    spyOn(component, 'initialize');
     component.ngOnInit();
+    expect(component.initialize).toHaveBeenCalled();
+  });
+
+  it('#initialize() should call #buildTree()', () => {
+    component.nodes = {
+      data: treeData
+    };
+    spyOn(component, 'buildTree');
+    component.initialize();
     expect(component.buildTree).toHaveBeenCalled();
   });
 
@@ -66,6 +79,65 @@ describe('FancyTreeComponent', () => {
     component.ngAfterViewInit();
     expect(component.getTreeConfig).toHaveBeenCalled();
     expect(component.renderTree).toHaveBeenCalled();
+  });
+
+  it('call #eachNodeActionButton() to verify #visibility for root node', () => {
+    component.config = mockData.config;
+    const rootNode = {
+      getLevel: () => 1,
+      folder: true,
+      data: { root: true },
+    };
+    component.eachNodeActionButton(rootNode);
+    expect(component.visibility.addFromLibrary).toBeFalsy();
+    expect(component.visibility.createNew).toBeFalsy();
+    expect(component.visibility.addChild).toBeTruthy();
+    expect(component.visibility.addSibling).toBeFalsy();
+  });
+
+  it('call #eachNodeActionButton() to verify #visibility for child node', () => {
+    component.config = mockData.config;
+    const node = {
+      getLevel: () => 2,
+      folder: true,
+      data: { root: false },
+    };
+    component.eachNodeActionButton(node);
+    expect(component.visibility.addChild).toBeTruthy();
+    expect(component.visibility.addSibling).toBeTruthy();
+    expect(component.visibility.addFromLibrary).toBeFalsy();
+    expect(component.visibility.createNew).toBeFalsy();
+  });
+
+  it('call #eachNodeActionButton() to verify #visibility for leaf node', () => {
+    component.config = mockData.config;
+    const node = {
+      getLevel: () => 3,
+      folder: true,
+      data: { root: false },
+    };
+    component.eachNodeActionButton(node);
+    expect(component.visibility.addChild).toBeFalsy();
+    expect(component.visibility.addSibling).toBeTruthy();
+    expect(component.visibility.addFromLibrary).toBeFalsy();
+    expect(component.visibility.createNew).toBeFalsy();
+  });
+
+  it('call #eachNodeActionButton() to verify #visibility when #bulkUploadProcessingStatus is true', () => {
+    component.config = mockData.config;
+    component.bulkUploadProcessingStatus = true;
+    const node = {
+      getLevel: () => 2,
+      folder: true,
+      data: { root: false },
+    };
+    component.eachNodeActionButton(node);
+    expect(component.visibility).toEqual({
+      addChild: false,
+      addSibling: false,
+      addFromLibrary: false,
+      createNew: false
+    });
   });
 
   it('#addFromLibrary() should call #emitshowLibraryPageEvent()', () => {
@@ -319,5 +391,5 @@ describe('FancyTreeComponent', () => {
 
   })
 
- 
+
 });

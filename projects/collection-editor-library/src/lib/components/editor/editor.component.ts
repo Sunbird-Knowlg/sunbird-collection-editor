@@ -9,6 +9,7 @@ import { EditorTelemetryService } from '../../services/telemetry/telemetry.servi
 import { ToasterService } from '../../services/toaster/toaster.service';
 import { HelperService } from '../../services/helper/helper.service';
 import { IEditorConfig } from '../../interfaces/editor';
+import { ICreationContext } from '../../interfaces/CreationContext';
 import { Router } from '@angular/router';
 import { catchError, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { Observable, throwError, forkJoin, Subscription, Subject, merge, of } from 'rxjs';
@@ -31,6 +32,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   @Output() editorEmitter = new EventEmitter<any>();
   @ViewChild('modal') private modal;
   public questionComponentInput: any = {};
+  public creationContext: ICreationContext;
   public collectionTreeNodes: any;
   public selectedNodeData: any = {};
   public templateList: any;
@@ -57,6 +59,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public targetFramework;
   public organisationFramework;
   public primaryCategoryDef: any;
+  public collectionPrimaryCategoryDef: any;
   toolbarConfig: any;
   public buttonLoaders = {
     saveAsDraftButtonLoader: false,
@@ -69,6 +72,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public showReviewModal: boolean;
   public csvDropDownOptions: any = {};
   public showCsvUploadPopup = false;
+  public objectType: string;
   public isObjectTypeCollection: any;
   public isCreateCsv = true;
   public isStatusReviewMode = false;
@@ -97,27 +101,45 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.editorService.initialize(this.editorConfig);
     this.editorMode = this.editorService.editorMode;
     this.treeService.initialize(this.editorConfig);
+    this.objectType = this.configService.categoryConfig[this.editorConfig.config.objectType];
     this.collectionId = _.get(this.editorConfig, 'context.identifier');
     this.toolbarConfig = this.editorService.getToolbarConfig();
-    this.isObjectTypeCollection = this.configService.categoryConfig[this.editorConfig.config.objectType] === 'questionSet' ? false : true;
+    this.isObjectTypeCollection = this.objectType === 'questionSet' ? false : true;
     this.isStatusReviewMode = this.isReviewMode();
-    this.mergeCollectionExternalProperties().subscribe(
-      (response) => {
-        const hierarchyResponse = _.first(response);
-        const collection = _.get(hierarchyResponse, `result.${this.configService.categoryConfig[this.editorConfig.config.objectType]}`);
-        this.toolbarConfig.title = collection.name;
-        this.toolbarConfig.isAddCollaborator = (collection.createdBy === _.get(this.editorConfig, 'context.user.id'));
-        this.organisationFramework = _.get(collection, 'framework') || _.get(this.editorConfig, 'context.framework');
-        this.targetFramework = _.get(collection, 'targetFWIds') || _.get(this.editorConfig, 'context.targetFWIds');
-        if (this.organisationFramework) {
-          this.frameworkService.initialize(this.organisationFramework);
+
+    if(this.objectType === 'question') {
+      this.collectionId = _.get(this.editorConfig, 'context.collectionIdentifier');
+      this.initializeFrameworkAndChannel();
+      this.editorService.getCategoryDefinition(_.get(this.editorConfig, 'context.collectionPrimaryCategory'),
+      this.editorConfig.context.channel, _.get(this.editorConfig, 'context.collectionObjectType'))
+      .subscribe(
+        (response) => {
+          this.collectionPrimaryCategoryDef = response;
+          this.getFrameworkDetails(this.collectionPrimaryCategoryDef);
+          this.editorService.selectedChildren = {
+            primaryCategory: _.get(this.editorConfig, 'config.primaryCategory'),
+            mimeType: _.get(this.editorConfig, 'config.mimeType'),
+            interactionType: _.get(this.editorConfig, 'config.interactionType')
+          };
+          const objectMetadata = _.get(response, "result.objectCategoryDefinition.objectMetadata");
+          if (objectMetadata.childrenConfig) {
+            this.questionComponentInput.config = objectMetadata.childrenConfig[_.get(this.editorConfig, 'config.interactionType')] || {};
+          }
+          this.redirectToQuestionTab(_.get(this.editorConfig, 'config.mode'));
         }
-        if (!_.isEmpty(this.targetFramework)) {
-          this.frameworkService.getTargetFrameworkCategories(this.targetFramework);
-        }
-        const channel = _.get(collection, 'channel') || _.get(this.editorConfig, 'context.channel');
-        this.helperService.initialize(channel);
-      });
+      )
+    }
+    else {
+      this.mergeCollectionExternalProperties().subscribe(
+        (response) => {
+          const hierarchyResponse = _.first(response);
+          const collection = _.get(hierarchyResponse, `result.${this.objectType}`);
+          this.toolbarConfig.title = collection.name;
+          this.toolbarConfig.isAddCollaborator = (collection.createdBy === _.get(this.editorConfig, 'context.user.id'));
+          this.initializeFrameworkAndChannel(collection);
+        });
+    }
+
     this.editorService.getCategoryDefinition(this.editorConfig.config.primaryCategory,
       this.editorConfig.context.channel, this.editorConfig.config.objectType)
       .subscribe(
@@ -130,8 +152,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           this.toolbarConfig.showBulkUploadBtn = enableBulkUpload ? enableBulkUpload : false;
           this.helperService.channelData$.subscribe(
             (channelResponse) => {
-              this.sethierarchyConfig(response);
               this.primaryCategoryDef = response;
+              if(this.objectType !== 'question') this.sethierarchyConfig(response);
             }
           );
         },
@@ -150,6 +172,19 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.getFrameworkDetails(this.primaryCategoryDef);
       }
     });
+  }
+
+  initializeFrameworkAndChannel(collection?: any) {
+    this.organisationFramework = _.get(collection, 'framework') || _.get(this.editorConfig, 'context.framework');
+    this.targetFramework = _.get(collection, 'targetFWIds') || _.get(this.editorConfig, 'context.targetFWIds');
+    if (this.organisationFramework) {
+      this.frameworkService.initialize(this.organisationFramework);
+    }
+    if (!_.isEmpty(this.targetFramework)) {
+      this.frameworkService.getTargetFrameworkCategories(this.targetFramework);
+    }
+    const channel = _.get(collection, 'channel') || _.get(this.editorConfig, 'context.channel');
+    this.helperService.initialize(channel);
   }
 
   getFrameworkDetails(categoryDefinitionData) {
@@ -268,15 +303,14 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     const requests = [];
     this.collectionTreeNodes = null;
     this.isTreeInitialized = true;
-    const objectType = this.configService.categoryConfig[this.editorConfig.config.objectType];
     requests.push(this.editorService.fetchCollectionHierarchy(this.collectionId));
-    if (objectType === 'questionSet') {
+    if (this.objectType === 'questionSet') {
       requests.push(this.editorService.readQuestionSet(this.collectionId));
     }
     return forkJoin(requests).pipe(tap(responseList => {
       const hierarchyResponse = _.first(responseList);
       this.collectionTreeNodes = {
-        data: _.get(hierarchyResponse, `result.${objectType}`)
+        data: _.get(hierarchyResponse, `result.${this.objectType}`)
       };
       this.buttonLoaders.showReviewComment = this.showCommentAddedAgainstContent();
       if (_.isEmpty(this.collectionTreeNodes.data.children)) {
@@ -285,9 +319,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.toolbarConfig.hasChildren = true;
       }
 
-      if (objectType === 'questionSet') {
+      if (this.objectType === 'questionSet') {
         const questionSetResponse = _.last(responseList);
-        const data = _.get(questionSetResponse, _.toLower(`result.${objectType}`));
+        const data = _.get(questionSetResponse, _.toLower(`result.${this.objectType}`));
         this.collectionTreeNodes.data.instructions = data.instructions ? data.instructions : '';
       }
     }
@@ -353,6 +387,14 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           this.buttonLoaders.saveAsDraftButtonLoader = false;
           this.toasterService.success(message);
           this.isEnableCsvAction = true;
+          if(_.get(this.editorConfig, 'config.enableQuestionCreation') === false) {
+            this.mergeCollectionExternalProperties().subscribe(response => {
+              this.redirectToChapterListTab({
+                collection: _.get(this.collectionTreeNodes, 'data')
+              })
+            })
+
+          }
         }).catch(((error: string) => {
           this.buttonLoaders.saveAsDraftButtonLoader = false;
           this.isEnableCsvAction = false;
@@ -465,8 +507,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         return reject(_.get(this.configService, 'labelConfig.messages.error.029'));
       }
       const nodesModified = _.get(this.editorService.getCollectionHierarchy(), 'nodesModified');
-      const objectType = this.configService.categoryConfig[this.editorConfig.config.objectType];
-      if (objectType === 'questionSet') {
+      if (this.objectType.toLowerCase() === 'questionset') {
         const maxScore = await this.editorService.getMaxScore();
         this.treeService.updateMetaDataProperty('maxScore', maxScore);
       }
@@ -478,6 +519,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           if (!_.isEmpty(response.identifiers)) {
             this.treeService.replaceNodeId(response.identifiers);
           }
+
           this.treeService.clearTreeCache();
           this.treeService.nextTreeStatus('saved');
           resolve(_.get(this.configService, 'labelConfig.messages.success.001'));
@@ -628,7 +670,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.editorService.fetchCollectionHierarchy(this.collectionId).subscribe((res) => {
       console.log('hierarchyData', res);
       this.collectionTreeNodes = {
-        data: _.get(res, `result.${this.configService.categoryConfig[this.editorConfig.config.objectType]}`)
+        data: _.get(res, `result.${this.objectType}`)
       };
       this.updateTreeNodeData();
       this.buttonLoaders.previewButtonLoader = false;
@@ -794,12 +836,36 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   redirectToQuestionTab(mode, interactionType?) {
+
+    let questionId = this.selectedNodeData?.data?.metadata?.identifier;
+    let questionCategory = '';
+
+    if(this.objectType === 'question') {
+      questionId = _.get(this.editorConfig, 'context.identifier');
+      interactionType = _.get(this.editorConfig, 'config.interactionType');
+      questionCategory = _.get(this.editorConfig, 'config.questionCategory');
+      this.creationContext =  {
+        objectType: this.objectType,
+        collectionObjectType: _.get(this.editorConfig, 'context.collectionObjectType'),
+        isReadOnlyMode: _.get(this.editorConfig, 'config.isReadOnlyMode'),
+        unitIdentifier: _.get(this.editorConfig, 'context.unitIdentifier'),
+        correctionComments: _.get(this.editorConfig, 'context.correctionComments'),
+        mode: mode,
+        editableFields: _.get(this.editorConfig, 'config.editableFields')
+      }
+
+    }
+
     this.questionComponentInput = {
       questionSetId: this.collectionId,
-      questionId: mode === 'edit' ? this.selectedNodeData.data.metadata.identifier : undefined,
+      questionId: mode === 'edit' ? this.selectedNodeData.data.metadata.identifier : questionId,
       type: interactionType,
-      setChildQueston:mode === 'edit' ? false : this.setChildQuestion
+      setChildQueston:mode === 'edit' ? false : this.setChildQuestion,
+      category: questionCategory,
+      creationContext: this.creationContext, // Pass the creation context to the question-component
+      ...this.questionComponentInput
     };
+
     if(mode === 'edit'){
       this.editorService.selectedChildren = {
         primaryCategory: this.selectedNodeData.data.metadata.primaryCategory,
@@ -842,11 +908,18 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       this.treeEventListener(event)
     }
     this.selectedNodeData = undefined;
-    this.mergeCollectionExternalProperties().subscribe((res: any) => {
-      this.pageId = 'collection_editor';
-      this.telemetryService.telemetryPageId = this.pageId;
-      this.isEnableCsvAction = true;
-    });
+    if(this.objectType === 'question') {
+      this.editorEmitter.emit({
+        close: true, library: 'collection_editor', action: event.actionType, identifier: event.identifier
+      });
+    }
+    else {
+      this.mergeCollectionExternalProperties().subscribe((res: any) => {
+        this.pageId = 'collection_editor';
+        this.telemetryService.telemetryPageId = this.pageId;
+        this.isEnableCsvAction = true;
+      });
+    }
   }
 
   get contentPolicyUrl() {

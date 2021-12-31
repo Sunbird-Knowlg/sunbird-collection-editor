@@ -167,21 +167,35 @@ export class EditorService {
     return formFields;
   }
 
-  updateCollection(collectionId, data?) {
+  updateCollection(collectionId, event?) {
     let objType = this.configService.categoryConfig[this.editorConfig.config.objectType];
-    objType = objType.toLowerCase();
-    const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
-    const fieldsObj = this.getFieldsToUpdate(collectionId);
-    const requestBody = {
-      request: {
-        [objType]: {
-          ...fieldsObj,
-          lastPublishedBy: this.editorConfig.context.user.id
-        }
-      }
+    let url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
+    let requestBody = {
+      request: { }
     };
-    const publishData =  _.get(data, 'publishData');
-    if (publishData) {
+    objType = objType.toLowerCase();
+
+    if (event.button === 'sourcingApproveQuestion' || event.button === 'sourcingRejectQuestion') {
+      objType = this.configService.categoryConfig[this.editorConfig.context['collectionObjectType']];
+      objType = objType.toLowerCase();
+      url = this.configService.urlConFig.URLS[this.editorConfig.context['collectionObjectType']];
+
+      requestBody = event.requestBody;
+      requestBody.request[objType].lastPublishedBy = this.editorConfig.context.user.id;
+    } else {
+      const fieldsObj = this.getFieldsToUpdate(collectionId);
+      requestBody = {
+        request: {
+          [objType]: {
+            ...fieldsObj,
+            lastPublishedBy: this.editorConfig.context.user.id
+          }
+        }
+      };
+    }
+
+    const publishData =  _.get(event, 'publishData');
+    if(publishData) {
      requestBody.request[objType] = { ...requestBody.request[objType], ...publishData };
     }
     const option = {
@@ -254,6 +268,22 @@ export class EditorService {
           rootId: collection,
           unitId: unitIdentifier,
           children: [contentId]
+        }
+      }
+    };
+    return this.publicDataService.patch(req);
+  }
+
+  addResourceToQuestionset(collection, unitIdentifier, contentId) {
+    const req = {
+      url: _.get(this.configService.urlConFig, 'URLS.QuestionSet.ADD'),
+      data: {
+        'request': {
+          'questionset': {
+            'rootId': collection,
+            'collectionId': unitIdentifier,
+            'children': [contentId]
+          }
         }
       }
     };

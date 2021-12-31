@@ -29,6 +29,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
   public showPublishCollectionPopup: boolean;
   public rejectComment: string;
   public actionType: string;
+  public objectType: string;
   public sourcingStatusText: string;
   public sourcingStatusClass: string;
   public originPreviewUrl: string;
@@ -48,6 +49,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
         this.bulkUploadStatus = false;
       }
     });
+    this.objectType = _.get(this.editorService, 'editorConfig.config.objectType');
     await this.handleActionButtons();
     this.getSourcingData();
   }
@@ -67,7 +69,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
     this.visibility.bulkUpload = _.get(this.editorService, 'editorConfig.config.objectType') === 'QuestionSet' && this.editorService.editorMode === 'edit';
     this.visibility.showOriginPreviewUrl = _.get(this.editorService, 'editorConfig.config.showOriginPreviewUrl');
     this.visibility.showSourcingStatus = _.get(this.editorService, 'editorConfig.config.showSourcingStatus');
-    //this.visibility.showCorrectionComments = _.get(this.editorService, 'editorConfig.config.showCorrectionComments');
+    this.visibility.showCorrectionComments = _.get(this.editorService, 'editorConfig.config.showCorrectionComments');
     this.visibility.hideSubmitForReviewBtn = _.get(this.editorService, 'editorConfig.config.hideSubmitForReviewBtn') || false;
     this.visibility.addCollaborator = _.get(this.editorService, 'editorConfig.config.showAddCollaborator');
   }
@@ -93,7 +95,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
   }
   publishEmitter(event) {
     this.showPublishCollectionPopup = false;
-    if (event.button === 'publishContent' || event.button === 'sourcingApprove') {
+    if (event.button === 'publishContent' || event.button === 'publishQuestion' || event.button === 'sourcingApprove' || event.button === 'sourcingApproveQuestion') {
       this.toolbarEmitter.emit(event)
     }
   }

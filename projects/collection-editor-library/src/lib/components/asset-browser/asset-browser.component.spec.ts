@@ -7,7 +7,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { mockData } from './asset-browser.component.spec.data';
 import { FormsModule } from '@angular/forms';
 import { EditorService } from '../../services/editor/editor.service';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import * as _ from 'lodash-es';
 
 const mockEditorService = {
@@ -137,21 +137,49 @@ describe('AssetBrowserComponent', () => {
         node_id: 'do_123'
       }
     }));
+    spyOn(questionService, 'generatePreSignedUrl').and.returnValue(of({
+      result: {
+        node_id: 'do_234',
+        pre_signed_url: '/test'
+      }
+    }));
+    spyOn(component, 'addImageInEditor').and.callThrough();
+    spyOn(component, 'dismissPops').and.callThrough();
+    component.uploadAndUseImage(modal);
+    expect(questionService.createMediaAsset).toHaveBeenCalled();
+    expect(component.loading).toEqual(true);
+    expect(component.isClosable).toEqual(false);
+    expect(component.imageFormValid).toEqual(false);
+  });
+  it('#uploadAndUseImage should upload image and call upload to blob', async () => {
+    component.showImageUploadModal = false;
+    let questionService: QuestionService = TestBed.inject(QuestionService);
+    let modal = true;
+    spyOn(questionService, 'createMediaAsset').and.returnValue(of({
+      result: {
+        node_id: 'do_123'
+      }
+    }));
+    spyOn(questionService, 'generatePreSignedUrl').and.returnValue(of({
+      result: {
+        node_id: 'do_234',
+        pre_signed_url: '/test'
+      }
+    }));
+    spyOn(component, 'uploadToBlob').and.returnValue(of(true));
     spyOn(questionService, 'uploadMedia').and.returnValue(of({
       result: {
         node_id: 'do_234',
         content_url: '/test'
       }
     }));
-    spyOn(component, 'addImageInEditor');
-    spyOn(component, 'dismissPops');
+    spyOn(component, 'addImageInEditor').and.callThrough();
+    spyOn(component, 'dismissPops').and.callThrough();
     component.uploadAndUseImage(modal);
     expect(questionService.createMediaAsset).toHaveBeenCalled();
-    expect(questionService.uploadMedia).toHaveBeenCalled();
-    expect(component.addImageInEditor).toHaveBeenCalledWith('/test', 'do_234');
-    expect(component.showImageUploadModal).toEqual(false);
-    expect(component.dismissPops).toHaveBeenCalledWith(modal);
-  })
+    expect(questionService.generatePreSignedUrl).toHaveBeenCalled();
+    expect(component.uploadToBlob).toHaveBeenCalled();
+  });
   it('#generateAssetCreateRequest() should return asset create request', () => {
     let fileName = 'test';
     let fileType = 'image/png';

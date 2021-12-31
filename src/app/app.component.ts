@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { questionEditorConfig, collectionEditorConfig, courseEditorConfig,
-  observationEditorConfig, observationRubricsEditorConfig } from './data';
+import { observationEditorConfig, observationRubricsEditorConfig, questionSetEditorConfig,
+  collectionEditorConfig, courseEditorConfig, questionEditorConfig } from './data';
 
 const configMapper = {
+  questionSet: questionSetEditorConfig,
   question: questionEditorConfig,
   observation: observationEditorConfig,
   collection : collectionEditorConfig,
@@ -27,8 +28,8 @@ export class AppComponent {
   }
 
   setType(editorType) {
-    if (editorType === 'question') {
-      localStorage.setItem('editorType', 'question');
+    if (editorType === 'questionSet') {
+      localStorage.setItem('editorType', 'questionSet');
     } else if (editorType === 'observation') {
       localStorage.setItem('editorType', 'observation');
     } else if (editorType === 'course') {
@@ -37,6 +38,8 @@ export class AppComponent {
       localStorage.setItem('editorType', 'collection');
     } else if (editorType === 'rubrics') {
       localStorage.setItem('editorType', 'rubrics');
+    } else if (editorType === 'question') {
+      localStorage.setItem('editorType', 'question');
     }
     window.location.reload();
   }

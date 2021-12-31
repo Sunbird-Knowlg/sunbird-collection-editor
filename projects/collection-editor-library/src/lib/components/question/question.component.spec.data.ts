@@ -1852,6 +1852,25 @@ export const leafFormConfigMock = [
     },
   }
 ];
+export const creationContextMock: any = {
+  "objectType": "question",
+  "collectionObjectType": "QuestionSet",
+  "isReadOnlyMode": true,
+  "unitIdentifier": "do_11330102570702438417",
+  "correctionComments": "",
+  "mode": "sourcingreview",
+  "editableFields": {
+    "orgreview": [
+      "name",
+      "learningOutcome"
+    ],
+    "sourcingreview": [
+      "name",
+      "learningOutcome"
+    ]
+  }
+};
+
 
 export const mockTreeService = {
   getChildren: () => {
@@ -1862,7 +1881,7 @@ export const mockTreeService = {
       data:{
         metadata:{}
       }
-     } 
+     }
   },
   getActiveNode: () => {
     return {
@@ -1889,7 +1908,7 @@ export const mockTreeService = {
   clearTreeCache :()=>{
   },
   updateNode:()=>{
-    
+
   }
 };
 
