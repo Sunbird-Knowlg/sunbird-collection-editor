@@ -308,8 +308,13 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         });
       }
     }
-    this.ishierarchyConfigSet = true;
     this.editorConfig.config = _.assign(this.editorConfig.config, hierarchyConfig);
+    if (this.editorConfig.config.primaryCategory === 'Observation With Rubrics') {
+      const orgFrameworkData = _.get(this.frameworkService.organisationFrameworkData, 'categories');
+      const categoryInstanceData = _.find(orgFrameworkData, {code: _.get(this.editorConfig, 'config.categoryInstance')});
+      this.collectionTreeNodes.data.children = _.get(categoryInstanceData, 'terms');
+    }
+    this.ishierarchyConfigSet = true;
   }
 
   getHierarchyChildrenConfig(childrenData) {

@@ -87,7 +87,14 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   private initialize() {
     const data = this.nodes.data;
     this.nodeParentDependentMap = this.editorService.getParentDependentMap(this.nodes.data);
-    const treeData = this.buildTree(this.nodes.data);
+    let treeData;
+    if (_.get(this.editorService, 'editorConfig.config.renderTaxonomy') === true) {
+      this.helperService.addDepthToHierarchy(this.nodes.data.children);
+      this.nodes.data.children =   this.removeIntermediateLevelsFromFramework(this.nodes.data.children);
+      treeData = this.buildTreeFromFramework(this.nodes.data);
+    } else {
+      treeData = this.buildTree(this.nodes.data);
+    }
     this.rootNode = [{
       id: data.identifier || UUID.UUID(),
       title: data.name,
@@ -125,6 +132,32 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       });
       if (child.visibility === 'Parent') {
         this.buildTree(child, childTree, data.level);
+      }
+    });
+    return tree;
+  }
+
+  buildTreeFromFramework(data, tree?, level?) {
+    tree = tree || [];
+    if (data.children) { data.children = _.sortBy(data.children, ['index']); }
+    _.forEach(data.children, (child) => {
+      const childTree = [];
+      tree.push({
+        id: UUID.UUID(),
+        title: child.name,
+        tooltip: child.name,
+        primaryCategory: _.get(this.editorService, 'editorConfig.config.primaryCategory'),
+        objectType: _.get(this.editorService, 'editorConfig.config.objectType'),
+        metadata: {
+          name: child.name
+        },
+        folder: true,
+        children: childTree,
+        root: false,
+        icon: 'fa fa-folder-o'
+      });
+      if (child.children) {
+        this.buildTreeFromFramework(child, childTree);
       }
     });
     return tree;
@@ -516,9 +549,8 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!_.isEmpty(currentNodeDependency.target) || !_.isEmpty(currentNodeDependency.sourceTarget)) {
       if (currentNode.hitMode === 'after') {
         // tslint:disable-next-line:max-line-length
-        movingNodeIds = _.uniq(_.compact(_.concat(currentNodeDependency.source, currentNodeDependency.target, currentNodeDependency.sourceTarget,nodeId)));
-      }
-      else {
+        movingNodeIds = _.uniq(_.compact(_.concat(currentNodeDependency.source, currentNodeDependency.target, currentNodeDependency.sourceTarget, nodeId)));
+      } else {
         // tslint:disable-next-line:max-line-length
         movingNodeIds = _.uniq(_.compact(_.concat(currentNodeDependency.source, nodeId, currentNodeDependency.target, currentNodeDependency.sourceTarget)));
       }
@@ -559,6 +591,41 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     };
     this.treeService.updateTreeNodeMetadata(metadata, id, primaryCategoryName);
     console.log(this.treeService.treeCache);
+  }
+
+  getCategoryInstanceData(data) {
+    const rootNode = {
+      ..._.omit(data, ['children']),
+    };
+    if (data.children) {
+      const children = this.removeIntermediateLevelsFromFramework(data.children, data);
+      rootNode.children = _.flatten(children);
+    }
+    return rootNode;
+  }
+
+  removeIntermediateLevelsFromFramework(data, parentData?) {
+    const tree = [];
+    _.forEach(data, child => {
+      if (child.depth === 0 || child.depth === this.helperService.treeDepth) {
+        const node = {
+          ..._.omit(child, ['children']),
+          ...(child.children && {children: this.removeIntermediateLevelsFromFramework(child.children, child)})
+        };
+        tree.push(
+          node
+        );
+      } else if ((child.depth !== 0 || child.depth !== this.helperService.treeDepth)) {
+        parentData.children  = _.filter(parentData.children, item => (item.depth === 0 || item.depth === this.helperService.treeDepth));
+        if (child.children && child.children.length > 0) {
+          const children = this.removeIntermediateLevelsFromFramework(child.children, child);
+          parentData.children = _.concat(parentData.children, children);
+        } else {
+          parentData.children = _.concat(parentData.children, child.children);
+        }
+      }
+    });
+    return !_.isEmpty(tree) ? tree : _.flatten(parentData.children);
   }
 
   ngOnDestroy() {
