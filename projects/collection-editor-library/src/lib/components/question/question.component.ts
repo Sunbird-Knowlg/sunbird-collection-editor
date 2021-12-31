@@ -408,15 +408,24 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
   sendBackQuestion(event) {
-    const requestBody = {
-      'question': {
-  			"requestChanges": event.comment,
-  			"status": "Draft"
-  		}
-  	}
-    this.questionService.upsertQuestion(this.questionId, requestBody).subscribe(res => {
-        this.redirectToChapterList();
-      })
+    this.questionService.readQuestion(this.questionId, 'versionKey')
+      .subscribe((res) => {
+        const requestObj = {
+          'question': {
+            'versionKey': _.get(res, `question.versionKey`),
+            "requestChanges": event.comment,
+        		"status": "Draft"
+          }
+        };
+        this.questionService.updateQuestion(this.questionId, requestObj).subscribe(res => {
+            this.redirectToChapterList();
+        });
+      }, (err: ServerResponse) => {
+        const errInfo = {
+          errorMsg: 'Cannot update question status. Please try again...',
+        };
+        this.editorService.apiErrorHandling(err, errInfo);
+      });
   }
 
   validateQuestionData() {
