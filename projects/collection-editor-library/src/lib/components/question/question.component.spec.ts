@@ -257,22 +257,6 @@ describe('QuestionComponent', () => {
     expect(component.upsertQuestion).toHaveBeenCalled();
   });
 
-  it('Unit test for #sendBackQuestion', () => {
-    const questionService = TestBed.inject(QuestionService);
-    spyOn(questionService, 'upsertQuestion').and.returnValue({ subscribe: f => f({}) });
-    spyOn(component, 'redirectToChapterList').and.callFake(()=>{ });
-    const event = { comment: 'text' }
-    const reqObj = {
-      'question': {
-  			"requestChanges": event.comment,
-  			"status": "Draft"
-  		}
-  	}
-    component.sendBackQuestion(event);
-    expect(questionService.upsertQuestion).toHaveBeenCalledWith(component.questionId, reqObj);
-    expect(component.redirectToChapterList).toHaveBeenCalled()
-  });
-
   it('Unit test for #setQuestionId', () => {
     component.setQuestionId('do_11330103476396851218');
     expect(component.questionId).toEqual('do_11330103476396851218');

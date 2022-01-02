@@ -408,15 +408,24 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
   sendBackQuestion(event) {
-    const requestBody = {
-      'question': {
-  			"requestChanges": event.comment,
-  			"status": "Draft"
-  		}
-  	}
-    this.questionService.upsertQuestion(this.questionId, requestBody).subscribe(res => {
-        this.redirectToChapterList();
-      })
+    this.questionService.readQuestion(this.questionId, 'versionKey')
+      .subscribe((res) => {
+        const requestObj = {
+          question: {
+            versionKey: _.get(res.result, `question.versionKey`),
+            requestChanges: event.comment,
+            status: 'Draft'
+          }
+        };
+        this.questionService.updateQuestion(this.questionId, requestObj).subscribe(res => {
+            this.redirectToChapterList();
+        });
+      }, (err: ServerResponse) => {
+        const errInfo = {
+          errorMsg: 'Cannot update question status. Please try again...',
+        };
+        this.editorService.apiErrorHandling(err, errInfo);
+      });
   }
 
   validateQuestionData() {
@@ -631,7 +640,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   getDefaultSessionContext() {
     return _.omitBy(_.merge(
       {
-        author: _.get(this.editorService.editorConfig, 'context.user.fullName'),
+        creator: _.get(this.editorService.editorConfig, 'context.user.fullName'),
         createdBy: _.get(this.editorService.editorConfig, 'context.user.id'),
         ..._.pick(_.get(this.editorService.editorConfig, 'context'), ['board', 'medium', 'gradeLevel', 'subject', 'topic'])
       },

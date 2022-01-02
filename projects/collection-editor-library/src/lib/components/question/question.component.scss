@@ -284,15 +284,21 @@ sui-select {
 
   .h-100{
     height: 100% !important;
-  } 
+  }
 
   .sb-required {
     color:#ff4558;
     padding-left: 2px;
-    position: relative; 
+    position: relative;
     top: -5px;
   }
   select[disabled]{
     opacity: 0.8 !important;
     font-weight: 500 !important;
   }
+
+.treepicker-parent .list-border {
+  height: 38px!important;
+  padding: 1rem!important;
+  margin-top: 15px !important;
+}
