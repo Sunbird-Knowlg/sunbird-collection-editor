@@ -1,5 +1,7 @@
 import { IEditorConfig } from 'collection-editor-library/lib/interfaces/editor';
 export let editorConfig: IEditorConfig | undefined;
+export let editorConfig_question: IEditorConfig | undefined;
+
 editorConfig = {
   context: {
     framework: 'test',
@@ -130,6 +132,222 @@ editorConfig = {
     },
     contentPolicyUrl: '/term-of-use.html'
   }
+};
+
+editorConfig_question = {
+  "context": {
+    "channel": "01309282781705830427",
+    "authToken": "",
+    "sid": "c4hzzUJYlbfLPoN2meEF6QfF3V_9o5Us",
+    "did": "6539921a5736199d5e1ff5b923776c23",
+    "uid": "ae94b68c-a535-4dce-8e7a-fb9662b0ad68",
+    "programId": "f09a30f0-5e34-11ec-874d-3de2a8c29d94",
+    "contributionOrgId": "e7328d77-42a7-44c8-84f4-8cfea235f07d",
+    "pdata": {
+      "id": "local.sunbird.portal",
+      "ver": "2.8.0",
+      "pid": "sunbird-portal"
+    },
+    "actor": {
+      "id": "ae94b68c-a535-4dce-8e7a-fb9662b0ad68",
+      "type": "User"
+    },
+    "contextRollup": {
+      "l1": "01309282781705830427"
+    },
+    "tags": [
+      "01309282781705830427",
+      "01309282781705830427"
+    ],
+    "timeDiff": -0.877,
+    "endpoint": "/data/v3/telemetry",
+    "env": "question_editor",
+    "user": {
+      "id": "ae94b68c-a535-4dce-8e7a-fb9662b0ad68",
+      "orgIds": [
+        "01309282781705830427"
+      ],
+      "organisations": {
+        "01309282781705830427": "NIT"
+      },
+      "fullName": "N150",
+      "firstName": "N150",
+      "lastName": "",
+      "isRootOrgAdmin": false
+    },
+    "targetFWIds": [
+      "nit_k-12"
+    ],
+    "channelData": {
+      "code": "01309282781705830427",
+      "frameworks": [],
+      "channel": "in.ekstep",
+      "description": "Preprod Kayal Org",
+      "createdOn": "2020-08-24T05:00:51.381+0000",
+      "objectType": "Channel",
+      "collectionPrimaryCategories": [
+        "Content Playlist",
+        "Course",
+        "Digital Textbook",
+        "Question paper"
+      ],
+      "appId": "@ignore@",
+      "primaryCategories": [],
+      "additionalCategories": [
+        "DigitalCourse",
+        "DigitalCourse1",
+        "DigitalCourse2",
+        "Exam Question Set",
+        "LearningPath1",
+        "Observation",
+        "Survey",
+        "Text Asset",
+        "Video transcript"
+      ],
+      "lastUpdatedOn": "2021-04-09T13:43:13.465+0000",
+      "collectionAdditionalCategories": [
+        "Textbook",
+        "Lesson Plan"
+      ],
+      "contentAdditionalCategories": [
+        "Classroom Teaching Video",
+        "Concept Map",
+        "Curiosity Question Set",
+        "Experiential Resource",
+        "Explanation Video",
+        "Focus Spot",
+        "Learning Outcome Definition",
+        "Lesson Plan",
+        "Marking Scheme Rubric",
+        "Pedagogy Flow",
+        "Previous Board Exam Papers",
+        "TV Lesson",
+        "Textbook"
+      ],
+      "apoc_num": 1,
+      "identifier": "01309282781705830427",
+      "lastStatusChangedOn": "2020-08-24T05:00:51.381+0000",
+      "consumerId": "7411b6bd-89f3-40ec-98d1-229dc64ce77d",
+      "assetAdditionalCategories": [],
+      "languageCode": [],
+      "versionKey": "1617975793465",
+      "contentPrimaryCategories": [
+        "Course Assessment",
+        "eTextbook",
+        "Explanation Content",
+        "Learning Resource",
+        "Practice Question Set",
+        "Teacher Resource",
+        "Exam Question"
+      ],
+      "name": "NIT123",
+      "defaultCourseFramework": "TPD",
+      "assetPrimaryCategories": [
+        "Asset",
+        "CertAsset",
+        "Certificate Template"
+      ],
+      "status": "Live",
+      "defaultFramework": "ekstep_ncert_k-12"
+    },
+    "labels": {
+      "submit_collection_btn_label": "Submit for review",
+      "publish_collection_btn_label": "Submit for Approval",
+      "sourcing_approve_collection_btn_label": "Publish",
+      "reject_collection_btn_label": "Request changes"
+    },
+    "framework": "ekstep_ncert_k-12",
+    "correctionComments": "",
+    "sourcingResourceStatus": "Draft",
+    "sourcingResourceStatusClass": "sb-color-gray-300",
+    "collectionIdentifier": "do_113431883451195392169",
+    "unitIdentifier": "do_113431884671442944170",
+    "collectionObjectType": "QuestionSet",
+    "collectionPrimaryCategory": "Exam Question Set"
+  },
+  "config": {
+    "primaryCategory": "Subjective Question",
+    "objectType": "Question",
+    "mode": "edit",
+    "setDefaultCopyRight": false,
+    "showOriginPreviewUrl": false,
+    "showSourcingStatus": false,
+    "showCorrectionComments": false,
+    "enableBulkUpload": false,
+    "publicStorageAccount": "https://dockstorage.blob.core.windows.net/",
+    "hideSubmitForReviewBtn": false,
+    "questionSet": {
+      "maxQuestionsLimit": 500
+    },
+    "collection": {
+      "maxContentsLimit": 1200
+    },
+    "editableFields": {
+      "orgreview": [
+        "name",
+        "learningOutcome"
+      ],
+      "sourcingreview": [
+        "name",
+        "learningOutcome"
+      ]
+    },
+    "mimeType": "application/vnd.sunbird.question",
+    "isReadOnlyMode": false,
+    "interactionType": "default",
+    "questionCategory": "VSA"
+  }
+};
+
+export const toolbarConfig_question = {
+  "preview_collection_btn_label": "Preview",
+  "preview_collection_btn_icon": "icon eye",
+  "save_collection_btn_label": "Save as Draft",
+  "save_collection_btn_icon": "",
+  "submit_collection_btn_label": "Submit for review",
+  "submit_collection_btn_icon": "",
+  "reject_collection_btn_label": "Request changes",
+  "reject_collection_btn_icon": "",
+  "publish_collection_btn_label": "Submit for Approval",
+  "publish_collection_btn_icon": "",
+  "edit_question_btn_label": "Edit",
+  "edit_question_btn_icon": "icon edit",
+  "preview_question_btn_label": "Preview",
+  "preview_question_btn_icon": "icon eye",
+  "cancel_question_btn_label": "Cancel",
+  "cancel_question_btn_icon": "",
+  "save_question_btn_label": "Save",
+  "save_question_btn_icon": "",
+  "send_back_for_correction_collection_btn_label": "Send Back For Corrections",
+  "send_back_for_correction_collection_btn_icon": "",
+  "sourcing_approve_collection_btn_label": "Publish",
+  "sourcing_approve_collection_btn_icon": "",
+  "sourcing_reject_collection_btn_label": "Reject",
+  "sourcing_reject_collection_btn_icon": "",
+  "upload_use_btn_label": "Upload and Use",
+  "cancel_btn_label": "Cancel",
+  "back_btn_label": "Back",
+  "search_btn_label": "Search",
+  "add_btn_label": "Add",
+  "upload_from_computer_btn_label": "Upload from Computer",
+  "request_btn_label": "Request",
+  "no_btn_label": "No",
+  "yes_btn_label": "Yes",
+  "close_btn_label": "Close",
+  "submit_btn_label": "Submit",
+  "add_sibling_btn_label": "Add Sibling",
+  "add_child_btn_label": "Add Child",
+  "create_new_btn_label": "Create New",
+  "add_from_library_btn_label": " Add from library",
+  "submit_review_btn_label": "Submit Review",
+  "apply_btn_label": "Apply",
+  "reset_btn_label": "Reset",
+  "delete_btn_label": "Delete",
+  "next_btn_label": "Next",
+  "remove_btn_label": "Remove",
+  "done_btn_label": "Done",
+  "showDialcode": "no",
+  "showBulkUploadBtn": false
 }
 
 export const nativeElement = `<div><ul id="ft-id-1" class="ui-fancytree fancytree-container fancytree-plain fancytree-ext-glyph fancytree-ext-dnd5 fancytree-connectors" tabindex="0" role="tree" aria-multiselectable="true"><li role="treeitem" aria-expanded="false" aria-selected="false" class="fancytree-lastsib"><span class="fancytree-node fancytree-folder fancytree-has-children fancytree-lastsib fancytree-exp-cl fancytree-ico-cf" draggable="true"><span role="button" class="fancytree-expander fa fa-caret-right"></span><span role="presentation" class="fancytree-custom-icon fa fa-book"></span><span class="fancytree-title" title="SB23410q" style="width:15em;text-overflow:ellipsis;white-space:nowrap;overflow:hidden">SB23410q</span><span class="ui dropdown sb-dotted-dropdown" autoclose="itemClick" suidropdown="" tabindex="0" style="display: none;"> <span id="contextMenu" class="p-0 w-auto"><i class="icon ellipsis vertical sb-color-black"></i></span>
@@ -1647,4 +1865,3 @@ export const categoryDefinitionData = {
     }
   }
 }
-

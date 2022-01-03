@@ -8,6 +8,7 @@ import { ConfigService } from '../../services/config/config.service';
 export class AnswerComponent implements OnInit {
   @Input() editorState;
   @Input() showFormError;
+  @Input() isReadOnlyMode;
   @Output() editorDataOutput: EventEmitter<any> = new EventEmitter<any>();
   constructor(public configService: ConfigService) { }
 

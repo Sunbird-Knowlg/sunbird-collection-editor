@@ -62,6 +62,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
   public initialFormConfig: any;
   public imageFormValid = false;
   public videoFile: any;
+  public imageFile: any;
   public termsAndCondition: any;
   public assetName: any;
   public emptyImageSearchMessage: any;
@@ -175,11 +176,15 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     this.videoDataOutput.emit(false);
   }
   dismissImageUploadModal() {
+    if (this.isClosable) {
     this.showImageUploadModal = false;
+  }
   }
   initiateImageUploadModal() {
     this.showImagePicker = false;
     this.showImageUploadModal = true;
+    this.loading = false;
+    this.isClosable = true;
   }
 
   dismissVideoUploadModal() {
@@ -534,6 +539,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
    * function to upload image
    */
   uploadImage(event) {
+    this.imageFile = event.target.files[0];
     const file = event.target.files[0];
     this.assetName = file.name;
     const reader = new FileReader();
@@ -580,21 +586,66 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     this.formConfig = formvalue;
   }
   uploadAndUseImage(modal) {
-    this.questionService.createMediaAsset({ content: this.assestData }).pipe(catchError(err => {
+    this.isClosable = false;
+    this.loading = true;
+    this.showErrorMsg = false;
+    this.imageFormValid = false;
+    this.questionService.createMediaAsset({ asset: this.assestData }).pipe(catchError(err => {
       const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.019') };
+      this.loading = false;
+      this.isClosable = true;
+      this.imageFormValid = true;
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     })).subscribe((res) => {
       const imgId = res.result.node_id;
-      const request = {
-        data: this.formData
+      const preSignedRequest = {
+        content: {
+          fileName: this.assetName
+        }
       };
-      this.questionService.uploadMedia(request, imgId).pipe(catchError(err => {
-        const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.019') };
+      this.questionService.generatePreSignedUrl(preSignedRequest, imgId).pipe(catchError(err => {
+        const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.026') };
+        this.loading = false;
+        this.isClosable = true;
+        this.imageFormValid = true;
         return throwError(this.editorService.apiErrorHandling(err, errInfo));
       })).subscribe((response) => {
-        this.addImageInEditor(response.result.content_url, response.result.node_id);
-        this.dismissPops(modal);
+        const signedURL = response.result.pre_signed_url;
+        const blobConfig = {
+          processData: false,
+          contentType: 'Asset',
+          headers: {
+            'x-ms-blob-type': 'BlockBlob'
+          }
+        };
+        this.uploadToBlob(signedURL, this.imageFile, blobConfig).subscribe(() => {
+          const fileURL = signedURL.split('?')[0];
+          const data = new FormData();
+          data.append('fileUrl', fileURL);
+          data.append('mimeType', this.imageFile.type);
+          const config1 = {
+            enctype: 'multipart/form-data',
+            processData: false,
+            contentType: false,
+            cache: false
+          };
+          const uploadMediaConfig = {
+            data,
+            param: config1
+          };
+          this.questionService.uploadMedia(uploadMediaConfig, imgId).pipe(catchError(err => {
+            const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.019') };
+            this.isClosable = true;
+            this.loading = false;
+            this.imageFormValid = true;
+            return throwError(this.editorService.apiErrorHandling(err, errInfo));
+          })).subscribe((response1) => {
+            this.addImageInEditor(response1.result.content_url, response1.result.node_id);
+            this.dismissPops(modal);
+          });
+        });
       });
+
     });
   }
   openImageUploadModal() {
@@ -639,6 +690,8 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     this.formConfig = this.initialFormConfig;
     this.imageUploadLoader = false;
     this.imageFormValid = false;
+    this.loading = false;
+    this.isClosable = true;
   }
   /**
    * function to upload video
@@ -690,7 +743,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     this.showErrorMsg = false;
     this.imageFormValid = false;
     if (!this.showErrorMsg) {
-      this.questionService.createMediaAsset({ content: this.assestData }).pipe(catchError(err => {
+      this.questionService.createMediaAsset({ asset: this.assestData }).pipe(catchError(err => {
         this.loading = false;
         this.isClosable = true;
         this.imageFormValid = true;

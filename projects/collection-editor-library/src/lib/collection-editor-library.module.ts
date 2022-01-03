@@ -6,6 +6,8 @@ import { CommonFormElementsModule, DialcodeCursor } from 'common-form-elements-w
 import { SuiModule } from 'ng2-semantic-ui-v9';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { HttpClientModule } from '@angular/common/http';
+import { SanitizeHtmlPipe } from './pipes/sanitize-html.pipe';
+import { InterpolatePipe } from './pipes/interpolate.pipe';
 import { CollectionEditorLibraryComponent } from './collection-editor-library.component';
 import { ContentplayerPageComponent } from './components/contentplayer-page/contentplayer-page.component';
 import { EditorComponent } from './components/editor/editor.component';
@@ -48,7 +50,7 @@ import { TranslationsComponent } from './components/translations/translations.co
 import { PublishChecklistComponent } from './components/publish-checklist/publish-checklist.component';
 import { BulkUploadComponent  } from './components/bulk-upload/bulk-upload.component';
 @NgModule({
-  declarations: [CollectionEditorLibraryComponent, ContentplayerPageComponent, EditorComponent, QumlplayerPageComponent,
+  declarations: [CollectionEditorLibraryComponent, InterpolatePipe, SanitizeHtmlPipe, ContentplayerPageComponent, EditorComponent, QumlplayerPageComponent,
     HeaderComponent, FancyTreeComponent, MetaFormComponent, LibraryComponent, LibraryFilterComponent, LibraryListComponent,
     QuestionComponent, OptionsComponent, AnswerComponent, CkeditorToolComponent,
     LibraryPlayerComponent, ResourceReorderComponent, SkeletonLoaderComponent, TemplateComponent, TelemetryInteractDirective,

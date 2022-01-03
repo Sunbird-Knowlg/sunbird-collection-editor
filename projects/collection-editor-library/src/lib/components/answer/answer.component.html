@@ -1,9 +1,15 @@
 <div class="sb-field-group mt-15">
   <label class="fs-0-92">{{configService.labelConfig?.lbl?.answers}}<span class="sb-required">*</span></label><i class="icon info circle ml-2" aria-hidden="true" suiPopup popupDelay="500" popupText={{configService.labelConfig?.lbl?.answersPopupText}}></i>
   <div class="sb-field">
-    <div class="ckeditor-tool__option mb-5">
-      <lib-ckeditor-tool (editorDataOutput)="editorDataHandler($event)"
+    <div [ngClass]="{'ckeditor-tool__option': !isReadOnlyMode, 'ckeditor-tool__option-readonly': isReadOnlyMode, 'mb-5': true}">
+      <lib-ckeditor-tool *ngIf="!isReadOnlyMode" (editorDataOutput)="editorDataHandler($event)"
         [editorDataInput]="editorState.answer"></lib-ckeditor-tool>
+      <ng-container *ngIf="isReadOnlyMode">
+        <label class="px-16 py-8 mb-0 ckeditor-tool__label width-100">{{configService.labelConfig?.lbl?.answers}}</label>
+        <div class="ckeditor-tool__solution__body">
+            <p class="fs-0-785 p-16" [innerHTML]="editorState.answer | sanitizeHtml"></p>
+        </div>
+      </ng-container>
     </div>
     <label *ngIf="showFormError && [undefined, ''].includes(editorState.answer)"
         class="sb-color-error fs-0-785">{{configService.labelConfig?.lbl?.answersRequired}}</label>
