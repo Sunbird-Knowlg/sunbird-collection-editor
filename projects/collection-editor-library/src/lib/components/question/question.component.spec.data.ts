@@ -1924,6 +1924,13 @@ export const mockTreeService = {
   }
 };
 
+export const mockEditorCursor = {
+  return {
+    setQuestionMap: () => {},
+    clearQuestionMap : () => {}
+  }
+}
+
 
 export const childMetaData = {
   name: "test",

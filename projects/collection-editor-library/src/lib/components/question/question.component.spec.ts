@@ -13,9 +13,9 @@ import { SuiModule } from 'ng2-semantic-ui-v9';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
 import { collectionHierarchyMock, creationContextMock, mockData, readQuestionMock, mockTreeService,
-  leafFormConfigMock, sourcingSettingsMock, childMetaData, HierarchyMockData, BranchingLogic } from './question.component.spec.data';
+  leafFormConfigMock, sourcingSettingsMock, childMetaData,
+  HierarchyMockData, BranchingLogic, mockEditorCursor } from './question.component.spec.data';
 import { of } from 'rxjs';
-
 
 const mockEditorService = {
   editorConfig: {
@@ -36,13 +36,13 @@ const mockEditorService = {
     primaryCategory: 'Text',
     label: 'Text',
     interactionType: 'text'
-},
-  getToolbarConfig: () => { },
+  },
+  getToolbarConfig: () => {},
   _toFlatObj: () => {},
   fetchCollectionHierarchy: (questionSetId) => {
     subscribe: fn => fn(collectionHierarchyMock);
   },
-  updateCollection: (questionSetId, event) => { subscribe: fn => fn({}); }
+  updateCollection: (questionSetId, event) => { subscribe: fn => fn({}) }
 };
 
 describe('QuestionComponent', () => {
@@ -58,7 +58,7 @@ describe('QuestionComponent', () => {
       imports: [HttpClientTestingModule, SuiModule],
       providers: [EditorTelemetryService, QuestionService, ToasterService,
         PlayerService, { provide: EditorService, useValue: mockEditorService }, { provide: Router, useClass: RouterStub }, EditorCursor,
-        { provide: TreeService, useValue: mockTreeService }],
+        { provide: TreeService, useValue: mockTreeService }, { provide: EditorCursor, useValue: mockEditorCursor }],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
       .compileComponents();
@@ -141,7 +141,7 @@ describe('QuestionComponent', () => {
     expect(component.childFormData).toEqual(mockData.formData);
   });
   it('should call validateFormFields', () => {
-    component.leafFormConfig = leafFormConfigMock;
+    component.leafFormConfig = mockData.childMetadata;
     component.childFormData = mockData.formData;
     const toasterService = TestBed.get(ToasterService);
     spyOn(toasterService, 'error').and.callThrough();
@@ -266,22 +266,6 @@ describe('QuestionComponent', () => {
     spyOn(component, 'upsertQuestion');
     component.sendForReview();
     expect(component.upsertQuestion).toHaveBeenCalled();
-  });
-
-  it('Unit test for #sendBackQuestion', () => {
-    const questionService = TestBed.inject(QuestionService);
-    spyOn(questionService, 'upsertQuestion').and.returnValue({ subscribe: f => f({}) });
-    spyOn(component, 'redirectToChapterList').and.callFake(()=>{ });
-    const event = { comment: 'text' };
-    const reqObj = {
-        question: {
-          requestChanges: event.comment,
-          status: 'Draft'
-        }
-    };
-    component.sendBackQuestion(event);
-    expect(questionService.upsertQuestion).toHaveBeenCalledWith(component.questionId, reqObj);
-    expect(component.redirectToChapterList).toHaveBeenCalled();
   });
 
   it('Unit test for #setQuestionId', () => {
