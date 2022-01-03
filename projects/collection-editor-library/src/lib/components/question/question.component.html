@@ -169,11 +169,11 @@
             </button>
           </div>
           <hr>
-          <div *ngIf="leafFormConfig">
+          <div *ngIf="questionFormConfig">
             <div class="pl-5 py-10 font-weight-bold fs-0-92">
               {{configService.labelConfig?.lbl?.Questiondetails}}
             </div>
-            <div class="form-container   px-30" *ngIf="questionFormConfig">
+            <div class="form-container px-30">
               <sb-dynamic-form [config]="questionFormConfig" (initialize)="output($event)"
                 (statusChanges)="onStatusChanges($event)" (valueChanges)="valueChanges($event)"></sb-dynamic-form>
             </div>

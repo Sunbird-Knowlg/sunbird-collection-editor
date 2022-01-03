@@ -17,7 +17,8 @@
       "UPDATE": "question/v1/update/",
       "CONTENT_REVIEW" : "question/v1/review/",
       "CONTENT_REJECT": "question/v1/reject/",
-      "CONTENT_PUBLISH": "question/v1/publish/"
+      "CONTENT_PUBLISH": "question/v1/publish/",
+      "SYSYTEM_UPDATE": "system/v4/question/update/"
     },
     "Collection": {
       "HIERARCHY_READ": "content/v3/hierarchy",

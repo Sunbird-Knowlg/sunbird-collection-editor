@@ -42,7 +42,7 @@ const mockEditorService = {
   fetchCollectionHierarchy: (questionSetId) => {
     subscribe: fn => fn(collectionHierarchyMock);
   },
-  updateCollection: (questionSetId, event) => { subscribe: fn => fn({}) }
+  updateCollection: (questionSetId, event) => { subscribe: fn => fn({}); }
 };
 
 describe('QuestionComponent', () => {
@@ -72,7 +72,7 @@ describe('QuestionComponent', () => {
       questionId: 'do_11330103476396851218',
     };
     component.questionPrimaryCategory='Multiselect Multiple Choice Question';
-    component.questionInteractionType = 'choice'
+    component.questionInteractionType = 'choice';
     let editorService: EditorService = TestBed.inject(EditorService);
     let telemetryService: EditorTelemetryService = TestBed.inject(EditorTelemetryService);
     spyOn(telemetryService, 'impression').and.callFake(() => { });
@@ -110,7 +110,7 @@ describe('QuestionComponent', () => {
       category: 'MTF',
       config: {},
       creationContext: creationContextMock
-    }
+    };
     const editorService = TestBed.get(EditorService);
     component.ngOnInit();
     expect(component.questionInteractionType).toEqual('default');
@@ -172,9 +172,9 @@ describe('QuestionComponent', () => {
   });
   it('#setQuestionTitle() should set #toolbarConfig.title', () => {
     component.creationContext = creationContextMock;
-    component.questionPrimaryCategory = 'Subjective Question'
+    component.questionPrimaryCategory = 'Subjective Question';
     component.setQuestionTitle();
-    expect(component.toolbarConfig.title).toBe('Subjective Question')
+    expect(component.toolbarConfig.title).toBe('Subjective Question');
   });
   it('call #getMcqQuestionHtmlBody() to verify questionBody', () => {
     const question = '<p>Objective 1</p>';
@@ -251,7 +251,7 @@ describe('QuestionComponent', () => {
   });
   it('#toolbarEventListener() should call toolbarEventListener for sendForCorrectionsQuestion', () => {
     const data = { button: 'sendForCorrectionsQuestion' };
-    spyOn(component, 'sendBackQuestion')
+    spyOn(component, 'sendBackQuestion');
     component.toolbarEventListener(data);
     expect(component.sendBackQuestion).toHaveBeenCalledWith(data);
   });
@@ -272,16 +272,16 @@ describe('QuestionComponent', () => {
     const questionService = TestBed.inject(QuestionService);
     spyOn(questionService, 'upsertQuestion').and.returnValue({ subscribe: f => f({}) });
     spyOn(component, 'redirectToChapterList').and.callFake(()=>{ });
-    const event = { comment: 'text' }
+    const event = { comment: 'text' };
     const reqObj = {
-      question: {
-  			requestChanges: event.comment,
-  			status: 'Draft'
-  		}
-  	}
+        question: {
+          requestChanges: event.comment,
+          status: 'Draft'
+        }
+    };
     component.sendBackQuestion(event);
     expect(questionService.upsertQuestion).toHaveBeenCalledWith(component.questionId, reqObj);
-    expect(component.redirectToChapterList).toHaveBeenCalled()
+    expect(component.redirectToChapterList).toHaveBeenCalled();
   });
 
   it('Unit test for #setQuestionId', () => {
@@ -316,7 +316,7 @@ describe('QuestionComponent', () => {
     expect(component.showConfirmPopup).toBeTruthy();
   });
   it('Unit test for #showHideSpinnerLoader', () => {
-    component.showHideSpinnerLoader(true, 'review')
+    component.showHideSpinnerLoader(true, 'review');
     expect(component.buttonLoaders.saveButtonLoader).toEqual(true);
     expect(component.buttonLoaders.review).toEqual(true);
   });
@@ -519,19 +519,19 @@ describe('QuestionComponent', () => {
     spyOn(component, 'subMenuChange').and.callThrough();
     component.subMenuChange({index:1,value:'test'})
     expect(component.subMenus[1].value).toBe('test');
-  })
+  });
   it('#dependentQuestions() should return dependentQuestions ', () => {
     component.subMenus =  mockData.subMenus;
     spyOn(component, 'dependentQuestions').and.callThrough();
     expect( component.dependentQuestions.length).toBe(1)
-  })
+  });
 
   it('#prepareRequestBody() should call to check the dynamic form data',()=>{
     spyOn(treeService, 'getFirstChild').and.callFake(() => { });
     spyOn(component,'prepareRequestBody').and.callThrough();
     component.prepareRequestBody();
     expect(component.prepareRequestBody).toHaveBeenCalled();
-  })
+  });
 
   it('#setQuestionTypeValues() should call to check the dynamic form data',()=>{
     spyOn(component,'setQuestionTypeValues').and.callThrough();
@@ -540,7 +540,7 @@ describe('QuestionComponent', () => {
     component.setQuestionTypeValues(mockData.questionMetaData);
     expect(component.setQuestionTypeValues).toHaveBeenCalled();
     expect(mockData.questionMetaData.showEvidence).toEqual(component.childFormData.showEvidence)
-  })
+  });
 
   it('#setQuestionTypeValues() should call to check the dynamic form data for date',()=>{
     component.questionInteractionType='date'
@@ -550,7 +550,7 @@ describe('QuestionComponent', () => {
     component.setQuestionTypeValues(mockData.questionMetaData);
     expect(component.setQuestionTypeValues).toHaveBeenCalled();
     expect(mockData.questionMetaData.showEvidence).toEqual(component.childFormData.showEvidence)
-  })
+  });
 
   it('#setQuestionTypeValues() should call to check the dynamic form data for text',()=>{
     component.questionInteractionType='text'
@@ -560,7 +560,7 @@ describe('QuestionComponent', () => {
     component.setQuestionTypeValues(mockData.questionMetaData);
     expect(component.setQuestionTypeValues).toHaveBeenCalled();
     expect(mockData.questionMetaData.showEvidence).toEqual(component.childFormData.showEvidence)
-  })
+  });
 
   it('#setQuestionTypeValues() should call to check the dynamic form data for slider',()=>{
     component.questionInteractionType='slider'
@@ -570,7 +570,7 @@ describe('QuestionComponent', () => {
     component.setQuestionTypeValues(mockData.questionMetaData);
     expect(component.setQuestionTypeValues).toHaveBeenCalled();
     expect(mockData.questionMetaData.showEvidence).toEqual(component.childFormData.showEvidence)
-  })
+  });
 
   it('#saveContent() should call saveContent when questionId exits ', () => {
     spyOn(component, 'validateQuestionData');
@@ -588,7 +588,7 @@ describe('QuestionComponent', () => {
     component.saveContent();
     component.updateQuestion();
     component.buildCondition('update');
-    component.updateTreeCache('Mid-day Meals',BranchingLogic,component.selectedSectionId)
+    component.updateTreeCache('Mid-day Meals',BranchingLogic,component.selectedSectionId);
     expect(component.saveQuestion).toHaveBeenCalled();
     expect(component.updateQuestion).toHaveBeenCalled();
     expect(component.buildCondition).toHaveBeenCalled();
@@ -612,7 +612,7 @@ describe('QuestionComponent', () => {
     component.questionId='do_1134355571590184961168';
     component.branchingLogic=BranchingLogic;
     component.updateTarget(component.questionId);
-    expect(component.updateTarget).toHaveBeenCalledWith(component.questionId)
+    expect(component.updateTarget).toHaveBeenCalledWith(component.questionId);
   });
 
   it('#getOptions() should call when child question is edited when option exits', () => {
@@ -620,14 +620,14 @@ describe('QuestionComponent', () => {
     let editorService = TestBed.get(EditorService);
     editorService.optionsLength = 4;
     component.getOptions();
-    expect(component.getOptions).toHaveBeenCalled()
+    expect(component.getOptions).toHaveBeenCalled();
   });
   it('#getOptions() should call when child question is edited when option not exits', () => {
     spyOn(component,'getOptions').and.callThrough();
     let editorService = TestBed.get(EditorService);
     editorService.optionsLength = undefined;
     component.getOptions();
-    expect(component.getOptions).toHaveBeenCalled()
+    expect(component.getOptions).toHaveBeenCalled();
   });
 
   it('#getParentQuestionOptions() should call when add dependent question clicked', () => {
@@ -650,7 +650,7 @@ describe('QuestionComponent', () => {
     component.questionId='do_1134355571590184961168';
     let data ={
       branchingLogic:BranchingLogic
-    }
+    };
     component.setCondition(data);
     expect(component.setCondition).toHaveBeenCalledWith(data);
   });
