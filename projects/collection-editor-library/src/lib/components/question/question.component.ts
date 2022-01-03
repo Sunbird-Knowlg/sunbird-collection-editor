@@ -851,7 +851,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.questionFormConfig = formvalue;
   }
   isEditable(fieldCode) {
-    if (this.creationContext.mode === 'edit') {
+    if (this.creationContext && this.creationContext.mode === 'edit') {
       return true;
     }
     /*
