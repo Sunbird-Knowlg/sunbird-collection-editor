@@ -1793,6 +1793,18 @@ export const collectionHierarchyMock = {
       shuffle: true,
       board: "CBSE",
       programId: "0b465ba0-0547-11ec-a788-ddb68ca633dd",
+      acceptedContributions: [
+        "do_11326368076523929623",
+        "do_11326368076523929635",
+      ],
+      rejectedContributions: [
+        "do_11326368076523929647",
+        "do_11326368076523929659",
+      ],
+      rejectedContributionComments: {
+        do_11326368076523929647: "test comment 1",
+        do_11326368076523929659: "test comment 2",
+      }
     },
   },
 };
@@ -1852,6 +1864,25 @@ export const leafFormConfigMock = [
     },
   }
 ];
+export const creationContextMock: any = {
+  "objectType": "question",
+  "collectionObjectType": "QuestionSet",
+  "isReadOnlyMode": true,
+  "unitIdentifier": "do_11330102570702438417",
+  "correctionComments": "",
+  "mode": "sourcingreview",
+  "editableFields": {
+    "orgreview": [
+      "name",
+      "learningOutcome"
+    ],
+    "sourcingreview": [
+      "name",
+      "learningOutcome"
+    ]
+  }
+};
+
 
 export const mockTreeService = {
   getChildren: () => {
@@ -1862,7 +1893,7 @@ export const mockTreeService = {
       data:{
         metadata:{}
       }
-     } 
+     }
   },
   getActiveNode: () => {
     return {
@@ -1889,9 +1920,14 @@ export const mockTreeService = {
   clearTreeCache :()=>{
   },
   updateNode:()=>{
-    
+
   }
 };
+
+export const mockEditorCursor = {
+    setQuestionMap: () => {},
+    clearQuestionMap : () => {}
+}
 
 
 export const childMetaData = {

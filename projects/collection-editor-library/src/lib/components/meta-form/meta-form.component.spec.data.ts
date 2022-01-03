@@ -79,6 +79,26 @@ export const mockData = {
             "placeholder": "Enter Keywords",
             "required": false,
             "validations": []
+        },
+        {
+            "code": "license",
+        },
+        /*
+        {
+            "code": "additionalCategories",
+        },
+        {
+            "code": "copyright",
+        },
+        {
+            "code": "maxQuestions",
+        },
+        */
+        {
+            "code": "author",
+        },
+        {
+            "code": "showTimer",
         }
         ]
     }

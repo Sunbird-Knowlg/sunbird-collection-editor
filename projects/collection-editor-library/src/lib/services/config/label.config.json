@@ -122,8 +122,8 @@
        "viewComments":"View Comments",
        "addReviewComments":"Add Review Comments",
        "enterYourComments":"Enter your comments",
-       "publishCollection":"Publish Collection",
-       "confirmPublishCollection":"Are you sure you want to publish this collection?",
+       "publishCollection":"Publish ${objectType}",
+       "confirmPublishCollection":"Are you sure you want to publish this ${objectType}?",
        "fillComments":"Fill comments",
        "searchLibrary":"Search Library",
        "options":"Options",
@@ -282,7 +282,8 @@
          "009": "QR code(s) updated successfully",
          "010": "QR code generated.",
          "011": "QR codes downloaded" ,
-         "012": "Collaborators updated successfully"
+         "012": "Collaborators updated successfully",
+         "013": "Question saved successfully"
       },
       "warning" : {
          "001" : "Errors found in linked QR Codes. Please check and correct.",

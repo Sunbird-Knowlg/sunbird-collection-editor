@@ -16,6 +16,7 @@ export class OptionsComponent implements OnInit {
   @Input() sourcingSettings;
   @Input() questionPrimaryCategory;
   @Input() mapping = [];
+  @Input() isReadOnlyMode;
   @Output() editorDataOutput: EventEmitter<any> = new EventEmitter<any>();
   public setCharacterLimit = 160;
   public setImageLimit = 1;
