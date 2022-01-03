@@ -101,13 +101,14 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
 
   attachDefaultValues() {
     const metaDataFields = _.get(this.nodeMetadata, 'data.metadata');
+    const isRootNode = _.get(this.nodeMetadata, 'data.root');
     // if (_.isEmpty(metaDataFields)) { return; }
-    const isRoot = _.get(metaDataFields, 'data.root');
+
     const categoryMasterList = this.frameworkDetails.frameworkData ||
-    !isRoot && this.frameworkService.selectedOrganisationFramework &&
+    !isRootNode && this.frameworkService.selectedOrganisationFramework &&
      _.get(this.frameworkService.selectedOrganisationFramework, 'framework.categories');
     // tslint:disable-next-line:max-line-length
-    let formConfig: any = (_.get(metaDataFields, 'visibility') === 'Default') ? _.cloneDeep(this.rootFormConfig) : _.cloneDeep(this.unitFormConfig);
+    let formConfig: any = (_.get(metaDataFields, 'visibility') === 'Default') || isRootNode ? _.cloneDeep(this.rootFormConfig) : _.cloneDeep(this.unitFormConfig);
     formConfig = formConfig && _.has(_.first(formConfig), 'fields') ? formConfig : [{name: '', fields: formConfig}];
     if (!_.isEmpty(this.frameworkDetails.targetFrameworks)) {
       _.forEach(this.frameworkDetails.targetFrameworks, (framework) => {
@@ -231,7 +232,7 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
           });
         }
 
-        const ifEditable = this.ifFieldIsEditable(field.code); 
+        const ifEditable = this.ifFieldIsEditable(field.code, field.editable);
         _.set(field, 'editable', ifEditable);
 
       });
@@ -243,9 +244,10 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   isReviewMode() {
     return  _.includes([ 'review', 'read', 'sourcingreview', 'orgreview' ], this.editorService.editorMode);
   }
-  ifFieldIsEditable(fieldCode) {
+  ifFieldIsEditable(fieldCode, primaryCategoryEditableConfig?) {
     const ediorMode = this.editorService.editorMode;
     if (!this.isReviewMode()) {
+      if(primaryCategoryEditableConfig === false) return false;
       return true;
     }
     const editableFields = _.get(this.editorService.editorConfig.config, 'editableFields');

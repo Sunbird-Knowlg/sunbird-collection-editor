@@ -27,6 +27,16 @@ describe('EditorService', () => {
           '011': 'File downloaded'
         },
       }
+    },
+    categoryConfig: {
+      QuestionSet: 'questionSet'
+    },
+    urlConFig: {
+      'URLS': {
+        questionSet: {
+          'SYSYTEM_UPDATE': ''
+        }
+      }
     }
   };
   beforeEach(() => {
@@ -352,4 +362,35 @@ describe('EditorService', () => {
     expect(publicDataService.post).toHaveBeenCalled();
     expect(returnValue).toBeDefined();
   });
+  it('#addResourceToQuestionset() should add question to questionSet on API success', () => {
+      const questionId = 'do_123';
+      const collectionId = 'do_11330102570702438417';
+      const unitIdentifier = 'do_11326714211239526417';
+      const publicDataService: PublicDataService = TestBed.get(PublicDataService);
+      spyOn(publicDataService, 'patch').and.returnValue(of({
+          responseCode: 'OK'
+      }));
+      editorService.addResourceToQuestionset(collectionId, unitIdentifier, questionId).subscribe(data => {
+          expect(data.responseCode).toEqual('OK');
+      });
+  });
+  it('#updateCollection() should reject question for event sourcingRejectQuestion', () => {
+      const collectionId = 'do_11330102570702438417';
+      const event = {
+        button: 'sourcingRejectQuestion',
+        requestBody: {
+          request: {
+            questionset: {}
+          }
+        }
+      };
+      const publicDataService: PublicDataService = TestBed.get(PublicDataService);
+      editorConfig.context.collectionObjectType = 'QuestionSet';
+      spyOn(publicDataService, 'patch').and.returnValue(of({
+          responseCode: 'OK'
+      }));
+      editorService.updateCollection(collectionId, event).subscribe(data => {
+          expect(data.responseCode).toEqual('OK');
+      });
+  })
 });

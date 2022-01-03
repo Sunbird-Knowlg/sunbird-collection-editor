@@ -33,6 +33,8 @@ describe('MetaFormComponent', () => {
     expect(component.setAppIconData).toHaveBeenCalled();
   });
 
+
+
   it('#onStatusChanges() should emit toolbarEmitter event', () => {
     const data = { button: 'onFormStatusChange', event: '' };
     spyOn(component.toolbarEmitter, 'emit');
@@ -60,6 +62,13 @@ describe('MetaFormComponent', () => {
     };
     component.setAppIconData();
     expect(component.appIcon).toBeDefined();
+  });
+  it('call #ifFieldIsEditable() verify returning value', () => {
+    spyOn(component, 'isReviewMode').and.returnValue(false);
+    expect(component.ifFieldIsEditable('bloomsLevel', false)).toEqual(false);
+  });
+  it('call #isReviewMode() verify returning value', () => {
+    expect(component.isReviewMode()).toEqual(false);
   });
   it('#valueChanges() should call updateNode and emit toolbarEmitter', () => {
     const data = {

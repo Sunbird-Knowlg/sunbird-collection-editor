@@ -35,7 +35,7 @@ export class QumlPlayerComponent implements OnInit {
       let childNodes = this.qumlPlayerConfig.metadata.childNodes;
       childNodes = _.filter(childNodes, (identifier) => !_.endsWith(identifier, '.img'));
       this.qumlPlayerConfig.metadata.childNodes = childNodes;
-      const allQuestions = this.editorService.getContentChildrens();
+      const allQuestions = _.get(this.qumlPlayerConfig, 'config.objectType') === 'Question' ? [] : this.editorService.getContentChildrens();
       this.qumlPlayerConfig.metadata.maxQuestions = this.qumlPlayerConfig.metadata.maxQuestions || allQuestions.length;
       if (this.isSingleQuestionPreview) {
         this.qumlPlayerConfig.context.threshold = 1;
