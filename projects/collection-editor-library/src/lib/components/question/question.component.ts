@@ -1183,8 +1183,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
   subMenuConfig() {
-    console.log('submenu called');
-    console.log(this.sourcingSettings);
     this.subMenus = [
       {
         id: 'addHint',
@@ -1214,8 +1212,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         show: _.get(this.sourcingSettings, 'showAddSecondaryQuestion') && !this.questionInput.setChildQueston
       },
     ];
-    console.log(this.questionInput);
-    console.log('submenus');
     if (!_.get(this.sourcingSettings, 'showAddSecondaryQuestion') && !this.questionInput.setChildQueston) {
       this.showOptions = false;
     } else {
