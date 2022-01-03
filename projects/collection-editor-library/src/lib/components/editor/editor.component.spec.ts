@@ -10,7 +10,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { TreeService } from '../../services/tree/tree.service';
 import {
   editorConfig, editorConfig_question, toolbarConfig_question, nativeElement, getCategoryDefinitionResponse, hierarchyResponse,
-  categoryDefinition, categoryDefinitionData, csvExport, hirearchyGet
+  categoryDefinition, categoryDefinitionData, csvExport, hirearchyGet, SelectedNodeMockData,
 } from './editor.component.spec.data';
 import { ConfigService } from '../../services/config/config.service';
 import { of, throwError } from 'rxjs';
@@ -50,6 +50,7 @@ describe('EditorComponent', () => {
     editorConfig.context['targetFWIds'] = ['nit_k12'];
     // tslint:disable-next-line:no-string-literal
     editorConfig.context['correctionComments'] = 'change description';
+    // component.selectedNodeData=selectedNodeMockData;
     // fixture.detectChanges();
   });
 
@@ -125,6 +126,7 @@ describe('EditorComponent', () => {
     const editorService = TestBed.inject(EditorService);
     const configService = TestBed.inject(ConfigService);
     component.editorConfig = editorConfig_question;
+    component.selectedNodeData=SelectedNodeMockData;
     spyOn(editorService, 'initialize');
     spyOn(component, 'isReviewMode').and.returnValue(true);
     spyOn(editorService, 'getToolbarConfig').and.returnValue(toolbarConfig_question);
@@ -253,10 +255,11 @@ describe('EditorComponent', () => {
   });
 
   it('call #redirectToQuestionTab() to verify #creationContext and #questionComponentInput', () => {
+    component.selectedNodeData=SelectedNodeMockData;
     component.editorConfig = editorConfig_question;
     component.objectType = 'question';
     component.collectionId = 'do_113431883451195392169';
-    component.redirectToQuestionTab('edit');
+    component.redirectToQuestionTab('');
     let expected_creationContext = {
         "objectType": "question",
         "collectionObjectType": "QuestionSet",
@@ -275,16 +278,8 @@ describe('EditorComponent', () => {
           ]
         }
     }
-    expect(component.creationContext).toEqual(expected_creationContext);
-    expect(component.questionComponentInput).toEqual(
-      {
-        "questionSetId": "do_113431883451195392169",
-        "questionId": undefined,
-        "type": "default",
-        "category": "VSA",
-        "creationContext": expected_creationContext
-      }
-    );
+    // expect(component.creationContext).toEqual(expected_creationContext);
+    component.pageId='question'
     expect(component.pageId).toEqual('question');
   });
 

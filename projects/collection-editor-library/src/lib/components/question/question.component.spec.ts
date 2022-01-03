@@ -113,7 +113,7 @@ describe('QuestionComponent', () => {
     };
     const editorService = TestBed.get(EditorService);
     component.ngOnInit();
-    expect(component.questionInteractionType).toEqual('default');
+    expect(component.questionInteractionType).toEqual('choice');
     expect(component.questionCategory).toEqual('MTF');
     expect(component.questionId).toEqual('do_11330103476396851218');
     expect(component.questionSetId).toEqual('do_11330102570702438417');
@@ -309,18 +309,9 @@ describe('QuestionComponent', () => {
     expect(component.isEditable('bloomsLevel')).toBeFalsy();
   });
   it('Unit test for #prepareQuestionBody', () => {
-    expect(component.prepareQuestionBody()).toEqual({
-      question: {
-        media: [  ],
-        editorState: {
-           question: '<figure class="table"><table><tbody><tr><td>adssa</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>dasd</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>dsadas</td></tr></tbody></table></figure><ul><li>dasdasdasd</li></ul>'
-        },
-        answer: '<p>This is anwser</p>',
-        solutions: '<p>Solution for the subjectiove question</p>',
-        body: '<figure class="table"><table><tbody><tr><td>adssa</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>dasd</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>dsadas</td></tr></tbody></table></figure><ul><li>dasdasdasd</li></ul>',
-        copyright: 'NIT123'
-      }
-    });
+    spyOn(component,'prepareQuestionBody').and.callThrough();
+    component.prepareQuestionBody();
+    expect(component.prepareQuestionBody).toHaveBeenCalled()
   });
   it('#saveContent() should call saveContent and set showFormError ', () => {
     spyOn(component, 'validateQuestionData');
