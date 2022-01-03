@@ -772,10 +772,6 @@ export const observationEditorConfig = {
   }
 };
 
-<<<<<<< HEAD
-
-=======
->>>>>>> upstream/sl-survey
 export const observationRubricsEditorConfig = {
   context: {
     programId: 'f72ad8b0-36df-11ec-a56f-4b503455085f',
