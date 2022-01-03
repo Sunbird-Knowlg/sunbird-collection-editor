@@ -18,6 +18,7 @@ import { DialcodeService } from '../../services/dialcode/dialcode.service';
 import { FormControl, FormGroup } from '@angular/forms';
 
 let evidenceMimeType;
+let ecm;
 
 @Component({
   selector: 'lib-editor',
@@ -250,6 +251,20 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.unitFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.unitMetadata.properties');
     // tslint:disable-next-line:max-line-length
     this.rootFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.create.properties');
+    console.log("setEditorForms");
+    console.log(this.rootFormConfig[0].fields);
+    let formData=this.rootFormConfig[0].fields;
+    formData.forEach(field => {
+      if (field.code === 'evidenceMimeType') {
+        evidenceMimeType = field.range;
+        field.options = this.setEvidence;
+        field.range = null;
+      }
+      else if (field.code === 'ecm') {
+        ecm = field.options;
+        field.options = this.setEcm;
+      }
+    });
     // tslint:disable-next-line:max-line-length
     this.libraryComponentInput.searchFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.search.properties');
     this.leafFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.childMetadata.properties');
@@ -767,7 +782,11 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
             evidenceMimeType = field.range;
             field.options = this.setEvidence;
             field.range = null;
-        }
+          }
+          else if (field.code === 'ecm') {
+            ecm = field.options;
+            field.options = this.setEcm;
+          }
         });
         this.leafFormConfig = questionCategoryConfig;
       }
@@ -823,7 +842,11 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
               evidenceMimeType = field.range;
               field.options = this.setEvidence;
               field.range = null;
-          }
+            }
+            else if (field.code === 'ecm') {
+              ecm = field.options;
+              field.options = this.setEcm;
+            }
           });
           this.leafFormConfig = questionCategoryConfig;
         }
@@ -961,6 +984,23 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
             if (!_.isEmpty(value) && _.toLower(value) === 'yes') {
                 control.isVisible = 'yes';
                 return of({range: evidenceMimeType});
+            } else {
+                control.isVisible = 'no';
+                return of(null);
+            }
+        })
+    );
+    return response;
+  }
+
+  setEcm(control, depends: FormControl[], formGroup: FormGroup, loading, loaded){
+    control.isVisible = 'no';
+    control.options = ecm;
+    const response = merge(..._.map(depends, depend => depend.valueChanges)).pipe(
+        switchMap((value: any) => {
+            if (!_.isEmpty(value) && _.toLower(value) === 'yes') {
+                control.isVisible = 'yes';
+                return of({options:ecm});
             } else {
                 control.isVisible = 'no';
                 return of(null);
