@@ -5,7 +5,7 @@ import { observationEditorConfig, observationRubricsEditorConfig, questionSetEdi
 const configMapper = {
   questionSet: questionSetEditorConfig,
   question: questionEditorConfig,
-  observation: observationEditorConfig,
+  observation: observationRubricsEditorConfig, 
   collection : collectionEditorConfig,
   course: courseEditorConfig,
   rubrics: observationRubricsEditorConfig
