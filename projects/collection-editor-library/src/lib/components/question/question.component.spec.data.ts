@@ -1793,6 +1793,18 @@ export const collectionHierarchyMock = {
       shuffle: true,
       board: "CBSE",
       programId: "0b465ba0-0547-11ec-a788-ddb68ca633dd",
+      acceptedContributions: [
+        "do_11326368076523929623",
+        "do_11326368076523929635",
+      ],
+      rejectedContributions: [
+        "do_11326368076523929647",
+        "do_11326368076523929659",
+      ],
+      rejectedContributionComments: {
+        do_11326368076523929647: "test comment 1",
+        do_11326368076523929659: "test comment 2",
+      }
     },
   },
 };
