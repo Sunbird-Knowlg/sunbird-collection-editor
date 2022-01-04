@@ -811,7 +811,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   redirectToQuestionTab(mode, interactionType?) {
 
-    let questionId = mode === 'edit' ? this.selectedNodeData.data.metadata.identifier : undefined;
+    let questionId = mode === 'edit' ? this.selectedNodeData?.data?.metadata?.identifier : undefined;
     let questionCategory = '';
 
     if(this.objectType === 'question') {
