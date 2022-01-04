@@ -1087,7 +1087,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   setAllowEcm(control, depends: FormControl[], formGroup: FormGroup, loading, loaded){
-    console.log(control);
     control.isVisible = 'no';
     const response = merge(..._.map(depends, depend => depend.valueChanges)).pipe(
         switchMap((value: any) => {

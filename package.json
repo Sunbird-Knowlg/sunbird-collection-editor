@@ -10,7 +10,7 @@
     "e2e": "ng e2e",
     "build-lib": "ng build collection-editor-library && node assets-copy.js",
     "build-lib:prod": " ng build collection-editor-library --prod=true && node assets-copy.js",
-    "test-coverage": "ng test collection-editor-library --code-coverage=true --watch=true --sourceMap=false --browsers=ChromeHeadless"
+    "test-coverage": "ng test collection-editor-library --code-coverage=true --watch=false --sourceMap=false --browsers=ChromeHeadless"
   },
   "private": true,
   "dependencies": {
@@ -33,7 +33,7 @@
     "@types/jquery": "^3.5.5",
     "alphanum-sort": "^1.0.2",
     "angular2-uuid": "^1.1.1",
-    "common-form-elements-web-v9": "^4.6.2",
+    "common-form-elements-web-v9": "4.6.2",
     "core-js": "^2.5.4",
     "epubjs": "0.3.88",
     "export-to-csv": "^0.2.1",
