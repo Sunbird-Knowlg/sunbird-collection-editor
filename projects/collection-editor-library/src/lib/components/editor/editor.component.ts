@@ -296,6 +296,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         field.options = this.setEvidence;
         field.range = null;
       }
+      else if(field.code === 'allowECM'){
+        field.options = this.setAllowEcm;
+      }
       else if (field.code === 'ecm') {
         ecm = field.options;
         field.options = this.setEcm;
@@ -1098,6 +1101,23 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
                 control.isVisible = 'no';
                 return of(null);
             }
+        })
+    );
+    return response;
+  }
+
+  setAllowEcm(control, depends: FormControl[], formGroup: FormGroup, loading, loaded){
+    control.isVisible = 'no';
+    const response = merge(..._.map(depends, depend => depend.valueChanges)).pipe(
+        switchMap((value: any) => {
+             if (!_.isEmpty(value) && _.toLower(value) === 'self' ){
+                control.isVisible = 'no';
+                return of(null)
+             }
+             else{
+                control.isVisible = 'yes'; 
+                return of(null)
+             }
         })
     );
     return response;
