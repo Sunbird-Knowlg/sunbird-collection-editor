@@ -830,12 +830,12 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     this.questionComponentInput = {
+      ...this.questionComponentInput,
       questionSetId: this.collectionId,
       questionId: questionId,
       type: interactionType,
       category: questionCategory,
       creationContext: this.creationContext, // Pass the creation context to the question-component
-      ...this.questionComponentInput
     };
     this.pageId = 'question';
   }
