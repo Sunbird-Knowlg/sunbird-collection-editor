@@ -11,7 +11,7 @@ import { HelperService } from '../../services/helper/helper.service';
 import { IEditorConfig } from '../../interfaces/editor';
 import { ICreationContext } from '../../interfaces/CreationContext';
 import { Router } from '@angular/router';
-import { catchError, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { catchError, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { Observable, throwError, forkJoin, Subscription, Subject, merge, of } from 'rxjs';
 import * as _ from 'lodash-es';
 import { ConfigService } from '../../services/config/config.service';
@@ -87,6 +87,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public sourcingSettings: any;
   setChildQuestion: any;
   public unsubscribe$ = new Subject<void>();
+  onComponentDestroy$ = new Subject<any>();
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
               private toasterService: ToasterService, private dialcodeService: DialcodeService,
@@ -358,12 +359,26 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
     this.editorConfig.config = _.assign(this.editorConfig.config, hierarchyConfig);
-    if (this.editorConfig.config.primaryCategory === 'Observation With Rubrics') {
-      const orgFrameworkData = _.get(this.frameworkService.organisationFrameworkData, 'categories');
-      const categoryInstanceData = _.find(orgFrameworkData, {code: _.get(this.editorConfig, 'config.categoryInstance')});
-      this.collectionTreeNodes.data.children = _.get(categoryInstanceData, 'terms');
+    if (_.get(this.editorConfig, 'config.renderTaxonomy') === true && _.isEmpty(_.get(this.collectionTreeNodes, 'data.children'))) {
+      this.fetchFrameWorkDetails();
+    } else {
+      this.ishierarchyConfigSet = true;
     }
-    this.ishierarchyConfigSet = true;
+  }
+
+  fetchFrameWorkDetails() {
+    this.frameworkService.frameworkData$.pipe(
+      takeUntil(this.onComponentDestroy$),
+      filter(data => _.get(data, `frameworkdata.${this.frameworkService.organisationFramework}`)),
+      take(1)
+    ).subscribe((frameworkDetails: any) => {
+      if (frameworkDetails && !frameworkDetails.err) {
+        const orgFrameworkData = _.get(frameworkDetails, `frameworkdata.${this.frameworkService.organisationFramework}.categories`);
+        const categoryInstanceData = _.find(orgFrameworkData, {code: _.get(this.editorConfig, 'config.categoryInstance')});
+        this.collectionTreeNodes.data.children = _.get(categoryInstanceData, 'terms');
+        this.ishierarchyConfigSet = true;
+      }
+    });
   }
 
   getHierarchyChildrenConfig(childrenData) {
