@@ -591,3 +591,292 @@ export const editorConfig = {
       "contentPolicyUrl": "/term-of-use.html"
   }
 }
+
+export const TargetNodeMockData = {
+  data: {
+    id: "do_1134355574936780801170",
+    primaryCategory: "Date",
+    objectType: "Question",
+    metadata: {
+      parent: "do_1134347209749299201119",
+      code: "6ce6f7de-c4e6-89a1-1ddc-3889140601cd",
+      subject: ["Mathematics"],
+      channel: "01309282781705830427",
+      language: ["English"],
+      medium: ["English"],
+      mimeType: "application/vnd.sunbird.question",
+      createdOn: "2021-12-21T10:31:41.865+0000",
+      objectType: "Question",
+      gradeLevel: ["Class 4"],
+      primaryCategory: "Date",
+      contentDisposition: "inline",
+      lastUpdatedOn: "2021-12-21T10:35:09.785+0000",
+      contentEncoding: "gzip",
+      showSolutions: "No",
+      allowAnonymousAccess: "Yes",
+      identifier: "do_1134355574936780801170",
+      lastStatusChangedOn: "2021-12-21T10:31:41.865+0000",
+      visibility: "Parent",
+      showTimer: "No",
+      author: "check1@yopmail.com",
+      index: 4,
+      languageCode: ["en"],
+      version: 1,
+      versionKey: "1640082909792",
+      showFeedback: "No",
+      license: "CC BY 4.0",
+      interactionTypes: ["date"],
+      framework: "ekstep_ncert_k-12",
+      depth: 2,
+      createdBy: "5a587cc1-e018-4859-a0a8-e842650b9d64",
+      compatibilityLevel: 4,
+      name: "Dep Date 3",
+      topic: ["Forest"],
+      board: "CBSE",
+      status: "Draft",
+    },
+    root: false,
+  },
+  folder: false,
+  parent: {
+    data: {
+      id: "do_1134347209749299201119",
+      primaryCategory: "Observation",
+      objectType: "QuestionSet",
+      metadata: {
+        parent: "do_1133610108714352641210",
+        code: "2c902f1b-6338-ba1e-d64f-3117f6d88493",
+        allowScoring: "No",
+        allowSkip: "Yes",
+        containsUserData: "No",
+        channel: "01309282781705830427",
+        branchingLogic: {
+          do_1134355569264885761166: {
+            target: ["do_1134355571590184961168", "do_1134355574936780801170"],
+            preCondition: {},
+            source: [],
+          },
+          do_1134355571590184961168: {
+            target: [],
+            source: ["do_1134355569264885761166"],
+            preCondition: {
+              and: [
+                {
+                  ne: [
+                    {
+                      var: "do_1134355569264885761166.response1.value",
+                      type: "responseDeclaration",
+                    },
+                    [0],
+                  ],
+                },
+              ],
+            },
+          },
+          do_1134355574936780801170: {
+            target: [],
+            source: ["do_1134355569264885761166"],
+            preCondition: {
+              and: [
+                {
+                  eq: [
+                    {
+                      var: "do_1134355569264885761166.response1.value",
+                      type: "responseDeclaration",
+                    },
+                    [1],
+                  ],
+                },
+              ],
+            },
+          },
+        },
+        language: ["English"],
+        mimeType: "application/vnd.sunbird.questionset",
+        showHints: "No",
+        createdOn: "2021-12-20T06:09:47.760+0000",
+        objectType: "QuestionSet",
+        allowMultipleInstances: "No",
+        primaryCategory: "Observation",
+        contentDisposition: "inline",
+        lastUpdatedOn: "2021-12-21T11:36:53.490+0000",
+        contentEncoding: "gzip",
+        showSolutions: "No",
+        allowAnonymousAccess: "Yes",
+        identifier: "do_1134347209749299201119",
+        lastStatusChangedOn: "2021-12-20T06:09:47.760+0000",
+        requiresSubmit: "No",
+        visibility: "Parent",
+        showTimer: "No",
+        index: 2,
+        setType: "materialised",
+        languageCode: ["en"],
+        version: 1,
+        versionKey: "1639980587760",
+        showFeedback: "No",
+        license: "CC BY 4.0",
+        depth: 1,
+        compatibilityLevel: 5,
+        name: "Mid-day Meals",
+        navigationMode: "non-linear",
+        allowBranching: "Yes",
+        shuffle: true,
+        attributions: [],
+        status: "Draft",
+        instances: null,
+      },
+    },
+  },
+  root: false,
+  getLevel: () => 3,
+};
+
+export const CurrentNodeMockData = {
+  hitMode: "after",
+  otherNode: {
+    data: {
+      id: "do_1134347235008512001125",
+      primaryCategory: "Multiselect Multiple Choice Question",
+      objectType: "Question",
+      metadata: {
+        parent: "do_1134355577791283201172",
+        code: "77e21fd6-9d5c-f351-d9da-7fc922bc1739",
+        subject: ["Mathematics"],
+        showRemarks: "No",
+        channel: "01309282781705830427",
+        language: ["English"],
+        medium: ["English"],
+        mimeType: "application/vnd.sunbird.question",
+        templateId: "mcq-vertical",
+        createdOn: "2021-12-20T06:14:56.100+0000",
+        objectType: "Question",
+        gradeLevel: ["Class 4"],
+        primaryCategory: "Multiselect Multiple Choice Question",
+        contentDisposition: "inline",
+        lastUpdatedOn: "2021-12-21T10:28:47.124+0000",
+        contentEncoding: "gzip",
+        showSolutions: "No",
+        allowAnonymousAccess: "Yes",
+        identifier: "do_1134347235008512001125",
+        lastStatusChangedOn: "2021-12-20T06:14:56.100+0000",
+        visibility: "Parent",
+        showTimer: "No",
+        author: "check1@yopmail.com",
+        index: 1,
+        qType: "MCQ",
+        languageCode: ["en"],
+        version: 1,
+        versionKey: "1640082527132",
+        showFeedback: "No",
+        license: "CC BY 4.0",
+        interactionTypes: ["choice"],
+        framework: "ekstep_ncert_k-12",
+        depth: 2,
+        createdBy: "5a587cc1-e018-4859-a0a8-e842650b9d64",
+        compatibilityLevel: 4,
+        name: "MCQ Question 2",
+        topic: ["Forest"],
+        board: "CBSE",
+        status: "Draft",
+        showEvidence: "No",
+      },
+    },
+    parent: {
+      data: {
+        id: "do_1134355577791283201172",
+        primaryCategory: "Observation",
+        objectType: "QuestionSet",
+        metadata: {
+          parent: "do_1133610108714352641210",
+          code: "4505fec1-8a2c-8e85-f340-7245734aaa35",
+          allowScoring: "No",
+          allowSkip: "Yes",
+          containsUserData: "No",
+          channel: "01309282781705830427",
+          branchingLogic: {},
+          language: ["English"],
+          mimeType: "application/vnd.sunbird.questionset",
+          showHints: "No",
+          createdOn: "2021-12-21T10:32:16.710+0000",
+          objectType: "QuestionSet",
+          allowMultipleInstances: "No",
+          primaryCategory: "Observation",
+          contentDisposition: "inline",
+          lastUpdatedOn: "2021-12-21T10:58:24.169+0000",
+          contentEncoding: "gzip",
+          showSolutions: "No",
+          allowAnonymousAccess: "Yes",
+          identifier: "do_1134355577791283201172",
+          lastStatusChangedOn: "2021-12-21T10:32:16.710+0000",
+          requiresSubmit: "No",
+          visibility: "Parent",
+          showTimer: "No",
+          index: 3,
+          setType: "materialised",
+          languageCode: ["en"],
+          version: 1,
+          versionKey: "1640082736710",
+          showFeedback: "No",
+          license: "CC BY 4.0",
+          depth: 1,
+          compatibilityLevel: 5,
+          name: "School Transport",
+          navigationMode: "non-linear",
+          allowBranching: "Yes",
+          shuffle: true,
+          attributions: [],
+          status: "Draft",
+          instances: null,
+        },
+        root: false,
+      },
+    },
+  },
+  root: false,
+};
+
+export const mockTreeService = {
+  getChildren: () => {
+    return ["do_11330103476396851218", "do_233"];
+  },
+  getFirstChild:()=>{
+     return {
+      data:{
+        metadata:{}
+      }
+     }
+  },
+  getActiveNode: () => {
+    return {
+      data: {
+        id: "do_11330103476396851218",
+      },
+      getParent: () => {
+        return {
+          getChildren: () => {
+            return [
+              {
+                data: {
+                  id: "do_11330103476396851218",
+                },
+              },
+            ];
+          },
+        };
+      },
+    };
+  },
+  getNodeById :() =>{
+    return{
+    moveTo:null
+    }
+  },
+  clearTreeCache :()=>{
+  },
+  updateNode:()=>{
+
+  },
+  updateTreeNodeMetadata:()=>{
+    return{}
+  }
+};

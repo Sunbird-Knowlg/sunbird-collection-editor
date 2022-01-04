@@ -5,7 +5,8 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA, ChangeDetectorRef } from '@angular/core';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
-import { mockData, config, treeData, tree, editorConfig } from './fancy-tree.component.spec.data';
+import { config, treeData, tree, editorConfig, TargetNodeMockData,
+  CurrentNodeMockData, mockTreeService, mockData } from './fancy-tree.component.spec.data';
 import { Router } from '@angular/router';
 import { TreeService } from '../../services/tree/tree.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
@@ -14,18 +15,19 @@ import { SuiModule } from 'ng2-semantic-ui-v9';
 describe('FancyTreeComponent', () => {
   let component: FancyTreeComponent;
   let fixture: ComponentFixture<FancyTreeComponent>;
-
+  let editorService;
   class RouterStub {
     navigate = jasmine.createSpy('navigate');
   }
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      providers: [EditorTelemetryService, TreeService, EditorService,
+      providers: [EditorTelemetryService, EditorService,
           { provide: Router, useClass: RouterStub }, ToasterService,
           { provide: ConfigService, useValue: config },
-          { provide: ChangeDetectorRef, useValue: { detectChanges: ()=>{} } }
-      ],
+          { provide: TreeService, useValue: mockTreeService },
+          { provide: ChangeDetectorRef, useValue: { detectChanges: () => {} } }
+        ],
       imports: [HttpClientTestingModule, SuiModule],
       declarations: [ FancyTreeComponent, TelemetryInteractDirective ],
       schemas: [NO_ERRORS_SCHEMA]
@@ -35,6 +37,7 @@ describe('FancyTreeComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(FancyTreeComponent);
+    editorService = TestBed.get(EditorService);
     component = fixture.componentInstance;
     // fixture.detectChanges();
   });
@@ -352,10 +355,41 @@ describe('FancyTreeComponent', () => {
 
   it ('#dropNode() should drop node', () => {
     component.config =  editorConfig.config;
+    spyOn(component, 'dropNode').and.callFake(() => {
+      return true;
+    });
     const targetNode = { folder: false, getLevel: () => 2 };
-    const contentNode: any = { hitMode: 'before', otherNode: { getLevel: () => 1, moveTo: () => true }, node: { data: { root: false } }};
-    const result = component.dropNode(targetNode, contentNode);
+    const contentNode: any = { hitMode: 'after', otherNode: { data:{id:"do_11330103476396851218"},getLevel: () => 1, moveTo: () => true }, node: { data: { root: false } }};
+    component.dropNode(targetNode, contentNode);
+    const result = component.dragDrop(targetNode, contentNode);
+
+    spyOn(editorService, 'getDependentNodes').and.returnValue({
+      "source": [],
+      "target": [
+          "do_1134347722012835841130",
+          "do_1134355563320688641163"
+      ]
+  });
     expect(result).toBeTruthy();
   });
+
+  it("#rearrangeBranchingLogic on the node drag and drop on tree structure",()=>{
+    const currentSectionId='do_1134355577791283201172';
+    const nodeId ='do_1134347235008512001125';
+    const targetSectionId='do_1134347209749299201119';
+    const dependentNodeIDs ={
+      "source": [],
+      "target": [
+          "do_1134347722012835841130",
+          "do_1134355563320688641163"
+      ]
+  };
+    const movingNodeIds= ['do_1134347722012835841130', 'do_1134355563320688641163', 'do_1134347235008512001125'];
+    spyOn(component,"rearrangeBranchingLogic").and.callThrough();
+    component.rearrangeBranchingLogic(nodeId, currentSectionId, targetSectionId, dependentNodeIDs, movingNodeIds);
+    expect(component.rearrangeBranchingLogic).toHaveBeenCalled();
+
+  })
+
 
 });

@@ -11,11 +11,16 @@ import { HelperService } from '../../services/helper/helper.service';
 import { IEditorConfig } from '../../interfaces/editor';
 import { ICreationContext } from '../../interfaces/CreationContext';
 import { Router } from '@angular/router';
-import { catchError, map, takeUntil, tap } from 'rxjs/operators';
-import { Observable, throwError, forkJoin, Subscription, Subject } from 'rxjs';
+import { catchError, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { Observable, throwError, forkJoin, Subscription, Subject, merge, of } from 'rxjs';
 import * as _ from 'lodash-es';
 import { ConfigService } from '../../services/config/config.service';
 import { DialcodeService } from '../../services/dialcode/dialcode.service';
+import { FormControl, FormGroup } from '@angular/forms';
+
+let evidenceMimeType;
+let ecm;
+
 @Component({
   selector: 'lib-editor',
   templateUrl: './editor.component.html',
@@ -79,7 +84,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public publishchecklist: any;
   public isComponenetInitialized = false;
   public unSubscribeShowLibraryPageEmitter: Subscription;
+  public sourcingSettings: any;
+  setChildQuestion: any;
   public unsubscribe$ = new Subject<void>();
+  onComponentDestroy$ = new Subject<any>();
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
               private toasterService: ToasterService, private dialcodeService: DialcodeService,
@@ -265,6 +273,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           this.frameworkService.frameworkValues = _.concat(_.map(_.get(response, 'result.Framework'), framework => {
             return { label: framework.name, identifier: framework.identifier };
           }));
+          console.log("leafconfig");
+          console.log(categoryDefinitionData);
           this.setEditorForms(categoryDefinitionData);
         }, error => {
           console.log('error', error);
@@ -277,9 +287,27 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.unitFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.unitMetadata.properties');
     // tslint:disable-next-line:max-line-length
     this.rootFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.create.properties');
+    console.log("setEditorForms");
+    console.log(this.rootFormConfig[0].fields);
+    let formData=this.rootFormConfig[0].fields;
+    formData.forEach(field => {
+      if (field.code === 'evidenceMimeType') {
+        evidenceMimeType = field.range;
+        field.options = this.setEvidence;
+        field.range = null;
+      }
+      else if(field.code === 'allowECM'){
+        field.options = this.setAllowEcm;
+      }
+      else if (field.code === 'ecm') {
+        ecm = field.options;
+        field.options = this.setEcm;
+      }
+    });
     // tslint:disable-next-line:max-line-length
     this.libraryComponentInput.searchFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.search.properties');
     this.leafFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.childMetadata.properties');
+
   }
 
   ngAfterViewInit() {
@@ -328,13 +356,32 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       if (!_.isEmpty(hierarchyConfig.hierarchy)) {
         _.forEach(hierarchyConfig.hierarchy, (hierarchyValue) => {
           if (_.get(hierarchyValue, 'children')) {
-            hierarchyValue['children'] = this.getHierarchyChildrenConfig(_.get(hierarchyValue, 'children'));
+            hierarchyValue.children = this.getHierarchyChildrenConfig(_.get(hierarchyValue, 'children'));
           }
         });
       }
     }
-    this.ishierarchyConfigSet = true;
     this.editorConfig.config = _.assign(this.editorConfig.config, hierarchyConfig);
+    if (_.get(this.editorConfig, 'config.renderTaxonomy') === true && _.isEmpty(_.get(this.collectionTreeNodes, 'data.children'))) {
+      this.fetchFrameWorkDetails();
+    } else {
+      this.ishierarchyConfigSet = true;
+    }
+  }
+
+  fetchFrameWorkDetails() {
+    this.frameworkService.frameworkData$.pipe(
+      takeUntil(this.onComponentDestroy$),
+      filter(data => _.get(data, `frameworkdata.${this.frameworkService.organisationFramework}`)),
+      take(1)
+    ).subscribe((frameworkDetails: any) => {
+      if (frameworkDetails && !frameworkDetails.err) {
+        const orgFrameworkData = _.get(frameworkDetails, `frameworkdata.${this.frameworkService.organisationFramework}.categories`);
+        const categoryInstanceData = _.find(orgFrameworkData, {code: _.get(this.editorConfig, 'config.categoryInstance')});
+        this.collectionTreeNodes.data.children = _.get(categoryInstanceData, 'terms');
+        this.ishierarchyConfigSet = true;
+      }
+    });
   }
 
   getHierarchyChildrenConfig(childrenData) {
@@ -710,8 +757,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.showDeleteConfirmationPopUp = true;
         break;
       case 'createNewContent':
+        this.setChildQuestion = event.isChildQuestion;
         if (this.editorService.checkIfContentsCanbeAdded()) {
           this.buttonLoaders.addFromLibraryButtonLoader = true;
+          this.templateList=this.editorService.templateList;
           this.saveContent().then((message: string) => {
             this.buttonLoaders.addFromLibraryButtonLoader = false;
             this.showQuestionTemplatePopup = true;
@@ -734,6 +783,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         _.get(this.editorService.editorConfig.config, `hierarchy.level${this.selectedNodeData.getLevel() - 1}.children`)
       );
     }
+    this.editorService.templateList=this.templateList;
   }
 
   deleteNode() {
@@ -786,7 +836,27 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       return throwError(this.editorService.apiErrorHandling(error, errInfo));
     })).subscribe((res) => {
       const selectedtemplateDetails = res.result.objectCategoryDefinition;
+      this.editorService.selectedChildren['label']=selectedtemplateDetails.label;
+      console.log('form read');
+      console.log(selectedtemplateDetails);
+      const selectedTemplateFormFields = _.get(selectedtemplateDetails, 'forms.create.properties');
+      if (!_.isEmpty(selectedTemplateFormFields)) {
+        const questionCategoryConfig = selectedTemplateFormFields;
+        questionCategoryConfig.forEach(field => {
+          if (field.code === 'evidenceMimeType') {
+            evidenceMimeType = field.range;
+            field.options = this.setEvidence;
+            field.range = null;
+          }
+          else if (field.code === 'ecm') {
+            ecm = field.options;
+            field.options = this.setEcm;
+          }
+        });
+        this.leafFormConfig = questionCategoryConfig;
+      }
       const catMetaData = selectedtemplateDetails.objectMetadata;
+      this.sourcingSettings = catMetaData.config.sourcingSettings;
       if (_.isEmpty(_.get(catMetaData, 'schema.properties.interactionTypes.items.enum'))) {
         // this.toasterService.error(this.resourceService.messages.emsg.m0026);
         this.editorService.selectedChildren = {
@@ -830,16 +900,59 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.questionComponentInput = {
       questionSetId: this.collectionId,
-      questionId: questionId,
+      questionId: mode === 'edit' ? this.selectedNodeData.data.metadata.identifier : questionId,
       type: interactionType,
+      setChildQueston:mode === 'edit' ? false : this.setChildQuestion,
       category: questionCategory,
       creationContext: this.creationContext, // Pass the creation context to the question-component
       ...this.questionComponentInput
     };
+
+    if(mode === 'edit'){
+      this.editorService.selectedChildren = {
+        primaryCategory: this.selectedNodeData.data.metadata.primaryCategory,
+        interactionType: this.selectedNodeData.data.metadata.interactionTypes[0]
+      };
+      this.editorService.getCategoryDefinition(this.selectedNodeData.data.metadata.primaryCategory, null, 'Question').pipe(catchError(error => {
+        const errInfo = {
+          errorMsg: _.get(this.configService, 'labelConfig.messages.error.006'),
+        };
+        return throwError(this.editorService.apiErrorHandling(error, errInfo));
+      })).subscribe((res) => {
+        const selectedtemplateDetails = res.result.objectCategoryDefinition;
+        this.editorService.selectedChildren['label']=selectedtemplateDetails.label;
+        console.log('form read');
+        console.log(selectedtemplateDetails);
+        const selectedTemplateFormFields = _.get(selectedtemplateDetails, 'forms.create.properties');
+        if (!_.isEmpty(selectedTemplateFormFields)) {
+          const questionCategoryConfig = selectedTemplateFormFields;
+          questionCategoryConfig.forEach(field => {
+            if (field.code === 'evidenceMimeType') {
+              evidenceMimeType = field.range;
+              field.options = this.setEvidence;
+              field.range = null;
+            }
+            else if (field.code === 'ecm') {
+              ecm = field.options;
+              field.options = this.setEcm;
+            }
+          });
+          this.leafFormConfig = questionCategoryConfig;
+        }
+        const catMetaData = selectedtemplateDetails.objectMetadata;
+        this.sourcingSettings = catMetaData.config.sourcingSettings;
+        this.pageId = 'question';
+      });
+    }
+    else{
     this.pageId = 'question';
+    }
   }
 
   questionEventListener(event: any) {
+    if (event.type === 'createNewContent') {
+      this.treeEventListener(event)
+    }
     this.selectedNodeData = undefined;
     if(this.objectType === 'question') {
       this.editorEmitter.emit({
@@ -957,4 +1070,57 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
+
+
+  setEvidence(control, depends: FormControl[], formGroup: FormGroup, loading, loaded) {
+    control.isVisible = 'no';
+    control.range = evidenceMimeType;
+    const response = merge(..._.map(depends, depend => depend.valueChanges)).pipe(
+        switchMap((value: any) => {
+            if (!_.isEmpty(value) && _.toLower(value) === 'yes') {
+                control.isVisible = 'yes';
+                return of({range: evidenceMimeType});
+            } else {
+                control.isVisible = 'no';
+                return of(null);
+            }
+        })
+    );
+    return response;
+  }
+
+  setEcm(control, depends: FormControl[], formGroup: FormGroup, loading, loaded){
+    control.isVisible = 'no';
+    control.options = ecm;
+    const response = merge(..._.map(depends, depend => depend.valueChanges)).pipe(
+        switchMap((value: any) => {
+            if (!_.isEmpty(value) && _.toLower(value) === 'yes') {
+                control.isVisible = 'yes';
+                return of({options:ecm});
+            } else {
+                control.isVisible = 'no';
+                return of(null);
+            }
+        })
+    );
+    return response;
+  }
+
+  setAllowEcm(control, depends: FormControl[], formGroup: FormGroup, loading, loaded){
+    control.isVisible = 'no';
+    const response = merge(..._.map(depends, depend => depend.valueChanges)).pipe(
+        switchMap((value: any) => {
+             if (!_.isEmpty(value) && _.toLower(value) === 'self' ){
+                control.isVisible = 'no';
+                return of(null)
+             }
+             else{
+                control.isVisible = 'yes'; 
+                return of(null)
+             }
+        })
+    );
+    return response;
+  }
+
 }

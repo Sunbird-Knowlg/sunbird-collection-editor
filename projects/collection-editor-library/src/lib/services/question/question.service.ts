@@ -31,16 +31,27 @@ export class QuestionService {
     return this.publicDataService.get(option);
   }
 
-  upsertQuestion(questionId, questionBody) {  
-    let mode = questionId ? 'UPDATE' : 'CREATE';  
+  upsertQuestion(questionId, questionBody) {
+    let mode = questionId ? 'UPDATE' : 'CREATE';
     const req = {
       url: `${this.configService.urlConFig.URLS[this.editorService.editorConfig.config.objectType][mode]}${mode === 'UPDATE' ? questionId : ''}`,
       data: {
         request: questionBody
       }
     }
-    return mode === 'UPDATE' ? this.publicDataService.patch(req) 
-      : this.publicDataService.post(req); 
+    return mode === 'UPDATE' ? this.publicDataService.patch(req)
+      : this.publicDataService.post(req);
+  }
+
+  updateQuestion(questionId, requestObj) {
+    const objectType = _.get(this.editorService.editorConfig, 'config.objectType');
+    const req = {
+      url: `${this.configService.urlConFig.URLS[objectType].SYSYTEM_UPDATE}${questionId}`,
+      data: {
+        request: requestObj
+      }
+    };
+    return this.publicDataService.patch(req);
   }
 
   updateHierarchyQuestionCreate(hierarchyBody): Observable<ServerResponse> {

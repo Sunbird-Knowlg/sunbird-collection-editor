@@ -17,7 +17,8 @@
       "UPDATE": "question/v1/update/",
       "CONTENT_REVIEW" : "question/v1/review/",
       "CONTENT_REJECT": "question/v1/reject/",
-      "CONTENT_PUBLISH": "question/v1/publish/"
+      "CONTENT_PUBLISH": "question/v1/publish/",
+      "SYSYTEM_UPDATE": "system/v4/question/update/"
     },
     "Collection": {
       "HIERARCHY_READ": "content/v3/hierarchy",
@@ -38,7 +39,7 @@
     },
     "ContentPolicyUrl" : "/term-of-use.html",
     "assetProxyUrl": "/assets/public/",
-    "getCategoryDefinition": "object/category/definition/v1/read?fields=objectMetadata,forms,name",
+    "getCategoryDefinition": "object/category/definition/v1/read?fields=objectMetadata,forms,name,label",
     "CONTENT": {
     "HIERARCHY_ADD":"content/v3/hierarchy/add",
     "READ":"content/v3/read/",
