@@ -19,6 +19,8 @@ export class HelperService {
   // tslint:disable-next-line:variable-name
   private _channelData$ = new BehaviorSubject<any>(undefined);
 
+  public treeDepth = 0;
+
   public readonly channelData$: Observable<any> = this._channelData$
   .asObservable().pipe(skipWhile(data => data === undefined || data === null));
 
@@ -147,5 +149,20 @@ export class HelperService {
       }
     };
     return this.publicDataService.patch(req);
+  }
+
+  addDepthToHierarchy(arr, depth = 0, index = 0) {
+    if (arr && index < arr.length) {
+      _.forEach(arr, child => {
+        child.depth = depth;
+        if (depth > this.treeDepth) { this.treeDepth = depth; }
+        if (_.get(child, 'children.length')) {
+          return this.addDepthToHierarchy(child.children, depth + 1, 0);
+        }
+        return this.addDepthToHierarchy(child, depth, index + 1);
+
+      });
+    }
+    return;
   }
 }
