@@ -295,11 +295,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         evidenceMimeType = field.range;
         field.options = this.setEvidence;
         field.range = null;
-      }
-      else if(field.code === 'allowECM'){
+      } else if (field.code === 'allowECM') {
         field.options = this.setAllowEcm;
-      }
-      else if (field.code === 'ecm') {
+      } else if (field.code === 'ecm') {
         ecm = field.options;
         field.options = this.setEcm;
       }
@@ -1115,12 +1113,11 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
                 return of(null)
              }
              else{
-                control.isVisible = 'yes'; 
+                control.isVisible = 'yes';
                 return of(null)
              }
         })
     );
     return response;
   }
-
 }
