@@ -149,7 +149,8 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         primaryCategory: _.get(this.editorService, 'editorConfig.config.primaryCategory'),
         objectType: _.get(this.editorService, 'editorConfig.config.objectType'),
         metadata: {
-          name: child.name
+          name: child.name,
+          mimeType: "application/vnd.sunbird.questionset"
         },
         folder: true,
         children: childTree,
@@ -211,6 +212,15 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.dialcodeService.readExistingQrCode();
       this.treeService.nextTreeStatus('loaded');
       this.showTree = true;
+      if (_.get(this.editorService, 'editorConfig.config.renderTaxonomy') === true && _.isEmpty(_.get(this.editorService.collectionTreeNodes, 'data.children'))) {
+        console.log(this.rootNode);
+        _.forEach(this.rootNode[0]?.children, (child) => {
+            this.treeService.updateTreeNodeMetadata(child.metadata, child.id, child.primaryCategory,child.objectType);
+            _.forEach(child.children, (el) => {
+              this.treeService.updateTreeNodeMetadata(el.metadata, el.id, el.primaryCategory,el.objectType);
+            });
+        });
+      }
     });
   }
 

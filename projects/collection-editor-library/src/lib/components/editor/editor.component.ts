@@ -347,10 +347,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     let hierarchyConfig;
     if (_.get(primaryCatConfig, 'result.objectCategoryDefinition.objectMetadata.config')) {
       hierarchyConfig = _.get(primaryCatConfig, 'result.objectCategoryDefinition.objectMetadata.config.sourcingSettings.collection');
-      if (!_.isEmpty(hierarchyConfig.children)) {
+      if (!_.isEmpty(hierarchyConfig?.children)) {
         hierarchyConfig.children = this.getHierarchyChildrenConfig(hierarchyConfig.children);
       }
-      if (!_.isEmpty(hierarchyConfig.hierarchy)) {
+      if (!_.isEmpty(hierarchyConfig?.hierarchy)) {
         _.forEach(hierarchyConfig.hierarchy, (hierarchyValue) => {
           if (_.get(hierarchyValue, 'children')) {
             hierarchyValue.children = this.getHierarchyChildrenConfig(_.get(hierarchyValue, 'children'));
@@ -359,6 +359,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
     this.editorConfig.config = _.assign(this.editorConfig.config, hierarchyConfig);
+    this.editorService.collectionTreeNodes=this.collectionTreeNodes;
     if (_.get(this.editorConfig, 'config.renderTaxonomy') === true && _.isEmpty(_.get(this.collectionTreeNodes, 'data.children'))) {
       this.fetchFrameWorkDetails();
     } else {
@@ -580,6 +581,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   validateFormStatus() {
+    console.log(this.formStatusMapper);
     const isValid = _.every(this.formStatusMapper, Boolean);
     if (isValid) { return true; }
     _.forIn(this.formStatusMapper, (value, key) => {
@@ -1102,4 +1104,23 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     );
     return response;
   }
+
+  setAllowEcm(control, depends: FormControl[], formGroup: FormGroup, loading, loaded){
+    control.isVisible = 'no';
+    const response = merge(..._.map(depends, depend => depend.valueChanges)).pipe(
+        switchMap((value: any) => {
+             console.log(value);
+             if (!_.isEmpty(value) && _.toLower(value) === 'self' ){
+                control.isVisible = 'no';
+                return of(null)
+             }
+             else{
+                control.isVisible = 'yes'; 
+                return of(null)
+             }
+        })
+    );
+    return response;
+  }
+
 }
