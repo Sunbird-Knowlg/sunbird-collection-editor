@@ -777,10 +777,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     return {
       nodesModified: {
         [questionId]: {
-          metadata: metaData,
+          metadata: _.omit(this.getQuestionMetadata(), ['creator']),
           objectType: 'Question',
           root: false,
-          isNew: this.questionId ? false : true
+          isNew: !this.questionId
         }
       },
       hierarchy: this.editorService._toFlatObj(data, questionId, selectedUnitId)
@@ -881,7 +881,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         code: UUID.UUID(),
         ...this.getQuestionMetadata()
       }
-    }
+    };
     return requestBody;
   }
 
@@ -1111,7 +1111,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   isEditable(fieldCode) {
-    if (this.creationContext.mode === 'edit') {
+    if (this.creationContext && this.creationContext.mode === 'edit') {
+      return true;
+    }
+    if (!this.questionId) {
       return true;
     }
     /*
@@ -1126,7 +1129,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   populateFormData() {
     this.childFormData = {};
     _.forEach(this.questionFormConfig, (formFieldCategory) => {
-      formFieldCategory.editable = this.isEditable(formFieldCategory.code);
+      formFieldCategory.editable = formFieldCategory.editable ? this.isEditable(formFieldCategory.code) : false;
       if (!_.isUndefined(this.questionId)) {
         if (this.questionMetaData && _.has(this.questionMetaData, formFieldCategory.code)) {
           formFieldCategory.default = this.questionMetaData[formFieldCategory.code];
