@@ -42,6 +42,9 @@
     padding: 0 0 1.5rem 0;
   }
 }
+.hidden-sectionName .sectionName{
+  display: none;
+}
 .multi-select-section-app {
   margin: 0.7rem 0 !important;
   label {
