@@ -717,6 +717,7 @@ describe('EditorComponent', () => {
   });
 
   it('#handleTemplateSelection should set #showQuestionTemplatePopup to false', () => {
+    component.editorConfig = editorConfig;
     component.handleTemplateSelection({});
     expect(component.showQuestionTemplatePopup).toEqual(false);
   });
@@ -730,6 +731,7 @@ describe('EditorComponent', () => {
   it('#handleTemplateSelection should call #redirectToQuestionTab()', async () => {
     const event = 'Multiple Choice Question';
     const editorService = TestBed.get(EditorService);
+    component.editorConfig = editorConfig;
     spyOn(editorService, 'getCategoryDefinition').and.returnValue(of(getCategoryDefinitionResponse));
     spyOn(component, 'redirectToQuestionTab');
     component.handleTemplateSelection(event);
