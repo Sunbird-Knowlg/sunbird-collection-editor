@@ -295,8 +295,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         evidenceMimeType = field.range;
         field.options = this.setEvidence;
         field.range = null;
-      }
-      else if (field.code === 'ecm') {
+      } else if (field.code === 'allowECM') {
+        field.options = this.setAllowEcm;
+      } else if (field.code === 'ecm') {
         ecm = field.options;
         field.options = this.setEcm;
       }
@@ -827,6 +828,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     if (selectedQuestionType && selectedQuestionType.type === 'close') {
       return false;
     }
+    // this will activate the save and cancel button
+    this.editorConfig.config.showSourcingStatus = false;
     // tslint:disable-next-line:max-line-length
     this.editorService.getCategoryDefinition(selectedQuestionType, null, 'Question').pipe(catchError(error => {
       const errInfo = {
@@ -878,7 +881,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   redirectToQuestionTab(mode, interactionType?) {
 
-    let questionId = this.selectedNodeData?.data?.metadata?.identifier;
+    let questionId = mode === 'edit' ? this.selectedNodeData?.data?.metadata?.identifier : undefined;
     let questionCategory = '';
 
     if(this.objectType === 'question') {
@@ -893,18 +896,17 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         correctionComments: _.get(this.editorConfig, 'context.correctionComments'),
         mode: mode,
         editableFields: _.get(this.editorConfig, 'config.editableFields')
-      }
-
+      };
     }
 
     this.questionComponentInput = {
+      ...this.questionComponentInput,
       questionSetId: this.collectionId,
       questionId: mode === 'edit' ? this.selectedNodeData.data.metadata.identifier : questionId,
       type: interactionType,
       setChildQueston:mode === 'edit' ? false : this.setChildQuestion,
       category: questionCategory,
       creationContext: this.creationContext, // Pass the creation context to the question-component
-      ...this.questionComponentInput
     };
 
     if(mode === 'edit'){
@@ -1115,12 +1117,11 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
                 return of(null)
              }
              else{
-                control.isVisible = 'yes'; 
+                control.isVisible = 'yes';
                 return of(null)
              }
         })
     );
     return response;
   }
-
 }
