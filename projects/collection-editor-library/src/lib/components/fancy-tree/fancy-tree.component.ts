@@ -88,7 +88,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     const data = this.nodes.data;
     this.nodeParentDependentMap = this.editorService.getParentDependentMap(this.nodes.data);
     let treeData;
-    if (_.get(this.editorService, 'editorConfig.config.renderTaxonomy') === true) {
+    if (_.get(this.editorService, 'editorConfig.config.renderTaxonomy') === true && _.isEmpty(_.get(this.editorService.collectionTreeNodes, 'data.children'))) {
       this.helperService.addDepthToHierarchy(this.nodes.data.children);
       this.nodes.data.children =   this.removeIntermediateLevelsFromFramework(this.nodes.data.children);
       treeData = this.buildTreeFromFramework(this.nodes.data);
