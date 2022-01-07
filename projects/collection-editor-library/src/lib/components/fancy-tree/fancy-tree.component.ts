@@ -88,7 +88,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     const data = this.nodes.data;
     this.nodeParentDependentMap = this.editorService.getParentDependentMap(this.nodes.data);
     let treeData;
-    if (_.get(this.editorService, 'editorConfig.config.renderTaxonomy') === true && _.isEmpty(_.get(this.editorService.collectionTreeNodes, 'data.children'))) {
+    if (_.get(this.editorService, 'editorConfig.config.renderTaxonomy') === true && _.isEmpty(_.get(this.nodes,'data.children'))) {
       this.helperService.addDepthToHierarchy(this.nodes.data.children);
       this.nodes.data.children =   this.removeIntermediateLevelsFromFramework(this.nodes.data.children);
       treeData = this.buildTreeFromFramework(this.nodes.data);
@@ -139,7 +139,9 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   buildTreeFromFramework(data, tree?, level?) {
     tree = tree || [];
+    let hierarchyLevel = _.get(this.editorService.editorConfig,'config.hierarchy');
     if (data.children) { data.children = _.sortBy(data.children, ['index']); }
+    data.level = level ? (level + 1) : 1;
     _.forEach(data.children, (child) => {
       const childTree = [];
       tree.push({
@@ -150,15 +152,15 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         objectType: _.get(this.editorService, 'editorConfig.config.objectType'),
         metadata: {
           name: child.name,
-          mimeType: "application/vnd.sunbird.questionset"
+          mimeType: _.get(hierarchyLevel,`level${data.level}.mimeType`) || "application/vnd.sunbird.questionset"
         },
         folder: true,
         children: childTree,
         root: false,
         icon: 'fa fa-folder-o'
       });
-      if (child.children) {
-        this.buildTreeFromFramework(child, childTree);
+      if (_.get(child,'children.length')) {
+        this.buildTreeFromFramework(child, childTree,data.level);
       }
     });
     return tree;
@@ -212,8 +214,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.dialcodeService.readExistingQrCode();
       this.treeService.nextTreeStatus('loaded');
       this.showTree = true;
-      if (_.get(this.editorService, 'editorConfig.config.renderTaxonomy') === true && _.isEmpty(_.get(this.editorService.collectionTreeNodes, 'data.children'))) {
-        console.log(this.rootNode);
+      if (_.get(this.editorService, 'editorConfig.config.renderTaxonomy') === true && _.isEmpty(_.get(this.nodes,'data.children'))) {
         _.forEach(this.rootNode[0]?.children, (child) => {
             this.treeService.updateTreeNodeMetadata(child.metadata, child.id, child.primaryCategory,child.objectType);
             _.forEach(child.children, (el) => {
