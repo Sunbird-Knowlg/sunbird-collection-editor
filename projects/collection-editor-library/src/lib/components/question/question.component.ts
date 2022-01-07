@@ -408,13 +408,13 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
   sendBackQuestion(event) {
-    this.questionService.readQuestion(this.questionId, 'versionKey')
+    this.questionService.readQuestion(this.questionId, 'status')
       .subscribe((res) => {
         const requestObj = {
           question: {
-            versionKey: _.get(res.result, `question.versionKey`),
-            requestChanges: event.comment,
-            status: 'Draft'
+            prevStatus: _.get(res.result, `question.status`),
+            status: 'Draft',
+            requestChanges: event.comment
           }
         };
         this.questionService.updateQuestion(this.questionId, requestObj).subscribe(res => {
