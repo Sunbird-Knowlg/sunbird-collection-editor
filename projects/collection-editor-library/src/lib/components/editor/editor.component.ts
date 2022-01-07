@@ -489,6 +489,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       case 'showReviewcomments':
         this.showReviewModal = !this.showReviewModal;
         break;
+      case 'pagination':
+        this.pageId = 'pagination';
+        break;
       //case 'showCorrectioncomments':
         //this.contentComment = _.get(this.editorConfig, 'context.correctionComments')
         //this.showReviewModal = !this.showReviewModal;
@@ -507,9 +510,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   updateToolbarTitle(data: any) {
     const selectedNode = this.treeService.getActiveNode();
-    if (!_.isEmpty(data.event.name) && selectedNode.data.root) {
+    if (!_.isEmpty(_.get(data, 'event.name')) && selectedNode.data.root) {
       this.toolbarConfig.title = data.event.name;
-    } else if (_.isEmpty(data.event.name) && selectedNode.data.root) {
+    } else if (_.isEmpty(_.get(data, 'event.name')) && selectedNode.data.root) {
       this.toolbarConfig.title = 'Untitled';
     }
   }
@@ -965,6 +968,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.isEnableCsvAction = true;
       });
     }
+  }
+
+  assignPageEmitterListener(event: any) {
+    this.pageId = 'collection_editor';
   }
 
   get contentPolicyUrl() {

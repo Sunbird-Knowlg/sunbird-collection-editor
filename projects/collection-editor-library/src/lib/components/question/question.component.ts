@@ -777,7 +777,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     return {
       nodesModified: {
         [questionId]: {
-          metadata: _.omit(this.getQuestionMetadata(), ['creator']),
+          metadata: _.omit(metaData, ['creator']),
           objectType: 'Question',
           root: false,
           isNew: !this.questionId
@@ -867,7 +867,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       };
     }
-    //  return metaData;
+    return metaData;
   }
 
 

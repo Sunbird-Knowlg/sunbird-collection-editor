@@ -263,12 +263,12 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   valueChanges(event: any) {
-    console.log(event);
+    const data = _.omit(event, ['allowECM', 'levels']);
     if (!_.isEmpty(this.appIcon) && this.showAppIcon) {
       event.appIcon = this.appIcon;
     }
-    this.toolbarEmitter.emit({ button: 'onFormValueChange', event });
-    this.treeService.updateNode(event);
+    this.toolbarEmitter.emit({ button: 'onFormValueChange', data });
+    this.treeService.updateNode(data);
   }
 
   appIconDataHandler(event) {
