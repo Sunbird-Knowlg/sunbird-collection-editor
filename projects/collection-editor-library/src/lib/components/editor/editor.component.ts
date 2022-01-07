@@ -360,7 +360,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
     this.editorConfig.config = _.assign(this.editorConfig.config, hierarchyConfig);
-    this.editorService.collectionTreeNodes=this.collectionTreeNodes;
     if (_.get(this.editorConfig, 'config.renderTaxonomy') === true && _.isEmpty(_.get(this.collectionTreeNodes, 'data.children'))) {
       this.fetchFrameWorkDetails();
     } else {

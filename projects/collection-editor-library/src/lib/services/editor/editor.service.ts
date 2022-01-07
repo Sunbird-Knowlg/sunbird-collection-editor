@@ -36,7 +36,6 @@ export class EditorService {
   optionsLength: any;
   selectedPrimaryCategory: any;
   leafParentIdentifier: any;
-  collectionTreeNodes:any;
   constructor(public treeService: TreeService, private toasterService: ToasterService,
               public configService: ConfigService, private telemetryService: EditorTelemetryService,
               private publicDataService: PublicDataService, private dataService: DataService, public httpClient: HttpClient) {
