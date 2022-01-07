@@ -88,7 +88,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     const data = this.nodes.data;
     this.nodeParentDependentMap = this.editorService.getParentDependentMap(this.nodes.data);
     let treeData;
-    if (_.get(this.editorService, 'editorConfig.config.renderTaxonomy') === true) {
+    if (_.get(this.editorService, 'editorConfig.config.renderTaxonomy') === true && _.isEmpty(_.get(this.nodes, 'data.children'))) {
       this.helperService.addDepthToHierarchy(this.nodes.data.children);
       this.nodes.data.children =   this.removeIntermediateLevelsFromFramework(this.nodes.data.children);
       treeData = this.buildTreeFromFramework(this.nodes.data);
@@ -147,8 +147,8 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         title: child.name,
         tooltip: child.name,
         primaryCategory: _.get(this.editorService, 'editorConfig.config.primaryCategory'),
-        objectType: _.get(this.editorService, 'editorConfig.config.objectType'),
         metadata: {
+          objectType: _.get(this.editorService, 'editorConfig.config.objectType'),
           name: child.name
         },
         folder: true,
@@ -212,6 +212,15 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.treeService.nextTreeStatus('loaded');
       this.showTree = true;
     });
+    if (_.get(this.editorService, 'editorConfig.config.renderTaxonomy') === true && _.isEmpty(_.get(this.nodes, 'data.children'))) {
+      console.log(this.rootNode);
+      _.forEach(this.rootNode[0]?.children, (child) => {
+          this.treeService.updateTreeNodeMetadata(child.metadata, child.id, child.primaryCategory, child.objectType);
+          _.forEach(child.children, (el) => {
+            this.treeService.updateTreeNodeMetadata(el.metadata, el.id, el.primaryCategory, el.objectType);
+          });
+      });
+    }
   }
 
   getTreeConfig() {

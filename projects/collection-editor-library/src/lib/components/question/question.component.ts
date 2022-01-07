@@ -724,6 +724,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (this.questionInteractionType === 'choice') {
       metadata.body = this.getMcqQuestionHtmlBody(this.editorState.question, this.editorState.templateId);
+    } else {
+      metadata.responseDeclaration = this.getResponseDeclaration(this.questionInteractionType);
     }
 
     if (!_.isUndefined(this.selectedSolutionType) && !_.isEmpty(this.selectedSolutionType)) {
@@ -739,6 +741,20 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     // tslint:disable-next-line:max-line-length
     return _.omit(metadata, ['question', 'numberOfOptions', 'options', 'allowMultiSelect', 'showEvidence', 'evidenceMimeType', 'showRemarks', 'markAsNotMandatory', 'leftAnchor', 'rightAnchor', 'step', 'numberOnly', 'characterLimit', 'dateFormat', 'autoCapture', 'remarksLimit']);
   }
+
+  getResponseDeclaration(type) {
+    const responseDeclaration = {
+      response1: {
+        type: type === 'slider' ? 'integer' : 'string'
+      }
+    };
+    if (type === 'text' || type === 'slider') {
+      responseDeclaration.response1['maxScore'] = 1;
+    }
+    return responseDeclaration;
+  }
+
+
 
   getMcqQuestionHtmlBody(question, templateId) {
     const mcqTemplateConfig = {
@@ -777,7 +793,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     return {
       nodesModified: {
         [questionId]: {
-          metadata: _.omit(this.getQuestionMetadata(), ['creator']),
+          metadata: _.omit(metaData, ['creator']),
           objectType: 'Question',
           root: false,
           isNew: !this.questionId
@@ -867,7 +883,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       };
     }
-    //  return metaData;
+    return metaData;
   }
 
 
