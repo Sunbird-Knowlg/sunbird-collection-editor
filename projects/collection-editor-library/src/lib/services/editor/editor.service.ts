@@ -159,7 +159,7 @@ export class EditorService {
     return formFields;
   }
 
-  updateCollection(collectionId, event?) {    
+  updateCollection(collectionId, event: any = {}) {    
     let objType = this.configService.categoryConfig[this.editorConfig.config.objectType];
     let url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
     let requestBody = {
@@ -171,9 +171,9 @@ export class EditorService {
       objType = this.configService.categoryConfig[this.editorConfig.context['collectionObjectType']];
       objType = objType.toLowerCase();
       url = this.configService.urlConFig.URLS[this.editorConfig.context['collectionObjectType']];
-             
+
       requestBody = event.requestBody;
-      requestBody.request[objType]['lastPublishedBy'] = this.editorConfig.context.user.id;            
+      requestBody.request[objType]['lastPublishedBy'] = this.editorConfig.context.user.id;
     }
     else {
       const fieldsObj = this.getFieldsToUpdate(collectionId);
@@ -185,11 +185,11 @@ export class EditorService {
           }
         }
       };
-      
+
     }
-              
+
     const publishData =  _.get(event, 'publishData');
-    if(publishData) { 
+    if(publishData) {
      requestBody.request[objType] = { ...requestBody.request[objType], ...publishData };
     }
     const option = {
@@ -244,9 +244,9 @@ export class EditorService {
       }
     };
    const publishData =  _.get(event, 'publishData');
-   if(publishData) { 
+   if(publishData) {
     requestBody.request[objType] = { ...requestBody.request[objType], ...publishData };
-   } 
+   }
     const option = {
       url: `${url.CONTENT_PUBLISH}${contentId}`,
       data: requestBody
@@ -279,7 +279,7 @@ export class EditorService {
             'children': [contentId]
           }
         }
-      }  
+      }
     };
     return this.publicDataService.patch(req);
   }
