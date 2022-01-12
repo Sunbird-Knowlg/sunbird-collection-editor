@@ -640,6 +640,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   getDefaultSessionContext() {
     return _.omitBy(_.merge(
       {
+        programId: _.get(this.editorService.editorConfig, 'context.programId'),
         creator: _.get(this.editorService.editorConfig, 'context.user.fullName'),
         createdBy: _.get(this.editorService.editorConfig, 'context.user.id'),
         ..._.pick(_.get(this.editorService.editorConfig, 'context'), ['board', 'medium', 'gradeLevel', 'subject', 'topic'])
