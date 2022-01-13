@@ -108,7 +108,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.solutionUUID = UUID.UUID();
     this.telemetryService.telemetryPageId = this.pageId;
     this.initialLeafFormConfig = _.cloneDeep(this.leafFormConfig);
-    this.questionFormConfig = _.cloneDeep(this.leafFormConfig);
     this.initialize();
     this.framework = _.get(this.editorService.editorConfig, 'context.framework');
     this.fetchFrameWorkDetails().subscribe((frameworkDetails: any) => {
@@ -128,12 +127,13 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   populateFrameworkData() {
     const categoryMasterList = this.frameworkDetails.frameworkData;
     _.forEach(categoryMasterList, (category) => {
-      _.forEach(this.questionFormConfig, (formFieldCategory) => {
+      _.forEach(this.leafFormConfig, (formFieldCategory) => {
         if (category.code === formFieldCategory.code) {
           formFieldCategory.terms = category.terms;
         }
       });
     });
+    this.questionFormConfig = _.cloneDeep(this.leafFormConfig);
   }
 
   ngAfterViewInit() {
@@ -146,7 +146,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   initialize() {
     this.editorService.fetchCollectionHierarchy(this.questionSetId).subscribe((response) => {
       this.questionSetHierarchy = _.get(response, 'result.questionSet');
-      const leafFormConfigfields = _.join(_.map(this.questionFormConfig, value => (value.code)), ',');
+      const leafFormConfigfields = _.join(_.map(this.leafFormConfig, value => (value.code)), ',');
       if (!_.isUndefined(this.questionId)) {
         this.questionService.readQuestion(this.questionId, leafFormConfigfields)
           .subscribe((res) => {
@@ -868,7 +868,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   populateFormData() {
     this.childFormData = {};
-    _.forEach(this.questionFormConfig, (formFieldCategory) => {
+    _.forEach(this.leafFormConfig, (formFieldCategory) => {
       formFieldCategory.editable = formFieldCategory.editable ? this.isEditable(formFieldCategory.code) : false;
       if (!_.isUndefined(this.questionId)) {
         if (this.questionMetaData && _.has(this.questionMetaData, formFieldCategory.code)) {
