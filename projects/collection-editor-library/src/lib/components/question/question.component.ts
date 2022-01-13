@@ -337,10 +337,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   sendQuestionForPublish(event) {
     this.editorService.publishContent(this.questionId, event).subscribe(res => {
-      this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.004'));
+      this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.037'));
       this.redirectToChapterList();
     }, err => {
-      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.004'));
+      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.037'));
     });
   }
 
@@ -709,7 +709,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       finalize(() => {
         this.showHideSpinnerLoader(false);
       })).subscribe((response: ServerResponse) => {
-        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.013'));
+        if (!_.includes(['submitQuestion'],this.actionType)) {
+          this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.013'));
+        }
         this.setQuestionId(_.get(response, 'result.identifier'));
         if (callback) callback();
       }, (err: ServerResponse) => {
