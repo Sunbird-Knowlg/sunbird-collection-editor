@@ -114,16 +114,16 @@ describe('QuestionComponent', () => {
   });
 
   it('Unit test for #populateFormData ', () => {
-    component.leafFormConfig = mockData.childMetadata;
+    component.leafFormConfig = mockData.childMetadata.properties;
     component.questionMetaData = mockData.questionMetaData;
     component.populateFormData();
     expect(component.questionMetaData).toBe(mockData.questionMetaData);
-    expect(component.leafFormConfig).toBe(mockData.childMetadata);
+    expect(component.leafFormConfig).toBe(mockData.childMetadata.properties);
   });
   it('should call previewFormData ', () => {
-    component.leafFormConfig = mockData.childMetadata;
+    component.leafFormConfig = mockData.childMetadata.properties;
     component.previewFormData(true);
-    expect(component.leafFormConfig).toEqual(mockData.childMetadata);
+    expect(component.leafFormConfig).toEqual(mockData.childMetadata.properties);
   });
   it('should call valueChanges', () => {
     component.valueChanges(mockData.formData);

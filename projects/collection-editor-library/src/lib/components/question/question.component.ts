@@ -108,7 +108,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.solutionUUID = UUID.UUID();
     this.telemetryService.telemetryPageId = this.pageId;
     this.initialLeafFormConfig = _.cloneDeep(this.leafFormConfig);
-    this.questionFormConfig = _.cloneDeep(this.leafFormConfig);
     this.initialize();
     this.framework = _.get(this.editorService.editorConfig, 'context.framework');
     this.fetchFrameWorkDetails().subscribe((frameworkDetails: any) => {
@@ -128,12 +127,13 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   populateFrameworkData() {
     const categoryMasterList = this.frameworkDetails.frameworkData;
     _.forEach(categoryMasterList, (category) => {
-      _.forEach(this.questionFormConfig, (formFieldCategory) => {
+      _.forEach(this.leafFormConfig, (formFieldCategory) => {
         if (category.code === formFieldCategory.code) {
           formFieldCategory.terms = category.terms;
         }
       });
     });
+    this.questionFormConfig = _.cloneDeep(this.leafFormConfig);
   }
 
   ngAfterViewInit() {
@@ -146,7 +146,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   initialize() {
     this.editorService.fetchCollectionHierarchy(this.questionSetId).subscribe((response) => {
       this.questionSetHierarchy = _.get(response, 'result.questionSet');
-      const leafFormConfigfields = _.join(_.map(this.questionFormConfig, value => (value.code)), ',');
+      const leafFormConfigfields = _.join(_.map(this.leafFormConfig, value => (value.code)), ',');
       if (!_.isUndefined(this.questionId)) {
         this.questionService.readQuestion(this.questionId, leafFormConfigfields)
           .subscribe((res) => {
@@ -337,10 +337,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   sendQuestionForPublish(event) {
     this.editorService.publishContent(this.questionId, event).subscribe(res => {
-      this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.004'));
+      this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.037'));
       this.redirectToChapterList();
     }, err => {
-      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.004'));
+      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.037'));
     });
   }
 
@@ -709,7 +709,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       finalize(() => {
         this.showHideSpinnerLoader(false);
       })).subscribe((response: ServerResponse) => {
-        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.013'));
+        if (!_.includes(['submitQuestion'],this.actionType)) {
+          this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.013'));
+        }
         this.setQuestionId(_.get(response, 'result.identifier'));
         if (callback) callback();
       }, (err: ServerResponse) => {
@@ -868,7 +870,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   populateFormData() {
     this.childFormData = {};
-    _.forEach(this.questionFormConfig, (formFieldCategory) => {
+    _.forEach(this.leafFormConfig, (formFieldCategory) => {
       formFieldCategory.editable = formFieldCategory.editable ? this.isEditable(formFieldCategory.code) : false;
       if (!_.isUndefined(this.questionId)) {
         if (this.questionMetaData && _.has(this.questionMetaData, formFieldCategory.code)) {
