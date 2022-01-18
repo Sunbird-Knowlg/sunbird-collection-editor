@@ -629,7 +629,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   getMcqQuestionHtmlBody(question, templateId) {
     const mcqTemplateConfig = {
       // tslint:disable-next-line:max-line-length
-      mcqBody: `<div class=\'question-body\' tabindex=\'-1\'><div class=\'mcq-title\' tabindex=\'0\'>{question}</div><div data-choice-interaction=\'response1\' class=\'{templateClass}\'></div></div>`
+      mcqBody: '<div class=\'question-body\' tabindex=\'-1\'><div class=\'mcq-title\' tabindex=\'0\'>{question}</div><div data-choice-interaction=\'response1\' class=\'{templateClass}\'></div></div>'
     };
     const { mcqBody } = mcqTemplateConfig;
     const questionBody = mcqBody.replace('{templateClass}', templateId)
