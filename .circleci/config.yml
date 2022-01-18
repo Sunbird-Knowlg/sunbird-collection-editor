@@ -45,9 +45,9 @@ jobs:
           name: Publish to NPM
           command: |
             if [ -z $CIRCLE_PR_NUMBER ]; then
-              npm run build-lib && npm pack ./dist/collection-editor-library
+              npm run build-lib
               echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
-              npm publish project-sunbird-sunbird-collection-editor-*
+              npm publish ./dist/collection-editor-library
             else
               npm run build-lib && npm pack ./dist/collection-editor-library
             fi
