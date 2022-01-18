@@ -372,7 +372,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     });
   }
 
-  addImageInEditor(imageUrl, imageId) {
+  addImageInEditor(imageUrl, imageId, imageName) {
     const src = this.getMediaOriginURL(imageUrl);
     const baseUrl = _.get(this.editorService.editorConfig, 'context.host') || document.location.origin;
     this.mediaobj = {
@@ -384,7 +384,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     this.editorInstance.model.change(writer => {
       const imageElement = writer.createElement('image', {
         src,
-        alt: imageId,
+        alt: imageName + 'image',
         'data-asset-variable': imageId
       });
       this.editorInstance.model.insertContent(imageElement, this.editorInstance.model.document.selection);
@@ -640,7 +640,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
             this.imageFormValid = true;
             return throwError(this.editorService.apiErrorHandling(err, errInfo));
           })).subscribe((response1) => {
-            this.addImageInEditor(response1.result.content_url, response1.result.node_id);
+            this.addImageInEditor(response1.result.content_url, response1.result.node_id, this.assestData['name']);
             this.dismissPops(modal);
           });
         });

@@ -1,15 +1,13 @@
 <ng-container>
     <div (click)="initializeImagePicker()" class="mb-20 w-15">
         <div class="app-icon-label" [attr.data-title]="appIconConfig?.description ? appIconConfig?.description : null">{{appIconConfig?.label}}</div>
-        <div *ngIf='!appIcon' class="sb-centericon">
+        <div *ngIf='!appIcon' class="sb-centericon" aria-label="app icon" tabindex="0">
             <div>
                 <i id="icon_appIcon" name="icon_appIcon" class="icon image outline" ></i>
             </div>
             <div class="addImageText">{{configService.labelConfig?.lbl?.addAnImage}}</div>
         </div>
-        <img *ngIf="appIcon" 
-        class="ui image sb-appicon" 
-        src="{{appIcon}}"/>
+        <img *ngIf="appIcon" class="ui image sb-appicon" src="{{appIcon}}" alt="app icon"/>
     </div>
     <lib-asset-browser *ngIf="showImagePicker" [showImagePicker]="showImagePicker" (assetBrowserEmitter)="collectionIconHandler($event)" (modalDismissEmitter)="handleModalDismiss($event)"></lib-asset-browser>
 </ng-container>

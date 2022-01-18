@@ -666,6 +666,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       this.updateTreeNodeData();
       this.buttonLoaders.previewButtonLoader = false;
       this.showPreview = true;
+      setTimeout(()=>{
+        const element: any = document.querySelector("#previewPlayerContainer")
+      element.focus();
+      },500);
     }, error => {
       this.buttonLoaders.previewButtonLoader = false;
       this.toasterService.error(_.get(error, 'error.params.errmsg'));

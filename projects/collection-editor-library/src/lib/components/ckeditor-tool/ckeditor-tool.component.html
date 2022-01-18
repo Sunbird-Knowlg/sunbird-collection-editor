@@ -39,7 +39,7 @@
         <div class="sb-grid-layout image">
           <div class="sb-video-content" *ngFor="let data of myAssets">
             <div class="sb-image-section relative position">
-              <img (click)="addImageInEditor(data.downloadUrl, data.identifier)" [src]="data.downloadUrl">
+              <img (click)="addImageInEditor(data.downloadUrl, data.identifier, data.name)" alt="{{data?.name}}" [src]="data.downloadUrl">
             </div>
           </div>
 
@@ -64,7 +64,7 @@
         <div class="sb-grid-layout image">
           <div class="sb-video-content" *ngFor="let data of allImages">
             <div class="sb-image-section">
-              <img (click)="addImageInEditor(data.downloadUrl, data.identifier)" [src]="data.downloadUrl">
+              <img (click)="addImageInEditor(data.downloadUrl, data.identifier, data.name)" alt="{{data?.name}}" [src]="data.downloadUrl">
             </div>
           </div>
         </div>
@@ -109,7 +109,7 @@
               (click)="selectVideo(data)">
               <div class="overlay-image"><i class="play circle icon" aria-hidden="true"></i></div>
               <i class="check circle icon selected-video" aria-hidden="true"></i>
-              <img [src]="data.thumbnail">
+              <img [src]="data.thumbnail" alt="{{data?.name}}">
             </div>
           </div>
 
@@ -137,7 +137,7 @@
               (click)="selectVideo(data);">
               <div class="overlay-image"><i class="play circle icon" aria-hidden="true"></i></div>
               <i class="check circle icon selected-video" aria-hidden="true"></i>
-              <img [src]="data.thumbnail">
+              <img [src]="data.thumbnail" alt="{{data?.name}}">
             </div>
           </div>
         </div>
