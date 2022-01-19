@@ -167,7 +167,7 @@ export class EditorService {
     return formFields;
   }
 
-  updateCollection(collectionId, event?: any = {}) {
+  updateCollection(collectionId, event: any = {}) {
     let objType = this.configService.categoryConfig[this.editorConfig.config.objectType];
     let url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
     let requestBody = {
