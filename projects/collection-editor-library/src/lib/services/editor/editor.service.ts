@@ -12,6 +12,7 @@ import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { ExportToCsv } from 'export-to-csv';
 interface SelectedChildren {
+  label?: string;
   primaryCategory?: string;
   mimeType?: string;
   interactionType?: string;
@@ -26,8 +27,15 @@ export class EditorService {
   private _editorMode = 'edit';
   public showLibraryPage: EventEmitter<number> = new EventEmitter();
   private _bulkUploadStatus$ = new BehaviorSubject<any>(undefined);
-  public readonly bulkUploadStatus$: Observable<any> = this._bulkUploadStatus$
+  public readonly bulkUploadStatus$: Observable<any> = this._bulkUploadStatus$;
   public contentsCount = 0;
+  templateList = [];
+  parentIdentifier: any;
+  branchingLogic = {};
+  selectedSection: any;
+  optionsLength: any;
+  selectedPrimaryCategory: any;
+  leafParentIdentifier: any;
   constructor(public treeService: TreeService, private toasterService: ToasterService,
               public configService: ConfigService, private telemetryService: EditorTelemetryService,
               private publicDataService: PublicDataService, private dataService: DataService, public httpClient: HttpClient) {
@@ -146,7 +154,7 @@ export class EditorService {
   }
 
   getFieldsToUpdate(collectionId) {
-    let formFields = {};
+    const formFields = {};
     const editableFields = _.get(this.editorConfig.config, 'editableFields');
     if (editableFields && !_.isEmpty(editableFields[this.editorMode])) {
       const fields = editableFields[this.editorMode];
@@ -159,7 +167,7 @@ export class EditorService {
     return formFields;
   }
 
-  updateCollection(collectionId, event: any = {}) {    
+  updateCollection(collectionId, event?: any = {}) {
     let objType = this.configService.categoryConfig[this.editorConfig.config.objectType];
     let url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
     let requestBody = {
@@ -167,7 +175,7 @@ export class EditorService {
     };
     objType = objType.toLowerCase();
 
-    if(event.button === 'sourcingApproveQuestion' || event.button === 'sourcingRejectQuestion') {
+    if (event.button === 'sourcingApproveQuestion' || event.button === 'sourcingRejectQuestion') {
       objType = this.configService.categoryConfig[this.editorConfig.context['collectionObjectType']];
       objType = objType.toLowerCase();
       url = this.configService.urlConFig.URLS[this.editorConfig.context['collectionObjectType']];
@@ -185,7 +193,6 @@ export class EditorService {
           }
         }
       };
-
     }
 
     const publishData =  _.get(event, 'publishData');
@@ -319,13 +326,14 @@ export class EditorService {
     const instance = this;
     this.data = {};
     const data = this.treeService.getFirstChild();
+    const clonedNodeModified = _.cloneDeep(this.treeService.treeCache.nodesModified);
     return {
-      nodesModified: this.treeService.treeCache.nodesModified,
+      nodesModified: clonedNodeModified,
       hierarchy: instance._toFlatObj(data)
     };
   }
 
-  _toFlatObj(data, questionId?, selectUnitId?) {
+  _toFlatObj(data, questionId?, selectUnitId?, parentId?) {
     const instance = this;
     if (data && data.data) {
       instance.data[data.data.id] = {
@@ -336,13 +344,40 @@ export class EditorService {
         root: data.data.root
       };
       if (questionId && selectUnitId && selectUnitId === data.data.id) {
-          instance.data[data.data.id].children.push(questionId);
+          if (parentId) {
+            const children = instance.data[data.data.id].children;
+            const index = _.findIndex(children, (e) => {
+              return e === parentId;
+            }, 0);
+            const setIndex = index + 1;
+            children.splice(setIndex, 0, questionId);
+          } else {
+            instance.data[data.data.id].children.push(questionId);
+          }
       }
       if (questionId && selectUnitId && data.folder === false) {
           delete instance.data[data.data.id];
       }
       _.forEach(data.children, (collection) => {
-        instance._toFlatObj(collection, questionId, selectUnitId);
+        instance._toFlatObj(collection, questionId, selectUnitId, parentId);
+      });
+    }
+    return instance.data;
+  }
+
+
+  _toFlatObjFromHierarchy(data) {
+    const instance = this;
+    if (data && data.children) {
+      instance.data[data.identifier] = {
+        name: data.name,
+        children: _.map(data.children, (child) => {
+          return child.identifier;
+        }),
+        branchingLogic: data.branchingLogic
+      };
+      _.forEach(data.children, (collection) => {
+        instance._toFlatObjFromHierarchy(collection);
       });
     }
     return instance.data;
@@ -361,6 +396,8 @@ export class EditorService {
         }
       }
     };
+    console.log('getCategoryDefinition');
+    console.log(req);
     return this.publicDataService.post(req);
   }
   fetchContentListDetails(req) {
@@ -522,6 +559,82 @@ export class EditorService {
     options = _.merge(options, config);
     const csvExporter = new ExportToCsv(options);
     csvExporter.generateCsv(tableData);
+  }
+
+  getBranchingLogicByFolder(identifier) {
+    const nodeData = this.treeService.getNodeById(identifier);
+    const branchingLogic = _.get(nodeData, 'data.metadata.branchingLogic');
+    return branchingLogic || {};
+  }
+
+/**
+ *
+ * @public
+ * @param identifier identifier of the node
+ * @returns { source: [], target: [], sourceTarget?: [] }
+ * @memberof EditorService
+ */
+getDependentNodes(identifier) {
+    const sectionBranchingLogic = this.getBranchingLogicByNodeId(identifier);
+
+    if (!_.isEmpty(sectionBranchingLogic)) {
+     const branchingEntry = this.getBranchingLogicEntry(sectionBranchingLogic, identifier);
+     const source = _.get(branchingEntry, 'source');
+     if (!_.isEmpty(source)) { // if the node is a dependent node
+
+       const sourceBranchingEntry = this.getBranchingLogicEntry(sectionBranchingLogic, _.first(branchingEntry.source));
+
+       return !_.isEmpty(sourceBranchingEntry) ? { source: branchingEntry.source, target: branchingEntry.target,
+        sourceTarget: sourceBranchingEntry.target } : {};
+
+     } else { // if the node is a parent node
+       return !_.isEmpty(branchingEntry) ? { source: branchingEntry.source, target: branchingEntry.target } : {};
+     }
+    }
+  }
+
+/**
+ *
+ * @public
+ * @param identifier identifier of the node
+ * @returns {"do_id": { "target": [ "do_id123", "do_id456" ], "preCondition": {}, "source": [] }}
+ * @memberof EditorService
+ */
+  getBranchingLogicByNodeId(identifier) {
+    const leafNode = this.treeService.getNodeById(identifier);
+    const parentIdentifier = _.get(leafNode, 'parent.data.id');
+    const branchingLogic = this.getBranchingLogicByFolder(parentIdentifier);
+    return branchingLogic;
+  }
+
+  getBranchingLogicEntry(parentBranchingLogic, identifier) {
+    const branchingEntry =  _.find(parentBranchingLogic, (logic, key) => {
+      return key === identifier;
+    });
+    return branchingEntry;
+  }
+
+  getFlattenedBranchingLogic(data) {
+    const flatHierarchy = this._toFlatObjFromHierarchy(data);
+    const branchingLogics = _.compact(_.map(flatHierarchy, 'branchingLogic'));
+    return _.reduce(branchingLogics, (acc, val) => {
+      return  _.assign(acc, val);
+    }, {});
+  }
+
+  getParentDependentMap(data) {
+    const branchingLogic = this.getFlattenedBranchingLogic(data);
+    const obj = {};
+    _.forEach(_.keys(branchingLogic), item => {
+      obj[item] = !_.isEmpty(branchingLogic[item].source) ? 'dependent' : !_.isEmpty(branchingLogic[item].target) ? 'parent' : '';
+    });
+    return obj;
+  }
+
+  getPrimaryCategoryName(sectionId) {
+    const nodeData = this.treeService.getNodeById(sectionId);
+    const primaryCategory = _.get(nodeData, 'data.primaryCategory');
+    return primaryCategory;
   }
 
 }

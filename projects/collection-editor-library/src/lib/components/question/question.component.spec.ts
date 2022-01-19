@@ -12,7 +12,9 @@ import { TreeService } from '../../services/tree/tree.service';
 import { SuiModule } from 'ng2-semantic-ui-v9';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
-import { collectionHierarchyMock, creationContextMock, mockData, readQuestionMock, mockTreeService } from './question.component.spec.data';
+import { collectionHierarchyMock, creationContextMock, mockData, readQuestionMock, mockTreeService,
+  leafFormConfigMock, sourcingSettingsMock, childMetaData,
+  HierarchyMockData, BranchingLogic, mockEditorCursor } from './question.component.spec.data';
 import { of } from 'rxjs';
 
 const mockEditorService = {
@@ -30,8 +32,13 @@ const mockEditorService = {
       }
     }
   },
-  selectedChildren: {},
+  selectedChildren: {
+    primaryCategory: 'Text',
+    label: 'Text',
+    interactionType: 'text'
+  },
   getToolbarConfig: () => {},
+  _toFlatObj: () => {},
   fetchCollectionHierarchy: (questionSetId) => {
     subscribe: fn => fn(collectionHierarchyMock);
   },
@@ -41,6 +48,7 @@ const mockEditorService = {
 describe('QuestionComponent', () => {
   let component: QuestionComponent;
   let fixture: ComponentFixture<QuestionComponent>;
+  let treeService;
   class RouterStub {
     navigate = jasmine.createSpy('navigate');
   }
@@ -50,7 +58,7 @@ describe('QuestionComponent', () => {
       imports: [HttpClientTestingModule, SuiModule],
       providers: [EditorTelemetryService, QuestionService, ToasterService,
         PlayerService, { provide: EditorService, useValue: mockEditorService }, { provide: Router, useClass: RouterStub }, EditorCursor,
-        { provide: TreeService, useValue: mockTreeService }],
+        { provide: TreeService, useValue: mockTreeService }, { provide: EditorCursor, useValue: mockEditorCursor }],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
       .compileComponents();
@@ -60,9 +68,11 @@ describe('QuestionComponent', () => {
     fixture = TestBed.createComponent(QuestionComponent);
     component = fixture.componentInstance;
     component.questionInput = {
-      "questionSetId": "do_11330102570702438417",
-      "questionId": "do_11330103476396851218",
+      questionSetId: 'do_11330102570702438417',
+      questionId: 'do_11330103476396851218',
     };
+    component.questionPrimaryCategory='Multiselect Multiple Choice Question';
+    component.questionInteractionType = 'choice';
     let editorService: EditorService = TestBed.inject(EditorService);
     let telemetryService: EditorTelemetryService = TestBed.inject(EditorTelemetryService);
     spyOn(telemetryService, 'impression').and.callFake(() => { });
@@ -72,6 +82,7 @@ describe('QuestionComponent', () => {
     spyOn(editorService, 'updateCollection').and.returnValue({ subscribe: fn => fn({}) });
     let questionService: QuestionService = TestBed.inject(QuestionService);
     spyOn(questionService, 'readQuestion').and.returnValue(of(readQuestionMock));
+    treeService = TestBed.get(TreeService);
     fixture.detectChanges();
   });
 
@@ -93,19 +104,19 @@ describe('QuestionComponent', () => {
 
   it('Unit test for #ngOnInit()', () => {
     component.questionInput = {
-      "questionSetId": "do_11330102570702438417",
-      "questionId": "do_11330103476396851218",
-      "type": "default",
-      "category": "MTF",
-      "config": {},
-      "creationContext": creationContextMock
-    }
+      questionSetId: 'do_11330102570702438417',
+      questionId: 'do_11330103476396851218',
+      type: 'default',
+      category: 'MTF',
+      config: {},
+      creationContext: creationContextMock
+    };
     const editorService = TestBed.get(EditorService);
     component.ngOnInit();
-    expect(component.questionInteractionType).toEqual("default");
-    expect(component.questionCategory).toEqual("MTF");
-    expect(component.questionId).toEqual("do_11330103476396851218");
-    expect(component.questionSetId).toEqual("do_11330102570702438417");
+    expect(component.questionInteractionType).toEqual('choice');
+    expect(component.questionCategory).toEqual('MTF');
+    expect(component.questionId).toEqual('do_11330103476396851218');
+    expect(component.questionSetId).toEqual('do_11330102570702438417');
     expect(component.creationContext).toEqual(creationContextMock);
     expect(component.unitId).toEqual(creationContextMock.unitIdentifier);
     expect(component.isReadOnlyMode).toEqual(creationContextMock.isReadOnlyMode);
@@ -161,15 +172,15 @@ describe('QuestionComponent', () => {
   });
   it('#setQuestionTitle() should set #toolbarConfig.title', () => {
     component.creationContext = creationContextMock;
-    component.questionPrimaryCategory = "Subjective Question"
+    component.questionPrimaryCategory = 'Subjective Question';
     component.setQuestionTitle();
-    expect(component.toolbarConfig.title).toBe("Subjective Question")
+    expect(component.toolbarConfig.title).toBe('Subjective Question');
   });
   it('call #getMcqQuestionHtmlBody() to verify questionBody', () => {
-    const question = "<p>Objective 1</p>";
-    const templateId = "mcq-vertical";
+    const question = '<p>Objective 1</p>';
+    const templateId = 'mcq-vertical';
     let result = component.getMcqQuestionHtmlBody(question, templateId);
-    expect(result).toBeDefined();
+    expect(result).toBe('<div class=\'question-body\'><div class=\'mcq-title\'><p>Objective 1</p></div><div data-choice-interaction=\'response1\' class=\'mcq-vertical\'></div></div>');
   });
   it('#toolbarEventListener() should call toolbarEventListener for saveContent', () => {
     const data = { button: 'saveContent' };
@@ -240,7 +251,7 @@ describe('QuestionComponent', () => {
   });
   it('#toolbarEventListener() should call toolbarEventListener for sendForCorrectionsQuestion', () => {
     const data = { button: 'sendForCorrectionsQuestion' };
-    spyOn(component, 'sendBackQuestion')
+    spyOn(component, 'sendBackQuestion');
     component.toolbarEventListener(data);
     expect(component.sendBackQuestion).toHaveBeenCalledWith(data);
   });
@@ -270,7 +281,7 @@ describe('QuestionComponent', () => {
     expect(component.validateFormFields).toHaveBeenCalledWith();
   });
   it('#rejectQuestion() should call #requestForChanges', () => {
-    const comment = "test comment";
+    const comment = 'test comment';
     spyOn(component, 'requestForChanges');
     component.rejectQuestion(comment);
     expect(component.requestForChanges).toHaveBeenCalledWith(comment);
@@ -289,7 +300,7 @@ describe('QuestionComponent', () => {
     expect(component.showConfirmPopup).toBeTruthy();
   });
   it('Unit test for #showHideSpinnerLoader', () => {
-    component.showHideSpinnerLoader(true, 'review')
+    component.showHideSpinnerLoader(true, 'review');
     expect(component.buttonLoaders.saveButtonLoader).toEqual(true);
     expect(component.buttonLoaders.review).toEqual(true);
   });
@@ -298,18 +309,9 @@ describe('QuestionComponent', () => {
     expect(component.isEditable('bloomsLevel')).toBeFalsy();
   });
   it('Unit test for #prepareQuestionBody', () => {
-    expect(component.prepareQuestionBody()).toEqual({
-      question: {
-        media: [  ],
-        editorState: {
-           question: '<figure class="table"><table><tbody><tr><td>adssa</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>dasd</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>dsadas</td></tr></tbody></table></figure><ul><li>dasdasdasd</li></ul>'
-        },
-        answer: '<p>This is anwser</p>',
-        solutions: '<p>Solution for the subjectiove question</p>',
-        body: '<figure class="table"><table><tbody><tr><td>adssa</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>dasd</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>dsadas</td></tr></tbody></table></figure><ul><li>dasdasdasd</li></ul>',
-        copyright: 'NIT123'
-      }
-    });
+    spyOn(component,'prepareQuestionBody').and.callThrough();
+    component.prepareQuestionBody();
+    expect(component.prepareQuestionBody).toHaveBeenCalled()
   });
   it('#saveContent() should call saveContent and set showFormError ', () => {
     spyOn(component, 'validateQuestionData');
@@ -379,6 +381,7 @@ describe('QuestionComponent', () => {
     expect(component.showFormError).toBeTruthy();
   });
   it('#validateQuestionData() should call validateQuestionData and questionInteractionType is default', () => {
+    component.sourcingSettings=sourcingSettingsMock;
     component.editorState = mockData.editorState;
     component.editorState.question = '<p> Hi how are you </p>';
     component.questionInteractionType = 'default';
@@ -386,6 +389,7 @@ describe('QuestionComponent', () => {
     expect(component.showFormError).toBeFalsy();
   });
   it('#validateQuestionData() should call validateQuestionData and questionInteractionType is default', () => {
+    component.sourcingSettings=sourcingSettingsMock;
     component.editorState = mockData.editorState;
     component.editorState.question = '<p> Hi how are you </p>';
     component.editorState.answer = '';
@@ -394,12 +398,13 @@ describe('QuestionComponent', () => {
     expect(component.showFormError).toBeTruthy();
   });
   it('#validateQuestionData() should call validateQuestionData and questionInteractionType is default', () => {
+    component.sourcingSettings=sourcingSettingsMock;
     component.editorState = mockData.editorState;
     component.editorState.question = '<p> Hi how are you </p>';
     component.editorState.answer = '';
     component.questionInteractionType = 'choice';
     component.validateQuestionData();
-    expect(component.showFormError).toBeTruthy();
+    expect(component.showFormError).toBeFalsy();
   });
   it('call #sourcingUpdate() for sourcingRejectQuestion to verify inputs for #editorService.updateCollection', () => {
     component.creationContext = creationContextMock;
@@ -411,19 +416,19 @@ describe('QuestionComponent', () => {
     const requestBody = {
       request: {
         questionset: {
-          'rejectedContributions': [
+          rejectedContributions: [
               ...questionSet.rejectedContributions,
               component.questionId
           ],
-          'rejectedContributionComments': {
+          rejectedContributionComments: {
               ...questionSet.rejectedContributionComments,
-              "do_11326368076523929611": data.comment
+              do_11326368076523929611: data.comment
           }
         }
       }
     };
     component.sourcingUpdate(data);
-    expect(editorService.updateCollection).toHaveBeenCalledWith("do_11330102570702438417", { ...data, requestBody });
+    expect(editorService.updateCollection).toHaveBeenCalledWith('do_11330102570702438417', { ...data, requestBody });
   });
   it('call #sourcingUpdate() for sourcingApproveQuestion to verify inputs for #editorService.updateCollection', () => {
     component.creationContext = creationContextMock;
@@ -435,7 +440,7 @@ describe('QuestionComponent', () => {
     const requestBody = {
       request: {
         questionset: {
-          'acceptedContributions': [
+          acceptedContributions: [
               ...questionSet.acceptedContributions,
               component.questionId
           ],
@@ -443,7 +448,7 @@ describe('QuestionComponent', () => {
       }
     };
     component.sourcingUpdate(data);
-    expect(editorService.updateCollection).toHaveBeenCalledWith("do_11330102570702438417", { ...data, requestBody });
+    expect(editorService.updateCollection).toHaveBeenCalledWith('do_11330102570702438417', { ...data, requestBody });
   });
   it('#sourcingUpdate() should call #redirectToChapterList() for sourcingApproveQuestion', () => {
     component.creationContext = creationContextMock;
@@ -484,4 +489,147 @@ describe('QuestionComponent', () => {
     component.videoDataOutput(event);
     expect(component.videoSolutionData).toBeDefined();
   });
+  it('#subMenuChange() should set the sub-menu value ', () => {
+    component.subMenus =  mockData.subMenus;
+    spyOn(component, 'subMenuChange').and.callThrough();
+    component.subMenuChange({index:1,value:'test'})
+    expect(component.subMenus[1].value).toBe('test');
+  });
+  it('#dependentQuestions() should return dependentQuestions ', () => {
+    component.subMenus =  mockData.subMenus;
+    spyOn(component, 'dependentQuestions').and.callThrough();
+    expect( component.dependentQuestions.length).toBe(1)
+  });
+
+  it('#prepareRequestBody() should call to check the dynamic form data',()=>{
+    spyOn(treeService, 'getFirstChild').and.callFake(() => { });
+    spyOn(component,'prepareRequestBody').and.callThrough();
+    component.prepareRequestBody();
+    expect(component.prepareRequestBody).toHaveBeenCalled();
+  });
+
+  it('#setQuestionTypeValues() should call to check the dynamic form data',()=>{
+    spyOn(component,'setQuestionTypeValues').and.callThrough();
+    component.childFormData=childMetaData;
+    component.subMenus =  mockData.subMenus;
+    component.setQuestionTypeValues(mockData.questionMetaData);
+    expect(component.setQuestionTypeValues).toHaveBeenCalled();
+    expect(mockData.questionMetaData.showEvidence).toEqual(component.childFormData.showEvidence)
+  });
+
+  it('#setQuestionTypeValues() should call to check the dynamic form data for date',()=>{
+    component.questionInteractionType='date'
+    spyOn(component,'setQuestionTypeValues').and.callThrough();
+    component.childFormData=childMetaData;
+    component.subMenus =  mockData.subMenus;
+    component.setQuestionTypeValues(mockData.questionMetaData);
+    expect(component.setQuestionTypeValues).toHaveBeenCalled();
+    expect(mockData.questionMetaData.showEvidence).toEqual(component.childFormData.showEvidence)
+  });
+
+  it('#setQuestionTypeValues() should call to check the dynamic form data for text',()=>{
+    component.questionInteractionType='text'
+    spyOn(component,'setQuestionTypeValues').and.callThrough();
+    component.childFormData=childMetaData;
+    component.subMenus =  mockData.subMenus;
+    component.setQuestionTypeValues(mockData.questionMetaData);
+    expect(component.setQuestionTypeValues).toHaveBeenCalled();
+    expect(mockData.questionMetaData.showEvidence).toEqual(component.childFormData.showEvidence)
+  });
+
+  it('#setQuestionTypeValues() should call to check the dynamic form data for slider',()=>{
+    component.questionInteractionType='slider'
+    spyOn(component,'setQuestionTypeValues').and.callThrough();
+    component.childFormData=childMetaData;
+    component.subMenus =  mockData.subMenus;
+    component.setQuestionTypeValues(mockData.questionMetaData);
+    expect(component.setQuestionTypeValues).toHaveBeenCalled();
+    expect(mockData.questionMetaData.showEvidence).toEqual(component.childFormData.showEvidence)
+  });
+
+  it('#saveContent() should call saveContent when questionId exits ', () => {
+    spyOn(component, 'validateQuestionData');
+    spyOn(component, 'validateFormFields');
+    spyOn(component, 'saveQuestion');
+    spyOn(component,'updateQuestion');
+    spyOn(component,'buildCondition');
+    component.questionId='do_1134355571590184961168';
+    component.selectedSectionId='do_1134347209749299201119';
+    component.showFormError = false;
+    component.showOptions=true;
+    component.isChildQuestion=true;
+    component.condition='eq';
+    component.selectedOptions=1;
+    component.saveContent();
+    component.updateQuestion();
+    component.buildCondition('update');
+    component.updateTreeCache('Mid-day Meals',BranchingLogic,component.selectedSectionId);
+    expect(component.saveQuestion).toHaveBeenCalled();
+    expect(component.updateQuestion).toHaveBeenCalled();
+    expect(component.buildCondition).toHaveBeenCalled();
+  });
+
+
+  it('#buildCondition() should call when it is a child question ', () => {
+    spyOn(component,'buildCondition');
+    component.questionId='do_1134355571590184961168';
+    component.selectedSectionId='do_1134347209749299201119';
+    component.condition='eq';
+    component.selectedOptions=1;
+    component.branchingLogic=BranchingLogic;
+    component.buildCondition('update');
+    component.updateTreeCache('Mid-day Meals',BranchingLogic,component.selectedSectionId);
+    expect(component.buildCondition).toHaveBeenCalled();
+  });
+
+  it('#updateTarget() should call when buildcondition is called ', () => {
+    spyOn(component,'updateTarget').and.callThrough();
+    component.questionId='do_1134355571590184961168';
+    component.branchingLogic=BranchingLogic;
+    component.updateTarget(component.questionId);
+    expect(component.updateTarget).toHaveBeenCalledWith(component.questionId);
+  });
+
+  it('#getOptions() should call when child question is edited when option exits', () => {
+    spyOn(component,'getOptions').and.callThrough();
+    let editorService = TestBed.get(EditorService);
+    editorService.optionsLength = 4;
+    component.getOptions();
+    expect(component.getOptions).toHaveBeenCalled();
+  });
+  it('#getOptions() should call when child question is edited when option not exits', () => {
+    spyOn(component,'getOptions').and.callThrough();
+    let editorService = TestBed.get(EditorService);
+    editorService.optionsLength = undefined;
+    component.getOptions();
+    expect(component.getOptions).toHaveBeenCalled();
+  });
+
+  it('#getParentQuestionOptions() should call when add dependent question clicked', () => {
+    spyOn(component,'getParentQuestionOptions').and.callThrough();
+    component.questionId='do_1134355571590184961168';
+    let editorService = TestBed.get(EditorService);
+    editorService.parentIdentifier = component.questionId;
+    component.getParentQuestionOptions(component.questionId);
+    expect(component.getParentQuestionOptions).toHaveBeenCalledWith(component.questionId);
+  });
+
+  it('#updateTreeCache() should call when buildcondition is called ', () => {
+    spyOn(component,'updateTreeCache').and.callThrough();
+    component.updateTreeCache('Mid-day Meals',BranchingLogic,component.selectedSectionId);
+    expect(component.updateTreeCache).toHaveBeenCalled();
+  });
+
+  it('#setCondition() should call when buildcondition is called ', () => {
+    spyOn(component,'setCondition').and.callThrough();
+    component.questionId='do_1134355571590184961168';
+    let data ={
+      branchingLogic:BranchingLogic
+    };
+    component.setCondition(data);
+    expect(component.setCondition).toHaveBeenCalledWith(data);
+  });
+
+
+
 });

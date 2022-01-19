@@ -45,7 +45,8 @@
        "delete_btn_label":"Delete",
        "next_btn_label":"Next",
        "remove_btn_label":"Remove",
-       "done_btn_label":"Done"
+       "done_btn_label":"Done",
+       "add_translation_label":"Add Translation"
     },
     "lbl":{
        "search":"Search",
@@ -174,6 +175,11 @@
        "collaborators": "Collaborators",
        "addCollaborators": "Add Collaborators",
        "manageCollaborators": "Manage Collaborators",
+       "sliderValue":"Slider Value",
+       "left":"Left",
+       "stepSize":"Step size",
+       "right":"Right",
+       "translation":"Translation",
        "publishchecklistTitle": "Please confirm that ALL the following items are verified (by ticking the check-boxes) before you can publish:",
        "bulkUploadErrorMessage" : "The metadata file has following errors. Please check and upload again",
        "bulkUploadQuestion": "Bulk Upload Question",
@@ -262,7 +268,8 @@
          "034": "failed to download {FILE_TYPE} file using blob url ",
          "035": "Unable to get pre_signed_url and Question bulk upload Failed, Please Try Again",
          "036": "Unable to upload to Blob and Question bulk upload Failed, Please Try Again",
-         "037": "Unable to accepted question"
+         "037": "Unable to accepted question",
+         "038": "Please select the condition and option for the dependent question"
       },
       "success": {
          "001": "Content is saved",
@@ -287,5 +294,8 @@
       "info" : {
          "001" : "QR code image generation is in progress. Please try downloading after sometime"
       }
-    }
+    },
+    "categoryLabels": {
+      "Multiselect Multiple Choice Question": "Multiple Choice Question"
+   }
  }
