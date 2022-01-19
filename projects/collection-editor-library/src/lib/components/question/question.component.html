@@ -78,11 +78,11 @@
                     <div class="text gray-200">{{configService.labelConfig?.lbl?.chooseType}}</div>
                     <i class="dropdown icon mx-8"></i>
                     <div class="menu" suiDropdownMenu>
-                      <div class="item" (click)="selectSolutionType('Text+Image')" libTelemetryInteract
+                      <div class="item" (click)="selectSolutionType('Text+Image')" (keydown.enter)="selectSolutionType('Text+Image')" tabindex="0" libTelemetryInteract
                         [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('solution_type','select','single_select', telemetryService.telemetryPageId, {solution_type:'Text+Image'})">
                         {{configService.labelConfig?.lbl?.textImage}}
                       </div>
-                      <div class="item" (click)="selectSolutionType('video')" libTelemetryInteract
+                      <div class="item" (click)="selectSolutionType('video')" (keydown.enter)="selectSolutionType('video')" tabindex="0" libTelemetryInteract
                         [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('solution_type','select','single_select', telemetryService.telemetryPageId, {solution_type:'video'})">
                         {{configService.labelConfig?.lbl?.video}}
                       </div>

@@ -4,7 +4,7 @@
     <div class="d-flex flex-ai-center sb-color-white">
       <button class="sb-btn sb-btn-primary sb-btn-xs back-btn px-0 hover-none fs-0-92 font-weight-bold"
       (click)="buttonEmitter({type: 'backContent'})" libTelemetryInteract
-      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('back','click','launch', telemetryService.telemetryPageId)">
+      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('back','click','launch', telemetryService.telemetryPageId)" aria-label="back button">
         <i class="arrow left icon" aria-hidden="true"></i> {{configService.labelConfig?.button_labels?.back_btn_label}}
       </button>
     </div>
@@ -14,7 +14,7 @@
 <div class="sb-bg-lightBlue bb-1">
 <div class="d-flex flex-jc-space-between flex-ai-center py-20 ui container">
   <div>
-    <div class="practical-header__title font-weight-bold pl-20 fs-0-92">
+    <div class="practical-header__title font-weight-bold pl-20 fs-0-92" tabindex="0">
       {{ labelConfigData.title }}
     </div>
 
