@@ -203,6 +203,9 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
         if (field.code === 'instructions') {
           field.default = _.get(metaDataFields, 'instructions.default') || '' ;
         }
+        if(field.code === 'setPeriod'){
+          field.default = !_.isEmpty(metaDataFields, 'endDate') ? 'Yes' : 'No' ;
+        }
 
         if ((_.isEmpty(field.range) || _.isEmpty(field.terms)) &&
           !field.editable && !_.isEmpty(field.default)) {
@@ -264,11 +267,12 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
 
   valueChanges(event: any) {
     console.log(event);
+    let data = _.omit(event,['setPeriod']);
     if (!_.isEmpty(this.appIcon) && this.showAppIcon) {
-      event.appIcon = this.appIcon;
+      data.appIcon = this.appIcon;
     }
-    this.toolbarEmitter.emit({ button: 'onFormValueChange', event });
-    this.treeService.updateNode(event);
+    this.toolbarEmitter.emit({ button: 'onFormValueChange', data });
+    this.treeService.updateNode(data);
   }
 
   appIconDataHandler(event) {
