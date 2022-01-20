@@ -763,7 +763,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   previewContent() {
     this.validateQuestionData();
-    this.validateFormFields();
     if (this.showFormError === false) {
       this.previewFormData(false);
       const questionId = _.isUndefined(this.questionId) ? this.tempQuestionId : this.questionId;
