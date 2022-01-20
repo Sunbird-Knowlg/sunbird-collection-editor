@@ -28,6 +28,7 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   public showAppIcon = false;
   public appIconConfig: any;
   public appIcon: any;
+  public outcomeDeclaration:any;
   constructor(private editorService: EditorService, public treeService: TreeService,
               public frameworkService: FrameworkService, private helperService: HelperService,
               private configService: ConfigService) {
@@ -203,6 +204,14 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
         if (field.code === 'instructions') {
           field.default = _.get(metaDataFields, 'instructions.default') || '' ;
         }
+        
+        if(field.code === 'allowECM'){
+          field.default = !_.isEmpty(metaDataFields, 'ecm') ? 'Yes' : 'No' ;
+        }
+
+        if(field.code === 'setPeriod'){
+          field.default = !_.isEmpty(metaDataFields, 'endDate') ? 'Yes' : 'No' ;
+        }
 
         if ((_.isEmpty(field.range) || _.isEmpty(field.terms)) &&
           !field.editable && !_.isEmpty(field.default)) {
@@ -263,13 +272,29 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   valueChanges(event: any) {
-    const data = _.omit(event, ['allowECM', 'levels']);
+    console.log(event);
+    let data = _.omit(event,['allowECM','levels','setPeriod']);
+    if(!_.isEmpty(event?.levels)){
+      data["outcomeDeclaration"]={
+        levels:this.createLeavels(event.levels)
+      }
+    }
     if (!_.isEmpty(this.appIcon) && this.showAppIcon) {
       event.appIcon = this.appIcon;
     }
     this.toolbarEmitter.emit({ button: 'onFormValueChange', data });
     this.treeService.updateNode(data);
   }
+
+  createLeavels(levels){
+    let obj={};
+    _.forEach(levels,(el,index)=>{
+      obj[`L${index+1}`] ={
+         label : el
+       }
+    })
+    return obj;
+}
 
   appIconDataHandler(event) {
     this.appIcon = event.url;

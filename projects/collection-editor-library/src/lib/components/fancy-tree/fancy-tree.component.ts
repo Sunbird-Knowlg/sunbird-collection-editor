@@ -151,7 +151,8 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         primaryCategory: _.get(this.editorService, 'editorConfig.config.primaryCategory'),
         metadata: {
           objectType: _.get(this.editorService, 'editorConfig.config.objectType'),
-          name: child.name
+          name: child.name,
+          mimeType: _.get(hierarchyLevel,`level${data.level}.mimeType`) || "application/vnd.sunbird.questionset"
         },
         folder: true,
         children: childTree,
@@ -350,6 +351,12 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.visibility.createNew = ((node.folder === false) || _.isEmpty(_.get(hierarchylevelData, 'children')) || _.get(this.config, 'enableQuestionCreation') === false) ? false : true;
       }
     }
+
+    if (_.get(this.editorService, 'editorConfig.config.renderTaxonomy') === true){
+      this.visibility.addChild=false;
+      this.visibility.addSibling=false;
+    }
+
     this.cdr.detectChanges();
   }
 
@@ -386,8 +393,14 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
     const $nodeSpan = $(node.span);
+    let menuTemplate;
     // tslint:disable-next-line:max-line-length   // TODO:: (node.data.contentType === 'CourseUnit') check this condition
-    const menuTemplate = node.data.root === true ? this.rootMenuTemplate : (node.data.root === false && node.folder === true  ? this.folderMenuTemplate : this.contentMenuTemplate);
+    if (_.get(this.editorService, 'editorConfig.config.renderTaxonomy') === true){
+      menuTemplate = node.data.root === true ? '' : (node.data.root === false && node.folder === true  ? '' : this.contentMenuTemplate);
+    }
+    else{
+      menuTemplate = node.data.root === true ? this.rootMenuTemplate : (node.data.root === false && node.folder === true  ? this.folderMenuTemplate : this.contentMenuTemplate);
+    }
     const iconsButton = $(menuTemplate);
     if ((node.getLevel() - 1) >= this.config.maxDepth) {
       iconsButton.find('#addchild').remove();

@@ -88,6 +88,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   setChildQuestion: any;
   public unsubscribe$ = new Subject<void>();
   onComponentDestroy$ = new Subject<any>();
+  outcomeDeclaration:any;
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
               private toasterService: ToasterService, private dialcodeService: DialcodeService,
@@ -288,6 +289,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     // tslint:disable-next-line:max-line-length
     this.rootFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.create.properties');
     console.log("setEditorForms");
+    this.setFeilds(this.rootFormConfig[0].fields);
     console.log(this.rootFormConfig[0].fields);
     let formData=this.rootFormConfig[0].fields;
     formData.forEach(field => {
@@ -906,7 +908,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       questionSetId: this.collectionId,
       questionId: mode === 'edit' ? this.selectedNodeData.data.metadata.identifier : questionId,
       type: interactionType,
-      setChildQueston:mode === 'edit' ? false : this.setChildQuestion,
+      setChildQuestion:mode === 'edit' ? false : this.setChildQuestion,
       category: questionCategory,
       creationContext: this.creationContext, // Pass the creation context to the question-component
     };
@@ -1130,4 +1132,129 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     );
     return response;
   }
+
+  setFeilds(rootFormConfig){
+    if (_.get(this.editorConfig, 'config.renderTaxonomy') === true) {
+      let orgId = _.get(this.editorConfig, 'context.identifier');
+      console.log(orgId);
+      this.editorService.fetchOutComeDeclaration(orgId)
+        .subscribe((data: any) => {
+          if (data?.result) {
+            this.outcomeDeclaration = _.get(data?.result, 'questionset.outcomeDeclaration.levels');
+            this.editorService.outcomeDeclaration = this.outcomeDeclaration;
+            console.log("outcomeDeclaration");
+            console.log(this.outcomeDeclaration);
+            let levelsArray = Object.keys(this.outcomeDeclaration);
+            levelsArray.forEach((level, index) => {
+              let obj = {
+                name: this.outcomeDeclaration[level].label,
+                renderingHints: {
+                  class: 'grid three-column-grid hidden-sectionName',
+                },
+                fields: this.constructFields(level, index, this.outcomeDeclaration[level].label),
+              };
+              this.unitFormConfig.push(obj);
+            });
+
+            rootFormConfig.forEach(field => {
+              if(field.code === 'levels'){
+                let defaultValue = [];
+                levelsArray.forEach((level) => {
+                  defaultValue.push(this.outcomeDeclaration[level].label)
+                });
+                console.log(defaultValue)
+                field.default = defaultValue
+              }
+            });
+          }
+        });
+    }
+  }
+
+  constructFields(level,index,labelName) {
+    let levelName=level.toLowerCase();
+    let fieldArray = [
+      {
+        code: levelName,
+        name: levelName,
+        label: `Level ${index+1}`,
+        placeholder: `Level ${index+1}`,
+        description: `Level ${index+1}`,
+        dataType: 'text',
+        inputType: 'text',
+        editable: false,
+        default:labelName,
+        required: true,
+        visible: true,
+        renderingHints: {
+          class: 'sb-g-col-lg-1 required',
+        },
+        validations: [
+          {
+            type: 'maxLength',
+            value: '120',
+            message: 'Entered name is too long',
+          },
+          {
+            type: 'required',
+            message: 'Name is required',
+          },
+        ],
+      },
+      {
+        code: `${levelName}min`,
+        name: `${levelName}min`,
+        label: 'Minimum',
+        placeholder: 'Minimum',
+        description: 'Minimum',
+        dataType: 'text',
+        inputType: 'text',
+        editable: true,
+        required: true,
+        visible: true,
+        renderingHints: {
+          class: 'sb-g-col-lg-1 required',
+        },
+        validations: [
+          {
+            type: 'maxLength',
+            value: '120',
+            message: 'Entered name is too long',
+          },
+          {
+            type: 'required',
+            message: 'Name is required',
+          },
+        ],
+      },
+      {
+        code: `${levelName}man`,
+        name: `${levelName}man`,
+        label: 'Maximum',
+        placeholder: 'Maximum',
+        description: 'Maximum',
+        dataType: 'text',
+        inputType: 'text',
+        editable: true,
+        required: true,
+        visible: true,
+        renderingHints: {
+          class: 'sb-g-col-lg-1 required',
+        },
+        validations: [
+          {
+            type: 'maxLength',
+            value: '120',
+            message: 'Entered name is too long',
+          },
+          {
+            type: 'required',
+            message: 'Name is required',
+          },
+        ],
+      },
+    ];
+    return fieldArray;
+  }
+
 }

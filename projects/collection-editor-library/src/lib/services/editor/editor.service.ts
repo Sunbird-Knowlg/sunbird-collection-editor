@@ -36,6 +36,7 @@ export class EditorService {
   optionsLength: any;
   selectedPrimaryCategory: any;
   leafParentIdentifier: any;
+  outcomeDeclaration:any;
   constructor(public treeService: TreeService, private toasterService: ToasterService,
               public configService: ConfigService, private telemetryService: EditorTelemetryService,
               private publicDataService: PublicDataService, private dataService: DataService, public httpClient: HttpClient) {
@@ -127,6 +128,23 @@ export class EditorService {
       url: hierarchyUrl,
       param: { ...param, ...option.params }
     };
+    console.log('readQuestionSet');
+    console.log(req);
+    return this.publicDataService.get(req);
+  }
+
+  fetchOutComeDeclaration(questionSetId, option: any = { params: {} }): Observable<any> {
+    const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
+    const param = {
+      fields: 'outcomeDeclaration'
+    };
+    const hierarchyUrl = `${url.READ}/${questionSetId}`;
+    const req = {
+      url: hierarchyUrl,
+      param: { ...param, ...option.params }
+    };
+    console.log('readQuestionSet');
+    console.log(req);
     return this.publicDataService.get(req);
   }
 

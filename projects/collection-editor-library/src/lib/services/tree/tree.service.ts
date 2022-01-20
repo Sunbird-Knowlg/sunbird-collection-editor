@@ -69,7 +69,7 @@ export class TreeService {
     activeNode.data.metadata = { ...activeNode.data.metadata, ...newData };
     activeNode.title = newData.name;
     newData = _.omitBy(newData, (v, key ) => _.isUndefined(v) || _.isNull(v) || (v === '' && _.includes(this.omitFalseyProps, key)));
-    newData = _.merge({}, newData, _.pick(activeNode.data.metadata, ['objectType', 'contentType', 'primaryCategory']));
+    newData=_.merge(newData,_.pick(activeNode.data.metadata, ['objectType', 'contentType', 'primaryCategory']));
     const attributions = newData.attributions;
     if (attributions && _.isString(attributions)) {
       newData.attributions = attributions.split(',');
@@ -99,6 +99,8 @@ export class TreeService {
     if (objectType) {
       newData.objectType = objectType;
     }
+    console.log("updateTreeNodeMetadata");
+    console.log(newData);
     this.setTreeCache(nodeId, newData, activeNode.data);
 
   }
