@@ -204,14 +204,6 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
         if (field.code === 'instructions') {
           field.default = _.get(metaDataFields, 'instructions.default') || '' ;
         }
-<<<<<<< HEAD
-        
-        if(field.code === 'allowECM'){
-          field.default = !_.isEmpty(metaDataFields, 'ecm') ? 'Yes' : 'No' ;
-        }
-
-=======
->>>>>>> kiran/sl-survey
         if(field.code === 'setPeriod'){
           field.default = !_.isEmpty(metaDataFields, 'endDate') ? 'Yes' : 'No' ;
         }
