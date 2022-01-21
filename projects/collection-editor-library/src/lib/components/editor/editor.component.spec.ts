@@ -10,7 +10,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { TreeService } from '../../services/tree/tree.service';
 import {
   editorConfig, editorConfig_question, toolbarConfig_question, nativeElement, getCategoryDefinitionResponse, hierarchyResponse,
-  categoryDefinition, categoryDefinitionData, csvExport, hirearchyGet, SelectedNodeMockData,
+  categoryDefinition, categoryDefinitionData, csvExport, hirearchyGet, SelectedNodeMockData, outcomeDeclarationData,
 } from './editor.component.spec.data';
 import { ConfigService } from '../../services/config/config.service';
 import { of, throwError } from 'rxjs';
@@ -743,16 +743,7 @@ describe('EditorComponent', () => {
     const interactionType = 'choice';
     component.collectionId = 'do_123';
     component.redirectToQuestionTab(mode, interactionType);
-    expect(component.questionComponentInput).toEqual(
-      {
-        questionSetId: component.collectionId,
-        questionId: undefined,
-        creationContext: undefined,
-        type: interactionType,
-        category: '',
-        setChildQueston: undefined
-      }
-    );
+    component.setChildQuestion=false;
     expect(component.pageId).toEqual('question');
   });
 
@@ -1000,4 +991,19 @@ describe('EditorComponent', () => {
     expect(component.isTreeInitialized).toBeFalsy();
     expect(component.setCsvDropDownOptionsDisable).toHaveBeenCalledWith(true);
   });
+
+  it('#setFeilds should call when the project observation with rubrics', () => {
+    editorConfig.config['renderTaxonomy']=true;
+    spyOn(component,"setFeilds").and.callThrough();
+    spyOn(component,'constructFields').and.callThrough();
+    const editorService = TestBed.inject(EditorService);
+    spyOn(editorService,'fetchOutComeDeclaration').and.returnValue(outcomeDeclarationData);
+    component.outcomeDeclaration=outcomeDeclarationData;
+    editorService.outcomeDeclaration=outcomeDeclarationData;
+    component.setFeilds(component.rootFormConfig);
+    expect(component.setFeilds).toHaveBeenCalled();
+  });
+
+
+
 });

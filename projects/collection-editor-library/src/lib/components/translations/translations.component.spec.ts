@@ -24,16 +24,23 @@ describe('TranslationsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  xit('#editorDataHandler() should call editorDataHandler for question', () => {
+  it('#editorDataHandler() should call editorDataHandler for question', () => {
     component.editorState = mockData.editorState;
     component.editorState.question=mockData.editorState;
     component.editorDataHandler(mockData.eventData, 'question');
     expect(component.editorState).toBeDefined();
   });
-  xit('#editorDataHandler() should call editorDataHandler for solution', () => {
+  it('#editorDataHandler() should call editorDataHandler for solution', () => {
     component.editorState = mockData.editorState;
     component.editorState.solutions=mockData.editorState;
     component.editorDataHandler(mockData.eventData, 'solution');
+    expect(component.editorState).toBeDefined();
+  });
+
+  it('#editorDataHandler() should call editorDataHandler for question', () => {
+    component.editorState = mockData.editorState;
+    component.editorState.solutions=mockData.editorState;
+    component.editorDataHandler(mockData.eventData, 'question');
     expect(component.editorState).toBeDefined();
   });
 
