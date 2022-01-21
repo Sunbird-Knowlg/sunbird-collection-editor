@@ -124,6 +124,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       )
     }
     else {
+      this.pageId = 'collection_editor';
       this.mergeCollectionExternalProperties().subscribe(
         (response) => {
           const hierarchyResponse = _.first(response);
