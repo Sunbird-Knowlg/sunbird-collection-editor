@@ -108,10 +108,13 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.solutionUUID = UUID.UUID();
     this.telemetryService.telemetryPageId = this.pageId;
     this.initialLeafFormConfig = _.cloneDeep(this.leafFormConfig);
-    this.questionFormConfig = _.cloneDeep(this.leafFormConfig);
     this.initialize();
     this.framework = _.get(this.editorService.editorConfig, 'context.framework');
-    this.fetchFrameWorkDetails().subscribe((frameworkDetails: any) => {
+  }
+
+  fetchFrameWorkDetails() {
+    this.frameworkService.frameworkData$.pipe(takeUntil(this.onComponentDestroy$),
+      filter(data => _.get(data, `frameworkdata.${this.framework}`)), take(1)).subscribe((frameworkDetails: any) => {
       if (frameworkDetails && !frameworkDetails.err) {
         const frameworkData = frameworkDetails.frameworkdata[this.framework].categories;
         this.frameworkDetails.frameworkData = frameworkData;
@@ -120,20 +123,17 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
   }
-  fetchFrameWorkDetails() {
-    return this.frameworkService.frameworkData$.pipe(takeUntil(this.onComponentDestroy$),
-      filter(data => _.get(data, `frameworkdata.${this.framework}`)), take(1));
-  }
 
   populateFrameworkData() {
     const categoryMasterList = this.frameworkDetails.frameworkData;
     _.forEach(categoryMasterList, (category) => {
-      _.forEach(this.questionFormConfig, (formFieldCategory) => {
+      _.forEach(this.leafFormConfig, (formFieldCategory) => {
         if (category.code === formFieldCategory.code) {
           formFieldCategory.terms = category.terms;
         }
       });
     });
+    this.questionFormConfig = _.cloneDeep(this.leafFormConfig);
   }
 
   ngAfterViewInit() {
@@ -146,7 +146,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   initialize() {
     this.editorService.fetchCollectionHierarchy(this.questionSetId).subscribe((response) => {
       this.questionSetHierarchy = _.get(response, 'result.questionSet');
-      const leafFormConfigfields = _.join(_.map(this.questionFormConfig, value => (value.code)), ',');
+      const leafFormConfigfields = _.join(_.map(this.leafFormConfig, value => (value.code)), ',');
       if (!_.isUndefined(this.questionId)) {
         this.questionService.readQuestion(this.questionId, leafFormConfigfields)
           .subscribe((res) => {
@@ -213,8 +213,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.questionInteractionType === 'default') {
           if (this.questionCategory) {
             this.editorState = _.get(this.configService, `editorConfig.defaultStates.nonInteractiveQuestions.${this.questionCategory}`);
-          }
-          else {
+          } else {
             this.editorState = { question: "", answer: "", solutions: "" };
           }
         }
@@ -337,10 +336,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   sendQuestionForPublish(event) {
     this.editorService.publishContent(this.questionId, event).subscribe(res => {
-      this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.004'));
+      this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.037'));
       this.redirectToChapterList();
     }, err => {
-      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.004'));
+      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.037'));
     });
   }
 
@@ -640,7 +639,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   getDefaultSessionContext() {
     return _.omitBy(_.merge(
       {
-        programId: _.get(this.editorService.editorConfig, 'context.programId'),
         creator: _.get(this.editorService.editorConfig, 'context.user.fullName'),
         createdBy: _.get(this.editorService.editorConfig, 'context.user.id'),
         ..._.pick(_.get(this.editorService.editorConfig, 'context'), ['board', 'medium', 'gradeLevel', 'subject', 'topic'])
@@ -709,7 +707,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       finalize(() => {
         this.showHideSpinnerLoader(false);
       })).subscribe((response: ServerResponse) => {
-        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.013'));
+        if (!_.includes(['submitQuestion'],this.actionType)) {
+          this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.013'));
+        }
         this.setQuestionId(_.get(response, 'result.identifier'));
         if (callback) callback();
       }, (err: ServerResponse) => {
@@ -866,9 +866,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     */
     return false;
   }
+
   populateFormData() {
     this.childFormData = {};
-    _.forEach(this.questionFormConfig, (formFieldCategory) => {
+    _.forEach(this.leafFormConfig, (formFieldCategory) => {
       formFieldCategory.editable = formFieldCategory.editable ? this.isEditable(formFieldCategory.code) : false;
       if (!_.isUndefined(this.questionId)) {
         if (this.questionMetaData && _.has(this.questionMetaData, formFieldCategory.code)) {
@@ -878,12 +879,14 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       } else {
         // tslint:disable-next-line:max-line-length
         const questionSetDefaultValue = _.get(this.questionSetHierarchy, formFieldCategory.code) ? _.get(this.questionSetHierarchy, formFieldCategory.code) : '';
-        const defaultEditStatus = _.find(this.initialLeafFormConfig, { code: formFieldCategory.code }).editable === true ? true : false;
+        const defaultEditStatus = _.find(this.initialLeafFormConfig, {code: formFieldCategory.code}).editable === true;
         formFieldCategory.default = defaultEditStatus ? '' : questionSetDefaultValue;
         this.childFormData[formFieldCategory.code] = formFieldCategory.default;
       }
     });
+    this.fetchFrameWorkDetails();
   }
+
   ngOnDestroy() {
     this.onComponentDestroy$.next();
     this.onComponentDestroy$.complete();
