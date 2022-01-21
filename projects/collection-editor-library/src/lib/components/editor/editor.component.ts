@@ -34,7 +34,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public templateList: any;
   public showConfirmPopup = false;
   public terms = false;
-  public pageId = 'collection_editor';
+  public pageId: string;
   public pageStartTime;
   public rootFormConfig: any;
   public unitFormConfig: any;
