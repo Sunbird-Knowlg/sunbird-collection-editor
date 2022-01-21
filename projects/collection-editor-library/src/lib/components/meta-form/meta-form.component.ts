@@ -204,11 +204,14 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
         if (field.code === 'instructions') {
           field.default = _.get(metaDataFields, 'instructions.default') || '' ;
         }
+<<<<<<< HEAD
         
         if(field.code === 'allowECM'){
           field.default = !_.isEmpty(metaDataFields, 'ecm') ? 'Yes' : 'No' ;
         }
 
+=======
+>>>>>>> kiran/sl-survey
         if(field.code === 'setPeriod'){
           field.default = !_.isEmpty(metaDataFields, 'endDate') ? 'Yes' : 'No' ;
         }
@@ -273,14 +276,9 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
 
   valueChanges(event: any) {
     console.log(event);
-    let data = _.omit(event,['allowECM','levels','setPeriod']);
-    if(!_.isEmpty(event?.levels)){
-      data["outcomeDeclaration"]={
-        levels:this.createLeavels(event.levels)
-      }
-    }
+    let data = _.omit(event,['setPeriod']);
     if (!_.isEmpty(this.appIcon) && this.showAppIcon) {
-      event.appIcon = this.appIcon;
+      data.appIcon = this.appIcon;
     }
     this.toolbarEmitter.emit({ button: 'onFormValueChange', data });
     this.treeService.updateNode(data);

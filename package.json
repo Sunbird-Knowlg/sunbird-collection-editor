@@ -33,7 +33,7 @@
     "@types/jquery": "^3.5.5",
     "alphanum-sort": "^1.0.2",
     "angular2-uuid": "^1.1.1",
-    "common-form-elements-web-v9": "^4.6.4",
+    "common-form-elements-web-v9": "4.6.4",
     "core-js": "^2.5.4",
     "epubjs": "0.3.88",
     "export-to-csv": "^0.2.1",
