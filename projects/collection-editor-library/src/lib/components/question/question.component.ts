@@ -429,7 +429,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.037'));
       this.redirectToChapterList();
     }, err => {
-      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.037'));
+      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.038'));
     });
   }
 
@@ -1285,7 +1285,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   buildCondition(type) {
     if(this.condition ==='default' || _.isEmpty(this.selectedOptions) ){
-      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.037'));
+      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.038'));
       return;
     }
     const questionId = this.questionId ? this.questionId : UUID.UUID();
