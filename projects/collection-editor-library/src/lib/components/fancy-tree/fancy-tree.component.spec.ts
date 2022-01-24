@@ -14,7 +14,7 @@ import { ConfigService } from '../../services/config/config.service';
 import { SuiModule } from 'ng2-semantic-ui-v9';
 import { HelperService } from 'collection-editor-library/lib/services/helper/helper.service';
 import { BranchingLogic } from '../question/question.component.spec.data';
-fdescribe('FancyTreeComponent', () => {
+describe('FancyTreeComponent', () => {
   let component: FancyTreeComponent;
   let fixture: ComponentFixture<FancyTreeComponent>;
   let editorService,helperService;
