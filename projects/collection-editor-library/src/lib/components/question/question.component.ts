@@ -283,7 +283,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   handleRedirectToQuestionset() {
-    if (_.isUndefined(this.questionId)) {
+    if (_.isUndefined(this.questionId) || _.get(this.creationContext, 'mode') === 'edit') {
       this.showConfirmPopup = true;
     } else {
       this.redirectToQuestionset();
@@ -623,6 +623,11 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       metadata.solutions = [];
     }
     metadata = _.merge(metadata, this.getDefaultSessionContext());
+    if(_.get(this.creationContext, 'objectType') === 'question') {
+      metadata.programId = _.get(this.editorService, 'editorConfig.context.programId');
+      metadata.collectionId = _.get(this.editorService, 'editorConfig.context.collectionIdentifier');
+      metadata.organisationId = _.get(this.editorService, 'editorConfig.context.contributionOrgId');
+    }
     metadata = _.merge(metadata, _.pickBy(this.childFormData, _.identity));
     return _.omit(metadata, ['question', 'numberOfOptions', 'options']);
   }
