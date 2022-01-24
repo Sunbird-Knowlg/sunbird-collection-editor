@@ -35,6 +35,8 @@ describe('OptionsComponent', () => {
     spyOn(treeService, 'getFirstChild').and.callFake(() => {
       return { data: { metadata: treeData } };
     });
+    component.editorState = mockOptionData.editorOptionData;
+
     // fixture.detectChanges();
   });
 
@@ -110,5 +112,25 @@ describe('OptionsComponent', () => {
     component.subMenuChange({index:1,value:'test'},1)
     expect(component.subMenus[0][0].value).toBe('test');
   })
+
+  it('#subMenuConfig() should set on initialize', () => {
+    spyOn(component,'subMenuConfig').and.callThrough();
+    const options = [
+      {
+        "body": "<p>true</p>"
+      }
+    ];
+    component.subMenuConfig(options);
+    expect(component.subMenuConfig).toHaveBeenCalledWith(options)
+  })
+
+  it('#setScore() should call if score is entered', () => {
+    spyOn(component,'setScore').and.callThrough();
+    const value = "20";
+    const scoreIndex = 1;
+    component.setScore(value,scoreIndex);
+    component.editorDataHandler();
+    expect(component.setScore).toHaveBeenCalled();    
+  });
 
 });

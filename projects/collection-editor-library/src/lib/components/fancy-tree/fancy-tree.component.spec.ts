@@ -14,7 +14,7 @@ import { ConfigService } from '../../services/config/config.service';
 import { SuiModule } from 'ng2-semantic-ui-v9';
 import { HelperService } from 'collection-editor-library/lib/services/helper/helper.service';
 import { BranchingLogic } from '../question/question.component.spec.data';
-describe('FancyTreeComponent', () => {
+fdescribe('FancyTreeComponent', () => {
   let component: FancyTreeComponent;
   let fixture: ComponentFixture<FancyTreeComponent>;
   let editorService,helperService;
@@ -86,6 +86,7 @@ describe('FancyTreeComponent', () => {
   });
 
   it('call #eachNodeActionButton() to verify #visibility for root node', () => {
+    spyOn(component,'eachNodeActionButton').and.callThrough();
     component.config = mockData.config;
     const rootNode = {
       getLevel: () => 1,
@@ -97,6 +98,7 @@ describe('FancyTreeComponent', () => {
     expect(component.visibility.createNew).toBeFalsy();
     expect(component.visibility.addChild).toBeTruthy();
     expect(component.visibility.addSibling).toBeFalsy();
+    expect(component.eachNodeActionButton).toHaveBeenCalled();
   });
 
   it('call #eachNodeActionButton() to verify #visibility for child node', () => {
