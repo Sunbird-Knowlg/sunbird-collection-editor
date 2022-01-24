@@ -81,6 +81,149 @@ export const mockData = {
             "validations": []
         },
         {
+            "code": "audience",
+            "dataType": "list",
+            "description": "Suggested User Type",
+            "editable": true,
+            "inputType": "nestedselect",
+            "label": "Suggested User Type",
+            "name": "userTypes",
+            "placeholder": "Suggested User Type",
+            "renderingHints": {
+                "class": "sb-g-col-lg-1"
+            },
+            "required": false,
+            "visible": true,
+            "range": [
+                "Education Official",
+                "School leaders (HMs)",
+                "Teachers",
+                "Students",
+                "Parents",
+                "Parent",
+                "Others"
+            ]
+        },
+        {
+            "code": "description",
+            "name": "Description",
+            "label": "Description",
+            "placeholder": "Enter Description",
+            "description": "Description of the Question Set",
+            "dataType": "text",
+            "inputType": "textarea",
+            "editable": true,
+            "required": false,
+            "visible": true,
+            "renderingHints": {
+                "class": "sb-g-col-lg-1"
+            }
+        },
+        {
+            "code": "startDate",
+            "name": "startDate",
+            "label": "Start Date",
+            "placeholder": "Start Date",
+            "description": "Choose Start Date",
+            "dataType": "date",
+            "inputType": "date",
+            "editable": true,
+            "required": false,
+            "visible": true,
+            "renderingHints": {
+                "class": "sb-g-col-lg-1"
+            },
+            "validations": [
+                {
+                    "type": "dateFormat",
+                    "value": "YYYY-MM-DD[T]HH:mm:ss.SSS[Z]",
+                    "message": "Date format not matched"
+                }
+            ]
+        },
+        {
+            "code": "setPeriod",
+            "name": "setPeriod",
+            "label": "Set Period",
+            "placeholder": "Set period",
+            "description": "Set Period",
+            "dataType": "text",
+            "inputType": "checkbox",
+            "editable": true,
+            "required": false,
+            "visible": true,
+            "renderingHints": {
+                "class": "sb-g-col-lg-1"
+            }
+        },
+        {
+            "code": "endDate",
+            "name": "endDate",
+            "depends": [
+                "setPeriod"
+            ],
+            "label": "End Date",
+            "placeholder": "End Date",
+            "description": "Choose End Date",
+            "dataType": "date",
+            "inputType": "date",
+            "editable": true,
+            "required": false,
+            "visible": true,
+            "renderingHints": {
+                "class": "sb-g-col-lg-1"
+            },
+            "validations": [
+                {
+                    "type": "dateFormat",
+                    "value": "YYYY-MM-DD[T]HH:mm:ss.SSS[Z]",
+                    "message": "Date format not matched"
+                }
+            ]
+        },
+        {
+            "code": "entityType",
+            "dataType": "text",
+            "description": "Select the entity i.e. district, block, cluster, schools for which the form is designed and is to be taken up. The users will be able to conduct observations for only the selected type of entities.",
+            "editable": true,
+            "inputType": "select",
+            "label": "Entity Type",
+            "name": "entityType",
+            "placeholder": "Entity Type",
+            "renderingHints": {
+                "class": "sb-g-col-lg-1 required"
+            },
+            "required": true,
+            "visible": true,
+            "range": [
+                "School",
+                "Block",
+                "Cluster",
+                "District"
+            ],
+            "validations": [
+                {
+                    "type": "required",
+                    "message": "Name is required"
+                }
+            ]
+        },
+        {
+            "code": "allowScoring",
+            "name": "allowScoring",
+            "label": "Enable Scoring",
+            "placeholder": "Enable Scoring",
+            "description": "Select to enable the option of scoring for questions in the form. Score can be added to questions only if this is selected",
+            "dataType": "text",
+            "inputType": "checkbox",
+            "editable": true,
+            "required": false,
+            "visible": true,
+            "renderingHints": {
+                "class": "sb-g-col-lg-1"
+            }
+        },
+        {
             "code": "license",
         },
         /*
