@@ -630,6 +630,15 @@ describe('QuestionComponent', () => {
     expect(component.setCondition).toHaveBeenCalledWith(data);
   });
 
+  it('#subMenuConfig() should call when question page render', () => {
+    spyOn(component,'subMenuConfig').and.callThrough();
+    component.questionMetaData=mockData.questionMetaData;
+    component.sourcingSettings=sourcingSettingsMock;
+    component.questionInput.setChildQuestion=false;
+    component.subMenuConfig();
+    expect(component.subMenuConfig).toHaveBeenCalled();
+  });
+
 
 
 });
