@@ -165,7 +165,7 @@ export const mockData = {
       en: [null],
     },
     instructions: {
-      en: [null],
+      en: ['test'],
     },
   },
   childMetadataUpdated: {

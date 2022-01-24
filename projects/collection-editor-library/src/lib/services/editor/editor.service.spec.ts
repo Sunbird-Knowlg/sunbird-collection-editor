@@ -1,5 +1,5 @@
 import { DataService } from './../data/data.service';
-import { editorConfig } from './../../components/editor/editor.component.spec.data';
+import { editorConfig,BranchingLogicData, treeNodeData,rootNodeData } from './../../components/editor/editor.component.spec.data';
 import { TestBed } from '@angular/core/testing';
 import { EditorService } from './editor.service';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
@@ -393,4 +393,51 @@ describe('EditorService', () => {
           expect(data.responseCode).toEqual('OK');
       });
   })
+
+  it('#getBranchingLogicByFolder() should call', () => {
+    spyOn(editorService,'getBranchingLogicByFolder').and.callThrough();
+    spyOn(editorService.treeService, 'getNodeById').and.returnValue(of(treeNodeData))
+    editorService.getBranchingLogicByFolder('do_113432866096922624110');
+    expect(editorService.getBranchingLogicByFolder).toHaveBeenCalled();
+  });
+
+  it('#getDependentNodes() should call', () => {
+    spyOn(editorService,'getDependentNodes').and.callThrough();
+    spyOn(editorService.treeService, 'getNodeById').and.returnValue(of(treeNodeData))
+    editorService.getDependentNodes('do_113432866096922624110');
+    expect(editorService.getDependentNodes).toHaveBeenCalled();
+  });
+
+  it('#getBranchingLogicByNodeId() should call', () => {
+    spyOn(editorService,'getBranchingLogicByNodeId').and.callThrough();
+    spyOn(editorService.treeService, 'getNodeById').and.returnValue(of(treeNodeData))
+    editorService.getBranchingLogicByNodeId('do_113432866096922624110');
+    expect(editorService.getBranchingLogicByNodeId).toHaveBeenCalled();
+  });
+
+  it('#getParentDependentMap() should call', () => {
+    spyOn(editorService,'getParentDependentMap').and.callThrough();
+    editorService.getParentDependentMap(rootNodeData);
+    editorService.getFlattenedBranchingLogic(rootNodeData);
+    expect(editorService.getParentDependentMap).toHaveBeenCalled();
+  });
+
+  it('#getFlattenedBranchingLogic() should call', () => {
+    spyOn(editorService,'getFlattenedBranchingLogic').and.callThrough();
+    editorService.getFlattenedBranchingLogic({data:rootNodeData});
+    expect(editorService.getFlattenedBranchingLogic).toHaveBeenCalled();
+  });
+
+  it('#getBranchingLogicEntry() should call', () => {
+    spyOn(editorService,'getBranchingLogicEntry').and.callThrough();
+    editorService.getBranchingLogicEntry(BranchingLogicData,'do_113432866096922624110');
+    expect(editorService.getBranchingLogicEntry).toHaveBeenCalled();
+  });
+
+  it('#getPrimaryCategoryName() should call to get primary category name', () => {
+    spyOn(editorService.treeService, 'getNodeById').and.returnValue(of(treeNodeData))
+    spyOn(editorService,'getPrimaryCategoryName').and.callThrough();
+    editorService.getPrimaryCategoryName('do_11326714211239526417');
+    expect(editorService.getPrimaryCategoryName).toHaveBeenCalledWith('do_11326714211239526417')
+  });
 });

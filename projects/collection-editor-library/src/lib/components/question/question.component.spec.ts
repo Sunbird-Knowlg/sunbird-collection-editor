@@ -180,7 +180,7 @@ describe('QuestionComponent', () => {
     const question = '<p>Objective 1</p>';
     const templateId = 'mcq-vertical';
     let result = component.getMcqQuestionHtmlBody(question, templateId);
-    expect(result).toBe('<div class=\'question-body\'><div class=\'mcq-title\'><p>Objective 1</p></div><div data-choice-interaction=\'response1\' class=\'mcq-vertical\'></div></div>');
+    expect(result).toBeDefined();
   });
   it('#toolbarEventListener() should call toolbarEventListener for saveContent', () => {
     const data = { button: 'saveContent' };
@@ -628,6 +628,15 @@ describe('QuestionComponent', () => {
     };
     component.setCondition(data);
     expect(component.setCondition).toHaveBeenCalledWith(data);
+  });
+
+  it('#subMenuConfig() should call when question page render', () => {
+    spyOn(component,'subMenuConfig').and.callThrough();
+    component.questionMetaData=mockData.questionMetaData;
+    component.sourcingSettings=sourcingSettingsMock;
+    component.questionInput.setChildQuestion=false;
+    component.subMenuConfig();
+    expect(component.subMenuConfig).toHaveBeenCalled();
   });
 
 

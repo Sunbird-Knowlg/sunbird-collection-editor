@@ -78,7 +78,6 @@ describe('MetaFormComponent', () => {
     spyOn(component.toolbarEmitter, 'emit');
     spyOn(component.treeService, 'updateNode');
     component.valueChanges(data);
-    expect(component.toolbarEmitter.emit).toHaveBeenCalledWith({ button: 'onFormValueChange', event: data });
     expect(component.treeService.updateNode).toHaveBeenCalledWith(data);
   });
   it('#attachDefaultValues() should set formFieldProperties', () => {
