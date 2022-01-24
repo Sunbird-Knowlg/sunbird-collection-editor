@@ -17,6 +17,8 @@ describe('TranslationsComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TranslationsComponent);
     component = fixture.componentInstance;
+    component.editorState = mockData.editorState;
+    component.editorState.solutions=mockData.editorState;
     fixture.detectChanges();
   });
 
@@ -31,17 +33,22 @@ describe('TranslationsComponent', () => {
     expect(component.editorState).toBeDefined();
   });
   it('#editorDataHandler() should call editorDataHandler for solution', () => {
-    component.editorState = mockData.editorState;
-    component.editorState.solutions=mockData.editorState;
+    spyOn(component,'editorDataHandler').and.callThrough();
     component.editorDataHandler(mockData.eventData, 'solution');
-    expect(component.editorState).toBeDefined();
+    expect(component.editorDataHandler).toHaveBeenCalledWith(mockData.eventData, 'solution');
   });
 
   it('#editorDataHandler() should call editorDataHandler for question', () => {
-    component.editorState = mockData.editorState;
-    component.editorState.solutions=mockData.editorState;
+    spyOn(component,'editorDataHandler').and.callThrough();
     component.editorDataHandler(mockData.eventData, 'question');
-    expect(component.editorState).toBeDefined();
+    expect(component.editorDataHandler).toHaveBeenCalledWith(mockData.eventData, 'question');
+    expect(component.editorState.question).toBe(mockData.eventData.body);
+  });
+
+  it('#editorDataHandler() should call editorDataHandler without type', () => {
+    spyOn(component,'editorDataHandler').and.callThrough();
+    component.editorDataHandler(mockData.eventData);
+    expect(component.editorDataHandler).toHaveBeenCalledWith(mockData.eventData);
   });
 
 });

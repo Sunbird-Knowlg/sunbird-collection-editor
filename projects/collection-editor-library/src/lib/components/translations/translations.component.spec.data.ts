@@ -18,6 +18,6 @@ export const mockData={
         name: "Subjective Question",
         qType: "SA",
         primaryCategory: "Subjective Question",
-        mediaobj: undefined
+        mediaobj: 'audio'
     }
 }

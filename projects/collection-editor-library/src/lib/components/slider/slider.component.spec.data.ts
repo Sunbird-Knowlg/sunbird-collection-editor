@@ -17,3 +17,14 @@ export const mockData = {
     },
   },
 };
+
+export const mockConfigService={
+  labelConfig:{
+    lbl:{
+      left:"Left",
+      stepSize:"Step size",
+      right:"Right",
+      sliderValue:'Slider Value'
+    }
+  }
+}

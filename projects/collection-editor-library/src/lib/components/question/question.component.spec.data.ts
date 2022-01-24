@@ -1821,47 +1821,135 @@ export const sourcingSettingsMock = {
 
 export const leafFormConfigMock = [
   {
-    code: "name",
-    dataType: "text",
-    description: "Name of the content",
-    editable: true,
-    inputType: "text",
-    label: "Title",
-    name: "Title",
-    placeholder: "Title",
-    renderingHints: {
-      class: "sb-g-col-lg-2 required",
-    },
-    required: true,
-    visible: true,
-    validations: [
-      {
-        type: "max",
-        value: "100",
-        message: "Input is Exceeded",
+      "code": "name",
+      "dataType": "text",
+      "description": "Name of the content",
+      "editable": false,
+      "inputType": "text",
+      "label": "Title",
+      "name": "Title",
+      "placeholder": "Title",
+      "renderingHints": {
+          "class": "sb-g-col-lg-1 required"
       },
-      {
-        type: "required",
-        message: "Title is required",
-      },
-    ],
-    default: "Text 4",
+      "required": true,
+      "visible": true,
+      "validations": [
+          {
+              "type": "max",
+              "value": "100",
+              "message": "Input is Exceeded"
+          },
+          {
+              "type": "required",
+              "message": "Title is required"
+          }
+      ],
+      "default": "test"
   },
   {
-    code: "numberOnly",
-    name: "numberOnly",
-    label: "Number Only",
-    placeholder: "Number Only",
-    description: "Number only",
-    default: "Yes",
-    dataType: "text",
-    inputType: "checkbox",
-    editable: true,
-    required: false,
-    visible: true,
-    renderingHints: {
-      class: "sb-g-col-lg-1",
-    },
+      "code": "allowMultiSelect",
+      "dataType": "text",
+      "description": "allowMultiSelect",
+      "editable": false,
+      "index": 5,
+      "default": "Yes",
+      "inputType": "checkbox",
+      "label": "Allow Multi Select",
+      "name": "allowMultiSelect",
+      "placeholder": "allowMultiSelect",
+      "renderingHints": {
+          "class": "sb-g-col-lg-1"
+      },
+      "required": false,
+      "visible": true
+  },
+  {
+      "code": "showEvidence",
+      "dataType": "text",
+      "description": "Allow Evidence",
+      "editable": false,
+      "index": 5,
+      "default": "Yes",
+      "inputType": "checkbox",
+      "label": "Allow Evidence",
+      "name": "showEvidence",
+      "placeholder": "showEvidence",
+      "renderingHints": {
+          "class": "sb-g-col-lg-1"
+      },
+      "required": false,
+      "visible": true
+  },
+  {
+      "code": "evidenceMimeType",
+      "dataType": "list",
+      "depends": [
+          "showEvidence"
+      ],
+      "description": "Evidence",
+      "editable": false,
+      "inputType": "multiselect",
+      "label": "evidence",
+      "name": "evidenceMimeType",
+      "placeholder": "evidence",
+      "renderingHints": {
+          "class": "sb-g-col-lg-1"
+      },
+      "required": false,
+      "visible": true,
+      "range": null
+  },
+  {
+      "code": "showRemarks",
+      "dataType": "text",
+      "description": "Allow Remarks",
+      "editable": false,
+      "index": 5,
+      "inputType": "checkbox",
+      "label": "Allow Remarks",
+      "name": "showRemarks",
+      "placeholder": "showRemarks",
+      "renderingHints": {
+          "class": "sb-g-col-lg-1"
+      },
+      "required": false,
+      "visible": true
+  },
+  {
+      "code": "remarksLimit",
+      "dataType": "text",
+      "description": "Remark limit",
+      "depends": [
+          "showRemarks"
+      ],
+      "editable": false,
+      "inputType": "text",
+      "label": "Remark limit",
+      "name": "remarksLimit",
+      "placeholder": "Add limit",
+      "renderingHints": {
+          "class": "sb-g-col-lg-1"
+      },
+      "required": false,
+      "visible": true
+  },
+  {
+      "code": "markAsNotMandatory",
+      "dataType": "text",
+      "description": "markAsNotMandatory",
+      "editable": false,
+      "index": 5,
+      "inputType": "checkbox",
+      "label": "Mark As Not Mandatory",
+      "name": "markAsNotMandatory",
+      "placeholder": "markAsNotMandatory",
+      "renderingHints": {
+          "class": "sb-g-col-lg-1"
+      },
+      "required": false,
+      "visible": true,
+      "default": "No"
   }
 ];
 export const creationContextMock: any = {
@@ -1934,7 +2022,7 @@ export const childMetaData = {
   name: "test",
   allowMultiSelect: "Yes",
   showEvidence: "Yes",
-  evidenceMimeType: ["audio"],
+  evidenceMimeType: ["image"],
   showRemarks: "Yes",
   remarksLimit: "10",
   markAsNotMandatory: "Yes",

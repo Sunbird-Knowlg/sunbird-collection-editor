@@ -86,6 +86,7 @@ describe('FancyTreeComponent', () => {
   });
 
   it('call #eachNodeActionButton() to verify #visibility for root node', () => {
+    spyOn(component,'eachNodeActionButton').and.callThrough();
     component.config = mockData.config;
     const rootNode = {
       getLevel: () => 1,
@@ -97,6 +98,7 @@ describe('FancyTreeComponent', () => {
     expect(component.visibility.createNew).toBeFalsy();
     expect(component.visibility.addChild).toBeTruthy();
     expect(component.visibility.addSibling).toBeFalsy();
+    expect(component.eachNodeActionButton).toHaveBeenCalled();
   });
 
   it('call #eachNodeActionButton() to verify #visibility for child node', () => {

@@ -33,9 +33,9 @@ const mockEditorService = {
     }
   },
   selectedChildren: {
-    primaryCategory: 'Text',
-    label: 'Text',
-    interactionType: 'text'
+    primaryCategory: 'Multiselect Multiple Choice Question',
+    label: 'Multiple Choice Question',
+    interactionType: 'choice'
   },
   getToolbarConfig: () => {},
   _toFlatObj: () => {},
@@ -100,6 +100,8 @@ describe('QuestionComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+    const editorService = TestBed.get(EditorService);
+    editorService.selectedChildren.label='Multiple Choice Question'
   });
 
   it('Unit test for #ngOnInit()', () => {
@@ -112,6 +114,7 @@ describe('QuestionComponent', () => {
       creationContext: creationContextMock
     };
     const editorService = TestBed.get(EditorService);
+
     component.ngOnInit();
     expect(component.questionInteractionType).toEqual('choice');
     expect(component.questionCategory).toEqual('MTF');
@@ -125,11 +128,11 @@ describe('QuestionComponent', () => {
   });
 
   it('Unit test for #populateFormData ', () => {
-    component.leafFormConfig = mockData.childMetadata.properties;
-    component.questionMetaData = mockData.questionMetaData;
+    spyOn(component,'populateFormData').and.callThrough();
+    component.leafFormConfig=leafFormConfigMock;
+    component.questionId='do_11330103476396851218',
     component.populateFormData();
-    expect(component.questionMetaData).toBe(mockData.questionMetaData);
-    expect(component.leafFormConfig).toBe(mockData.childMetadata.properties);
+    expect(component.populateFormData).toHaveBeenCalled();
   });
   it('should call previewFormData ', () => {
     component.leafFormConfig = mockData.childMetadata.properties;
@@ -183,10 +186,11 @@ describe('QuestionComponent', () => {
     expect(result).toBeDefined();
   });
   it('#toolbarEventListener() should call toolbarEventListener for saveContent', () => {
-    const data = { button: 'saveContent' };
+    const event = { button: 'saveContent' };
+    component.actionType = event.button;
     spyOn(component, 'saveContent');
-    component.toolbarEventListener(data);
-    expect(component.saveContent).toHaveBeenCalled();
+    component.toolbarEventListener(event);
+    expect(component.toolbarEventListener).toHaveBeenCalledWith;
   });
   it('#toolbarEventListener() should call toolbarEventListener for cancelContent', () => {
     const data = { button: 'cancelContent' };
@@ -639,6 +643,15 @@ describe('QuestionComponent', () => {
     expect(component.subMenuConfig).toHaveBeenCalled();
   });
 
-
+  it('#sliderData() should call when slider question is called', () => {
+    spyOn(component,'sliderData').and.callThrough();
+    const event={
+      leftAnchor:0,
+      rightAnchor:10,
+      step:1
+    }
+    component.sliderData(event);
+    expect(component.sliderData).toHaveBeenCalledWith(event);
+  });
 
 });
