@@ -1,3 +1,6 @@
+<div *ngIf='showLoader' class="ui container">
+  <app-loader></app-loader>
+</div>
 <div class="sb-editor-container mb-0" *ngIf="!showLoader">
   <lib-header [labelConfigData]="toolbarConfig" [buttonLoaders]="buttonLoaders" [pageId]="pageId" (toolbarEmitter)="toolbarEventListener($event)">
   </lib-header>
