@@ -49,6 +49,7 @@ import { SliderComponent } from './components/slider/slider.component';
 import { TranslationsComponent } from './components/translations/translations.component';
 import { PublishChecklistComponent } from './components/publish-checklist/publish-checklist.component';
 import { BulkUploadComponent  } from './components/bulk-upload/bulk-upload.component';
+import { AppLoaderComponent } from './components/app-loader/app-loader.component';
 @NgModule({
   declarations: [CollectionEditorLibraryComponent, InterpolatePipe, SanitizeHtmlPipe, ContentplayerPageComponent, EditorComponent, QumlplayerPageComponent,
     HeaderComponent, FancyTreeComponent, MetaFormComponent, LibraryComponent, LibraryFilterComponent, LibraryListComponent,
@@ -56,7 +57,7 @@ import { BulkUploadComponent  } from './components/bulk-upload/bulk-upload.compo
     LibraryPlayerComponent, ResourceReorderComponent, SkeletonLoaderComponent, TemplateComponent, TelemetryInteractDirective,
     AssetBrowserComponent, CollectionIconComponent,
     QumlPlayerComponent, DialcodeComponent, DateFormatPipe, BulkUploadComponent, CsvUploadComponent, ManageCollaboratorComponent,
-    PublishChecklistComponent, AnswerDateComponent, QuestionOptionSubMenuComponent, SliderComponent, TranslationsComponent],
+    PublishChecklistComponent, AnswerDateComponent, QuestionOptionSubMenuComponent, SliderComponent, TranslationsComponent, AppLoaderComponent],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule.forChild([]), SuiModule,
   CommonFormElementsModule, InfiniteScrollModule, HttpClientModule, SunbirdPdfPlayerModule, SunbirdVideoPlayerModule,
   QumlLibraryModule, CarouselModule, SunbirdEpubPlayerModule],

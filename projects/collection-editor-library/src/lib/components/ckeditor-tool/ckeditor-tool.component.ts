@@ -384,7 +384,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
     this.editorInstance.model.change(writer => {
       const imageElement = writer.createElement('image', {
         src,
-        alt: imageName + 'image',
+        alt: imageName,
         'data-asset-variable': imageId
       });
       this.editorInstance.model.insertContent(imageElement, this.editorInstance.model.document.selection);

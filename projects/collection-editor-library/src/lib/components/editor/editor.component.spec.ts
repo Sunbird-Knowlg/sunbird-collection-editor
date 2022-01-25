@@ -62,7 +62,6 @@ describe('EditorComponent', () => {
     expect(component.questionComponentInput).toEqual({});
     expect(component.showConfirmPopup).toBeFalsy();
     expect(component.terms).toBeFalsy();
-    expect(component.pageId).toEqual('collection_editor');
     expect(component.showLibraryPage).toBeFalsy();
     expect(component.libraryComponentInput).toEqual({});
     expect(component.isQumlPlayer).toBeUndefined();
@@ -748,7 +747,9 @@ describe('EditorComponent', () => {
   });
 
   it('#questionEventListener() should set #pageId to collection_editor', async () => {
+    component.objectType = 'questionSet';
     spyOn(component, 'mergeCollectionExternalProperties').and.returnValue(of({}));
+    component.questionEventListener({});
     expect(component.pageId).toEqual('collection_editor');
   });
 
