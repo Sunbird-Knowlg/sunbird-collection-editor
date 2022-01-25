@@ -56,7 +56,7 @@ import { AppLoaderComponent } from './components/app-loader/app-loader.component
     LibraryPlayerComponent, ResourceReorderComponent, SkeletonLoaderComponent, TemplateComponent, TelemetryInteractDirective,
     AssetBrowserComponent, CollectionIconComponent,
     QumlPlayerComponent, DialcodeComponent, DateFormatPipe, BulkUploadComponent, CsvUploadComponent, ManageCollaboratorComponent,
-    PublishChecklistComponent, QuestionOptionSubMenuComponent, SliderComponent, TranslationsComponent],
+    PublishChecklistComponent, QuestionOptionSubMenuComponent, SliderComponent, TranslationsComponent,AppLoaderComponent],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule.forChild([]), SuiModule,
   CommonFormElementsModule, InfiniteScrollModule, HttpClientModule, SunbirdPdfPlayerModule, SunbirdVideoPlayerModule,
   QumlLibraryModule, CarouselModule, SunbirdEpubPlayerModule],
