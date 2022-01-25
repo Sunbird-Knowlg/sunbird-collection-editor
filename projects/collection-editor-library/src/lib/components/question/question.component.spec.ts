@@ -69,8 +69,10 @@ describe('QuestionComponent', () => {
     component = fixture.componentInstance;
     component.questionInput = {
       questionSetId: 'do_11330102570702438417',
-      questionId: 'do_11330103476396851218',
+      questionId: 'do_1134357224765685761203',
     };
+    component.questionId='do_1134357224765685761203';
+    component.questionInteractionType='choice';
     component.questionPrimaryCategory='Multiselect Multiple Choice Question';
     component.questionInteractionType = 'choice';
     let editorService: EditorService = TestBed.inject(EditorService);
@@ -80,11 +82,13 @@ describe('QuestionComponent', () => {
     spyOn(editorService, 'getToolbarConfig').and.returnValue({ title: 'abcd', showDialcode: 'No', showPreview: '' });
     spyOn(editorService, 'fetchCollectionHierarchy').and.returnValue({ subscribe: fn => fn(collectionHierarchyMock) });
     spyOn(editorService, 'updateCollection').and.returnValue({ subscribe: fn => fn({}) });
+    spyOn(component,'subMenuConfig').and.callThrough();
     let questionService: QuestionService = TestBed.inject(QuestionService);
     spyOn(questionService, 'readQuestion').and.returnValue(of(readQuestionMock));
     treeService = TestBed.get(TreeService);
     fixture.detectChanges();
   });
+  
 
   it('check default values', () => {
     expect(component.terms).toEqual(false);
@@ -635,7 +639,6 @@ describe('QuestionComponent', () => {
   });
 
   it('#subMenuConfig() should call when question page render', () => {
-    spyOn(component,'subMenuConfig').and.callThrough();
     component.questionMetaData=mockData.questionMetaData;
     component.sourcingSettings=sourcingSettingsMock;
     component.questionInput.setChildQuestion=false;

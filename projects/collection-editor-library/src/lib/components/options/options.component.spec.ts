@@ -9,6 +9,7 @@ import { ConfigService } from '../../services/config/config.service';
 import { SuiModule } from 'ng2-semantic-ui-v9';
 import { TreeService } from '../../services/tree/tree.service';
 import { treeData } from './../fancy-tree/fancy-tree.component.spec.data';
+import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 
 describe('OptionsComponent', () => {
   let component: OptionsComponent;
@@ -18,7 +19,7 @@ describe('OptionsComponent', () => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule, FormsModule, SuiModule ],
       declarations: [ OptionsComponent, TelemetryInteractDirective ],
-      providers: [ConfigService,TreeService],
+      providers: [ConfigService,TreeService,EditorTelemetryService],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     })
     .compileComponents();
@@ -70,6 +71,7 @@ describe('OptionsComponent', () => {
     spyOn(component.editorDataOutput, 'emit').and.callThrough();
     component.editorState = mockOptionData.editorOptionData;
     component.editorDataHandler();
+    component.questionPrimaryCategory='Multiselect Multiple Choice Question';
     expect(component.prepareMcqBody).toHaveBeenCalledWith(mockOptionData.editorOptionData);
     expect(component.editorDataOutput.emit).toHaveBeenCalled();
   });

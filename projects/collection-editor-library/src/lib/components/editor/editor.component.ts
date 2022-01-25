@@ -272,8 +272,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           this.frameworkService.frameworkValues = _.concat(_.map(_.get(response, 'result.Framework'), framework => {
             return { label: framework.name, identifier: framework.identifier };
           }));
-          console.log("leafconfig");
-          console.log(categoryDefinitionData);
           this.setEditorForms(categoryDefinitionData);
         }, error => {
           console.log('error', error);
@@ -286,8 +284,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.unitFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.unitMetadata.properties');
     // tslint:disable-next-line:max-line-length
     this.rootFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.create.properties');
-    console.log("setEditorForms");
-    console.log(this.rootFormConfig[0].fields);
     let formData=this.rootFormConfig[0].fields;
     formData.forEach(field => {
       if (field.code === 'evidenceMimeType') {
@@ -683,7 +679,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   setUpdatedTreeNodeData() {
     this.editorService.fetchCollectionHierarchy(this.collectionId).subscribe((res) => {
-      console.log('hierarchyData', res);
       this.collectionTreeNodes = {
         data: _.get(res, `result.${this.objectType}`)
       };
@@ -820,8 +815,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     })).subscribe((res) => {
       const selectedtemplateDetails = res.result.objectCategoryDefinition;
       this.editorService.selectedChildren['label']=selectedtemplateDetails.label;
-      console.log('form read');
-      console.log(selectedtemplateDetails);
       const selectedTemplateFormFields = _.get(selectedtemplateDetails, 'forms.create.properties');
       if (!_.isEmpty(selectedTemplateFormFields)) {
         const questionCategoryConfig = selectedTemplateFormFields;
@@ -830,10 +823,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
             evidenceMimeType = field.range;
             field.options = this.setEvidence;
             field.range = null;
-          }
-          else if (field.code === 'ecm') {
-            ecm = field.options;
-            field.options = this.setEcm;
           }
         });
         this.leafFormConfig = questionCategoryConfig;
@@ -903,8 +892,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       })).subscribe((res) => {
         const selectedtemplateDetails = res.result.objectCategoryDefinition;
         this.editorService.selectedChildren['label']=selectedtemplateDetails.label;
-        console.log('form read');
-        console.log(selectedtemplateDetails);
         const selectedTemplateFormFields = _.get(selectedtemplateDetails, 'forms.create.properties');
         if (!_.isEmpty(selectedTemplateFormFields)) {
           const questionCategoryConfig = selectedTemplateFormFields;
@@ -913,10 +900,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
               evidenceMimeType = field.range;
               field.options = this.setEvidence;
               field.range = null;
-            }
-            else if (field.code === 'ecm') {
-              ecm = field.options;
-              field.options = this.setEcm;
             }
           });
           this.leafFormConfig = questionCategoryConfig;
@@ -1057,7 +1040,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   setEvidence(control, depends: FormControl[], formGroup: FormGroup, loading, loaded) {
     control.isVisible = 'no';
     control.range = evidenceMimeType;
-    const response = merge(..._.map(depends, depend => depend.valueChanges)).pipe(
+    return merge(..._.map(depends, depend => depend.valueChanges)).pipe(
         switchMap((value: any) => {
             if (!_.isEmpty(value) && _.toLower(value) === 'yes') {
                 control.isVisible = 'yes';
@@ -1068,13 +1051,12 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
             }
         })
     );
-    return response;
   }
 
   setEcm(control, depends: FormControl[], formGroup: FormGroup, loading, loaded){
     control.isVisible = 'no';
     control.options = ecm;
-    const response = merge(..._.map(depends, depend => depend.valueChanges)).pipe(
+    return merge(..._.map(depends, depend => depend.valueChanges)).pipe(
         switchMap((value: any) => {
             if (!_.isEmpty(value) && _.toLower(value) === 'yes') {
                 control.isVisible = 'yes';
@@ -1085,6 +1067,5 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
             }
         })
     );
-    return response;
   }
 }

@@ -34,6 +34,7 @@ describe('TranslationsComponent', () => {
   });
   it('#editorDataHandler() should call editorDataHandler for solution', () => {
     spyOn(component,'editorDataHandler').and.callThrough();
+    component.editorState.solutions=mockData.editorState;
     component.editorDataHandler(mockData.eventData, 'solution');
     expect(component.editorDataHandler).toHaveBeenCalledWith(mockData.eventData, 'solution');
   });

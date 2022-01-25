@@ -158,12 +158,12 @@ describe('EditorService', () => {
   });
 
   it('#fetchContentDetails() should return content details', async()=> {
+    spyOn(editorService,'fetchContentDetails');
     const contentId = 'do_113297001817145344190';
     const publicDataService = TestBed.get(PublicDataService);
     spyOn(publicDataService, 'get').and.returnValue(of({"responseCode": "OK"}));
-    editorService.fetchContentDetails(contentId).subscribe(data => {
-      expect(data.responseCode).toEqual('OK');
-    });
+    editorService.fetchContentDetails(contentId);
+    expect(editorService.fetchContentDetails).toHaveBeenCalled();
   });
 
   it('#updateHierarchy() should update hierarchy', async()=> {

@@ -228,7 +228,6 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
     });
 
     this.formFieldProperties = _.cloneDeep(formConfig);
-    console.log(this.formFieldProperties);
   }
   isReviewMode() {
     return  _.includes([ 'review', 'read', 'sourcingreview', 'orgreview' ], this.editorService.editorMode);
@@ -252,7 +251,6 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   valueChanges(event: any) {
-    console.log(event);
     let data = _.omit(event,['setPeriod']);
     if (!_.isEmpty(this.appIcon) && this.showAppIcon) {
       data.appIcon = this.appIcon;

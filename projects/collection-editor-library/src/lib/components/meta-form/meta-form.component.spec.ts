@@ -3,6 +3,8 @@ import { MetaFormComponent } from './meta-form.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { mockData } from './meta-form.component.spec.data';
+import { TreeService } from '../../services/tree/tree.service';
+import { mockTreeService } from '../question/question.component.spec.data';
 describe('MetaFormComponent', () => {
   let component: MetaFormComponent;
   let fixture: ComponentFixture<MetaFormComponent>;
@@ -11,6 +13,9 @@ describe('MetaFormComponent', () => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       declarations: [MetaFormComponent],
+      providers:[
+        { provide: TreeService, useValue: mockTreeService }
+      ],
       schemas: [NO_ERRORS_SCHEMA]
     })
       .compileComponents();
@@ -71,14 +76,19 @@ describe('MetaFormComponent', () => {
     expect(component.isReviewMode()).toEqual(false);
   });
   it('#valueChanges() should call updateNode and emit toolbarEmitter', () => {
+    spyOn(component,'valueChanges').and.callThrough();
     const data = {
       // tslint:disable-next-line:max-line-length
-      appIcon: 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png'
+      appIcon: 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png',
+      language: ['English'],
+      description: "test"
     };
     spyOn(component.toolbarEmitter, 'emit');
     spyOn(component.treeService, 'updateNode');
     component.valueChanges(data);
-    expect(component.treeService.updateNode).toHaveBeenCalledWith(data);
+    const treeService = TestBed.get(TreeService);
+    expect(treeService.updateNode).toHaveBeenCalledWith(data);
+    expect(component.valueChanges).toHaveBeenCalled();
   });
   it('#attachDefaultValues() should set formFieldProperties', () => {
     component.rootFormConfig = mockData.rootFormConfig;
