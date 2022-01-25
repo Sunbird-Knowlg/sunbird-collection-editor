@@ -52,7 +52,6 @@
               </div>
               <lib-question-option-sub-menu *ngIf="subMenus?.length" [subMenus]="subMenus"
                 (onChange)="subMenuChange($event)"></lib-question-option-sub-menu>
-              <!-- <lib-answer-date></lib-answer-date> -->
 
               <lib-answer *ngIf="questionInteractionType === 'default'"
                 [editorState]="editorState" [showFormError]="showFormError"

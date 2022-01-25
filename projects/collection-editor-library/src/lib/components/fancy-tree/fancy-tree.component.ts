@@ -560,7 +560,6 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       ...(!_.isUndefined(branchingLogic) && {branchingLogic})
     };
     this.treeService.updateTreeNodeMetadata(metadata, id, primaryCategoryName);
-    console.log(this.treeService.treeCache);
   }
 
   ngOnDestroy() {

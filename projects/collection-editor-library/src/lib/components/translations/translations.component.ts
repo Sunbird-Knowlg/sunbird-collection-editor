@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component} from "@angular/core";
 import { ConfigService } from "../../services/config/config.service";
 import * as _ from 'lodash-es';
 
@@ -7,7 +7,7 @@ import * as _ from 'lodash-es';
   templateUrl: "./translations.component.html",
   styleUrls: ["./translations.component.scss"],
 })
-export class TranslationsComponent implements OnInit {
+export class TranslationsComponent {
   public editorState: any = {};
   sampleJson = {
     body: {
@@ -114,9 +114,6 @@ export class TranslationsComponent implements OnInit {
   };
   constructor(public configService: ConfigService) {}
 
-  ngOnInit(): void {
-    
-  }
 
   editorDataHandler(event, type?) {
     if (type === 'question') {

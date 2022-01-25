@@ -8,18 +8,15 @@ import { PlayerService } from '../../services/player/player.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { EditorService } from '../../services/editor/editor.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
-import { throwError, Subject, merge, of } from 'rxjs';
+import { throwError, Subject} from 'rxjs';
 import { Router } from '@angular/router';
 import { ConfigService } from '../../services/config/config.service';
 import { FrameworkService } from '../../services/framework/framework.service';
 import { TreeService } from '../../services/tree/tree.service';
 import { EditorCursor } from '../../collection-editor-cursor.service';
-import { catchError, filter, finalize, switchMap, take, takeUntil } from 'rxjs/operators';
-import { extraConfig } from './extraConfig';
+import { filter, finalize, take, takeUntil } from 'rxjs/operators';
 import { SubMenu } from '../question-option-sub-menu/question-option-sub-menu.component';
-import { FormControl, FormGroup } from '@angular/forms';
 import { ICreationContext } from '../../interfaces/CreationContext';
-
 
 let evidenceMimeType;
 
@@ -125,7 +122,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
-    const { questionSetId, questionId, type, category, config, creationContext, setChildQueston } = this.questionInput;
+    const { questionSetId, questionId, type, category, creationContext, setChildQueston } = this.questionInput;
     if (_.isUndefined(setChildQueston)) {
       this.questionInput.setChildQueston = false;
     }
@@ -205,8 +202,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
           .subscribe((res) => {
             if (res.result) {
               this.questionMetaData = res.result.question;
-              console.log('questionMetaData');
-              console.log(this.questionMetaData);
               this.populateFormData();
               this.subMenuConfig();
               if (_.isUndefined(this.questionPrimaryCategory)) {
@@ -570,7 +565,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     setTimeout(() => {
       this.showAddSecondaryQuestionCat ?
       this.questionEmitter.emit({ type: 'createNewContent', isChildQuestion: true }) :
-      this.editorService.parentIdentifier = '';
+      this.editorService.parentIdentifier = undefined;
       this.showAddSecondaryQuestionCat = false;
       this.questionEmitter.emit({ status: false });
     }, 100);
@@ -829,7 +824,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     metaData.interactions.validation = { required: this.childFormData.markAsNotMandatory === 'Yes' ? 'No' : 'Yes'};
     if (this.childFormData.allowMultiSelect === 'Yes') {
       metaData.responseDeclaration.response1.cardinality = 'multiple';
-      // todo add for html body also
     }
 
     _.forEach(this.subMenus, (el: any) => {
@@ -945,7 +939,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   createQuestion() {
     if (this.showOptions) {
-      console.log('dependent Question data');
       this.buildCondition('create');
     } else {
       const requestBody = this.prepareRequestBody();
@@ -982,7 +975,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   updateQuestion() {
     if (this.isChildQuestion) {
-      console.log('dependent Question data');
       this.buildCondition('update');
     } else {
       this.saveUpdateQuestions();
@@ -996,7 +988,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       finalize(() => {
         this.showHideSpinnerLoader(false);
       })).subscribe((response: ServerResponse) => {
-        console.log('');
         if (this.showAddSecondaryQuestionCat) {
           const result = _.get(response.result.identifiers, this.questionId);
           this.editorService.parentIdentifier = result;
@@ -1075,12 +1066,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
               questionTitle = `Q${(index + 1).toString()} | ` + (_.get(this.categoryLabel, `${_.get(question, 'data.primaryCategory')}`) || _.get(question, 'data.primaryCategory'));
             }
         });
-
-        // const parentNode = this.treeService.getActiveNode().getParent();
-        // hierarchyChildren = parentNode.getChildren();
-        // index =  _.findIndex(hierarchyChildren, (node) => node.data.id === questionId);
-        // const question  = hierarchyChildren[index];
-        // questionTitle = `Q${(index + 1).toString()} | ` + question.data.primaryCategory;
 
       } else {
         index = hierarchyChildren.length;
@@ -1255,7 +1240,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   sliderData($event) {
-    console.log($event);
     const val = $event;
     const obj = {
       validation: {
@@ -1340,7 +1324,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       hierarchy: this.editorService._toFlatObj(data, questionId, this.selectedSectionId,this.editorService.parentIdentifier)
     };
-    console.log(finalResult);
     this.saveQuestions(finalResult, type);
   }
 
@@ -1386,7 +1369,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       branchingLogic
     };
     this.treeService.updateNode(metadata, selectedSection, this.sectionPrimaryCategory);
-    console.log(this.treeService.treeCache);
   }
 
   setCondition(data) {

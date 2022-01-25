@@ -396,8 +396,6 @@ export class EditorService {
         }
       }
     };
-    console.log('getCategoryDefinition');
-    console.log(req);
     return this.publicDataService.post(req);
   }
   fetchContentListDetails(req) {
@@ -603,15 +601,13 @@ getDependentNodes(identifier) {
   getBranchingLogicByNodeId(identifier) {
     const leafNode = this.treeService.getNodeById(identifier);
     const parentIdentifier = _.get(leafNode, 'parent.data.id');
-    const branchingLogic = this.getBranchingLogicByFolder(parentIdentifier);
-    return branchingLogic;
+    return this.getBranchingLogicByFolder(parentIdentifier);
   }
 
   getBranchingLogicEntry(parentBranchingLogic, identifier) {
-    const branchingEntry =  _.find(parentBranchingLogic, (logic, key) => {
+    return _.find(parentBranchingLogic, (logic, key) => {
       return key === identifier;
     });
-    return branchingEntry;
   }
 
   getFlattenedBranchingLogic(data) {
@@ -633,8 +629,7 @@ getDependentNodes(identifier) {
 
   getPrimaryCategoryName(sectionId) {
     const nodeData = this.treeService.getNodeById(sectionId);
-    const primaryCategory = _.get(nodeData, 'data.primaryCategory');
-    return primaryCategory;
+    return _.get(nodeData, 'data.primaryCategory');
   }
 
 }

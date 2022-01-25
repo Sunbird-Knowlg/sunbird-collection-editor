@@ -86,6 +86,7 @@ describe('EditorComponent', () => {
     spyOn(editorService, 'getToolbarConfig').and.returnValue({ title: 'abcd', showDialcode: 'No' });
     const treeService = TestBed.inject(TreeService);
     spyOn(treeService, 'initialize').and.callFake(() => { });
+    treeService.initialize(editorConfig);
     spyOn(component, 'mergeCollectionExternalProperties').and.returnValue(of(hierarchyResponse));
     const frameworkService = TestBed.inject(FrameworkService);
     spyOn(frameworkService, 'initialize').and.callFake(() => { });
@@ -353,10 +354,12 @@ describe('EditorComponent', () => {
   });
 
   it('#toolbarEventListener() should call #redirectToQuestionTab() if event is editContent', () => {
+    spyOn(component,'toolbarEventListener').and.callThrough();
     spyOn(component, 'redirectToQuestionTab').and.callFake(() => { });
     const event = { button: 'editContent' };
     component.toolbarEventListener(event);
     expect(component.redirectToQuestionTab).toHaveBeenCalled();
+    expect(component.toolbarEventListener).toHaveBeenCalled()
   });
 
 
@@ -739,11 +742,23 @@ describe('EditorComponent', () => {
 
   it('call #redirectToQuestionTab() to verify #questionComponentInput data', async () => {
     const mode = 'update';
+    component.objectType='question';
+    component.editorConfig = editorConfig;
     const interactionType = 'choice';
     component.collectionId = 'do_123';
     component.redirectToQuestionTab(mode, interactionType);
     component.setChildQuestion=false;
     expect(component.pageId).toEqual('question');
+  });
+
+  it('call #redirectToQuestionTab() to verify #questionComponentInput data for edit', async () => {
+    const mode = 'edit';
+    component.selectedNodeData=SelectedNodeMockData;
+    component.objectType='question';
+    const interactionType = 'choice';
+    component.collectionId = 'do_123';
+    component.redirectToQuestionTab(mode, interactionType);
+    component.setChildQuestion=false;
   });
 
   it('#questionEventListener() should set #pageId to collection_editor', async () => {
