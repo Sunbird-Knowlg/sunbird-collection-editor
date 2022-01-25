@@ -210,16 +210,18 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         this.tempQuestionId = UUID.UUID();
         this.populateFormData();
         this.setQuestionTitle();
+        let editorState = {}
         if (this.questionInteractionType === 'default') {
           if (this.questionCategory) {
-            this.editorState = _.get(this.configService, `editorConfig.defaultStates.nonInteractiveQuestions.${this.questionCategory}`);
+            editorState = _.get(this.configService, `editorConfig.defaultStates.nonInteractiveQuestions.${this.questionCategory}`);
           } else {
-            this.editorState = { question: "", answer: "", solutions: "" };
+            editorState = { question: "", answer: "", solutions: "" };
           }
         }
         if (this.questionInteractionType === 'choice') {
-          this.editorState = new McqForm({ question: '', options: [] }, {numberOfOptions: _.get(this.questionInput, 'config.numberOfOptions')});
+          editorState = new McqForm({ question: '', options: [] }, {numberOfOptions: _.get(this.questionInput, 'config.numberOfOptions')});
         }
+        this.editorState = { ...editorState };
         this.showLoader = false;
       }
     }, (err: ServerResponse) => {
@@ -281,7 +283,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   handleRedirectToQuestionset() {
-    if (_.isUndefined(this.questionId)) {
+    if (_.isUndefined(this.questionId) || _.get(this.creationContext, 'mode') === 'edit') {
       this.showConfirmPopup = true;
     } else {
       this.redirectToQuestionset();
@@ -621,6 +623,11 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       metadata.solutions = [];
     }
     metadata = _.merge(metadata, this.getDefaultSessionContext());
+    if(_.get(this.creationContext, 'objectType') === 'question') {
+      metadata.programId = _.get(this.editorService, 'editorConfig.context.programId');
+      metadata.collectionId = _.get(this.editorService, 'editorConfig.context.collectionIdentifier');
+      metadata.organisationId = _.get(this.editorService, 'editorConfig.context.contributionOrgId');
+    }
     metadata = _.merge(metadata, _.pickBy(this.childFormData, _.identity));
     return _.omit(metadata, ['question', 'numberOfOptions', 'options']);
   }
@@ -763,7 +770,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   previewContent() {
     this.validateQuestionData();
-    this.validateFormFields();
     if (this.showFormError === false) {
       this.previewFormData(false);
       const questionId = _.isUndefined(this.questionId) ? this.tempQuestionId : this.questionId;
