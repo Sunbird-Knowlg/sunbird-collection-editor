@@ -24,6 +24,8 @@ describe('MetaFormComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(MetaFormComponent);
     component = fixture.componentInstance;
+    component.appIcon='https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png';
+    component.showAppIcon=true;
     fixture.detectChanges();
   });
 
@@ -106,11 +108,23 @@ describe('MetaFormComponent', () => {
 
   it('#valueChanges() should call updateNode and emit toolbarEmitter with appIcon', () => {
     spyOn(component,'valueChanges').and.callThrough();
-    component.appIcon='https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png';
-    component.showAppIcon=true;
     const event={
       appIcon: 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png',
-      setPeroid:true
+      setPeroid:'Yes'
+    }
+    spyOn(component.toolbarEmitter, 'emit');
+    spyOn(component.treeService, 'updateNode');
+    component.valueChanges(event);
+    const treeService = TestBed.get(TreeService);
+    expect(treeService.updateNode).toHaveBeenCalledWith(event);
+    expect(component.valueChanges).toHaveBeenCalledWith(event);
+  });
+
+  it('#valueChanges() should call updateNode and emit toolbarEmitter without appIcon', () => {
+    spyOn(component,'valueChanges').and.callThrough();
+    component.showAppIcon=false;
+    const event={
+      setPeroid:'Yes'
     }
     spyOn(component.toolbarEmitter, 'emit');
     spyOn(component.treeService, 'updateNode');
