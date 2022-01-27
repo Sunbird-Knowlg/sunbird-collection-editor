@@ -32,6 +32,7 @@ const mockEditorService = {
       }
     }
   },
+  parentIdentifier:'',
   selectedChildren: {
     primaryCategory: 'Multiselect Multiple Choice Question',
     label: 'Multiple Choice Question',
@@ -77,15 +78,20 @@ describe('QuestionComponent', () => {
     component.questionInteractionType = 'choice';
     let editorService: EditorService = TestBed.inject(EditorService);
     let telemetryService: EditorTelemetryService = TestBed.inject(EditorTelemetryService);
+    treeService = TestBed.get(TreeService);
     spyOn(telemetryService, 'impression').and.callFake(() => { });
     spyOn(component, 'initialize').and.callThrough();
     spyOn(editorService, 'getToolbarConfig').and.returnValue({ title: 'abcd', showDialcode: 'No', showPreview: '' });
-    spyOn(editorService, 'fetchCollectionHierarchy').and.returnValue({ subscribe: fn => fn(collectionHierarchyMock) });
+    spyOn(editorService, 'fetchCollectionHierarchy').and.returnValue(of(collectionHierarchyMock));
+    spyOn(treeService, 'getNodeById').and.callFake(() => { });
+    editorService.parentIdentifier=undefined;
+    component.questionSetHierarchy=collectionHierarchyMock.result.questionSet;
+    component.sectionPrimaryCategory=collectionHierarchyMock.result.questionSet.primaryCategory;
     spyOn(editorService, 'updateCollection').and.returnValue({ subscribe: fn => fn({}) });
     spyOn(component,'subMenuConfig').and.callThrough();
+    spyOn(component,'getOptions').and.callThrough();
     let questionService: QuestionService = TestBed.inject(QuestionService);
     spyOn(questionService, 'readQuestion').and.returnValue(of(readQuestionMock));
-    treeService = TestBed.get(TreeService);
     fixture.detectChanges();
   });
   
@@ -599,14 +605,12 @@ describe('QuestionComponent', () => {
   });
 
   it('#getOptions() should call when child question is edited when option exits', () => {
-    spyOn(component,'getOptions').and.callThrough();
     let editorService = TestBed.get(EditorService);
     editorService.optionsLength = 4;
     component.getOptions();
     expect(component.getOptions).toHaveBeenCalled();
   });
   it('#getOptions() should call when child question is edited when option not exits', () => {
-    spyOn(component,'getOptions').and.callThrough();
     let editorService = TestBed.get(EditorService);
     editorService.optionsLength = undefined;
     component.getOptions();

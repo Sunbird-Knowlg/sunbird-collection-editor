@@ -15,14 +15,14 @@ export class SilderEvent {
 })
 export class SliderComponent implements OnInit {
   sliderValue:any = {};
-  @Input() editorDataInput: any;
+  @Input() editorDataInput;
   leftAnchor: any;
   rightAnchor: any;
   step: any;
-  @Output() public onChange: EventEmitter<SilderEvent> = new EventEmitter<SilderEvent>();
+  @Output() onChange: EventEmitter<SilderEvent> = new EventEmitter<SilderEvent>();
   constructor(public configService: ConfigService) { }
 
-  ngOnInit(): void {
+  ngOnInit(){
     if (_.get(this.editorDataInput,"step")) {
       this.step = this.editorDataInput.step;
       this.sliderValue['step']= this.editorDataInput.step;

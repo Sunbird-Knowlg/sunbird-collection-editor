@@ -211,6 +211,7 @@ describe('EditorComponent', () => {
     spyOn(editorService, 'readQuestionSet').and.callFake(() => { });
     spyOn(component, 'showCommentAddedAgainstContent').and.callFake(() => { });
     component.mergeCollectionExternalProperties();
+    component.objectType='questionSet';
     expect(editorService.fetchCollectionHierarchy).toHaveBeenCalled();
     expect(editorService.readQuestionSet).not.toHaveBeenCalled();
   });
@@ -354,12 +355,10 @@ describe('EditorComponent', () => {
   });
 
   it('#toolbarEventListener() should call #redirectToQuestionTab() if event is editContent', () => {
-    spyOn(component,'toolbarEventListener').and.callThrough();
     spyOn(component, 'redirectToQuestionTab').and.callFake(() => { });
     const event = { button: 'editContent' };
     component.toolbarEventListener(event);
     expect(component.redirectToQuestionTab).toHaveBeenCalled();
-    expect(component.toolbarEventListener).toHaveBeenCalled()
   });
 
 
@@ -410,10 +409,12 @@ describe('EditorComponent', () => {
 
   it('#toolbarEventListener() should call #updateToolbarTitle() if event is onFormValueChange', () => {
     spyOn(component, 'updateToolbarTitle').and.callFake(() => { });
+    spyOn(component,'toolbarEventListener').and.callThrough()
     const event = {
       button: 'onFormValueChange'
     };
     component.toolbarEventListener(event);
+    expect(component.toolbarEventListener).toHaveBeenCalledWith(event);
     expect(component.updateToolbarTitle).toHaveBeenCalled();
   });
 

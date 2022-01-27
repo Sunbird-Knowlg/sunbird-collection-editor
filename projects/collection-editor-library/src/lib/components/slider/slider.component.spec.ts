@@ -21,7 +21,9 @@ describe("SliderComponent", () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SliderComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    component.sliderValue = {};
+    component.editorDataInput = mockData.editorDataInput;
+    // fixture.detectChanges();
   });
 
   it("should create", () => {
@@ -29,9 +31,16 @@ describe("SliderComponent", () => {
   });
 
   it("should call the ngOnInit", () => {
-    spyOn(component, "ngOnInit").and.callThrough();
-    component.sliderValue = {};
     component.editorDataInput = mockData.editorDataInput;
+    spyOn(component, "ngOnInit").and.callThrough();
+    component.ngOnInit();
+    expect(component.ngOnInit).toHaveBeenCalled();
+  });
+
+  it("should call the ngOnInit when editorDataInput is undefined", () => {
+    component.sliderValue = {};
+    component.editorDataInput = undefined;
+    spyOn(component, "ngOnInit").and.callThrough();
     component.ngOnInit();
     expect(component.ngOnInit).toHaveBeenCalled();
   });
@@ -42,6 +51,7 @@ describe("SliderComponent", () => {
     component.onValueChange(mockData.changeEvent.event, "rightAnchor");
     expect(component.onChange.emit).toHaveBeenCalledWith({ rightAnchor: 10 });
     expect(component.onValueChange).toHaveBeenCalled();
+    expect(component.sliderValue.rightAnchor).toBe(10);
   });
 
 });

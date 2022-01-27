@@ -677,6 +677,59 @@ export const categoryDefinition = {
                     class: "sb-g-col-lg-1",
                   },
                 },
+                {
+                  code: "evidenceMimeType",
+                  dataType: "list",
+                  depends: ["showEvidence"],
+                  description: "Evidence",
+                  editable: true,
+                  inputType: "multiselect",
+                  label: "evidence",
+                  name: "evidenceMimeType",
+                  placeholder: "evidence",
+                  renderingHints: {
+                    class: "sb-g-col-lg-1",
+                  },
+                  required: false,
+                  visible: true,
+                  range: [
+                    {
+                      value: "image/png",
+                      label: "image/png",
+                    },
+                    { value: "audio/mp3", label: "audio/mp3" },
+                    { value: "video/mp4", label: "video/mp4" },
+                    { value: "video/webm", label: "video/webm" },
+                  ],
+                },
+                {
+                  "code": "ecm",
+                  "name": "ECM",
+                  "depends": [
+                    "allowECM"
+                  ],
+                  "label": "Select ECM's",
+                  "placeholder": "Select ECM's",
+                  "description": "ECM for the Observation with rubrics",
+                  "dataType": "list",
+                  "inputType": "selectTextBox",
+                  "editable": true,
+                  "required": false,
+                  "visible": true,
+                  "renderingHints": {
+                    "class": "sb-g-col-lg-1"
+                  },
+                  "options": [
+                    "Student interview",
+                    "Teacher interview",
+                    "HM/HT interview",
+                    "Parent interview",
+                    "Official interview",
+                    "School walkthrough",
+                    "Class observation",
+                    "Document Review"
+                  ]
+                },
               ],
             },
           ],
@@ -3245,3 +3298,4 @@ export const rootNodeData={
   "level": 1,
   "timeLimits": {}
 }
+

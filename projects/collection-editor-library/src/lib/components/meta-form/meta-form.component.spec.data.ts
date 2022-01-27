@@ -142,6 +142,49 @@ export const mockData = {
             ]
         },
         {
+            'code': 'author',
+            'dataType': 'text',
+            'description': 'Author of the content',
+            'editable': true,
+            'inputType': 'text',
+            'label': 'Author',
+            'name': 'Author',
+            'placeholder': 'Author',
+            'renderingHints': {
+                'class': 'sb-g-col-lg-1'
+            },
+            'required': false,
+            'visible': true
+        },
+        {
+            'code': 'license',
+            'dataType': 'text',
+            'description': 'license',
+            'editable': true,
+            'inputType': 'select',
+            'label': 'License',
+            'name': 'license',
+            'placeholder': 'Select License',
+            'renderingHints': {
+                'class': 'sb-g-col-lg-1 required'
+            },
+            'required': true,
+            'visible': true,
+            'defaultValue': 'CC BY 4.0',
+            'validations': [
+                {
+                    'type': 'required',
+                    'message': 'License is required'
+                }
+            ],
+            'default': 'CC BY 4.0',
+            'range': [
+                '@+kp_ft_license_102876130',
+                '@+kp_ft_license_132244417',
+                '@+kp_ft_license_164164056',
+            ]
+        },
+        {
             "code": "setPeriod",
             "name": "setPeriod",
             "label": "Set Period",
