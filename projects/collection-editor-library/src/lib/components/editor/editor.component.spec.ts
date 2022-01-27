@@ -737,11 +737,23 @@ describe('EditorComponent', () => {
     const event = 'Multiple Choice Question';
     const editorService = TestBed.get(EditorService);
     component.editorConfig = editorConfig;
+    getCategoryDefinitionResponse.result.objectCategoryDefinition.forms = categoryDefinition.result.objectCategoryDefinition.forms.create.properties;
     spyOn(editorService, 'getCategoryDefinition').and.returnValue(of(getCategoryDefinitionResponse));
+    editorService.selectedChildren['label']=getCategoryDefinitionResponse.result.objectCategoryDefinition.label;
     spyOn(component, 'redirectToQuestionTab');
     component.handleTemplateSelection(event);
     expect(component.redirectToQuestionTab).toHaveBeenCalled();
   });
+
+  // it('#handleTemplateSelection should call #redirectToQuestionTab() throw error', async () => {
+  //   const event = 'Multiple Choice Question';
+  //   const editorService = TestBed.get(EditorService);
+  //   spyOn(editorService.telemetryService,'error').and.callFake(()=>{})
+  //   component.editorConfig = editorConfig;
+  //   spyOn(editorService, 'getCategoryDefinition').and.returnValue(throwError('error'));
+  //   component.handleTemplateSelection(event);
+  //   expect(editorService.telemetryService.error).toHaveBeenCalled();
+  // });
 
   it('call #redirectToQuestionTab() to verify #questionComponentInput data', async () => {
     const mode = 'update';
