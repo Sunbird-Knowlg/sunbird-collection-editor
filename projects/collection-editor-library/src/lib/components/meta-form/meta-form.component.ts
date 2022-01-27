@@ -17,7 +17,7 @@ let framworkServiceTemp;
   styleUrls: ['./meta-form.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
+export class MetaFormComponent implements OnChanges, OnDestroy {
   @Input() rootFormConfig: any;
   @Input() unitFormConfig: any;
   @Input() nodeMetadata: any;
@@ -39,7 +39,6 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
     this.setAppIconData();
   }
 
-  ngOnInit() {}
 
   setAppIconData() {
     const isRootNode = _.get(this.nodeMetadata, 'data.root');

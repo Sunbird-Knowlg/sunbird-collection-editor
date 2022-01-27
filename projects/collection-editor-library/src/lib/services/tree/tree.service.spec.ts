@@ -32,7 +32,8 @@ describe('TreeService', () => {
     };
     spyOn(treeService, 'setNodeTitle');
     spyOn(treeService, 'updateTreeNodeMetadata');
-    treeService.updateNode(metadata);
+    treeService.updateNode(metadata,'','Observation');
+    treeService.updateTreeNodeMetadata(treeNode,undefined,'Observation');
     expect(treeService.setNodeTitle).toHaveBeenCalled();
     expect(treeService.updateTreeNodeMetadata).toHaveBeenCalled();
   })
@@ -61,6 +62,28 @@ describe('TreeService', () => {
     expect(treeService.setTreeCache).toHaveBeenCalled();
   })
 
+  it("#updateTreeNodeMetadata() should call #setTreeCache() with primaryCategory", ()=> {
+    spyOn(treeService, 'getActiveNode').and.callFake(()=> treeNode);
+    spyOn(treeService, 'getNodeById');
+    spyOn(treeService, 'setTreeCache');
+    treeService.updateTreeNodeMetadata(treeNode,undefined,'Observation');
+    expect(treeService.setTreeCache).toHaveBeenCalled();
+  })
+
+  it("#getNodeById() should call", ()=> {
+    spyOn(treeService, 'getNodeById');
+    spyOn(treeService,'getTreeObject').and.callThrough();
+    treeService.getNodeById('do_123');
+    expect(treeService.getNodeById).toHaveBeenCalled();
+  });
+
+  it("#getParent() should call", ()=> {
+    spyOn(treeService, 'getActiveNode').and.callFake(()=> {});
+    spyOn(treeService, 'getNodeById');
+    spyOn(treeService,'getFirstChild');
+    treeService.getParent();
+  });
+  
   it("#removeSpecialChars() should remove special characters from string", ()=> {
     let string = "test@ioo!$%#";
     const result = treeService.removeSpecialChars(string);

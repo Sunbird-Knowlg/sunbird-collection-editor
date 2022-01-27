@@ -76,7 +76,6 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.bulkUploadProcessingStatus = false;
       }
     });
-
     this.initialize();
   }
 
@@ -265,10 +264,8 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         // check if span of node already rendered
         if (!$nodeSpan.data('rendered')) {
           this.attachContextMenu(node);
-
           // span rendered
           $nodeSpan.data('rendered', true);
-
         }
       }
     };

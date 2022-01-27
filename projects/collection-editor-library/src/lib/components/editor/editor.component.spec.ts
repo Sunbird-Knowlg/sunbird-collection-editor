@@ -198,6 +198,8 @@ describe('EditorComponent', () => {
   it('#setEditorForms() should set variable values', () => {
     spyOn(component, 'setEditorForms').and.callThrough();
     component.setEditorForms(categoryDefinition);
+    component.unitFormConfig=categoryDefinition.result.objectCategoryDefinition.forms.unitMetadata.properties;
+    component.rootFormConfig=categoryDefinition.result.objectCategoryDefinition.forms.create.properties;
     expect(component.unitFormConfig).toBeDefined();
     expect(component.rootFormConfig).toBeDefined();
     expect(component.libraryComponentInput.searchFormConfig).toBeDefined();
