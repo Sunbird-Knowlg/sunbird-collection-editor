@@ -55,15 +55,16 @@ describe('MetaFormComponent', () => {
     expect(component.treeService.updateAppIcon).toHaveBeenCalledWith(data.url);
   });
   it('#setAppIconData() should set appIcon', () => {
-    const data = {
+    spyOn(component,'setAppIconData').and.callThrough();
+    const nodeMetadataMock = {
       data: {
         // tslint:disable-next-line:max-line-length
         metadata: { appIcon: 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png' }
       }
     };
-    component.nodeMetadata = data;
+    component.nodeMetadata = nodeMetadataMock;
     component.appIconConfig = {
-      isAppIconEditable: ''
+      isAppIconEditable: true
     };
     component.setAppIconData();
     expect(component.appIcon).toBeDefined();
@@ -75,21 +76,8 @@ describe('MetaFormComponent', () => {
   it('call #isReviewMode() verify returning value', () => {
     expect(component.isReviewMode()).toEqual(false);
   });
-  it('#valueChanges() should call updateNode and emit toolbarEmitter', () => {
-    spyOn(component,'valueChanges').and.callThrough();
-    const data = {
-      // tslint:disable-next-line:max-line-length
-      appIcon: 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png',
-      language: ['English'],
-      description: "test"
-    };
-    spyOn(component.toolbarEmitter, 'emit');
-    spyOn(component.treeService, 'updateNode');
-    component.valueChanges(data);
-    const treeService = TestBed.get(TreeService);
-    expect(treeService.updateNode).toHaveBeenCalledWith(data);
-    expect(component.valueChanges).toHaveBeenCalled();
-  });
+ 
+  
   it('#attachDefaultValues() should set formFieldProperties', () => {
     component.rootFormConfig = mockData.rootFormConfig;
     component.nodeMetadata = mockData.nodeMetaData;
@@ -115,4 +103,22 @@ describe('MetaFormComponent', () => {
     component.fetchFrameWorkDetails();
     expect(component.frameworkDetails).toBeDefined();
   });
+
+  it('#valueChanges() should call updateNode and emit toolbarEmitter with appIcon', () => {
+    spyOn(component,'valueChanges').and.callThrough();
+    component.appIcon='https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png';
+    component.showAppIcon=true;
+    const event={
+      appIcon: 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png',
+      setPeroid:true
+    }
+    spyOn(component.toolbarEmitter, 'emit');
+    spyOn(component.treeService, 'updateNode');
+    component.valueChanges(event);
+    const treeService = TestBed.get(TreeService);
+    expect(treeService.updateNode).toHaveBeenCalledWith(event);
+    expect(component.valueChanges).toHaveBeenCalledWith(event);
+  });
+
+
 });

@@ -39,8 +39,7 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
     this.setAppIconData();
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   setAppIconData() {
     const isRootNode = _.get(this.nodeMetadata, 'data.root');
