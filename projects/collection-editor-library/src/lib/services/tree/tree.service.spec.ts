@@ -56,15 +56,20 @@ describe('TreeService', () => {
   });
 
   it("#updateTreeNodeMetadata() should call #setTreeCache()", ()=> {
+    spyOn(treeService,'updateMetaDataProperty');
     spyOn(treeService, 'getActiveNode').and.callFake(()=> treeNode);
+    spyOn(treeService, 'getNodeById');
     spyOn(treeService, 'setTreeCache');
-    treeService.updateTreeNodeMetadata(treeNode);
+    treeService.updateTreeNodeMetadata(treeNode,undefined,'Observation');
     expect(treeService.setTreeCache).toHaveBeenCalled();
+    expect(treeService.updateMetaDataProperty);
   })
 
   it("#updateTreeNodeMetadata() should call #setTreeCache() with primaryCategory", ()=> {
     spyOn(treeService, 'getActiveNode').and.callFake(()=> treeNode);
-    spyOn(treeService, 'getNodeById');
+    spyOn(treeService, 'getTreeObject').and.callFake(() => {
+      return { visit(cb) { cb({ data: { metadata: {} } }); } }});
+
     spyOn(treeService, 'setTreeCache');
     treeService.updateTreeNodeMetadata(treeNode,undefined,'Observation');
     expect(treeService.setTreeCache).toHaveBeenCalled();
@@ -78,10 +83,56 @@ describe('TreeService', () => {
   });
 
   it("#getParent() should call", ()=> {
+    spyOn(treeService,'getParent');
     spyOn(treeService, 'getActiveNode').and.callFake(()=> {});
     spyOn(treeService, 'getNodeById');
     spyOn(treeService,'getFirstChild');
     treeService.getParent();
+    expect(treeService.getParent).toHaveBeenCalled();
+  });
+
+  it("#getNodeById() should call", ()=> {
+    spyOn(treeService, 'getTreeObject').and.callFake(() => {
+      return { visit(cb) { cb({ data: { metadata: {} } }); } };
+    });
+    treeService.getNodeById('d0_123');
+  });
+
+  it("#getLeafNodes() should call", ()=> {
+    spyOn(treeService, 'getActiveNode').and.callFake(() => {
+      return { visit(cb) { cb({ data: { metadata: {} } }); } };
+    });
+    treeService.getLeafNodes();
+  });
+
+  it("#getChildren() should call", ()=> {
+    spyOn(treeService, 'getActiveNode').and.callFake(() => {
+      return { visit(cb) { cb({ data: { metadata: {} } }); } };
+    });
+    treeService.getChildren();
+  });
+
+  it("#replaceNodeId() should call", ()=> {
+    spyOn(treeService, 'getTreeObject').and.callFake(() => {
+      return { visit(cb) { cb({ data: { metadata: {} } }); } };
+    });
+    treeService.replaceNodeId('do_123');
+  });
+
+  it("#clearTreeCache() should call to clear all the treecache no node", ()=> {
+    spyOn(treeService,'clearTreeCache').and.callThrough();
+    treeService.clearTreeCache();
+    expect(treeService.clearTreeCache).toHaveBeenCalled();
+    expect(treeService.treeCache.nodesModified).toEqual({})
+  });
+
+  it("#clearTreeCache() should call to clear all the treecache with node", ()=> {
+    let node={
+      id:'do_123'
+    }
+    spyOn(treeService,'clearTreeCache').and.callThrough();
+    treeService.clearTreeCache(node);
+    expect(treeService.clearTreeCache).toHaveBeenCalled();
   });
   
   it("#removeSpecialChars() should remove special characters from string", ()=> {

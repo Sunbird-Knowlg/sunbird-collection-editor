@@ -15,7 +15,7 @@ import { TelemetryInteractDirective } from '../../directives/telemetry-interact/
 import { collectionHierarchyMock, creationContextMock, mockData, readQuestionMock, mockTreeService,
   leafFormConfigMock, sourcingSettingsMock, childMetaData,
   HierarchyMockData, BranchingLogic, mockEditorCursor } from './question.component.spec.data';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 
 const mockEditorService = {
   editorConfig: {
@@ -43,13 +43,15 @@ const mockEditorService = {
   fetchCollectionHierarchy: (questionSetId) => {
     subscribe: fn => fn(collectionHierarchyMock);
   },
-  updateCollection: (questionSetId, event) => { subscribe: fn => fn({}) }
+  updateCollection: (questionSetId, event) => { subscribe: fn => fn({}) },
+  addResourceToQuestionset:(questionSetId,unitId,questionId)=>{subscribe:fn=>fn({})},
+  apiErrorHandling:()=>{}
 };
 
 describe('QuestionComponent', () => {
   let component: QuestionComponent;
   let fixture: ComponentFixture<QuestionComponent>;
-  let treeService;
+  let treeService,editorService,telemetryService,questionService;
   class RouterStub {
     navigate = jasmine.createSpy('navigate');
   }
@@ -75,27 +77,26 @@ describe('QuestionComponent', () => {
     component.questionId='do_1134357224765685761203';
     component.questionInteractionType='choice';
     component.questionPrimaryCategory='Multiselect Multiple Choice Question';
-    component.questionInteractionType = 'choice';
-    let editorService: EditorService = TestBed.inject(EditorService);
-    let telemetryService: EditorTelemetryService = TestBed.inject(EditorTelemetryService);
+    editorService= TestBed.inject(EditorService);
+    telemetryService = TestBed.inject(EditorTelemetryService);
     treeService = TestBed.get(TreeService);
+    questionService=TestBed.get(QuestionService);
     spyOn(telemetryService, 'impression').and.callFake(() => { });
-    spyOn(component, 'initialize').and.callThrough();
+    // spyOn(component, 'initialize').and.callThrough();
     spyOn(editorService, 'getToolbarConfig').and.returnValue({ title: 'abcd', showDialcode: 'No', showPreview: '' });
-    spyOn(editorService, 'fetchCollectionHierarchy').and.returnValue(of(collectionHierarchyMock));
+    spyOn(editorService, 'fetchCollectionHierarchy').and.callFake(()=>{
+      return of(collectionHierarchyMock);
+    });
+    component.questionInteractionType = 'choice';
     spyOn(treeService, 'getNodeById').and.callFake(() => { });
     editorService.parentIdentifier=undefined;
     component.questionSetHierarchy=collectionHierarchyMock.result.questionSet;
     component.sectionPrimaryCategory=collectionHierarchyMock.result.questionSet.primaryCategory;
     spyOn(editorService, 'updateCollection').and.returnValue({ subscribe: fn => fn({}) });
-    spyOn(component,'subMenuConfig').and.callThrough();
-    spyOn(component,'getOptions').and.callThrough();
-    let questionService: QuestionService = TestBed.inject(QuestionService);
     spyOn(questionService, 'readQuestion').and.returnValue(of(readQuestionMock));
     fixture.detectChanges();
   });
   
-
   it('check default values', () => {
     expect(component.terms).toEqual(false);
     expect(component.actionType).not.toBeDefined();
@@ -111,7 +112,8 @@ describe('QuestionComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
     const editorService = TestBed.get(EditorService);
-    editorService.selectedChildren.label='Multiple Choice Question'
+    editorService.selectedChildren.label=undefined;
+    // editorService.selectedChildren.label='Multiple Choice Question'
   });
 
   it('Unit test for #ngOnInit()', () => {
@@ -124,7 +126,6 @@ describe('QuestionComponent', () => {
       creationContext: creationContextMock
     };
     const editorService = TestBed.get(EditorService);
-
     component.ngOnInit();
     expect(component.questionInteractionType).toEqual('choice');
     expect(component.questionCategory).toEqual('MTF');
@@ -370,13 +371,45 @@ describe('QuestionComponent', () => {
     component.setMedia({ id: '1234' });
     expect(component.mediaArr).toBeDefined();
   });
-  it('#saveQuestion() should call saveQuestion for updateQuestion', () => {
+  it('#saveQuestion() should call saveQuestion for updateQuestion throw error', () => {
     component.editorState = mockData.editorState;
     component.questionId = 'do_11326368076523929611';
     spyOn(component, 'updateQuestion');
+    component.creationContext = creationContextMock;
+    spyOn(questionService,'upsertQuestion').and.returnValue(throwError('error'))
     component.saveQuestion();
-    expect(component.updateQuestion).toHaveBeenCalled();
+    expect(component.updateQuestion);
   });
+  it('#saveQuestion() should call saveQuestion for updateQuestion api error when there is question id', () => {
+    component.editorState = mockData.editorState;
+    component.questionId = 'do_11326368076523929611';
+    spyOn(component, 'updateQuestion');
+    creationContextMock.objectType='QuestionSet'
+    component.creationContext = creationContextMock;
+    spyOn(questionService,'upsertQuestion').and.returnValue(throwError('error'))
+    component.saveQuestion();
+    expect(component.updateQuestion);
+  });
+  it('#saveQuestion() should call saveQuestion for updateQuestion api error when new question', () => {
+    component.editorState = mockData.editorState;
+    component.questionId = undefined;
+    spyOn(component, 'updateQuestion');
+    creationContextMock.objectType='QuestionSet'
+    component.creationContext = creationContextMock;
+    spyOn(questionService,'updateHierarchyQuestionCreate').and.returnValue(throwError('error'))
+    component.saveQuestion();
+    expect(component.updateQuestion);
+  });
+
+  it('#createQuestion() should call when child question', () => {
+    spyOn(component,'createQuestion')
+    component.editorState = mockData.editorState;
+    component.questionId = 'do_11326368076523929611';
+    component.showOptions=true;
+    component.createQuestion();
+    expect(component.createQuestion);
+  });
+
   it('#deleteSolution() should call deleteSolution and set showSolutionDropDown value', () => {
     component.editorState = mockData.editorState;
     component.deleteSolution();
@@ -426,7 +459,6 @@ describe('QuestionComponent', () => {
     component.questionId = 'do_11326368076523929611';
     component.actionType = 'sourcingRejectQuestion';
     const data = { button: 'sourcingRejectQuestion', comment: 'test comment for rejection' };
-    const editorService = TestBed.inject(EditorService);
     const requestBody = {
       request: {
         questionset: {
@@ -450,7 +482,6 @@ describe('QuestionComponent', () => {
     component.questionId = 'do_11326368076523929611';
     component.actionType = 'sourcingApproveQuestion';
     const data = { button: 'sourcingApproveQuestion' };
-    const editorService = TestBed.inject(EditorService);
     const requestBody = {
       request: {
         questionset: {
@@ -478,9 +509,9 @@ describe('QuestionComponent', () => {
     component.questionId = 'do_11326368076523929611';
     component.actionType = 'sourcingRejectQuestion';
     const data = { button: 'sourcingRejectQuestion', comment: 'test comment for rejection' };
-    spyOn(component, 'redirectToChapterList');
+    spyOn(editorService, 'addResourceToQuestionset').and.returnValue(throwError({}))
     component.sourcingUpdate(data);
-    expect(component.redirectToChapterList).toHaveBeenCalled();
+    component.addResourceToQuestionset();
   });
   it('#videoDataOutput() should call videoDataOutput and event data is empty', () => {
     const event = '';
@@ -518,6 +549,7 @@ describe('QuestionComponent', () => {
   it('#prepareRequestBody() should call to check the dynamic form data',()=>{
     spyOn(treeService, 'getFirstChild').and.callFake(() => { });
     spyOn(component,'prepareRequestBody').and.callThrough();
+    component.childFormData = mockData.formData;
     component.prepareRequestBody();
     expect(component.prepareRequestBody).toHaveBeenCalled();
   });
@@ -584,17 +616,25 @@ describe('QuestionComponent', () => {
   });
 
 
-  it('#buildCondition() should call when it is a child question ', () => {
-    spyOn(component,'buildCondition');
+  it('#buildCondition() should call when it is a child question save', () => {
+    spyOn(component,'buildCondition')
     component.questionId='do_1134355571590184961168';
     component.selectedSectionId='do_1134347209749299201119';
     component.condition='eq';
     component.selectedOptions=1;
     component.branchingLogic=BranchingLogic;
+    component.showAddSecondaryQuestionCat=true;
+    spyOn(component,'saveQuestions').and.callThrough();
     component.buildCondition('update');
     component.updateTreeCache('Mid-day Meals',BranchingLogic,component.selectedSectionId);
     expect(component.buildCondition).toHaveBeenCalled();
   });
+
+  it('#saveQuestions call on click save button', () => {
+    spyOn(questionService, 'updateHierarchyQuestionCreate').and.returnValue(throwError('error'));
+    component.saveQuestions({},'create');
+    expect(questionService.updateHierarchyQuestionCreate).toBeDefined();
+  })
 
   it('#updateTarget() should call when buildcondition is called ', () => {
     spyOn(component,'updateTarget').and.callThrough();
@@ -605,12 +645,14 @@ describe('QuestionComponent', () => {
   });
 
   it('#getOptions() should call when child question is edited when option exits', () => {
+    spyOn(component,'getOptions').and.callThrough();
     let editorService = TestBed.get(EditorService);
     editorService.optionsLength = 4;
     component.getOptions();
     expect(component.getOptions).toHaveBeenCalled();
   });
   it('#getOptions() should call when child question is edited when option not exits', () => {
+    spyOn(component,'getOptions').and.callThrough()
     let editorService = TestBed.get(EditorService);
     editorService.optionsLength = undefined;
     component.getOptions();
@@ -620,10 +662,9 @@ describe('QuestionComponent', () => {
   it('#getParentQuestionOptions() should call when add dependent question clicked', () => {
     spyOn(component,'getParentQuestionOptions').and.callThrough();
     component.questionId='do_1134355571590184961168';
-    let editorService = TestBed.get(EditorService);
     editorService.parentIdentifier = component.questionId;
     component.getParentQuestionOptions(component.questionId);
-    expect(component.getParentQuestionOptions).toHaveBeenCalledWith(component.questionId);
+    expect(component.getParentQuestionOptions).toHaveBeenCalled()
   });
 
   it('#updateTreeCache() should call when buildcondition is called ', () => {
@@ -643,6 +684,7 @@ describe('QuestionComponent', () => {
   });
 
   it('#subMenuConfig() should call when question page render', () => {
+    spyOn(component,'subMenuConfig');
     component.questionMetaData=mockData.questionMetaData;
     component.sourcingSettings=sourcingSettingsMock;
     component.questionInput.setChildQuestion=false;

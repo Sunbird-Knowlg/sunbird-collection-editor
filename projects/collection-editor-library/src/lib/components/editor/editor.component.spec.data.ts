@@ -371,6 +371,7 @@ export const getCategoryDefinitionResponse = {
           },
         },
       },
+      label: "Multiple Choice Question",
       languageCode: [],
       name: "Multiple Choice Question",
       forms: {},
@@ -741,6 +742,7 @@ export const categoryDefinition = {
           properties: { code: "name", editable: true },
         },
       },
+      label:"Multiple Choice Question"
     },
   },
 };
