@@ -328,11 +328,20 @@ export class EditorService {
   _toFlatObj(data, questionId?, selectUnitId?) {
     const instance = this;
     if (data && data.data) {
+      let relationalMetadata = {};
+      const childrenIds =  _.map(data.children, (child) => {
+        if (_.get(child, 'data.metadata.relationalMetadata')) {
+          relationalMetadata = {
+            ...relationalMetadata,
+            [child.data.id]: _.get(child, 'data.metadata.relationalMetadata')
+          };
+        }
+        return child.data.id;
+      });
       instance.data[data.data.id] = {
         name: data.title,
-        children: _.map(data.children, (child) => {
-          return child.data.id;
-        }),
+        children: childrenIds,
+        relationalMetadata,
         root: data.data.root
       };
       if (questionId && selectUnitId && selectUnitId === data.data.id) {

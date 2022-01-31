@@ -63,6 +63,7 @@
                   <lib-qumlplayer-page *ngIf="isQumlPlayer" [questionMetaData]="selectedNodeData" [questionSetHierarchy]="collectionTreeNodes?.data"
                       (toolbarEmitter)="toolbarEventListener($event)">
                     </lib-qumlplayer-page>
+                  <lib-relational-metadata *ngIf="relationFormConfig" [contentMetadata]="selectedNodeData" [formConfig]="relationFormConfig" (statusChanges)="onFormStatusChange($event)" (valueChanges)="onFormValueChange($event)"></lib-relational-metadata>
               </ng-container>
             </div>
           </div>
