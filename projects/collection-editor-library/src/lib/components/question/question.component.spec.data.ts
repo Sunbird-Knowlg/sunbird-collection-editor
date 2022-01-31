@@ -355,7 +355,7 @@ export const mockData = {
     {
       id: "addHint",
       name: "Add Hint",
-      value: "",
+      value: "test",
       enabled: false,
       type: "input",
       label: "label",
@@ -2853,6 +2853,10 @@ export const childMetaData = {
   showRemarks: "Yes",
   remarksLimit: "10",
   markAsNotMandatory: "Yes",
+  dateFormat:'dd/mm/yyyy',
+  autoCapture:'Yes',
+  numberOnly:'Yes',
+  characterLimit:50,
 };
 
 export const HierarchyMockData = {

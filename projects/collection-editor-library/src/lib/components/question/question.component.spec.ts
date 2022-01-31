@@ -203,6 +203,15 @@ describe('QuestionComponent', () => {
     component.toolbarEventListener(event);
     expect(component.toolbarEventListener).toHaveBeenCalledWith;
   });
+
+  it('#toolbarEventListener() should call toolbarEventListener for showTranslation', () => {
+    const event = { button: 'showTranslation' };
+    component.actionType = event.button;
+    spyOn(component, 'showTranslation');
+    component.toolbarEventListener(event);
+    expect(component.toolbarEventListener).toHaveBeenCalledWith;
+  });
+
   it('#toolbarEventListener() should call toolbarEventListener for cancelContent', () => {
     const data = { button: 'cancelContent' };
     spyOn(component, 'handleRedirectToQuestionset');
@@ -261,8 +270,9 @@ describe('QuestionComponent', () => {
   });
   it('#toolbarEventListener() should call toolbarEventListener for showReviewcomments', () => {
     const data = { button: 'showReviewcomments' };
+    component.showReviewModal=true;
     component.toolbarEventListener(data);
-    expect(component.showReviewModal).toBeTruthy();
+    expect(component.showReviewModal).toBeFalsy();
   });
   it('#toolbarEventListener() should call toolbarEventListener for sendForCorrectionsQuestion', () => {
     const data = { button: 'sendForCorrectionsQuestion' };
@@ -435,6 +445,7 @@ describe('QuestionComponent', () => {
     component.validateQuestionData();
     expect(component.showFormError).toBeFalsy();
   });
+  
   it('#validateQuestionData() should call validateQuestionData and questionInteractionType is default', () => {
     component.sourcingSettings=sourcingSettingsMock;
     component.editorState = mockData.editorState;
@@ -453,6 +464,7 @@ describe('QuestionComponent', () => {
     component.validateQuestionData();
     expect(component.showFormError).toBeFalsy();
   });
+
   it('call #sourcingUpdate() for sourcingRejectQuestion to verify inputs for #editorService.updateCollection', () => {
     component.creationContext = creationContextMock;
     const questionSet = collectionHierarchyMock.result['questionSet'];
@@ -558,10 +570,40 @@ describe('QuestionComponent', () => {
     spyOn(component,'setQuestionTypeValues').and.callThrough();
     component.childFormData=childMetaData;
     component.subMenus =  mockData.subMenus;
+    component.childFormData.showRemarks='Yes';
     component.setQuestionTypeValues(mockData.questionMetaData);
     expect(component.setQuestionTypeValues).toHaveBeenCalled();
     expect(mockData.questionMetaData.showEvidence).toEqual(component.childFormData.showEvidence)
   });
+
+  it('#setQuestionTypeValues() should call to check the dynamic form data for slider',()=>{
+    spyOn(component,'setQuestionTypeValues').and.callThrough();
+    component.childFormData=childMetaData;
+    component.subMenus =  mockData.subMenus;
+    component.childFormData.showRemarks='Yes';
+       component.sliderDatas={
+      step: 1,
+      validation: {
+        range: {
+          min: 0,
+          max: 10,
+        },
+      },
+    };
+    component.questionInteractionType='slider';
+    component.setQuestionTypeValues(mockData.questionMetaData);
+    expect(component.setQuestionTypeValues).toHaveBeenCalled();
+  });
+
+  it('#setQuestionTypeValues() should call to check the dynamic form data for text',()=>{
+    spyOn(component,'setQuestionTypeValues').and.callThrough();
+    component.childFormData=childMetaData;
+    component.questionPrimaryCategory='Observation';
+    component.questionInteractionType='text';
+    component.setQuestionTypeValues(mockData.questionMetaData);
+    expect(component.setQuestionTypeValues).toHaveBeenCalled();
+  });
+  
 
   it('#setQuestionTypeValues() should call to check the dynamic form data for date',()=>{
     component.questionInteractionType='date'
@@ -701,6 +743,31 @@ describe('QuestionComponent', () => {
     }
     component.sliderData(event);
     expect(component.sliderData).toHaveBeenCalledWith(event);
+  });
+
+  // it('#validateQuestionData() should call validateQuestionData and questionInteractionType for slider', () => {
+  //   spyOn(component,'validQuestionData').and.callThrough();
+  //   component.sourcingSettings=sourcingSettingsMock;
+  //   component.editorState = mockData.editorState;
+  //   component.questionInteractionType = 'slider';
+  //   component.sliderDatas={
+  //     step: 1,
+  //     validation: {
+  //       range: {
+  //         min: 0,
+  //         max: 10,
+  //       },
+  //     },
+  //   };
+  //   component.validateQuestionData();
+  //   expect(component.showFormError).toBeFalsy();
+  //   expect(component.validQuestionData).toHaveBeenCalled();
+  // });
+
+  it('#getResponseDeclaration() should call for question save', () => {
+    spyOn(component,'getResponseDeclaration').and.callThrough();
+    component.getResponseDeclaration('slider');
+    expect(component.getResponseDeclaration).toHaveBeenCalled();
   });
 
 });

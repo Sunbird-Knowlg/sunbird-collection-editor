@@ -218,6 +218,18 @@ describe('EditorComponent', () => {
     expect(editorService.readQuestionSet).not.toHaveBeenCalled();
   });
 
+  it('#mergeCollectionExternalProperties() should call fetchCollectionHierarchy api error', () => {
+    const editorService = TestBed.inject(EditorService);
+    component.editorConfig = editorConfig;
+    spyOn(editorService, 'fetchCollectionHierarchy').and.returnValue(throwError('error'));
+    spyOn(editorService, 'readQuestionSet').and.callFake(() => { });
+    spyOn(component, 'showCommentAddedAgainstContent').and.callFake(() => { });
+    component.mergeCollectionExternalProperties();
+    component.objectType='questionSet';
+    expect(editorService.fetchCollectionHierarchy).toHaveBeenCalled();
+    expect(editorService.readQuestionSet).not.toHaveBeenCalled();
+  });
+
   it('#sethierarchyConfig() should set #ishierarchyConfigSet', () => {
     component.editorConfig = editorConfig;
     component.sethierarchyConfig(categoryDefinitionData);
@@ -616,6 +628,15 @@ describe('EditorComponent', () => {
     expect(component.redirectToChapterListTab).toHaveBeenCalled();
   });
 
+  it('#rejectContent() should call #submitRequestChanges() and #redirectToChapterListTab() api error', async () => {
+    component.collectionId = 'do_1234';
+    const editorService = TestBed.inject(EditorService);
+    spyOn(editorService, 'submitRequestChanges').and.returnValue(throwError({}));
+    component.editorConfig = editorConfig;
+    component.rejectContent('test');
+    expect(editorService.submitRequestChanges).toHaveBeenCalled();
+  });
+
   it('#publishContent should call #publishContent() and #redirectToChapterListTab()', () => {
     const editorService = TestBed.inject(EditorService);
     spyOn(editorService, 'publishContent').and.returnValue(of({}));
@@ -627,6 +648,19 @@ describe('EditorComponent', () => {
     expect(editorService.publishContent).toHaveBeenCalled();
     expect(component.redirectToChapterListTab).toHaveBeenCalled();
   });
+
+  it('#publishContent should call #publishContent() and #redirectToChapterListTab() api error', () => {
+    const editorService = TestBed.inject(EditorService);
+    spyOn(editorService, 'publishContent').and.returnValue(throwError({}));
+    spyOn(component, 'redirectToChapterListTab');
+    component.publishContent({});
+    component.editorConfig = editorConfig;
+    component.publishchecklist = []
+    component.publishContent({});
+    expect(editorService.publishContent).toHaveBeenCalled();
+    expect(component.redirectToChapterListTab);
+  });
+
   it('#toolbarEventListener() should call #redirectToChapterListTab() if event is sourcingApprove', () => {
     const editorService = TestBed.inject(EditorService);
     spyOn(component, 'redirectToChapterListTab');
@@ -744,16 +778,6 @@ describe('EditorComponent', () => {
     component.handleTemplateSelection(event);
     expect(component.redirectToQuestionTab).toHaveBeenCalled();
   });
-
-  // it('#handleTemplateSelection should call #redirectToQuestionTab() throw error', async () => {
-  //   const event = 'Multiple Choice Question';
-  //   const editorService = TestBed.get(EditorService);
-  //   spyOn(editorService.telemetryService,'error').and.callFake(()=>{})
-  //   component.editorConfig = editorConfig;
-  //   spyOn(editorService, 'getCategoryDefinition').and.returnValue(throwError('error'));
-  //   component.handleTemplateSelection(event);
-  //   expect(editorService.telemetryService.error).toHaveBeenCalled();
-  // });
 
   it('call #redirectToQuestionTab() to verify #questionComponentInput data', async () => {
     const mode = 'update';
