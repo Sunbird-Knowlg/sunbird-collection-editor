@@ -440,4 +440,14 @@ describe('EditorService', () => {
     editorService.getPrimaryCategoryName('do_11326714211239526417');
     expect(editorService.getPrimaryCategoryName).toHaveBeenCalledWith('do_11326714211239526417')
   });
+
+
+  // rootNodeData
+
+  it('#_toFlatObjFromHierarchy() should call to get rootnode', () => {
+    spyOn(editorService,'_toFlatObjFromHierarchy');
+    editorService._toFlatObjFromHierarchy(rootNodeData);
+    expect(editorService._toFlatObjFromHierarchy);
+  });
+
 });
