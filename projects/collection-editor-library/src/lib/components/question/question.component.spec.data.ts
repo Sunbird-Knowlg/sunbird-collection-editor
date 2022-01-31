@@ -78,95 +78,297 @@ export const mockData = {
       },
     ],
   },
-  questionMetaData: {
-    mimeType: "application/vnd.sunbird.question",
-    media: [],
-    editorState: {
-      options: [
-        {
-          answer: false,
-          value: {
-            body: "<p>test</p>",
-            value: 0,
-          },
-        },
-        {
-          answer: false,
-          value: {
-            body: "<p>test</p>",
-            value: 1,
-          },
-        },
-      ],
-      question: "<p>test mcq</p>",
+  mcqQuestionMetaData: {
+    "id": "api.question.read",
+    "ver": "3.0",
+    "ts": "2022-01-31T04:38:30ZZ",
+    "params": {
+      "resmsgid": "327f9629-17b6-4b11-b15a-c60279285292",
+      "msgid": null,
+      "err": null,
+      "status": "successful",
+      "errmsg": null
     },
-    templateId: "mcq-vertical",
-    name: "test mcq",
-    responseDeclaration: {
-      response1: {
-        maxScore: 1,
-        cardinality: "multiple",
-        type: "integer",
-        correctResponse: {
-          outcomes: {
-            SCORE: 1,
-          },
+    "responseCode": "OK",
+    "result": {
+      "question": {
+        "instructions": {
+          "en": [
+            null
+          ]
         },
-        mapping: [],
-      },
-    },
-    interactionTypes: ["choice"],
-    interactions: {
-      response1: {
-        type: "choice",
-        options: [
-          {
-            label: "<p>test</p>",
-            value: 0,
+        "evidence": "{\"required\":\"No\",\"mimeType\":[\"audio\"],\"minCount\":1,\"maxCount\":1,\"sizeLimit\":\"20480\"}",
+        "responseDeclaration": {
+          "response1": {
+            "maxScore": 1,
+            "cardinality": "multiple",
+            "type": "integer",
+            "correctResponse": {
+              "outcomes": {
+                "SCORE": 1
+              }
+            },
+            "mapping": [
+              {
+                "respone": 0,
+                "outcomes": {
+                  "score": "10"
+                }
+              },
+              {
+                "respone": 1,
+                "outcomes": {
+                  "score": "10"
+                }
+              }
+            ]
+          }
+        },
+        "mimeType": "application/vnd.sunbird.question",
+        "media": [],
+        "body": "<div class='question-body' tabindex='-1'><div class='mcq-title' tabindex='0'><p>Parent Question MCQ</p></div><div data-choice-interaction='response1' class='mcq-vertical'></div></div>",
+        "editorState": {
+          "options": [
+            {
+              "answer": false,
+              "value": {
+                "body": "<p>true</p>",
+                "value": 0
+              }
+            },
+            {
+              "answer": false,
+              "value": {
+                "body": "<p>false</p>",
+                "value": 1
+              }
+            }
+          ],
+          "question": "<p>Parent Question MCQ</p>"
+        },
+        "templateId": "mcq-vertical",
+        "interactions": {
+          "response1": {
+            "type": "choice",
+            "options": [
+              {
+                "label": "<p>true</p>",
+                "value": 0
+              },
+              {
+                "label": "<p>false</p>",
+                "value": 1
+              }
+            ]
           },
-          {
-            label: "<p>test</p>",
-            value: 1,
-          },
+          "validation": {
+            "required": "Yes"
+          }
+        },
+        "primaryCategory": "Multiselect Multiple Choice Question",
+        "identifier": "do_113449672558780416163",
+        "solutions": [],
+        "hints": {
+          "en": [
+            null
+          ]
+        },
+        "qType": "MCQ",
+        "languageCode": [
+          "en"
         ],
-      },
-      validation: {
-        required: "Yes",
-      },
+        "interactionTypes": [
+          "choice"
+        ],
+        "name": "Parent Question MCQ"
+      }
+    }
+  },
+  sliderQuestionMetaData: {
+    "id": "api.question.read",
+    "ver": "3.0",
+    "ts": "2022-01-31T04:17:19ZZ",
+    "params": {
+      "resmsgid": "68a6ed45-a6eb-4fe3-930b-bbcefa7a4511",
+      "msgid": null,
+      "err": null,
+      "status": "successful",
+      "errmsg": null
     },
-    qType: "MCQ",
-    primaryCategory: "Multiselect Multiple Choice Question",
-    body: "<div class='question-body'><div class='mcq-title'><p>test mcq</p></div><div data-choice-interaction='response1' class='mcq-vertical'></div></div>",
-    solutions: [],
-    author: "check1@yopmail.com",
-    createdBy: "5a587cc1-e018-4859-a0a8-e842650b9d64",
-    board: "CBSE",
-    medium: ["English"],
-    gradeLevel: ["Class 4"],
-    subject: ["Mathematics"],
-    topic: ["Forest"],
-    channel: "01309282781705830427",
-    framework: "ekstep_ncert_k-12",
-    license: "CC BY 4.0",
-    showEvidence: "Yes",
-    evidence: {
-      required: "No",
-      mimeType: ["image"],
-      minCount: 1,
-      maxCount: 1,
-      sizeLimit: "20480",
+    "responseCode": "OK",
+    "result": {
+      "question": {
+        "instructions": {
+          "en": [
+            null
+          ]
+        },
+        "responseDeclaration": {
+          "response1": {
+            "type": "integer",
+            "maxScore": 1
+          }
+        },
+        "mimeType": "application/vnd.sunbird.question",
+        "media": [],
+        "body": "<p>test slider 2</p>",
+        "editorState": {
+          "question": "<p>test slider 2</p>"
+        },
+        "interactions": {
+          "validation": {
+            "required": "Yes"
+          },
+          "response1": {
+            "validation": {
+              "range": {
+                "min": "0",
+                "max": "10"
+              }
+            },
+            "step": "1"
+          }
+        },
+        "primaryCategory": "Slider",
+        "identifier": "do_113449775832088576181",
+        "solutions": [],
+        "hints": {
+          "en": [
+            null
+          ]
+        },
+        "languageCode": [
+          "en"
+        ],
+        "interactionTypes": [
+          "slider"
+        ],
+        "name": "test slider 2"
+      }
+    }
+  },
+  dateQuestionMetaDate: {
+    "id": "api.question.read",
+    "ver": "3.0",
+    "ts": "2022-01-31T04:21:32ZZ",
+    "params": {
+      "resmsgid": "10091336-fd86-49bd-8505-2d67e3ce9241",
+      "msgid": null,
+      "err": null,
+      "status": "successful",
+      "errmsg": null
     },
-    showRemarks: "Yes",
-    remarks: {
-      maxLength: "100",
-      required: "No",
+    "responseCode": "OK",
+    "result": {
+      "question": {
+        "instructions": {
+          "en": [
+            null
+          ]
+        },
+        "responseDeclaration": {
+          "response1": {
+            "type": "string"
+          }
+        },
+        "mimeType": "application/vnd.sunbird.question",
+        "media": [],
+        "body": "<p>Child Date 1</p>",
+        "editorState": {
+          "question": "<p>Child Date 1</p>"
+        },
+        "interactions": {
+          "validation": {
+            "required": "Yes"
+          },
+          "response1": {
+            "validation": {
+              "pattern": "DD/MM/YYYY"
+            },
+            "autoCapture": "Yes"
+          }
+        },
+        "primaryCategory": "Date",
+        "identifier": "do_113449808985628672185",
+        "solutions": [],
+        "hints": {
+          "en": [
+            null
+          ]
+        },
+        "languageCode": [
+          "en"
+        ],
+        "interactionTypes": [
+          "date"
+        ],
+        "name": "Child Date 1"
+      }
+    }
+  },
+  textQuestionNetaData: {
+    "id": "api.question.read",
+    "ver": "3.0",
+    "ts": "2022-01-31T04:22:24ZZ",
+    "params": {
+      "resmsgid": "a536133f-822e-4533-a57c-5558ef65297d",
+      "msgid": null,
+      "err": null,
+      "status": "successful",
+      "errmsg": null
     },
-    hints: {
-      en: [null],
-    },
-    instructions: {
-      en: ['test'],
-    },
+    "responseCode": "OK",
+    "result": {
+      "question": {
+        "instructions": {
+          "en": [
+            null
+          ]
+        },
+        "responseDeclaration": {
+          "response1": {
+            "type": "string",
+            "maxScore": 1
+          }
+        },
+        "mimeType": "application/vnd.sunbird.question",
+        "media": [],
+        "body": "<p>child Text Question</p>",
+        "editorState": {
+          "question": "<p>child Text Question</p>"
+        },
+        "interactions": {
+          "validation": {
+            "required": "Yes"
+          },
+          "response1": {
+            "validation": {
+              "limit": {
+                "maxLength": "50"
+              }
+            },
+            "type": {
+              "number": "Yes"
+            }
+          }
+        },
+        "primaryCategory": "Text",
+        "identifier": "do_11345671149997260811",
+        "solutions": [],
+        "hints": {
+          "en": [
+            null
+          ]
+        },
+        "languageCode": [
+          "en"
+        ],
+        "interactionTypes": [
+          "text"
+        ],
+        "name": "child Text Question"
+      }
+    }
   },
   childMetadataUpdated: {
     templateName: "",
@@ -2645,135 +2847,135 @@ export const sourcingSettingsMock = {
 
 export const leafFormConfigMock = [
   {
-      "code": "name",
-      "dataType": "text",
-      "description": "Name of the content",
-      "editable": false,
-      "inputType": "text",
-      "label": "Title",
-      "name": "Title",
-      "placeholder": "Title",
-      "renderingHints": {
-          "class": "sb-g-col-lg-1 required"
+    "code": "name",
+    "dataType": "text",
+    "description": "Name of the content",
+    "editable": false,
+    "inputType": "text",
+    "label": "Title",
+    "name": "Title",
+    "placeholder": "Title",
+    "renderingHints": {
+      "class": "sb-g-col-lg-1 required"
+    },
+    "required": true,
+    "visible": true,
+    "validations": [
+      {
+        "type": "max",
+        "value": "100",
+        "message": "Input is Exceeded"
       },
-      "required": true,
-      "visible": true,
-      "validations": [
-          {
-              "type": "max",
-              "value": "100",
-              "message": "Input is Exceeded"
-          },
-          {
-              "type": "required",
-              "message": "Title is required"
-          }
-      ],
-      "default": "test"
+      {
+        "type": "required",
+        "message": "Title is required"
+      }
+    ],
+    "default": "test"
   },
   {
-      "code": "allowMultiSelect",
-      "dataType": "text",
-      "description": "allowMultiSelect",
-      "editable": false,
-      "index": 5,
-      "default": "Yes",
-      "inputType": "checkbox",
-      "label": "Allow Multi Select",
-      "name": "allowMultiSelect",
-      "placeholder": "allowMultiSelect",
-      "renderingHints": {
-          "class": "sb-g-col-lg-1"
-      },
-      "required": false,
-      "visible": true
+    "code": "allowMultiSelect",
+    "dataType": "text",
+    "description": "allowMultiSelect",
+    "editable": false,
+    "index": 5,
+    "default": "Yes",
+    "inputType": "checkbox",
+    "label": "Allow Multi Select",
+    "name": "allowMultiSelect",
+    "placeholder": "allowMultiSelect",
+    "renderingHints": {
+      "class": "sb-g-col-lg-1"
+    },
+    "required": false,
+    "visible": true
   },
   {
-      "code": "showEvidence",
-      "dataType": "text",
-      "description": "Allow Evidence",
-      "editable": false,
-      "index": 5,
-      "default": "Yes",
-      "inputType": "checkbox",
-      "label": "Allow Evidence",
-      "name": "showEvidence",
-      "placeholder": "showEvidence",
-      "renderingHints": {
-          "class": "sb-g-col-lg-1"
-      },
-      "required": false,
-      "visible": true
+    "code": "showEvidence",
+    "dataType": "text",
+    "description": "Allow Evidence",
+    "editable": false,
+    "index": 5,
+    "default": "Yes",
+    "inputType": "checkbox",
+    "label": "Allow Evidence",
+    "name": "showEvidence",
+    "placeholder": "showEvidence",
+    "renderingHints": {
+      "class": "sb-g-col-lg-1"
+    },
+    "required": false,
+    "visible": true
   },
   {
-      "code": "evidenceMimeType",
-      "dataType": "list",
-      "depends": [
-          "showEvidence"
-      ],
-      "description": "Evidence",
-      "editable": false,
-      "inputType": "multiselect",
-      "label": "evidence",
-      "name": "evidenceMimeType",
-      "placeholder": "evidence",
-      "renderingHints": {
-          "class": "sb-g-col-lg-1"
-      },
-      "required": false,
-      "visible": true,
-      "range": null
+    "code": "evidenceMimeType",
+    "dataType": "list",
+    "depends": [
+      "showEvidence"
+    ],
+    "description": "Evidence",
+    "editable": false,
+    "inputType": "multiselect",
+    "label": "evidence",
+    "name": "evidenceMimeType",
+    "placeholder": "evidence",
+    "renderingHints": {
+      "class": "sb-g-col-lg-1"
+    },
+    "required": false,
+    "visible": true,
+    "range": null
   },
   {
-      "code": "showRemarks",
-      "dataType": "text",
-      "description": "Allow Remarks",
-      "editable": false,
-      "index": 5,
-      "inputType": "checkbox",
-      "label": "Allow Remarks",
-      "name": "showRemarks",
-      "placeholder": "showRemarks",
-      "renderingHints": {
-          "class": "sb-g-col-lg-1"
-      },
-      "required": false,
-      "visible": true
+    "code": "showRemarks",
+    "dataType": "text",
+    "description": "Allow Remarks",
+    "editable": false,
+    "index": 5,
+    "inputType": "checkbox",
+    "label": "Allow Remarks",
+    "name": "showRemarks",
+    "placeholder": "showRemarks",
+    "renderingHints": {
+      "class": "sb-g-col-lg-1"
+    },
+    "required": false,
+    "visible": true
   },
   {
-      "code": "remarksLimit",
-      "dataType": "text",
-      "description": "Remark limit",
-      "depends": [
-          "showRemarks"
-      ],
-      "editable": false,
-      "inputType": "text",
-      "label": "Remark limit",
-      "name": "remarksLimit",
-      "placeholder": "Add limit",
-      "renderingHints": {
-          "class": "sb-g-col-lg-1"
-      },
-      "required": false,
-      "visible": true
+    "code": "remarksLimit",
+    "dataType": "text",
+    "description": "Remark limit",
+    "depends": [
+      "showRemarks"
+    ],
+    "editable": false,
+    "inputType": "text",
+    "label": "Remark limit",
+    "name": "remarksLimit",
+    "placeholder": "Add limit",
+    "renderingHints": {
+      "class": "sb-g-col-lg-1"
+    },
+    "required": false,
+    "visible": true
   },
   {
-      "code": "markAsNotMandatory",
-      "dataType": "text",
-      "description": "markAsNotMandatory",
-      "editable": false,
-      "index": 5,
-      "inputType": "checkbox",
-      "label": "Mark As Not Mandatory",
-      "name": "markAsNotMandatory",
-      "placeholder": "markAsNotMandatory",
-      "renderingHints": {
-          "class": "sb-g-col-lg-1"
-      },
-      "required": false,
-      "visible": true,
-      "default": "No"
+    "code": "markAsNotMandatory",
+    "dataType": "text",
+    "description": "markAsNotMandatory",
+    "editable": false,
+    "index": 5,
+    "inputType": "checkbox",
+    "label": "Mark As Not Mandatory",
+    "name": "markAsNotMandatory",
+    "placeholder": "markAsNotMandatory",
+    "renderingHints": {
+      "class": "sb-g-col-lg-1"
+    },
+    "required": false,
+    "visible": true,
+    "default": "No"
   }
 ];
 export const creationContextMock: any = {
@@ -2800,12 +3002,12 @@ export const mockTreeService = {
   getChildren: () => {
     return ["do_11330103476396851218", "do_233"];
   },
-  getFirstChild:()=>{
-     return {
-      data:{
-        metadata:{}
+  getFirstChild: () => {
+    return {
+      data: {
+        metadata: {}
       }
-     }
+    }
   },
   getActiveNode: () => {
     return {
@@ -2827,21 +3029,21 @@ export const mockTreeService = {
       },
     };
   },
-  getNodeById :() =>{
+  getNodeById: () => {
   },
-  clearTreeCache :()=>{
+  clearTreeCache: () => {
   },
-  updateNode:()=>{
+  updateNode: () => {
 
   },
-  updateAppIcon:()=>{
+  updateAppIcon: () => {
 
   }
 };
 
 export const mockEditorCursor = {
-    setQuestionMap: () => {},
-    clearQuestionMap : () => {}
+  setQuestionMap: () => { },
+  clearQuestionMap: () => { }
 }
 
 
@@ -2853,10 +3055,10 @@ export const childMetaData = {
   showRemarks: "Yes",
   remarksLimit: "10",
   markAsNotMandatory: "Yes",
-  dateFormat:'dd/mm/yyyy',
-  autoCapture:'Yes',
-  numberOnly:'Yes',
-  characterLimit:50,
+  dateFormat: 'dd/mm/yyyy',
+  autoCapture: 'Yes',
+  numberOnly: 'Yes',
+  characterLimit: 50,
 };
 
 export const HierarchyMockData = {

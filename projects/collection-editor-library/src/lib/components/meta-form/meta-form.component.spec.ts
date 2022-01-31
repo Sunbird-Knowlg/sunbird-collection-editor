@@ -32,6 +32,22 @@ describe('MetaFormComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('#valueChanges() should call updateNode and emit toolbarEmitter with appIcon', () => {
+    spyOn(component,'valueChanges').and.callThrough();
+    component.appIcon='https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png';
+    component.showAppIcon=true;
+    const event={
+      appIcon: 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png',
+    }
+    spyOn(component.toolbarEmitter, 'emit');
+    spyOn(component.treeService, 'updateNode');
+    component.valueChanges(event);
+    expect(component.valueChanges).toHaveBeenCalledWith(event);
+    expect(component.toolbarEmitter.emit).toHaveBeenCalled();
+  });
+
+
   it('#ngOnChanges() should call setAppIconData', () => {
     spyOn(component, 'fetchFrameWorkDetails');
     spyOn(component, 'setAppIconData');
@@ -40,8 +56,6 @@ describe('MetaFormComponent', () => {
     expect(component.setAppIconData).toHaveBeenCalled();
   });
 
-
-
   it('#onStatusChanges() should emit toolbarEmitter event', () => {
     const data = { button: 'onFormStatusChange', event: '' };
     spyOn(component.toolbarEmitter, 'emit');
@@ -49,12 +63,14 @@ describe('MetaFormComponent', () => {
     expect(component.toolbarEmitter.emit).toHaveBeenCalledWith(data);
   });
   it('#appIconDataHandler() should call updateAppIcon method', () => {
+    spyOn(component,'appIconDataHandler').and.callThrough();
     // tslint:disable-next-line:max-line-length
-    const data = { url: 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png' };
-    component.appIcon = data.url;
+    const event = { url: 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png' };
+    component.appIcon = event.url;
     spyOn(component.treeService, 'updateAppIcon');
-    component.appIconDataHandler(data);
-    expect(component.treeService.updateAppIcon).toHaveBeenCalledWith(data.url);
+    component.appIconDataHandler(event);
+    expect(component.treeService.updateAppIcon).toHaveBeenCalledWith(event.url);
+    expect(component.appIconDataHandler).toHaveBeenCalled();
   });
   it('#setAppIconData() should set appIcon', () => {
     spyOn(component,'setAppIconData').and.callThrough();
@@ -71,6 +87,8 @@ describe('MetaFormComponent', () => {
     component.setAppIconData();
     expect(component.appIcon).toBeDefined();
   });
+
+ 
   it('call #ifFieldIsEditable() verify returning value', () => {
     spyOn(component, 'isReviewMode').and.returnValue(false);
     expect(component.ifFieldIsEditable('bloomsLevel', false)).toEqual(false);
@@ -105,34 +123,5 @@ describe('MetaFormComponent', () => {
     component.fetchFrameWorkDetails();
     expect(component.frameworkDetails).toBeDefined();
   });
-
-  it('#valueChanges() should call updateNode and emit toolbarEmitter with appIcon', () => {
-    spyOn(component,'valueChanges').and.callThrough();
-    const event={
-      appIcon: 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png',
-      setPeroid:'Yes'
-    }
-    spyOn(component.toolbarEmitter, 'emit');
-    spyOn(component.treeService, 'updateNode');
-    component.valueChanges(event);
-    const treeService = TestBed.get(TreeService);
-    expect(treeService.updateNode).toHaveBeenCalledWith(event);
-    expect(component.valueChanges).toHaveBeenCalledWith(event);
-  });
-
-  it('#valueChanges() should call updateNode and emit toolbarEmitter without appIcon', () => {
-    spyOn(component,'valueChanges').and.callThrough();
-    component.showAppIcon=false;
-    const event={
-      setPeroid:'Yes'
-    }
-    spyOn(component.toolbarEmitter, 'emit');
-    spyOn(component.treeService, 'updateNode');
-    component.valueChanges(event);
-    const treeService = TestBed.get(TreeService);
-    expect(treeService.updateNode).toHaveBeenCalledWith(event);
-    expect(component.valueChanges).toHaveBeenCalledWith(event);
-  });
-
 
 });

@@ -26,12 +26,6 @@ describe('TranslationsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('#editorDataHandler() should call editorDataHandler for question', () => {
-    component.editorState = mockData.editorState;
-    component.editorState.question=mockData.editorState;
-    component.editorDataHandler(mockData.eventData, 'question');
-    expect(component.editorState).toBeDefined();
-  });
   it('#editorDataHandler() should call editorDataHandler for solution', () => {
     spyOn(component,'editorDataHandler').and.callThrough();
     component.editorState.solutions=mockData.editorState;
@@ -48,8 +42,9 @@ describe('TranslationsComponent', () => {
 
   it('#editorDataHandler() should call editorDataHandler without type', () => {
     spyOn(component,'editorDataHandler').and.callThrough();
-    component.editorDataHandler(mockData.eventData);
-    expect(component.editorDataHandler).toHaveBeenCalledWith(mockData.eventData);
+    component.editorDataHandler(mockData.eventData,'test');
+    expect(component.editorDataHandler).toHaveBeenCalledWith(mockData.eventData, 'test');
+    expect(component.editorState.question).toBe(mockData.eventData.body);
   });
 
 });
