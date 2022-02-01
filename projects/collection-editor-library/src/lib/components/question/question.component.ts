@@ -208,7 +208,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.questionPrimaryCategory = this.questionMetaData.primaryCategory;
               }
               // tslint:disable-next-line:max-line-length
-              this.questionInteractionType = this.questionMetaData.interactionTypes ? this.questionMetaData.interactionTypes[0] : 'default';
+              this.questionInteractionType = this.questionMetaData?.interactionTypes ? this.questionMetaData?.interactionTypes[0] : 'default';
               if (this.questionInteractionType === 'default') {
                 if (this.questionMetaData.editorState) {
                   this.editorState = this.questionMetaData.editorState;
@@ -240,7 +240,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
                 const responseDeclaration = this.questionMetaData.responseDeclaration;
                 this.scoreMapping = _.get(responseDeclaration, 'response1.mapping');
                 const templateId = this.questionMetaData.templateId;
-                // this.questionMetaData.editorState = this.questionMetaData.editorState;
                 const numberOfOptions = this.questionMetaData.editorState.options.length;
                 this.editorService.optionsLength = numberOfOptions;
                 const options = _.map(this.questionMetaData.editorState.options, option => ({ body: option.value.body }));
