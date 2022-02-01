@@ -126,6 +126,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     if (_.isUndefined(setChildQueston)) {
       this.questionInput.setChildQueston = false;
     }
+    this.questionFormConfig=this.leafFormConfig;
     this.questionInteractionType = type;
     this.questionCategory = category;
     this.questionId = questionId;
@@ -322,6 +323,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         this.showAddSecondaryQuestionCat = false;
         this.saveContent();
         break;
+      case 'showTranslation':
+        this.showTranslation = true;
+        break;  
       case 'submitQuestion':
         this.submitHandler();
         break;
@@ -353,9 +357,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         this.previewFormData(true);
         this.showPreview = false;
         this.toolbarConfig.showPreview = false;
-        break;
-      case 'showTranslation':
-        this.showTranslation = true;
         break;
       case 'showReviewcomments':
         this.showReviewModal = !this.showReviewModal;
@@ -790,7 +791,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     return {
       nodesModified: {
         [questionId]: {
-          metadata: _.omit(this.getQuestionMetadata(), ['creator']),
+          metadata: _.omit(metaData, ['creator']),
           objectType: 'Question',
           root: false,
           isNew: !this.questionId
@@ -838,7 +839,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
 
-    if (! _.isEmpty(this.sliderDatas) && this.questionInteractionType === 'slider') {
+    if (!_.isEmpty(this.sliderDatas) && this.questionInteractionType === 'slider') {
       metaData.interactionTypes = [this.questionInteractionType];
       metaData.primaryCategory = this.questionPrimaryCategory;
       metaData.interactions = {
@@ -1223,13 +1224,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!_.get(this.sourcingSettings, 'showAddSecondaryQuestion') && !this.questionInput.setChildQueston) {
       this.showOptions = false;
     } else {
-    _.forEach(this.subMenus, (el) => {
-      if (el.id === 'addDependantQuestion' && el.show === false) {
-        this.showOptions = true;
-      } else {
-        this.showOptions = false;
-      }
-    });
+    this.showOptions = (this.questionInput.setChildQueston === true) ? true : false;
   }
   }
   ngOnDestroy() {

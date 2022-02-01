@@ -249,12 +249,11 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
   }
 
   valueChanges(event: any) {
-    let data = _.omit(event,['setPeriod']);
     if (!_.isEmpty(this.appIcon) && this.showAppIcon) {
-      data.appIcon = this.appIcon;
+      event.appIcon = this.appIcon;
     }
-    this.toolbarEmitter.emit({ button: 'onFormValueChange', data });
-    this.treeService.updateNode(data);
+    this.toolbarEmitter.emit({ button: 'onFormValueChange', event });
+    this.treeService.updateNode(event);
   }
 
   appIconDataHandler(event) {
