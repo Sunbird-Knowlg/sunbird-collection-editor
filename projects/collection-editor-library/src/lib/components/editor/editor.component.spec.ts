@@ -781,6 +781,7 @@ describe('EditorComponent', () => {
 
   it('call #redirectToQuestionTab() to verify #questionComponentInput data', async () => {
     const mode = 'update';
+    const editorService = TestBed.get(EditorService);
     component.objectType='question';
     component.editorConfig = editorConfig;
     const interactionType = 'choice';
@@ -792,6 +793,9 @@ describe('EditorComponent', () => {
 
   it('call #redirectToQuestionTab() to verify #questionComponentInput data for edit', async () => {
     const mode = 'edit';
+    const editorService = TestBed.get(EditorService);
+    getCategoryDefinitionResponse.result.objectCategoryDefinition.forms = categoryDefinition.result.objectCategoryDefinition.forms.create.properties;
+    spyOn(editorService, 'getCategoryDefinition').and.returnValue(of(getCategoryDefinitionResponse));
     component.selectedNodeData=SelectedNodeMockData;
     component.objectType='question';
     const interactionType = 'choice';
