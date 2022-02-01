@@ -97,7 +97,7 @@ describe("QuestionComponent", () => {
     };
     component.questionId = "do_1134357224765685761203";
     component.questionInteractionType = "choice";
-    component.questionPrimaryCategory = "Multiselect Multiple Choice Question";
+    component.questionPrimaryCategory = undefined;
     editorService = TestBed.inject(EditorService);
     telemetryService = TestBed.inject(EditorTelemetryService);
     treeService = TestBed.get(TreeService);
@@ -203,7 +203,6 @@ describe("QuestionComponent", () => {
       showPreview: "false",
     });
     component.toolbarConfig.showPreview = false;
-    component.questionPrimaryCategory = undefined;
     spyOn(editorService, "fetchCollectionHierarchy").and.callFake(() => {
       return of(collectionHierarchyMock);
     });
@@ -372,7 +371,6 @@ describe("QuestionComponent", () => {
     spyOn(editorService, "apiErrorHandling").and.callFake(() => {});
     component.questionMetaData = mockData.mcqQuestionMetaData;
     component.questionInteractionType = "choice";
-    component.subMenuConfig();
     component.initialize();
     expect(component.initialize).toHaveBeenCalled();
   });
@@ -852,7 +850,7 @@ describe("QuestionComponent", () => {
     expect(component.showFormError).toBeFalsy();
   });
 
-  it("#validateQuestionData() should call validateQuestionData and questionInteractionType is date", () => {
+  it("#validateQuestionData() should call validateQuestionData and questionInteractionType is slider", () => {
     component.sourcingSettings = sourcingSettingsMock;
     component.editorState = mockData.editorState;
     component.editorState.question = "<p> Hi how are you </p>";
@@ -868,6 +866,29 @@ describe("QuestionComponent", () => {
     };
     component.validateQuestionData();
     expect(component.showFormError).toBeFalsy();
+  });
+
+  it("#validateQuestionData() should call validateQuestionData and questionInteractionType is slider empty data", () => {
+    component.sourcingSettings = sourcingSettingsMock;
+    component.editorState = mockData.editorState;
+    component.editorState.question = "<p> Hi how are you </p>";
+    component.questionInteractionType = "slider";
+    component.sliderDatas = {
+      validation: {
+        range: {
+          min: "",
+          max: "10",
+        },
+      },
+      step: "1",
+    };
+    component.configService.labelConfig = {messages: {error: {
+      '005': 'error'
+    }}};
+    const toasterService = TestBed.get(ToasterService);
+    spyOn(toasterService, 'error').and.callThrough();
+    component.validateQuestionData();
+    expect(component.showFormError).toBeTruthy();
   });
 
   it("call #sourcingUpdate() for sourcingRejectQuestion to verify inputs for #editorService.updateCollection", () => {
@@ -1015,92 +1036,6 @@ describe("QuestionComponent", () => {
     expect(component.dependentQuestions.length).toBe(1);
   });
 
-  it("#prepareRequestBody() should call to check the dynamic form data for mcq with evidence", () => {
-    spyOn(treeService, "getFirstChild").and.callFake(() => {});
-    spyOn(component, "prepareRequestBody").and.callThrough();
-    spyOn(component, "getQuestionMetadata").and.callThrough();
-    spyOn(component, "setQuestionTypeValues").and.callThrough();
-    component.editorState = mockData.mcqQuestionMetaData.result.question;
-    component.editorState.showRemarks = "Yes";
-    component.childFormData = childMetaData;
-    component.questionInteractionType = "choice";
-    component.subMenus = mockData.subMenus;
-    component.prepareRequestBody();
-    component.getQuestionMetadata();
-    component.setQuestionTypeValues(
-      mockData.mcqQuestionMetaData.result.question
-    );
-    expect(component.getQuestionMetadata).toHaveBeenCalled();
-    expect(component.setQuestionTypeValues).toHaveBeenCalled();
-    expect(component.prepareRequestBody).toHaveBeenCalled();
-  });
-
-  it("#prepareRequestBody() should call to check the dynamic form data for slider", () => {
-    spyOn(treeService, "getFirstChild").and.callFake(() => {});
-    spyOn(component, "prepareRequestBody").and.callThrough();
-    spyOn(component, "getQuestionMetadata").and.callThrough();
-    spyOn(component, "setQuestionTypeValues").and.callThrough();
-    component.editorState = mockData.sliderQuestionMetaData.result.question;
-    component.childFormData = childMetaData;
-    component.questionInteractionType = "slider";
-    component.sliderDatas = {
-      step: 1,
-      validation: {
-        range: {
-          min: 0,
-          max: 10,
-        },
-      },
-    };
-    component.subMenus = mockData.subMenus;
-    component.prepareRequestBody();
-    component.getQuestionMetadata();
-    component.setQuestionTypeValues(
-      mockData.sliderQuestionMetaData.result.question
-    );
-    expect(component.getQuestionMetadata).toHaveBeenCalled();
-    expect(component.setQuestionTypeValues).toHaveBeenCalled();
-    expect(component.prepareRequestBody).toHaveBeenCalled();
-  });
-
-  it("#prepareRequestBody() should call to check the dynamic form data for text", () => {
-    spyOn(treeService, "getFirstChild").and.callFake(() => {});
-    spyOn(component, "prepareRequestBody").and.callThrough();
-    spyOn(component, "getQuestionMetadata").and.callThrough();
-    spyOn(component, "setQuestionTypeValues").and.callThrough();
-    component.editorState = mockData.textQuestionNetaData.result.question;
-    component.childFormData = childMetaData;
-    component.questionInteractionType = "text";
-    component.subMenus = mockData.subMenus;
-    component.prepareRequestBody();
-    component.getQuestionMetadata();
-    component.setQuestionTypeValues(
-      mockData.textQuestionNetaData.result.question
-    );
-    expect(component.getQuestionMetadata).toHaveBeenCalled();
-    expect(component.setQuestionTypeValues).toHaveBeenCalled();
-    expect(component.prepareRequestBody).toHaveBeenCalled();
-  });
-
-  it("#prepareRequestBody() should call to check the dynamic form data for date", () => {
-    spyOn(treeService, "getFirstChild").and.callFake(() => {});
-    spyOn(component, "prepareRequestBody").and.callThrough();
-    spyOn(component, "getQuestionMetadata").and.callThrough();
-    spyOn(component, "setQuestionTypeValues").and.callThrough();
-    component.editorState = mockData.dateQuestionMetaDate.result.question;
-    component.childFormData = childMetaData;
-    component.questionInteractionType = "date";
-    component.subMenus = mockData.subMenus;
-    component.prepareRequestBody();
-    component.getQuestionMetadata();
-    component.setQuestionTypeValues(
-      mockData.dateQuestionMetaDate.result.question
-    );
-    expect(component.getQuestionMetadata).toHaveBeenCalled();
-    expect(component.setQuestionTypeValues).toHaveBeenCalled();
-    expect(component.prepareRequestBody).toHaveBeenCalled();
-  });
-
   it("#saveContent() should call saveContent when questionId exits ", () => {
     spyOn(component, "validateQuestionData");
     spyOn(component, "validateFormFields");
@@ -1220,14 +1155,12 @@ describe("QuestionComponent", () => {
     expect(component.setCondition).toHaveBeenCalledWith(data);
   });
 
-  it("#subMenuConfig() should call when question page render", () => {
-    spyOn(component, "subMenuConfig");
-    component.questionMetaData = mockData.mcqQuestionMetaData;
-    component.sourcingSettings = sourcingSettingsMock;
-    component.questionInput.setChildQuestion = false;
-    component.subMenuConfig();
-    expect(component.subMenuConfig).toHaveBeenCalled();
-  });
+  // it("#subMenuConfig() should call when question page render", () => {
+  //   component.questionMetaData = mockData.mcqQuestionMetaData.result.question;
+  //   component.sourcingSettings = sourcingSettingsMock;
+  //   component.questionInput.setChildQuestion = true;
+  //   component.subMenuConfig();
+  // });
 
   it("#sliderData() should call when slider question is called", () => {
     spyOn(component, "sliderData").and.callThrough();
@@ -1245,4 +1178,69 @@ describe("QuestionComponent", () => {
     component.getResponseDeclaration("slider");
     expect(component.getResponseDeclaration).toHaveBeenCalled();
   });
+
+it('#setQuestionTypeValues call when question showEvidence is yes',()=>{
+  const metaData=mockData.mcqQuestionMetaData.result.question;
+  component.childFormData=childMetaData;
+  component.subMenus=mockData.subMenus;
+  component.questionInteractionType="choice";
+  component.setQuestionTypeValues(metaData);
+})
+
+it('#setQuestionTypeValues call when question howEvidence is no',()=>{
+  let metaData=mockData.mcqQuestionMetaData.result.question;
+  metaData.showEvidence="No";
+  childMetaData.showEvidence="No";
+  childMetaData.showRemarks='Yes';
+  metaData.showRemarks='Yes';
+  component.childFormData=childMetaData;
+  component.subMenus=mockData.subMenus;
+  component.questionInteractionType="choice";
+  component.setQuestionTypeValues(metaData);
+})
+
+it('#setQuestionTypeValues call when question for slider',()=>{
+  const metaData=mockData.sliderQuestionMetaData.result.question;
+  component.childFormData=childMetaData;
+  component.subMenus=mockData.subMenus;
+  component.sliderDatas=mockData.sliderQuestionMetaData.result.question.responseDeclaration.response1
+  component.questionInteractionType="slider";
+  component.setQuestionTypeValues(metaData);
+})
+
+it('#setQuestionTypeValues call when question for date',()=>{
+  const metaData=mockData.dateQuestionMetaDate.result.question;
+  component.childFormData=childMetaData;
+  component.subMenus=mockData.subMenus;
+  component.questionInteractionType="date";
+  component.setQuestionTypeValues(metaData);
+})
+
+it('#setQuestionTypeValues call when question for text',()=>{
+  const metaData=mockData.textQuestionNetaData.result.question;
+  component.questionPrimaryCategory=metaData.primaryCategory;
+  component.childFormData=childMetaData;
+  component.subMenus=mockData.subMenus;
+  component.questionInteractionType="text";
+  component.setQuestionTypeValues(metaData);
+})
+
+
+it("#saveQuestions call on click save button", () => {
+  spyOn(component, "saveQuestions");
+  const metaData=mockData.textQuestionNetaData.result.question;
+  spyOn(questionService, "updateHierarchyQuestionCreate").and.callFake(() => {
+    return of({
+      result: {
+        identifiers: {
+          "1245": "do_123",
+        },
+      },
+    });
+  });
+  component.saveQuestions(metaData, "create");
+  expect(component.saveQuestion);
+});
+
+
 });

@@ -95,8 +95,14 @@ export const mockData = {
         instructions: {
           en: [null],
         },
-        evidence:
-          '{"required":"No","mimeType":["audio"],"minCount":1,"maxCount":1,"sizeLimit":"20480"}',
+        showEvidence:'Yes',
+        evidence:{
+          "required":"No",
+          "mimeType":["audio"],
+          "minCount":1,
+          "maxCount":1,
+          "sizeLimit":"20480"
+        },
         responseDeclaration: {
           response1: {
             maxScore: 1,
@@ -166,9 +172,13 @@ export const mockData = {
         },
         primaryCategory: "Multiselect Multiple Choice Question",
         identifier: "do_113449672558780416163",
+        remarks:{
+          maxLength:10,
+          required: 'No'
+        },
         solutions: [],
         hints: {
-          en: [null],
+          en: ["test"],
         },
         qType: "MCQ",
         languageCode: ["en"],
@@ -581,9 +591,9 @@ export const mockData = {
   },
   subMenus: [
     {
-      id: "addHint",
+      id: 'addHint',
       name: "Add Hint",
-      value: "test",
+      value: "",
       enabled: false,
       type: "input",
       label: "label",
@@ -2819,7 +2829,7 @@ export const childMetaData = {
   name: "test",
   allowMultiSelect: "Yes",
   showEvidence: "Yes",
-  evidenceMimeType: ["audio"],
+  evidenceMimeType: ["vedio","audio"],
   showRemarks: "Yes",
   remarksLimit: 10,
   markAsNotMandatory: "Yes",
