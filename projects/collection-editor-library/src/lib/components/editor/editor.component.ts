@@ -102,7 +102,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.isObjectTypeCollection = this.objectType === 'questionSet' ? false : true;
     this.isStatusReviewMode = this.isReviewMode();
 
-    if(this.objectType === 'question') {
+    if (this.objectType === 'question') {
       this.collectionId = _.get(this.editorConfig, 'context.collectionIdentifier');
       this.initializeFrameworkAndChannel();
       this.editorService.getCategoryDefinition(_.get(this.editorConfig, 'context.collectionPrimaryCategory'),
@@ -116,15 +116,14 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
             mimeType: _.get(this.editorConfig, 'config.mimeType'),
             interactionType: _.get(this.editorConfig, 'config.interactionType')
           };
-          const objectMetadata = _.get(response, "result.objectCategoryDefinition.objectMetadata");
+          const objectMetadata = _.get(response, 'result.objectCategoryDefinition.objectMetadata');
           if (objectMetadata.childrenConfig) {
             this.questionComponentInput.config = objectMetadata.childrenConfig[_.get(this.editorConfig, 'config.interactionType')] || {};
           }
           this.redirectToQuestionTab(_.get(this.editorConfig, 'config.mode'));
         }
-      )
-    }
-    else {
+      );
+    } else {
       this.pageId = 'collection_editor';
       this.mergeCollectionExternalProperties().subscribe(
         (response) => {
@@ -149,7 +148,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           this.helperService.channelData$.subscribe(
             (channelResponse) => {
               this.primaryCategoryDef = response;
-              if(this.objectType !== 'question') {this.sethierarchyConfig(response);}
+              if (this.objectType !== 'question') { this.sethierarchyConfig(response); }
             }
           );
         },
