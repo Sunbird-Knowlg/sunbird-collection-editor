@@ -4,6 +4,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RelationalMetadataComponent } from './relational-metadata.component';
 import { mockData } from './relational-metadata.component.spec.data';
 import { EditorService } from '../../services/editor/editor.service';
+import { TreeService } from '../../services/tree/tree.service';
 
 describe('RelationalMetadataComponent', () => {
   let component: RelationalMetadataComponent;
@@ -13,7 +14,7 @@ describe('RelationalMetadataComponent', () => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       declarations: [ RelationalMetadataComponent ],
-      providers: [EditorService]
+      providers: [EditorService, TreeService]
     })
     .compileComponents();
   }));
@@ -93,6 +94,10 @@ describe('RelationalMetadataComponent', () => {
   it('#onFormValueChange() should emit the form values', () => {
     spyOn(component.valueChanges, 'emit');
     const testData = {name: 'Test Book'};
+    const treeService = TestBed.inject(TreeService);
+    spyOn(treeService, 'getActiveNode').and.callFake(() => {
+      return { data: { metadata: { relationalMetadata: { name: 'Test' }} } };
+    });
     component.onFormValueChange(testData);
     expect(component.valueChanges.emit).toHaveBeenCalledWith(testData);
   });
