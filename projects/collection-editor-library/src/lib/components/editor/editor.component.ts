@@ -275,13 +275,12 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   setEditorForms(categoryDefinitionData) {
-    this.unitFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.unitMetadata.properties');
-    // tslint:disable-next-line:max-line-length
-    this.rootFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.create.properties');
-    // tslint:disable-next-line:max-line-length
-    this.libraryComponentInput.searchFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.search.properties');
-    this.leafFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.childMetadata.properties');
-    this.relationFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.relationalMetadata.properties');
+    const formsConfigObj = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms');
+    this.unitFormConfig = _.get(formsConfigObj, 'unitMetadata.properties');
+    this.rootFormConfig = _.get(formsConfigObj, 'create.properties');
+    this.libraryComponentInput.searchFormConfig = _.get(formsConfigObj, 'search.properties');
+    this.leafFormConfig = _.get(formsConfigObj, 'childMetadata.properties');
+    this.relationFormConfig = _.get(formsConfigObj, 'relationalMetadata.properties');
   }
 
   ngAfterViewInit() {
