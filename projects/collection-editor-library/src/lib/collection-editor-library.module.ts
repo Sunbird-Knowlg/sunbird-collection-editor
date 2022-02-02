@@ -48,15 +48,16 @@ import { SliderComponent } from './components/slider/slider.component';
 import { TranslationsComponent } from './components/translations/translations.component';
 import { PublishChecklistComponent } from './components/publish-checklist/publish-checklist.component';
 import { BulkUploadComponent  } from './components/bulk-upload/bulk-upload.component';
+import { RelationalMetadataComponent } from './components/relational-metadata/relational-metadata.component';
 import { AppLoaderComponent } from './components/app-loader/app-loader.component';
 @NgModule({
   declarations: [CollectionEditorLibraryComponent, InterpolatePipe, SanitizeHtmlPipe, ContentplayerPageComponent, EditorComponent, QumlplayerPageComponent,
     HeaderComponent, FancyTreeComponent, MetaFormComponent, LibraryComponent, LibraryFilterComponent, LibraryListComponent,
     QuestionComponent, OptionsComponent, AnswerComponent, CkeditorToolComponent,
-    LibraryPlayerComponent, ResourceReorderComponent, SkeletonLoaderComponent, TemplateComponent, TelemetryInteractDirective,
-    AssetBrowserComponent, CollectionIconComponent,
-    QumlPlayerComponent, DialcodeComponent, DateFormatPipe, BulkUploadComponent, CsvUploadComponent, ManageCollaboratorComponent,
-    PublishChecklistComponent, QuestionOptionSubMenuComponent, SliderComponent, TranslationsComponent,AppLoaderComponent],
+    LibraryPlayerComponent, ResourceReorderComponent, SkeletonLoaderComponent, TemplateComponent, DateFormatPipe,
+    TelemetryInteractDirective, AssetBrowserComponent, CollectionIconComponent,
+    QumlPlayerComponent, DialcodeComponent, BulkUploadComponent, CsvUploadComponent, ManageCollaboratorComponent,
+    PublishChecklistComponent, QuestionOptionSubMenuComponent, SliderComponent, TranslationsComponent,AppLoaderComponent, RelationalMetadataComponent],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule.forChild([]), SuiModule,
   CommonFormElementsModule, InfiniteScrollModule, HttpClientModule, SunbirdPdfPlayerModule, SunbirdVideoPlayerModule,
   QumlLibraryModule, CarouselModule, SunbirdEpubPlayerModule],

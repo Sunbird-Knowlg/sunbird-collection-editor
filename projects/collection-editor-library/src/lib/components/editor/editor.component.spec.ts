@@ -1056,6 +1056,7 @@ describe('EditorComponent', () => {
     expect(component.setCsvDropDownOptionsDisable).toHaveBeenCalledWith(true);
   });
 
+
   it('#ngOnInit should call #getCategoryDefinition api faile case', async () => {
     const event = 'Multiple Choice Question';
     const editorService = TestBed.get(EditorService);
@@ -1066,3 +1067,17 @@ describe('EditorComponent', () => {
   });
 
 });
+
+  it('#onFormStatusChange() should store form status when form state changed', () => {
+    const formStatus = {isValid: true};
+    const expectedResult = { do_12345 : true };
+    const treeService = TestBed.inject(TreeService);
+    spyOn(treeService, 'getActiveNode').and.callFake(() => {
+      return { data: { id: 'do_12345' } };
+    });
+    component.onFormStatusChange(formStatus);
+    expect(component['formStatusMapper']).toEqual(expectedResult);
+  });
+
+});
+

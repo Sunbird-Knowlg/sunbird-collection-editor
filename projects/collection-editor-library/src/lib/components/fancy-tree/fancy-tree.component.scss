@@ -22,7 +22,7 @@
           padding-left: 5px;
           width: inherit !important;
         }
-        .highlightNode {
+        .fancytree-title.highlightNode {
           color: red !important;
           &::before {
             color: red !important;
@@ -33,6 +33,11 @@
       li {
         padding: 0;
         margin: 0 0 1px 0;
+
+  
+        .highlightNode {
+          color: red !important;
+        }
 
         .fancytree {
           &-ico-c{
@@ -85,6 +90,13 @@
               }
             }
 
+
+            .fancytree-custom-icon.highlightNode {
+              &::before {
+                color: red !important;
+              }
+            }
+  
             .fancytree-node {
               padding: 6px 6px 8px 5px;
               margin-left: 45px;
