@@ -45,6 +45,7 @@ import { CsvUploadComponent } from './components/csv-upload/csv-upload.component
 import { ManageCollaboratorComponent } from './components/manage-collaborator/manage-collaborator.component';
 import { PublishChecklistComponent } from './components/publish-checklist/publish-checklist.component';
 import { BulkUploadComponent  } from './components/bulk-upload/bulk-upload.component';
+import { RelationalMetadataComponent } from './components/relational-metadata/relational-metadata.component';
 import { AppLoaderComponent } from './components/app-loader/app-loader.component';
 @NgModule({
   declarations: [CollectionEditorLibraryComponent, InterpolatePipe, SanitizeHtmlPipe, ContentplayerPageComponent, EditorComponent, QumlplayerPageComponent,
@@ -53,7 +54,7 @@ import { AppLoaderComponent } from './components/app-loader/app-loader.component
     LibraryPlayerComponent, ResourceReorderComponent, SkeletonLoaderComponent, TemplateComponent, DateFormatPipe,
     TelemetryInteractDirective, AssetBrowserComponent, CollectionIconComponent,
     QumlPlayerComponent, DialcodeComponent, BulkUploadComponent, CsvUploadComponent, ManageCollaboratorComponent,
-     PublishChecklistComponent, AppLoaderComponent],
+     PublishChecklistComponent, RelationalMetadataComponent, AppLoaderComponent],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule.forChild([]), SuiModule,
   CommonFormElementsModule, InfiniteScrollModule, HttpClientModule, SunbirdPdfPlayerModule, SunbirdVideoPlayerModule,
   QumlLibraryModule, CarouselModule, SunbirdEpubPlayerModule],

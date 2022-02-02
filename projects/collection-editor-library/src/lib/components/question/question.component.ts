@@ -671,7 +671,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
           isNew: !this.questionId
         }
       },
-      hierarchy: this.editorService._toFlatObj(data, questionId, selectedUnitId)
+      hierarchy: this.editorService.getHierarchyObj(data, questionId, selectedUnitId)
     };
   }
 
