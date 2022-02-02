@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angu
 import * as _ from 'lodash-es';
 import { EditorService } from '../../services/editor/editor.service';
 import { ConfigService } from '../../services/config/config.service';
+import { TreeService } from '../../services/tree/tree.service';
 
 @Component({
   selector: 'lib-relational-metadata',
@@ -16,7 +17,7 @@ export class RelationalMetadataComponent implements OnInit, OnChanges {
   @Output() statusChanges = new EventEmitter<any>();
   @Output() valueChanges = new EventEmitter<any>();
   public formFieldProperties: any;
-  constructor(private editorService: EditorService, private configService: ConfigService) { }
+  constructor(private editorService: EditorService, private treeService: TreeService) { }
 
   ngOnInit(): void {
   }
@@ -64,13 +65,16 @@ export class RelationalMetadataComponent implements OnInit, OnChanges {
     return false;
   }
 
-
   onFormStatusChange(event) {
     this.statusChanges.emit(event);
   }
 
   onFormValueChange(event) {
     this.valueChanges.emit(event);
+    const selectedNode = this.treeService.getActiveNode();
+    let relationalMetadata = _.get(selectedNode, 'data.metadata.relationalMetadata', {});
+    relationalMetadata = _.assign({}, relationalMetadata, event);
+    selectedNode.data.metadata = {...selectedNode.data.metadata, relationalMetadata};
   }
 
 }

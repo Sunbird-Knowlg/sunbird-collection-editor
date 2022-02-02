@@ -321,26 +321,17 @@ export class EditorService {
     const data = this.treeService.getFirstChild();
     return {
       nodesModified: this.treeService.treeCache.nodesModified,
-      hierarchy: instance._toFlatObj(data)
+      hierarchy: instance.getHierarchyObj(data)
     };
   }
 
-  _toFlatObj(data, questionId?, selectUnitId?) {
+  getHierarchyObj(data, questionId?, selectUnitId?) {
     const instance = this;
     if (data && data.data) {
-      let relationalMetadata = {};
-      const childrenIds =  _.map(data.children, (child) => {
-        if (_.get(child, 'data.metadata.relationalMetadata')) {
-          relationalMetadata = {
-            ...relationalMetadata,
-            [child.data.id]: _.get(child, 'data.metadata.relationalMetadata')
-          };
-        }
-        return child.data.id;
-      });
+      const relationalMetadata = this.getRelationalMetadataObj(data.children);
       instance.data[data.data.id] = {
         name: data.title,
-        children: childrenIds,
+        children: _.map(data.children, (child) => child.data.id),
         relationalMetadata,
         root: data.data.root
       };
@@ -351,10 +342,23 @@ export class EditorService {
           delete instance.data[data.data.id];
       }
       _.forEach(data.children, (collection) => {
-        instance._toFlatObj(collection, questionId, selectUnitId);
+        instance.getHierarchyObj(collection, questionId, selectUnitId);
       });
     }
     return instance.data;
+  }
+
+  getRelationalMetadataObj(data) {
+    let relationalMetadata = {};
+    _.forEach(data, (child) => {
+      if (_.get(child, 'data.metadata.relationalMetadata')) {
+        relationalMetadata = {
+          ...relationalMetadata,
+          [child.data.id]: _.get(child, 'data.metadata.relationalMetadata')
+        };
+      }
+    });
+    return relationalMetadata;
   }
 
   getCategoryDefinition(categoryName, channel, objectType?: any) {

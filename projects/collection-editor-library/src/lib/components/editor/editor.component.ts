@@ -416,10 +416,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.publishContent(event);
         break;
       case 'onFormStatusChange':
-        const selectedNode = this.treeService.getActiveNode();
-        if (selectedNode && selectedNode.data.id) {
-          this.formStatusMapper[selectedNode.data.id] = event.event.isValid;
-        }
+        this.onFormStatusChange(event.event);
         if (this.isObjectTypeCollection) {
           this.handleCsvDropdownOptionsOnCollection();
         }
@@ -952,13 +949,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     if (selectedNode && selectedNode.data.id) {
       this.formStatusMapper[selectedNode.data.id] = form.isValid;
     }
-  }
-
-  onFormValueChange(event) {
-    const selectedNode = this.treeService.getActiveNode();
-    let relationalMetadata = _.get(selectedNode, 'data.metadata.relationalMetadata', {});
-    relationalMetadata = _.assign({}, relationalMetadata, event);
-    selectedNode.data.metadata = {...selectedNode.data.metadata, relationalMetadata};
   }
 
   ngOnDestroy() {
