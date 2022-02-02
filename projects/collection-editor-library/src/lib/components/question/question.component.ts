@@ -115,18 +115,18 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.questionPrimaryCategory = primaryCategory;
     this.pageStartTime = Date.now();
     this.categoryLabel = [];
+    this.getOptions();
     if (!_.isUndefined(label)) {
       this.categoryLabel[primaryCategory] = label;
     }
-    this.getOptions();
   }
 
   ngOnInit() {
+    this.questionFormConfig=this.leafFormConfig;
     const { questionSetId, questionId, type, category, creationContext, setChildQueston } = this.questionInput;
     if (_.isUndefined(setChildQueston)) {
       this.questionInput.setChildQueston = false;
     }
-    this.questionFormConfig=this.leafFormConfig;
     this.questionInteractionType = type;
     this.questionCategory = category;
     this.questionId = questionId;
@@ -180,13 +180,13 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.editorService.fetchCollectionHierarchy(this.questionSetId).subscribe((response) => {
       this.questionSetHierarchy = _.get(response, 'result.questionSet');
       const parentId = this.editorService.parentIdentifier ? this.editorService.parentIdentifier : this.questionId;
+      if (parentId) {
+        this.getParentQuestionOptions(parentId);
+      }
       const sectionData = this.treeService.getNodeById(parentId);
       const childerns = _.get(response, 'result.questionSet.children');
       this.sectionPrimaryCategory = _.get(response, 'result.questionSet.primaryCategory');
       this.selectedSectionId = _.get(sectionData, 'data.metadata.parent');
-      if (parentId) {
-        this.getParentQuestionOptions(parentId);
-      }
       _.forEach(childerns, (data) => {
         if (data.identifier === this.selectedSectionId) {
           this.branchingLogic = data?.branchingLogic ? data?.branchingLogic : {};
@@ -203,11 +203,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
           .subscribe((res) => {
             if (res.result) {
               this.questionMetaData = res.result.question;
+              this.questionPrimaryCategory = this.questionMetaData?.primaryCategory;
               this.populateFormData();
               this.subMenuConfig();
-              if (_.isUndefined(this.questionPrimaryCategory)) {
-                this.questionPrimaryCategory = this.questionMetaData.primaryCategory;
-              }
+
               // tslint:disable-next-line:max-line-length
               this.questionInteractionType = this.questionMetaData?.interactionTypes ? this.questionMetaData?.interactionTypes[0] : 'default';
               if (this.questionInteractionType === 'default') {
@@ -1134,7 +1133,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   populateFormData() {
     this.childFormData = {};
     _.forEach(this.leafFormConfig, (formFieldCategory) => {
-      formFieldCategory.editable = formFieldCategory.editable ? this.isEditable(formFieldCategory.code) : false;
       if (!_.isUndefined(this.questionId)) {
         if (this.questionMetaData && _.has(this.questionMetaData, formFieldCategory.code)) {
           formFieldCategory.default = this.questionMetaData[formFieldCategory.code];
