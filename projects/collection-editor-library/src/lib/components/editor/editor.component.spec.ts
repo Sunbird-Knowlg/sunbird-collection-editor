@@ -21,6 +21,7 @@ import * as labelConfig from '../../services/config/label.config.json';
 import * as categoryConfig from '../../services/config/category.config.json';
 import { FrameworkService } from '../../services/framework/framework.service';
 import { HelperService } from '../../services/helper/helper.service';
+import { ToasterService } from '../../services/toaster/toaster.service';
 
 describe('EditorComponent', () => {
   const configStub = {
@@ -31,12 +32,13 @@ describe('EditorComponent', () => {
 
   let component: EditorComponent;
   let fixture: ComponentFixture<EditorComponent>;
+  let toasterService,configService;
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, FormsModule, ReactiveFormsModule, RouterTestingModule],
       declarations: [EditorComponent, TelemetryInteractDirective],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      providers: [EditorTelemetryService, EditorService, DialcodeService,
+      providers: [EditorTelemetryService, EditorService, DialcodeService,ToasterService,
         { provide: ConfigService, useValue: configStub }
       ]
     })
@@ -46,6 +48,9 @@ describe('EditorComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(EditorComponent);
     component = fixture.componentInstance;
+    toasterService = TestBed.get(ToasterService);
+    configService=TestBed.get(ConfigService);
+    component.configService=configService;
     // tslint:disable-next-line:no-string-literal
     editorConfig.context['targetFWIds'] = ['nit_k12'];
     // tslint:disable-next-line:no-string-literal
@@ -1049,6 +1054,15 @@ describe('EditorComponent', () => {
     expect(component.isEnableCsvAction).toBeFalsy();
     expect(component.isTreeInitialized).toBeFalsy();
     expect(component.setCsvDropDownOptionsDisable).toHaveBeenCalledWith(true);
+  });
+
+  it('#ngOnInit should call #getCategoryDefinition api faile case', async () => {
+    const event = 'Multiple Choice Question';
+    const editorService = TestBed.get(EditorService);
+    component.editorConfig = editorConfig;
+    component.objectType='question';
+    spyOn(editorService, 'getCategoryDefinition').and.returnValue(throwError('error'));
+    component.ngOnInit();
   });
 
 });
