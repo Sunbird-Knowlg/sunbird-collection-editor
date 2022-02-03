@@ -19,6 +19,8 @@ import { SubMenu } from '../question-option-sub-menu/question-option-sub-menu.co
 import { ICreationContext } from '../../interfaces/CreationContext';
 
 let evidenceMimeType;
+let maxScore=1;
+let evidenceSizeLimit:'20480';
 
 @Component({
   selector: 'lib-question',
@@ -746,7 +748,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     };
     if (type === 'text' || type === 'slider') {
-      responseDeclaration.response1['maxScore'] = 1;
+      responseDeclaration.response1['maxScore'] = maxScore;
     }
     return responseDeclaration;
   }
@@ -785,7 +787,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
           mimeType: this.childFormData.evidenceMimeType,
           minCount: 1,
           maxCount: 1,
-          sizeLimit: '20480',
+          sizeLimit: evidenceSizeLimit,
         };
     }
     metaData.showRemarks = this.childFormData.showRemarks;
