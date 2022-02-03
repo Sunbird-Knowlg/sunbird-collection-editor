@@ -777,29 +777,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     ), key => _.isEmpty(key));
   }
 
-  prepareRequestBody() {
-    const questionId = this.questionId ? this.questionId : UUID.UUID();
-    this.newQuestionID = questionId;
-    const data = this.treeService.getFirstChild();
-    const activeNode = this.treeService.getActiveNode();
-    const selectedUnitId = _.get(activeNode, 'data.id');
-    this.editorService.data = {};
-    this.editorService.selectedSection = selectedUnitId;
-    const metaData = this.getQuestionMetadata();
-    this.setQuestionTypeValues(metaData);
-    return {
-      nodesModified: {
-        [questionId]: {
-          metadata: _.omit(metaData, ['creator']),
-          objectType: 'Question',
-          root: false,
-          isNew: !this.questionId
-        }
-      },
-      hierarchy: this.editorService.getHierarchyObj(data, questionId, selectedUnitId)
-    };
-  }
-
   setQuestionTypeValues(metaData) {
     metaData.showEvidence = this.childFormData.showEvidence;
     if (metaData.showEvidence === 'Yes') {
@@ -882,6 +859,28 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     //  return metaData;
   }
 
+  prepareRequestBody() {
+    const questionId = this.questionId ? this.questionId : UUID.UUID();
+    this.newQuestionID = questionId;
+    const data = this.treeService.getFirstChild();
+    const activeNode = this.treeService.getActiveNode();
+    const selectedUnitId = _.get(activeNode, 'data.id');
+    this.editorService.data = {};
+    this.editorService.selectedSection = selectedUnitId;
+    const metaData = this.getQuestionMetadata();
+    this.setQuestionTypeValues(metaData);
+    return {
+      nodesModified: {
+        [questionId]: {
+          metadata: _.omit(metaData, ['creator']),
+          objectType: 'Question',
+          root: false,
+          isNew: !this.questionId
+        }
+      },
+      hierarchy: this.editorService.getHierarchyObj(data, questionId, selectedUnitId)
+    };
+  }
 
   prepareQuestionBody () {
     const requestBody = this.questionId ?
@@ -1271,7 +1270,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     const questionId = this.questionId ? this.questionId : UUID.UUID();
     const data = this.treeService.getFirstChild();
-    const hierarchyData = this.editorService._toFlatObj(data, '', this.selectedSectionId);
+    const hierarchyData = this.editorService.getHierarchyObj(data, '', this.selectedSectionId);
     const sectionData = _.get(hierarchyData, `${this.selectedSectionId}`);
     const sectionName = sectionData.name;
     const branchingLogic = {
@@ -1314,7 +1313,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
           ...this.treeService.treeCache.nodesModified[this.selectedSectionId]
         }
       },
-      hierarchy: this.editorService._toFlatObj(data, questionId, this.selectedSectionId,this.editorService.parentIdentifier)
+      hierarchy: this.editorService.getHierarchyObj(data, questionId, this.selectedSectionId,this.editorService.parentIdentifier)
     };
     this.saveQuestions(finalResult, type);
   }
