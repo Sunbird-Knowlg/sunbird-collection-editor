@@ -18,9 +18,9 @@ import { filter, finalize, take, takeUntil } from 'rxjs/operators';
 import { SubMenu } from '../question-option-sub-menu/question-option-sub-menu.component';
 import { ICreationContext } from '../../interfaces/CreationContext';
 
-let evidenceMimeType;
-let maxScore=1;
-let evidenceSizeLimit:'20480';
+const evidenceMimeType='';
+const maxScore=1;
+const evidenceSizeLimit='20480';
 
 @Component({
   selector: 'lib-question',

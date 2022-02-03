@@ -11,7 +11,7 @@ import { HelperService } from '../../services/helper/helper.service';
 import { IEditorConfig } from '../../interfaces/editor';
 import { ICreationContext } from '../../interfaces/CreationContext';
 import { Router } from '@angular/router';
-import { catchError, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { Observable, throwError, forkJoin, Subscription, Subject, merge, of } from 'rxjs';
 import * as _ from 'lodash-es';
 import { ConfigService } from '../../services/config/config.service';
@@ -821,8 +821,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.leafFormConfig = questionCategoryConfig;
       }
 
-      const catMetaData = selectedtemplateDetails.objectMetadata;
-      this.sourcingSettings = catMetaData.config.sourcingSettings;
+      const catMetaData = _.get(selectedtemplateDetails,'objectMetadata');
+      this.sourcingSettings = _.get(catMetaData,'config.sourcingSettings');
       if (_.isEmpty(_.get(catMetaData, 'schema.properties.interactionTypes.items.enum'))) {
         // this.toasterService.error(this.resourceService.messages.emsg.m0026);
         this.editorService.selectedChildren = {

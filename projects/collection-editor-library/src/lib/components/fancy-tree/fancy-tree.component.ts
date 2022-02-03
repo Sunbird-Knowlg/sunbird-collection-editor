@@ -119,7 +119,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         folder: this.isFolder(child),
         children: childTree,
         root: false,
-        extraClasses: this.nodeParentDependentMap[child.identifier],
+        extraClasses: !_.isEmpty(this.nodeParentDependentMap[child.identifier]) ? this.nodeParentDependentMap[child.identifier] : '',
         icon: this.getIconClass(child, data.level)
       });
       if (child.visibility === 'Parent') {

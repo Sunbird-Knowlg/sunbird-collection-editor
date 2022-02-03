@@ -650,16 +650,6 @@ describe("QuestionComponent", () => {
     expect(component.onStatusChanges).toHaveBeenCalled();
   });
 
-  it("#setQuestionTitle() should set #toolbarConfig.title for question", () => {
-    spyOn(component, "setQuestionTitle").and.callThrough();
-    creationContextMock.objectType = "question";
-    component.creationContext = creationContextMock;
-    component.questionPrimaryCategory = "Subjective Question";
-    component.setQuestionTitle();
-    expect(component.toolbarConfig.title).toBe("Subjective Question");
-    expect(component.setQuestionTitle).toHaveBeenCalled();
-  });
-
   it("call #getMcqQuestionHtmlBody() to verify questionBody", () => {
     const question = "<p>Objective 1</p>";
     const templateId = "mcq-vertical";
@@ -1500,5 +1490,14 @@ describe("QuestionComponent", () => {
     component.setQuestionTypeValues(metaData);
     component.prepareQuestionBody();
   })
+
+  it("#setQuestionTitle() should set #toolbarConfig.title for question", () => {
+    creationContextMock.objectType = "questionSet";
+    component.questionId='do_123'
+    component.creationContext=creationContextMock;
+    component.questionPrimaryCategory = "";
+    component.setQuestionTitle();
+    expect(component.questionId).toEqual('do_123')
+  });
 
 });
