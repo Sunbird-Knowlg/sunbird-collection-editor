@@ -54,7 +54,7 @@ const mockEditorService = {
     interactionType: "choice",
   },
   getToolbarConfig: () => {},
-  _toFlatObj: () => {},
+  getHierarchyObj: () => {},
   fetchCollectionHierarchy: (questionSetId) => {
     subscribe: (fn) => fn(collectionHierarchyMock);
   },
