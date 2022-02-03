@@ -285,11 +285,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     const formsConfigObj = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms');
     this.unitFormConfig = _.get(formsConfigObj, 'unitMetadata.properties');
     this.rootFormConfig = _.get(formsConfigObj, 'create.properties');
-    this.libraryComponentInput.searchFormConfig = _.get(formsConfigObj, 'search.properties');
-    this.leafFormConfig = _.get(formsConfigObj, 'childMetadata.properties');
-    this.relationFormConfig = _.get(formsConfigObj, 'relationalMetadata.properties');
     let formData=this.rootFormConfig[0].fields;
-    formData.forEach(field => {
+    formData.forEach((field) => {
       if (field.code === 'evidenceMimeType') {
         evidenceMimeType = field.range;
         field.options = this.setEvidence;
@@ -300,6 +297,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         field.options = this.setEcm;
       }
     });
+    this.libraryComponentInput.searchFormConfig = _.get(formsConfigObj, 'search.properties');
+    this.leafFormConfig = _.get(formsConfigObj, 'childMetadata.properties');
+    this.relationFormConfig = _.get(formsConfigObj, 'relationalMetadata.properties');
   }
 
   ngAfterViewInit() {
@@ -804,12 +804,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     // this will activate the save and cancel button
     this.editorConfig.config.showSourcingStatus = false;
     // tslint:disable-next-line:max-line-length
-    this.editorService.getCategoryDefinition(selectedQuestionType, null, 'Question').pipe(catchError(error => {
-      const errInfo = {
-        errorMsg: _.get(this.configService, 'labelConfig.messages.error.006'),
-      };
-      return throwError(this.editorService.apiErrorHandling(error, errInfo));
-    })).subscribe((res) => {
+    this.editorService.getCategoryDefinition(selectedQuestionType, null, 'Question')
+    .subscribe((res) => {
       const selectedtemplateDetails = res.result.objectCategoryDefinition;
       this.editorService.selectedChildren['label']=selectedtemplateDetails.label;
       const selectedTemplateFormFields = _.get(selectedtemplateDetails, 'forms.create.properties');
@@ -824,6 +820,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         });
         this.leafFormConfig = questionCategoryConfig;
       }
+
       const catMetaData = selectedtemplateDetails.objectMetadata;
       this.sourcingSettings = catMetaData.config.sourcingSettings;
       if (_.isEmpty(_.get(catMetaData, 'schema.properties.interactionTypes.items.enum'))) {
@@ -843,6 +840,11 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         };
         this.redirectToQuestionTab(undefined, interactionTypes[0]);
       }
+    },(error) => {
+      const errInfo = {
+        errorMsg: _.get(this.configService, 'labelConfig.messages.error.006'),
+      };
+      return throwError(this.editorService.apiErrorHandling(error, errInfo))
     });
   }
 
@@ -881,12 +883,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         primaryCategory: this.selectedNodeData.data.metadata.primaryCategory,
         interactionType: this.selectedNodeData.data.metadata.interactionTypes[0]
       };
-      this.editorService.getCategoryDefinition(this.selectedNodeData.data.metadata.primaryCategory, null, 'Question').pipe(catchError(error => {
-        const errInfo = {
-          errorMsg: _.get(this.configService, 'labelConfig.messages.error.006'),
-        };
-        return throwError(this.editorService.apiErrorHandling(error, errInfo));
-      })).subscribe((res) => {
+      this.editorService.getCategoryDefinition(this.selectedNodeData.data.metadata.primaryCategory, null, 'Question')
+      .subscribe((res) => {
         const selectedtemplateDetails = res.result.objectCategoryDefinition;
         this.editorService.selectedChildren['label']=selectedtemplateDetails.label;
         const selectedTemplateFormFields = _.get(selectedtemplateDetails, 'forms.create.properties');
@@ -904,6 +902,11 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         const catMetaData = selectedtemplateDetails.objectMetadata;
         this.sourcingSettings = catMetaData.config.sourcingSettings;
         this.pageId = 'question';
+      },(error) => {
+        const errInfo = {
+          errorMsg: _.get(this.configService, 'labelConfig.messages.error.006'),
+        };
+        return throwError(this.editorService.apiErrorHandling(error, errInfo))
       });
     }
     else{

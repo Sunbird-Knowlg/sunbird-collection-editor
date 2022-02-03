@@ -418,13 +418,13 @@ describe('EditorService', () => {
   it('#getParentDependentMap() should call', () => {
     spyOn(editorService,'getParentDependentMap').and.callThrough();
     editorService.getParentDependentMap(rootNodeData);
-    editorService.getFlattenedBranchingLogic(rootNodeData);
     expect(editorService.getParentDependentMap).toHaveBeenCalled();
   });
 
   it('#getFlattenedBranchingLogic() should call', () => {
     spyOn(editorService,'getFlattenedBranchingLogic').and.callThrough();
-    editorService.getFlattenedBranchingLogic({data:rootNodeData});
+    spyOn(editorService,'_toFlatObjFromHierarchy');
+    editorService.getFlattenedBranchingLogic(rootNodeData);
     expect(editorService.getFlattenedBranchingLogic).toHaveBeenCalled();
   });
 
@@ -439,15 +439,6 @@ describe('EditorService', () => {
     spyOn(editorService,'getPrimaryCategoryName').and.callThrough();
     editorService.getPrimaryCategoryName('do_11326714211239526417');
     expect(editorService.getPrimaryCategoryName).toHaveBeenCalledWith('do_11326714211239526417')
-  });
-
-
-  // rootNodeData
-
-  it('#_toFlatObjFromHierarchy() should call to get rootnode', () => {
-    spyOn(editorService,'_toFlatObjFromHierarchy');
-    editorService._toFlatObjFromHierarchy(rootNodeData);
-    expect(editorService._toFlatObjFromHierarchy);
   });
 
 });
