@@ -1066,8 +1066,6 @@ describe('EditorComponent', () => {
     component.ngOnInit();
   });
 
-});
-
   it('#onFormStatusChange() should store form status when form state changed', () => {
     const formStatus = {isValid: true};
     const expectedResult = { do_12345 : true };
