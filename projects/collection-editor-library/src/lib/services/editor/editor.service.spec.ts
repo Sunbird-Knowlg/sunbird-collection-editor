@@ -422,10 +422,10 @@ describe('EditorService', () => {
   });
 
   it('#getFlattenedBranchingLogic() should call', () => {
-    spyOn(editorService,'getFlattenedBranchingLogic').and.callThrough();
-    spyOn(editorService,'_toFlatObjFromHierarchy');
+    spyOn(editorService,'getFlattenedBranchingLogic');
+    editorService._toFlatObjFromHierarchy(rootNodeData)
     editorService.getFlattenedBranchingLogic(rootNodeData);
-    expect(editorService.getFlattenedBranchingLogic).toHaveBeenCalled();
+    expect(editorService.getFlattenedBranchingLogic);
   });
 
   it('#getBranchingLogicEntry() should call', () => {

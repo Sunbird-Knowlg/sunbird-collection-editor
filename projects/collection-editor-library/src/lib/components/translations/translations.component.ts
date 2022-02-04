@@ -94,7 +94,6 @@ export class TranslationsComponent {
       },
     },
     solution: [],
-    editorState: [],
     media: [],
     showEvidence: "Yes/No",
     evidence: {
@@ -120,8 +119,6 @@ export class TranslationsComponent {
       this.editorState.question = event.body;
     } else if (type === 'solution') {
       this.editorState.solutions = event.body;
-    } else {
-      this.editorState = _.assign(this.editorState, event.body);
     }
 
     if (event.mediaobj) {

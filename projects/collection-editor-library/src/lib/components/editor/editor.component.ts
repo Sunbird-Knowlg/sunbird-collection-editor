@@ -292,7 +292,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         field.options = this.setEvidence;
         field.range = null;
       }
-      else if (field.code === 'ecm') {
+      if (field.code === 'ecm') {
         ecm = field.options;
         field.options = this.setEcm;
       }
@@ -849,10 +849,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   redirectToQuestionTab(mode, interactionType?) {
-
     let questionId = mode === 'edit' ? this.selectedNodeData?.data?.metadata?.identifier : undefined;
     let questionCategory = '';
-
     if (this.objectType === 'question') {
       questionId = _.get(this.editorConfig, 'context.identifier');
       interactionType = _.get(this.editorConfig, 'config.interactionType');

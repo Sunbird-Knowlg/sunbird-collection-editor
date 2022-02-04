@@ -39,7 +39,7 @@ describe("SliderComponent", () => {
 
   it("should call the ngOnInit when editorDataInput is undefined", () => {
     component.sliderValue = {};
-    component.editorDataInput = undefined;
+    component.editorDataInput = {};
     spyOn(component, "ngOnInit").and.callThrough();
     component.ngOnInit();
     expect(component.ngOnInit).toHaveBeenCalled();
