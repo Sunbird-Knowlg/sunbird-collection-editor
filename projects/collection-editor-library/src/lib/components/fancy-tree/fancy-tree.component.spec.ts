@@ -296,6 +296,9 @@ describe('FancyTreeComponent', () => {
     spyOn(component, 'dropNode').and.callFake(() => {
       return true;
     });
+    spyOn(editorService,'getDependentNodes').and.callFake(()=>{
+      return {};
+    })
     const node = {};
     component.dragDrop(node, data);
     expect(component.dropNode).toHaveBeenCalled();
