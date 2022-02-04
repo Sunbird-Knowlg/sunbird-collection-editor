@@ -14,7 +14,7 @@ import { EditorTelemetryService } from '../../services/telemetry/telemetry.servi
 describe('OptionsComponent', () => {
   let component: OptionsComponent;
   let fixture: ComponentFixture<OptionsComponent>;
-  let treeService;
+  let treeService,telemetryService;
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule, FormsModule, SuiModule ],
@@ -28,6 +28,7 @@ describe('OptionsComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(OptionsComponent);
     treeService = TestBed.get(TreeService);
+    telemetryService=TestBed.get(EditorTelemetryService);
     component = fixture.componentInstance;
     component.sourcingSettings=sourcingSettingsMock;
     spyOn(treeService, 'setTreeElement').and.callFake((el) => {

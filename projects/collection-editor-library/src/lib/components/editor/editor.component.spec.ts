@@ -790,17 +790,16 @@ describe('EditorComponent', () => {
     const editorService = TestBed.get(EditorService);
     component.editorConfig = editorConfig;
     getCategoryDefinitionResponse.result.objectCategoryDefinition.forms = categoryDefinition.result.objectCategoryDefinition.forms.create.properties;
-    spyOn(editorService, 'getCategoryDefinition').and.returnValue(of(getCategoryDefinitionResponse));
+    spyOn(editorService, 'getCategoryDefinition').and.returnValue(throwError('error'));
     editorService.selectedChildren['label']=getCategoryDefinitionResponse.result.objectCategoryDefinition.label;
-    spyOn(component, 'redirectToQuestionTab');
     component.handleTemplateSelection(event);
-    expect(component.redirectToQuestionTab).toHaveBeenCalled();
   });
 
   it('#handleTemplateSelection should call #redirectToQuestionTab()', async () => {
     const event = 'Multiple Choice Question';
     const editorService = TestBed.get(EditorService);
     component.editorConfig = editorConfig;
+    component.editorConfig.config.showSourcingStatus = false;
     getCategoryDefinitionResponse.result.objectCategoryDefinition.forms = categoryDefinition.result.objectCategoryDefinition.forms.create.properties;
     component.sourcingSettings=sourcingSettingsMock;
     spyOn(editorService, 'getCategoryDefinition').and.returnValue(of(getCategoryDefinitionResponse));
@@ -810,20 +809,7 @@ describe('EditorComponent', () => {
     expect(component.redirectToQuestionTab).toHaveBeenCalled();
   });
 
-  it('#handleTemplateSelection should call #redirectToQuestionTab() api fail case', async () => {
-    const event = 'Multiple Choice Question';
-    const editorService = TestBed.get(EditorService);
-    component.editorConfig = editorConfig;
-    getCategoryDefinitionResponse.result.objectCategoryDefinition.forms = categoryDefinition.result.objectCategoryDefinition.forms.create.properties;
-    component.sourcingSettings=sourcingSettingsMock;
-    spyOn(editorService, 'getCategoryDefinition').and.returnValue(throwError('error'));
-    // editorService.selectedChildren['label']=getCategoryDefinitionResponse.result.objectCategoryDefinition.label;
-    // spyOn(component, 'redirectToQuestionTab');
-    component.handleTemplateSelection(event);
-    // expect(component.redirectToQuestionTab).toHaveBeenCalled();
-  });
 
-  
   it('call #redirectToQuestionTab() to verify #questionComponentInput data', async () => {
     const mode = 'update';
     component.objectType='question';

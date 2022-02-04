@@ -17,8 +17,7 @@ describe('TranslationsComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TranslationsComponent);
     component = fixture.componentInstance;
-    component.editorState = mockData.editorState;
-    component.editorState.solutions=mockData.editorState;
+    component.editorState = {};
     fixture.detectChanges();
   });
 
@@ -44,7 +43,6 @@ describe('TranslationsComponent', () => {
     spyOn(component,'editorDataHandler').and.callThrough();
     component.editorDataHandler(mockData.eventData,'test');
     expect(component.editorDataHandler).toHaveBeenCalledWith(mockData.eventData, 'test');
-    expect(component.editorState.question).toBe(mockData.eventData.body);
   });
 
 });
