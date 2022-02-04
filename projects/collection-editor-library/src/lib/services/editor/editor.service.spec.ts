@@ -1,5 +1,5 @@
 import { DataService } from './../data/data.service';
-import { editorConfig,BranchingLogicData, treeNodeData,rootNodeData } from './../../components/editor/editor.component.spec.data';
+import { editorConfig,BranchingLogicData, treeNodeData,rootNodeData, hierarchyRootNodeData } from './../../components/editor/editor.component.spec.data';
 import { TestBed } from '@angular/core/testing';
 import { EditorService } from './editor.service';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
@@ -11,10 +11,12 @@ import * as categoryConfig from '../../services/config/category.config.json';
 import { of } from 'rxjs';
 import { PublicDataService } from '../public-data/public-data.service';
 import { ToasterService} from '../../services/toaster/toaster.service';
+import { TreeService } from '../tree/tree.service';
 
 
 describe('EditorService', () => {
   let editorService: EditorService;
+  let treeService;
   const configStub = {
     urlConFig: (urlConfig as any).default,
     labelConfig: (labelConfig as any).default,
@@ -44,10 +46,12 @@ describe('EditorService', () => {
       imports: [HttpClientModule],
       providers: [HttpClient,
         DataService,
+        TreeService,
         PublicDataService,
         { provide: ConfigService, useValue: configStub }]
     });
     editorService = TestBed.get(EditorService);
+    treeService=TestBed.get(TreeService);
     editorService.initialize(editorConfig);
   });
 
@@ -440,5 +444,24 @@ describe('EditorService', () => {
     editorService.getPrimaryCategoryName('do_11326714211239526417');
     expect(editorService.getPrimaryCategoryName).toHaveBeenCalledWith('do_11326714211239526417')
   });
+
+  it('#getCollectionHierarchy should call',()=>{
+    spyOn(editorService,'getCollectionHierarchy').and.callThrough();
+    spyOn(treeService, 'getFirstChild').and.callFake(() => {
+      return { data: { metadata: { identifier: '0123'} } };
+    });
+    editorService.getHierarchyObj(hierarchyRootNodeData,'do_113432866096922624110','do_113432866096922624110','do_11343286031200256013');
+    editorService.getCollectionHierarchy();
+    expect(editorService.getCollectionHierarchy).toHaveBeenCalled();
+  })
+
+  it('#_toFlatObjFromHierarchy should call',()=>{
+    spyOn(editorService,'_toFlatObjFromHierarchy').and.callThrough();
+    spyOn(treeService, 'getFirstChild').and.callFake(() => {
+      return { data: { metadata: { identifier: '0123'} } };
+    });
+    editorService._toFlatObjFromHierarchy(rootNodeData);
+    expect(editorService._toFlatObjFromHierarchy).toHaveBeenCalled();
+  })
 
 });
