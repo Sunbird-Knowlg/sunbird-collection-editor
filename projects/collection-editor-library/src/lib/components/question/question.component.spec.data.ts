@@ -95,7 +95,9 @@ export const mockData = {
         instructions: {
           en: [null],
         },
+        allowMultiSelect:'Yes',
         showEvidence:'Yes',
+        evidenceMimeType:['audio'],
         evidence:{
           "required":"No",
           "mimeType":["audio"],
