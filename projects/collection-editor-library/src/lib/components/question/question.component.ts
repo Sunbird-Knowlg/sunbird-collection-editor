@@ -203,14 +203,14 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       if (!_.isUndefined(this.questionId)) {
         this.questionService.readQuestion(this.questionId, leafFormConfigFields)
           .subscribe((res) => {
-            if (res.result) {
-              this.questionMetaData = res.result.question;
-              this.questionPrimaryCategory = this.questionMetaData?.primaryCategory;
+            if (_.get(res,'result')) {
+              this.questionMetaData = _.get(res,'result.question');
+              this.questionPrimaryCategory = _.get(this.questionMetaData,'primaryCategory');
               this.populateFormData();
               this.subMenuConfig();
 
               // tslint:disable-next-line:max-line-length
-              this.questionInteractionType = this.questionMetaData?.interactionTypes ? this.questionMetaData?.interactionTypes[0] : 'default';
+              this.questionInteractionType = _.get(this.questionMetaData,'interactionTypes') ? _.get(this.questionMetaData,'interactionTypes[0]') : 'default';
               if (this.questionInteractionType === 'default') {
                 if (this.questionMetaData.editorState) {
                   this.editorState = this.questionMetaData.editorState;
@@ -712,6 +712,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       media: this.mediaArr,
       editorState: {}
     };
+    console.log('getQuestionMetadata');
+    console.log(this.editorState);
     metadata = _.assign(metadata, this.editorState);
     metadata.editorState.question = metadata.question;
     metadata.body = metadata.question;

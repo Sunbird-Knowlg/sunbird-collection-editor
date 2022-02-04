@@ -175,7 +175,7 @@ describe("QuestionComponent", () => {
     component.questionInput = {
       questionSetId: "do_11330102570702438417",
       questionId: "do_11330103476396851218",
-      type: undefined,
+      type: 'choice',
       category: "MTF",
       config: {},
       creationContext: creationContextMock,
@@ -191,7 +191,7 @@ describe("QuestionComponent", () => {
       return of(collectionHierarchyMock);
     });
     spyOn(questionService, "readQuestion").and.returnValue(
-      of(readQuestionMock)
+      of(mockData.mcqQuestionMetaData)
     );
     component.ngOnInit();
     expect(component.questionInteractionType).toEqual("choice");
@@ -231,7 +231,7 @@ describe("QuestionComponent", () => {
       throwError("error")
     );
     spyOn(questionService, "readQuestion").and.returnValue(
-      of(readQuestionMock)
+      of(mockData.mcqQuestionMetaData)
     );
     component.ngOnInit();
     expect(component.ngOnInit).toHaveBeenCalled();
@@ -265,6 +265,10 @@ describe("QuestionComponent", () => {
       mockData.mcqQuestionMetaData.result.question.responseDeclaration.response1.mapping;
     component.sourcingSettings = sourcingSettingsMock;
     component.questionInput.setChildQuestion = false;
+    component.editorState.solutions=[{
+      id:'1',
+      type:'vedio'
+    }]
     component.initialize();
     expect(component.initialize).toHaveBeenCalled();
   });
@@ -507,7 +511,6 @@ describe("QuestionComponent", () => {
     spyOn(questionService, "readQuestion").and.returnValue(
       of(mockData.dateQuestionMetaDate)
     );
-    component.questionMetaData = mockData.dateQuestionMetaDate;
     component.questionInteractionType = "date";
     component.initialize();
     expect(component.initialize).toHaveBeenCalled();
@@ -658,10 +661,9 @@ describe("QuestionComponent", () => {
   });
 
   it("call #getMcqQuestionHtmlBody() to verify questionBody", () => {
-    const question = "<p>Objective 1</p>";
+    const question = '<div class=\'question-body\' tabindex=\'-1\'><div class=\'mcq-title\' tabindex=\'0\'>{question}</div><div data-choice-interaction=\'response1\' class=\'{templateClass}\'></div></div>';
     const templateId = "mcq-vertical";
-    let result = component.getMcqQuestionHtmlBody(question, templateId);
-    expect(result).toBeDefined();
+    component.getMcqQuestionHtmlBody(question, templateId);
   });
 
   it("Unit test for #sendForReview", () => {
@@ -771,7 +773,7 @@ describe("QuestionComponent", () => {
   });
   it("#saveQuestion() should call saveQuestion for updateQuestion throw error", () => {
     component.editorState = mockData.editorState;
-    component.questionId = "do_11326368076523929611";
+    component.questionId = undefined;
     spyOn(treeService, "getFirstChild").and.callFake(() => {
       return { data: { metadata: { identifier: "0123" } } };
     });
@@ -801,6 +803,7 @@ describe("QuestionComponent", () => {
     component.questionPrimaryCategory = metaData.primaryCategory;
     component.childFormData = childMetaData;
     component.subMenus = mockData.subMenus;
+    component.selectedSolutionType='12345';
     component.questionInteractionType = "text";
     component.getQuestionMetadata();
     component.setQuestionTypeValues(metaData);
@@ -808,6 +811,16 @@ describe("QuestionComponent", () => {
     component.updateQuestion();
     component.saveQuestion();
   });
+
+  it('#getQuestionMetadata shpuld call when queston body is prepared',()=>{
+    spyOn(component,'getQuestionMetadata').and.callThrough();
+    component.editorState=mockData.sliderQuestionMetaData.result.question;
+    component.selectedSolutionType="2432432"
+    component.questionInteractionType='slider';
+    component.getResponseDeclaration('slider')
+    component.getQuestionMetadata();
+    expect(component.getQuestionMetadata).toHaveBeenCalled();
+  })
 
   it("#saveQuestion() should call saveQuestion for updateQuestion objectType not a question", () => {
     component.editorState = mockData.editorState;
@@ -1443,10 +1456,8 @@ describe("QuestionComponent", () => {
 
   it("#setQuestionTypeValues call when question howEvidence is no", () => {
     let metaData = mockData.mcqQuestionMetaData.result.question;
-    metaData.showEvidence = "No";
     childMetaData.showEvidence = "No";
     childMetaData.showRemarks = "Yes";
-    metaData.showRemarks = "Yes";
     component.childFormData = childMetaData;
     component.subMenus = mockData.subMenus;
     component.questionInteractionType = "choice";

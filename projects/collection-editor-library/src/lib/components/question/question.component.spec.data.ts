@@ -92,102 +92,103 @@ export const mockData = {
     responseCode: "OK",
     result: {
       question: {
-        instructions: {
-          en: [null],
+        mimeType: "application/vnd.sunbird.question",
+        media: [
+          {
+            id:'1',
+            type:'vedio'
+          }
+        ],
+        editorState: {
+          options: [
+            {
+              answer: false,
+              value: {
+                body: "<p>option 1</p>",
+                value: 0,
+              },
+            },
+            {
+              answer: false,
+              value: {
+                body: "<p>option 2</p>",
+                value: 1,
+              },
+            },
+            {
+              answer: false,
+              value: {
+                body: "<p>option 3</p>",
+                value: 2,
+              },
+            },
+          ],
+          question: "<p>MCQ Question</p>",
         },
-        allowMultiSelect:'Yes',
-        showEvidence:'Yes',
-        evidenceMimeType:['audio'],
-        evidence:{
-          "required":"No",
-          "mimeType":["audio"],
-          "minCount":1,
-          "maxCount":1,
-          "sizeLimit":"20480"
+        templateId: "mcq-vertical",
+        solutions: [
+          {
+            id:'1',
+            type:'vedio'
+          }
+        ],
+        interactions: {
+          response1: {
+            type: "choice",
+            options: [
+              {
+                label: "<p>option 1</p>",
+                value: 0,
+                hints: {
+                  en: "test hint 1",
+                },
+              },
+              {
+                label: "<p>option 2</p>",
+                value: 1,
+                hints: {
+                  en: "test hint 2",
+                },
+              },
+              {
+                label: "<p>option 3</p>",
+                value: 2,
+                hints: {
+                  en: "test hint 3",
+                },
+              },
+            ],
+          },
         },
+        name: "MCQ Question",
         responseDeclaration: {
           response1: {
             maxScore: 1,
-            cardinality: "multiple",
+            cardinality: "single",
             type: "integer",
             correctResponse: {
               outcomes: {
                 SCORE: 1,
               },
             },
-            mapping: [
-              {
-                respone: 0,
-                outcomes: {
-                  score: "10",
-                },
-              },
-              {
-                respone: 1,
-                outcomes: {
-                  score: "10",
-                },
-              },
-            ],
+            mapping: [],
           },
         },
-        mimeType: "application/vnd.sunbird.question",
-        media: [],
-        body: "<div class='question-body' tabindex='-1'><div class='mcq-title' tabindex='0'><p>Parent Question MCQ</p></div><div data-choice-interaction='response1' class='mcq-vertical'></div></div>",
-        editorState: {
-          options: [
-            {
-              answer: false,
-              value: {
-                body: "<p>true</p>",
-                value: 0,
-              },
-            },
-            {
-              answer: false,
-              value: {
-                body: "<p>false</p>",
-                value: 1,
-              },
-            },
-          ],
-          question: "<p>Parent Question MCQ</p>",
-        },
-        templateId: "mcq-vertical",
-        interactions: {
-          response1: {
-            type: "choice",
-            options: [
-              {
-                label: "<p>true</p>",
-                value: 0,
-              },
-              {
-                label: "<p>false</p>",
-                value: 1,
-              },
-            ],
-          },
-          validation: {
-            required: "Yes",
-          },
-        },
-        primaryCategory: "Multiselect Multiple Choice Question",
-        identifier: "do_113449672558780416163",
-        remarks:{
-          maxLength:10,
-          required: 'No'
-        },
-        solutions: [],
-        hints: {
-          en: ["test"],
-        },
-        qType: "MCQ",
-        languageCode: ["en"],
         interactionTypes: ["choice"],
-        name: "Parent Question MCQ",
-        showRemarks: "Yes",
-        remarksLimit: "20",
+        qType: "MCQ",
+        primaryCategory: "Multiselect Multiple Choice Question",
+        body: "<div class='question-body' tabindex='-1'><div class='mcq-title' tabindex='0'><p>MCQ Question</p></div><div data-choice-interaction='response1' class='mcq-vertical'></div></div>",
+        creator: "Vaibahv Bhuva",
+        createdBy: "5a587cc1-e018-4859-a0a8-e842650b9d64",
+        board: "CBSE",
+        medium: ["English"],
+        gradeLevel: ["Grade 1"],
+        subject: ["English"],
+        topic: ["Forest"],
+        author: "check1@yopmail.com",
+        channel: "01309282781705830427",
+        framework: "nit_k-12",
+        license: "CC BY 4.0",
       },
     },
   },
@@ -205,20 +206,43 @@ export const mockData = {
     responseCode: "OK",
     result: {
       question: {
-        instructions: {
-          en: [null],
+        mimeType: "application/vnd.sunbird.question",
+        media: [],
+        editorState: {
+          question: "<p>Slider Question</p>",
         },
+        body: "<p>Slider Question</p>",
         responseDeclaration: {
           response1: {
             type: "integer",
             maxScore: 1,
           },
         },
-        mimeType: "application/vnd.sunbird.question",
-        media: [],
-        body: "<p>test slider 2</p>",
-        editorState: {
-          question: "<p>test slider 2</p>",
+        solutions: [],
+        creator: "Vaibahv Bhuva",
+        createdBy: "5a587cc1-e018-4859-a0a8-e842650b9d64",
+        board: "CBSE",
+        medium: ["English"],
+        gradeLevel: ["Grade 1"],
+        subject: ["English"],
+        topic: ["Forest"],
+        author: "check1@yopmail.com",
+        channel: "01309282781705830427",
+        framework: "nit_k-12",
+        license: "CC BY 4.0",
+        name: "Slider Question",
+        showEvidence: "Yes",
+        evidence: {
+          required: "No",
+          mimeType: ["audio"],
+          minCount: 1,
+          maxCount: 1,
+          sizeLimit: "20480",
+        },
+        showRemarks: "Yes",
+        remarks: {
+          maxLength: "100",
+          required: "No",
         },
         interactions: {
           validation: {
@@ -234,17 +258,14 @@ export const mockData = {
             step: "1",
           },
         },
-        primaryCategory: "Slider",
-        identifier: "do_113449775832088576181",
-        solutions: [],
         hints: {
           en: [null],
         },
-        showRemarks: "Yes",
-        remarksLimit: "20",
-        languageCode: ["en"],
+        instructions: {
+          en: [null],
+        },
         interactionTypes: ["slider"],
-        name: "test slider 2",
+        primaryCategory: "Slider",
       },
     },
   },
@@ -262,20 +283,30 @@ export const mockData = {
     responseCode: "OK",
     result: {
       question: {
-        instructions: {
-          en: [null],
+        mimeType: "application/vnd.sunbird.question",
+        media: [],
+        editorState: {
+          question: "<p>Child Date Question</p>",
         },
+        body: "<p>Child Date Question</p>",
         responseDeclaration: {
           response1: {
             type: "string",
           },
         },
-        mimeType: "application/vnd.sunbird.question",
-        media: [],
-        body: "<p>Child Date 1</p>",
-        editorState: {
-          question: "<p>Child Date 1</p>",
-        },
+        solutions: [],
+        creator: "Vaibahv Bhuva",
+        createdBy: "5a587cc1-e018-4859-a0a8-e842650b9d64",
+        board: "CBSE",
+        medium: ["English"],
+        gradeLevel: ["Grade 1"],
+        subject: ["English"],
+        topic: ["Forest"],
+        author: "check1@yopmail.com",
+        channel: "01309282781705830427",
+        framework: "nit_k-12",
+        license: "CC BY 4.0",
+        name: "Child Date Question",
         interactions: {
           validation: {
             required: "Yes",
@@ -287,17 +318,14 @@ export const mockData = {
             autoCapture: "Yes",
           },
         },
-        primaryCategory: "Date",
-        identifier: "do_113449808985628672185",
-        solutions: [],
         hints: {
           en: [null],
         },
-        languageCode: ["en"],
+        instructions: {
+          en: [null],
+        },
         interactionTypes: ["date"],
-        name: "Child Date 1",
-        showRemarks: "Yes",
-        remarksLimit: "20",
+        primaryCategory: "Date",
       },
     },
   },
@@ -315,21 +343,33 @@ export const mockData = {
     responseCode: "OK",
     result: {
       question: {
-        instructions: {
-          en: [null],
+        mimeType: "application/vnd.sunbird.question",
+        media: [],
+        editorState: {
+          question: "<p>Text Question</p>",
         },
+        body: "<p>Text Question</p>",
         responseDeclaration: {
           response1: {
             type: "string",
             maxScore: 1,
           },
         },
-        mimeType: "application/vnd.sunbird.question",
-        media: [],
-        body: "<p>child Text Question</p>",
-        editorState: {
-          question: "<p>child Text Question</p>",
-        },
+        solutions: [],
+        creator: "Vaibahv Bhuva",
+        createdBy: "5a587cc1-e018-4859-a0a8-e842650b9d64",
+        board: "CBSE",
+        medium: ["English"],
+        gradeLevel: ["Grade 1"],
+        subject: ["English"],
+        topic: ["Forest"],
+        author: "check1@yopmail.com",
+        channel: "01309282781705830427",
+        framework: "nit_k-12",
+        license: "CC BY 4.0",
+        name: "Text Question",
+        showEvidence: "No",
+        showRemarks: "No",
         interactions: {
           validation: {
             required: "Yes",
@@ -337,7 +377,7 @@ export const mockData = {
           response1: {
             validation: {
               limit: {
-                maxLength: "50",
+                maxLength: "100",
               },
             },
             type: {
@@ -345,21 +385,18 @@ export const mockData = {
             },
           },
         },
-        primaryCategory: "Text",
-        showRemarks: "Yes",
-        remarksLimit: "20",
-        identifier: "do_11345671149997260811",
-        solutions: [],
         hints: {
           en: [null],
         },
-        languageCode: ["en"],
+        instructions: {
+          en: [null],
+        },
         interactionTypes: ["text"],
-        name: "child Text Question",
+        primaryCategory: "Text",
       },
     },
   },
-  defaultQuestionMetaData:{
+  defaultQuestionMetaData: {
     id: "api.question.read",
     ver: "3.0",
     ts: "2022-01-31T04:22:24ZZ",
@@ -403,7 +440,7 @@ export const mockData = {
           en: [null],
         },
         languageCode: ["en"],
-        interactionTypes: '',
+        interactionTypes: "",
         name: "child Text Question",
       },
     },
@@ -593,7 +630,7 @@ export const mockData = {
   },
   subMenus: [
     {
-      id: 'addHint',
+      id: "addHint",
       name: "Add Hint",
       value: "",
       enabled: false,
@@ -2828,17 +2865,17 @@ export const mockEditorCursor = {
 };
 
 export const childMetaData = {
-  name: "test",
   allowMultiSelect: "Yes",
+  evidenceMimeType: ["audio"],
+  markAsNotMandatory: "No",
+  name: "MCQ Question",
+  remarksLimit: "100",
   showEvidence: "Yes",
-  evidenceMimeType: ["vedio","audio"],
   showRemarks: "Yes",
-  remarksLimit: 10,
-  markAsNotMandatory: "Yes",
   dateFormat: "dd/mm/yyyy",
   autoCapture: "Yes",
   numberOnly: "Yes",
-  characterLimit: 50,
+  characterLimit: "50",
 };
 
 export const HierarchyMockData = {
