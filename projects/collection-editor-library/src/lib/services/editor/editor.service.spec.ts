@@ -434,7 +434,7 @@ describe('EditorService', () => {
 
   it('#getBranchingLogicEntry() should call', () => {
     spyOn(editorService,'getBranchingLogicEntry').and.callThrough();
-    editorService.getBranchingLogicEntry(BranchingLogicData,'do_113432866096922624110');
+    editorService.getBranchingLogicEntry(BranchingLogicData,'do_113432866799935488112');
     expect(editorService.getBranchingLogicEntry).toHaveBeenCalled();
   });
 
@@ -450,7 +450,30 @@ describe('EditorService', () => {
     spyOn(treeService, 'getFirstChild').and.callFake(() => {
       return { data: { metadata: { identifier: '0123'} } };
     });
-    editorService.getHierarchyObj(hierarchyRootNodeData,'do_113432866096922624110','do_113432866096922624110','do_11343286031200256013');
+    hierarchyRootNodeData.folder=true;
+    editorService.getHierarchyObj(hierarchyRootNodeData,'do_113432866096922624110','do_113432866096922624110','do_1134468013653114881310');
+    editorService.getCollectionHierarchy();
+    expect(editorService.getCollectionHierarchy).toHaveBeenCalled();
+  })
+
+  it('#getCollectionHierarchy should call when folder false',()=>{
+    spyOn(editorService,'getCollectionHierarchy').and.callThrough();
+    spyOn(treeService, 'getFirstChild').and.callFake(() => {
+      return { data: { metadata: { identifier: '0123'} } };
+    });
+    hierarchyRootNodeData.folder=false;
+    editorService.getHierarchyObj(hierarchyRootNodeData,'do_113432866096922624110','do_113432866096922624110','do_1134468013653114881310');
+    editorService.getCollectionHierarchy();
+    expect(editorService.getCollectionHierarchy).toHaveBeenCalled();
+  })
+
+  it('#getCollectionHierarchy should call when no section id and parent',()=>{
+    spyOn(editorService,'getCollectionHierarchy').and.callThrough();
+    spyOn(treeService, 'getFirstChild').and.callFake(() => {
+      return { data: { metadata: { identifier: '0123'} } };
+    });
+    hierarchyRootNodeData.folder=false;
+    editorService.getHierarchyObj(hierarchyRootNodeData);
     editorService.getCollectionHierarchy();
     expect(editorService.getCollectionHierarchy).toHaveBeenCalled();
   })
