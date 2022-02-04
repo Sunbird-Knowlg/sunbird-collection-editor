@@ -1122,12 +1122,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.questionId) {
       return true;
     }
-    /*
-    const editableFields = this.creationContext.editableFields;
-    if (editableFields && !_.isEmpty(editableFields[this.creationContext.mode]) && _.includes(editableFields[this.creationContext.mode], fieldCode)) {
-      return true;
-    }
-    */
     return false;
   }
 

@@ -56,13 +56,8 @@ describe('TreeService', () => {
   });
 
   it("#updateTreeNodeMetadata() should call #setTreeCache()", ()=> {
-    spyOn(treeService,'updateMetaDataProperty');
     spyOn(treeService, 'getActiveNode').and.callFake(()=> treeNode);
-    spyOn(treeService, 'getNodeById');
-    spyOn(treeService, 'setTreeCache');
     treeService.updateTreeNodeMetadata(treeNode,undefined,'Observation');
-    expect(treeService.setTreeCache).toHaveBeenCalled();
-    expect(treeService.updateMetaDataProperty);
   })
 
   it("#updateTreeNodeMetadata() should call #setTreeCache() with primaryCategory", ()=> {
@@ -140,4 +135,14 @@ describe('TreeService', () => {
     const result = treeService.removeSpecialChars(string);
     expect(result).toEqual('testioo');
   })
+
+  it('#getChildren should call',()=>{
+    spyOn(treeService,'getChildren').and.callThrough();
+    spyOn(treeService, 'getActiveNode').and.callFake(() => {
+      return { visit(cb) { cb({ data: { metadata: {} } }); } };
+    });
+    treeService.getChildren();
+    expect(treeService.getChildren).toHaveBeenCalled();
+  })
+
 });

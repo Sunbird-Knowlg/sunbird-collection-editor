@@ -138,7 +138,9 @@ describe("QuestionComponent", () => {
       setChildQueston: undefined,
     };
     component.showTranslation = false;
-    spyOn(treeService, "getNodeById").and.returnValue(of(treeNodeData));
+    spyOn(treeService, "getNodeById").and.callFake(()=>{
+      return treeNodeData;
+    })
 
     // fixture.detectChanges();
   });
@@ -605,6 +607,7 @@ describe("QuestionComponent", () => {
 
   it("Unit test for #populateFormData ", () => {
     component.childFormData = {};
+    component.questionMetaData=mockData.mcqQuestionMetaData.result.question;
     component.leafFormConfig = leafFormConfigMock;
     component.initialLeafFormConfig = leafFormConfigMock;
     component.questionFormConfig = leafFormConfigMock;
@@ -707,7 +710,12 @@ describe("QuestionComponent", () => {
     expect(component.buttonLoaders.saveButtonLoader).toEqual(true);
     expect(component.buttonLoaders.review).toEqual(true);
   });
-  it("Unit test for #isEditable", () => {
+  it("Unit test for #isEditable without queston id", () => {
+    component.creationContext = creationContextMock;
+    component.questionId=undefined;
+    expect(component.isEditable("bloomsLevel")).toBeTruthy();
+  });
+  it("Unit test for #isEditable with queston id", () => {
     component.creationContext = creationContextMock;
     expect(component.isEditable("bloomsLevel")).toBeFalsy();
   });
@@ -901,7 +909,7 @@ describe("QuestionComponent", () => {
     });
     component.saveContent();
     component.updateQuestion();
-    component.buildCondition("update");
+    component.buildCondition("create");
     component.updateTreeCache(
       "Mid-day Meals",
       BranchingLogic,
@@ -910,6 +918,7 @@ describe("QuestionComponent", () => {
     component.createQuestion();
     expect(component.createQuestion);
   });
+
 
   it("#createQuestion() should call when child question", () => {
     component.questionId = "do_11326368076523929611";
@@ -1163,22 +1172,45 @@ describe("QuestionComponent", () => {
     expect(component.videoSolutionData).toBeDefined();
   });
   it("#subMenuChange() should set the sub-menu value ", () => {
-    spyOn(component, "subMenuChange").and.callThrough();
     component.subMenus = mockData.subMenus;
     component.subMenuChange({ index: 1, value: "test" });
     expect(component.subMenus[1].value).toBe("test");
   });
   it("#subMenuChange() should set the sub-menu value for dependent question forerror is true ", () => {
-    spyOn(component, "subMenuChange").and.callThrough();
     component.subMenus = mockData.subMenus;
-    component.showFormError = true;
-    component.subMenuChange({ index: 2, value: "test" });
-    expect(component.showAddSecondaryQuestionCat).toBeFalsy();
+    component.showFormError=false;
+      spyOn(component, "validateQuestionData");
+      spyOn(component, "validateFormFields");
+      spyOn(component, "saveQuestion");
+      spyOn(component, "updateQuestion");
+      spyOn(component, "buildCondition");
+      component.questionId = "do_1134355571590184961168";
+      component.selectedSectionId = "do_1134347209749299201119";
+      component.showFormError = false;
+      component.showOptions = true;
+      component.isChildQuestion = true;
+      component.condition = "eq";
+      component.selectedOptions = 1;
+      component.saveContent();
+      component.updateQuestion();
+      component.buildCondition("update");
+      component.updateTreeCache(
+        "Mid-day Meals",
+        BranchingLogic,
+        component.selectedSectionId
+      );
+      expect(component.saveQuestion).toHaveBeenCalled();
+      expect(component.updateQuestion).toHaveBeenCalled();
+      expect(component.buildCondition).toHaveBeenCalled();
+    component.subMenuChange({ index: 2, value: [{ id: 1 }] });
+    expect(component.subMenus[2].value).toEqual([{ id: 1 }]);
+    expect(component.showAddSecondaryQuestionCat).toBeTruthy();
   });
 
   it("#dependentQuestions() should return dependentQuestions ", () => {
     spyOn(component, "dependentQuestions");
     component.subMenus = mockData.subMenus;
+    component.subMenuChange({ index: 2, value: "test" });
     expect(component.dependentQuestions.length).toBe(1);
     expect(component.dependentQuestions);
   });
@@ -1189,6 +1221,8 @@ describe("QuestionComponent", () => {
     spyOn(component, "saveQuestion");
     spyOn(component, "updateQuestion");
     spyOn(component, "buildCondition");
+    component.creationContext.objectType='questionSet';
+    component.creationContext.mode='submit'
     component.questionId = "do_1134355571590184961168";
     component.selectedSectionId = "do_1134347209749299201119";
     component.showFormError = false;
@@ -1196,7 +1230,6 @@ describe("QuestionComponent", () => {
     component.isChildQuestion = true;
     component.condition = "eq";
     component.selectedOptions = 1;
-    component.saveContent();
     component.updateQuestion();
     component.buildCondition("update");
     component.updateTreeCache(
@@ -1204,6 +1237,7 @@ describe("QuestionComponent", () => {
       BranchingLogic,
       component.selectedSectionId
     );
+    component.saveContent();
     expect(component.saveQuestion).toHaveBeenCalled();
     expect(component.updateQuestion).toHaveBeenCalled();
     expect(component.buildCondition).toHaveBeenCalled();
@@ -1286,9 +1320,10 @@ describe("QuestionComponent", () => {
     expect(component.getOptions).toHaveBeenCalled();
   });
   it("#getOptions() should call when child question is edited when option not exits", () => {
-    spyOn(component, "getOptions");
+    spyOn(component, "getOptions").and.callThrough();
     editorService.optionsLength = undefined;
     component.getOptions();
+    expect(component.getOptions).toHaveBeenCalled();
   });
 
   it("#getParentQuestionOptions() should call when add dependent question clicked", () => {
@@ -1303,13 +1338,12 @@ describe("QuestionComponent", () => {
   });
 
   it("#updateTreeCache() should call when buildcondition is called ", () => {
-    spyOn(component, "updateTreeCache").and.callThrough();
+    component.selectedSectionId='do_1234'
     component.updateTreeCache(
       "Mid-day Meals",
       BranchingLogic,
       component.selectedSectionId
     );
-    expect(component.updateTreeCache).toHaveBeenCalled();
   });
 
   it("#setCondition() should call when buildcondition is called ", () => {
@@ -1552,4 +1586,71 @@ describe("QuestionComponent", () => {
     spyOn(editorService, "apiErrorHandling").and.callFake(() => {});
     component.upsertQuestion("");
   });
+
+  it("#updateQuestion() should call on question save isChildQuestion is true", () => {
+    component.editorState = mockData.mcqQuestionMetaData.result.question;
+    component.questionId = "do_11326368076523929611";
+    component.showOptions = true;
+    component.questionId = "do_1134355571590184961168";
+    component.selectedSectionId = "do_1134347209749299201119";
+    component.showFormError = false;
+    component.showOptions = true;
+    component.isChildQuestion = true;
+    component.condition = "eq";
+    component.selectedOptions = 1;
+    component.sourcingSettings=sourcingSettingsMock;
+    component.childFormData=childMetaData;
+    component.saveContent();
+    component.updateQuestion();
+    component.buildCondition("update");
+    component.updateTreeCache(
+      "Mid-day Meals",
+      BranchingLogic,
+      component.selectedSectionId
+    );
+    spyOn(questionService, "updateHierarchyQuestionUpdate").and.callFake(() => {
+      return of({
+        result: {
+          identifiers: {
+            "1245": "do_123",
+          },
+        },
+      });
+    });
+   component.saveUpdateQuestions();  
+   component.updateQuestion(); 
+  });
+
+  it("#updateQuestion() should call on question save isChildQuestion is false", () => {
+    spyOn(component,'updateQuestion').and.callThrough();
+    component.sourcingSettings=sourcingSettingsMock;
+    component.childFormData=childMetaData;
+    component.isChildQuestion=false;
+    component.questionId='1245'
+    component.showAddSecondaryQuestionCat=true;
+    spyOn(questionService, "updateHierarchyQuestionUpdate").and.callFake(() => {
+      return of({
+        result: {
+          identifiers: {
+            "1245": "do_123",
+          },
+        },
+      });
+    });
+   component.saveUpdateQuestions();  
+   component.updateQuestion(); 
+  });
+
+  it("#updateQuestion() should call on question save isChildQuestion is false api fail", () => {
+    spyOn(component,'updateQuestion').and.callThrough();
+    component.sourcingSettings=sourcingSettingsMock;
+    component.childFormData=childMetaData;
+    component.isChildQuestion=false;
+    component.questionId='1245'
+    component.showAddSecondaryQuestionCat=true;
+    spyOn(questionService, "updateHierarchyQuestionUpdate").and.returnValue(throwError('error'))
+   component.saveUpdateQuestions();  
+   component.updateQuestion(); 
+  });
+
 });
