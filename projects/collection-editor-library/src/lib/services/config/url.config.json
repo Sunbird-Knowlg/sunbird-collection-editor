@@ -5,7 +5,7 @@
       "ADD": "questionset/v1/add",
       "READ": "questionset/v1/read",
       "CREATE": "questionset/v1/create",
-      "UPDATE": "questionset/v1/update",
+      "UPDATE": "questionset/v1/update/",
       "HIERARCHY_UPDATE": "questionset/v1/hierarchy/update",
       "CONTENT_REVIEW" : "questionset/v1/review/",
       "CONTENT_REJECT" : "questionset/v1/reject/",

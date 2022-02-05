@@ -127,19 +127,19 @@
       <i *ngIf="labelConfigData.save_question_btn_icon && !buttonLoaders?.saveButtonLoader" class="{{labelConfigData.save_question_btn_icon}}"></i>
       {{ labelConfigData.save_question_btn_label}}
     </button>
-    <button *ngIf="visibility && visibility?.submitContent && !visibility.hideSubmitForReviewBtn" class="sb-btn sb-btn-normal sb-btn-secondary" (click)="buttonEmitter({type:'submitQuestion'})" libTelemetryInteract
+    <button *ngIf="visibility && visibility?.submitContent && labelConfigData?.questionContribution && !visibility.hideSubmitForReviewBtn && !visibility.showSourcingStatus" class="sb-btn sb-btn-normal sb-btn-secondary" (click)="buttonEmitter({type:'submitQuestion'})" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('submit','click','submit', telemetryService.telemetryPageId)"
     >
       <i class="{{labelConfigData.submit_collection_btn_icon}}"></i>
       {{labelConfigData.submit_collection_btn_label}}
     </button>
-    <button *ngIf="visibility && visibility?.rejectContent" class="sb-btn sb-btn-outline-error sb-btn-normal ripple mr-10" (click)="openRequestChangePopup('rejectQuestion')" libTelemetryInteract
+    <button *ngIf="visibility && visibility?.rejectContent && labelConfigData?.questionContribution" class="sb-btn sb-btn-outline-error sb-btn-normal ripple mr-10" (click)="openRequestChangePopup('rejectQuestion')" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('reject','click','submit', telemetryService.telemetryPageId)">
       <i class="{{labelConfigData.reject_collection_btn_icon}}"></i>
       {{labelConfigData.reject_collection_btn_label}}
     </button>
 
-    <button *ngIf="visibility && visibility?.publishContent" class="sb-btn sb-btn-secondary sb-btn-normal ripple" (click)="buttonEmitter({type:'publishQuestion'})" libTelemetryInteract
+    <button *ngIf="visibility && visibility?.publishContent && labelConfigData?.questionContribution" class="sb-btn sb-btn-secondary sb-btn-normal ripple" (click)="buttonEmitter({type:'publishQuestion'})" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('publish','click','submit', telemetryService.telemetryPageId)">
       <i class="{{labelConfigData.publish_collection_btn_icon}}"></i>
       {{labelConfigData.publish_collection_btn_label}}
