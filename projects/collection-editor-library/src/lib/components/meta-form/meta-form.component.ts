@@ -17,7 +17,7 @@ let framworkServiceTemp;
   styleUrls: ['./meta-form.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
+export class MetaFormComponent implements OnChanges, OnDestroy {
   @Input() rootFormConfig: any;
   @Input() unitFormConfig: any;
   @Input() nodeMetadata: any;
@@ -39,8 +39,6 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
     this.setAppIconData();
   }
 
-  ngOnInit() {
-  }
 
   setAppIconData() {
     const isRootNode = _.get(this.nodeMetadata, 'data.root');
@@ -84,11 +82,6 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
           filter(data => _.get(data, `frameworkdata.${_.first(this.frameworkService.targetFrameworkIds)}`))
         ).subscribe((frameworkDetails: any) => {
           if (frameworkDetails && !frameworkDetails.err) {
-            // const frameworkData = frameworkDetails.frameworkdata[this.frameworkService.targetFrameworkIds].categories;
-            // this.frameworkDetails.frameworkData = frameworkData;
-            // this.frameworkDetails.topicList = _.get(_.find(frameworkData, {
-            //   code: 'topic'
-            // }), 'terms');
             this.frameworkDetails.targetFrameworks = _.filter(frameworkDetails.frameworkdata, (value, key) => {
               return _.includes(this.frameworkService.targetFrameworkIds, key);
             });
@@ -102,8 +95,6 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   attachDefaultValues() {
     const metaDataFields = _.get(this.nodeMetadata, 'data.metadata');
     const isRootNode = _.get(this.nodeMetadata, 'data.root');
-    // if (_.isEmpty(metaDataFields)) { return; }
-
     const categoryMasterList = this.frameworkDetails.frameworkData ||
     !isRootNode && this.frameworkService.selectedOrganisationFramework &&
      _.get(this.frameworkService.selectedOrganisationFramework, 'framework.categories');
@@ -137,14 +128,7 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
             moment.utc(moment.duration(value, 'seconds').asMilliseconds()).format(this.helperService.getTimerFormat(field)) : '';
           }
         }
-
-        // const frameworkCategory = _.find(categoryMasterList, category => {
-        //   return (category.code === field.sourceCategory || category.code === field.code) && !_.includes(field.code, 'target');
-        // // });
-        // if (!_.isEmpty(frameworkCategory)) {
-        //   field.terms = frameworkCategory.terms;
-        // }
-
+        
         if (field.code === 'framework') {
           field.range = this.frameworkService.frameworkValues;
           field.options = this.getFramework;
@@ -203,6 +187,9 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
         if (field.code === 'instructions') {
           field.default = _.get(metaDataFields, 'instructions.default') || '' ;
         }
+        if(field.code === 'setPeriod'){
+          field.default = !_.isEmpty(metaDataFields, 'endDate') ? 'Yes' : 'No' ;
+        }
 
         if ((_.isEmpty(field.range) || _.isEmpty(field.terms)) &&
           !field.editable && !_.isEmpty(field.default)) {
@@ -239,7 +226,6 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
     });
 
     this.formFieldProperties = _.cloneDeep(formConfig);
-    console.log(this.formFieldProperties);
   }
   isReviewMode() {
     return  _.includes([ 'review', 'read', 'sourcingreview', 'orgreview' ], this.editorService.editorMode);
@@ -263,7 +249,6 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   valueChanges(event: any) {
-    console.log(event);
     if (!_.isEmpty(this.appIcon) && this.showAppIcon) {
       event.appIcon = this.appIcon;
     }

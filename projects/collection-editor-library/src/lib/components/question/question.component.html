@@ -10,7 +10,23 @@
       <div class="ui twelve column wide h-100">
         <div class="px-16">
           <div *ngIf="showPreview" class="br-2 b-1-100">
-            <lib-quml-player [questionSetHierarchy]="questionSetHierarchy" [isSingleQuestionPreview]="true" ></lib-quml-player>
+            <lib-quml-player [questionSetHierarchy]="questionSetHierarchy" [isSingleQuestionPreview]="true"></lib-quml-player>
+          </div>
+          <div style="display: flex;align-items: flex-end;justify-content: flex-end;"
+            *ngIf="showOptions || isChildQuestion ">
+            <div class="left" style="justify-content: flex-end;margin-right:10px">
+              <select (change)="conditionHandler($event)" [value]='condition'>
+                <option value="default">Select Condition</option>
+                <option value="eq">Equal to</option>
+                <option value="ne">Not equal</option>
+              </select>
+
+              <sui-multi-select class="selection multiselect" [(ngModel)]="selectedOptions" valueField="value"
+                labelField="label" [isSearchable]="false" #multiSelect>
+                <sui-select-option *ngFor="let option of options" [value]="option">
+                </sui-select-option>
+              </sui-multi-select>
+            </div>
           </div>
           <div class="py-20 px-32 br-4 b-1-100" *ngIf="!showPreview" [ngClass]="{'sb-bg-color-primary-0': !isReadOnlyMode}">
             <div class="sb-field-group">
@@ -34,17 +50,25 @@
                     [undefined, ''].includes(editorState.question)
                   " class="sb-color-error fs-0-785">{{configService.labelConfig?.lbl?.questionRequired}}</label>
               </div>
+              <lib-question-option-sub-menu *ngIf="subMenus?.length" [subMenus]="subMenus"
+                (onChange)="subMenuChange($event)"></lib-question-option-sub-menu>
 
               <lib-answer *ngIf="questionInteractionType === 'default'"
                 [editorState]="editorState" [showFormError]="showFormError"
                 (editorDataOutput)="editorDataHandler($event)" [isReadOnlyMode]="isReadOnlyMode"></lib-answer>
 
               <lib-options *ngIf="questionInteractionType === 'choice'"
+                [questionPrimaryCategory]="questionPrimaryCategory"
                 [editorState]="editorState" [showFormError]="showFormError"
-                (editorDataOutput)="editorDataHandler($event)" [isReadOnlyMode]="isReadOnlyMode"></lib-options>
+                (editorDataOutput)="editorDataHandler($event)"
+                [sourcingSettings]="sourcingSettings" [mapping]="scoreMapping"
+                [isReadOnlyMode]="isReadOnlyMode"></lib-options>
+
+              <lib-slider *ngIf="questionInteractionType === 'slider'" [editorDataInput]="sliderOptions"
+                (onChange)="sliderData($event)"></lib-slider>
 
               <ng-container *ngIf="!isReadOnlyMode; else readOnlySolutionsContainer">
-                <div class="d-flex flex-ai-center ckeditor-tool__solution py-10 px-16 mt-15 sb-bg-color-white">
+                <div *ngIf="sourcingSettings?.showSolution !== false" class="d-flex flex-ai-center ckeditor-tool__solution py-10 px-16 mt-15 sb-bg-color-white">
                   <label class="fs-0-92 mb-0 ckeditor-tool__label pb-4">
                     <span class="sb-color-primary fs-0-785 mr-4">{{configService.labelConfig?.lbl?.solution}}</span>
                     <span class="sb-color-gray-200 fxsmall font-weight-normal">{{configService.labelConfig?.lbl?.optional}}</span>
@@ -134,6 +158,17 @@
               </div>
               </ng-template>
             </div>
+          </div>
+          <lib-translations *ngIf="showTranslation"></lib-translations>
+          <!-- child question section -->
+          <div class="b-1-100 br-4 my-15 px-32 py-10 sb-bg-color-primary-0"
+            *ngFor="let question of dependentQuestions;let childindex=index">
+            {{ questionSetHierarchy.children ? 'Q'+ (questionSetHierarchy.children.length+1):''}} {{'. '+
+            (childindex+1)}}
+            <button
+              class="sb-btn sb-btn-outline-primary sb-btn-xs sb-left-icon-btn text-inherit b-0 bg-none no-hover pl-0">
+              <span class="sb-line-height-24">edit question</span>
+            </button>
           </div>
           <hr>
           <div *ngIf="questionFormConfig">

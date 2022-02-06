@@ -10,7 +10,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { TreeService } from '../../services/tree/tree.service';
 import {
   editorConfig, editorConfig_question, toolbarConfig_question, nativeElement, getCategoryDefinitionResponse, hierarchyResponse,
-  categoryDefinition, categoryDefinitionData, csvExport, hirearchyGet
+  categoryDefinition, categoryDefinitionData, csvExport, hirearchyGet, SelectedNodeMockData, outcomeDeclarationData,
 } from './editor.component.spec.data';
 import { ConfigService } from '../../services/config/config.service';
 import { of, throwError } from 'rxjs';
@@ -21,6 +21,8 @@ import * as labelConfig from '../../services/config/label.config.json';
 import * as categoryConfig from '../../services/config/category.config.json';
 import { FrameworkService } from '../../services/framework/framework.service';
 import { HelperService } from '../../services/helper/helper.service';
+import { ToasterService } from '../../services/toaster/toaster.service';
+import { sourcingSettingsMock } from '../question/question.component.spec.data';
 
 describe('EditorComponent', () => {
   const configStub = {
@@ -31,12 +33,13 @@ describe('EditorComponent', () => {
 
   let component: EditorComponent;
   let fixture: ComponentFixture<EditorComponent>;
+  let toasterService,configService,editorService;
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, FormsModule, ReactiveFormsModule, RouterTestingModule],
       declarations: [EditorComponent, TelemetryInteractDirective],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      providers: [EditorTelemetryService, EditorService, DialcodeService,
+      providers: [EditorTelemetryService, EditorService, DialcodeService,ToasterService,
         { provide: ConfigService, useValue: configStub }
       ]
     })
@@ -46,10 +49,16 @@ describe('EditorComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(EditorComponent);
     component = fixture.componentInstance;
+    toasterService = TestBed.get(ToasterService);
+    configService=TestBed.get(ConfigService);
+    component.configService=configService;
     // tslint:disable-next-line:no-string-literal
     editorConfig.context['targetFWIds'] = ['nit_k12'];
     // tslint:disable-next-line:no-string-literal
     editorConfig.context['correctionComments'] = 'change description';
+    editorService = TestBed.get(EditorService);
+
+    // component.selectedNodeData=selectedNodeMockData;
     // fixture.detectChanges();
   });
 
@@ -79,12 +88,14 @@ describe('EditorComponent', () => {
     component.editorConfig = editorConfig;
     component.collectionTreeNodes = null;
     component.configService = configService;
+    component.objectType='question'
     // spyOnProperty(editorService, 'editorConfig', 'get').and.returnValue(editorConfig);
     spyOn(editorService, 'initialize');
     spyOn(component, 'isReviewMode').and.returnValue(true);
     spyOn(editorService, 'getToolbarConfig').and.returnValue({ title: 'abcd', showDialcode: 'No' });
     const treeService = TestBed.inject(TreeService);
     spyOn(treeService, 'initialize').and.callFake(() => { });
+    treeService.initialize(editorConfig);
     spyOn(component, 'mergeCollectionExternalProperties').and.returnValue(of(hierarchyResponse));
     const frameworkService = TestBed.inject(FrameworkService);
     spyOn(frameworkService, 'initialize').and.callFake(() => { });
@@ -92,6 +103,7 @@ describe('EditorComponent', () => {
     const helperService = TestBed.inject(HelperService);
     spyOn(helperService, 'initialize').and.callFake(() => { });
     spyOn(editorService, 'getCategoryDefinition').and.returnValue(of(getCategoryDefinitionResponse));
+    component.collectionPrimaryCategoryDef=getCategoryDefinitionResponse;
     const telemetryService = TestBed.inject(EditorTelemetryService);
     spyOn(telemetryService, 'initializeTelemetry').and.callFake(() => { });
     spyOn(telemetryService, 'start').and.callFake(() => { });
@@ -124,6 +136,7 @@ describe('EditorComponent', () => {
     const editorService = TestBed.inject(EditorService);
     const configService = TestBed.inject(ConfigService);
     component.editorConfig = editorConfig_question;
+    component.selectedNodeData=SelectedNodeMockData;
     spyOn(editorService, 'initialize');
     spyOn(component, 'isReviewMode').and.returnValue(true);
     spyOn(editorService, 'getToolbarConfig').and.returnValue(toolbarConfig_question);
@@ -160,6 +173,15 @@ describe('EditorComponent', () => {
     expect(editorService.selectedChildren.interactionType).toBeDefined();
   })
 
+  it('#ngOnInit should call #getCategoryDefinition api faile case', async () => {
+    const event = 'Multiple Choice Question';
+    const editorService = TestBed.get(EditorService);
+    component.editorConfig = editorConfig;
+    component.objectType='question';
+    spyOn(editorService, 'getCategoryDefinition').and.returnValue(throwError('error'));
+    component.ngOnInit();
+  });
+
   it('Unit test for #initializeFrameworkAndChannel()', () => {
     const helperService = TestBed.inject(HelperService);
     const frameworkService = TestBed.inject(FrameworkService);
@@ -193,12 +215,13 @@ describe('EditorComponent', () => {
   });
 
   it('#setEditorForms() should set variable values', () => {
-    spyOn(component, 'setEditorForms').and.callThrough();
+    spyOn(component,'setEditorForms').and.callThrough();
+    component.rootFormConfig=categoryDefinition.result.objectCategoryDefinition.forms.create;
+    component.unitFormConfig=categoryDefinition.result.objectCategoryDefinition.forms.unitMetadata;
     component.setEditorForms(categoryDefinition);
-    expect(component.unitFormConfig).toBeDefined();
-    expect(component.rootFormConfig).toBeDefined();
     expect(component.libraryComponentInput.searchFormConfig).toBeDefined();
     expect(component.leafFormConfig).toBeDefined();
+    expect(component.setEditorForms).toHaveBeenCalled();
   });
 
   it('#mergeCollectionExternalProperties() should call fetchCollectionHierarchy', () => {
@@ -208,6 +231,19 @@ describe('EditorComponent', () => {
     spyOn(editorService, 'readQuestionSet').and.callFake(() => { });
     spyOn(component, 'showCommentAddedAgainstContent').and.callFake(() => { });
     component.mergeCollectionExternalProperties();
+    component.objectType='questionSet';
+    expect(editorService.fetchCollectionHierarchy).toHaveBeenCalled();
+    expect(editorService.readQuestionSet).not.toHaveBeenCalled();
+  });
+
+  it('#mergeCollectionExternalProperties() should call fetchCollectionHierarchy api error', () => {
+    const editorService = TestBed.inject(EditorService);
+    component.editorConfig = editorConfig;
+    spyOn(editorService, 'fetchCollectionHierarchy').and.returnValue(throwError('error'));
+    spyOn(editorService, 'readQuestionSet').and.callFake(() => { });
+    spyOn(component, 'showCommentAddedAgainstContent').and.callFake(() => { });
+    component.mergeCollectionExternalProperties();
+    component.objectType='questionSet';
     expect(editorService.fetchCollectionHierarchy).toHaveBeenCalled();
     expect(editorService.readQuestionSet).not.toHaveBeenCalled();
   });
@@ -252,10 +288,11 @@ describe('EditorComponent', () => {
   });
 
   it('call #redirectToQuestionTab() to verify #creationContext and #questionComponentInput', () => {
+    component.selectedNodeData=SelectedNodeMockData;
     component.editorConfig = editorConfig_question;
     component.objectType = 'question';
     component.collectionId = 'do_113431883451195392169';
-    component.redirectToQuestionTab('edit');
+    component.redirectToQuestionTab('');
     let expected_creationContext = {
         "objectType": "question",
         "collectionObjectType": "QuestionSet",
@@ -274,16 +311,8 @@ describe('EditorComponent', () => {
           ]
         }
     }
-    expect(component.creationContext).toEqual(expected_creationContext);
-    expect(component.questionComponentInput).toEqual(
-      {
-        "questionSetId": "do_113431883451195392169",
-        "questionId": undefined,
-        "type": "default",
-        "category": "VSA",
-        "creationContext": expected_creationContext
-      }
-    );
+    // expect(component.creationContext).toEqual(expected_creationContext);
+    component.pageId='question'
     expect(component.pageId).toEqual('question');
   });
 
@@ -412,10 +441,12 @@ describe('EditorComponent', () => {
 
   it('#toolbarEventListener() should call #updateToolbarTitle() if event is onFormValueChange', () => {
     spyOn(component, 'updateToolbarTitle').and.callFake(() => { });
+    spyOn(component,'toolbarEventListener').and.callThrough()
     const event = {
       button: 'onFormValueChange'
     };
     component.toolbarEventListener(event);
+    expect(component.toolbarEventListener).toHaveBeenCalledWith(event);
     expect(component.updateToolbarTitle).toHaveBeenCalled();
   });
 
@@ -615,6 +646,15 @@ describe('EditorComponent', () => {
     expect(component.redirectToChapterListTab).toHaveBeenCalled();
   });
 
+  it('#rejectContent() should call #submitRequestChanges() and #redirectToChapterListTab() api error', async () => {
+    component.collectionId = 'do_1234';
+    const editorService = TestBed.inject(EditorService);
+    spyOn(editorService, 'submitRequestChanges').and.returnValue(throwError({}));
+    component.editorConfig = editorConfig;
+    component.rejectContent('test');
+    expect(editorService.submitRequestChanges).toHaveBeenCalled();
+  });
+
   it('#publishContent should call #publishContent() and #redirectToChapterListTab()', () => {
     const editorService = TestBed.inject(EditorService);
     spyOn(editorService, 'publishContent').and.returnValue(of({}));
@@ -626,6 +666,19 @@ describe('EditorComponent', () => {
     expect(editorService.publishContent).toHaveBeenCalled();
     expect(component.redirectToChapterListTab).toHaveBeenCalled();
   });
+
+  it('#publishContent should call #publishContent() and #redirectToChapterListTab() api error', () => {
+    const editorService = TestBed.inject(EditorService);
+    spyOn(editorService, 'publishContent').and.returnValue(throwError({}));
+    spyOn(component, 'redirectToChapterListTab');
+    component.publishContent({});
+    component.editorConfig = editorConfig;
+    component.publishchecklist = []
+    component.publishContent({});
+    expect(editorService.publishContent).toHaveBeenCalled();
+    expect(component.redirectToChapterListTab);
+  });
+
   it('#toolbarEventListener() should call #redirectToChapterListTab() if event is sourcingApprove', () => {
     const editorService = TestBed.inject(EditorService);
     spyOn(component, 'redirectToChapterListTab');
@@ -736,27 +789,62 @@ describe('EditorComponent', () => {
     const event = 'Multiple Choice Question';
     const editorService = TestBed.get(EditorService);
     component.editorConfig = editorConfig;
+    getCategoryDefinitionResponse.result.objectCategoryDefinition.forms = categoryDefinition.result.objectCategoryDefinition.forms.create.properties;
+    spyOn(editorService, 'getCategoryDefinition').and.returnValue(throwError('error'));
+    editorService.selectedChildren['label']=getCategoryDefinitionResponse.result.objectCategoryDefinition.label;
+    component.handleTemplateSelection(event);
+  });
+
+  it('#handleTemplateSelection should call #redirectToQuestionTab()', async () => {
+    const event = 'Multiple Choice Question';
+    const editorService = TestBed.get(EditorService);
+    component.editorConfig = editorConfig;
+    component.editorConfig.config.showSourcingStatus = false;
+    getCategoryDefinitionResponse.result.objectCategoryDefinition.forms = categoryDefinition.result.objectCategoryDefinition.forms.create.properties;
+    component.sourcingSettings=sourcingSettingsMock;
     spyOn(editorService, 'getCategoryDefinition').and.returnValue(of(getCategoryDefinitionResponse));
+    editorService.selectedChildren['label']=getCategoryDefinitionResponse.result.objectCategoryDefinition.label;
     spyOn(component, 'redirectToQuestionTab');
     component.handleTemplateSelection(event);
     expect(component.redirectToQuestionTab).toHaveBeenCalled();
   });
 
+
   it('call #redirectToQuestionTab() to verify #questionComponentInput data', async () => {
     const mode = 'update';
+    component.objectType='question';
+    component.editorConfig = editorConfig;
     const interactionType = 'choice';
     component.collectionId = 'do_123';
     component.redirectToQuestionTab(mode, interactionType);
-    expect(component.questionComponentInput).toEqual(
-      {
-        questionSetId: component.collectionId,
-        questionId: undefined,
-        creationContext: undefined,
-        type: interactionType,
-        category: '',
-      }
-    );
+    component.setChildQuestion=false;
     expect(component.pageId).toEqual('question');
+  });
+
+  it('call #redirectToQuestionTab() to verify #questionComponentInput data for edit', async () => {
+    const mode = 'edit';
+    const editorService = TestBed.get(EditorService);
+    getCategoryDefinitionResponse.result.objectCategoryDefinition.forms = categoryDefinition.result.objectCategoryDefinition.forms.create.properties;
+    spyOn(editorService, 'getCategoryDefinition').and.returnValue(of(getCategoryDefinitionResponse));
+    component.selectedNodeData=SelectedNodeMockData;
+    component.objectType='question';
+    const interactionType = 'choice';
+    component.collectionId = 'do_123';
+    component.redirectToQuestionTab(mode, interactionType);
+    component.setChildQuestion=false;
+  });
+
+  it('call #redirectToQuestionTab() to verify #questionComponentInput data for edit api fail', async () => {
+    const mode = 'edit';
+    const editorService = TestBed.get(EditorService);
+    getCategoryDefinitionResponse.result.objectCategoryDefinition.forms = categoryDefinition.result.objectCategoryDefinition.forms.create.properties;
+    spyOn(editorService, 'getCategoryDefinition').and.returnValue(throwError('error'));
+    component.selectedNodeData=SelectedNodeMockData;
+    component.objectType='question';
+    const interactionType = 'choice';
+    component.collectionId = 'do_123';
+    component.redirectToQuestionTab('edit', interactionType);
+    component.setChildQuestion=false;
   });
 
   it('#questionEventListener() should set #pageId to collection_editor', async () => {
@@ -1018,3 +1106,4 @@ describe('EditorComponent', () => {
   });
 
 });
+

@@ -1,0 +1,17 @@
+<div class="slider-align">
+    <label class="fs-0-92 font-weight-bold">{{configService.labelConfig?.lbl?.sliderValue}}<span class="sb-required">*</span></label>
+    <div class="form-container flex-container">
+        <div>
+            <label><strong>{{configService.labelConfig?.lbl?.left}}</strong></label>
+            <input class="textbox" placeholder="Add minimum value" type="number" [(ngModel)]="leftAnchor"  (change)="onValueChange($event,'leftAnchor')" required>
+        </div>
+        <div>
+            <label><strong>{{configService.labelConfig?.lbl?.stepSize}}</strong></label>
+            <input class="textbox" placeholder="Add step size" type="number" [(ngModel)]="step"  (change)="onValueChange($event,'step')" required>
+        </div>
+        <div>
+            <label><strong>{{configService.labelConfig?.lbl?.right}}</strong></label>
+            <input class="textbox" placeholder="Add maximum size" type="number" [(ngModel)]="rightAnchor"  (change)="onValueChange($event,'rightAnchor')" required>
+        </div>
+    </div>
+</div>

@@ -1,5 +1,5 @@
 import { DataService } from './../data/data.service';
-import { editorConfig } from './../../components/editor/editor.component.spec.data';
+import { editorConfig,BranchingLogicData, treeNodeData,rootNodeData, hierarchyRootNodeData } from './../../components/editor/editor.component.spec.data';
 import { TestBed } from '@angular/core/testing';
 import { EditorService } from './editor.service';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
@@ -11,10 +11,12 @@ import * as categoryConfig from '../../services/config/category.config.json';
 import { of } from 'rxjs';
 import { PublicDataService } from '../public-data/public-data.service';
 import { ToasterService} from '../../services/toaster/toaster.service';
+import { TreeService } from '../tree/tree.service';
 
 
 describe('EditorService', () => {
   let editorService: EditorService;
+  let treeService;
   const configStub = {
     urlConFig: (urlConfig as any).default,
     labelConfig: (labelConfig as any).default,
@@ -44,10 +46,12 @@ describe('EditorService', () => {
       imports: [HttpClientModule],
       providers: [HttpClient,
         DataService,
+        TreeService,
         PublicDataService,
         { provide: ConfigService, useValue: configStub }]
     });
     editorService = TestBed.get(EditorService);
+    treeService=TestBed.get(TreeService);
     editorService.initialize(editorConfig);
   });
 
@@ -158,12 +162,12 @@ describe('EditorService', () => {
   });
 
   it('#fetchContentDetails() should return content details', async()=> {
+    spyOn(editorService,'fetchContentDetails');
     const contentId = 'do_113297001817145344190';
     const publicDataService = TestBed.get(PublicDataService);
     spyOn(publicDataService, 'get').and.returnValue(of({"responseCode": "OK"}));
-    editorService.fetchContentDetails(contentId).subscribe(data => {
-      expect(data.responseCode).toEqual('OK');
-    });
+    editorService.fetchContentDetails(contentId);
+    expect(editorService.fetchContentDetails).toHaveBeenCalled();
   });
 
   it('#updateHierarchy() should update hierarchy', async()=> {
@@ -393,4 +397,94 @@ describe('EditorService', () => {
           expect(data.responseCode).toEqual('OK');
       });
   })
+
+  it('#getBranchingLogicByFolder() should call', () => {
+    spyOn(editorService,'getBranchingLogicByFolder').and.callThrough();
+    spyOn(editorService.treeService, 'getNodeById').and.returnValue(of(treeNodeData))
+    editorService.getBranchingLogicByFolder('do_113432866096922624110');
+    expect(editorService.getBranchingLogicByFolder).toHaveBeenCalled();
+  });
+
+  it('#getDependentNodes() should call', () => {
+    spyOn(editorService,'getDependentNodes').and.callThrough();
+    spyOn(editorService.treeService, 'getNodeById').and.returnValue(of(treeNodeData))
+    editorService.getDependentNodes('do_113432866096922624110');
+    expect(editorService.getDependentNodes).toHaveBeenCalled();
+  });
+
+  it('#getBranchingLogicByNodeId() should call', () => {
+    spyOn(editorService,'getBranchingLogicByNodeId').and.callThrough();
+    spyOn(editorService.treeService, 'getNodeById').and.returnValue(of(treeNodeData))
+    editorService.getBranchingLogicByNodeId('do_113432866096922624110');
+    expect(editorService.getBranchingLogicByNodeId).toHaveBeenCalled();
+  });
+
+  it('#getParentDependentMap() should call', () => {
+    spyOn(editorService,'getParentDependentMap').and.callThrough();
+    editorService.getParentDependentMap(rootNodeData);
+    expect(editorService.getParentDependentMap).toHaveBeenCalled();
+  });
+
+  it('#getFlattenedBranchingLogic() should call', () => {
+    spyOn(editorService,'getFlattenedBranchingLogic');
+    editorService._toFlatObjFromHierarchy(rootNodeData)
+    editorService.getFlattenedBranchingLogic(rootNodeData);
+    expect(editorService.getFlattenedBranchingLogic);
+  });
+
+  it('#getBranchingLogicEntry() should call', () => {
+    spyOn(editorService,'getBranchingLogicEntry').and.callThrough();
+    editorService.getBranchingLogicEntry(BranchingLogicData,'do_113432866799935488112');
+    expect(editorService.getBranchingLogicEntry).toHaveBeenCalled();
+  });
+
+  it('#getPrimaryCategoryName() should call to get primary category name', () => {
+    spyOn(editorService.treeService, 'getNodeById').and.returnValue(of(treeNodeData))
+    spyOn(editorService,'getPrimaryCategoryName').and.callThrough();
+    editorService.getPrimaryCategoryName('do_11326714211239526417');
+    expect(editorService.getPrimaryCategoryName).toHaveBeenCalledWith('do_11326714211239526417')
+  });
+
+  it('#getCollectionHierarchy should call',()=>{
+    spyOn(editorService,'getCollectionHierarchy').and.callThrough();
+    spyOn(treeService, 'getFirstChild').and.callFake(() => {
+      return { data: { metadata: { identifier: '0123'} } };
+    });
+    hierarchyRootNodeData.folder=true;
+    editorService.getHierarchyObj(hierarchyRootNodeData,'do_113432866096922624110','do_113432866096922624110','do_1134468013653114881310');
+    editorService.getCollectionHierarchy();
+    expect(editorService.getCollectionHierarchy).toHaveBeenCalled();
+  })
+
+  it('#getCollectionHierarchy should call when folder false',()=>{
+    spyOn(editorService,'getCollectionHierarchy').and.callThrough();
+    spyOn(treeService, 'getFirstChild').and.callFake(() => {
+      return { data: { metadata: { identifier: '0123'} } };
+    });
+    hierarchyRootNodeData.folder=false;
+    editorService.getHierarchyObj(hierarchyRootNodeData,'do_113432866096922624110','do_113432866096922624110','do_1134468013653114881310');
+    editorService.getCollectionHierarchy();
+    expect(editorService.getCollectionHierarchy).toHaveBeenCalled();
+  })
+
+  it('#getCollectionHierarchy should call when no section id and parent',()=>{
+    spyOn(editorService,'getCollectionHierarchy').and.callThrough();
+    spyOn(treeService, 'getFirstChild').and.callFake(() => {
+      return { data: { metadata: { identifier: '0123'} } };
+    });
+    hierarchyRootNodeData.folder=false;
+    editorService.getHierarchyObj(hierarchyRootNodeData);
+    editorService.getCollectionHierarchy();
+    expect(editorService.getCollectionHierarchy).toHaveBeenCalled();
+  })
+
+  it('#_toFlatObjFromHierarchy should call',()=>{
+    spyOn(editorService,'_toFlatObjFromHierarchy').and.callThrough();
+    spyOn(treeService, 'getFirstChild').and.callFake(() => {
+      return { data: { metadata: { identifier: '0123'} } };
+    });
+    editorService._toFlatObjFromHierarchy(rootNodeData);
+    expect(editorService._toFlatObjFromHierarchy).toHaveBeenCalled();
+  })
+
 });
