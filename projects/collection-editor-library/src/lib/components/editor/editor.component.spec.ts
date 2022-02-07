@@ -281,7 +281,8 @@ describe('EditorComponent', () => {
         "questionId": undefined,
         "type": "default",
         "category": "VSA",
-        "creationContext": expected_creationContext
+        "creationContext": expected_creationContext,
+        "creationMode": "edit"
       }
     );
     expect(component.pageId).toEqual('question');
@@ -754,6 +755,7 @@ describe('EditorComponent', () => {
         creationContext: undefined,
         type: interactionType,
         category: '',
+        creationMode: 'update'
       }
     );
     expect(component.pageId).toEqual('question');
