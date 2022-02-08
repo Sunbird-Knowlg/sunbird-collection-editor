@@ -422,6 +422,8 @@ describe('QuestionComponent', () => {
         }
       }
     };
+    const toasterService = TestBed.get(ToasterService);
+    spyOn(toasterService, 'success').and.callFake(() => { });
     component.sourcingUpdate(data);
     expect(editorService.updateCollection).toHaveBeenCalledWith("do_11330102570702438417", { ...data, requestBody });
   });
@@ -442,6 +444,8 @@ describe('QuestionComponent', () => {
         }
       }
     };
+    const toasterService = TestBed.get(ToasterService);
+    spyOn(toasterService, 'success').and.callFake(() => { });
     component.sourcingUpdate(data);
     expect(editorService.updateCollection).toHaveBeenCalledWith("do_11330102570702438417", { ...data, requestBody });
   });
@@ -451,6 +455,8 @@ describe('QuestionComponent', () => {
     component.actionType = 'sourcingApproveQuestion';
     const data = { button: 'sourcingApproveQuestion' };
     spyOn(component, 'redirectToChapterList');
+    const toasterService = TestBed.get(ToasterService);
+    spyOn(toasterService, 'success').and.callFake(() => { });
     component.sourcingUpdate(data);
     expect(component.redirectToChapterList).toHaveBeenCalled();
   });
@@ -460,6 +466,8 @@ describe('QuestionComponent', () => {
     component.actionType = 'sourcingRejectQuestion';
     const data = { button: 'sourcingRejectQuestion', comment: 'test comment for rejection' };
     spyOn(component, 'redirectToChapterList');
+    const toasterService = TestBed.get(ToasterService);
+    spyOn(toasterService, 'success').and.callFake(() => { });
     component.sourcingUpdate(data);
     expect(component.redirectToChapterList).toHaveBeenCalled();
   });
