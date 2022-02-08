@@ -264,7 +264,10 @@
          "034": "failed to download {FILE_TYPE} file using blob url ",
          "035": "Unable to get pre_signed_url and Question bulk upload Failed, Please Try Again",
          "036": "Unable to upload to Blob and Question bulk upload Failed, Please Try Again",
-         "037": "Unable to accepted question"
+         "037": "Unable to accepted question",
+         "038": "Unable to approve content",
+         "039": "Unable to reject content",
+         "040": "Unable to send content back for corrections"
       },
       "success": {
          "001": "Content is saved",
@@ -280,7 +283,10 @@
          "011": "QR codes downloaded" ,
          "012": "Collaborators updated successfully",
          "013": "Question saved successfully",
-         "037": "Question accepted successfully"
+         "037": "Question accepted successfully",
+         "038": "Content is successfully approved",
+         "039": "Content is successfully rejected",
+         "040": "Content sent back for corrections"
       },
       "warning" : {
          "001" : "Errors found in linked QR Codes. Please check and correct.",
