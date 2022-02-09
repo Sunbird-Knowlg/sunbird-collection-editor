@@ -210,4 +210,28 @@ Click to see the mock - [collectionEditorConfig](https://github.com/Sunbird-Ed/s
 ---
 
 
+## :label: Step 7: Set the auth token and questionset identifier
+From the root directory - go to server.js file
 
+
+Update the host variable to which env your pointing. example if you are pointing sunbird dev instance update variable like below
+```javascript
+const BASE_URL = 'dev.sunbirded.org'
+const API_AUTH_TOKEN = 'XXXX'
+const USER_TOKEN= 'YYYY'
+```
+Note: You will need actual `API_AUTH_TOKEN` and `USER_TOKEN`
+
+If you are pointing to sunbird dev -> [dev.sunbirded.org](https://dev.sunbirded.org/), create a textbook in sunbird dev, copy the textbook_id from the browser url and set the do_id of textbook data.ts file
+
+```javascript
+export const collectionEditorConfig = {
+  context: {
+       ...
+       identifier: 'do_id', // identifier of textbook created in sunbird dev
+      ...
+  },
+  config: {
+      ...
+  }
+```
