@@ -182,7 +182,7 @@ export class AppComponent {
 }
 ```
 
-## :label: Step 5: Send input to render Collection Editor
+## :label: Step 6: Send input to render Collection Editor
 
 Use the mock config in your component to send input to Collection editor as `editorConfig`  
 Click to see the mock - [collectionEditorConfig](https://github.com/Sunbird-Ed/sunbird-collection-editor/blob/release-4.7.0/src/app/data.ts)  
@@ -190,6 +190,24 @@ Click to see the mock - [collectionEditorConfig](https://github.com/Sunbird-Ed/s
 ```html
 <lib-editor [editorConfig]="editorConfig"></lib-editor>
 ```
+
+## :orange_circle: Available components
+|Feature| Notes| Selector|Code|Input|Output
+|--|--|--|------------------------------------------------------------------------------------------|---|--|
+| Collection Editor | Can be used to render Editor | lib-editor| *`<lib-editor [editorConfig]="editorConfig"></lib-editor>`*|editorConfig|editorEmitter|
+
+### :small_red_triangle_down: Input Parameters
+1. editorConfig: Object - [`Required`]  
+```javascript
+{
+  context: Object   // Information about the telemetry and default settings for editor API requests
+  config: Object    // default editor config such as sidebar menu list
+}
+```
+
+### :small_red_triangle_down: Output Events
+1. editorEmitter()    - It emits event for each action performed in the editor.
+---
 
 
 
