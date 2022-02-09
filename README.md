@@ -235,3 +235,18 @@ export const collectionEditorConfig = {
       ...
   }
 ```
+
+## :label: Step 8: Run the application
+
+From the root directory - Start the server (Open  terminal in root folder and start the application) as: 
+
+
+  `npm run start`
+
+The  app will launch at [http://localhost:4200](http://localhost:4200)
+
+Run Node server to proxy the APIs (Open another terminal in root folder and run the server.js ) as:
+
+
+  `nodemon server.js`
+
