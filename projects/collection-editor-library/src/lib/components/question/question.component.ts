@@ -388,16 +388,19 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       let questionIds = [];
       //let comments = {};
       let comments = event.comment
+      let successMessage = '';
       this.editorService.fetchCollectionHierarchy(this.questionSetId).subscribe(res => {
         const questionSet = res.result['questionSet'];
         switch (event.button) {
           case 'sourcingApproveQuestion':
             questionIds = questionSet.acceptedContributions || [];
+            successMessage = _.get(this.configService, 'labelConfig.messages.success.038')
             break;
           case 'sourcingRejectQuestion':
             questionIds = questionSet.rejectedContributions || [];
             comments = questionSet.rejectedContributionComments || {};
             comments[this.questionId] = event.comment;
+            successMessage = _.get(this.configService, 'labelConfig.messages.success.039')
             break;
           default:
             break;
@@ -405,6 +408,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         questionIds.push(this.questionId);
         event['requestBody'] = this.prepareSourcingUpdateBody(questionIds, comments);
         this.editorService.updateCollection(this.questionSetId, event).subscribe(res => {
+          this.toasterService.success(successMessage);
           this.redirectToChapterList();
         })
       })
@@ -421,6 +425,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         };
         this.questionService.updateQuestion(this.questionId, requestObj).subscribe(res => {
+            this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.040'));
             this.redirectToChapterList();
         });
       }, (err: ServerResponse) => {
