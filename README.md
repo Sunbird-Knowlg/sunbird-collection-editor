@@ -46,17 +46,16 @@ Note: *As Collection library is build with angular version 9, we are using **boo
 For more reference Check compatibility document for ng-bootstrap [here](https://valor-software.com/ngx-bootstrap/#/documentation#compatibility)*  
 
 ## :label: Step 2: create and copy required assests
-Create a data.ts file which contains the collectionEditorConfig   Refer: [data.ts](https://github.com/Sunbird-Ed/sunbird-collection-editor/blob/release-4.7.0/src/app/data.ts)
-
+- Create a data.ts file which contains the collectionEditorConfig   Refer: [data.ts](https://github.com/Sunbird-Ed/sunbird-collection-editor/blob/release-4.7.0/src/app/data.ts)
 Note: collectionEditorConfig data.ts contains the mock config used in component to send it as input to Collection Editor. We need only [collectionEditorConfig](https://github.com/Sunbird-Ed/sunbird-collection-editor/blob/release-4.7.0/src/app/data.ts#L143)
 
-Create a latexService.js in  root folder. Refer: [latexService.js](https://github.com/Sunbird-Ed/sunbird-collection-editor/blob/release-4.7.0/latexService.js)
+- Create a latexService.js in  root folder. Refer: [latexService.js](https://github.com/Sunbird-Ed/sunbird-collection-editor/blob/release-4.7.0/latexService.js)
 
-Create a proxy.conf.json in  root folder. Refer: [proxy.conf.json](https://github.com/Sunbird-Ed/sunbird-collection-editor/blob/release-4.7.0/proxy.conf.json)
+- Create a proxy.conf.json in  root folder. Refer: [proxy.conf.json](https://github.com/Sunbird-Ed/sunbird-collection-editor/blob/release-4.7.0/proxy.conf.json)
 
-Create server.js in root folder. Refer: [server.js](https://github.com/Sunbird-Ed/sunbird-collection-editor/blob/release-4.7.0/server.js) 
+- Create server.js in root folder. Refer: [server.js](https://github.com/Sunbird-Ed/sunbird-collection-editor/blob/release-4.7.0/server.js) 
 
-Copy the assets from: [assets](https://github.com/Sunbird-Ed/sunbird-collection-editor/tree/release-4.7.0/src/assets) 
+- Copy the assets from: [assets](https://github.com/Sunbird-Ed/sunbird-collection-editor/tree/release-4.7.0/src/assets) 
 
 ## :label: Step 3: Add question-cursor-implementation.service
 Create a **question-cursor-implementation.service.ts** in a project and which will implement the `QuestionCursor` and `EditorCursor` abstract class.  
@@ -67,3 +66,130 @@ Remember EditorCursor and QuestionCursor is to be imported like below:
 `import { EditorCursor, QuestionCursor } from '@project-sunbird/sunbird-collection-editor-v9';`
 
 For more information refer [question-cursor-implementation.service.ts](https://github.com/Sunbird-Ed/sunbird-collection-editor/blob/release-4.7.0/src/app/editor-cursor-implementation.service.ts) and do not forgot to add your question list API URL here, for example: [https://staging.sunbirded.org/api/question/v1/list](https://staging.sunbirded.org/api/question/v1/list)
+
+
+## :label: Step 4: Include the styles, scripts and assets in angular.json
+  Add the following under `architect.build.assets` for default project  
+```javascript
+{
+  ...
+  "build": {
+    "builder": "@angular-devkit/build-angular:browser",
+    "options": {
+      ...
+      ...
+      "aot": false,
+      "assets": [
+        ...
+        ...
+              {
+                "glob": "**/*",
+                "input": "node_modules/@project-sunbird/sunbird-pdf-player-v9/lib/assets/",
+                "output": "/assets/"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@project-sunbird/sunbird-video-player-v9/lib/assets/",
+                "output": "/assets/"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@project-sunbird/sunbird-collection-editor-v9/lib/assets",
+                "output": "/assets/"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@project-sunbird/sunbird-quml-player-v9/lib/assets/",
+                "output": "/assets/"
+              }
+      ],
+      "styles": [
+        ...
+        "src/assets/quml-styles/quml-carousel.css",
+        "node_modules/@project-sunbird/sb-styles/assets/_styles.scss",
+        "src/assets/lib/semantic/semantic.min.css",
+        "src/assets/styles/styles.scss",
+        "node_modules/font-awesome/css/font-awesome.css",
+        "node_modules/video.js/dist/video-js.min.css",
+        "node_modules/@project-sunbird/sunbird-video-player-v9/lib/assets/videojs.markers.min.css",
+        "node_modules/videojs-http-source-selector/dist/videojs-http-source-selector.css"
+      ],
+      "scripts": [
+        ...
+        "node_modules/epubjs/dist/epub.js",
+        "src/assets/libs/iziToast/iziToast.min.js",
+        "node_modules/jquery/dist/jquery.min.js",
+        "node_modules/jquery.fancytree/dist/jquery.fancytree-all-deps.min.js",
+        "src/assets/lib/dimmer.min.js",
+        "src/assets/lib/transition.min.js",
+        "src/assets/lib/modal.min.js",
+        "src/assets/lib/semantic-ui-tree-picker.js",
+        "node_modules/@project-sunbird/client-services/index.js",
+        "node_modules/video.js/dist/video.js",
+        "node_modules/@project-sunbird/sunbird-video-player-v9/lib/assets/videojs-markers.js",
+        "node_modules/videojs-contrib-quality-levels/dist/videojs-contrib-quality-levels.min.js",
+        "node_modules/videojs-http-source-selector/dist/videojs-http-source-selector.min.js"
+      ]
+    }
+  }
+  ...
+  ...
+}
+```
+
+## :label: Step 5: Import the modules and components
+Import the required modules such as below:
+
+```javascript
+  import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CollectionEditorLibraryModule, EditorCursor } from '@project-sunbird/sunbird-collection-editor-v9';
+import { RouterModule } from '@angular/router';
+import { QuestionCursor } from '@project-sunbird/sunbird-quml-player-v9';
+import { EditorCursorImplementationService } from './editor-cursor-implementation.service';
+
+  @NgModule({
+   ...
+
+   imports: [ 
+      CollectionEditorLibraryModule,
+      BrowserAnimationsModule,
+      RouterModule.forRoot([])
+      ],
+   providers: [
+    { provide: QuestionCursor, useExisting: EditorCursorImplementationService },
+    { provide: EditorCursor, useExisting: EditorCursorImplementationService }
+   ]
+
+   ...
+  })
+
+ export class AppModule { }
+```
+
+Add the collection editor config in component as below:
+```javascript
+...
+import { questionSetEditorConfig } from './data';
+@Component({
+  ...
+  ...
+  ...
+})
+
+export class AppComponent {
+  ...
+  public editorConfig: any = collectionEditorConfig;
+}
+```
+
+## :label: Step 5: Send input to render Collection Editor
+
+Use the mock config in your component to send input to Collection editor as `editorConfig`  
+Click to see the mock - [collectionEditorConfig](https://github.com/Sunbird-Ed/sunbird-collection-editor/blob/release-4.7.0/src/app/data.ts)  
+
+```html
+<lib-editor [editorConfig]="editorConfig"></lib-editor>
+```
+
+
+
