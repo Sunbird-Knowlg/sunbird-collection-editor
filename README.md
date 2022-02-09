@@ -1,5 +1,5 @@
 # :diamond_shape_with_a_dot_inside: Collection Editor library for Sunbird platform
-Contains Collection Editor library components powered by angular. These components are designed to be used in the sunbirdEd portal and coKreat reference web portal to drive reusability, maintainability hence reducing the redundant development effort significantly.
+Contains Collection Editor library components powered by angular. These components are designed to be used in the sunbirdEd portal and web portal to drive reusability, maintainability hence reducing the redundant development effort significantly.
 
 ![image](https://user-images.githubusercontent.com/36467967/153172086-5552cfe4-ad39-4b70-b015-e7553610a6fa.png)
 
