@@ -192,7 +192,6 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
         }
 
         if(field.code === 'instances'){
-          console.log( _.get(metaDataFields,'instances.label'))
           field.default =  !_.isEmpty(metaDataFields, 'instances') ? _.get(metaDataFields,'instances.label') : '' ;
         }
 
