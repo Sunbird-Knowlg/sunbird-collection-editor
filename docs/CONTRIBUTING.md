@@ -4,28 +4,38 @@ Thank you for investing your time in contributing to our project!
 
 In this guide you will get an overview of the contribution workflow of the editor.
 
+**If you don't have git on your machine,** [install it](https://help.github.com/articles/set-up-git/).
 
-## Make changes locally 
+## Getting started
 
-Fork the project
-
+#### Fork the project
 ```
 https://github.com/Sunbird-Ed/sunbird-collection-editor.git
 ```
+#### Clone the repository
 
-Go to the root directory
+Now clone the forked repository to your machine. Go to your GitHub account, open the forked repository, click on the code button and then click the copy to clipboard icon.
+
+Open a terminal and run the following git command:
+
+```
+git clone "url you just copied"
+```
+For example: `git clone https://github.com/Sunbird-Ed/sunbird-collection-editor.git`
+
+#### Go to the root directory and run the following command
 
 ```
 cd sunbird-collection-editor
 ```
 
-Install dependencies
+#### Install dependencies
 
 ```
 npm install
 ```
 
-Build the library
+#### Build the library
 
 ```
 npm run build-lib
@@ -48,7 +58,7 @@ npm run start
 The demo app will launch at http://localhost:4200
 
 
-### Set the auth token and questionset identifier
+### Set the auth token and textbook identifier
 
 From the root directory - go to `server.js` file
 
@@ -82,3 +92,5 @@ Run Node server to proxy the APIs (Open one more terminal in root folder and run
   ```
 nodemon server.js
 ```
+
+**Create a working branch and start with your changes!**
