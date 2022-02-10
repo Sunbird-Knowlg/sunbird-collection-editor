@@ -17,6 +17,54 @@ export const mockData = {
             "visible": true
         },
         {
+            "code": "allowMultipleInstances",
+            "dataType": "text",
+            "description": "Enable multiple instances/submissions of questions in this section?",
+            "editable": true,
+            "index": 5,
+            "inputType": "radio",
+            "label": "Enable multiple instances/submissions of questions in this section?",
+            "name": "allowMultipleInstances",
+            "placeholder": "QR code required",
+            "renderingHints": {
+                "class": "sb-g-col-lg-2"
+            },
+            "range": [
+                "Yes",
+                "No"
+            ],
+            "required": true,
+            "visible": true
+        },
+        {
+            "code": "instances",
+            "depends": [
+                "allowMultipleInstances"
+            ],
+            "dataType": "text",
+            "description": "This label will show up on a button to record multiple solutions of questions in this section",
+            "editable": true,
+            "inputType": "text",
+            "label": "Add label",
+            "name": "instanceName",
+            "placeholder": "Enter label here",
+            "renderingHints": {
+                "class": "sb-g-col-lg-1"
+            },
+            "required": true,
+            "visible": true,
+            "validations": [
+                {
+                    "type": "minLength",
+                    "value": "2"
+                },
+                {
+                    "type": "maxLength",
+                    "value": "20"
+                }
+            ]
+        },
+        {
             "code": "name",
             "dataType": "text",
             "description": "Name of the content",
