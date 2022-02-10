@@ -250,3 +250,8 @@ Run Node server to proxy the APIs (Open another terminal in root folder and run 
 
   `nodemon server.js`
 
+# :bookmark_tabs: Editor Contribution and Configuration Guide
+
+[Contribution guidelines for this project](docs/CONTRIBUTING.md)
+
+[Configuration guidelines for this project](docs/CONFIGURATION.md)
