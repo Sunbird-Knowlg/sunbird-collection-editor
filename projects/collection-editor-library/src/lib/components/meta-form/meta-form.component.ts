@@ -191,6 +191,10 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
           field.default = !_.isEmpty(metaDataFields, 'endDate') ? 'Yes' : 'No' ;
         }
 
+        if(field.code === 'instances'){
+          field.default =  !_.isEmpty(metaDataFields, 'instances') ? _.get(metaDataFields,'instances.label') : '' ;
+        }
+
         if ((_.isEmpty(field.range) || _.isEmpty(field.terms)) &&
           !field.editable && !_.isEmpty(field.default)) {
           if (_.has(field, 'terms')) {
@@ -249,6 +253,11 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
   }
 
   valueChanges(event: any) {
+    if (_.get(event, 'instances')) {
+      event.instances = {
+        "label": event.instances
+      }
+    }
     if (!_.isEmpty(this.appIcon) && this.showAppIcon) {
       event.appIcon = this.appIcon;
     }
