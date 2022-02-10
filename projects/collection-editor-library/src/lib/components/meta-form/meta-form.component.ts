@@ -253,8 +253,10 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
   }
 
   valueChanges(event: any) {
-    event.instances={
-      "label":event.instances
+    if (_.get(event, 'instances')) {
+      event.instances = {
+        "label": event.instances
+      }
     }
     if (!_.isEmpty(this.appIcon) && this.showAppIcon) {
       event.appIcon = this.appIcon;
