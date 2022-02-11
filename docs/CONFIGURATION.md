@@ -87,20 +87,19 @@ Description of the properties for the context
 | `did` |  It is `string` and Unique id to identify the device or browser | true | `''` |
 | `uid` |  It is `string` and Current logged in user id | true | `''` |
 | `channel` |  It is `string` which defines channel identifier to know which channel is currently using. | true | `''` |
-| `pdata` |  It is an `object` which defines the producer information it should have identifier and version and canvas will log in the telemetry | true | `''` |
-| `contextRollup` |  It is an `object` which defines content roll up data | true | `''` |
-| `tags` |  It is an `object` which defines content roll up data | true | `''` |
-| `cdata` |  It is an `array` which defines the correlation data | true | `''` |
-| `timeDiff` |  It is `number` and timeDiff (in sec) is diff of server date and local date | true | `''` |
-| `objectRollup` |  It is an `object` which defines object rollup data (up to level 4) | true | `''` |
-| `host` |  It is `string` which defines the from which domain content should be load | true | `''` |
-| `endpoint` |  It is `string` and Telemetry API endpoint | true | `''` |
-| `userData.firstName` |  It is `string` and first name of logged in user | true | `''` |
-| `userData.lastName` |  It is `string` and last name of logged in user | true | `''` |
-| `env` |  It is `string` and type of editor , in case of collection editor its `collection_editor` | true | `''` |
-| `defaultLicense` |  It is `string` and default license of editor | true | `''` |
-| `framework` |  It is `string` and Organisation framework id | true | `''` |
-| `cloudStorageUrls` |  It is `string` and Array of cloud storage urls | true | `''` |
-| `additionalCategories` |  It is `string` and Array of objects of additional categories | true | `''` |
-| `labels` |  It is `string` and Additional labels to be used in editor| true | `''` |
-| `targetFWIds` |  It is `string` and Array of target framework ids | true | `''` |
+| `pdata` |  It is an `object` which defines the producer information it should have identifier and version and canvas will log in the telemetry | true | `{}` |
+| `contextRollup` |  It is an `object` which defines content roll up data | true | `{}` |
+| `tags` |  It is an `object` which defines content roll up data | true | `{}` |
+| `cdata` |  It is an `array` which defines the correlation data | false | `[]` |
+| `timeDiff` |  It is `number` and timeDiff (in sec) is diff of server date and local date | false | `''` |
+| `objectRollup` |  It is an `object` which defines object rollup data (up to level 4) | false | `{}` |
+| `host` |  It is `string` which defines the from which domain content should be load | false | `''` |
+| `endpoint` |  It is `string` and Telemetry API endpoint | false | `''` |
+| `userData` |  It is `object` and first and last name of logged in user | false | `{}` |
+| `env` |  It is `string` and type of editor , in case of collection editor its `collection_editor` | true | `collection_editor | questionset_editor` |
+| `defaultLicense` |  It is `string` and default license of editor | false | `''` |
+| `framework` |  It is `string` and Organisation framework id | true | `ekstep_ncert_k-12` |
+| `cloudStorageUrls` |  It is `array` and Array of cloud storage urls | false | `[]` |
+| `additionalCategories` |  It is `array` and Array of objects of additional categories | false | `[]` |
+| `labels` |  It is `object` and Additional labels to be used in editor| false | `{}` |
+| `targetFWIds` |  It is `array` and Array of target framework ids | false | `[]` |
