@@ -78,6 +78,29 @@ Description of the properties for the context
 
 |Property Name	| Description | Required | Default Value
 |--|------------------------------------------------------------------------------------------|---|--|
-| `programId` |  It is `string` and program id in which questionset is created. For example: `b8a328e0-1511-11eb-81b1-659ec274e395` | false | `''` |
-|  `contributionOrgId` | It is `string` and Organisation id of the contributor. For example: `01274256635219968039517` | false | `''` |
+| `programId` |  It is `string` and program id in which questionset is created. | false | `''` |
+|  `contributionOrgId` | It is `string` and Organisation id of the contributor. | false | `''` |
 |  `user` | It is an `object` which defines user data	which contains users id, fullName, lastName, orgIds. | true | **For example:** ``` { id: '5a587cc1-e018-4859-a0a8-e842650b9d64', orgIds: [ '01309282781705830427' ], organisations: {}, fullName: 'Vaibhav Bhuva', firstName: 'Vaibhav', lastName: 'Bhuva', isRootOrgAdmin: true } ``` |
+| `identifier` |  It is `string` and Identifier of content. | false | `''` |
+| `authToken` |  It is `string` and Auth key to make api calls. | false | `''` |
+| `sid` |  It is `string` and session id of the requestor stamped by portal | true | `''` |
+| `did` |  It is `string` and Unique id to identify the device or browser | true | `''` |
+| `uid` |  It is `string` and Current logged in user id | true | `''` |
+| `channel` |  It is `string` which defines channel identifier to know which channel is currently using. | true | `''` |
+| `pdata` |  It is an `object` which defines the producer information it should have identifier and version and canvas will log in the telemetry | true | `''` |
+| `contextRollup` |  It is an `object` which defines content roll up data | true | `''` |
+| `tags` |  It is an `object` which defines content roll up data | true | `''` |
+| `cdata` |  It is an `array` which defines the correlation data | true | `''` |
+| `timeDiff` |  It is `number` and timeDiff (in sec) is diff of server date and local date | true | `''` |
+| `objectRollup` |  It is an `object` which defines object rollup data (up to level 4) | true | `''` |
+| `host` |  It is `string` which defines the from which domain content should be load | true | `''` |
+| `endpoint` |  It is `string` and Telemetry API endpoint | true | `''` |
+| `userData.firstName` |  It is `string` and first name of logged in user | true | `''` |
+| `userData.lastName` |  It is `string` and last name of logged in user | true | `''` |
+| `env` |  It is `string` and type of editor , in case of collection editor its `collection_editor` | true | `''` |
+| `defaultLicense` |  It is `string` and default license of editor | true | `''` |
+| `framework` |  It is `string` and Organisation framework id | true | `''` |
+| `cloudStorageUrls` |  It is `string` and Array of cloud storage urls | true | `''` |
+| `additionalCategories` |  It is `string` and Array of objects of additional categories | true | `''` |
+| `labels` |  It is `string` and Additional labels to be used in editor| true | `''` |
+| `targetFWIds` |  It is `string` and Array of target framework ids | true | `''` |
