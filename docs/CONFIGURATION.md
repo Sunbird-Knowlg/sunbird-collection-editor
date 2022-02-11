@@ -103,3 +103,62 @@ Description of the properties for the context
 | `additionalCategories` |  It is `array` and Array of objects of additional categories | false | `[]` |
 | `labels` |  It is `object` and Additional labels to be used in editor| false | `{}` |
 | `targetFWIds` |  It is `array` and Array of target framework ids | false | `[]` |
+
+
+## Config - `Required`
+This Required property from the collectionEditorConfig provides the configuration for the editor to enable/disable some functionalities.  
+
+```javascript
+config: {
+    mode: 'string', //ex: 'edit'/'review'/'read'/'sourcingReview'/'orgReview'
+    editableFields: {
+      sourcingreview: string[],
+      orgreview: string[],
+      review: string[],
+    },
+    maxDepth: number, //ex: 1
+    dialcodeMinLength: 2,
+    dialcodeMaxLength: 250,
+    showAddCollaborator: 'boolen',
+    enableBulkUpload: 'boolen',
+    publicStorageAccount: 'https://dockstorage.blob.core.windows.net/'
+    objectType: 'Collection',
+    primaryCategory: 'Digital Textbook',
+    isRoot: boolean, //ex: true
+    iconClass: 'string', //ex: 'fa fa-book'
+    children: {
+        Content: [
+          'Explanation Content',
+          'Learning Resource',
+          'eTextbook',
+          'Teacher Resource',
+          'Course Assessment'
+        ]
+     },
+    hierarchy: {
+      level1: {
+        name: '', //ex: 'name of the section'
+        type: '', //ex: 'Unit'
+        mimeType: 'application/vnd.ekstep.content-collection',
+        contentType: 'TextBookUnit',
+        primaryCategory: 'string', //ex: 'Textbook Unit'
+        iconClass: 'string' //ex: 'fa fa-folder-o',
+        children: {}
+      },
+      level2: {
+        name: 'string', //ex: 'Sub Section'
+        ...
+        ...
+      },
+      level3: {
+      ...
+      ...
+      }
+    },
+    contentPolicyUrl: 'string' //ex: '/term-of-use.html' 
+  }
+```
+
+Note: If any of the property is added in object-category-definition. It will take the config from there, otherwise editor will take the mock config passed as input to the editor.
+
+Description of the properties for the config:
