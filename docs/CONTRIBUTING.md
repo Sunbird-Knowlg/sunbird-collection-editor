@@ -1,7 +1,5 @@
 # Welcome to Editor contributing guide <!-- omit in toc -->
 
-Thank you for investing your time in contributing to our project! 
-
 In this guide you will get an overview of the contribution workflow of the editor.
 
 **If you don't have git on your machine,** [install it](https://help.github.com/articles/set-up-git/).
