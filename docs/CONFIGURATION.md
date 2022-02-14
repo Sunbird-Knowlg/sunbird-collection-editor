@@ -96,7 +96,7 @@ Description of the properties for the context
 | `host` |  It is `string` which defines the from which domain content should be load | false | `''` |
 | `endpoint` |  It is `string` and Telemetry API endpoint | false | `''` |
 | `userData` |  It is `object` and first and last name of logged in user | false | `{}` |
-| `env` |  It is `string` and type of editor , in case of collection editor its `collection_editor` | true | `collection_editor | questionset_editor` |
+| `env` |  It is `string` and type of editor , in case of collection editor its `collection_editor` | true | `collection_editor OR questionset_editor` |
 | `defaultLicense` |  It is `string` and default license of editor | false | `''` |
 | `framework` |  It is `string` and Organisation framework id | true | `ekstep_ncert_k-12` |
 | `cloudStorageUrls` |  It is `array` and Array of cloud storage urls | false | `[]` |
@@ -110,22 +110,23 @@ This Required property from the collectionEditorConfig provides the configuratio
 
 ```javascript
 config: {
-    mode: 'string', //ex: 'edit'/'review'/'read'/'sourcingReview'/'orgReview'
+    mode: 'string', //Ex.: 'edit'/'review'/'read'/'sourcingReview'/'orgReview'
     editableFields: {
-      sourcingreview: string[],
+      sourcingreview: string[], //Ex.: ["name","description"]
       orgreview: string[],
       review: string[],
     },
-    maxDepth: number, //ex: 1
-    dialcodeMinLength: 2,
-    dialcodeMaxLength: 250,
-    showAddCollaborator: 'boolen',
+    maxDepth: number, //Ex.: 1
+    dialcodeMinLength: number, //Ex.: 2
+    dialcodeMaxLength: number, //Ex.: 250
+    showAddCollaborator: 'boolen', // true | false
     enableBulkUpload: 'boolen',
-    publicStorageAccount: 'https://dockstorage.blob.core.windows.net/'
-    objectType: 'Collection',
-    primaryCategory: 'Digital Textbook',
-    isRoot: boolean, //ex: true
-    iconClass: 'string', //ex: 'fa fa-book'
+    publicStorageAccount: 'url', //Ex.: https://dockstorage.blob.core.windows.net/
+    assetConfig: object,
+    objectType: 'string', //Ex.: Collection
+    primaryCategory: 'string', //Ex.: Digital Textbook
+    isRoot: boolean, //Ex.: true
+    iconClass: 'string', //Ex.: 'fa fa-book'
     children: {
         Content: [
           'Explanation Content',
@@ -139,14 +140,14 @@ config: {
       level1: {
         name: '', //ex: 'name of the section'
         type: '', //ex: 'Unit'
-        mimeType: 'application/vnd.ekstep.content-collection',
-        contentType: 'TextBookUnit',
+        mimeType: 'string', //Ex.: application/vnd.ekstep.content-collection
+        contentType: 'string', //Ex.: TextBookUnit
         primaryCategory: 'string', //ex: 'Textbook Unit'
         iconClass: 'string' //ex: 'fa fa-folder-o',
         children: {}
       },
       level2: {
-        name: 'string', //ex: 'Sub Section'
+        name: 'string', //Ex.: 'Sub Section'
         ...
         ...
       },
@@ -155,10 +156,27 @@ config: {
       ...
       }
     },
-    contentPolicyUrl: 'string' //ex: '/term-of-use.html' 
+    contentPolicyUrl: 'string' //Ex.: '/term-of-use.html' 
   }
 ```
 
 Note: If any of the property is added in object-category-definition. It will take the config from there, otherwise editor will take the mock config passed as input to the editor.
 
 Description of the properties for the config:
+
+|Property Name	| Description | Required | Default Value
+|--|------------------------------------------------------------------------------------------|---|--|
+| `mode` |  It is `string` and that defines the mode in editor is to be loaded.  | false | **For example:** `edit / review / read / sourcingReview / orgReview` |
+| `editableFields` |  It is an `object` and that defines the mode in editor is to be loaded.  | false | `{ sourcingreview: [],       orgreview: [],       review: [], }` |
+| `maxDepth` |  It is `number` and Defines the depth to which the textbook is to be created. If the depth is 1, hierarchy should have level1 described.  | false | **For example:** `1` |
+| `dialcodeMinLength` |  It is `number` and it specifies the minimum number of characters required in an input field  | false | `2` |
+| `dialcodeMaxLength` |  It is `number` and it specifies the maximum number of characters required in an input field  | false | `250` |
+| `showAddCollaborator` |  It is `boolen` and this is to enable/disable the functionality of add collaborator in editor. If it is true add collobrorator button will be enabled and created can add the collolaborator to collaborate in textbook.  | false | `false` |
+| `publicStorageAccount` |  It is `url` and URL of the blob storage  | true | **For example:** `https://dockstorage.blob.core.windows.net/` |
+| `assetConfig` |  It is an `object` and `assetConfig` sets the max size limit and type for image and videos to be uploaded in the editor. | false | **For example:** `{ "image": { "size": "1", "sizeType": "MB", "accepted": "png, jpeg" }, "video": { "size": "50", "sizeType": "MB", "accepted": "mp4, webm" } }` |
+| `objectType` |  It is `string` and that defines the object type of content  | true |  |
+| `isRoot` |  It is `boolen` and that defines the node is root node.  | true | `true` |
+| `iconClass` |  It is `string` and that defines the icon of root node  | true | `fa fa-book` |
+| `children` |  It is an `object` and If maxdepth is 0 than children inside the root node defines the content type.  | true | For example: `children: { Content: [ 'Explanation Content', 'Learning Resource', 'eTextbook' ] }` |
+| `hierarchy` |  It is an `object` and If maxdepth is > 0 then hierarchy should have definiton of the levels.  | false | `{}` |
+| `contentPolicyUrl` |  It is `string` and It defines where should the content policy link will be redirected.  | true | `/term-of-use.html`  |
