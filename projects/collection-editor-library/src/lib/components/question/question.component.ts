@@ -67,6 +67,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   questionCategory;
   questionId;
   creationContext: ICreationContext;
+  creationMode;
   tempQuestionId;
   questionSetId;
   unitId;
@@ -124,16 +125,13 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.questionFormConfig=this.leafFormConfig;
-    const { questionSetId, questionId, type, category, creationContext, setChildQueston } = this.questionInput;
-    if (_.isUndefined(setChildQueston)) {
-      this.questionInput.setChildQueston = false;
-    }
+    const { questionSetId, questionId, type, category, config, creationContext, creationMode } = this.questionInput;
     this.questionInteractionType = type;
     this.questionCategory = category;
     this.questionId = questionId;
     this.questionSetId = questionSetId;
     this.creationContext = creationContext;
+    this.creationMode = creationMode;
     this.unitId = this.creationContext?.unitIdentifier;
     this.isReadOnlyMode = this.creationContext?.isReadOnlyMode;
     this.toolbarConfig = this.editorService.getToolbarConfig();
@@ -294,14 +292,11 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
           } else {
             this.editorState = { question: '', answer: '', solutions: '' };
           }
+          this.editorState = { ...editorState };
         }
-        if (this.questionInteractionType === 'choice') {
-          this.editorState = new McqForm(
-            { question: '', options: [] },
-            {numberOfOptions: _.get(this.questionInput, 'config.numberOfOptions')}
-            );
+        else if (this.questionInteractionType === 'choice') {
+          this.editorState = new McqForm({ question: '', options: [] }, {numberOfOptions: _.get(this.questionInput, 'config.numberOfOptions')});
         }
-        this.subMenuConfig();
         this.showLoader = false;
       }
     }, (err: ServerResponse) => {
@@ -368,7 +363,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   handleRedirectToQuestionset() {
-    if (_.isUndefined(this.questionId) || _.get(this.creationContext, 'mode') === 'edit') {
+    if (_.isUndefined(this.questionId) || this.creationMode === 'edit') {
       this.showConfirmPopup = true;
     } else {
       this.redirectToQuestionset();
@@ -432,7 +427,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   rejectQuestion(comment) {
     const editableFields = _.get(this.creationContext, 'editableFields');
-    if (_.get(this.creationContext, 'mode') === 'orgreview' && editableFields && !_.isEmpty(editableFields[_.get(this.creationContext, 'mode')])) {
+    if (this.creationMode === 'orgreview' && editableFields && !_.isEmpty(editableFields[this.creationMode])) {
       this.validateFormFields();
       if(this.showFormError === true) {
         this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
@@ -447,7 +442,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   publishQuestion(event) {
     const editableFields = _.get(this.creationContext, 'editableFields');
-    if (_.get(this.creationContext, 'mode') === 'orgreview' && editableFields && !_.isEmpty(editableFields[_.get(this.creationContext, 'mode')])) {
+    if (this.creationMode === 'orgreview' && editableFields && !_.isEmpty(editableFields[this.creationMode])) {
       this.validateFormFields();
       if(this.showFormError === true) {
         this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
@@ -462,7 +457,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   sourcingUpdate(event) {
     const editableFields = _.get(this.creationContext, 'editableFields');
-    if (_.get(this.creationContext, 'mode') === 'sourcingreview' && editableFields && !_.isEmpty(editableFields[_.get(this.creationContext, 'mode')])) {
+    if (this.creationMode === 'sourcingreview' && editableFields && !_.isEmpty(editableFields[this.creationMode])) {
       this.validateFormFields();
       if(this.showFormError === true) {
         this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
@@ -471,16 +466,19 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       let questionIds = [];
       //let comments = {};
       let comments = event.comment
+      let successMessage = '';
       this.editorService.fetchCollectionHierarchy(this.questionSetId).subscribe(res => {
         const questionSet = res.result['questionSet'];
         switch (event.button) {
           case 'sourcingApproveQuestion':
             questionIds = questionSet.acceptedContributions || [];
+            successMessage = _.get(this.configService, 'labelConfig.messages.success.038')
             break;
           case 'sourcingRejectQuestion':
             questionIds = questionSet.rejectedContributions || [];
             comments = questionSet.rejectedContributionComments || {};
             comments[this.questionId] = event.comment;
+            successMessage = _.get(this.configService, 'labelConfig.messages.success.039')
             break;
           default:
             break;
@@ -488,6 +486,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         questionIds.push(this.questionId);
         event['requestBody'] = this.prepareSourcingUpdateBody(questionIds, comments);
         this.editorService.updateCollection(this.questionSetId, event).subscribe(res => {
+          this.toasterService.success(successMessage);
           this.redirectToChapterList();
         })
       })
@@ -504,6 +503,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         };
         this.questionService.updateQuestion(this.questionId, requestObj).subscribe(res => {
+            this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.040'));
             this.redirectToChapterList();
         });
       }, (err: ServerResponse) => {
@@ -618,7 +618,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   saveQuestion() {
     if(_.get(this.creationContext, 'objectType') === 'question') {
-      if(_.get(this.creationContext, 'mode') === 'edit') {
+      if(this.creationMode === 'edit') {
         let callback = this.addResourceToQuestionset.bind(this);
         this.upsertQuestion(callback);
       }
@@ -1118,7 +1118,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   isEditable(fieldCode) {
-    if (this.creationContext && this.creationContext.mode === 'edit') {
+    if (this.creationMode === 'edit') {
       return true;
     }
     if (!this.questionId) {

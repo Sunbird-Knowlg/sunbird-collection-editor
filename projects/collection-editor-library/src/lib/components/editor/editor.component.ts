@@ -856,12 +856,12 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       interactionType = _.get(this.editorConfig, 'config.interactionType');
       questionCategory = _.get(this.editorConfig, 'config.questionCategory');
       this.creationContext =  {
+        mode: mode,
         objectType: this.objectType,
         collectionObjectType: _.get(this.editorConfig, 'context.collectionObjectType'),
         isReadOnlyMode: _.get(this.editorConfig, 'config.isReadOnlyMode'),
         unitIdentifier: _.get(this.editorConfig, 'context.unitIdentifier'),
         correctionComments: _.get(this.editorConfig, 'context.correctionComments'),
-        mode,
         editableFields: _.get(this.editorConfig, 'config.editableFields')
       };
     }
@@ -874,6 +874,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       setChildQueston:mode === 'edit' ? false : this.setChildQuestion,
       category: questionCategory,
       creationContext: this.creationContext, // Pass the creation context to the question-component
+      creationMode: mode
     };
 
     if(mode === 'edit'){

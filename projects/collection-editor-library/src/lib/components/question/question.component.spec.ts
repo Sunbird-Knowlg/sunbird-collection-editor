@@ -1078,6 +1078,8 @@ describe("QuestionComponent", () => {
         },
       },
     };
+    const toasterService = TestBed.get(ToasterService);
+    spyOn(toasterService, 'success').and.callFake(() => { });
     component.sourcingUpdate(data);
   });
 
@@ -1102,6 +1104,8 @@ describe("QuestionComponent", () => {
         },
       },
     };
+    const toasterService = TestBed.get(ToasterService);
+    spyOn(toasterService, 'success').and.callFake(() => { });
     component.sourcingUpdate(data);
     // expect(editorService.updateCollection).toHaveBeenCalledWith('do_11330102570702438417', { ...data, requestBody });
   });
@@ -1113,9 +1117,12 @@ describe("QuestionComponent", () => {
     );
     spyOn(editorService, "updateCollection").and.returnValue(of({}));
     component.creationContext = creationContextMock;
-    component.questionId = "do_11326368076523929611";
-    component.actionType = "sourcingApproveQuestion";
-    const data = { button: "sourcingApproveQuestion" };
+    component.questionId = 'do_11326368076523929611';
+    component.actionType = 'sourcingApproveQuestion';
+    const data = { button: 'sourcingApproveQuestion' };
+    spyOn(component, 'redirectToChapterList');
+    const toasterService = TestBed.get(ToasterService);
+    spyOn(toasterService, 'success').and.callFake(() => { });
     component.sourcingUpdate(data);
     expect(component.redirectToChapterList);
   });
@@ -1125,15 +1132,12 @@ describe("QuestionComponent", () => {
     });
     spyOn(editorService, "updateCollection").and.returnValue(of({}));
     component.creationContext = creationContextMock;
-    component.questionId = "do_11326368076523929611";
-    component.actionType = "sourcingRejectQuestion";
-    const data = {
-      button: "sourcingRejectQuestion",
-      comment: "test comment for rejection",
-    };
-    spyOn(editorService, "addResourceToQuestionset").and.returnValue(
-      throwError({})
-    );
+    component.questionId = 'do_11326368076523929611';
+    component.actionType = 'sourcingRejectQuestion';
+    const data = { button: 'sourcingRejectQuestion', comment: 'test comment for rejection' };
+    spyOn(component, 'redirectToChapterList');
+    const toasterService = TestBed.get(ToasterService);
+    spyOn(toasterService, 'success').and.callFake(() => { });
     component.sourcingUpdate(data);
     component.addResourceToQuestionset();
   });

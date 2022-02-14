@@ -311,8 +311,17 @@ describe('EditorComponent', () => {
           ]
         }
     }
-    // expect(component.creationContext).toEqual(expected_creationContext);
-    component.pageId='question'
+    expect(component.creationContext).toEqual(expected_creationContext);
+    expect(component.questionComponentInput).toEqual(
+      {
+        "questionSetId": "do_113431883451195392169",
+        "questionId": undefined,
+        "type": "default",
+        "category": "VSA",
+        "creationContext": expected_creationContext,
+        "creationMode": "edit"
+      }
+    );
     expect(component.pageId).toEqual('question');
   });
 
@@ -817,7 +826,16 @@ describe('EditorComponent', () => {
     const interactionType = 'choice';
     component.collectionId = 'do_123';
     component.redirectToQuestionTab(mode, interactionType);
-    component.setChildQuestion=false;
+    expect(component.questionComponentInput).toEqual(
+      {
+        questionSetId: component.collectionId,
+        questionId: undefined,
+        creationContext: undefined,
+        type: interactionType,
+        category: '',
+        creationMode: 'update'
+      }
+    );
     expect(component.pageId).toEqual('question');
   });
 
