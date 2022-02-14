@@ -7,9 +7,10 @@ In this guide you will get an overview of the contribution workflow of the edito
 ## Getting started
 
 #### Fork the project
-```
-https://github.com/Sunbird-Ed/sunbird-collection-editor.git
-```
+Go to GitHub and [fork the repository](https://github.com/Sunbird-Ed/sunbird-collection-editor.git).
+The forked repository will appear in your GitHub account as 
+
+`https://github.com/<YOUR-USERNAME>/sunbird-collection-editor`
 #### Clone the repository
 
 Now clone the forked repository to your machine. Go to your GitHub account, open the forked repository, click on the code button and then click the copy to clipboard icon.
@@ -41,12 +42,11 @@ npm run build-lib
 
 It will create a `/dist/collection-editor-library` folder at the root directory and also copy all the required assets.
 
-### Starting up the Sample application
+#### Starting up the sample application
 
 A sample angular application is included as part of this repo
-In another terminal tab -
 
-From the root directory - Start the server
+Open your terminal, then start the server
 
 
 ```
@@ -56,9 +56,9 @@ npm run start
 The demo app will launch at http://localhost:4200
 
 
-### Set the auth token and textbook identifier
+#### Set the auth token and content identifier
 
-From the root directory - go to `server.js` file
+Go to the root directory - Open `server.js` file
 
 
 Update the host variable to which env your pointing. example if you are pointing sunbird dev instance update variable like below
@@ -91,4 +91,6 @@ Run Node server to proxy the APIs (Open one more terminal in root folder and run
 nodemon server.js
 ```
 
-**Create a working branch and start with your changes!**
+#### Now make the changes. Stick to the code-style guidelines and remember about tests and 100% code coverage!
+#### Commit your changes and Push your changes to your forked repository
+#### Go to your forked repository on GitHub. Use the pull request button to create the pull request of your changes.
