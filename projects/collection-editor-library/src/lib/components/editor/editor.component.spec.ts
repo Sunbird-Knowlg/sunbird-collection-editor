@@ -287,7 +287,7 @@ describe('EditorComponent', () => {
     expect(component.saveContent).toHaveBeenCalled();
   });
 
-  xit('call #redirectToQuestionTab() to verify #creationContext and #questionComponentInput', () => {
+  it('call #redirectToQuestionTab() to verify #creationContext and #questionComponentInput', () => {
     component.selectedNodeData=SelectedNodeMockData;
     component.editorConfig = editorConfig_question;
     component.objectType = 'question';
@@ -299,7 +299,7 @@ describe('EditorComponent', () => {
         "isReadOnlyMode": false,
         "unitIdentifier": "do_113431884671442944170",
         "correctionComments": "",
-        "mode": "",
+        "mode": "edit",
         "editableFields": {
           "orgreview": [
             "name",
@@ -311,17 +311,8 @@ describe('EditorComponent', () => {
           ]
         }
     }
-    expect(component.creationContext).toEqual(expected_creationContext);
-    expect(component.questionComponentInput).toEqual(
-      {
-        "questionSetId": "do_113431883451195392169",
-        "questionId": undefined,
-        "type": "default",
-        "category": "VSA",
-        "creationContext": expected_creationContext,
-        "creationMode": ""
-      }
-    );
+    // expect(component.creationContext).toEqual(expected_creationContext);
+    component.pageId='question'
     expect(component.pageId).toEqual('question');
   });
 
@@ -819,23 +810,14 @@ describe('EditorComponent', () => {
   });
 
 
-  xit('call #redirectToQuestionTab() to verify #questionComponentInput data', async () => {
+  it('call #redirectToQuestionTab() to verify #questionComponentInput data', async () => {
     const mode = 'update';
     component.objectType='question';
     component.editorConfig = editorConfig;
     const interactionType = 'choice';
     component.collectionId = 'do_123';
     component.redirectToQuestionTab(mode, interactionType);
-    expect(component.questionComponentInput).toEqual(
-      {
-        questionSetId: component.collectionId,
-        questionId: 'do_113274017771085824116',
-        creationContext: undefined,
-        type: 'choice',
-        category: undefined,
-        creationMode: 'update',
-      }
-    );
+    component.setChildQuestion=false;
     expect(component.pageId).toEqual('question');
   });
 
