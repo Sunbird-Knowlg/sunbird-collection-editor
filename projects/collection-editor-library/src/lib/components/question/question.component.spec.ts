@@ -1078,6 +1078,8 @@ describe("QuestionComponent", () => {
         },
       },
     };
+    const toasterService = TestBed.get(ToasterService);
+    spyOn(toasterService, 'success').and.callFake(() => { });
     component.sourcingUpdate(data);
   });
 
@@ -1102,6 +1104,8 @@ describe("QuestionComponent", () => {
         },
       },
     };
+    const toasterService = TestBed.get(ToasterService);
+    spyOn(toasterService, 'success').and.callFake(() => { });
     component.sourcingUpdate(data);
     // expect(editorService.updateCollection).toHaveBeenCalledWith('do_11330102570702438417', { ...data, requestBody });
   });
@@ -1116,6 +1120,8 @@ describe("QuestionComponent", () => {
     component.questionId = "do_11326368076523929611";
     component.actionType = "sourcingApproveQuestion";
     const data = { button: "sourcingApproveQuestion" };
+    const toasterService = TestBed.get(ToasterService);
+    spyOn(toasterService, 'success').and.callFake(() => { });
     component.sourcingUpdate(data);
     expect(component.redirectToChapterList);
   });
