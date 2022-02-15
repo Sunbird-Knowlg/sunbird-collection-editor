@@ -83,19 +83,19 @@ Let's understand the description of the following properties:
 
 |Property Name	| Description | Required | Default Value
 |--|------------------------------------------------------------------------------------------|---|--|
-| `env` |  It is `string` and type of editor , in case of collection editor its `collection_editor` | true | `collection_editor OR questionset_editor` |
+| `env` |  It is `string` and Unique environment where the event has occured **For example:** in case of collection editor its `collection_editor` | true | `collection_editor OR questionset_editor` |
 | `sid` |  It is `string` and session id of the requestor stamped by portal **For example:** `vLpZ1rFl6-sxMVHi4RrmrlHw0HsX9ggC` | true |   |
-| `did` |  It is `string` and Unique id to identify the device or browser **For example:** `1d8e290dd3c2a6a9eeac58568cdef28d` | true |   |
+| `did` |  It is `string` and uuid of the device, created during app installation or browser **For example:** `1d8e290dd3c2a6a9eeac58568cdef28d` | true |   |
 | `uid` |  It is `string` and Current logged in user id **For example:** `5a587cc1-e018-4859-a0a8-e842650b9d64` | true |  |
 | `channel` |  It is `string` which defines channel identifier to know which channel is currently using. **For example:** `01309282781705830427` | true |  |
 | `pdata` |  It is an `object` which defines the producer information it should have identifier and version and canvas will log in the telemetry. **For example:** `{ id: 'local.sunbird.portal', ver: '4.1.0', pid: 'sunbird-portal' }`  | true | |
 | `contextRollup` |  It is an `object` which defines collection roll up data For example: `{ l1: 'do_1234567890' }` | true | |
-| `tags` |  It is an `object` which defines collection roll up data. For example: `['01307938306521497658']` | true |  |
+| `tags` |  It is an `object` and Encrypted dimension tags passed by respective channels. For example: `['01307938306521497658']` | true |  |
 | `identifier` |  It is `string` and Identifier of collection. | false | `''` |
 | `authToken` |  It is `string` and Auth key to make api calls. | false | `''` |
 | `cdata` |  It is an `array` which defines the correlation data | false | `[]` |
 | `timeDiff` |  It is `number` and timeDiff (in sec) is diff of server date and local date | false | `''` |
-| `objectRollup` |  It is an `object` which defines object rollup data (up to level 4) | false | `{}` |
+| `objectRollup` |  It is an `object` which defines object rollup data (Only 4 levels are allowed) | false | `{}` |
 | `host` |  It is `string` which defines the from which domain collection should be load. **For example:** `https://dev.sunbirded.org` | false | `''` |
 | `endpoint` |  It is `string` and Telemetry API endpoint. **For example:** `/data/v3/telemetry` | false | `''` |
 | `userData` |  It is `object` and first and last name of logged in user | false | `{}` |
