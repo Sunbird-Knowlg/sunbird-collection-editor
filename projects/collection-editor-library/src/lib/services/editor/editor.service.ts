@@ -130,6 +130,24 @@ export class EditorService {
     return this.publicDataService.get(req);
   }
 
+  deleteNodeFromHierarchy(data): Observable<any> {
+    const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
+    const hierarchyUrl = `${url.DELETENODE}`;
+    const req = {
+      url: hierarchyUrl,
+      data: {
+        request: {
+          questionset: {
+            rootId: data.orgId,
+            collectionId: data.collectionId,
+            children: [data.childernId],
+          },
+        },
+      },
+    };
+    return this.publicDataService.delete(req);
+  }
+
   fetchContentDetails(contentId) {
     const req = {
       url: _.get(this.configService.urlConFig, 'URLS.CONTENT.READ') + contentId

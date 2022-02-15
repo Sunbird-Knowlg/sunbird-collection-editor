@@ -271,7 +271,8 @@
          "035": "Unable to get pre_signed_url and Question bulk upload Failed, Please Try Again",
          "036": "Unable to upload to Blob and Question bulk upload Failed, Please Try Again",
          "037": "Unable to accepted question",
-         "038": "Please select the condition and option for the dependent question"
+         "038": "Please select the condition and option for the dependent question",
+         "039": "Dependent Children Found! Please Remove Children first and then remove parent"
       },
       "success": {
          "001": "Content is saved",

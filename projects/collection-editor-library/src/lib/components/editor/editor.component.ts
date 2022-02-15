@@ -761,19 +761,43 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   deleteNode() {
     const activeNode = this.treeService.getActiveNode();
-    delete this.formStatusMapper[activeNode.data.id];
-    const children = this.treeService.getChildren();
-    _.forEach(children, (node) => {
-      if (_.has(this.formStatusMapper, node.data.id)) {
-        delete this.formStatusMapper[node.data.id];
+    let orgId = _.get(this.editorConfig, 'context.identifier');
+    if (!_.isEqual(orgId,_.get(activeNode, 'data.metadata.parent'))) {
+      let param = {
+        orgId: orgId,
+        collectionId: _.get(activeNode, 'data.metadata.parent'),
+        childernId: _.get(activeNode, 'data.id'),
       }
-    });
-    this.treeService.removeNode();
-    this.updateSubmitBtnVisibility();
-    this.showDeleteConfirmationPopUp = false;
-    this.collectionTreeNodes.data.childNodes = _.filter(this.collectionTreeNodes.data.childNodes, (key) => {
-      return key !== activeNode.data.id;
-    });
+      this.editorService.deleteNodeFromHierarchy(param)
+        .subscribe((data: any) => {
+          this.deleteNodeFromTree(activeNode);
+          window.location.reload();
+        }, (err) => {
+          if (_.get(err, 'error.params.err') === 'ERR_BRANCHING_LOGIC') {
+            this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.039'));
+          }
+          this.showDeleteConfirmationPopUp = false;
+        })
+    }
+    else {
+      this.deleteNodeFromTree(activeNode)
+    }
+  }
+
+  deleteNodeFromTree(activeNode){
+    delete this.formStatusMapper[activeNode.data.id];
+        const children = this.treeService.getChildren();
+        _.forEach(children, (node) => {
+          if (_.has(this.formStatusMapper, node.data.id)) {
+            delete this.formStatusMapper[node.data.id];
+          }
+        });
+        this.treeService.removeNode();
+        this.updateSubmitBtnVisibility();
+        this.showDeleteConfirmationPopUp = false;
+        this.collectionTreeNodes.data.childNodes = _.filter(this.collectionTreeNodes.data.childNodes, (key) => {
+          return key !== activeNode.data.id;
+        });
   }
 
   updateSubmitBtnVisibility() {

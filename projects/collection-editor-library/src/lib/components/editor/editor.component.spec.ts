@@ -910,9 +910,46 @@ describe('EditorComponent', () => {
     spyOn(treeService, 'getFirstChild').and.callFake(() => {
       return { data: { metadata: treeData } };
     });
+    spyOn(editorService,'deleteNodeFromHierarchy').and.returnValue(of({}))
     spyOn(component, 'updateSubmitBtnVisibility');
     component.deleteNode();
     expect(treeService.removeNode).toHaveBeenCalled();
+    expect(component.updateSubmitBtnVisibility).toHaveBeenCalled();
+    expect(component.showDeleteConfirmationPopUp).toEqual(false);
+  });
+
+  it('#deleteNode() should set #showDeleteConfirmationPopUp false ap fails', () => {
+    component.collectionTreeNodes = {
+      data: {
+        childNodes: []
+      }
+    };
+    const treeService = TestBed.get(TreeService);
+    spyOn(treeService, 'getActiveNode').and.callFake(() => {
+      return {
+        data: {
+          id: 'do_113264100861919232115'
+        }
+      };
+    });
+    spyOn(treeService, 'getChildren').and.callFake(() => {
+      return [];
+    });
+    spyOn(treeService, 'removeNode').and.callFake(() => {
+      return true;
+    });
+    spyOn(treeService, 'getFirstChild').and.callFake(() => {
+      return { data: { metadata: treeData } };
+    });
+    component.editorConfig = editorConfig;
+    spyOn(component, 'updateSubmitBtnVisibility');
+    spyOn(editorService,'deleteNodeFromHierarchy').and.returnValue(throwError({}))
+    component.deleteNode();
+    component.deleteNodeFromTree({
+      data: {
+        id: 'do_113264100861919232115'
+      }
+    });
     expect(component.updateSubmitBtnVisibility).toHaveBeenCalled();
     expect(component.showDeleteConfirmationPopUp).toEqual(false);
   });
