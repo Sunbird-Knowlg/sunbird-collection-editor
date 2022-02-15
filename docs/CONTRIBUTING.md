@@ -56,7 +56,7 @@ npm run start
 The demo app will launch at http://localhost:4200
 
 
-#### Set the auth token and content identifier
+#### Set the auth token and collection identifier
 
 Go to the root directory - Open `server.js` file
 
@@ -69,13 +69,13 @@ const USER_TOKEN= 'YYYY'
 ```
 Note: You will need actual `API_AUTH_TOKEN` and `USER_TOKEN`
 
-If you are pointing to sunbird dev ([dev.sunbirded.org](https://dev.sunbirded.org/)), create a textbook in sunbird dev and set the do_id of textbook in `data.ts` file
+If you are pointing to sunbird dev ([dev.sunbirded.org](https://dev.sunbirded.org/)), create a collection in sunbird dev and set the do_id of created collection in `data.ts` file
 
 ```javascript
 export const collectionEditorConfig = {
   context: {
     ...
-    identifier: 'do_id', // identifier of textbook created in sunbird dev
+    identifier: 'do_id', // identifier of collection created in sunbird dev
     ...
   },
   config: {
