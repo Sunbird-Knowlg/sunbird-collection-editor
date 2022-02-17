@@ -36,7 +36,7 @@
         [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('mark_as_right_anwser','click',undefined,telemetryService.telemetryPageId,{answer:i.toString()})" />
         <label for="answer_{{ i + 1 }}" class="mr-0 fs-0-785">{{configService.labelConfig?.lbl?.correctAns}}</label>
       </div>
-      <div class="w-100">
+      <!-- <div class="w-100">
         <lib-question-option-sub-menu [subMenus]="subMenus[i]" (onChange)="subMenuChange($event,i)"></lib-question-option-sub-menu>
         <div *ngIf="parentMeta?.allowScoring">
           <label for="score" class="d-block mt-10 optionLabel">Score</label>
@@ -49,7 +49,7 @@
             [value]="mapping[i]?.outcomes?.score"
           />
         </div>
-      </div>
+      </div> -->
     </div>
     <div class="d-flex">
       <button *ngIf="editorState.options.length < 4"

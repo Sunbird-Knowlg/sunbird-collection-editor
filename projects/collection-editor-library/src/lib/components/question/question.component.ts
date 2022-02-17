@@ -142,6 +142,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.telemetryService.telemetryPageId = this.pageId;
     this.initialLeafFormConfig = _.cloneDeep(this.leafFormConfig);
     this.initialize();
+    console.log('rajnish');
     this.framework = _.get(this.editorService.editorConfig, 'context.framework');
   }
 
@@ -180,23 +181,23 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.editorService.fetchCollectionHierarchy(this.questionSetId).subscribe((response) => {
       this.questionSetHierarchy = _.get(response, 'result.questionSet');
       const parentId = this.editorService.parentIdentifier ? this.editorService.parentIdentifier : this.questionId;
-      if (parentId) {
-        this.getParentQuestionOptions(parentId);
-        const sectionData = this.treeService.getNodeById(parentId);
-        const childerns = _.get(response, 'result.questionSet.children');
-        this.sectionPrimaryCategory = _.get(response, 'result.questionSet.primaryCategory');
-        this.selectedSectionId = _.get(sectionData, 'data.metadata.parent');
-        _.forEach(childerns, (data) => {
-          if (data.identifier === this.selectedSectionId) {
-            this.branchingLogic = data?.branchingLogic ? data?.branchingLogic : {};
-            if (_.get(data?.branchingLogic, `${this.questionId}.source[0]`)) {
-              this.isChildQuestion = true;
-              this.getParentQuestionOptions(data.branchingLogic[this.questionId].source[0]);
-              this.setCondition(data);
-            }
-          }
-        });
-      }
+      // if (parentId) {
+      //   this.getParentQuestionOptions(parentId);
+      //   const sectionData = this.treeService.getNodeById(parentId);
+      //   const childerns = _.get(response, 'result.questionSet.children');
+      //   this.sectionPrimaryCategory = _.get(response, 'result.questionSet.primaryCategory');
+      //   this.selectedSectionId = _.get(sectionData, 'data.metadata.parent');
+      //   _.forEach(childerns, (data) => {
+      //     if (data.identifier === this.selectedSectionId) {
+      //       this.branchingLogic = data?.branchingLogic ? data?.branchingLogic : {};
+      //       if (_.get(data?.branchingLogic, `${this.questionId}.source[0]`)) {
+      //         this.isChildQuestion = true;
+      //         this.getParentQuestionOptions(data.branchingLogic[this.questionId].source[0]);
+      //         this.setCondition(data);
+      //       }
+      //     }
+      //   });
+      // }
 
       const leafFormConfigFields = _.join(_.map(this.questionFormConfig, value => (value.code)), ',');
       if (!_.isUndefined(this.questionId)) {
