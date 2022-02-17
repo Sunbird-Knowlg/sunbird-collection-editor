@@ -538,7 +538,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.questionInteractionType === 'choice') {
       const optionValid = _.find(this.editorState.options, option =>
         (option.body === undefined || option.body === '' || option.length > this.setCharacterLimit));
-      if (optionValid || (!this.editorState.answer && this.sourcingSettings.enforceCorrectAnswer)) {
+      if (optionValid || (!this.editorState.answer && this.sourcingSettings?.enforceCorrectAnswer)) {
         this.showFormError = true;
         return;
       } else {

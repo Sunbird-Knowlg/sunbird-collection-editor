@@ -285,7 +285,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     const formsConfigObj = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms');
     this.unitFormConfig = _.get(formsConfigObj, 'unitMetadata.properties');
     this.rootFormConfig = _.get(formsConfigObj, 'create.properties');
-    let formData=this.rootFormConfig[0].fields;
+    let formData;
+    if (this.rootFormConfig.length) {
+      formData = this.rootFormConfig[0].fields || [];
+    }
     formData.forEach((field) => {
       if (field.code === 'evidenceMimeType') {
         evidenceMimeType = field.range;
@@ -435,7 +438,14 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.publishContent(event);
         break;
       case 'onFormStatusChange':
-        this.onFormStatusChange(event.event);
+        // this.onFormStatusChange(event.event);
+        // if (this.isObjectTypeCollection) {
+        //   this.handleCsvDropdownOptionsOnCollection();
+        // }
+        const selectedNode = this.treeService.getActiveNode();
+        if (selectedNode && selectedNode.data.id) {
+          this.formStatusMapper[selectedNode.data.id] = event.event.isValid;
+        }
         if (this.isObjectTypeCollection) {
           this.handleCsvDropdownOptionsOnCollection();
         }
@@ -733,7 +743,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.setChildQuestion = event.isChildQuestion;
         if (this.editorService.checkIfContentsCanbeAdded()) {
           this.buttonLoaders.addFromLibraryButtonLoader = true;
-          this.templateList=this.editorService.templateList;
+          this.templateList = this.editorService.templateList;
           this.saveContent().then((message: string) => {
             this.buttonLoaders.addFromLibraryButtonLoader = false;
             this.showQuestionTemplatePopup = true;
@@ -756,7 +766,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         _.get(this.editorService.editorConfig.config, `hierarchy.level${this.selectedNodeData.getLevel() - 1}.children`)
       );
     }
-    this.editorService.templateList=this.templateList;
+    this.editorService.templateList = this.templateList;
   }
 
   deleteNode() {
@@ -807,7 +817,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.editorService.getCategoryDefinition(selectedQuestionType, null, 'Question')
     .subscribe((res) => {
       const selectedtemplateDetails = res.result.objectCategoryDefinition;
-      this.editorService.selectedChildren['label']=selectedtemplateDetails.label;
+      this.editorService.selectedChildren.label = selectedtemplateDetails.label;
       const selectedTemplateFormFields = _.get(selectedtemplateDetails, 'forms.create.properties');
       if (!_.isEmpty(selectedTemplateFormFields)) {
         const questionCategoryConfig = selectedTemplateFormFields;
@@ -821,8 +831,11 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.leafFormConfig = questionCategoryConfig;
       }
 
-      const catMetaData = _.get(selectedtemplateDetails,'objectMetadata');
-      this.sourcingSettings = _.get(catMetaData,'config.sourcingSettings');
+      const catMetaData = _.get(selectedtemplateDetails, 'objectMetadata');
+      this.sourcingSettings = _.get(catMetaData, 'config.sourcingSettings') || {};
+      if (!_.has(this.sourcingSettings, 'enforceCorrectAnswer')) {
+        this.sourcingSettings.enforceCorrectAnswer = true;
+      }
       if (_.isEmpty(_.get(catMetaData, 'schema.properties.interactionTypes.items.enum'))) {
         // this.toasterService.error(this.resourceService.messages.emsg.m0026);
         this.editorService.selectedChildren = {
@@ -840,7 +853,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         };
         this.redirectToQuestionTab(undefined, interactionTypes[0]);
       }
-    },(error) => {
+    }, (error) => {
       const errInfo = {
         errorMsg: _.get(this.configService, 'labelConfig.messages.error.006'),
       };
@@ -871,21 +884,22 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       questionSetId: this.collectionId,
       questionId: mode === 'edit' ? this.selectedNodeData.data.metadata.identifier : questionId,
       type: interactionType,
-      setChildQueston:mode === 'edit' ? false : this.setChildQuestion,
+      setChildQueston: mode === 'edit' ? false : this.setChildQuestion,
       category: questionCategory,
       creationContext: this.creationContext, // Pass the creation context to the question-component
       creationMode: mode
     };
 
-    if(mode === 'edit'){
+    if (mode === 'edit') {
       this.editorService.selectedChildren = {
         primaryCategory: this.selectedNodeData.data.metadata.primaryCategory,
-        interactionType: this.selectedNodeData.data.metadata.interactionTypes[0]
+        // tslint:disable-next-line:object-literal-shorthand
+        interactionType: interactionType
       };
       this.editorService.getCategoryDefinition(this.selectedNodeData.data.metadata.primaryCategory, null, 'Question')
       .subscribe((res) => {
         const selectedtemplateDetails = res.result.objectCategoryDefinition;
-        this.editorService.selectedChildren['label']=selectedtemplateDetails.label;
+        this.editorService.selectedChildren.label = selectedtemplateDetails.label;
         const selectedTemplateFormFields = _.get(selectedtemplateDetails, 'forms.create.properties');
         if (!_.isEmpty(selectedTemplateFormFields)) {
           const questionCategoryConfig = selectedTemplateFormFields;
@@ -899,16 +913,18 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           this.leafFormConfig = questionCategoryConfig;
         }
         const catMetaData = selectedtemplateDetails.objectMetadata;
-        this.sourcingSettings = catMetaData.config.sourcingSettings;
+        this.sourcingSettings = catMetaData?.config?.sourcingSettings || {};
+        if (!_.has(this.sourcingSettings, 'enforceCorrectAnswer')) {
+          this.sourcingSettings.enforceCorrectAnswer = true;
+        }
         this.pageId = 'question';
-      },(error) => {
+      }, (error) => {
         const errInfo = {
           errorMsg: _.get(this.configService, 'labelConfig.messages.error.006'),
         };
         return throwError(this.editorService.apiErrorHandling(error, errInfo))
       });
-    }
-    else{
+    } else {
     this.pageId = 'question';
     }
   }
@@ -1059,14 +1075,14 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
-  setEcm(control, depends: FormControl[], formGroup: FormGroup, loading, loaded){
+  setEcm(control, depends: FormControl[], formGroup: FormGroup, loading, loaded) {
     control.isVisible = 'no';
     control.options = ecm;
     return merge(..._.map(depends, depend => depend.valueChanges)).pipe(
         switchMap((value: any) => {
             if (!_.isEmpty(value) && _.toLower(value) === 'yes') {
                 control.isVisible = 'yes';
-                return of({options:ecm});
+                return of({options: ecm});
             } else {
                 control.isVisible = 'no';
                 return of(null);
