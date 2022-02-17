@@ -438,14 +438,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.publishContent(event);
         break;
       case 'onFormStatusChange':
-        // this.onFormStatusChange(event.event);
-        // if (this.isObjectTypeCollection) {
-        //   this.handleCsvDropdownOptionsOnCollection();
-        // }
-        const selectedNode = this.treeService.getActiveNode();
-        if (selectedNode && selectedNode.data.id) {
-          this.formStatusMapper[selectedNode.data.id] = event.event.isValid;
-        }
+        this.onFormStatusChange(event.event);
         if (this.isObjectTypeCollection) {
           this.handleCsvDropdownOptionsOnCollection();
         }
