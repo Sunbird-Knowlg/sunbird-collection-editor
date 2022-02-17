@@ -875,7 +875,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.questionComponentInput = {
       ...this.questionComponentInput,
       questionSetId: this.collectionId,
-      questionId: mode === 'edit' ? this.selectedNodeData.data.metadata.identifier : questionId,
+      questionId: this.selectedNodeData?.data?.metadata?.identifier || questionId,
       type: interactionType,
       setChildQueston: mode === 'edit' ? false : this.setChildQuestion,
       category: questionCategory,
@@ -883,7 +883,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       creationMode: mode
     };
 
-    if (mode === 'edit') {
+    if (mode === 'edit' && !_.isEmpty(this.selectedNodeData)) {
       this.editorService.selectedChildren = {
         primaryCategory: this.selectedNodeData.data.metadata.primaryCategory,
         // tslint:disable-next-line:object-literal-shorthand

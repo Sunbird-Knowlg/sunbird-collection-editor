@@ -182,21 +182,22 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       const parentId = this.editorService.parentIdentifier ? this.editorService.parentIdentifier : this.questionId;
       if (parentId) {
         this.getParentQuestionOptions(parentId);
-      }
-      const sectionData = this.treeService.getNodeById(parentId);
-      const childerns = _.get(response, 'result.questionSet.children');
-      this.sectionPrimaryCategory = _.get(response, 'result.questionSet.primaryCategory');
-      this.selectedSectionId = _.get(sectionData, 'data.metadata.parent');
-      _.forEach(childerns, (data) => {
-        if (data.identifier === this.selectedSectionId) {
-          this.branchingLogic = data?.branchingLogic ? data?.branchingLogic : {};
-          if (_.get(data?.branchingLogic, `${this.questionId}.source[0]`)) {
-            this.isChildQuestion = true;
-            this.getParentQuestionOptions(data.branchingLogic[this.questionId].source[0]);
-            this.setCondition(data);
+        const sectionData = this.treeService.getNodeById(parentId);
+        const childerns = _.get(response, 'result.questionSet.children');
+        this.sectionPrimaryCategory = _.get(response, 'result.questionSet.primaryCategory');
+        this.selectedSectionId = _.get(sectionData, 'data.metadata.parent');
+        _.forEach(childerns, (data) => {
+          if (data.identifier === this.selectedSectionId) {
+            this.branchingLogic = data?.branchingLogic ? data?.branchingLogic : {};
+            if (_.get(data?.branchingLogic, `${this.questionId}.source[0]`)) {
+              this.isChildQuestion = true;
+              this.getParentQuestionOptions(data.branchingLogic[this.questionId].source[0]);
+              this.setCondition(data);
+            }
           }
-        }
-      });
+        });
+      }
+
       const leafFormConfigFields = _.join(_.map(this.questionFormConfig, value => (value.code)), ',');
       if (!_.isUndefined(this.questionId)) {
         this.questionService.readQuestion(this.questionId, leafFormConfigFields)
