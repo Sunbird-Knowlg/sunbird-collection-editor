@@ -810,7 +810,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.editorService.getCategoryDefinition(selectedQuestionType, null, 'Question')
     .subscribe((res) => {
       const selectedtemplateDetails = res.result.objectCategoryDefinition;
-      this.editorService.selectedChildren.label = selectedtemplateDetails.label;
+      this.editorService.selectedChildren['label']=selectedtemplateDetails.label;
       const selectedTemplateFormFields = _.get(selectedtemplateDetails, 'forms.create.properties');
       if (!_.isEmpty(selectedTemplateFormFields)) {
         const questionCategoryConfig = selectedTemplateFormFields;
@@ -846,7 +846,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         };
         this.redirectToQuestionTab(undefined, interactionTypes[0]);
       }
-    }, (error) => {
+    },(error) => {
       const errInfo = {
         errorMsg: _.get(this.configService, 'labelConfig.messages.error.006'),
       };
@@ -875,24 +875,23 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.questionComponentInput = {
       ...this.questionComponentInput,
       questionSetId: this.collectionId,
-      questionId: this.selectedNodeData?.data?.metadata?.identifier || questionId,
+      questionId: mode === this.selectedNodeData?.data?.metadata?.identifier || questionId,
       type: interactionType,
-      setChildQueston: mode === 'edit' ? false : this.setChildQuestion,
+      setChildQueston:mode === 'edit' ? false : this.setChildQuestion,
       category: questionCategory,
       creationContext: this.creationContext, // Pass the creation context to the question-component
       creationMode: mode
     };
 
-    if (mode === 'edit' && !_.isEmpty(this.selectedNodeData)) {
+    if(mode === 'edit' && !_.isEmpty(this.selectedNodeData)){
       this.editorService.selectedChildren = {
-        primaryCategory: this.selectedNodeData.data.metadata.primaryCategory,
-        // tslint:disable-next-line:object-literal-shorthand
-        interactionType: interactionType
+        primaryCategory: _.get(this.selectedNodeData, 'data.metadata.primaryCategory'),
+        interactionType: _.get(this.selectedNodeData, 'data.metadata.interactionTypes[0]')
       };
       this.editorService.getCategoryDefinition(this.selectedNodeData.data.metadata.primaryCategory, null, 'Question')
       .subscribe((res) => {
         const selectedtemplateDetails = res.result.objectCategoryDefinition;
-        this.editorService.selectedChildren.label = selectedtemplateDetails.label;
+        this.editorService.selectedChildren['label']=selectedtemplateDetails.label;
         const selectedTemplateFormFields = _.get(selectedtemplateDetails, 'forms.create.properties');
         if (!_.isEmpty(selectedTemplateFormFields)) {
           const questionCategoryConfig = selectedTemplateFormFields;
@@ -911,13 +910,14 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           this.sourcingSettings.enforceCorrectAnswer = true;
         }
         this.pageId = 'question';
-      }, (error) => {
+      },(error) => {
         const errInfo = {
           errorMsg: _.get(this.configService, 'labelConfig.messages.error.006'),
         };
         return throwError(this.editorService.apiErrorHandling(error, errInfo))
       });
-    } else {
+    }
+    else{
     this.pageId = 'question';
     }
   }

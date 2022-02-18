@@ -142,7 +142,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.telemetryService.telemetryPageId = this.pageId;
     this.initialLeafFormConfig = _.cloneDeep(this.leafFormConfig);
     this.initialize();
-    console.log('rajnish');
     this.framework = _.get(this.editorService.editorConfig, 'context.framework');
   }
 
@@ -181,25 +180,26 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.editorService.fetchCollectionHierarchy(this.questionSetId).subscribe((response) => {
       this.questionSetHierarchy = _.get(response, 'result.questionSet');
       const parentId = this.editorService.parentIdentifier ? this.editorService.parentIdentifier : this.questionId;
-      // if (parentId) {
-      //   this.getParentQuestionOptions(parentId);
-      //   const sectionData = this.treeService.getNodeById(parentId);
-      //   const childerns = _.get(response, 'result.questionSet.children');
-      //   this.sectionPrimaryCategory = _.get(response, 'result.questionSet.primaryCategory');
-      //   this.selectedSectionId = _.get(sectionData, 'data.metadata.parent');
-      //   _.forEach(childerns, (data) => {
-      //     if (data.identifier === this.selectedSectionId) {
-      //       this.branchingLogic = data?.branchingLogic ? data?.branchingLogic : {};
-      //       if (_.get(data?.branchingLogic, `${this.questionId}.source[0]`)) {
-      //         this.isChildQuestion = true;
-      //         this.getParentQuestionOptions(data.branchingLogic[this.questionId].source[0]);
-      //         this.setCondition(data);
-      //       }
-      //     }
-      //   });
-      // }
+      /*
+      if (parentId) {
+        this.getParentQuestionOptions(parentId);
+        const sectionData = this.treeService.getNodeById(parentId);
+        const childerns = _.get(response, 'result.questionSet.children');
+        this.sectionPrimaryCategory = _.get(response, 'result.questionSet.primaryCategory');
+        this.selectedSectionId = _.get(sectionData, 'data.metadata.parent');
+        _.forEach(childerns, (data) => {
+          if (data.identifier === this.selectedSectionId) {
+            this.branchingLogic = data?.branchingLogic ? data?.branchingLogic : {};
+            if (_.get(data?.branchingLogic, `${this.questionId}.source[0]`)) {
+              this.isChildQuestion = true;
+              this.getParentQuestionOptions(data.branchingLogic[this.questionId].source[0]);
+              this.setCondition(data);
+            }
+          }
+        });
+      } */
 
-      const leafFormConfigFields = _.join(_.map(this.questionFormConfig, value => (value.code)), ',');
+      const leafFormConfigFields = _.join(_.map(this.leafFormConfig, value => (value.code)), ',');
       if (!_.isUndefined(this.questionId)) {
         this.questionService.readQuestion(this.questionId, leafFormConfigFields)
           .subscribe((res) => {
@@ -242,15 +242,15 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
                 const responseDeclaration = this.questionMetaData.responseDeclaration;
                 this.scoreMapping = _.get(responseDeclaration, 'response1.mapping');
                 const templateId = this.questionMetaData.templateId;
-                const numberOfOptions = this.questionMetaData.editorState.options.length;
+                const numberOfOptions = this.questionMetaData?.editorState?.options?.length || 0;
                 this.editorService.optionsLength = numberOfOptions;
-                const options = _.map(this.questionMetaData.editorState.options, option => ({ body: option.value.body }));
-                const question = this.questionMetaData.editorState.question;
-                const interactions = this.questionMetaData.interactions;
+                const options = _.map(this.questionMetaData?.editorState?.options, option => ({ body: option.value.body }));
+                const question = this.questionMetaData?.editorState?.question;
+                const interactions = this.questionMetaData?.interactions;
                 this.editorState = new McqForm({
                   question, options, answer: _.get(responseDeclaration, 'response1.correctResponse.value')
                 }, { templateId, numberOfOptions });
-                this.editorState.solutions = this.questionMetaData.editorState.solutions;
+                this.editorState.solutions = this.questionMetaData?.editorState?.solutions;
                 this.editorState.interactions = interactions;
               }
               this.setQuestionTitle(this.questionId);
