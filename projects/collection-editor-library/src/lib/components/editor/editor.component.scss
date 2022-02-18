@@ -78,7 +78,7 @@ lib-editor {
         padding: 12px 8px !important;
       }
       .list-border {
-        margin-top: 14px !important;
+        margin-top: 2px !important;
         min-height: 43px !important;
         height: inherit !important;
         padding: 5px 8px !important;
@@ -144,6 +144,18 @@ lib-editor {
           padding: 0;
         }
       }
+      .textbox {
+        .sb-textarea-container {
+          .sb-textarea {
+            height: 10rem !important;
+            padding-top: 0.5rem !important;
+          }
+          label {
+            padding: 0;
+          }
+        }
+      }
+
       .sb-textarea-container {
         .sb-textarea {
           height: 2.9rem;
@@ -153,6 +165,7 @@ lib-editor {
           padding: 0;
         }
       }
+
       .sb-checkbox {
         padding: 0;
         margin-top: 0;
