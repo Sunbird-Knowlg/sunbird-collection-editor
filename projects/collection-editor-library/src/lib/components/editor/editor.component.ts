@@ -875,7 +875,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.questionComponentInput = {
       ...this.questionComponentInput,
       questionSetId: this.collectionId,
-      questionId: mode === this.selectedNodeData?.data?.metadata?.identifier || questionId,
+      questionId: questionId,
       type: interactionType,
       setChildQueston:mode === 'edit' ? false : this.setChildQuestion,
       category: questionCategory,
