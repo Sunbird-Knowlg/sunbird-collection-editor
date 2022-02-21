@@ -193,3 +193,84 @@ Description of the properties for the config:
 | `showAddCollaborator` |  It is `boolen` and this is to enable/disable the functionality of add collaborator in editor. If it is true add collobrorator button will be enabled and created can add the collolaborator to collaborate in textbook.  | false | `false` |
 | `assetConfig` |  It is an `object` and `assetConfig` sets the max size limit and type for image and videos to be uploaded in the editor.  **For example:** `{ "image": { "size": "1", "sizeType": "MB", "accepted": "png, jpeg" }, "video": { "size": "50", "sizeType": "MB", "accepted": "mp4, webm" } }` | false | `{}` |
 | `hierarchy` |  It is an `object` and If maxdepth is > 0 then hierarchy should have definiton of the levels. **For example:** `{ level1: { name: 'Textbook Unit', type: 'Unit', mimeType: 'application/vnd.ekstep.content-collection', contentType: 'TextBookUnit', primaryCategory: 'Textbook Unit', iconClass: 'fa fa-folder-o', children: { Content: [ 'Explanation Content', 'Learning Resource' ] } }}`  | false | `{}` |
+
+Following are the configuration for different types of collections. 
+
+**1. Digital Textbook**
+```json
+{
+  "maxDepth": 2,
+  "objectType": "Collection",
+  "primaryCategory": "Digital Textbook",
+  "isRoot": true,
+  "iconClass": "fa fa-book",
+  "children": {},
+  "hierarchy": {
+    "level1": {
+      "name": "Chapter",
+      "type": "unit",
+      "mimeType": "application/vnd.ekstep.content-collection",
+      "contentType": "Textbook Unit",
+      "iconClass": "fa fa-folder-o",
+      "children": {}
+    },
+    "level2": {
+      "name": "Sub-Chapter",
+      "type": "unit",
+      "mimeType": "application/vnd.ekstep.content-collection",
+      "contentType": "Textbook Unit",
+      "iconClass": "fa fa-folder-o",
+      "children": {
+        "Content": []
+      }
+    }
+  }
+}
+```
+
+**2. Course**
+```json
+{
+  "maxDepth": 2,
+  "objectType": "Collection",
+  "primaryCategory": "Course",
+  "isRoot": true,
+  "iconClass": "fa fa-book",
+  "children": {},
+  "hierarchy": {
+    "level1": {
+      "name": "Chapter",
+      "type": "unit",
+      "mimeType": "application/vnd.ekstep.content-collection",
+      "contentType": "Course Unit",
+      "iconClass": "fa fa-folder-o",
+      "children": {}
+    },
+    "level2": {
+      "name": "Sub-Chapter",
+      "type": "unit",
+      "mimeType": "application/vnd.ekstep.content-collection",
+      "contentType": "Course Unit",
+      "iconClass": "fa fa-folder-o",
+      "children": {
+        "Content": [
+          "Explanation Content",
+          "Learning Resource",
+          "eTextbook",
+          "Teacher Resource",
+          "Course Assessment"
+        ],
+        "QuestionSet": [
+          "Practice Question Set"
+        ]
+      }
+    }
+  }
+}
+```
+
+
+### References:
+
+https://project-sunbird.atlassian.net/wiki/spaces/SingleSource/pages/2696183813/How+to+configure+forms+in+primaryCategory#Overview
+https://project-sunbird.atlassian.net/wiki/spaces/SingleSource/pages/2118451214/Editor+Generalisation+Configurations
