@@ -61,15 +61,15 @@ For more reference Check compatibility document for ng-bootstrap [here](https://
 
 After installing the above dependencies, now we have to copy the required assets from the given folder to the assets folder of your angular application. It contains styles and plugins.
 
-- Copy the assets from: [assets](https://github.com/Sunbird-Ed/sunbird-collection-editor/tree/release-4.7.0/src/assets)
+- Copy the assets from: [assets](https://github.com/Sunbird-Ed/sunbird-collection-editor/tree/release-4.8.0/src/assets)
 
 <img width="320" alt="image" src="https://user-images.githubusercontent.com/36467967/154430084-44060eda-97a9-4fd4-a3c0-06364a8ba86f.png">
 
-- Create a latexService.js in the root folder. Refer: [latexService.js](https://github.com/Sunbird-Ed/sunbird-collection-editor/blob/release-4.7.0/latexService.js)
+- Create a latexService.js in the root folder. Refer: [latexService.js](https://github.com/Sunbird-Ed/sunbird-collection-editor/blob/release-4.8.0/latexService.js)
 
-- Create a proxy.conf.json in the root folder. Refer: [proxy.conf.json](https://github.com/Sunbird-Ed/sunbird-collection-editor/blob/release-4.7.0/proxy.conf.json)
+- Create a proxy.conf.json in the root folder. Refer: [proxy.conf.json](https://github.com/Sunbird-Ed/sunbird-collection-editor/blob/release-4.8.0/proxy.conf.json)
 
-- Create server.js in the root folder. Refer: [server.js](https://github.com/Sunbird-Ed/sunbird-collection-editor/blob/release-4.7.0/server.js) 
+- Create server.js in the root folder. Refer: [server.js](https://github.com/Sunbird-Ed/sunbird-collection-editor/blob/release-4.8.0/server.js) 
 
 
 ## :label: Step 3: Include the styles, scripts and assets in angular.json
@@ -218,9 +218,9 @@ Add the <lib-editor> tag to the `app.component.html` like so:
 
 ## :label: Step 6: Send input to render Collection Editor
 
-Create a data.ts file which contains the `collectionEditorConfig`   Refer: [data.ts](https://github.com/Sunbird-Ed/sunbird-collection-editor/blob/release-4.7.0/src/app/data.ts)
+Create a data.ts file which contains the `collectionEditorConfig`   Refer: [data.ts](https://github.com/Sunbird-Ed/sunbird-collection-editor/blob/release-4.8.0/src/app/data.ts)
 
-(Note: `data.ts` contains the mock config used in component to send it as input to collection Editor. We need only [collectionEditorConfig](https://github.com/Sunbird-Ed/sunbird-collection-editor/blob/release-4.7.0/src/app/data.ts#L143).Use the mock config in your component to send input to collection editor as `editorConfig`)  
+(Note: `data.ts` contains the mock config used in component to send it as input to collection Editor. We need only [collectionEditorConfig](https://github.com/Sunbird-Ed/sunbird-collection-editor/blob/release-4.8.0/src/app/data.ts#L143).Use the mock config in your component to send input to collection editor as `editorConfig`)  
 
 **app.component.ts**
 ```diff
