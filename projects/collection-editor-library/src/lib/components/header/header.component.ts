@@ -56,6 +56,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
 
   async handleActionButtons() {
     this.visibility = {};
+    this.visibility.editContent = this.editorService.editorMode === 'edit';
     this.visibility.saveContent = this.editorService.editorMode === 'edit';
     this.visibility.submitContent = this.editorService.editorMode === 'edit';
     this.visibility.rejectContent = this.editorService.editorMode === 'review' || this.editorService.editorMode === 'orgreview';
