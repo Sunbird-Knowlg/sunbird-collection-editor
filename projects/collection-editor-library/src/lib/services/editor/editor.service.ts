@@ -26,6 +26,7 @@ export class EditorService {
   private _editorConfig: IEditorConfig;
   private _editorMode = 'edit';
   public showLibraryPage: EventEmitter<number> = new EventEmitter();
+  public showQuestionLibraryPage: EventEmitter<number> = new EventEmitter();
   private _bulkUploadStatus$ = new BehaviorSubject<any>(undefined);
   public readonly bulkUploadStatus$: Observable<any> = this._bulkUploadStatus$;
   public contentsCount = 0;
@@ -90,6 +91,12 @@ export class EditorService {
   }
   getshowLibraryPageEmitter() {
     return this.showLibraryPage;
+  }
+  emitshowQuestionLibraryPageEvent(page) {
+    this.showQuestionLibraryPage.emit(page);
+  }
+  getshowQuestionLibraryPageEmitter() {
+    return this.showQuestionLibraryPage;
   }
 
   getQuestionList(questionIds: string[]): Observable<any> {
@@ -279,16 +286,20 @@ export class EditorService {
     const req = {
       url: _.get(this.configService.urlConFig, 'URLS.QuestionSet.ADD'),
       data: {
-        'request': {
-          'questionset': {
-            'rootId': collection,
-            'collectionId': unitIdentifier,
-            'children': [contentId]
+        request: {
+          questionset: {
+            rootId: collection,
+            collectionId: unitIdentifier,
+            children: [contentId]
           }
         }
       }
     };
     return this.publicDataService.patch(req);
+  }
+
+  addQuestionsToQuestionset(request) {
+    return this.publicDataService.patch(request);
   }
 
   public getQuestionStream$() {

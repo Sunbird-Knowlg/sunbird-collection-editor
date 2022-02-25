@@ -49,18 +49,20 @@ import { TranslationsComponent } from './components/translations/translations.co
 import { PublishChecklistComponent } from './components/publish-checklist/publish-checklist.component';
 import { BulkUploadComponent  } from './components/bulk-upload/bulk-upload.component';
 import { RelationalMetadataComponent } from './components/relational-metadata/relational-metadata.component';
+import { ResourceLibraryModule } from '@project-sunbird/sunbird-resource-library';
 import { AppLoaderComponent } from './components/app-loader/app-loader.component';
 @NgModule({
-  declarations: [CollectionEditorLibraryComponent, InterpolatePipe, SanitizeHtmlPipe, ContentplayerPageComponent, EditorComponent, QumlplayerPageComponent,
-    HeaderComponent, FancyTreeComponent, MetaFormComponent, LibraryComponent, LibraryFilterComponent, LibraryListComponent,
-    QuestionComponent, OptionsComponent, AnswerComponent, CkeditorToolComponent,
+  declarations: [CollectionEditorLibraryComponent, InterpolatePipe, SanitizeHtmlPipe, ContentplayerPageComponent,
+    EditorComponent, QumlplayerPageComponent, HeaderComponent, FancyTreeComponent, MetaFormComponent, LibraryComponent,
+    LibraryFilterComponent, LibraryListComponent, QuestionComponent, OptionsComponent, AnswerComponent, CkeditorToolComponent,
     LibraryPlayerComponent, ResourceReorderComponent, SkeletonLoaderComponent, TemplateComponent, DateFormatPipe,
     TelemetryInteractDirective, AssetBrowserComponent, CollectionIconComponent,
     QumlPlayerComponent, DialcodeComponent, BulkUploadComponent, CsvUploadComponent, ManageCollaboratorComponent,
-    PublishChecklistComponent, QuestionOptionSubMenuComponent, SliderComponent, TranslationsComponent,AppLoaderComponent, RelationalMetadataComponent],
+    PublishChecklistComponent, QuestionOptionSubMenuComponent, SliderComponent, TranslationsComponent,AppLoaderComponent,
+    RelationalMetadataComponent],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule.forChild([]), SuiModule,
   CommonFormElementsModule, InfiniteScrollModule, HttpClientModule, SunbirdPdfPlayerModule, SunbirdVideoPlayerModule,
-  QumlLibraryModule, CarouselModule, SunbirdEpubPlayerModule],
+  QumlLibraryModule, CarouselModule, SunbirdEpubPlayerModule, ResourceLibraryModule],
   providers: [
     CacheService,
     { provide: CacheStorageAbstract, useClass: CacheSessionStorage },
