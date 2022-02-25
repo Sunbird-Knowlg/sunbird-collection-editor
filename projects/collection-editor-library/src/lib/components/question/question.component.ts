@@ -323,7 +323,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         break;
       case 'showTranslation':
         this.showTranslation = true;
-        break;  
+        break;
       case 'submitQuestion':
         this.submitHandler();
         break;
@@ -387,26 +387,32 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   sendForReview() {
-    let callback = function () {
-      this.editorService.reviewContent(this.questionId).subscribe(data => {
-        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.002'));
-        this.redirectToChapterList();
-      }, err => {
-        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.002'));
-      });
-    };
-    if (!this.questionId) {
-      callback = function () {
+    if (!_.get(this.editorService.editorConfig, 'config.skipTwoLevelReview')) {
+      let callback = function () {
         this.editorService.reviewContent(this.questionId).subscribe(data => {
           this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.002'));
-          this.addResourceToQuestionset();
+          this.redirectToChapterList();
         }, err => {
           this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.002'));
         });
       };
+      if (!this.questionId) {
+        callback = function () {
+          this.editorService.reviewContent(this.questionId).subscribe(data => {
+            this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.002'));
+            this.addResourceToQuestionset();
+          }, err => {
+            this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.002'));
+          });
+        };
+      }
+      callback = callback.bind(this);
+      this.upsertQuestion(callback);
     }
-    callback = callback.bind(this);
-    this.upsertQuestion(callback);
+    else {
+      //this.saveQuestion()
+      this.sendQuestionForPublish({})
+    }
   }
 
   requestForChanges(comment) {
