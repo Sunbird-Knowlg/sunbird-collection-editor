@@ -257,6 +257,8 @@ export const questionSetEditorConfig = {
   },
   config: {
     mode: 'edit', // edit / review / read / sourcingReview // orgReview
+    enableQuestionCreation: true,
+    enableAddQuestionfromLibrary: true,
     editableFields: {
       //sourcingreview: ['instructions'],
       orgreview: ['name', 'instructions', 'learningOutcome'],
@@ -277,6 +279,7 @@ export const questionSetEditorConfig = {
     //     'Subjective Question'
     //   ]
     // },
+    addFromLibrary: false,
     hierarchy: {
       level1: {
         name: 'Section',
@@ -284,7 +287,8 @@ export const questionSetEditorConfig = {
         mimeType: 'application/vnd.sunbird.questionset',
         primaryCategory: 'Practice Question Set',
         iconClass: 'fa fa-folder-o',
-        children: {}
+        children: {},
+        addFromLibrary: true
       },
       level2: {
         name: 'Sub Section',
@@ -297,7 +301,8 @@ export const questionSetEditorConfig = {
             'Multiple Choice Question',
             'Subjective Question'
           ]
-        }
+        },
+        addFromLibrary: true
       },
       level3: {
         name: 'Sub Section',
