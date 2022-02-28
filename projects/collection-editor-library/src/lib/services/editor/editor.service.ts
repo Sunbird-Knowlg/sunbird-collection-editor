@@ -298,10 +298,6 @@ export class EditorService {
     return this.publicDataService.patch(req);
   }
 
-  addQuestionsToQuestionset(request) {
-    return this.publicDataService.patch(request);
-  }
-
   public getQuestionStream$() {
     return this.questionStream$;
   }

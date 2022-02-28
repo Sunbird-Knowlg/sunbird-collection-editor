@@ -67,6 +67,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public buttonLoaders = {
     saveAsDraftButtonLoader: false,
     addFromLibraryButtonLoader: false,
+    addQuestionFromLibraryButtonLoader: false,
     previewButtonLoader: false,
     showReviewComment: false
   };
@@ -89,7 +90,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public unSubscribeshowQuestionLibraryPageEmitter: Subscription;
   public sourcingSettings: any;
   setChildQuestion: any;
-  public questionCategory = [];
   public unsubscribe$ = new Subject<void>();
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
@@ -511,24 +511,32 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
   showQuestionLibraryComponentPage() {
-    if (!_.isUndefined(this.editorService.templateList) &&
-    _.isArray(this.editorService.templateList)) {
-
-      _.forEach(this.editorService.templateList, (template) => {
-        this.questionCategory.push({name: template, targetObjectType: 'Question'});
-      });
+    if (this.editorService.checkIfContentsCanbeAdded()) {
+      const questionCategory = [];
+      this.buttonLoaders.addQuestionFromLibraryButtonLoader = true;
+      if (!_.isUndefined(this.editorService.templateList) &&
+        _.isArray(this.editorService.templateList)) {
+          _.forEach(this.editorService.templateList, (template) => {
+            questionCategory.push({name: template, targetObjectType: 'Question'});
+          });
+        }
+      this.saveContent().then((message: string) => {
+        this.buttonLoaders.addQuestionFromLibraryButtonLoader = false;
+        this.questionlibraryInput = {
+          targetPrimaryCategories: questionCategory,
+          collectionId: this.collectionId,
+          collection: this.selectedNodeData?.data?.metadata,
+          framework: this.organisationFramework,
+          editorConfig: this.editorConfig,
+          searchFormConfig:  this.libraryComponentInput.searchFormConfig
+        };
+        console.log('questionlibraryInput', this.questionlibraryInput);
+        this.pageId = 'question_library';
+      }).catch(((error: string) => {
+        this.toasterService.error(error);
+        this.buttonLoaders.addQuestionFromLibraryButtonLoader = false;
+      }));
     }
-    console.log('questionCategory', this.questionCategory);
-    this.questionlibraryInput = {
-      targetPrimaryCategories: this.questionCategory,
-      collectionId: this.collectionId,
-      collection: this.selectedNodeData?.data?.metadata,
-      framework: this.organisationFramework,
-      editorConfig: this.editorConfig,
-      searchFormConfig:  this.libraryComponentInput.searchFormConfig
-    };
-    console.log('questionlibraryInput', this.questionlibraryInput);
-    this.pageId = 'question_library';
   }
 
   libraryEventListener(event: any) {

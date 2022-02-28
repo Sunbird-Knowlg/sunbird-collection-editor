@@ -142,6 +142,7 @@ describe('FancyTreeComponent', () => {
       addChild: false,
       addSibling: false,
       addFromLibrary: false,
+      addQuestionFromLibrary: false,
       createNew: false
     });
   });

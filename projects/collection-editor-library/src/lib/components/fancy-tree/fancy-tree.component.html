@@ -12,16 +12,6 @@
         {{configService.labelConfig?.button_labels?.add_child_btn_label}} </button>
     </div>
   </div>
-  <button *ngIf="config.objectType === 'QuestionSet'" (click)="addQuestionFromLibrary();"
-    [disabled]="!visibility?.addQuestionFromLibrary"
-    [ngClass]="[!visibility?.addQuestionFromLibrary ? 'sb-btn-outline-disabled' : '', (visibility?.addQuestionFromLibrary && buttonLoaders?.addQuestionFromLibraryButtonLoader) ? 'sb-btn-loading-spinner sb-btn-outline-disabled': '']"
-    class="sb-btn sb-btn-outline-primary sb-btn-normal mt-10 mr-30" libTelemetryInteract
-    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('add_question_from_library','click','launch', telemetryService.telemetryPageId)">
-    <i class="icon plus" aria-hidden="true" *ngIf="!buttonLoaders?.addQuestionFromLibraryButtonLoader"></i>
-    <div class="sb-loading-spinner" *ngIf="buttonLoaders?.addQuestionFromLibraryButtonLoader" role="status" aria-hidden="true">
-    </div>
-    {{configService.labelConfig?.button_labels?.add_from_library_btn_label}}
-  </button>
   <button *ngIf="config.objectType !== 'QuestionSet'" (click)="addFromLibrary();"
     [disabled]="!visibility?.addFromLibrary"
     [ngClass]="[!visibility?.addFromLibrary ? 'sb-btn-outline-disabled' : '', (visibility?.addFromLibrary && buttonLoaders?.addFromLibraryButtonLoader) ? 'sb-btn-loading-spinner sb-btn-outline-disabled': '']"
@@ -32,9 +22,20 @@
     </div>
     {{configService.labelConfig?.button_labels?.add_from_library_btn_label}}
   </button>
+  <div class="d-flex mt-10 mr-30">
+    <button *ngIf="config.objectType === 'QuestionSet'" (click)="addQuestionFromLibrary();"
+    [disabled]="!visibility?.addQuestionFromLibrary"
+    [ngClass]="[!visibility?.addQuestionFromLibrary ? 'sb-btn-outline-disabled' : '', (visibility?.addQuestionFromLibrary && buttonLoaders?.addQuestionFromLibraryButtonLoader) ? 'sb-btn-loading-spinner sb-btn-outline-disabled': '']"
+    class="sb-btn sb-btn-outline-primary sb-btn-normal  mr-10" libTelemetryInteract
+    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('add_question_from_library','click','launch', telemetryService.telemetryPageId)">
+    <i class="icon plus" aria-hidden="true" *ngIf="!buttonLoaders?.addQuestionFromLibraryButtonLoader"></i>
+    <div class="sb-loading-spinner" *ngIf="buttonLoaders?.addQuestionFromLibraryButtonLoader" role="status" aria-hidden="true">
+    </div>
+    {{configService.labelConfig?.button_labels?.add_from_library_btn_label}}
+  </button>
   <button *ngIf="config.objectType === 'QuestionSet'" [disabled]="!visibility?.createNew"
     [ngClass]="[!visibility?.createNew ? 'sb-btn-outline-disabled' : '', (visibility?.createNew && buttonLoaders?.addFromLibraryButtonLoader) ? 'sb-btn-loading-spinner sb-btn-outline-disabled': '']"
-    type="button" class="sb-btn sb-btn-normal sb-btn-primary mt-10 mr-30" (click)="createNewContent()"
+    type="button" class="sb-btn sb-btn-normal sb-btn-primary" (click)="createNewContent()"
     libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('create_new','click','launch', telemetryService.telemetryPageId)">
     <i class="icon plus" *ngIf="!buttonLoaders?.addFromLibraryButtonLoader"></i>
@@ -42,4 +43,5 @@
     </div>
     {{configService.labelConfig?.button_labels?.create_new_btn_label}}
   </button>
+  </div>
 </div>
