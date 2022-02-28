@@ -183,14 +183,13 @@ export class EditorService {
     objType = objType.toLowerCase();
 
     if (event.button === 'sourcingApproveQuestion' || event.button === 'sourcingRejectQuestion') {
-      objType = this.configService.categoryConfig[this.editorConfig.context['collectionObjectType']];
+      objType = this.configService.categoryConfig[this.editorConfig.context.collectionObjectType];
       objType = objType.toLowerCase();
-      url = this.configService.urlConFig.URLS[this.editorConfig.context['collectionObjectType']];
+      url = this.configService.urlConFig.URLS[this.editorConfig.context.collectionObjectType];
 
       requestBody = event.requestBody;
-      requestBody.request[objType]['lastPublishedBy'] = this.editorConfig.context.user.id;
-    }
-    else {
+      requestBody.request[objType].lastPublishedBy = this.editorConfig.context.user.id;
+    } else {
       const fieldsObj = this.getFieldsToUpdate(collectionId);
       requestBody = {
         request: {
@@ -203,7 +202,7 @@ export class EditorService {
     }
 
     const publishData =  _.get(event, 'publishData');
-    if(publishData) {
+    if (publishData) {
      requestBody.request[objType] = { ...requestBody.request[objType], ...publishData };
     }
     const option = {
@@ -257,8 +256,8 @@ export class EditorService {
         }
       }
     };
-   const publishData =  _.get(event, 'publishData');
-   if(publishData) {
+    const publishData =  _.get(event, 'publishData');
+    if (publishData) {
     requestBody.request[objType] = { ...requestBody.request[objType], ...publishData };
    }
     const option = {
@@ -283,6 +282,7 @@ export class EditorService {
   }
 
   addResourceToQuestionset(collection, unitIdentifier, contentId) {
+    const children: any[] = _.isArray(contentId) ? contentId : [contentId];
     const req = {
       url: _.get(this.configService.urlConFig, 'URLS.QuestionSet.ADD'),
       data: {
@@ -290,7 +290,7 @@ export class EditorService {
           questionset: {
             rootId: collection,
             collectionId: unitIdentifier,
-            children: [contentId]
+            children
           }
         }
       }
@@ -374,7 +374,7 @@ export class EditorService {
     }
     return instance.data;
   }
-  
+
  _toFlatObjFromHierarchy(data) {
     const instance = this;
     if (data && data.children) {

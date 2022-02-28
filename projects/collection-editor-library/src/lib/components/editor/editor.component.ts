@@ -543,7 +543,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   onQuestionLibraryChange(event: any) {
     switch (event.action) {
       case 'addBulk':
-        this.addResourceToHierarchy(event.collectionIds, event.resourceType, true);
+        this.addResourceToQuestionset(event.collectionIds, event.resourceType);
         break;
       case 'back':
         this.libraryEventListener({});
@@ -551,80 +551,23 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  public addResourceToHierarchy(contentId, resourceType = 'default', isAddedFromLibrary = false) {
+  public addResourceToQuestionset(contentId, resourceType) {
     const children: any[] = _.isArray(contentId) ? contentId : [contentId];
-    const req: any = {
-      url: this.configService.urlConFig.URLS.Collection.HIERARCHY_UPDATE,
-      data: {
-        request: {
-          rootId: this.collectionId,
-          unitId: this.selectedNodeData?.data?.metadata?.identifier,
-          children
-        }
-      }
-    };
     if (resourceType === 'Question') {
-      req.url = this.configService.urlConFig.URLS.QuestionSet.ADD;
-      req.data = {
-        request: {
-          questionset: {
-            rootId: this.collectionId,
-            collectionId: this.selectedNodeData?.data?.metadata?.identifier,
-            children
-          }
+      this.editorService.addResourceToQuestionset(this.collectionId, this.selectedNodeData?.data?.metadata?.identifier,
+        children).subscribe(res => {
+        if (_.get(res, 'responseCode') === 'OK') {
+          console.log('res', res);
+          this.libraryEventListener({});
         }
-      };
+      }, err => {
+        const errInfo = {
+          errorMsg: 'Adding question to questionset failed. Please try again.',
+        };
+        return throwError(this.editorService.apiErrorHandling(err, errInfo));
+      });
     }
-    console.log('req', req);
-    this.editorService.addQuestionsToQuestionset(req).subscribe(res => {
-      if (_.get(res, 'responseCode') === 'OK') {
-        console.log('res', res);
-        this.libraryEventListener({});
-      }
-    }, (error) => {
-      console.log(error);
-    });
-    // this.actionService.patch(req).pipe(map((data: any) => data.result), catchError(err => {
-    //   return throwError('');
-    // })).subscribe(res => {
-    //   if (isAddedFromLibrary) {
-    //     this.updateContentReusedContribution();
-    //   } else {
-    //     this.libraryEventListener({});
-    //   }
-    // });
-  }
-
-  // public updateContentReusedContribution() {
-  //   const option = {
-  //     url: `${this.configService.urlConFig.URLS.DOCKCONTENT.GET}/${this.collectionId}`,
-  //     param: { mode: 'edit', fields: 'versionKey' }
-  //   };
-  //   this.actionService.get(option).pipe(map((res: any) => res.result.content)).subscribe((data) => {
-  //     const request = {
-  //       content: {
-  //         versionKey: data.versionKey,
-  //         reusedContributions: this.reusedContributions
-  //       }
-  //     };
-  //     // tslint:disable-next-line:max-line-length
-  //     this.updateContent(request, this.collectionId).subscribe(res => {
-  //       this.libraryEventListener({});
-  //     }, err => {
-  //       this.toasterService.error('Error occured');
-  //     });
-  //   });
-  // }
-
-  // updateContent(req, contentId): Observable<any> {
-  //   const option = {
-  //     url: this.configService.urlConFig.URLS.CONTENT.UPDATE + '/' + contentId,
-  //     data: {
-  //       request: req
-  //     }
-  //   };
-  //   return this.actionService.patch(option);
-  // }
+}
 
   saveContent() {
     return new Promise(async (resolve, reject) => {
