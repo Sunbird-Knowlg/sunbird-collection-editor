@@ -410,8 +410,11 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       this.upsertQuestion(callback);
     }
     else {
+      const publishCallback = this.sendQuestionForPublish.bind(this);
+      const callback = this.addResourceToQuestionset.bind(this, publishCallback);
+      this.upsertQuestion(callback);
       //this.saveQuestion()
-      this.sendQuestionForPublish({})
+      //this.sendQuestionForPublish({})
     }
   }
 
@@ -613,9 +616,13 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  addResourceToQuestionset() {
+  addResourceToQuestionset(callback = null) {
     this.editorService.addResourceToQuestionset(this.questionSetId, this.unitId, this.questionId).subscribe(res => {
-      this.redirectToChapterList();
+      if (callback) {
+        callback();
+      } else {
+        this.redirectToChapterList();
+      }
     }, err => {
         const errInfo = {
           errorMsg: 'Adding question to questionset failed. Please try again.',
