@@ -530,7 +530,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           editorConfig: this.editorConfig,
           searchFormConfig:  this.libraryComponentInput.searchFormConfig
         };
-        console.log('questionlibraryInput', this.questionlibraryInput);
+        console.log(this.questionlibraryInput);
         this.pageId = 'question_library';
       }).catch(((error: string) => {
         this.toasterService.error(error);
@@ -565,7 +565,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       this.editorService.addResourceToQuestionset(this.collectionId, this.selectedNodeData?.data?.metadata?.identifier,
         children).subscribe(res => {
         if (_.get(res, 'responseCode') === 'OK') {
-          console.log('res', res);
           this.libraryEventListener({});
         }
       }, err => {
