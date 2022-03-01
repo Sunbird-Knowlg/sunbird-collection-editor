@@ -188,7 +188,7 @@ export class EditorService {
       url = this.configService.urlConFig.URLS[this.editorConfig.context['collectionObjectType']];
 
       requestBody = event.requestBody;
-      requestBody.request[objType].lastPublishedBy = this.editorConfig.context.user.id;
+      requestBody.request[objType]['lastPublishedBy'] = this.editorConfig.context.user.id;
     }
     else {
       const fieldsObj = this.getFieldsToUpdate(collectionId);
@@ -258,7 +258,7 @@ export class EditorService {
       }
     };
     const publishData =  _.get(event, 'publishData');
-    if (publishData) {
+    if(publishData) {
     requestBody.request[objType] = { ...requestBody.request[objType], ...publishData };
    }
     const option = {
