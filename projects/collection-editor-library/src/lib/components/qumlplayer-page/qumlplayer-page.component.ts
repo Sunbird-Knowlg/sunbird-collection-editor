@@ -30,6 +30,7 @@ export class QumlplayerPageComponent implements OnChanges {
   initQumlPlayer() {
     this.showPlayerPreview = false;
     this.questionMetaData = _.get(this.questionMetaData, 'data.metadata');
+    console.log('questionMetaData', this.questionMetaData);
     const newQuestionId = _.get(this.questionMetaData, 'identifier');
     if (newQuestionId && this.prevQuestionId !== newQuestionId) {
       this.hierarchy = _.cloneDeep(this.questionSetHierarchy);

@@ -728,7 +728,7 @@ export const categoryDefinition = {
             },
           ],
         },
-        searchConfig: {
+        search: {
           properties: { code: "name", editable: true },
         },
         childMetadata: {

@@ -305,7 +305,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         field.options = this.setEcm;
       }
     });
-    this.libraryComponentInput.searchFormConfig = _.get(formsConfigObj, 'searchConfig.properties');
+    this.libraryComponentInput.searchFormConfig = _.get(formsConfigObj, 'search.properties');
     this.leafFormConfig = _.get(formsConfigObj, 'childMetadata.properties');
     this.relationFormConfig = _.get(formsConfigObj, 'relationalMetadata.properties');
   }

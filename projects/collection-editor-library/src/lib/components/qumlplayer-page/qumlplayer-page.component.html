@@ -7,7 +7,10 @@
 <div class="ui mt-20" *ngIf="(editorService.editorMode === 'edit')">
     <div class="ui twelve column grid m-0">
         <div class="nine wide column p-0 text-left">
-            <button type="button" class="sb-btn sb-btn-normal sb-btn-primary" (click)="editQuestion();"
+            <button type="button" class="sb-btn sb-btn-normal sb-btn-primary"
+            [disabled]="questionMetaData?.status === 'Live'"
+            [ngClass]="[questionMetaData?.status === 'Live' ? 'sb-btn-outline-disabled' : '']"
+            (click)="editQuestion();"
                 libTelemetryInteract
                 [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('edit','click','launch', telemetryService.telemetryPageId)">
                 <i class="icon edit"></i>Edit</button>
