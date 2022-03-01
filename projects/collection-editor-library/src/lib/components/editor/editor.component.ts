@@ -956,7 +956,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       this.editorService.getCategoryDefinition(this.selectedNodeData.data.metadata.primaryCategory, null, 'Question')
       .subscribe((res) => {
         const selectedtemplateDetails = res.result.objectCategoryDefinition;
-        this.editorService.selectedChildren.label = selectedtemplateDetails.label;
+        this.editorService.selectedChildren['label']=selectedtemplateDetails.label;
         const selectedTemplateFormFields = _.get(selectedtemplateDetails, 'forms.create.properties');
         if (!_.isEmpty(selectedTemplateFormFields)) {
           const questionCategoryConfig = selectedTemplateFormFields;
@@ -975,21 +975,21 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           this.sourcingSettings.enforceCorrectAnswer = true;
         }
         this.pageId = 'question';
-      }, (error) => {
+      },(error) => {
         const errInfo = {
           errorMsg: _.get(this.configService, 'labelConfig.messages.error.006'),
         };
         return throwError(this.editorService.apiErrorHandling(error, errInfo))
       });
     }
-    else {
+    else{
     this.pageId = 'question';
     }
   }
 
   questionEventListener(event: any) {
     if (event.type === 'createNewContent') {
-      this.treeEventListener(event);
+      this.treeEventListener(event)
     }
     this.selectedNodeData = undefined;
     if (this.objectType === 'question') {
