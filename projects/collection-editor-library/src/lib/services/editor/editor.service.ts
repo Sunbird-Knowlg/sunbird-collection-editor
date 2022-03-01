@@ -257,8 +257,8 @@ export class EditorService {
         }
       }
     };
-    const publishData =  _.get(event, 'publishData');
-    if(publishData) {
+   const publishData =  _.get(event, 'publishData');
+   if(publishData) {
     requestBody.request[objType] = { ...requestBody.request[objType], ...publishData };
    }
     const option = {
