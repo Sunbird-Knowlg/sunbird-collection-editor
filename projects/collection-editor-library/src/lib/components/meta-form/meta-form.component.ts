@@ -253,6 +253,7 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
   }
 
   valueChanges(event: any) {
+    console.log(event);
     if (_.get(event, 'instances')) {
       event.instances = {
         "label": event.instances
