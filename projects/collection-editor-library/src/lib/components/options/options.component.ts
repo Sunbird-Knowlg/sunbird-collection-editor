@@ -24,7 +24,6 @@ export class OptionsComponent implements OnInit {
   public setImageLimit = 1;
   public templateType = 'mcq-vertical';
   subMenus: SubMenu[][];
-  parentMeta: any;
   hints = [];
   showSubMenu:boolean=false;
   constructor(
@@ -35,7 +34,6 @@ export class OptionsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.parentMeta = this.treeService.getFirstChild().data.metadata;
     if (!_.isUndefined(this.editorState.templateId)) {
       this.templateType = this.editorState.templateId;
     }
