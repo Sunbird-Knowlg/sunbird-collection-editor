@@ -219,7 +219,7 @@ describe('EditorComponent', () => {
     component.rootFormConfig=categoryDefinition.result.objectCategoryDefinition.forms.create;
     component.unitFormConfig=categoryDefinition.result.objectCategoryDefinition.forms.unitMetadata;
     component.setEditorForms(categoryDefinition);
-    expect(component.libraryComponentInput.searchFormConfig).toBeDefined();
+    expect(component.searchFormConfig).toBeDefined();
     expect(component.leafFormConfig).toBeDefined();
     expect(component.setEditorForms).toHaveBeenCalled();
   });
