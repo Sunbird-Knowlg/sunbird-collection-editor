@@ -242,7 +242,7 @@ describe('EditorService', () => {
   it('#checkIfContentsCanbeAdded() should return true', ()=> {
     editorService.contentsCount = 0;
     spyOn(editorService, 'getContentChildrens').and.callFake(() => []);
-    let result = editorService.checkIfContentsCanbeAdded();
+    let result = editorService.checkIfContentsCanbeAdded('add');
     expect(editorService.getContentChildrens).toHaveBeenCalled();
     expect(result).toBe(true);
   });
@@ -256,7 +256,7 @@ describe('EditorService', () => {
   it('#checkIfContentsCanbeAdded() should return false', ()=> {
     editorService.contentsCount = 0;
     spyOn(editorService, 'getContentChildrens').and.callFake(() => [1,2,3,4,5,6,7,8,9,10]);
-    let result = editorService.checkIfContentsCanbeAdded();
+    let result = editorService.checkIfContentsCanbeAdded('add');
     expect(editorService.getContentChildrens).toHaveBeenCalled();
     expect(result).toBe(false);
   });
