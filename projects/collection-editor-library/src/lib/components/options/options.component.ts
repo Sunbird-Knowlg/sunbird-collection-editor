@@ -4,6 +4,8 @@ import { EditorTelemetryService } from '../../services/telemetry/telemetry.servi
 import { ConfigService } from '../../services/config/config.service';
 import { SubMenu } from '../question-option-sub-menu/question-option-sub-menu.component';
 import { TreeService } from '../../services/tree/tree.service';
+import { EditorService } from '../../services/editor/editor.service';
+
 @Component({
   selector: 'lib-options',
   templateUrl: './options.component.html',
@@ -24,11 +26,12 @@ export class OptionsComponent implements OnInit {
   subMenus: SubMenu[][];
   parentMeta: any;
   hints = [];
-
+  showSubMenu:boolean=false;
   constructor(
     public telemetryService: EditorTelemetryService,
     public configService: ConfigService,
-    public treeService: TreeService
+    public treeService: TreeService,
+    private editorService: EditorService
   ) {}
 
   ngOnInit() {
@@ -38,6 +41,9 @@ export class OptionsComponent implements OnInit {
     }
     this.editorDataHandler();
     this.mapping = _.get(this.editorState, 'responseDeclaration.response1.mapping') || [];
+    if(!_.isUndefined(this.editorService.editorConfig.config.renderTaxonomy)){
+      this.showSubMenu=true;
+    }
   }
 
   editorDataHandler(event?) {

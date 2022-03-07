@@ -273,7 +273,8 @@
          "037": "Unable to accepted question",
          "038": "Unable to approve content",
          "039": "Unable to reject content",
-         "040": "Unable to send content back for corrections"
+         "040": "Unable to send content back for corrections",
+         "041": "Dependent Children Found! Please Remove Children first and then remove parent"
       },
       "success": {
          "001": "Content is saved",

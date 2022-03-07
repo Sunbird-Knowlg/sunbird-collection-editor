@@ -11,7 +11,8 @@
       "CONTENT_REJECT" : "questionset/v1/reject/",
       "CONTENT_PUBLISH" : "questionset/v1/publish/",
       "DEFAULT_PARAMS_FIELDS": "instructions",
-      "SYSYTEM_UPDATE": "questionset/v4/system/update/"
+      "SYSYTEM_UPDATE": "questionset/v4/system/update/",
+      "DELETENODE" : "questionset/v1/remove"
     },
     "Question": {
       "HIERARCHY_READ": "questionset/v1/hierarchy",
