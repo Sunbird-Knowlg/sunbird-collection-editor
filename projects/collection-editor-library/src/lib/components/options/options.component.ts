@@ -26,6 +26,7 @@ export class OptionsComponent implements OnInit {
   subMenus: SubMenu[][];
   hints = [];
   showSubMenu:boolean=false;
+  parentMeta: any;
   constructor(
     public telemetryService: EditorTelemetryService,
     public configService: ConfigService,
@@ -40,6 +41,7 @@ export class OptionsComponent implements OnInit {
     this.editorDataHandler();
     this.mapping = _.get(this.editorState, 'responseDeclaration.response1.mapping') || [];
     if(!_.isUndefined(this.editorService.editorConfig.config.renderTaxonomy)){
+      this.parentMeta = this.treeService.getFirstChild().data.metadata;
       this.showSubMenu=true;
     }
   }
