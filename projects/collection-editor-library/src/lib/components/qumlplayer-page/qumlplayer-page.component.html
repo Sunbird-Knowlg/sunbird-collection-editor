@@ -7,14 +7,12 @@
 <div class="ui mt-20" *ngIf="(editorService.editorMode === 'edit')">
     <div class="ui twelve column grid m-0">
         <div class="nine wide column p-0 text-left">
-            <button type="button" class="sb-btn sb-btn-normal sb-btn-primary"
-            [disabled]="questionMetaData?.status === 'Live'"
-            [ngClass]="[questionMetaData?.status === 'Live' ? 'sb-btn-outline-disabled' : '']"
-            (click)="editQuestion();"
+            <button type="button" class="sb-btn sb-btn-normal sb-btn-primary mr-15"*ngIf="(questionMetaData?.status != 'Live' &&
+            questionMetaData?.status !='Approved')" (click)="editQuestion();"
                 libTelemetryInteract
                 [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('edit','click','launch', telemetryService.telemetryPageId)">
                 <i class="icon edit"></i>Edit</button>
-            <button type="button" class="sb-btn sb-btn-normal sb-btn-outline-primary mx-15"
+            <button type="button" class="sb-btn sb-btn-normal sb-btn-outline-primary"
                 (click)="removeQuestion()"><i class="icon trash sb-color-primary" aria-hidden="true" libTelemetryInteract
                     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('delete','click','launch', telemetryService.telemetryPageId)"></i>{{configService.labelConfig?.button_labels?.delete_btn_label}}</button>
         </div>

@@ -43,6 +43,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public pageStartTime;
   public rootFormConfig: any;
   public unitFormConfig: any;
+  public searchFormConfig: any;
   public leafFormConfig: any;
   public relationFormConfig: any;
   public showLibraryPage = false;
@@ -305,7 +306,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         field.options = this.setEcm;
       }
     });
-    this.libraryComponentInput.searchFormConfig = _.get(formsConfigObj, 'search.properties');
+    this.searchFormConfig = _.get(formsConfigObj, 'searchConfig.properties');
     this.leafFormConfig = _.get(formsConfigObj, 'childMetadata.properties');
     this.relationFormConfig = _.get(formsConfigObj, 'relationalMetadata.properties');
   }
@@ -525,10 +526,11 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.questionlibraryInput = {
           targetPrimaryCategories: questionCategory,
           collectionId: this.collectionId,
+          existingcontentCounts: this.editorService.getContentChildrens().length,
           collection: this.selectedNodeData?.data?.metadata,
           framework: this.organisationFramework,
           editorConfig: this.editorConfig,
-          searchFormConfig:  this.libraryComponentInput.searchFormConfig
+          searchFormConfig:  this.searchFormConfig
         };
         console.log(this.questionlibraryInput);
         this.pageId = 'question_library';
@@ -574,7 +576,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         return throwError(this.editorService.apiErrorHandling(err, errInfo));
       });
     }
-}
+  }
 
   saveContent() {
     return new Promise(async (resolve, reject) => {
