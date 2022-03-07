@@ -499,7 +499,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   showLibraryComponentPage() {
-    if (this.editorService.checkIfContentsCanbeAdded()) {
+    if (this.editorService.checkIfContentsCanbeAdded('add')) {
       this.buttonLoaders.addFromLibraryButtonLoader = true;
       this.saveContent().then(res => {
         this.libraryComponentInput.collectionId = this.collectionId;
@@ -512,7 +512,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
   showQuestionLibraryComponentPage() {
-    if (this.editorService.checkIfContentsCanbeAdded()) {
+    if (this.editorService.checkIfContentsCanbeAdded('add')) {
       const questionCategory = [];
       this.buttonLoaders.addQuestionFromLibraryButtonLoader = true;
       if (!_.isUndefined(this.editorService.templateList) &&
@@ -800,7 +800,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         break;
       case 'createNewContent':
         this.setChildQuestion = event.isChildQuestion;
-        if (this.editorService.checkIfContentsCanbeAdded()) {
+        if (this.editorService.checkIfContentsCanbeAdded('create')) {
           this.buttonLoaders.addFromLibraryButtonLoader = true;
           this.templateList = this.editorService.templateList;
           this.saveContent().then((message: string) => {

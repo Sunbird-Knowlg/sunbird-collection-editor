@@ -480,17 +480,28 @@ export class EditorService {
       this.contentsCount = this.contentsCount + 1;
     }
   }
-  checkIfContentsCanbeAdded() {
+  checkIfContentsCanbeAdded(buttonAction) {
     const config = {
       errorMessage: '',
       maxLimit: 0
     };
     if (_.get(this.editorConfig, 'config.objectType') === 'QuestionSet') {
-      config.errorMessage = _.get(this.configService, 'labelConfig.messages.error.031');
       config.maxLimit = _.get(this.editorConfig, 'config.questionSet.maxQuestionsLimit');
+      if (buttonAction === 'add') {
+        config.errorMessage = _.get(this.configService, 'labelConfig.messages.error.041');
+      }
+      if (buttonAction === 'create') {
+        config.errorMessage = _.get(this.configService, 'labelConfig.messages.error.031');
+      }
+
     } else {
-      config.errorMessage = _.get(this.configService, 'labelConfig.messages.error.032');
       config.maxLimit = _.get(this.editorConfig, 'config.collection.maxContentsLimit');
+      if (buttonAction === 'add') {
+        config.errorMessage = _.get(this.configService, 'labelConfig.messages.error.032');
+      }
+      if (buttonAction === 'create') {
+        config.errorMessage = _.get(this.configService, 'labelConfig.messages.error.042');
+      }
     }
     const childrenCount = this.getContentChildrens().length + this.contentsCount;
     if (childrenCount >= config.maxLimit) {
