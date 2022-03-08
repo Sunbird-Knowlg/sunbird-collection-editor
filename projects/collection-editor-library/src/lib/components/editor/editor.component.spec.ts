@@ -919,6 +919,39 @@ describe('EditorComponent', () => {
     expect(component.showDeleteConfirmationPopUp).toEqual(false);
   });
 
+  it('#deleteNode() should set #showDeleteConfirmationPopUp true api call to delete', () => {
+    const treeService = TestBed.get(TreeService);
+    component.collectionTreeNodes = {
+      data: {
+        childNodes: [
+          'do_113489952367042560144'
+        ]
+      }
+    };
+    spyOn(treeService, 'getActiveNode').and.callFake(() => {
+      return {
+        data: {
+          id: "do_113489952367042560144",
+          metadata:{
+            parent: 'do_11348210546027724811'
+          }
+        }
+      };
+    });
+    component.editorConfig=editorConfig;
+    spyOn(treeService, 'getChildren').and.callFake(() => {
+      return [];
+    });
+    spyOn(treeService, 'removeNode').and.callFake(() => {
+      return true;
+    });
+    spyOn(treeService, 'getFirstChild').and.callFake(() => {
+      return { data: { metadata: treeData } };
+    });
+    spyOn(editorService,'deleteNodeFromHierarchy').and.returnValue(throwError({}))
+    component.deleteNode();
+  });
+
   it('#treeEventListener should call treeEventListener for createNewContent and checkIfContentsCanbeAdded returns false', () => {
     const event = {
       type: 'createNewContent'

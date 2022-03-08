@@ -15,6 +15,7 @@ import { EditorService } from "../../services/editor/editor.service";
 const mockEditorService = {
   editorConfig: {
     config: {
+      renderTaxonomy:true,
       hierarchy: {
         level1: {
           name: "Module",

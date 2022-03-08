@@ -78,6 +78,7 @@ editorConfig = {
     dialcodeMaxLength: 250,
     iconClass: "fa fa-book",
     children: {},
+    renderTaxonomy:false,
     hierarchy: {
       level1: {
         name: "Module",

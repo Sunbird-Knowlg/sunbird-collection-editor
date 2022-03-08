@@ -161,6 +161,19 @@ describe('EditorService', () => {
     });
   });
 
+  it('#deleteNodeFromHierarchy() should return question set', async()=> {
+    const data={
+      childernId: "do_113489986527453184160",
+      collectionId: "do_11348210546027724811",
+      orgId: "do_113480838751551488129"
+    }
+    const publicDataService = TestBed.get(PublicDataService);
+    spyOn(publicDataService, 'delete').and.returnValue(of({"responseCode": "OK"}));
+    editorService.deleteNodeFromHierarchy(data).subscribe(data => {
+      expect(data.responseCode).toEqual('OK');
+    });
+  });
+
   it('#fetchContentDetails() should return content details', async()=> {
     spyOn(editorService,'fetchContentDetails');
     const contentId = 'do_113297001817145344190';
