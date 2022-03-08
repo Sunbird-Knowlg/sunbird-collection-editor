@@ -562,19 +562,22 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public addResourceToQuestionset(contentId, resourceType) {
+    const activeNode = this.treeService.getActiveNode();
     const children: any[] = _.isArray(contentId) ? contentId : [contentId];
     if (resourceType === 'Question') {
-      this.editorService.addResourceToQuestionset(this.collectionId, this.selectedNodeData?.data?.metadata?.identifier,
-        children).subscribe(res => {
-        if (_.get(res, 'responseCode') === 'OK') {
-          this.libraryEventListener({});
-        }
-      }, err => {
-        const errInfo = {
-          errorMsg: _.get(this.configService, 'labelConfig.messages.error.043')
-        };
-        return throwError(this.editorService.apiErrorHandling(err, errInfo));
-      });
+      if (activeNode && activeNode.data.id) {
+        this.editorService.addResourceToQuestionset(this.collectionId, activeNode.data.id,
+          children).subscribe(res => {
+          if (_.get(res, 'responseCode') === 'OK') {
+            this.libraryEventListener({});
+          }
+        }, err => {
+          const errInfo = {
+            errorMsg: _.get(this.configService, 'labelConfig.messages.error.043')
+          };
+          return throwError(this.editorService.apiErrorHandling(err, errInfo));
+        });
+      }
     }
   }
 
