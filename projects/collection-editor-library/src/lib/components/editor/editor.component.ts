@@ -571,7 +571,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       }, err => {
         const errInfo = {
-          errorMsg: 'Adding question to questionset failed. Please try again.',
+          errorMsg: _.get(this.configService, 'labelConfig.messages.error.043')
         };
         return throwError(this.editorService.apiErrorHandling(err, errInfo));
       });
