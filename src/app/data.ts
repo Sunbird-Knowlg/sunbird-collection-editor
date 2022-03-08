@@ -279,7 +279,6 @@ export const questionSetEditorConfig = {
     //     'Subjective Question'
     //   ]
     // },
-    addFromLibrary: false,
     hierarchy: {
       level1: {
         name: 'Section',
