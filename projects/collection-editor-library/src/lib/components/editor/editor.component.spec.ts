@@ -171,7 +171,7 @@ describe('EditorComponent', () => {
     expect(component.isStatusReviewMode).toBeTruthy();
     expect(editorService.selectedChildren).toBeDefined();
     expect(editorService.selectedChildren.interactionType).toBeDefined();
-  })
+  });
 
   it('#ngOnInit should call #getCategoryDefinition api faile case', async () => {
     const event = 'Multiple Choice Question';
@@ -287,6 +287,17 @@ describe('EditorComponent', () => {
     expect(component.saveContent).toHaveBeenCalled();
   });
 
+  it('#showQuestionLibraryComponentPage() should set #addQuestionFromLibraryButtonLoader to true and call #saveContent()', () => {
+    const editorService = TestBed.inject(EditorService);
+    spyOn(editorService, 'checkIfContentsCanbeAdded').and.returnValue(true);
+    spyOn(component, 'saveContent').and.callFake(() => {
+      return Promise.resolve();
+    });
+    component.showQuestionLibraryComponentPage();
+    expect(component.buttonLoaders.addQuestionFromLibraryButtonLoader).toEqual(true);
+    expect(component.saveContent).toHaveBeenCalled();
+  });
+
   it('call #redirectToQuestionTab() to verify #creationContext and #questionComponentInput', () => {
     component.selectedNodeData=SelectedNodeMockData;
     component.editorConfig = editorConfig_question;
@@ -366,6 +377,15 @@ describe('EditorComponent', () => {
     };
     component.toolbarEventListener(event);
     expect(component.showLibraryComponentPage).toHaveBeenCalled();
+  });
+
+  it('#toolbarEventListener() should call #showQuestionLibraryComponentPage() if event is showQuestionLibraryPage', () => {
+    spyOn(component, 'showQuestionLibraryComponentPage').and.callFake(() => { });
+    const event = {
+      button: 'showQuestionLibraryPage'
+    };
+    component.toolbarEventListener(event);
+    expect(component.showQuestionLibraryComponentPage).toHaveBeenCalled();
   });
 
   it('#toolbarEventListener() should call #submitHandler() if event is submitContent', () => {
@@ -773,6 +793,42 @@ describe('EditorComponent', () => {
     expect(component.showQuestionTemplatePopup).toBeFalsy();
   });
 
+  it('#onQuestionLibraryChange() should call #addResourceToQuestionset()', () => {
+    spyOn(component, 'addResourceToQuestionset').and.callFake(() => {});
+    spyOn(component, 'onQuestionLibraryChange').and.callThrough();
+    component.onQuestionLibraryChange(
+      {action: 'addBulk',
+      collectionIds: 'do_12345',
+      resourceType: 'Question'
+    });
+    expect(component.addResourceToQuestionset).toHaveBeenCalled();
+  });
+
+  it('#onQuestionLibraryChange() should call #libraryEventListener()', () => {
+    spyOn(component, 'libraryEventListener').and.callFake(() => {});
+    spyOn(component, 'onQuestionLibraryChange').and.callThrough();
+    component.onQuestionLibraryChange({action: 'back'});
+    expect(component.libraryEventListener).toHaveBeenCalled();
+  });
+
+  it('#addResourceToQuestionset() should call #libraryEventListener()', () => {
+    const editorService = TestBed.get(EditorService);
+    spyOn(editorService, 'addResourceToQuestionset').and.returnValue(of({responseCode: 'OK'}));
+    spyOn(component, 'libraryEventListener').and.callFake(() => {});
+    spyOn(component, 'addResourceToQuestionset').and.callThrough();
+    component.addResourceToQuestionset('do_12345', 'Question');
+    expect(component.libraryEventListener).toHaveBeenCalled();
+  });
+
+  it('#addResourceToQuestionset() should call editorService.apiErrorHandling()', () => {
+    const editorService = TestBed.get(EditorService);
+    spyOn(editorService, 'apiErrorHandling').and.callFake(() => {});
+    spyOn(editorService, 'addResourceToQuestionset').and.returnValue(throwError('error'));
+    spyOn(component, 'addResourceToQuestionset').and.callThrough();
+    component.addResourceToQuestionset('do_12345', 'Question');
+    expect(editorService.apiErrorHandling).toHaveBeenCalled();
+  });
+
   it('#handleTemplateSelection should set #showQuestionTemplatePopup to false', () => {
     component.editorConfig = editorConfig;
     component.handleTemplateSelection({});
@@ -933,6 +989,13 @@ describe('EditorComponent', () => {
     spyOn(editorService, 'checkIfContentsCanbeAdded').and.returnValue(false);
     spyOn(component, 'saveContent');
     component.showLibraryComponentPage();
+    expect(component.saveContent).not.toHaveBeenCalled();
+  });
+  it('#showQuestionLibraryComponentPage should call showQuestionLibraryComponentPage', () => {
+    const editorService = TestBed.inject(EditorService);
+    spyOn(editorService, 'checkIfContentsCanbeAdded').and.returnValue(false);
+    spyOn(component, 'saveContent');
+    component.showQuestionLibraryComponentPage();
     expect(component.saveContent).not.toHaveBeenCalled();
   });
   it('#downloadFile() should download the file', () => {
