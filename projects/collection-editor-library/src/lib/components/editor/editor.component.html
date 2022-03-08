@@ -141,7 +141,6 @@
     </div>
   </ng-container>
   <ng-container *ngSwitchCase="'question_library'">
-    <!-- <lib-question-library></lib-question-library> -->
     <lib-library [libraryInput]="questionlibraryInput" (libraryEmitter)="onQuestionLibraryChange($event)"></lib-library>
   </ng-container>
   <ng-container *ngSwitchCase="'library'">
