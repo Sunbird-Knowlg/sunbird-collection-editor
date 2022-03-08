@@ -25,8 +25,8 @@
   <div class="d-flex mt-10 mr-30">
     <button *ngIf="config.objectType === 'QuestionSet'" (click)="addQuestionFromLibrary();"
     [disabled]="!visibility?.addQuestionFromLibrary"
-    [ngClass]="[!visibility?.addQuestionFromLibrary ? 'sb-btn-outline-disabled' : '', (visibility?.addQuestionFromLibrary && buttonLoaders?.addQuestionFromLibraryButtonLoader) ? 'sb-btn-loading-spinner sb-btn-outline-disabled': '']"
-    class="sb-btn sb-btn-outline-primary sb-btn-normal  mr-10" libTelemetryInteract
+    [ngClass]="[!visibility?.addQuestionFromLibrary ? 'sb-btn-outline-disabled' : 'sb-btn-outline-primary', (visibility?.addQuestionFromLibrary && buttonLoaders?.addQuestionFromLibraryButtonLoader) ? 'sb-btn-loading-spinner sb-btn-outline-disabled': '']"
+    class="sb-btn sb-btn-normal  mr-10" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('add_question_from_library','click','launch', telemetryService.telemetryPageId)">
     <i class="icon plus" aria-hidden="true" *ngIf="!buttonLoaders?.addQuestionFromLibraryButtonLoader"></i>
     <div class="sb-loading-spinner" *ngIf="buttonLoaders?.addQuestionFromLibraryButtonLoader" role="status" aria-hidden="true">
