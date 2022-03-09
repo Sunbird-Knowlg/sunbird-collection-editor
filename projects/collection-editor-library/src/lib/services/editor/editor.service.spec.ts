@@ -162,16 +162,19 @@ describe('EditorService', () => {
   });
 
   it('#deleteNodeFromHierarchy() should return question set', async()=> {
-    const data={
+    spyOn(editorService,'deleteNodeFromHierarchy').and.callThrough();
+    const dataParam={
       childernId: "do_113489986527453184160",
       collectionId: "do_11348210546027724811",
       orgId: "do_113480838751551488129"
     }
     const publicDataService = TestBed.get(PublicDataService);
     spyOn(publicDataService, 'delete').and.returnValue(of({"responseCode": "OK"}));
-    editorService.deleteNodeFromHierarchy(data).subscribe(data => {
+    editorService.deleteNodeFromHierarchy(dataParam).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
     });
+    expect(editorService.deleteNodeFromHierarchy).toHaveBeenCalledWith(dataParam);
+
   });
 
   it('#fetchContentDetails() should return content details', async()=> {
