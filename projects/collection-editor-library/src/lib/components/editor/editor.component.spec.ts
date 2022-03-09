@@ -812,7 +812,9 @@ describe('EditorComponent', () => {
   });
 
   it('#addResourceToQuestionset() should call #libraryEventListener()', () => {
+    const treeService = TestBed.get(TreeService);
     const editorService = TestBed.get(EditorService);
+    spyOn(treeService, 'getActiveNode').and.returnValue({data: {id: 'do_123456'}});
     spyOn(editorService, 'addResourceToQuestionset').and.returnValue(of({responseCode: 'OK'}));
     spyOn(component, 'libraryEventListener').and.callFake(() => {});
     spyOn(component, 'addResourceToQuestionset').and.callThrough();
@@ -821,7 +823,9 @@ describe('EditorComponent', () => {
   });
 
   it('#addResourceToQuestionset() should call editorService.apiErrorHandling()', () => {
+    const treeService = TestBed.get(TreeService);
     const editorService = TestBed.get(EditorService);
+    spyOn(treeService, 'getActiveNode').and.returnValue({data: {id: 'do_123456'}});
     spyOn(editorService, 'apiErrorHandling').and.callFake(() => {});
     spyOn(editorService, 'addResourceToQuestionset').and.returnValue(throwError('error'));
     spyOn(component, 'addResourceToQuestionset').and.callThrough();
