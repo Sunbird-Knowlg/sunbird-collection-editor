@@ -105,13 +105,7 @@
               <div class="twelve wide column sb-checkbox-tnc mt-10">
                 <div class="sb-checkbox sb-checkbox-primary font-italic p-0 m-0"><input [(ngModel)]="terms" id="termAndConditions"
                     name="example" type="checkbox">
-                  <label for="termAndConditions" class="fsmall pl-32"><span class="sb-required">*</span><span
-                      class="font-weight-bold mb-4 d-block">"{{configService.labelConfig?.lbl?.iAgreeSubmit}}</span>
-                    <div class="sb-color-gray-300">{{configService.labelConfig?.lbl?.iconfirmContent}}<a
-                        class="sb-color-primary font-weight-bold cursor-pointer" href="https://creativecommons.org/licenses" target="_blank" > {{configService.labelConfig?.lbl?.createCommonFramework}}</a>
-                        {{configService.labelConfig?.lbl?.accordance}}
-                     <a class="sb-color-primary font-weight-bold cursor-pointer" href="{{contentPolicyUrl}}" target="_blank" >{{configService.labelConfig?.lbl?.contentPolicy}}</a> {{configService.labelConfig?.lbl?.privacyRights}}"</div>
-                  </label>
+                  <label for="termAndConditions" class="fsmall pl-32"><span class="font-weight-bold mb-4"><span class="sb-required sb-color-red">*</span> "{{configService.labelConfig?.lbl?.iAgreeSubmit}}</span>&nbsp;<span class="sb-color-gray-300">{{configService.labelConfig?.lbl?.iconfirmContent}} <a class="sb-color-primary font-weight-bold cursor-pointer" href="https://creativecommons.org/licenses" target="_blank" > {{configService.labelConfig?.lbl?.createCommonFramework}}</a> {{configService.labelConfig?.lbl?.accordance}} <a class="sb-color-primary font-weight-bold cursor-pointer" href="{{contentPolicyUrl}}" target="_blank" >{{configService.labelConfig?.lbl?.contentPolicy}}</a> {{configService.labelConfig?.lbl?.privacyRights}}"</span></label>
                 </div>
               </div>
             </div>
