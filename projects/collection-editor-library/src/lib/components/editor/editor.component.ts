@@ -522,17 +522,17 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           });
         }
       this.saveContent().then((message: string) => {
+        const activeNode = this.treeService.getActiveNode();
         this.buttonLoaders.addQuestionFromLibraryButtonLoader = false;
         this.questionlibraryInput = {
           targetPrimaryCategories: questionCategory,
           collectionId: this.collectionId,
           existingcontentCounts: this.editorService.getContentChildrens().length,
-          collection: this.selectedNodeData?.data?.metadata,
+          collection: activeNode?.data?.metadata,
           framework: this.organisationFramework,
           editorConfig: this.editorConfig,
           searchFormConfig:  this.searchFormConfig
         };
-        console.log(this.questionlibraryInput);
         this.pageId = 'question_library';
       }).catch(((error: string) => {
         this.toasterService.error(error);

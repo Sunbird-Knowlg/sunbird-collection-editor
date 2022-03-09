@@ -1,5 +1,5 @@
 import { EditorService } from './../../services/editor/editor.service';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 import { EditorComponent } from './editor.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -287,16 +287,30 @@ describe('EditorComponent', () => {
     expect(component.saveContent).toHaveBeenCalled();
   });
 
-  it('#showQuestionLibraryComponentPage() should set #addQuestionFromLibraryButtonLoader to true and call #saveContent()', () => {
+  it('#showQuestionLibraryComponentPage() should set #addQuestionFromLibraryButtonLoader to false and call #saveContent()',
+  fakeAsync(() => {
     const editorService = TestBed.inject(EditorService);
+    const treeService = TestBed.get(TreeService);
+    editorService.templateList = ['Subjective Question'];
+    component.collectionId = 'do_12345';
+    component.organisationFramework = 'nit_k12';
+    component.editorConfig = editorConfig_question;
+    component.searchFormConfig = categoryDefinition.result.objectCategoryDefinition.forms.searchConfig;
+    spyOn(treeService, 'getActiveNode').and.returnValue({data: {metadata: {}}});
+    spyOn(editorService, 'getContentChildrens').and.returnValue([{}, {}]);
     spyOn(editorService, 'checkIfContentsCanbeAdded').and.returnValue(true);
     spyOn(component, 'saveContent').and.callFake(() => {
-      return Promise.resolve();
+      return Promise.resolve('success');
     });
+    spyOn(component, 'showQuestionLibraryComponentPage').and.callThrough();
     component.showQuestionLibraryComponentPage();
-    expect(component.buttonLoaders.addQuestionFromLibraryButtonLoader).toEqual(true);
-    expect(component.saveContent).toHaveBeenCalled();
-  });
+    component.saveContent().then(response => {
+      expect(treeService.getActiveNode).toHaveBeenCalled();
+      expect(component.buttonLoaders.addQuestionFromLibraryButtonLoader).toBeFalsy();
+      expect(component.questionlibraryInput).toBeDefined();
+      expect(component.pageId).toEqual('question_library');
+    });
+  }));
 
   it('call #redirectToQuestionTab() to verify #creationContext and #questionComponentInput', () => {
     component.selectedNodeData=SelectedNodeMockData;
@@ -1127,13 +1141,18 @@ describe('EditorComponent', () => {
   it('#ngOnDestroy should call modal.deny()', () => {
     component.telemetryService = undefined;
     component.treeService = undefined;
+    component.unSubscribeShowLibraryPageEmitter = undefined;
+    component.unSubscribeshowQuestionLibraryPageEmitter = undefined;
+    const treeService = TestBed.get(TreeService);
     // tslint:disable-next-line:no-string-literal
     component['modal'] = {
       deny: jasmine.createSpy('deny')
     };
+    spyOn(treeService, 'clearTreeCache').and.callFake(() => {});
     spyOn(component, 'generateTelemetryEndEvent');
     component.ngOnDestroy();
     expect(component.generateTelemetryEndEvent).not.toHaveBeenCalled();
+    expect(treeService.clearTreeCache).not.toHaveBeenCalled();
     // tslint:disable-next-line:no-string-literal
     expect(component['modal'].deny).toHaveBeenCalled();
   });
