@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 import { HelperService } from '../../services/helper/helper.service';
 
 @Component({
-  selector: 'lib-library',
+  selector: 'lib-content-library',
   templateUrl: './library.component.html',
   styleUrls: ['./library.component.scss'],
   encapsulation: ViewEncapsulation.None,

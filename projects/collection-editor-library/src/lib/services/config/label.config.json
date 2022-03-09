@@ -273,7 +273,10 @@
          "037": "Unable to accepted question",
          "038": "Unable to approve content",
          "039": "Unable to reject content",
-         "040": "Unable to send content back for corrections"
+         "040": "Unable to send content back for corrections",
+         "041": "Cannot add question. reached limit of maximum number of questions allowed.",
+         "042": "Cannot create content. reached limit of maximum number of contents allowed.",
+         "043": "Adding question to questionset failed. Please try again."
       },
       "success": {
          "001": "Content is saved",
