@@ -257,6 +257,8 @@ export const questionSetEditorConfig = {
   },
   config: {
     mode: 'edit', // edit / review / read / sourcingReview // orgReview
+    enableQuestionCreation: true,
+    enableAddFromLibrary: true,
     editableFields: {
       //sourcingreview: ['instructions'],
       orgreview: ['name', 'instructions', 'learningOutcome'],

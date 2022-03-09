@@ -43,10 +43,12 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public pageStartTime;
   public rootFormConfig: any;
   public unitFormConfig: any;
+  public searchFormConfig: any;
   public leafFormConfig: any;
   public relationFormConfig: any;
   public showLibraryPage = false;
   public libraryComponentInput: any = {};
+  public questionlibraryInput: any = {};
   public editorMode;
   public collectionId;
   public isCurrentNodeFolder: boolean;
@@ -66,6 +68,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public buttonLoaders = {
     saveAsDraftButtonLoader: false,
     addFromLibraryButtonLoader: false,
+    addQuestionFromLibraryButtonLoader: false,
     previewButtonLoader: false,
     showReviewComment: false
   };
@@ -85,6 +88,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public publishchecklist: any;
   public isComponenetInitialized = false;
   public unSubscribeShowLibraryPageEmitter: Subscription;
+  public unSubscribeshowQuestionLibraryPageEmitter: Subscription;
   public sourcingSettings: any;
   setChildQuestion: any;
   public unsubscribe$ = new Subject<void>();
@@ -169,6 +173,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.telemetryService.start({ type: 'editor', pageid: this.telemetryService.telemetryPageId });
     this.unSubscribeShowLibraryPageEmitter = this.editorService.getshowLibraryPageEmitter()
       .subscribe(item => this.showLibraryComponentPage());
+    this.unSubscribeshowQuestionLibraryPageEmitter = this.editorService.getshowQuestionLibraryPageEmitter()
+    .subscribe(item => this.showQuestionLibraryComponentPage());
     this.treeService.treeStatus$.pipe(takeUntil(this.unsubscribe$)).subscribe((status) => {
       if (status === 'loaded') {
         this.getFrameworkDetails(this.primaryCategoryDef);
@@ -300,7 +306,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         field.options = this.setEcm;
       }
     });
-    this.libraryComponentInput.searchFormConfig = _.get(formsConfigObj, 'search.properties');
+    this.searchFormConfig = _.get(formsConfigObj, 'searchConfig.properties');
     this.leafFormConfig = _.get(formsConfigObj, 'childMetadata.properties');
     this.relationFormConfig = _.get(formsConfigObj, 'relationalMetadata.properties');
   }
@@ -421,6 +427,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       case 'addFromLibrary':
         this.showLibraryComponentPage();
         break;
+      case 'showQuestionLibraryPage':
+        this.showQuestionLibraryComponentPage();
+        break;
       case 'submitContent':
         this.submitHandler();
         break;
@@ -490,7 +499,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   showLibraryComponentPage() {
-    if (this.editorService.checkIfContentsCanbeAdded()) {
+    if (this.editorService.checkIfContentsCanbeAdded('add')) {
       this.buttonLoaders.addFromLibraryButtonLoader = true;
       this.saveContent().then(res => {
         this.libraryComponentInput.collectionId = this.collectionId;
@@ -502,6 +511,35 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       });
     }
   }
+  showQuestionLibraryComponentPage() {
+    if (this.editorService.checkIfContentsCanbeAdded('add')) {
+      const questionCategory = [];
+      this.buttonLoaders.addQuestionFromLibraryButtonLoader = true;
+      if (!_.isUndefined(this.editorService.templateList) &&
+        _.isArray(this.editorService.templateList)) {
+          _.forEach(this.editorService.templateList, (template) => {
+            questionCategory.push({name: template, targetObjectType: 'Question'});
+          });
+        }
+      this.saveContent().then((message: string) => {
+        const activeNode = this.treeService.getActiveNode();
+        this.buttonLoaders.addQuestionFromLibraryButtonLoader = false;
+        this.questionlibraryInput = {
+          targetPrimaryCategories: questionCategory,
+          collectionId: this.collectionId,
+          existingcontentCounts: this.editorService.getContentChildrens().length,
+          collection: activeNode?.data?.metadata,
+          framework: this.organisationFramework,
+          editorConfig: this.editorConfig,
+          searchFormConfig:  this.searchFormConfig
+        };
+        this.pageId = 'question_library';
+      }).catch(((error: string) => {
+        this.toasterService.error(error);
+        this.buttonLoaders.addQuestionFromLibraryButtonLoader = false;
+      }));
+    }
+  }
 
   libraryEventListener(event: any) {
     this.mergeCollectionExternalProperties().subscribe((res: any) => {
@@ -510,6 +548,37 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       this.isEnableCsvAction = true;
       this.isComponenetInitialized = true;
     });
+  }
+
+  onQuestionLibraryChange(event: any) {
+    switch (event.action) {
+      case 'addBulk':
+        this.addResourceToQuestionset(event.collectionIds, event.resourceType);
+        break;
+      case 'back':
+        this.libraryEventListener({});
+        break;
+    }
+  }
+
+  public addResourceToQuestionset(contentId, resourceType) {
+    const activeNode = this.treeService.getActiveNode();
+    const children: any[] = _.isArray(contentId) ? contentId : [contentId];
+    if (resourceType === 'Question') {
+      if (activeNode && activeNode.data.id) {
+        this.editorService.addResourceToQuestionset(this.collectionId, activeNode.data.id,
+          children).subscribe(res => {
+          if (_.get(res, 'responseCode') === 'OK') {
+            this.libraryEventListener({});
+          }
+        }, err => {
+          const errInfo = {
+            errorMsg: _.get(this.configService, 'labelConfig.messages.error.043')
+          };
+          return throwError(this.editorService.apiErrorHandling(err, errInfo));
+        });
+      }
+    }
   }
 
   saveContent() {
@@ -734,7 +803,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         break;
       case 'createNewContent':
         this.setChildQuestion = event.isChildQuestion;
-        if (this.editorService.checkIfContentsCanbeAdded()) {
+        if (this.editorService.checkIfContentsCanbeAdded('create')) {
           this.buttonLoaders.addFromLibraryButtonLoader = true;
           this.templateList = this.editorService.templateList;
           this.saveContent().then((message: string) => {
@@ -1047,6 +1116,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.unSubscribeShowLibraryPageEmitter) {
       this.unSubscribeShowLibraryPageEmitter.unsubscribe();
     }
+    if (this.unSubscribeshowQuestionLibraryPageEmitter) {
+      this.unSubscribeshowQuestionLibraryPageEmitter.unsubscribe();
+    }
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
@@ -1084,3 +1156,4 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 }
+

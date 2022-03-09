@@ -140,9 +140,12 @@
       </lib-template>
     </div>
   </ng-container>
+  <ng-container *ngSwitchCase="'question_library'">
+    <lib-library [libraryInput]="questionlibraryInput" (libraryEmitter)="onQuestionLibraryChange($event)"></lib-library>
+  </ng-container>
   <ng-container *ngSwitchCase="'library'">
-    <lib-library [libraryInput]="libraryComponentInput" (libraryEmitter)="libraryEventListener($event)">
-    </lib-library>
+    <lib-content-library [libraryInput]="libraryComponentInput" (libraryEmitter)="libraryEventListener($event)">
+    </lib-content-library>
   </ng-container>
   <ng-container *ngSwitchCase="'question'">
     <lib-question *ngIf="leafFormConfig" [questionInput]="questionComponentInput" [leafFormConfig]="leafFormConfig" [sourcingSettings]="sourcingSettings"  (questionEmitter)="questionEventListener($event)" >

@@ -16,7 +16,7 @@ export class LibraryPlayerComponent implements OnInit {
   ngOnInit() {
   }
   addToLibrary() {
-    if (this.editorService.checkIfContentsCanbeAdded()) {
+    if (this.editorService.checkIfContentsCanbeAdded('add')) {
     this.moveEvent.emit({
       action: 'openHierarchyPopup'
     });

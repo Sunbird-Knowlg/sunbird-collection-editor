@@ -26,6 +26,7 @@ export class EditorService {
   private _editorConfig: IEditorConfig;
   private _editorMode = 'edit';
   public showLibraryPage: EventEmitter<number> = new EventEmitter();
+  public showQuestionLibraryPage: EventEmitter<number> = new EventEmitter();
   private _bulkUploadStatus$ = new BehaviorSubject<any>(undefined);
   public readonly bulkUploadStatus$: Observable<any> = this._bulkUploadStatus$;
   public contentsCount = 0;
@@ -90,6 +91,12 @@ export class EditorService {
   }
   getshowLibraryPageEmitter() {
     return this.showLibraryPage;
+  }
+  emitshowQuestionLibraryPageEvent(page) {
+    this.showQuestionLibraryPage.emit(page);
+  }
+  getshowQuestionLibraryPageEmitter() {
+    return this.showQuestionLibraryPage;
   }
 
   getQuestionList(questionIds: string[]): Observable<any> {
@@ -276,14 +283,15 @@ export class EditorService {
   }
 
   addResourceToQuestionset(collection, unitIdentifier, contentId) {
+    const children: any[] = _.isArray(contentId) ? contentId : [contentId];
     const req = {
       url: _.get(this.configService.urlConFig, 'URLS.QuestionSet.ADD'),
       data: {
-        'request': {
-          'questionset': {
-            'rootId': collection,
-            'collectionId': unitIdentifier,
-            'children': [contentId]
+        request: {
+          questionset: {
+            rootId: collection,
+            collectionId: unitIdentifier,
+            children
           }
         }
       }
@@ -364,6 +372,7 @@ export class EditorService {
     return instance.data;
   }
   
+
  _toFlatObjFromHierarchy(data) {
     const instance = this;
     if (data && data.children) {
@@ -471,17 +480,28 @@ export class EditorService {
       this.contentsCount = this.contentsCount + 1;
     }
   }
-  checkIfContentsCanbeAdded() {
+  checkIfContentsCanbeAdded(buttonAction) {
     const config = {
       errorMessage: '',
       maxLimit: 0
     };
     if (_.get(this.editorConfig, 'config.objectType') === 'QuestionSet') {
-      config.errorMessage = _.get(this.configService, 'labelConfig.messages.error.031');
       config.maxLimit = _.get(this.editorConfig, 'config.questionSet.maxQuestionsLimit');
+      if (buttonAction === 'add') {
+        config.errorMessage = _.get(this.configService, 'labelConfig.messages.error.041');
+      }
+      if (buttonAction === 'create') {
+        config.errorMessage = _.get(this.configService, 'labelConfig.messages.error.031');
+      }
+
     } else {
-      config.errorMessage = _.get(this.configService, 'labelConfig.messages.error.032');
       config.maxLimit = _.get(this.editorConfig, 'config.collection.maxContentsLimit');
+      if (buttonAction === 'add') {
+        config.errorMessage = _.get(this.configService, 'labelConfig.messages.error.032');
+      }
+      if (buttonAction === 'create') {
+        config.errorMessage = _.get(this.configService, 'labelConfig.messages.error.042');
+      }
     }
     const childrenCount = this.getContentChildrens().length + this.contentsCount;
     if (childrenCount >= config.maxLimit) {
