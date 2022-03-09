@@ -170,11 +170,8 @@ describe('EditorService', () => {
     }
     const publicDataService = TestBed.get(PublicDataService);
     spyOn(publicDataService, 'delete').and.returnValue(of({"responseCode": "OK"}));
-    editorService.deleteNodeFromHierarchy(dataParam).subscribe(data => {
-      expect(data.responseCode).toEqual('OK');
-    });
-    expect(editorService.deleteNodeFromHierarchy).toHaveBeenCalledWith(dataParam);
-
+    editorService.deleteNodeFromHierarchy(dataParam);
+    expect(editorService.deleteNodeFromHierarchy).toHaveBeenCalledWith(dataParam)
   });
 
   it('#fetchContentDetails() should return content details', async()=> {

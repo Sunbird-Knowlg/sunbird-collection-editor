@@ -141,9 +141,9 @@ export class EditorService {
             rootId: data.orgId,
             collectionId: data.collectionId,
             children: [data.childernId],
-          },
-        },
-      },
+          }
+        }
+      }
     };
     return this.publicDataService.delete(req);
   }

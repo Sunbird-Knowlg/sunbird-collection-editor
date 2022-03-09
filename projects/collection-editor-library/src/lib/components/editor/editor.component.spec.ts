@@ -892,7 +892,7 @@ describe('EditorComponent', () => {
   it('#deleteNode() should set #showDeleteConfirmationPopUp false', () => {
     component.collectionTreeNodes = {
       data: {
-        childNodes: ['do_113264100861919232115']
+        childNodes: []
       }
     };
     const treeService = TestBed.get(TreeService);
@@ -916,42 +916,6 @@ describe('EditorComponent', () => {
     component.deleteNode();
     expect(treeService.removeNode).toHaveBeenCalled();
     expect(component.updateSubmitBtnVisibility).toHaveBeenCalled();
-    expect(component.showDeleteConfirmationPopUp).toEqual(false);
-  });
-
-  it('#deleteNode() should set #showDeleteConfirmationPopUp true api call to delete', () => {
-    spyOn(component,'deleteNode').and.callThrough();
-    const treeService = TestBed.get(TreeService);
-    component.collectionTreeNodes = {
-      data: {
-        childNodes: [
-          'do_113489952367042560144'
-        ]
-      }
-    };
-    editorConfig.context.identifier='do_113489952367042560144';
-    component.editorConfig=editorConfig;
-    spyOn(treeService, 'getActiveNode').and.callFake(() => {
-      return {
-        data: {
-          id: "do_113489952367042560144",
-          metadata:{
-            parent: 'do_11348210546027724811'
-          }
-        }
-      };
-    });
-    spyOn(treeService, 'getChildren').and.callFake(() => {
-      return [];
-    });
-    spyOn(treeService, 'removeNode').and.callFake(() => {
-      return true;
-    });
-    spyOn(treeService, 'getFirstChild').and.callFake(() => {
-      return { data: { metadata: treeData } };
-    });
-    spyOn(editorService,'deleteNodeFromHierarchy').and.returnValue(throwError({}));
-    component.deleteNode();
     expect(component.showDeleteConfirmationPopUp).toEqual(false);
   });
 

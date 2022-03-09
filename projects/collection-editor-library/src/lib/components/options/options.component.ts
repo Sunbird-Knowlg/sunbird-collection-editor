@@ -5,7 +5,6 @@ import { ConfigService } from '../../services/config/config.service';
 import { SubMenu } from '../question-option-sub-menu/question-option-sub-menu.component';
 import { TreeService } from '../../services/tree/tree.service';
 import { EditorService } from '../../services/editor/editor.service';
-
 @Component({
   selector: 'lib-options',
   templateUrl: './options.component.html',
