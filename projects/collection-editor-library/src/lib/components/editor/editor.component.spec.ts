@@ -897,6 +897,7 @@ describe('EditorComponent', () => {
 
   it('call #redirectToQuestionTab() to verify #questionComponentInput data for edit', async () => {
     const mode = 'edit';
+    component.editorConfig = editorConfig;
     const editorService = TestBed.get(EditorService);
     getCategoryDefinitionResponse.result.objectCategoryDefinition.forms = categoryDefinition.result.objectCategoryDefinition.forms.create.properties;
     spyOn(editorService, 'getCategoryDefinition').and.returnValue(of(getCategoryDefinitionResponse));
@@ -910,6 +911,7 @@ describe('EditorComponent', () => {
 
   it('call #redirectToQuestionTab() to verify #questionComponentInput data for edit api fail', async () => {
     const mode = 'edit';
+    component.editorConfig = editorConfig;
     const editorService = TestBed.get(EditorService);
     getCategoryDefinitionResponse.result.objectCategoryDefinition.forms = categoryDefinition.result.objectCategoryDefinition.forms.create.properties;
     spyOn(editorService, 'getCategoryDefinition').and.returnValue(throwError('error'));
