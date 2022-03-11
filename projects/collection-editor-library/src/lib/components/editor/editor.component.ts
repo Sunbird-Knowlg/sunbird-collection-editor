@@ -306,7 +306,11 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         field.options = this.setEcm;
       }
     });
-    this.searchFormConfig = _.get(formsConfigObj, 'searchConfig.properties');
+    if ( this.objectType === 'questionset' && _.has(formsConfigObj, 'searchConfig')) {
+        this.libraryComponentInput.searchFormConfig = _.get(formsConfigObj, 'searchConfig.properties');
+    } else {
+      this.libraryComponentInput.searchFormConfig = _.get(formsConfigObj, 'search.properties');
+    }
     this.leafFormConfig = _.get(formsConfigObj, 'childMetadata.properties');
     this.relationFormConfig = _.get(formsConfigObj, 'relationalMetadata.properties');
   }
@@ -531,7 +535,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           collection: activeNode?.data?.metadata,
           framework: this.organisationFramework,
           editorConfig: this.editorConfig,
-          searchFormConfig:  this.searchFormConfig
+          searchFormConfig:  this.libraryComponentInput.searchFormConfig
         };
         this.pageId = 'question_library';
       }).catch(((error: string) => {
