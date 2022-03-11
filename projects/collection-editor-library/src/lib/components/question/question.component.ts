@@ -180,8 +180,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.editorService.fetchCollectionHierarchy(this.questionSetId).subscribe((response) => {
       this.questionSetHierarchy = _.get(response, 'result.questionSet');
       const parentId = this.editorService.parentIdentifier ? this.editorService.parentIdentifier : this.questionId;
-      /*
-      if (parentId) {
+      this.subMenuConfig();
+      //only for observation,survey,observation with rubrics 
+      if (!_.isUndefined(parentId) && !_.isUndefined(this.editorService.editorConfig.config.renderTaxonomy)) {
         this.getParentQuestionOptions(parentId);
         const sectionData = this.treeService.getNodeById(parentId);
         const childerns = _.get(response, 'result.questionSet.children');
@@ -197,8 +198,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
             }
           }
         });
-      } */
-
+      }
+      this.questionFormConfig=_.cloneDeep(this.leafFormConfig);
       const leafFormConfigFields = _.join(_.map(this.leafFormConfig, value => (value.code)), ',');
       if (!_.isUndefined(this.questionId)) {
         this.questionService.readQuestion(this.questionId, leafFormConfigFields)
@@ -207,8 +208,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
               this.questionMetaData = _.get(res,'result.question');
               this.questionPrimaryCategory = _.get(this.questionMetaData,'primaryCategory');
               this.populateFormData();
-              this.subMenuConfig();
-
               // tslint:disable-next-line:max-line-length
               this.questionInteractionType = _.get(this.questionMetaData,'interactionTypes') ? _.get(this.questionMetaData,'interactionTypes[0]') : 'default';
               if (this.questionInteractionType === 'default') {
@@ -1121,7 +1120,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   previewFormData(status) {
-    const formConfig = _.cloneDeep(this.questionFormConfig);
+    const formConfig = _.cloneDeep(this.leafFormConfig);
     this.questionFormConfig = null;
     _.forEach(formConfig, (formFieldCategory) => {
       if (_.has(formFieldCategory, 'editable')) {

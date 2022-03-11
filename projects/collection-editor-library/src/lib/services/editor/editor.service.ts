@@ -347,7 +347,7 @@ export class EditorService {
       instance.data[data.data.id] = {
         name: data.title,
         children: _.map(data.children, (child) => child.data.id),
-        relationalMetadata,
+        ...(!_.isEmpty(relationalMetadata) &&  {relationalMetadata}),
         root: data.data.root
       };
       if (questionId && selectUnitId && selectUnitId === data.data.id) {

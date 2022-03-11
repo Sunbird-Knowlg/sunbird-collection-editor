@@ -952,7 +952,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       creationMode: mode
     };
 
-    if(mode === 'edit' && !_.isEmpty(this.selectedNodeData)){
+    if(mode === 'edit' && !_.isUndefined(this.editorConfig.config.renderTaxonomy)){
       this.editorService.selectedChildren = {
         primaryCategory: _.get(this.selectedNodeData, 'data.metadata.primaryCategory'),
         interactionType: _.get(this.selectedNodeData, 'data.metadata.interactionTypes[0]')

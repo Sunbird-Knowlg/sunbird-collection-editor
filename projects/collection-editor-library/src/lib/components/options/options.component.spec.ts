@@ -10,6 +10,27 @@ import { SuiModule } from 'ng2-semantic-ui-v9';
 import { TreeService } from '../../services/tree/tree.service';
 import { treeData } from './../fancy-tree/fancy-tree.component.spec.data';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
+import { EditorService } from "../../services/editor/editor.service";
+
+const mockEditorService = {
+  editorConfig: {
+    config: {
+      renderTaxonomy:true,
+      hierarchy: {
+        level1: {
+          name: "Module",
+          type: "Unit",
+          mimeType: "application/vnd.ekstep.content-collection",
+          contentType: "Course Unit",
+          iconClass: "fa fa-folder-o",
+          children: {},
+        },
+      },
+    },
+  },
+  parentIdentifier: ""
+};
+
 
 describe('OptionsComponent', () => {
   let component: OptionsComponent;
@@ -19,7 +40,8 @@ describe('OptionsComponent', () => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule, FormsModule, SuiModule ],
       declarations: [ OptionsComponent, TelemetryInteractDirective ],
-      providers: [ConfigService,TreeService,EditorTelemetryService],
+      providers: [ConfigService,TreeService,EditorTelemetryService,
+        { provide: EditorService, useValue: mockEditorService },],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     })
     .compileComponents();
