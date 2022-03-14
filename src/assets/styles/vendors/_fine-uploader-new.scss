@@ -65,7 +65,8 @@
 
 /* Upload Button
 ------------------------------------------ */
-.upload-input-button {
+
+.qq-upload-button{
     display: inline;
     min-width: 105px;
     margin-bottom: 10px;
@@ -80,17 +81,7 @@
                 1px 0 1px rgba(255, 255, 255, 0.07) inset,
                 0 1px 0 rgba(0, 0, 0, 0.36),
                 0 -2px 12px rgba(0, 0, 0, 0.08) inset;
-    input[type="file"] {
-        position: absolute;
-        right: 0px;
-        top: 0px;
-        font-size: 118px;
-        margin: 0px;
-        padding: 0px;
-        cursor: pointer;
-        opacity: 0;
-        height: 100%;
-    }
+
 }
 .qq-upload-button-hover {
     background: #33B6CC;

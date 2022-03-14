@@ -98,3 +98,16 @@
       }
     }
   }
+.upload-input-button {
+    input[type="file"] {
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        font-size: 118px;
+        margin: 0px;
+        padding: 0px;
+        cursor: pointer;
+        opacity: 0;
+        height: 100%;
+    }
+}
