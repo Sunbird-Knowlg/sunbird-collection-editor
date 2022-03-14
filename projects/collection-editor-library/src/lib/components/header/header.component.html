@@ -99,7 +99,7 @@
 
   </div>
   <div class="d-flex flex-ai-center" *ngIf="pageId === 'question' && labelConfigData">
-    <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10" *ngIf="visibility && visibility?.editContent"
+    <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10" *ngIf="visibility && visibility?.editContent && labelConfigData.showPreview"
       (click)="buttonEmitter({type: 'editContent'})" libTelemetryInteract
       [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('edit','click','launch', telemetryService.telemetryPageId)">
       <i *ngIf="labelConfigData.edit_question_btn_icon" class="{{labelConfigData.edit_question_btn_icon}}"></i>
