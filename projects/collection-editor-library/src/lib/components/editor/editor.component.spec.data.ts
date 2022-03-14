@@ -729,6 +729,9 @@ export const categoryDefinition = {
             },
           ],
         },
+        search: {
+          properties: { code: "name", editable: true },
+        },
         searchConfig: {
           properties: { code: "name", editable: true },
         },
