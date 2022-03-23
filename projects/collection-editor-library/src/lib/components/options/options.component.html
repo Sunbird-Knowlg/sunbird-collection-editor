@@ -38,7 +38,7 @@
       </div>
       <div class="w-100" *ngIf="showSubMenu">
         <lib-question-option-sub-menu [subMenus]="subMenus[i]" (onChange)="subMenuChange($event,i)"></lib-question-option-sub-menu>
-        <div *ngIf="parentMeta?.allowScoring">
+        <div *ngIf="parentMeta?.allowScoring === 'Yes'">
           <label for="score" class="d-block mt-10 optionLabel">Score</label>
           <input
             class="sb-textbox false mb-30"
