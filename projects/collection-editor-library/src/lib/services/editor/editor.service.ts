@@ -1,5 +1,5 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import * as _ from 'lodash-es';
 import { TreeService } from '../tree/tree.service';
 import { PublicDataService } from '../public-data/public-data.service';
@@ -10,8 +10,9 @@ import { EditorTelemetryService } from '../../services/telemetry/telemetry.servi
 import { DataService } from '../data/data.service';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-
+import { ExportToCsv } from 'export-to-csv';
 interface SelectedChildren {
+  label?: string;
   primaryCategory?: string;
   mimeType?: string;
   interactionType?: string;
@@ -25,7 +26,17 @@ export class EditorService {
   private _editorConfig: IEditorConfig;
   private _editorMode = 'edit';
   public showLibraryPage: EventEmitter<number> = new EventEmitter();
+  public showQuestionLibraryPage: EventEmitter<number> = new EventEmitter();
+  private _bulkUploadStatus$ = new BehaviorSubject<any>(undefined);
+  public readonly bulkUploadStatus$: Observable<any> = this._bulkUploadStatus$;
   public contentsCount = 0;
+  templateList = [];
+  parentIdentifier: any;
+  branchingLogic = {};
+  selectedSection: any;
+  optionsLength: any;
+  selectedPrimaryCategory: any;
+  leafParentIdentifier: any;
   constructor(public treeService: TreeService, private toasterService: ToasterService,
               public configService: ConfigService, private telemetryService: EditorTelemetryService,
               private publicDataService: PublicDataService, private dataService: DataService, public httpClient: HttpClient) {
@@ -72,11 +83,20 @@ export class EditorService {
     return _.cloneDeep(_.merge(this.configService.labelConfig.button_labels, _.get(this.editorConfig, 'context.labels')));
   }
 
+  nextBulkUploadStatus(status) {
+    this._bulkUploadStatus$.next(status);
+  }
   emitshowLibraryPageEvent(page) {
     this.showLibraryPage.emit(page);
   }
   getshowLibraryPageEmitter() {
     return this.showLibraryPage;
+  }
+  emitshowQuestionLibraryPageEvent(page) {
+    this.showQuestionLibraryPage.emit(page);
+  }
+  getshowQuestionLibraryPageEmitter() {
+    return this.showQuestionLibraryPage;
   }
 
   getQuestionList(questionIds: string[]): Observable<any> {
@@ -141,7 +161,7 @@ export class EditorService {
   }
 
   getFieldsToUpdate(collectionId) {
-    let formFields = {};
+    const formFields = {};
     const editableFields = _.get(this.editorConfig.config, 'editableFields');
     if (editableFields && !_.isEmpty(editableFields[this.editorMode])) {
       const fields = editableFields[this.editorMode];
@@ -154,21 +174,36 @@ export class EditorService {
     return formFields;
   }
 
-  updateCollection(collectionId, data?) {
+  updateCollection(collectionId, event: any = {}) {
     let objType = this.configService.categoryConfig[this.editorConfig.config.objectType];
-    objType = objType.toLowerCase();
-    const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
-    const fieldsObj = this.getFieldsToUpdate(collectionId);
-    const requestBody = {
-      request: {
-        [objType]: {
-          ...fieldsObj,
-          lastPublishedBy: this.editorConfig.context.user.id
-        }
-      }
+    let url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
+    let requestBody = {
+      request: { }
     };
-    const publishData =  _.get(data, 'publishData');
-    if(publishData) { 
+    objType = objType.toLowerCase();
+
+    if (event.button === 'sourcingApproveQuestion' || event.button === 'sourcingRejectQuestion') {
+      objType = this.configService.categoryConfig[this.editorConfig.context['collectionObjectType']];
+      objType = objType.toLowerCase();
+      url = this.configService.urlConFig.URLS[this.editorConfig.context['collectionObjectType']];
+
+      requestBody = event.requestBody;
+      requestBody.request[objType]['lastPublishedBy'] = this.editorConfig.context.user.id;
+    }
+    else {
+      const fieldsObj = this.getFieldsToUpdate(collectionId);
+      requestBody = {
+        request: {
+          [objType]: {
+            ...fieldsObj,
+            lastPublishedBy: this.editorConfig.context.user.id
+          }
+        }
+      };
+    }
+
+    const publishData =  _.get(event, 'publishData');
+    if(publishData) {
      requestBody.request[objType] = { ...requestBody.request[objType], ...publishData };
     }
     const option = {
@@ -223,9 +258,9 @@ export class EditorService {
       }
     };
    const publishData =  _.get(event, 'publishData');
-   if(publishData) { 
+   if(publishData) {
     requestBody.request[objType] = { ...requestBody.request[objType], ...publishData };
-   } 
+   }
     const option = {
       url: `${url.CONTENT_PUBLISH}${contentId}`,
       data: requestBody
@@ -241,6 +276,23 @@ export class EditorService {
           rootId: collection,
           unitId: unitIdentifier,
           children: [contentId]
+        }
+      }
+    };
+    return this.publicDataService.patch(req);
+  }
+
+  addResourceToQuestionset(collection, unitIdentifier, contentId) {
+    const children: any[] = _.isArray(contentId) ? contentId : [contentId];
+    const req = {
+      url: _.get(this.configService.urlConFig, 'URLS.QuestionSet.ADD'),
+      data: {
+        request: {
+          questionset: {
+            rootId: collection,
+            collectionId: unitIdentifier,
+            children
+          }
         }
       }
     };
@@ -284,31 +336,71 @@ export class EditorService {
     const data = this.treeService.getFirstChild();
     return {
       nodesModified: this.treeService.treeCache.nodesModified,
-      hierarchy: instance._toFlatObj(data)
+      hierarchy: instance.getHierarchyObj(data)
     };
   }
 
-  _toFlatObj(data, questionId?, selectUnitId?) {
+  getHierarchyObj(data, questionId?, selectUnitId?, parentId?) {
     const instance = this;
     if (data && data.data) {
+      const relationalMetadata = this.getRelationalMetadataObj(data.children);
       instance.data[data.data.id] = {
         name: data.title,
-        children: _.map(data.children, (child) => {
-          return child.data.id;
-        }),
+        children: _.map(data.children, (child) => child.data.id),
+        ...(!_.isEmpty(relationalMetadata) &&  {relationalMetadata}),
         root: data.data.root
       };
       if (questionId && selectUnitId && selectUnitId === data.data.id) {
-          instance.data[data.data.id].children.push(questionId);
+          if (parentId) {
+            const children = instance.data[data.data.id].children;
+            const index = _.findIndex(children, (e) => {
+              return e === parentId;
+            }, 0);
+            const setIndex = index + 1;
+            children.splice(setIndex, 0, questionId);
+          } else {
+            instance.data[data.data.id].children.push(questionId);
+          }
       }
       if (questionId && selectUnitId && data.folder === false) {
           delete instance.data[data.data.id];
       }
       _.forEach(data.children, (collection) => {
-        instance._toFlatObj(collection, questionId, selectUnitId);
+        instance.getHierarchyObj(collection, questionId, selectUnitId, parentId);
       });
     }
     return instance.data;
+  }
+  
+
+ _toFlatObjFromHierarchy(data) {
+    const instance = this;
+    if (data && data.children) {
+      instance.data[data.identifier] = {
+        name: data.name,
+        children: _.map(data.children, (child) => {
+          return child.identifier;
+        }),
+        branchingLogic: data.branchingLogic
+      };
+      _.forEach(data.children, (collection) => {
+        instance._toFlatObjFromHierarchy(collection);
+      });
+    }
+    return instance.data;
+  }
+
+  getRelationalMetadataObj(data) {
+    let relationalMetadata = {};
+    _.forEach(data, (child) => {
+      if (_.get(child, 'data.metadata.relationalMetadata')) {
+        relationalMetadata = {
+          ...relationalMetadata,
+          [child.data.id]: _.get(child, 'data.metadata.relationalMetadata')
+        };
+      }
+    });
+    return relationalMetadata;
   }
 
   getCategoryDefinition(categoryName, channel, objectType?: any) {
@@ -388,17 +480,28 @@ export class EditorService {
       this.contentsCount = this.contentsCount + 1;
     }
   }
-  checkIfContentsCanbeAdded() {
+  checkIfContentsCanbeAdded(buttonAction) {
     const config = {
       errorMessage: '',
       maxLimit: 0
     };
     if (_.get(this.editorConfig, 'config.objectType') === 'QuestionSet') {
-      config.errorMessage = _.get(this.configService, 'labelConfig.messages.error.031');
       config.maxLimit = _.get(this.editorConfig, 'config.questionSet.maxQuestionsLimit');
+      if (buttonAction === 'add') {
+        config.errorMessage = _.get(this.configService, 'labelConfig.messages.error.041');
+      }
+      if (buttonAction === 'create') {
+        config.errorMessage = _.get(this.configService, 'labelConfig.messages.error.031');
+      }
+
     } else {
-      config.errorMessage = _.get(this.configService, 'labelConfig.messages.error.032');
       config.maxLimit = _.get(this.editorConfig, 'config.collection.maxContentsLimit');
+      if (buttonAction === 'add') {
+        config.errorMessage = _.get(this.configService, 'labelConfig.messages.error.032');
+      }
+      if (buttonAction === 'create') {
+        config.errorMessage = _.get(this.configService, 'labelConfig.messages.error.042');
+      }
     }
     const childrenCount = this.getContentChildrens().length + this.contentsCount;
     if (childrenCount >= config.maxLimit) {
@@ -466,4 +569,98 @@ export class EditorService {
       console.error( _.replace(_.get(this.configService, 'labelConfig.messages.error.033'), '{FILE_TYPE}', config.fileType ) + error);
     }
   }
+
+  generateCSV(config) {
+    const tableData = config.tableData;
+    delete config.tableData;
+    let options = {
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalSeparator: '.',
+      showLabels: true,
+      useTextFile: false,
+      useBom: true,
+      showTitle: true,
+      title: '',
+      filename: '',
+      headers: []
+    };
+    options = _.merge(options, config);
+    const csvExporter = new ExportToCsv(options);
+    csvExporter.generateCsv(tableData);
+  }
+
+  getBranchingLogicByFolder(identifier) {
+    const nodeData = this.treeService.getNodeById(identifier);
+    const branchingLogic = _.get(nodeData, 'data.metadata.branchingLogic');
+    return branchingLogic || {};
+  }
+
+/**
+ *
+ * @public
+ * @param identifier identifier of the node
+ * @returns { source: [], target: [], sourceTarget?: [] }
+ * @memberof EditorService
+ */
+getDependentNodes(identifier) {
+    const sectionBranchingLogic = this.getBranchingLogicByNodeId(identifier);
+
+    if (!_.isEmpty(sectionBranchingLogic)) {
+     const branchingEntry = this.getBranchingLogicEntry(sectionBranchingLogic, identifier);
+     const source = _.get(branchingEntry, 'source');
+     if (!_.isEmpty(source)) { // if the node is a dependent node
+
+       const sourceBranchingEntry = this.getBranchingLogicEntry(sectionBranchingLogic, _.first(branchingEntry.source));
+
+       return !_.isEmpty(sourceBranchingEntry) ? { source: branchingEntry.source, target: branchingEntry.target,
+        sourceTarget: sourceBranchingEntry.target } : {};
+
+     } else { // if the node is a parent node
+       return !_.isEmpty(branchingEntry) ? { source: branchingEntry.source, target: branchingEntry.target } : {};
+     }
+    }
+  }
+
+/**
+ *
+ * @public
+ * @param identifier identifier of the node
+ * @returns {"do_id": { "target": [ "do_id123", "do_id456" ], "preCondition": {}, "source": [] }}
+ * @memberof EditorService
+ */
+  getBranchingLogicByNodeId(identifier) {
+    const leafNode = this.treeService.getNodeById(identifier);
+    const parentIdentifier = _.get(leafNode, 'parent.data.id');
+    return this.getBranchingLogicByFolder(parentIdentifier);
+  }
+
+  getBranchingLogicEntry(parentBranchingLogic, identifier) {
+    return _.find(parentBranchingLogic, (logic, key) => {
+      return key === identifier;
+    });
+  }
+
+  getFlattenedBranchingLogic(data) {
+    const flatHierarchy = this._toFlatObjFromHierarchy(data);
+    const branchingLogics = _.compact(_.map(flatHierarchy, 'branchingLogic'));
+    return _.reduce(branchingLogics, (acc, val) => {
+      return  _.assign(acc, val);
+    }, {});
+  }
+
+  getParentDependentMap(data) {
+    const branchingLogic = this.getFlattenedBranchingLogic(data);
+    const obj = {};
+    _.forEach(_.keys(branchingLogic), item => {
+      obj[item] = !_.isEmpty(branchingLogic[item].source) ? 'dependent' : !_.isEmpty(branchingLogic[item].target) ? 'parent' : '';
+    });
+    return obj;
+  }
+
+  getPrimaryCategoryName(sectionId) {
+    const nodeData = this.treeService.getNodeById(sectionId);
+    return _.get(nodeData, 'data.primaryCategory');
+  }
+
 }

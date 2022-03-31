@@ -1,0 +1,38 @@
+.slider-align {
+  margin-top: 15px;
+}
+::placeholder {
+  padding: 0.25rem;
+  opacity: 0.99;
+  color: #999999;
+  font-family: "Noto Sans";
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.sb-input {
+  margin: 1rem 0;
+}
+
+label {
+  display: block;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.flex-container {
+  display: flex;
+  margin-top: 15px;
+}
+
+.textbox {
+  width: 90%;
+  border: 1px solid rgba(34,36,38,.15)!important;
+  box-sizing: border-box;
+  background-color: #fff;
+  margin-right: 40px;
+  height: 45px;
+  border-radius: 5px;
+  font-size: 13px;
+  padding: 12px;
+}

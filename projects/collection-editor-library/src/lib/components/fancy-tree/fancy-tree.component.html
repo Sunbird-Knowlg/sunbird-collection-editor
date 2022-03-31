@@ -22,9 +22,19 @@
     </div>
     {{configService.labelConfig?.button_labels?.add_from_library_btn_label}}
   </button>
-  <button *ngIf="config.objectType === 'QuestionSet'" [disabled]="!visibility?.createNew"
+  <div class="d-flex mt-10 mr-30" *ngIf="config.objectType === 'QuestionSet'">
+    <button [disabled]="!visibility?.addQuestionFromLibrary" (click)="addQuestionFromLibrary();"
+    [ngClass]="[!visibility?.addQuestionFromLibrary ? 'sb-btn-outline-disabled' : 'sb-btn-outline-primary', (visibility?.addQuestionFromLibrary && buttonLoaders?.addQuestionFromLibraryButtonLoader) ? 'sb-btn-loading-spinner sb-btn-outline-disabled': '']"
+    class="sb-btn sb-btn-normal  mr-10" libTelemetryInteract
+    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('add_from_library','click','launch', telemetryService.telemetryPageId)">
+    <i class="icon plus" aria-hidden="true" *ngIf="!buttonLoaders?.addQuestionFromLibraryButtonLoader"></i>
+    <div class="sb-loading-spinner" *ngIf="buttonLoaders?.addQuestionFromLibraryButtonLoader" role="status" aria-hidden="true">
+    </div>
+    {{configService.labelConfig?.button_labels?.add_from_library_btn_label}}
+  </button>
+  <button class="sb-btn sb-btn-normal sb-btn-primary" [disabled]="!visibility?.createNew"
     [ngClass]="[!visibility?.createNew ? 'sb-btn-outline-disabled' : '', (visibility?.createNew && buttonLoaders?.addFromLibraryButtonLoader) ? 'sb-btn-loading-spinner sb-btn-outline-disabled': '']"
-    type="button" class="sb-btn sb-btn-normal sb-btn-primary mt-10 mr-30" (click)="createNewContent()"
+    type="button"  (click)="createNewContent()"
     libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('create_new','click','launch', telemetryService.telemetryPageId)">
     <i class="icon plus" *ngIf="!buttonLoaders?.addFromLibraryButtonLoader"></i>
@@ -32,4 +42,5 @@
     </div>
     {{configService.labelConfig?.button_labels?.create_new_btn_label}}
   </button>
+  </div>
 </div>
