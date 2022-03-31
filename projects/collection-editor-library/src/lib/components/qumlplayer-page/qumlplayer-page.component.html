@@ -7,12 +7,11 @@
 <div class="ui mt-20" *ngIf="(editorService.editorMode === 'edit')">
     <div class="ui twelve column grid m-0">
         <div class="nine wide column p-0 text-left">
-            <button type="button" class="sb-btn sb-btn-normal sb-btn-primary mr-15"*ngIf="(questionMetaData?.status != 'Live' &&
-            questionMetaData?.status !='Approved')" (click)="editQuestion();"
+            <button type="button" class="sb-btn sb-btn-normal sb-btn-primary" (click)="editQuestion();"
                 libTelemetryInteract
                 [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('edit','click','launch', telemetryService.telemetryPageId)">
                 <i class="icon edit"></i>Edit</button>
-            <button type="button" class="sb-btn sb-btn-normal sb-btn-outline-primary"
+            <button type="button" class="sb-btn sb-btn-normal sb-btn-outline-primary mx-15"
                 (click)="removeQuestion()"><i class="icon trash sb-color-primary" aria-hidden="true" libTelemetryInteract
                     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('delete','click','launch', telemetryService.telemetryPageId)"></i>{{configService.labelConfig?.button_labels?.delete_btn_label}}</button>
         </div>
@@ -35,7 +34,7 @@
     <div class="five wide column">
         <div class="sb-field-group">
             <label class="sb-color-gray-100">{{configService.labelConfig?.lbl?.name}}</label>
-            <div class="fs-0-92 text-capitalize break-word">{{questionMetaData?.name}}</div>
+            <div class="fs-0-92 text-capitalize">{{questionMetaData?.name}}</div>
         </div>
     </div>
     <div class="four wide column">

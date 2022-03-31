@@ -1,10 +1,10 @@
 <sui-modal [mustScroll]="true" [isClosable]="isClosable" [transitionDuration]="0" [size]="'normal'"
   class="sb-modal bx-none overflow-modal publish-checklist" appBodyScroll (dismissed)="isClosable = false" #modal>
   <div class="sb-modal-header">
-    {{ configService.labelConfig?.lbl?.publishCollection | interpolate: '${objectType}': objectType }}
+    {{configService.labelConfig?.lbl?.publishCollection}}
   </div>
   <div class="sb-modal-content">
-    <span *ngIf="!publishchecklist?.length"> {{configService.labelConfig?.lbl?.confirmPublishCollection | interpolate: '${objectType}': objectType}} </span>
+    <span *ngIf="!publishchecklist?.length"> {{configService.labelConfig?.lbl?.confirmPublishCollection}} </span>
     <div class="sectionTitle" *ngIf="publishchecklist?.length">{{configService.labelConfig?.lbl?.publishchecklistTitle}}</div>
     <sb-dynamic-form *ngIf="publishchecklist?.length" [config]="publishchecklist"
       (initialize)="outputData($event)" (statusChanges)="onStatusChanges($event)" (valueChanges)="valueChanges($event)">

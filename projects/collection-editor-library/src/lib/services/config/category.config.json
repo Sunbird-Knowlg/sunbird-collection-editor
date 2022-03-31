@@ -1,7 +1,6 @@
 {
   "QuestionSet": "questionSet",
   "Collection": "content",
-  "Question": "question",
   "additionalCategories": {
     "QuestionSet": "contentAdditionalCategories",
     "Collection": "collectionAdditionalCategories"

@@ -1,22 +1,4 @@
 {
-    "/action/question/v1/bulkUpload": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/action/question/v1/bulkUploadStatus": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/action/program/v1": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
     "/action/questionset/v1": {
         "target": "http://localhost:3000",
         "secure": false,

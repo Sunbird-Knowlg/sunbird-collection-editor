@@ -22,7 +22,7 @@
     <div *ngFor="let content of contentList">
       <div class="sbchapter__item mb-0 d-flex flex-dc" [ngClass]=" {'selected':content.identifier === selectedContent.identifier}"
        (click)="onContentChange(content)" libTelemetryInteract
-       [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('on_click_content','click','launch', telemetryService?.telemetryPageId)"
+       [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('on_click_content','click','launch', telemetryService?.telemetryPageId)" 
        [class.d-none]="content.isAdded && !showAddedContent">
       <!-- <div class="sbchapter__img"><img src="./assets/images/book.png" /></div> -->
         <div class="d-flex w-100">
@@ -38,7 +38,7 @@
           <div class="w-40">
             <div class="text-right" [hidden]="!content.isAdded">
               <button type="button" class="text-right py-0 sb-btn sb-btn-normal sb-btn-link sb-btn-hover-none
-              sb-color-success sb-left-icon-btn fs-0-785"><i class="circle check icon"></i>
+              sb-btn-link-secondary sb-left-icon-btn fs-0-785"><i class="circle check icon"></i>
               {{configService.labelConfig?.lbl?.addedToCollection}}</button>
             </div>
             <div libTelemetryInteract
