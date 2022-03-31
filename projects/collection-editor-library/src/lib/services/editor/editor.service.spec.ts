@@ -1,5 +1,5 @@
 import { DataService } from './../data/data.service';
-import { editorConfig,BranchingLogicData, treeNodeData,rootNodeData, hierarchyRootNodeData } from './../../components/editor/editor.component.spec.data';
+import { editorConfig } from './../../components/editor/editor.component.spec.data';
 import { TestBed } from '@angular/core/testing';
 import { EditorService } from './editor.service';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
@@ -11,12 +11,10 @@ import * as categoryConfig from '../../services/config/category.config.json';
 import { of } from 'rxjs';
 import { PublicDataService } from '../public-data/public-data.service';
 import { ToasterService} from '../../services/toaster/toaster.service';
-import { TreeService } from '../tree/tree.service';
 
 
 describe('EditorService', () => {
   let editorService: EditorService;
-  let treeService;
   const configStub = {
     urlConFig: (urlConfig as any).default,
     labelConfig: (labelConfig as any).default,
@@ -29,16 +27,6 @@ describe('EditorService', () => {
           '011': 'File downloaded'
         },
       }
-    },
-    categoryConfig: {
-      QuestionSet: 'questionSet'
-    },
-    urlConFig: {
-      URLS: {
-        questionSet: {
-          SYSYTEM_UPDATE: ''
-        }
-      }
     }
   };
   beforeEach(() => {
@@ -46,12 +34,10 @@ describe('EditorService', () => {
       imports: [HttpClientModule],
       providers: [HttpClient,
         DataService,
-        TreeService,
         PublicDataService,
         { provide: ConfigService, useValue: configStub }]
     });
     editorService = TestBed.get(EditorService);
-    treeService=TestBed.get(TreeService);
     editorService.initialize(editorConfig);
   });
 
@@ -99,18 +85,10 @@ describe('EditorService', () => {
     expect(result).toBeTruthy();
   });
 
-  it('#emitshowLibraryPageEvent() should call #showLibraryPage.emit event', () => {
-    spyOn(editorService, 'emitshowLibraryPageEvent').and.callThrough();
-    spyOn(editorService.showLibraryPage, 'emit').and.callFake(() => {});
+  it('#emitshowLibraryPageEvent() should call #showLibraryPage.emit event', ()=> {
+    spyOn(editorService.showLibraryPage, 'emit');
     editorService.emitshowLibraryPageEvent('test');
     expect(editorService.showLibraryPage.emit).toHaveBeenCalledWith('test');
-  });
-
-  it('#emitshowQuestionLibraryPageEvent() should call #showQuestionLibraryPage.emit event', ()=> {
-    spyOn(editorService, 'emitshowQuestionLibraryPageEvent').and.callThrough();
-    spyOn(editorService.showQuestionLibraryPage, 'emit').and.callFake(() => {});
-    editorService.emitshowQuestionLibraryPageEvent('test');
-    expect(editorService.showQuestionLibraryPage.emit).toHaveBeenCalledWith('test');
   });
 
   it('#contentsCountAddedInLibraryPage() should increase value of contentsCount', () => {
@@ -132,23 +110,18 @@ describe('EditorService', () => {
     expect(result).toBeTruthy();
   });
 
-  it('#getshowQuestionLibraryPageEmitter() should return event emitter object', () => {
-    const result: EventEmitter<number> = editorService.getshowQuestionLibraryPageEmitter();
-    expect(result).toBeTruthy();
-  });
-
   it('#getQuestionList() should return question list', async()=> {
     const questionIds: string[] = [
-      'do_11330103476396851218',
-      'do_113301035530600448110'
+      "do_11330103476396851218",
+      "do_113301035530600448110"
     ];
     const dataService = TestBed.get(DataService);
     spyOn(dataService, 'post').and.returnValue(of({
-      id: 'api.questions.list',
-      result: {
-        questions: [
+      "id": "api.questions.list",
+      "result": {
+        "questions": [
         ],
-        count: 0
+        "count": 0
       }
     }));
     editorService.getQuestionList(questionIds).subscribe(data => {
@@ -159,7 +132,7 @@ describe('EditorService', () => {
   it('#fetchCollectionHierarchy() should return collection hierarchy', async()=> {
     const collectionId = 'do_11330102570702438417';
     const publicDataService = TestBed.get(PublicDataService);
-    spyOn(publicDataService, 'get').and.returnValue(of({responseCode: 'OK'}));
+    spyOn(publicDataService, 'get').and.returnValue(of({"responseCode": "OK"}));
     editorService.fetchCollectionHierarchy(collectionId).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
     });
@@ -168,34 +141,35 @@ describe('EditorService', () => {
   it('#readQuestionSet() should return question set', async()=> {
     const questionSetId = 'do_11330102570702438417';
     const publicDataService = TestBed.get(PublicDataService);
-    spyOn(publicDataService, 'get').and.returnValue(of({responseCode: 'OK'}));
-    editorService.readQuestionSet(questionSetId);
-    expect(publicDataService.get).toHaveBeenCalled();
+    spyOn(publicDataService, 'get').and.returnValue(of({"responseCode": "OK"}));
+    editorService.readQuestionSet(questionSetId).subscribe(data => {
+      expect(data.responseCode).toEqual('OK');
+    });
   });
 
   it('#fetchContentDetails() should return content details', async()=> {
-    spyOn(editorService, 'fetchContentDetails').and.callThrough();
     const contentId = 'do_113297001817145344190';
     const publicDataService = TestBed.get(PublicDataService);
-    spyOn(publicDataService, 'get').and.returnValue(of({responseCode: 'OK'}));
-    editorService.fetchContentDetails(contentId);
-    expect(publicDataService.get).toHaveBeenCalled();
+    spyOn(publicDataService, 'get').and.returnValue(of({"responseCode": "OK"}));
+    editorService.fetchContentDetails(contentId).subscribe(data => {
+      expect(data.responseCode).toEqual('OK');
+    });
   });
 
   it('#updateHierarchy() should update hierarchy', async()=> {
     const publicDataService = TestBed.get(PublicDataService);
     spyOn(editorService, 'getCollectionHierarchy').and.callFake(()=>{
       return {
-        id: 'api.content.hierarchy.get',
-        ver: '3.0',
-        ts: '2021-06-29T09:17:27ZZ',
-        responseCode: 'OK',
-        result: {
-          content: {}
+        "id": "api.content.hierarchy.get",
+        "ver": "3.0",
+        "ts": "2021-06-29T09:17:27ZZ",
+        "responseCode": "OK",
+        "result": {
+          "content": {}
         }
       };
     })
-    spyOn(publicDataService, 'patch').and.returnValue(of({responseCode: 'OK'}));
+    spyOn(publicDataService, 'patch').and.returnValue(of({"responseCode": "OK"}));
     editorService.updateHierarchy().subscribe(data => {
       expect(data.responseCode).toEqual('OK');
     });
@@ -204,7 +178,7 @@ describe('EditorService', () => {
   it('#reviewContent() should update hierarchy', async()=> {
     const contentId = 'do_11326714211239526417';
     const publicDataService = TestBed.get(PublicDataService);
-    spyOn(publicDataService, 'post').and.returnValue(of({responseCode: 'OK'}));
+    spyOn(publicDataService, 'post').and.returnValue(of({"responseCode": "OK"}));
     editorService.reviewContent(contentId).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
     });
@@ -214,7 +188,7 @@ describe('EditorService', () => {
     const contentId = 'do_11326714211239526417';
     const comment = 'No appropriate description'
     const publicDataService = TestBed.get(PublicDataService);
-    spyOn(publicDataService, 'post').and.returnValue(of({responseCode: 'OK'}));
+    spyOn(publicDataService, 'post').and.returnValue(of({"responseCode": "OK"}));
     editorService.submitRequestChanges(contentId, comment).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
     });
@@ -223,7 +197,7 @@ describe('EditorService', () => {
   it('#publishContent() should publish content when API success', async()=> {
     const contentId = 'do_11326714211239526417';
     const publicDataService = TestBed.get(PublicDataService);
-    spyOn(publicDataService, 'post').and.returnValue(of({responseCode: 'OK'}));
+    spyOn(publicDataService, 'post').and.returnValue(of({"responseCode": "OK"}));
     editorService.publishContent(contentId, {}).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
     });
@@ -234,7 +208,7 @@ describe('EditorService', () => {
     const unitIdentifier = 'do_11326714211239526417';
     const contentId = 'do_11326714211239526417';
     const publicDataService = TestBed.get(PublicDataService);
-    spyOn(publicDataService, 'patch').and.returnValue(of({responseCode: 'OK'}));
+    spyOn(publicDataService, 'patch').and.returnValue(of({"responseCode": "OK"}));
     editorService.addResourceToHierarchy(collection, unitIdentifier, contentId).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
     });
@@ -245,7 +219,7 @@ describe('EditorService', () => {
     const channel = 'forms';
     const objectType = 'name';
     const publicDataService = TestBed.get(PublicDataService);
-    spyOn(publicDataService, 'post').and.returnValue(of({responseCode: 'OK'}));
+    spyOn(publicDataService, 'post').and.returnValue(of({"responseCode": "OK"}));
     editorService.getCategoryDefinition(categoryName, channel, objectType).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
     });
@@ -254,7 +228,7 @@ describe('EditorService', () => {
   it('#checkIfContentsCanbeAdded() should return true', ()=> {
     editorService.contentsCount = 0;
     spyOn(editorService, 'getContentChildrens').and.callFake(() => []);
-    let result = editorService.checkIfContentsCanbeAdded('add');
+    let result = editorService.checkIfContentsCanbeAdded();
     expect(editorService.getContentChildrens).toHaveBeenCalled();
     expect(result).toBe(true);
   });
@@ -268,7 +242,7 @@ describe('EditorService', () => {
   it('#checkIfContentsCanbeAdded() should return false', ()=> {
     editorService.contentsCount = 0;
     spyOn(editorService, 'getContentChildrens').and.callFake(() => [1,2,3,4,5,6,7,8,9,10]);
-    let result = editorService.checkIfContentsCanbeAdded('add');
+    let result = editorService.checkIfContentsCanbeAdded();
     expect(editorService.getContentChildrens).toHaveBeenCalled();
     expect(result).toBe(false);
   });
@@ -378,136 +352,4 @@ describe('EditorService', () => {
     expect(publicDataService.post).toHaveBeenCalled();
     expect(returnValue).toBeDefined();
   });
-  it('#addResourceToQuestionset() should add question to questionSet on API success', () => {
-      const questionId = 'do_123';
-      const collectionId = 'do_11330102570702438417';
-      const unitIdentifier = 'do_11326714211239526417';
-      const publicDataService: PublicDataService = TestBed.get(PublicDataService);
-      spyOn(publicDataService, 'patch').and.returnValue(of({
-          responseCode: 'OK'
-      }));
-      editorService.addResourceToQuestionset(collectionId, unitIdentifier, questionId).subscribe(data => {
-          expect(data.responseCode).toEqual('OK');
-      });
-  });
-  it('#addResourceToQuestionset() should add questions to questionSet on API success', () => {
-    const questionIds = ['do_123', 'do_1234'];
-    const collectionId = 'do_11330102570702438417';
-    const unitIdentifier = 'do_11326714211239526417';
-    const publicDataService: PublicDataService = TestBed.get(PublicDataService);
-    spyOn(publicDataService, 'patch').and.returnValue(of({
-        responseCode: 'OK'
-    }));
-    editorService.addResourceToQuestionset(collectionId, unitIdentifier, questionIds);
-    expect(publicDataService.patch).toHaveBeenCalled();
-});
-  it('#updateCollection() should reject question for event sourcingRejectQuestion', () => {
-      const collectionId = 'do_11330102570702438417';
-      const event = {
-        button: 'sourcingRejectQuestion',
-        requestBody: {
-          request: {
-            questionset: {}
-          }
-        }
-      };
-      const publicDataService: PublicDataService = TestBed.get(PublicDataService);
-      editorConfig.context.collectionObjectType = 'QuestionSet';
-      spyOn(publicDataService, 'patch').and.returnValue(of({
-          responseCode: 'OK'
-      }));
-      editorService.updateCollection(collectionId, event).subscribe(data => {
-          expect(data.responseCode).toEqual('OK');
-      });
-  })
-
-  it('#getBranchingLogicByFolder() should call', () => {
-    spyOn(editorService,'getBranchingLogicByFolder').and.callThrough();
-    spyOn(editorService.treeService, 'getNodeById').and.returnValue(of(treeNodeData))
-    editorService.getBranchingLogicByFolder('do_113432866096922624110');
-    expect(editorService.getBranchingLogicByFolder).toHaveBeenCalled();
-  });
-
-  it('#getDependentNodes() should call', () => {
-    spyOn(editorService,'getDependentNodes').and.callThrough();
-    spyOn(editorService.treeService, 'getNodeById').and.returnValue(of(treeNodeData))
-    editorService.getDependentNodes('do_113432866096922624110');
-    expect(editorService.getDependentNodes).toHaveBeenCalled();
-  });
-
-  it('#getBranchingLogicByNodeId() should call', () => {
-    spyOn(editorService,'getBranchingLogicByNodeId').and.callThrough();
-    spyOn(editorService.treeService, 'getNodeById').and.returnValue(of(treeNodeData))
-    editorService.getBranchingLogicByNodeId('do_113432866096922624110');
-    expect(editorService.getBranchingLogicByNodeId).toHaveBeenCalled();
-  });
-
-  it('#getParentDependentMap() should call', () => {
-    spyOn(editorService,'getParentDependentMap').and.callThrough();
-    editorService.getParentDependentMap(rootNodeData);
-    expect(editorService.getParentDependentMap).toHaveBeenCalled();
-  });
-
-  it('#getFlattenedBranchingLogic() should call', () => {
-    spyOn(editorService,'getFlattenedBranchingLogic');
-    editorService._toFlatObjFromHierarchy(rootNodeData)
-    editorService.getFlattenedBranchingLogic(rootNodeData);
-    expect(editorService.getFlattenedBranchingLogic);
-  });
-
-  it('#getBranchingLogicEntry() should call', () => {
-    spyOn(editorService,'getBranchingLogicEntry').and.callThrough();
-    editorService.getBranchingLogicEntry(BranchingLogicData,'do_113432866799935488112');
-    expect(editorService.getBranchingLogicEntry).toHaveBeenCalled();
-  });
-
-  it('#getPrimaryCategoryName() should call to get primary category name', () => {
-    spyOn(editorService.treeService, 'getNodeById').and.returnValue(of(treeNodeData))
-    spyOn(editorService,'getPrimaryCategoryName').and.callThrough();
-    editorService.getPrimaryCategoryName('do_11326714211239526417');
-    expect(editorService.getPrimaryCategoryName).toHaveBeenCalledWith('do_11326714211239526417')
-  });
-
-  it('#getCollectionHierarchy should call',()=>{
-    spyOn(editorService,'getCollectionHierarchy').and.callThrough();
-    spyOn(treeService, 'getFirstChild').and.callFake(() => {
-      return { data: { metadata: { identifier: '0123'} } };
-    });
-    hierarchyRootNodeData.folder=true;
-    editorService.getHierarchyObj(hierarchyRootNodeData,'do_113432866096922624110','do_113432866096922624110','do_1134468013653114881310');
-    editorService.getCollectionHierarchy();
-    expect(editorService.getCollectionHierarchy).toHaveBeenCalled();
-  })
-
-  it('#getCollectionHierarchy should call when folder false',()=>{
-    spyOn(editorService,'getCollectionHierarchy').and.callThrough();
-    spyOn(treeService, 'getFirstChild').and.callFake(() => {
-      return { data: { metadata: { identifier: '0123'} } };
-    });
-    hierarchyRootNodeData.folder=false;
-    editorService.getHierarchyObj(hierarchyRootNodeData,'do_113432866096922624110','do_113432866096922624110','do_1134468013653114881310');
-    editorService.getCollectionHierarchy();
-    expect(editorService.getCollectionHierarchy).toHaveBeenCalled();
-  })
-
-  it('#getCollectionHierarchy should call when no section id and parent',()=>{
-    spyOn(editorService,'getCollectionHierarchy').and.callThrough();
-    spyOn(treeService, 'getFirstChild').and.callFake(() => {
-      return { data: { metadata: { identifier: '0123'} } };
-    });
-    hierarchyRootNodeData.folder=false;
-    editorService.getHierarchyObj(hierarchyRootNodeData);
-    editorService.getCollectionHierarchy();
-    expect(editorService.getCollectionHierarchy).toHaveBeenCalled();
-  })
-
-  it('#_toFlatObjFromHierarchy should call',()=>{
-    spyOn(editorService,'_toFlatObjFromHierarchy').and.callThrough();
-    spyOn(treeService, 'getFirstChild').and.callFake(() => {
-      return { data: { metadata: { identifier: '0123'} } };
-    });
-    editorService._toFlatObjFromHierarchy(rootNodeData);
-    expect(editorService._toFlatObjFromHierarchy).toHaveBeenCalled();
-  })
-
 });

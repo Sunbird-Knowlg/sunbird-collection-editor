@@ -7,13 +7,13 @@
       &:before {
         background: none !important;
       }
-
+  
       ul {
         &::before {
           background: none !important;
         }
       }
-
+  
       .fancytree-folder {
         .fancytree-title {
           color: var(--primary-color) !important;
@@ -22,23 +22,18 @@
           padding-left: 5px;
           width: inherit !important;
         }
-        .fancytree-title.highlightNode {
+        .highlightNode {
           color: red !important;
           &::before {
             color: red !important;
           }
         }
       }
-
+  
       li {
         padding: 0;
         margin: 0 0 1px 0;
-
   
-        .highlightNode {
-          color: red !important;
-        }
-
         .fancytree {
           &-ico-c{
             padding-left: 5px !important;
@@ -61,16 +56,16 @@
             border-top: none;
           }
         }
-
+  
         &:last-child {
           &:after {
             display: none;
           }
         }
-
+  
         ul {
           padding-top: 1px;
-
+  
           li {
             list-style-type: none;;
             .fancytree-custom-icon {
@@ -82,18 +77,11 @@
                 margin-left: 6px;
                 font-size: 16px;
               }
-
+  
               &:last-child {
                 &:after {
                   display: none;
                 }
-              }
-            }
-
-
-            .fancytree-custom-icon.highlightNode {
-              &::before {
-                color: red !important;
               }
             }
   
@@ -101,7 +89,7 @@
               padding: 6px 6px 8px 5px;
               margin-left: 45px;
               border: 1px solid transparent;
-
+  
               &.fancytree-active,
               &.fancytree-focused,
               &:hover {
@@ -109,22 +97,18 @@
                 background-color: var(--primary-0);
                 border-right: 0;
               }
-
-              &.dependent {
-                margin-left: 65px;
-              }
             }
           }
         }
-
+  
         &::before {
           background: none !important;
         }
-
+  
         .sb-fancyTree-icon {
           color: var(--gray-300) !important;
         }
-
+  
         .fancytree-custom-icon {
           &::before {
             // content: url("/assets/images/question_collection.svg");
@@ -133,14 +117,14 @@
           }
         }
       }
-
+  
       .fa-caret-down {
         margin-top: 6px;
         display: block;
         width: 10px;
         padding-left: 2px;
       }
-
+  
       .fa-caret-right {
         margin-top: 6px;
         display: block;
@@ -148,7 +132,7 @@
         padding-left: 6px;
       }
     }
-
+  
     .ui-fancytree {
       padding-right: 0.785rem;
       // height: calc(100vh - 126px);

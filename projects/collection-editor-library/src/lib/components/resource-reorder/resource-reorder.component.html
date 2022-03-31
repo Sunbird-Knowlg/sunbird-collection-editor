@@ -21,7 +21,7 @@
           <label for="{{child?.identifier}}" class="sb-color-primary font-weight-bold mb-0">{{child?.name}}</label>
           <div class="textbookBtnLink"  *ngIf="child.identifier === prevUnitSelect && isContentAdded">
             <button type="button" class="sb-btn sb-btn-normal sb-btn-link sb-btn-hover-none
-            sb-color-success sb-left-icon-btn fs-0-785"><i class="circle check icon" aria-hidden="true"></i>
+             sb-btn-link-secondary sb-left-icon-btn fs-0-785"><i class="circle check icon" aria-hidden="true"></i>
              {{configService.labelConfig?.lbl?.alreadyContentPresent}}</button>
           </div>
         </div>
@@ -39,7 +39,7 @@
         <div class="item cursor-pointer w-100">
           <ng-template ngFor [ngForOf]="child.children" [ngForTemplate]="nodeTemplateRef">
           </ng-template>
-        </div>
+        </div>             
       </div>
     </sui-accordion-panel>
   </ng-template>

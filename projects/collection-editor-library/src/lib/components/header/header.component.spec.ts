@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HeaderComponent } from './header.component';
-import { CUSTOM_ELEMENTS_SCHEMA, EventEmitter } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
@@ -96,12 +96,5 @@ describe('HeaderComponent', () => {
     component.openPublishCheckListPopup('publishContent');
     expect(component.showPublishCollectionPopup).toBeTruthy();
     expect(component.actionType).toBeDefined();
-  });
-  it('#bulkUploadListener() should call #bulkUploadEmitter.emit()', () => {
-    const data = { status: true, type: 'updateHierarchy' };
-    component.bulkUploadEmitter = new EventEmitter<any>();
-    spyOn(component.bulkUploadEmitter, 'emit');
-    component.bulkUploadListener(data);
-    expect(component.bulkUploadEmitter.emit).toHaveBeenCalledWith(data)
   });
 });
