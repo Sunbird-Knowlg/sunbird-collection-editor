@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 import { HelperService } from '../../services/helper/helper.service';
 
 @Component({
-  selector: 'lib-library',
+  selector: 'lib-content-library',
   templateUrl: './library.component.html',
   styleUrls: ['./library.component.scss'],
   encapsulation: ViewEncapsulation.None,
@@ -128,7 +128,8 @@ export class LibraryComponent implements OnInit, AfterViewInit, OnDestroy {
       if (!(_.get(response, 'result.count'))) {
         this.contentList = [];
       } else {
-        this.contentList = _.compact(_.concat(_.get(response.result, 'content'), _.get(response.result, 'QuestionSet')));
+        this.contentList = _.filter(_.compact(_.concat(_.get(response.result, 'content'), _.get(response.result, 'QuestionSet'))),
+         (item: any) => item.identifier !== this.collectionId);
         this.filterContentList();
       }
     });

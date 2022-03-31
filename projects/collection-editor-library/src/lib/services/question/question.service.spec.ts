@@ -121,4 +121,15 @@ describe('QuestionService', () => {
             expect(data.responseCode).toEqual('OK');
         })
     })
+
+    it('#upsertQuestion() it should update question on API success', () => {
+        const questionId = 'do_123';
+        spyOn(publicDataService, 'patch').and.returnValue(of({
+            responseCode: 'OK'
+        }));
+        questionService.upsertQuestion(questionId, {}).subscribe(data => {
+            expect(data.responseCode).toEqual('OK');
+        });
+    })
+
 })

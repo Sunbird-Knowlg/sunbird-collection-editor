@@ -39,7 +39,7 @@
         <div class="sb-grid-layout image">
           <div class="sb-video-content" *ngFor="let data of myAssets">
             <div class="sb-image-section relative position">
-              <img (click)="addImageInEditor(data.downloadUrl, data.identifier)" [src]="data.downloadUrl">
+              <img (click)="addImageInEditor(data.downloadUrl, data.identifier, data.name)" alt="{{data?.name}}" [src]="data.downloadUrl">
             </div>
           </div>
 
@@ -64,7 +64,7 @@
         <div class="sb-grid-layout image">
           <div class="sb-video-content" *ngFor="let data of allImages">
             <div class="sb-image-section">
-              <img (click)="addImageInEditor(data.downloadUrl, data.identifier)" [src]="data.downloadUrl">
+              <img (click)="addImageInEditor(data.downloadUrl, data.identifier, data.name)" alt="{{data?.name}}" [src]="data.downloadUrl">
             </div>
           </div>
         </div>
@@ -109,7 +109,7 @@
               (click)="selectVideo(data)">
               <div class="overlay-image"><i class="play circle icon" aria-hidden="true"></i></div>
               <i class="check circle icon selected-video" aria-hidden="true"></i>
-              <img [src]="data.thumbnail">
+              <img [src]="data.thumbnail" alt="{{data?.name}}">
             </div>
           </div>
 
@@ -137,7 +137,7 @@
               (click)="selectVideo(data);">
               <div class="overlay-image"><i class="play circle icon" aria-hidden="true"></i></div>
               <i class="check circle icon selected-video" aria-hidden="true"></i>
-              <img [src]="data.thumbnail">
+              <img [src]="data.thumbnail" alt="{{data?.name}}">
             </div>
           </div>
         </div>
@@ -157,7 +157,7 @@
 
 <!-- Upload image pop up code here  -->
 
-<sui-modal class="sb-modal overflow-modal" [isClosable]="true" [isInverted]="false"
+<sui-modal class="sb-modal overflow-modal" [isClosable]="isClosable" [isInverted]="false"
   (dismissed)="dismissImageUploadModal()" *ngIf="showImageUploadModal" [size]="'large'" [isFullScreen]="false"
   [mustScroll]="true" appBodyScroll #modal>
   <div class="sb-modal-header">{{configService.labelConfig?.lbl?.uploadAndUse}}</div>
@@ -209,10 +209,11 @@
     <div class="sb-modal-actions flex-jc-space-between p-0">
       <div>
         <button (click)="dismissPops(modal);" class="mr-10 sb-btn sb-btn-primary sb-btn-normal">{{configService.labelConfig?.button_labels?.cancel_btn_label}}</button>
-
-        <button (click)="uploadAndUseImage(modal);" [disabled]="!imageFormValid"
-          [ngClass]="{'sb-btn-primary': imageFormValid, 'sb-btn-disabled': !imageFormValid}"
-          class="sb-btn  sb-btn-normal text-left">{{configService.labelConfig?.button_labels?.upload_use_btn_label}} 
+          <button type="button" class="sb-btn sb-btn-normal text-left sb-btn-loading-spinner sb-btn-primary"
+          [disabled]="!imageFormValid"  (click)="uploadAndUseImage(modal);" 
+          [ngClass]="{'sb-btn-primary': imageFormValid, 'sb-btn-disabled': !imageFormValid}">
+            <div class="sb-loading-spinner"  *ngIf="loading" role="status" aria-hidden="true"></div>
+            {{configService.labelConfig?.button_labels?.upload_use_btn_label}}
           </button>
       </div>
       <div>

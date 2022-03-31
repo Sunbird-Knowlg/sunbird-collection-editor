@@ -24,6 +24,7 @@ export class TreeService {
   private _treeStatus$ = new BehaviorSubject<any>(undefined);
   public readonly treeStatus$: Observable<any> = this._treeStatus$
   .asObservable().pipe(skipWhile(status => status === undefined || status === null));
+  previousNode: any;
 
   constructor(private toasterService: ToasterService, private helperService: HelperService, public configService: ConfigService) { }
 
@@ -40,9 +41,9 @@ export class TreeService {
     this.treeNativeElement = el;
   }
 
-  updateNode(metadata) {
+  updateNode(metadata, nodeToBeUpdated?, primaryCategory?: any) {
     this.setNodeTitle(metadata.name);
-    this.updateTreeNodeMetadata(metadata);
+    this.updateTreeNodeMetadata(metadata, nodeToBeUpdated, primaryCategory);
   }
 
   updateAppIcon(appIconUrl) {
@@ -59,9 +60,9 @@ export class TreeService {
     this.setTreeCache(nodeId, _.merge({}, {[key] : value}, _.pick(node.data.metadata, ['objectType'])));
   }
 
-  updateTreeNodeMetadata(newData: any) {
-    const activeNode = this.getActiveNode();
-    const nodeId = activeNode.data.id;
+  updateTreeNodeMetadata(newData: any, nodeToBeUpdated?: any, primaryCategory?: any) {
+    const activeNode = !_.isUndefined(nodeToBeUpdated) ? this.getNodeById(nodeToBeUpdated) : this.getActiveNode();
+    const nodeId = nodeToBeUpdated  || activeNode.data.id;
     if (newData.instructions) {
       newData.instructions = { default: newData.instructions };
      }
@@ -72,6 +73,8 @@ export class TreeService {
     const attributions = newData.attributions;
     if (attributions && _.isString(attributions)) {
       newData.attributions = attributions.split(',');
+    } else if (attributions && _.isArray(attributions)) {
+      newData.attributions = attributions;
     } else {
       newData.attributions = [];
     }
@@ -92,6 +95,9 @@ export class TreeService {
     }
     delete newData.maxTime;
     delete newData.warningTime;
+    if (primaryCategory) {
+      newData.primaryCategory = primaryCategory;
+    }
     this.setTreeCache(nodeId, newData, activeNode.data);
   }
 
@@ -159,6 +165,11 @@ export class TreeService {
     }
   }
 
+  getParent() {
+    const selectedNode = this.getActiveNode();
+    return !_.isEmpty(selectedNode) ? selectedNode.getParent() : this.getNodeById(this.previousNode) || this.getFirstChild();
+  }
+
   getFirstChild() {
     return $(this.treeNativeElement).fancytree('getRootNode').getFirstChild();
   }
@@ -193,6 +204,14 @@ export class TreeService {
     const nodes = [];
     this.getActiveNode().visit((node) => {
       nodes.push(node);
+    });
+    return nodes;
+  }
+
+  getLeafNodes() {
+    const nodes = [];
+    this.getActiveNode().visit((node) => {
+      if (!_.includes(node.icon, 'folder')) { nodes.push(node); }
     });
     return nodes;
   }
