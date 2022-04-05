@@ -37,6 +37,7 @@ export class EditorService {
   optionsLength: any;
   selectedPrimaryCategory: any;
   leafParentIdentifier: any;
+  totalQuestionIds = [];
   constructor(public treeService: TreeService, private toasterService: ToasterService,
               public configService: ConfigService, private telemetryService: EditorTelemetryService,
               private publicDataService: PublicDataService, private dataService: DataService, public httpClient: HttpClient) {
@@ -307,39 +308,47 @@ export class EditorService {
     this.questionStream$.next(value);
   }
 
-  async getMaxScore() {
-    let maxScore = 0;
-    const rootNode = this.treeService.getFirstChild();
-    const metadata = _.get(rootNode, 'data.metadata');
-    let questionIds = [];
-    let questionCount = 0;
-    if (_.get(this.editorConfig, 'config.maxDepth') === 0) {
-      const allQuestionIds = this.getContentChildrens();
-      questionCount = metadata.maxQuestions ? metadata.maxQuestions : allQuestionIds.length;
-      questionIds = _.take(allQuestionIds, questionCount);
-    }
-    if (_.get(this.editorConfig, 'config.maxDepth') === 1) {
-      const childrens = _.get(rootNode, 'children');
-      if (!_.isEmpty(childrens)) {
-        for (const children of childrens) {
-          if (children.data.objectType === 'QuestionSet') {
-            if (children.data.metadata.maxQuestions) {
-              questionCount = children.data.metadata.maxQuestions;
-            } else {
-              questionCount = children.children ?
-              children.children.length : 0;
-            }
-            for (let i = 0; i < questionCount; i++) {
-              if (!_.isEmpty(children, 'children')) {
-                questionIds.push(children.children[i].data.id);
+  checkChildrenAndGetQuestions(childrens) {
+    const self = this;
+    for (const children of childrens) {
+      if (children.data.objectType === 'QuestionSet') {
+        let questionCount = 0;
+        if (children.data.metadata.maxQuestions) {
+          questionCount = children.data.metadata.maxQuestions;
+        } else {
+          questionCount = children.children ?
+          children.children.length : 0;
+        }
+        if (questionCount > 0) {
+          for (let i = 0; i < questionCount; i++) {
+            if (!_.isEmpty(children, 'children')) {
+              if (children.children[i].data.objectType === 'QuestionSet') {
+                self.checkChildrenAndGetQuestions([children.children[i]]);
+              } else {
+                if (!_.includes(this.totalQuestionIds, children.children[i].data.id)) {
+                  this.totalQuestionIds.push(children.children[i].data.id);
+                }
               }
-             }
+            }
           }
         }
       }
     }
-    if (!_.isEmpty(questionIds)) {
-      const { questions } =  await this.getQuestionList(questionIds).toPromise();
+  }
+
+  async getMaxScore() {
+    let maxScore = 0;
+    let rootNode = [];
+    this.totalQuestionIds = [];
+    const rootNodeData = this.treeService.getFirstChild();
+    if (rootNodeData.children) {
+      rootNode = [rootNodeData];
+    }
+    if (!_.isEmpty(rootNode)) {
+      this.checkChildrenAndGetQuestions(rootNode);
+    }
+    if (!_.isEmpty(this.totalQuestionIds)) {
+      const { questions } =  await this.getQuestionList(this.totalQuestionIds).toPromise();
       maxScore = this.calculateMaxScore(questions);
     }
     return maxScore;
@@ -392,7 +401,7 @@ export class EditorService {
     }
     return instance.data;
   }
-  
+
 
  _toFlatObjFromHierarchy(data) {
     const instance = this;

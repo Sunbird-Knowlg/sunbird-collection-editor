@@ -468,6 +468,34 @@ describe('EditorService', () => {
     expect(editorService.getPrimaryCategoryName).toHaveBeenCalledWith('do_11326714211239526417')
   });
 
+  it('#calculateMaxScore should return calculated Max Score as 1', () => {
+    spyOn(editorService, 'calculateMaxScore').and.callThrough();
+    const questions = [{
+      responseDeclaration: {
+        response1: {
+          maxScore: 1
+        }
+      },
+      primaryCategory: 'Multiple Choice Question'
+    }];
+    const maxScore = editorService.calculateMaxScore(questions);
+    expect(maxScore).toEqual(1);
+  });
+
+  it('#calculateMaxScore should return calculated Max Score as 0', () => {
+    spyOn(editorService, 'calculateMaxScore').and.callThrough();
+    const questions = [{
+      responseDeclaration: {
+        response1: {
+          type: 'string'
+        }
+      },
+      primaryCategory: 'Subjective Question'
+    }];
+    const maxScore = editorService.calculateMaxScore(questions);
+    expect(maxScore).toEqual(0);
+  });
+
   it('#getCollectionHierarchy should call',()=>{
     spyOn(editorService,'getCollectionHierarchy').and.callThrough();
     spyOn(treeService, 'getFirstChild').and.callFake(() => {
