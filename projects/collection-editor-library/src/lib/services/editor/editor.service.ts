@@ -308,25 +308,46 @@ export class EditorService {
   }
 
   async getMaxScore() {
+    let maxScore = 0;
     const rootNode = this.treeService.getFirstChild();
     const metadata = _.get(rootNode, 'data.metadata');
-    const questionIds = this.getContentChildrens();
-    if (metadata.shuffle) {
-      if (metadata.maxQuestions && !_.isEmpty(questionIds) ) {
-        const { questions } =  await this.getQuestionList(_.take(questionIds, metadata.maxQuestions)).toPromise();
-        const maxScore = this.calculateMaxScore(questions);
-        return maxScore;
-      } else {
-        return questionIds.length;
-      }
-    } else {
-      return metadata.maxQuestions ? metadata.maxQuestions : questionIds.length;
+    let questionIds = [];
+    let questionCount = 0;
+    if (_.get(this.editorConfig, 'config.maxDepth') === 0) {
+      const allQuestionIds = this.getContentChildrens();
+      questionCount = metadata.maxQuestions ? metadata.maxQuestions : allQuestionIds.length;
+      questionIds = _.take(allQuestionIds, questionCount);
     }
+    if (_.get(this.editorConfig, 'config.maxDepth') === 1) {
+      const childrens = _.get(rootNode, 'children');
+      if (!_.isEmpty(childrens)) {
+        for (const children of childrens) {
+          if (children.data.objectType === 'QuestionSet') {
+            if (children.data.metadata.maxQuestions) {
+              questionCount = children.data.metadata.maxQuestions;
+            } else {
+              questionCount = children.children ?
+              children.children.length : 0;
+            }
+            for (let i = 0; i < questionCount; i++) {
+              if (!_.isEmpty(children, 'children')) {
+                questionIds.push(children.children[i].data.id);
+              }
+             }
+          }
+        }
+      }
+    }
+    if (!_.isEmpty(questionIds)) {
+      const { questions } =  await this.getQuestionList(questionIds).toPromise();
+      maxScore = this.calculateMaxScore(questions);
+    }
+    return maxScore;
   }
 
   calculateMaxScore(questions: Array<any>) {
    return _.reduce(questions, (sum, question) => {
-      return sum + (question.responseDeclaration ? _.get(question, 'responseDeclaration.response1.maxScore') : 1);
+      return sum + (question.responseDeclaration.response1.maxScore ? _.get(question, 'responseDeclaration.response1.maxScore') : 0);
     }, 0);
   }
 
