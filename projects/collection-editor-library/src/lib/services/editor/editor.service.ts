@@ -37,7 +37,7 @@ export class EditorService {
   optionsLength: any;
   selectedPrimaryCategory: any;
   leafParentIdentifier: any;
-  totalQuestionIds = [];
+  questionIds = [];
   constructor(public treeService: TreeService, private toasterService: ToasterService,
               public configService: ConfigService, private telemetryService: EditorTelemetryService,
               private publicDataService: PublicDataService, private dataService: DataService, public httpClient: HttpClient) {
@@ -308,7 +308,7 @@ export class EditorService {
     this.questionStream$.next(value);
   }
 
-  checkChildrenAndGetQuestions(childrens) {
+  checkChildrenAndSetQuestions(childrens) {
     const self = this;
     for (const children of childrens) {
       if (children.data.objectType === 'QuestionSet') {
@@ -323,10 +323,10 @@ export class EditorService {
           for (let i = 0; i < questionCount; i++) {
             if (!_.isEmpty(children, 'children')) {
               if (children.children[i].data.objectType === 'QuestionSet') {
-                self.checkChildrenAndGetQuestions([children.children[i]]);
+                self.checkChildrenAndSetQuestions([children.children[i]]);
               } else {
-                if (!_.includes(this.totalQuestionIds, children.children[i].data.id)) {
-                  this.totalQuestionIds.push(children.children[i].data.id);
+                if (!_.includes(this.questionIds, children.children[i].data.id)) {
+                  this.questionIds.push(children.children[i].data.id);
                 }
               }
             }
@@ -339,16 +339,16 @@ export class EditorService {
   async getMaxScore() {
     let maxScore = 0;
     let rootNode = [];
-    this.totalQuestionIds = [];
+    this.questionIds = [];
     const rootNodeData = this.treeService.getFirstChild();
     if (rootNodeData.children) {
       rootNode = [rootNodeData];
     }
     if (!_.isEmpty(rootNode)) {
-      this.checkChildrenAndGetQuestions(rootNode);
+      this.checkChildrenAndSetQuestions(rootNode);
     }
-    if (!_.isEmpty(this.totalQuestionIds)) {
-      const { questions } =  await this.getQuestionList(this.totalQuestionIds).toPromise();
+    if (!_.isEmpty(this.questionIds)) {
+      const { questions } =  await this.getQuestionList(this.questionIds).toPromise();
       maxScore = this.calculateMaxScore(questions);
     }
     return maxScore;
