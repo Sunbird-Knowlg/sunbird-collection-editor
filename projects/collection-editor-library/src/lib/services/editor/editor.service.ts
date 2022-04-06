@@ -313,7 +313,7 @@ export class EditorService {
     for (const children of childrens) {
       if (children.data.objectType === 'QuestionSet') {
         let questionCount = 0;
-        if (children.data.metadata.maxQuestions) {
+        if (children?.data?.metadata?.maxQuestions) {
           questionCount = children.data.metadata.maxQuestions;
         } else {
           questionCount = children.children ?

@@ -12,7 +12,9 @@ import { of } from 'rxjs';
 import { PublicDataService } from '../public-data/public-data.service';
 import { ToasterService} from '../../services/toaster/toaster.service';
 import { TreeService } from '../tree/tree.service';
-
+import * as mockData from './editor.service.data';
+import { map } from 'rxjs/operators';
+import * as _ from 'lodash-es';
 
 describe('EditorService', () => {
   let editorService: EditorService;
@@ -466,6 +468,42 @@ describe('EditorService', () => {
     spyOn(editorService,'getPrimaryCategoryName').and.callThrough();
     editorService.getPrimaryCategoryName('do_11326714211239526417');
     expect(editorService.getPrimaryCategoryName).toHaveBeenCalledWith('do_11326714211239526417')
+  });
+
+  it('#checkChildrenAndSetQuestions should set questionIds', () => {
+    editorService.questionIds = [];
+    spyOn(editorService, 'checkChildrenAndSetQuestions').and.callThrough();
+    editorService.checkChildrenAndSetQuestions([mockData.rootNode.children]);
+    expect(editorService.questionIds).toEqual(['do_1135097615298723841131', 'do_1135097709808189441133']);
+  });
+
+  it('#getMaxScore should not call calculateMaxScore', async () => {
+    spyOn(editorService.treeService, 'getFirstChild').and.returnValue({});
+    spyOn(editorService, 'checkChildrenAndSetQuestions').and.callFake(() => {});
+    spyOn(await editorService, 'getQuestionList').and.callFake(() => {});
+    spyOn(editorService, 'calculateMaxScore').and.callFake(() => {});
+    spyOn(editorService, 'getMaxScore').and.callThrough();
+    const maxScore = await editorService.getMaxScore();
+    expect(editorService.treeService.getFirstChild).toHaveBeenCalled();
+    expect(editorService.checkChildrenAndSetQuestions).not.toHaveBeenCalled();
+    expect(editorService.getQuestionList).not.toHaveBeenCalled();
+    expect(editorService.calculateMaxScore).not.toHaveBeenCalled();
+    expect(maxScore).toEqual(0);
+  });
+
+  it('#getMaxScore should return maxScore', async () => {
+    spyOn(editorService.treeService, 'getFirstChild').and.returnValue(mockData.rootNode);
+    spyOn(editorService, 'checkChildrenAndSetQuestions').and.callFake(() => {
+      editorService.questionIds = ['do_1135097615298723841131', 'do_1135097709808189441133'];
+    });
+    spyOn(await editorService, 'getQuestionList').and.returnValue(of(mockData.questionResult).pipe(map(data => _.get(data, 'result'))));
+    spyOn(editorService, 'calculateMaxScore').and.callThrough();
+    spyOn(editorService, 'getMaxScore').and.callThrough();
+    const maxScore = await editorService.getMaxScore();
+    expect(editorService.questionIds.length).toEqual(2);
+    expect(editorService.getQuestionList).toHaveBeenCalled();
+    expect(editorService.calculateMaxScore).toHaveBeenCalled();
+    expect(maxScore).toEqual(1);
   });
 
   it('#calculateMaxScore should return calculated Max Score as 1', () => {
