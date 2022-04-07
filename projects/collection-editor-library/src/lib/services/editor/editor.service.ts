@@ -308,7 +308,7 @@ export class EditorService {
     this.questionStream$.next(value);
   }
 
-  checkChildrenAndSetQuestions(childrens) {
+  setQuestionIds(childrens) {
     const self = this;
     for (const children of childrens) {
       if (children.data.objectType === 'QuestionSet') {
@@ -323,7 +323,7 @@ export class EditorService {
           for (let i = 0; i < questionCount; i++) {
             if (!_.isEmpty(children, 'children')) {
               if (children.children[i].data.objectType === 'QuestionSet') {
-                self.checkChildrenAndSetQuestions([children.children[i]]);
+                self.setQuestionIds([children.children[i]]);
               } else {
                 if (!_.includes(this.questionIds, children.children[i].data.id)) {
                   this.questionIds.push(children.children[i].data.id);
@@ -345,7 +345,7 @@ export class EditorService {
       rootNode = [rootNodeData];
     }
     if (!_.isEmpty(rootNode)) {
-      this.checkChildrenAndSetQuestions(rootNode);
+      this.setQuestionIds(rootNode);
     }
     if (!_.isEmpty(this.questionIds)) {
       const { questions } =  await this.getQuestionList(this.questionIds).toPromise();
