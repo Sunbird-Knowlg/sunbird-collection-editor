@@ -12,7 +12,7 @@ import { of } from 'rxjs';
 import { PublicDataService } from '../public-data/public-data.service';
 import { ToasterService} from '../../services/toaster/toaster.service';
 import { TreeService } from '../tree/tree.service';
-import * as mockData from './editor.service.data';
+import * as mockData from './editor.service.spec.data';
 import { map } from 'rxjs/operators';
 import * as _ from 'lodash-es';
 
