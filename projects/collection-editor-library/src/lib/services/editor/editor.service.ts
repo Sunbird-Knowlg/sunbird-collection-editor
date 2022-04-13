@@ -356,7 +356,7 @@ export class EditorService {
 
   calculateMaxScore(questions: Array<any>) {
    return _.reduce(questions, (sum, question) => {
-      return sum + (question.responseDeclaration.response1.maxScore ? _.get(question, 'responseDeclaration.response1.maxScore') : 0);
+      return sum + (question?.responseDeclaration?.response1?.maxScore ? _.get(question, 'responseDeclaration.response1.maxScore') : 0);
     }, 0);
   }
 
