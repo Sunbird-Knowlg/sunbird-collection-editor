@@ -332,6 +332,9 @@ describe("QuestionComponent", () => {
 
   it("#initialize should call when question page for question text", () => {
     spyOn(component, "initialize").and.callThrough();
+    component.leafFormConfig=leafFormConfigMock;
+    component.initialLeafFormConfig=leafFormConfigMock;
+    component.childFormData = childMetaData;
     component.questionInteractionType = "text";
     component.questionId = "do_11330103476396851218";
     editorService.parentIdentifier = undefined;
@@ -360,9 +363,10 @@ describe("QuestionComponent", () => {
   it("#initialize should call when question page for question date", () => {
     spyOn(component, "initialize").and.callThrough();
     component.questionInteractionType = "date";
+    component.leafFormConfig=leafFormConfigMock;
+    component.initialLeafFormConfig=leafFormConfigMock;
+    component.childFormData = childMetaData;
     component.questionId = "do_11330103476396851218";
-    component.questionFormConfig = leafFormConfigMock;
-    component.leafFormConfig = leafFormConfigMock;
     editorService.parentIdentifier = undefined;
     spyOn(editorService, "getToolbarConfig").and.returnValue({
       title: "abcd",
@@ -390,8 +394,9 @@ describe("QuestionComponent", () => {
     spyOn(component, "initialize").and.callThrough();
     component.questionId = "do_11330103476396851218";
     editorService.parentIdentifier = undefined;
-    component.questionFormConfig = leafFormConfigMock;
-    component.leafFormConfig = leafFormConfigMock;
+    component.leafFormConfig=leafFormConfigMock;
+    component.initialLeafFormConfig=leafFormConfigMock;
+    component.childFormData = childMetaData;
     spyOn(editorService, "getToolbarConfig").and.returnValue({
       title: "abcd",
       showDialcode: "No",
@@ -615,6 +620,7 @@ describe("QuestionComponent", () => {
 
   it("Unit test for #populateFormData ", () => {
     component.childFormData = {};
+    component.isReadOnlyMode=false;
     component.questionMetaData=mockData.mcqQuestionMetaData.result.question;
     component.leafFormConfig = leafFormConfigMock;
     component.initialLeafFormConfig = leafFormConfigMock;

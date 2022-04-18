@@ -1133,7 +1133,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.questionFormConfig = null;
     _.forEach(formConfig, (formFieldCategory) => {
       if (_.has(formFieldCategory, 'editable') && !_.isUndefined(formFieldCategory.editable)) {
-        formFieldCategory.editable = status ? _.find(this.initialLeafFormConfig, { code: formFieldCategory.code }).editable : status;
+        formFieldCategory.editable = status ? _.find(this.leafFormConfig, { code: formFieldCategory.code }).editable : status;
         formFieldCategory.default = this.childFormData[formFieldCategory.code];
       }
     });
