@@ -364,9 +364,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       case 'showReviewcomments':
         this.showReviewModal = !this.showReviewModal;
         break;
-      case 'reviewContent':
-        this.isReadOnlyMode = true;
-        break;  
       default:
         break;
     }
