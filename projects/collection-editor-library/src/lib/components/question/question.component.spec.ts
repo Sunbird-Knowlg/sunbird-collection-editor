@@ -144,6 +144,10 @@ describe("QuestionComponent", () => {
     spyOn(treeService, "getNodeById").and.callFake(()=>{
       return treeNodeData;
     })
+    component.conditions=[
+      {label:'Equal to',value:"eq"},
+      {label:'Not equal',value:'ne'}
+    ]
 
     // fixture.detectChanges();
   });
@@ -648,10 +652,10 @@ describe("QuestionComponent", () => {
 
   it("should call previewFormData ", () => {
     spyOn(component, "previewFormData").and.callThrough();
+    component.leafFormConfig = mockData.childMetadata.properties;
     component.initialLeafFormConfig = mockData.childMetadata.properties;
     component.childFormData = childMetaData;
     component.questionFormConfig = mockData.childMetadata.properties;
-    component.leafFormConfig = mockData.childMetadata.properties;
     component.previewFormData(true);
     expect(component.leafFormConfig).toEqual(mockData.childMetadata.properties);
     expect(component.previewFormData).toHaveBeenCalled();

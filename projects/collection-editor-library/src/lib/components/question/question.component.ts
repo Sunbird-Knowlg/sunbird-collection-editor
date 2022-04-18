@@ -109,7 +109,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   selectedSectionId: any;
   sectionPrimaryCategory: any;
   public questionFormConfig: any;
-  conditions=[
+  public conditions:any=[
     {label:'Equal to',value:"eq"},
     {label:'Not equal',value:'ne'}
   ]
@@ -1184,8 +1184,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         this.childFormData[formFieldCategory.code] = formFieldCategory.default;
       }
     });
-    (this.editorService.editorMode ==='review' && !_.isUndefined(this.editorService.editorConfig.config.renderTaxonomy)) ? this.previewFormData(false) : this.previewFormData(true);
     this.fetchFrameWorkDetails();
+    (this.isReadOnlyMode ===true && !_.isUndefined(this.editorService.editorConfig.config.renderTaxonomy)) ? this.previewFormData(false) : this.previewFormData(true);
   }
 
   subMenuChange({ index, value }) {
