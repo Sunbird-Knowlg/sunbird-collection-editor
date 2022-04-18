@@ -109,10 +109,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   selectedSectionId: any;
   sectionPrimaryCategory: any;
   public questionFormConfig: any;
-  public conditions:any=[
-    {label:'Equal to',value:"eq"},
-    {label:'Not equal',value:'ne'}
-  ]
   constructor(
     private questionService: QuestionService, public editorService: EditorService, public telemetryService: EditorTelemetryService,
     public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,

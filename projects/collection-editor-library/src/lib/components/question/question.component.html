@@ -17,8 +17,8 @@
             <div class="options">
               <sui-select [(ngModel)]="condition" valueField="value" class="selection multiselect"
               labelField="label" [placeholder]="'Select Condition'" #select [isDisabled]="(editorService.editorMode === 'review') ? true : false">
-                <sui-select-option *ngFor="let option of conditions" [value]="option">
-                </sui-select-option>
+                <sui-select-option [value]="{label:'Equal to',value:'eq'}"></sui-select-option>
+                <sui-select-option [value]="{label:'Not equal',value:'ne'}"></sui-select-option>
               </sui-select>
 
               <sui-multi-select class="selection multiselect" [(ngModel)]="selectedOptions" valueField="value"
@@ -159,7 +159,7 @@
               </ng-template>
             </div>
           </div>
-          <lib-translations *ngIf="showTranslation"></lib-translations>
+          <!-- <lib-translations *ngIf="showTranslation"></lib-translations> -->
           <!-- child question section -->
           <div class="b-1-100 br-4 my-15 px-32 py-10 sb-bg-color-primary-0"
             *ngFor="let question of dependentQuestions;let childindex=index">

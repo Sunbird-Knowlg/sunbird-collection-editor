@@ -144,10 +144,6 @@ describe("QuestionComponent", () => {
     spyOn(treeService, "getNodeById").and.callFake(()=>{
       return treeNodeData;
     })
-    component.conditions=[
-      {label:'Equal to',value:"eq"},
-      {label:'Not equal',value:'ne'}
-    ]
 
     // fixture.detectChanges();
   });
