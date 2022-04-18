@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import * as _ from 'lodash-es';
-import { DialcodeCursor } from 'common-form-elements-web-v9';
+import { DialcodeCursor } from '@project-sunbird/common-form-elements-web-v9';
 import { ConfigService } from '../config/config.service';
 import { PublicDataService } from '../public-data/public-data.service';
 import { TreeService } from '../../services/tree/tree.service';

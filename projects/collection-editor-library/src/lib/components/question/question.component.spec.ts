@@ -126,6 +126,7 @@ describe("QuestionComponent", () => {
     editorService.selectedChildren.label = "Slider";
     component.toolbarConfig.showPreview = false;
     component.creationContext = creationContextMock;
+    component.leafFormConfig = leafFormConfigMock;
     editorService.optionsLength = 4;
     editorService.selectedChildren.label = "MCQ";
     component.questionInput = {
@@ -171,6 +172,8 @@ describe("QuestionComponent", () => {
 
   it("Unit test for #ngOnInit()", () => {
     component.toolbarConfig = editorService.toolbarConfig;
+    component.leafFormConfig=leafFormConfigMock;
+    component.initialLeafFormConfig=leafFormConfigMock;
     component.questionFormConfig = leafFormConfigMock;
     component.questionInput = {
       questionSetId: "do_11330102570702438417",
@@ -194,6 +197,7 @@ describe("QuestionComponent", () => {
       of(mockData.mcqQuestionMetaData)
     );
     component.ngOnInit();
+    component.previewFormData(true);
     expect(component.questionInteractionType).toEqual("choice");
     expect(component.questionCategory).toEqual("MTF");
     expect(component.questionId).toEqual("do_11330103476396851218");
@@ -239,12 +243,13 @@ describe("QuestionComponent", () => {
   });
 
   it("#initialize should call when question page for question mcq", () => {
+    component.initialLeafFormConfig = leafFormConfigMock;
+    component.leafFormConfig = leafFormConfigMock;
+    component.questionFormConfig=leafFormConfigMock;
     spyOn(component, "initialize").and.callThrough();
     component.questionId = "do_11330103476396851218";
     editorService.parentIdentifier = undefined;
     component.questionPrimaryCategory = undefined;
-    component.initialLeafFormConfig = leafFormConfigMock;
-    component.leafFormConfig = leafFormConfigMock;
     spyOn(editorService, "getToolbarConfig").and.returnValue({
       title: "abcd",
       showDialcode: "No",
@@ -270,6 +275,7 @@ describe("QuestionComponent", () => {
       type:'vedio'
     }]
     component.initialize();
+    component.previewFormData(true);
     expect(component.initialize).toHaveBeenCalled();
   });
 
@@ -329,8 +335,6 @@ describe("QuestionComponent", () => {
     component.questionInteractionType = "text";
     component.questionId = "do_11330103476396851218";
     editorService.parentIdentifier = undefined;
-    component.questionFormConfig = leafFormConfigMock;
-    component.leafFormConfig = leafFormConfigMock;
     spyOn(editorService, "getToolbarConfig").and.returnValue({
       title: "abcd",
       showDialcode: "No",
@@ -349,6 +353,7 @@ describe("QuestionComponent", () => {
     component.editorState =
       mockData.textQuestionNetaData.result.question.editorState;
     component.initialize();
+    component.previewFormData(false);
     expect(component.initialize).toHaveBeenCalled();
   });
 

@@ -477,6 +477,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       case 'showReviewcomments':
         this.showReviewModal = !this.showReviewModal;
         break;
+      case 'reviewContent':
+        this.redirectToQuestionTab('review');
+        break;    
       // case 'showCorrectioncomments':
         // this.contentComment = _.get(this.editorConfig, 'context.correctionComments')
         // this.showReviewModal = !this.showReviewModal;
@@ -928,7 +931,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   redirectToQuestionTab(mode, interactionType?) {
-    let questionId = mode === 'edit' ? this.selectedNodeData?.data?.metadata?.identifier : undefined;
+    let questionId = (mode === 'edit' || mode === 'review') ? this.selectedNodeData?.data?.metadata?.identifier : undefined;
     let questionCategory = '';
     if (this.objectType === 'question') {
       questionId = _.get(this.editorConfig, 'context.identifier');
@@ -956,11 +959,19 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       creationMode: mode
     };
 
-    if(mode === 'edit' && !_.isUndefined(this.editorConfig.config.renderTaxonomy)){
+    if((mode === 'edit' || mode === 'review') && !_.isUndefined(this.editorConfig.config.renderTaxonomy)){
       this.editorService.selectedChildren = {
         primaryCategory: _.get(this.selectedNodeData, 'data.metadata.primaryCategory'),
         interactionType: _.get(this.selectedNodeData, 'data.metadata.interactionTypes[0]')
       };
+      if(mode === 'review'){
+        this.questionComponentInput = {
+          ...this.questionComponentInput,
+          creationContext:{
+            isReadOnlyMode:true
+          }
+        }
+      }
       this.editorService.getCategoryDefinition(this.selectedNodeData.data.metadata.primaryCategory, null, 'Question')
       .subscribe((res) => {
         const selectedtemplateDetails = res.result.objectCategoryDefinition;
@@ -1160,4 +1171,3 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 }
-

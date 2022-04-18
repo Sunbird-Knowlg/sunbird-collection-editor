@@ -30,6 +30,17 @@
     </div>
 </div>
 
+<div class="ui mt-20"
+    *ngIf="(editorService?.editorMode === 'review' && editorService?.editorConfig?.config?.renderTaxonomy != undefined)">
+    <div class="ui twelve column grid m-0">
+        <div class="nine wide column p-0 text-left">
+            <button type="button" class="sb-btn sb-btn-normal sb-btn-primary mr-15"  (click)="reviewQuestion();" libTelemetryInteract
+                [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('edit','click','launch', telemetryService.telemetryPageId)">
+                View Details</button>
+        </div>
+    </div>
+</div>
+
 <hr class="my-20">
 <div class="ui grid text-font">
     <div class="five wide column">

@@ -3,6 +3,7 @@ import { mockConfigService, mockData } from "./slider.component.spec.data";
 import { SliderComponent } from "./slider.component";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { ConfigService } from '../../services/config/config.service';
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 
 describe("SliderComponent", () => {
   let component: SliderComponent;
@@ -10,6 +11,7 @@ describe("SliderComponent", () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports:[HttpClientTestingModule],
       declarations: [SliderComponent],
       providers:[
         { provide: ConfigService, useValue: mockConfigService }

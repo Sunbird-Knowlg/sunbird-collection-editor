@@ -14,15 +14,15 @@
           </div>
           <div style="display: flex;align-items: flex-end;justify-content: flex-end;"
             *ngIf="showOptions || isChildQuestion ">
-            <div class="left" style="justify-content: flex-end;margin-right:10px">
-              <select (change)="conditionHandler($event)" [value]='condition'>
-                <option value="default">Select Condition</option>
-                <option value="eq">Equal to</option>
-                <option value="ne">Not equal</option>
-              </select>
+            <div class="options">
+              <sui-select [(ngModel)]="condition" valueField="value" class="selection multiselect"
+              labelField="label" [placeholder]="'Select Condition'" #select [isDisabled]="(editorService.editorMode === 'review') ? true : false">
+                <sui-select-option *ngFor="let option of conditions" [value]="option">
+                </sui-select-option>
+              </sui-select>
 
               <sui-multi-select class="selection multiselect" [(ngModel)]="selectedOptions" valueField="value"
-                labelField="label" [isSearchable]="false" #multiSelect>
+                labelField="label" [isSearchable]="false" #multiSelect [placeholder]="'Select options'" [isDisabled]="(editorService.editorMode === 'review') ? true : false" >
                 <sui-select-option *ngFor="let option of options" [value]="option">
                 </sui-select-option>
               </sui-multi-select>

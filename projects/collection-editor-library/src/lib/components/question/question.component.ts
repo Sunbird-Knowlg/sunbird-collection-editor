@@ -109,8 +109,12 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   selectedSectionId: any;
   sectionPrimaryCategory: any;
   public questionFormConfig: any;
+  conditions=[
+    {label:'Equal to',value:"eq"},
+    {label:'Not equal',value:'ne'}
+  ]
   constructor(
-    private questionService: QuestionService, private editorService: EditorService, public telemetryService: EditorTelemetryService,
+    private questionService: QuestionService, public editorService: EditorService, public telemetryService: EditorTelemetryService,
     public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,
     private frameworkService: FrameworkService, private router: Router, public configService: ConfigService,
     private editorCursor: EditorCursor) {
@@ -238,6 +242,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
               }
 
               if (this.questionInteractionType === 'choice') {
+                this.subMenuConfig();
                 const responseDeclaration = this.questionMetaData.responseDeclaration;
                 this.scoreMapping = _.get(responseDeclaration, 'response1.mapping');
                 const templateId = this.questionMetaData.templateId;
@@ -306,6 +311,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       };
       this.editorService.apiErrorHandling(err, errInfo);
     });
+    this.subMenuConfig();
 
   }
 
@@ -358,6 +364,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       case 'showReviewcomments':
         this.showReviewModal = !this.showReviewModal;
         break;
+      case 'reviewContent':
+        this.isReadOnlyMode = true;
+        break;  
       default:
         break;
     }
@@ -1123,7 +1132,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     const formConfig = _.cloneDeep(this.leafFormConfig);
     this.questionFormConfig = null;
     _.forEach(formConfig, (formFieldCategory) => {
-      if (_.has(formFieldCategory, 'editable')) {
+      if (_.has(formFieldCategory, 'editable') && !_.isUndefined(formFieldCategory.editable)) {
         formFieldCategory.editable = status ? _.find(this.initialLeafFormConfig, { code: formFieldCategory.code }).editable : status;
         formFieldCategory.default = this.childFormData[formFieldCategory.code];
       }
@@ -1178,6 +1187,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         this.childFormData[formFieldCategory.code] = formFieldCategory.default;
       }
     });
+    (this.editorService.editorMode ==='review' && !_.isUndefined(this.editorService.editorConfig.config.renderTaxonomy)) ? this.previewFormData(false) : this.previewFormData(true);
     this.fetchFrameWorkDetails();
   }
 
@@ -1263,11 +1273,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       obj.step = val.step;
     }
     this.sliderDatas = obj;
-  }
-
-
-  conditionHandler(e) {
-    this.condition = e.target.value;
   }
 
   optionHandler(e) {
