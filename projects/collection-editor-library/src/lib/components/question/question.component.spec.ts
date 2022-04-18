@@ -35,6 +35,7 @@ import { treeNodeData } from "../editor/editor.component.spec.data";
 const mockEditorService = {
   editorConfig: {
     config: {
+      renderTaxonomy:false,
       hierarchy: {
         level1: {
           name: "Module",
@@ -66,6 +67,7 @@ const mockEditorService = {
     subscribe: (fn) => fn({});
   },
   apiErrorHandling: () => {},
+  editorMode:'review'
 };
 
 describe("QuestionComponent", () => {
@@ -627,8 +629,23 @@ describe("QuestionComponent", () => {
     component.questionFormConfig = leafFormConfigMock;
     component.questionId = "do_123";
     component.questionSetHierarchy = collectionHierarchyMock.result.questionSet;
+    component.previewFormData(false);
     component.populateFormData();
   });
+
+  it("Unit test for #populateFormData readonly mode true ", () => {
+    component.childFormData = {};
+    component.isReadOnlyMode=true;
+    component.questionMetaData=mockData.mcqQuestionMetaData.result.question;
+    component.leafFormConfig = leafFormConfigMock;
+    component.initialLeafFormConfig = leafFormConfigMock;
+    component.questionFormConfig = leafFormConfigMock;
+    component.questionId = "do_123";
+    component.questionSetHierarchy = collectionHierarchyMock.result.questionSet;
+    component.previewFormData(true);
+    component.populateFormData();
+  });
+
   it("should call previewFormData ", () => {
     spyOn(component, "previewFormData").and.callThrough();
     component.initialLeafFormConfig = mockData.childMetadata.properties;
