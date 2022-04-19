@@ -15,8 +15,9 @@ interface PlayerConfig {
 })
 export class PlayerService {
   qumlPlayerSideMenuConfig = {
-    showShare: true,
-    showDownload: true,
+    enable: false,
+    showShare: false,
+    showDownload: false,
     showReplay: true,
     showExit: false,
   };

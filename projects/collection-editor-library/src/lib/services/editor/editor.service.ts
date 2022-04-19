@@ -37,6 +37,7 @@ export class EditorService {
   optionsLength: any;
   selectedPrimaryCategory: any;
   leafParentIdentifier: any;
+  questionIds = [];
   constructor(public treeService: TreeService, private toasterService: ToasterService,
               public configService: ConfigService, private telemetryService: EditorTelemetryService,
               private publicDataService: PublicDataService, private dataService: DataService, public httpClient: HttpClient) {
@@ -307,26 +308,55 @@ export class EditorService {
     this.questionStream$.next(value);
   }
 
-  async getMaxScore() {
-    const rootNode = this.treeService.getFirstChild();
-    const metadata = _.get(rootNode, 'data.metadata');
-    const questionIds = this.getContentChildrens();
-    if (metadata.shuffle) {
-      if (metadata.maxQuestions && !_.isEmpty(questionIds) ) {
-        const { questions } =  await this.getQuestionList(_.take(questionIds, metadata.maxQuestions)).toPromise();
-        const maxScore = this.calculateMaxScore(questions);
-        return maxScore;
-      } else {
-        return questionIds.length;
+  setQuestionIds(childrens) {
+    const self = this;
+    for (const children of childrens) {
+      if (children.data.objectType === 'QuestionSet') {
+        let questionCount = 0;
+        if (children?.data?.metadata?.maxQuestions) {
+          questionCount = children.data.metadata.maxQuestions;
+        } else {
+          questionCount = children.children ?
+          children.children.length : 0;
+        }
+        if (questionCount > 0) {
+          for (let i = 0; i < questionCount; i++) {
+            if (!_.isEmpty(children, 'children')) {
+              if (children.children[i].data.objectType === 'QuestionSet') {
+                self.setQuestionIds([children.children[i]]);
+              } else {
+                if (!_.includes(this.questionIds, children.children[i].data.id)) {
+                  this.questionIds.push(children.children[i].data.id);
+                }
+              }
+            }
+          }
+        }
       }
-    } else {
-      return metadata.maxQuestions ? metadata.maxQuestions : questionIds.length;
     }
+  }
+
+  async getMaxScore() {
+    let maxScore = 0;
+    let rootNode = [];
+    this.questionIds = [];
+    const rootNodeData = this.treeService.getFirstChild();
+    if (rootNodeData.children) {
+      rootNode = [rootNodeData];
+    }
+    if (!_.isEmpty(rootNode)) {
+      this.setQuestionIds(rootNode);
+    }
+    if (!_.isEmpty(this.questionIds)) {
+      const { questions } =  await this.getQuestionList(this.questionIds).toPromise();
+      maxScore = this.calculateMaxScore(questions);
+    }
+    return maxScore;
   }
 
   calculateMaxScore(questions: Array<any>) {
    return _.reduce(questions, (sum, question) => {
-      return sum + (question.responseDeclaration ? _.get(question, 'responseDeclaration.response1.maxScore') : 1);
+      return sum + (question?.responseDeclaration?.response1?.maxScore ? _.get(question, 'responseDeclaration.response1.maxScore') : 0);
     }, 0);
   }
 
@@ -371,7 +401,7 @@ export class EditorService {
     }
     return instance.data;
   }
-  
+
 
  _toFlatObjFromHierarchy(data) {
     const instance = this;
