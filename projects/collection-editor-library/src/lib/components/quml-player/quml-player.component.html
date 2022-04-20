@@ -1,9 +1,21 @@
  <div class="aspectratio" data-ratio="16:9">
      <div class="content-player">
         <div class="w-100 h-100">
-                <div class="contentViewerIframeShadow">
+                <div class="contentViewerIframeShadow" *ngIf="(editorService?.editorConfig?.config?.renderTaxonomy === undefined)">
                     <quml-main-player *ngIf="showPreview" [playerConfig]="qumlPlayerConfig" (playerEvent)="getPlayerEvents($event)"
                         (telemetryEvent)="getTelemetryEvents($event)"></quml-main-player>
+                </div>
+                <div class="mt-25">
+                    <h5>Click on View details to view the question details.</h5>
+                    <div class="ui  btn-align"
+                        *ngIf="(editorService?.editorMode === 'review' && editorService?.editorConfig?.config?.renderTaxonomy != undefined)">
+                        <div class="ui twelve column grid m-0">
+                            <div class="nine wide column p-0 text-left">
+                                <button type="button" class="sb-btn sb-btn-normal sb-btn-primary mr-15" (click)="reviewQuestion();">
+                                    View Details</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

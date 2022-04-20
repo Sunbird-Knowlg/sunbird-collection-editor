@@ -1,4 +1,4 @@
-import { Component, Input, OnInit , ViewEncapsulation} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit , Output, ViewEncapsulation} from '@angular/core';
 import * as _ from 'lodash-es';
 import { ConfigService } from '../../services/config/config.service';
 import { PlayerService } from '../../services/player/player.service';
@@ -14,8 +14,9 @@ export class QumlPlayerComponent implements OnInit {
   @Input() questionSetHierarchy: any;
   @Input() isSingleQuestionPreview = false;
   showPreview = false;
+  @Output() public toolbarEmitter: EventEmitter<any> = new EventEmitter();
   constructor(private configService: ConfigService, private playerService: PlayerService,
-    private editorService: EditorService ) { }
+    public editorService: EditorService ) { }
 
   ngOnInit() {
     this.initialize();
@@ -54,6 +55,10 @@ export class QumlPlayerComponent implements OnInit {
 
   getTelemetryEvents(event) {
     console.log('event is for telemetry', JSON.stringify(event));
+  }
+
+  reviewQuestion(){
+    this.toolbarEmitter.emit({});
   }
 
 }

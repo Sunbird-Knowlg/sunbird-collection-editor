@@ -964,12 +964,11 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         primaryCategory: _.get(this.selectedNodeData, 'data.metadata.primaryCategory'),
         interactionType: _.get(this.selectedNodeData, 'data.metadata.interactionTypes[0]')
       };
-      if(mode === 'review'){
         this.questionComponentInput = {
           ...this.questionComponentInput,
           creationContext:{
-            isReadOnlyMode:true
-          }
+            isReadOnlyMode: mode==='review' ?true : false,
+            correctionComments:this.contentComment
         }
       }
       this.editorService.getCategoryDefinition(this.selectedNodeData.data.metadata.primaryCategory, null, 'Question')

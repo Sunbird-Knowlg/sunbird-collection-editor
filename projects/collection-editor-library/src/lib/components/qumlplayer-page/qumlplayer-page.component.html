@@ -1,7 +1,7 @@
 <div>
     <div [ngClass]="{'potrait-mode': showPotrait}">
         <div class="b-1-100 br-2 mt-5" *ngIf="showPlayerPreview">
-            <lib-quml-player [questionSetHierarchy]="hierarchy" [isSingleQuestionPreview]="true" ></lib-quml-player>
+            <lib-quml-player [questionSetHierarchy]="hierarchy" [isSingleQuestionPreview]="true" (toolbarEmitter)="reviewQuestion()"></lib-quml-player>
         </div>
     </div>
 <div class="ui mt-20" *ngIf="(editorService.editorMode === 'edit')">
@@ -26,17 +26,6 @@
                     <i class="mobile alternate icon sb-color-primary fs-1-3" [ngClass]="{'opacity-icon': !showPotrait}"></i>
                 </button>
             </span>
-        </div>
-    </div>
-</div>
-
-<div class="ui mt-20"
-    *ngIf="(editorService?.editorMode === 'review' && editorService?.editorConfig?.config?.renderTaxonomy != undefined)">
-    <div class="ui twelve column grid m-0">
-        <div class="nine wide column p-0 text-left">
-            <button type="button" class="sb-btn sb-btn-normal sb-btn-primary mr-15"  (click)="reviewQuestion();" libTelemetryInteract
-                [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('edit','click','launch', telemetryService.telemetryPageId)">
-                View Details</button>
         </div>
     </div>
 </div>

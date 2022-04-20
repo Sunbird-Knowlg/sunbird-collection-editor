@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { Router } from '@angular/router';
-import { CommonFormElementsModule } from '@project-sunbird/common-form-elements-web-v9';
+import { CommonFormElementsModule } from 'common-form-elements-web-v9';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { SuiModule } from 'ng2-semantic-ui-v9';
 import * as $ from 'jquery';
