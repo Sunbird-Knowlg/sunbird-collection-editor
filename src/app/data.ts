@@ -598,7 +598,7 @@ export const observationEditorConfig = {
       orgIds: ['01309282781705830427']
     },
     // identifier: 'do_113395089840529408131', // 'do_1132393548335759361558', // do_11330102570702438417
-    identifier: 'do_113511152078536704153',  // 'do_1133610108714352641210', // Observation
+    identifier: 'do_113480838751551488129',  // 'do_1133610108714352641210', // Observation
     // identifier: 'do_113395099906416640139', // survey
     // identifier: 'do_1134357224765685761203', // Observation With Rubrics
     authToken: ' ',
@@ -705,7 +705,7 @@ export const observationEditorConfig = {
     }
   },
   config: {
-    mode: 'review', // edit / review / read / sourcingReview // orgReview
+    mode: 'edit', // edit / review / read / sourcingReview // orgReview
     editableFields: {
       //sourcingreview: ['instructions'],
       orgreview: ['name', 'instructions', 'learningOutcome'],
