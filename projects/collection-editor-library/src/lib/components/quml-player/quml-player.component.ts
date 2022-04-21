@@ -14,12 +14,16 @@ export class QumlPlayerComponent implements OnInit {
   @Input() questionSetHierarchy: any;
   @Input() isSingleQuestionPreview = false;
   showPreview = false;
+  showViewButton = false;
   @Output() public toolbarEmitter: EventEmitter<any> = new EventEmitter();
   constructor(private configService: ConfigService, private playerService: PlayerService,
     public editorService: EditorService ) { }
 
   ngOnInit() {
     this.initialize();
+    if(!_.isUndefined(this.editorService?.editorConfig?.config?.renderTaxonomy)){
+      this.showViewButton = true
+    }
   }
 
   initialize() {
