@@ -390,6 +390,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       this.editorInstance.model.insertContent(imageElement, this.editorInstance.model.document.selection);
     });
     this.showImagePicker = false;
+    this.showImageUploadModal = false;
   }
 
   addVideoInEditor(videoModal?) {
@@ -641,7 +642,6 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
             return throwError(this.editorService.apiErrorHandling(err, errInfo));
           })).subscribe((response1) => {
             this.addImageInEditor(response1.result.content_url, response1.result.node_id, this.assestData['name']);
-            this.dismissPops(modal);
           });
         });
       });
