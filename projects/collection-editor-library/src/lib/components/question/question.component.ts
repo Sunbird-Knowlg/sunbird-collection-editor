@@ -180,7 +180,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.editorService.fetchCollectionHierarchy(this.questionSetId).subscribe((response) => {
       this.questionSetHierarchy = _.get(response, 'result.questionSet');
       const parentId = this.editorService.parentIdentifier ? this.editorService.parentIdentifier : this.questionId;
-      this.subMenuConfig();
       //only for observation,survey,observation with rubrics 
       if (!_.isUndefined(parentId) && !_.isUndefined(this.editorService.editorConfig.config.renderTaxonomy)) {
         this.getParentQuestionOptions(parentId);
@@ -238,7 +237,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
               }
 
               if (this.questionInteractionType === 'choice') {
-                this.subMenuConfig();
                 const responseDeclaration = this.questionMetaData.responseDeclaration;
                 this.scoreMapping = _.get(responseDeclaration, 'response1.mapping');
                 const templateId = this.questionMetaData.templateId;
@@ -273,6 +271,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
               if (this.questionMetaData.media) {
                 this.mediaArr = this.questionMetaData.media;
               }
+              /** for observation and survey to show hint,tip,dependent question option. */
+              if(!_.isUndefined(this.editorService?.editorConfig?.config?.renderTaxonomy)){
+                this.subMenuConfig();
+              }
               this.contentComment = _.get(this.creationContext, 'correctionComments');
               this.showLoader = false;
             }
@@ -299,6 +301,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         else if (this.questionInteractionType === 'choice') {
           this.editorState = new McqForm({ question: '', options: [] }, {numberOfOptions: _.get(this.questionInput, 'config.numberOfOptions')});
         }
+        /** for observation and survey to show hint,tip,dependent question option. */
+        if(!_.isUndefined(this.editorService?.editorConfig?.config?.renderTaxonomy)){
+          this.subMenuConfig();
+        }
         this.showLoader = false;
       }
     }, (err: ServerResponse) => {
@@ -307,8 +313,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       };
       this.editorService.apiErrorHandling(err, errInfo);
     });
-    this.subMenuConfig();
-
   }
 
   get contentPolicyUrl() {
@@ -1181,7 +1185,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
     this.fetchFrameWorkDetails();
-    (this.isReadOnlyMode ===true && !_.isUndefined(this.editorService.editorConfig.config.renderTaxonomy)) ? this.previewFormData(false) : this.previewFormData(true);
+    (this.isReadOnlyMode ===true && !_.isUndefined(this.editorService?.editorConfig?.config?.renderTaxonomy)) ? this.previewFormData(false) : this.previewFormData(true);
   }
 
   subMenuChange({ index, value }) {
