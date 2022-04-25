@@ -1,0 +1,282 @@
+{
+    "id": "api.channel.read",
+    "ver": "1.0",
+    "ts": "2022-04-22T09:12:47.520Z",
+    "params": {
+      "resmsgid": "607b2a00-c21c-11ec-8b57-c5cb801c89d2",
+      "msgid": "5b60699b-d830-8b73-53e0-0c6cc443744d",
+      "status": "successful",
+      "err": null,
+      "errmsg": null
+    },
+    "responseCode": "OK",
+    "result": {
+      "channel": {
+        "code": "01309282781705830427",
+        "frameworks": [
+          {
+            "name": "Centre",
+            "relation": "hasSequenceMember",
+            "identifier": "ekstep_ncert_k-12",
+            "description": "Centre",
+            "objectType": "Framework",
+            "status": "Live",
+            "type": "K-12"
+          },
+          {
+            "name": "nit_tpd",
+            "relation": "hasSequenceMember",
+            "identifier": "nit_tpd",
+            "description": "nit_tpd Framework",
+            "objectType": "Framework",
+            "status": "Live",
+            "type": "TPD"
+          }
+        ],
+        "channel": "in.ekstep",
+        "description": "Preprod Kayal Org",
+        "createdOn": "2020-08-24T05:00:51.381+0000",
+        "objectType": "Channel",
+        "collectionPrimaryCategories": [
+          "Content Playlist",
+          "Course",
+          "Digital Textbook",
+          "Question paper"
+        ],
+        "appId": "@ignore@",
+        "primaryCategories": [
+          {
+            "identifier": "obj-cat:asset_asset_all",
+            "name": "Asset",
+            "targetObjectType": "Asset"
+          },
+          {
+            "identifier": "obj-cat:content-playlist_collection_all",
+            "name": "Content Playlist",
+            "targetObjectType": "Collection"
+          },
+          {
+            "identifier": "obj-cat:content-playlist_content_all",
+            "name": "Content Playlist",
+            "targetObjectType": "Content"
+          },
+          {
+            "identifier": "obj-cat:course-assessment_collection_all",
+            "name": "Course Assessment",
+            "targetObjectType": "Collection"
+          },
+          {
+            "identifier": "obj-cat:course-assessment_content_all",
+            "name": "Course Assessment",
+            "targetObjectType": "Content"
+          },
+          {
+            "identifier": "obj-cat:curriculum-course_collection_all",
+            "name": "Curriculum Course",
+            "targetObjectType": "Collection"
+          },
+          {
+            "identifier": "obj-cat:demo-practice-question-set_questionset_all",
+            "name": "Demo Practice Question Set",
+            "targetObjectType": "QuestionSet"
+          },
+          {
+            "identifier": "obj-cat:digital-textbook_collection_all",
+            "name": "Digital Textbook",
+            "targetObjectType": "Collection"
+          },
+          {
+            "identifier": "obj-cat:digitalcourse_collection_all",
+            "name": "DigitalCourse",
+            "targetObjectType": "Collection"
+          },
+          {
+            "identifier": "obj-cat:digitalcourse1_collection_all",
+            "name": "DigitalCourse1",
+            "targetObjectType": "Collection"
+          },
+          {
+            "identifier": "obj-cat:digitalcourse2_collection_all",
+            "name": "DigitalCourse2",
+            "targetObjectType": "Collection"
+          },
+          {
+            "identifier": "obj-cat:etextbook_content_all",
+            "name": "eTextbook",
+            "targetObjectType": "Content"
+          },
+          {
+            "identifier": "obj-cat:explanation-content_content_all",
+            "name": "Explanation Content",
+            "targetObjectType": "Content"
+          },
+          {
+            "identifier": "obj-cat:ftb-question_question_all",
+            "name": "FTB Question",
+            "targetObjectType": "Question"
+          },
+          {
+            "identifier": "obj-cat:learning-resource_content_all",
+            "name": "Learning Resource",
+            "targetObjectType": "Content"
+          },
+          {
+            "identifier": "obj-cat:learningpath1_collection_all",
+            "name": "LearningPath1",
+            "targetObjectType": "Collection"
+          },
+          {
+            "identifier": "obj-cat:multiple-choice-question_question_all",
+            "name": "Multiple Choice Question",
+            "targetObjectType": "Question"
+          },
+          {
+            "identifier": "obj-cat:observation_questionset_all",
+            "name": "Observation",
+            "targetObjectType": "QuestionSet"
+          },
+          {
+            "identifier": "obj-cat:practice-question-set_question_all",
+            "name": "Practice Question Set",
+            "targetObjectType": "Question"
+          },
+          {
+            "identifier": "obj-cat:practice-question-set_content_all",
+            "name": "Practice Question Set",
+            "targetObjectType": "Content"
+          },
+          {
+            "identifier": "obj-cat:professional-development-course_collection_all",
+            "name": "Professional Development Course",
+            "targetObjectType": "Collection"
+          },
+          {
+            "identifier": "obj-cat:subjective-question_question_all",
+            "name": "Subjective Question",
+            "targetObjectType": "Question"
+          },
+          {
+            "identifier": "obj-cat:survey_questionset_all",
+            "name": "Survey",
+            "targetObjectType": "QuestionSet"
+          },
+          {
+            "identifier": "obj-cat:teacher-resource_content_all",
+            "name": "Teacher Resource",
+            "targetObjectType": "Content"
+          },
+          {
+            "identifier": "obj-cat:text-asset_asset_all",
+            "name": "Text Asset",
+            "targetObjectType": "Asset"
+          },
+          {
+            "identifier": "obj-cat:video-transcript_asset_all",
+            "name": "Video transcript",
+            "targetObjectType": "Asset"
+          },
+          {
+            "identifier": "obj-cat:course_collection_01309282781705830427",
+            "name": "Course",
+            "targetObjectType": "Collection"
+          },
+          {
+            "identifier": "obj-cat:ekstep-new-qs_questionset_01309282781705830427",
+            "name": "Ekstep New QS",
+            "targetObjectType": "QuestionSet"
+          },
+          {
+            "identifier": "obj-cat:exam-question_content_01309282781705830427",
+            "name": "Exam Question",
+            "targetObjectType": "Content"
+          },
+          {
+            "identifier": "obj-cat:exam-question-set_questionset_01309282781705830427",
+            "name": "Exam Question Set",
+            "targetObjectType": "QuestionSet"
+          },
+          {
+            "identifier": "obj-cat:haryana-new-qs_questionset_01309282781705830427",
+            "name": "Haryana_New_QS",
+            "targetObjectType": "QuestionSet"
+          },
+          {
+            "identifier": "obj-cat:observation-with-rubrics_questionset_01309282781705830427",
+            "name": "Observation With Rubrics",
+            "targetObjectType": "QuestionSet"
+          },
+          {
+            "identifier": "obj-cat:practice-set_questionset_01309282781705830427",
+            "name": "Practice Set",
+            "targetObjectType": "QuestionSet"
+          },
+          {
+            "identifier": "obj-cat:question-paper_collection_01309282781705830427",
+            "name": "Question Paper",
+            "targetObjectType": "Collection"
+          }
+        ],
+        "additionalCategories": [
+          "DigitalCourse",
+          "DigitalCourse1",
+          "DigitalCourse2",
+          "Ekstep New QS",
+          "Exam Question Set",
+          "Haryana New QS",
+          "haryana Question Set",
+          "haryana_New_Question Set",
+          "LearningPath1",
+          "Observation",
+          "Practice Set",
+          "Survey",
+          "Text Asset",
+          "Video transcript"
+        ],
+        "lastUpdatedOn": "2022-03-31T10:00:58.199+0000",
+        "collectionAdditionalCategories": [
+          "Textbook",
+          "Lesson Plan"
+        ],
+        "contentAdditionalCategories": [
+          "Classroom Teaching Video",
+          "Concept Map",
+          "Curiosity Question Set",
+          "Experiential Resource",
+          "Explanation Video",
+          "Focus Spot",
+          "Learning Outcome Definition",
+          "Lesson Plan",
+          "Marking Scheme Rubric",
+          "Pedagogy Flow",
+          "Previous Board Exam Papers",
+          "TV Lesson",
+          "Textbook"
+        ],
+        "apoc_num": 1,
+        "identifier": "01309282781705830427",
+        "lastStatusChangedOn": "2020-08-24T05:00:51.381+0000",
+        "consumerId": "7411b6bd-89f3-40ec-98d1-229dc64ce77d",
+        "assetAdditionalCategories": [],
+        "languageCode": [],
+        "versionKey": "1648720858199",
+        "contentPrimaryCategories": [
+          "Course Assessment",
+          "eTextbook",
+          "Explanation Content",
+          "Learning Resource",
+          "Practice Question Set",
+          "Teacher Resource",
+          "Exam Question"
+        ],
+        "name": "NIT123",
+        "defaultCourseFramework": "TPD",
+        "assetPrimaryCategories": [
+          "Asset",
+          "CertAsset",
+          "Certificate Template"
+        ],
+        "status": "Live",
+        "defaultFramework": "ekstep_ncert_k-12"
+      }
+    }
+  }

@@ -4,6 +4,8 @@ var express = require('express'),
     proxy = require('express-http-proxy'),
     urlHelper = require('url');
 const latexService = require('./latexService.js')
+channelData = require('./data/channelReadData.json')
+userData = require('./data/userData.json')
 
 // ENV Variables
 const BASE_URL = 'dev.sunbirded.org';
@@ -17,9 +19,9 @@ app.set('port', 3000);
 app.use(express.json())
 app.get("/latex/convert", latexService.convert)
 app.post("/latex/convert", bodyParser.json({ limit: '1mb' }), latexService.convert);
+
 app.all(['/api/framework/v1/read/*',
-     '/learner/framework/v1/read/*', 
-     '/api/channel/v1/read/*'], proxy(BASE_URL, {
+     '/learner/framework/v1/read/*'], proxy(BASE_URL, {
     https: true,
     proxyReqPathResolver: function(req) {
         console.log('proxyReqPathResolver ',  urlHelper.parse(req.url).path);
@@ -82,7 +84,14 @@ app.use(['/action/program/v1/*',
          return proxyReqOpts;
     }
 }));
-
+app.get('/api/channel/v1/read/*', function(req, res) {
+    console.log('channel');
+    res.status(200).json(channelData)
+});
+app.post('/action/user/v1/*', function(req, res) {
+    console.log('user');
+    res.status(200).json(userData)
+});
 app.use(['/api','/assets','/action'], proxy(BASE_URL, {
     https: true,
     limit: '30mb',
@@ -99,6 +108,7 @@ app.use(['/api','/assets','/action'], proxy(BASE_URL, {
         return proxyReqOpts;
     }
 }));
+
 
 app.use(['/action/content/*'], proxy(BASE_URL, {
     https: true,
