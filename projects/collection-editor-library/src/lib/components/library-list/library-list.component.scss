@@ -9,21 +9,21 @@
   .sbchapter {
     border-bottom: calculateRem(1px) solid #ddd;
     padding: calculateRem(16px) calculateRem(16px) calculateRem(8px) calculateRem(16px);
-  
+
     h4 {
       font-size: 10px;
       line-height: normal;
       color: var(--gray-800);
       margin-bottom: calculateRem(8px);
     }
-  
+
     .textbookBtnLink{
       visibility: hidden;
     }
-  
+
     &__item {
-      background: var(--white);
-      border: calculateRem(1px) solid #ddd;
+      background: var(--white) !important;
+      border: calculateRem(1px) solid #ddd !important;
       box-shadow: 0 calculateRem(3px) calculateRem(4px) 0 rgba(2, 79, 157, 0.1);
       // border: calculateRem(0.5px) solid rgba(35, 97, 255, 0.5);
       display: flex;
@@ -34,7 +34,7 @@
       cursor: pointer;
       min-height: calculateRem(56px);
       position: relative;
-  
+
       &.active{
         background: var(--secondary-300);
         border: 0.0625rem solid var(--gray-100);
@@ -58,7 +58,7 @@
       &.active.selected{
         border: solid 1px var(--primary-600) !important;
       }
-  
+
       .btn-addtoLibrary {
         position: absolute;
         right: 1px;
@@ -69,7 +69,7 @@
         align-items: center;
         padding: 8px 8px;
       }
-  
+
       h4 {
         font-size: 12px;
         line-height: calculateRem(20px);
@@ -77,40 +77,42 @@
         margin: 0px;
         padding: 0px;
       }
-  
+
       .sbchapter__img {
         width: calculateRem(40px);
         height: calculateRem(40px);
         flex: 0 0 calculateRem(40px);
         overflow: hidden;
-  
         img {
           width: 100%;
         }
       }
-  
+
       &:last-child {
         margin-bottom: 0px;
       }
-  
+
       &:hover {
-        background: var(--secondary-0);
+        background: var(--secondary-0) !important;
       }
-  
+
       &:hover {
         visibility: visible;
       }
-  
+
       &--active {
         background: var(--primary-100);
       }
+      .sb-checkbox{
+        min-width: 30px !important;
+      }
     }
   }
-  
+
   .sbchapter-open {
     border-bottom: calculateRem(1px) solid #e0e0e0;
     padding-bottom: var(--base-block-space);
-  
+
     &__title {
       //@extend .sbaccordion__panel-header__tilte;
       font-size: 14px;
@@ -120,29 +122,29 @@
       padding: calculateRem(16px);
       width: 100%;
     }
-  
+
     &__topics {
       padding: 0;
     }
-  
+
     &__topics__title {
       font-size: 14px;
       margin: 0px 0px calculateRem(8px) 0px;
       color: var(--primary-400);
       padding: 0px calculateRem(16px);
     }
-  
+
     &__topic {
       font-size: 12px;
       padding: calculateRem(8px) calculateRem(32px);
       margin: 0px;
       color: var(--primary-400);
     }
-  
+
     &__topic--active {
       background: var(--primary-100);
     }
-  
+
     &__topic:hover {
       background: var(--gray-0);
     }
