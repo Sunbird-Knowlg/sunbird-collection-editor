@@ -285,7 +285,7 @@ export class EditorService {
 
   addResourceToQuestionset(collection, unitIdentifier, contentId) {
     const children: any[] = _.isArray(contentId) ? contentId : [contentId];
-    const req = {
+    let req = {
       url: _.get(this.configService.urlConFig, 'URLS.QuestionSet.ADD'),
       data: {
         request: {
@@ -297,6 +297,9 @@ export class EditorService {
         }
       }
     };
+    if (collection === unitIdentifier) {
+      req = _.omit(req, 'data.request.questionset.collectionId');
+    }
     return this.publicDataService.patch(req);
   }
 
