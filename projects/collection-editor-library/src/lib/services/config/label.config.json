@@ -224,14 +224,17 @@
        "slidervalue": "Set the minimum and maximum values with which the slider would start and end respectively.",
        "stepSizeInfo": "The step size would define the gap/jump between two values on the slider.",
        "minSizeInfo": "The minimum slider value",
-       "maxSizeInfo": "The maximum slider value"
+       "maxSizeInfo": "The maximum slider value",
+       "questionsetAddFromLibraryItemLabel": "question",
+       "questionsetAddFromLibraryCollectionLabel": "question set"
       },
     "err":{
        "somethingWentWrong":"Something went wrong",
        "contentNotFoundonOrigin": "The content not found in consumption",
        "resultNotFound": "No Results Found",
        "userNotFound": "No users found",
-       "collaboratorsNotFound": "No collaborators found for this content"
+       "collaboratorsNotFound": "No collaborators found for this content",
+       "searchConfigNotFound": "Search filters configuration not available. Please contact system admin for support."
     },
     "termsAndConditions": {
      "001": "I understand and confirm that all resources and assets created through the content editor or uploaded on the platform shall be available for free and public use without limitations on the platform (web portal, applications and any other end user interface that the platform would enable) and will be licensed under terms & conditions and policy guidelines of the platform. In doing so, the copyright and license of the original author is not infringed."

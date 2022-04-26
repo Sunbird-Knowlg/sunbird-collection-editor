@@ -48,6 +48,7 @@ export class QumlPlayerComponent implements OnInit {
         this.qumlPlayerConfig.metadata.showStartPage = 'No';
         this.qumlPlayerConfig.metadata.showTimer = 'No';
         this.qumlPlayerConfig.metadata.requiresSubmit = 'No';
+        this.qumlPlayerConfig.config.showLegend = false;
       }
     }
     console.log('qumlPlayerConfig:: ', this.qumlPlayerConfig);
