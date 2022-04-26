@@ -516,6 +516,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
   showQuestionLibraryComponentPage() {
+    if (_.isUndefined(this.libraryComponentInput.searchFormConfig) || _.isEmpty(this.libraryComponentInput.searchFormConfig)) {
+      this.toasterService.error(_.get(this.configService, 'labelConfig.err.searchConfigNotFound'));
+      return;
+    }
     if (this.editorService.checkIfContentsCanbeAdded('add')) {
       const questionCategory = [];
       this.buttonLoaders.addQuestionFromLibraryButtonLoader = true;
@@ -529,6 +533,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         const activeNode = this.treeService.getActiveNode();
         this.buttonLoaders.addQuestionFromLibraryButtonLoader = false;
         this.questionlibraryInput = {
+          libraryLabels: {
+            itemType: _.get(this.configService, 'labelConfig.lbl.questionsetAddFromLibraryItemLabel'),
+            collectionType: _.get(this.configService, 'labelConfig.lbl.questionsetAddFromLibraryCollectionLabel')
+          },
           targetPrimaryCategories: questionCategory,
           collectionId: this.collectionId,
           existingcontentCounts: this.editorService.getContentChildrens().length,
@@ -538,6 +546,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           searchFormConfig:  this.libraryComponentInput.searchFormConfig
         };
         this.pageId = 'question_library';
+        console.log(this.questionlibraryInput);
       }).catch(((error: string) => {
         this.toasterService.error(error);
         this.buttonLoaders.addQuestionFromLibraryButtonLoader = false;

@@ -295,7 +295,7 @@ describe('EditorComponent', () => {
     component.collectionId = 'do_12345';
     component.organisationFramework = 'nit_k12';
     component.editorConfig = editorConfig_question;
-    component.searchFormConfig = categoryDefinition.result.objectCategoryDefinition.forms.searchConfig;
+    component.libraryComponentInput.searchFormConfig = categoryDefinition.result.objectCategoryDefinition.forms.searchConfig;
     spyOn(treeService, 'getActiveNode').and.returnValue({data: {metadata: {}}});
     spyOn(editorService, 'getContentChildrens').and.returnValue([{}, {}]);
     spyOn(editorService, 'checkIfContentsCanbeAdded').and.returnValue(true);
