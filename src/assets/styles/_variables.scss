@@ -19,7 +19,7 @@
       "Noto Sans Kannada", "Noto Sans Oriya", -apple-system, BlinkMacSystemFont,
       "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue",
       sans-serif;
-  
+
     // base colors
     --blue: #024f9d;
     --green: #008840;
@@ -33,7 +33,7 @@
     --cyan: #17a2b8;
     --black: #000000;
     --white: #ffffff;
-  
+
     // gray colors shades
     --gray-hs: 0, 0%;
     --gray: hsl(var(--gray-hs), 20%);
@@ -43,12 +43,12 @@
     --gray-300: hsl(var(--gray-hs), 59%); // sub heading 2 #969696
     --gray-400: hsl(var(--gray-hs), 40%); // sub heading #666666
     --gray-800: var(--gray); // text color #333333
-  
+
     // basetheme
     --primary-color: #024f9d;
     --secondary-color: #008840;
     --tertiary-color: #e55a28;
-  
+
     // primary colors
     --primary-0: #f3f7fa; // bg
     --primary-100: #edf4f9; // default button bg
@@ -58,41 +58,42 @@
     --primary-400: var(--primary-color); // button bg, heading, table titles, links, toggles
     --primary-600: #005391; // on press
     --primary-800: #002e50; // hover
-  
+
     // secondary colors
     --secondary-0: #e1ffdf; // toast bg, label
     --secondary-100: #00c786; // button bg bg, toast
     --secondary-200: #07bc81; // button bg
+    --secondary-300: #D4EFE6;
     --secondary-400: var(--secondary-color); // hover
-  
+
     // tertiary colors
     --tertiary-0: #feedd7; // toast bg, label
     --tertiary-100: #ffa11d; // buttong bg, toast
     --tertiary-400: var(--tertiary-color); // icon, label, notification bg
-  
+
     // red colors
     --red-0: #fbccd1; // toast bg
     --red-100: #ff6979; // buttong bg, toast
     --red-400: var(--red); // icon color, lable, notification
-  
+
     // status colors
     --info-color: var(--blue);
     --success-color: var(--green);
     --warning-color: var(--orange);
     --danger-color: var(--red);
-  
+
     // element based variables
     --body-background-color: var(--primary-0);
     --default-text-color: var(--gray-800);
     --bg-body: var(--primary-0);
     --body-color: var(--gray-800);
-  
+
     // alpha
     --alpha0: 0;
     --alpha25: 0.25;
     --alpha50: 0.5;
     --alpha75: 0.75;
-  
+
     // fonts
     --font-default-size: 0.875rem;
     --font-size-base: var(--font-default-size); // 14px Assumes the browser default, typically `16px`
@@ -113,7 +114,7 @@
     --font-size-sm: 0.75rem; // 12px
     --font-size-xs: 0.625rem; // 10px
     --p-font-size: var(--font-size-base); //14px
-  
+
     // base variables
     --base-font-size: 0.875rem;
     --base-block-space: 0.5rem; //8px,
@@ -123,7 +124,7 @@
     --icon-svg-md: calc(var(--base-block-space) * 4);
     --icon-svg-lg: calc(var(--base-block-space) * 5);
     --icon-svg-xl: calc(var(--base-block-space) * 6);
-  
+
     //random colors and backgrounds
     --rc-96C8DA: #96C8DA;
     --rc-0076FE: #0076FE;
@@ -231,12 +232,12 @@
     --rc-rgba-7b86f4: 123, 134, 244;
     --rc-rgba-C8D6EA: 200, 214, 234;
   }
-  
+
   // Variables
   $font-stack-en: var(--font-stack-en);
   $font-stack-hi: var(--font-stack-hi);
   $font-stack-ur: var(--font-stack-ur);
-  
+
   // Base Colors
   $blue: var(--primary-color);
   $green: var(--secondary-color);
@@ -251,7 +252,7 @@
   $teal: var(--teal);
   $cyan: var(--cyan);
   $gray: var(--gray);
-  
+
   // brand Colors
   $primary-color: var(--primary-color);
   $secondary-color: var(--secondary-color);
@@ -265,7 +266,7 @@
   $gray-300: var(--gray-300); // sub heading 2 #969696
   $gray-400: var(--gray-400); // sub heading #666666
   $gray-800: var(--gray-800); // text color #333333
-  
+
   // primary colors shades
   $primary-0: var(--primary-0); // bg
   $primary-100: var(--primary-100); // default button bg
@@ -275,26 +276,26 @@
   $primary-400: var(--primary-400); // button bg, heading, table titles, links, toggles
   $primary-600: var(--primary-600); // on press
   $primary-800: var(--primary-800); // hover
-  
+
   // secondary colors shades
   $secondary-0: var(--secondary-0); // toast bg, label
   $secondary-100: var(--secondary-100); // buttong bg, toast
   $secondary-200: var(--secondary-200); // button bg
   $secondary-400: var(--secondary-400); // hover
-  
+
   // tertiary colors shades
   $tertiary-0: var(--tertiary-0); // toast bg, label
   $tertiary-100: var(--tertiary-100); // buttong bg, toast
   $tertiary-400: var(--tertiary-400); // icon, label, notification bg
-  
+
   // red colors shades
   $red-0: var(--red-0); // toast bg
   $red-100: var(--red-100); // buttong bg, toast
   $red-400: var(--red-400); // icon color, lable, notification
-  
+
   // input border width
   $input-border-width: 0.0625rem;
-  
+
   // Status Colors
   $info-color: var(--primary-400);
   $success-color: var(--secondary-200);
@@ -304,7 +305,7 @@
   $default-text-color: var(--gray-800);
   $bg-body: var(--primary-0);
   $body-color: var(--gray-800);
-  
+
   /* Fonts */
   $font-default-size: var(--font-default-size);
   $font-size-base: var(--font-size-base); // 14px Assumes the browser default, typically `16px`
@@ -325,7 +326,7 @@
   $font-size-sm: var(--font-size-sm); // 12px
   $font-size-xs: var(--font-size-xs); // 10px
   $p-font-size: var(--font-size-base); //14px
-  
+
   // spaces
   $base-block-space: 0.5rem;
   $block-padding-xy: ($base-block-space * 2);
@@ -368,7 +369,7 @@ $sb-search-btn-bg: $primary-100;
 $sb-search-btn-font-size: $font-size-sm;
 $sb-search-close-btn-bg: $blue;
 $sb-search-close-btn-color: $white;
-  
+
 
 /* sb-input */
 $sb-input-line-height: 1.5;
