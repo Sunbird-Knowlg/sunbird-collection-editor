@@ -6,7 +6,7 @@ var express = require('express'),
 const latexService = require('./latexService.js')
 
 // ENV Variables
-const BASE_URL = 'dev.sunbirded.org';
+const BASE_URL = 'dock.sunbirded.org';
 const API_AUTH_TOKEN = "";
 const PORTAL_COOKIES= ""
 const USER_TOKEN = "";
