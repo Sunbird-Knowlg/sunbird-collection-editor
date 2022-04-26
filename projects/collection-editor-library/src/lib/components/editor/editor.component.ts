@@ -517,7 +517,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   showQuestionLibraryComponentPage() {
     if (_.isUndefined(this.libraryComponentInput.searchFormConfig) || _.isEmpty(this.libraryComponentInput.searchFormConfig)) {
-      this.toasterService.error('Search configuration not available. Kindly contact system admin.');
+      this.toasterService.error(_.get(this.configService, 'labelConfig.err.searchConfigNotFound'));
       return;
     }
     if (this.editorService.checkIfContentsCanbeAdded('add')) {
@@ -534,8 +534,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.buttonLoaders.addQuestionFromLibraryButtonLoader = false;
         this.questionlibraryInput = {
           libraryLabels: {
-            itemType: 'question',
-            collectionType: 'question set'
+            itemType: _.get(this.configService, 'labelConfig.lbl.questionsetAddFromLibraryItemLabel'),
+            collectionType: _.get(this.configService, 'labelConfig.lbl.questionsetAddFromLibraryCollectionLabel')
           },
           targetPrimaryCategories: questionCategory,
           collectionId: this.collectionId,
