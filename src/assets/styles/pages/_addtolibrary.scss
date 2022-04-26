@@ -746,7 +746,7 @@
     }
     &.selected{
       background: var(--secondary-300);
-      border: solid 1px var(--primary-600);
+      border: solid 1px var(--primary-600) !important;
     }
     &.active.selected{
       border: solid 1px var(--primary-600) !important;
@@ -796,6 +796,9 @@
 
     &--active {
       background: var(--primary-100);
+    }
+    .sb-checkbox.ui.checkbox{
+      min-width: 30px !important;
     }
   }
 }
@@ -996,7 +999,7 @@
   .ui.label.visible{
     margin: 0.4rem 0.125rem 0.25rem 0.125rem !important;
   }
-}  
+}
 .sb-select-searchfilter{
   .text{
     padding: 5px 8px !important;
@@ -1004,7 +1007,7 @@
 }
 .sb-prominent-filter-field{
   width: 33.2% !important;
-} 
+}
 
 .sb-prominent-filter {
     position: relative;
@@ -1035,7 +1038,7 @@
         text-align: inherit !important;
         margin: inherit !important;
       }
-          
+
       .ui.selection.dropdown {
         border-color: #999;
       }
@@ -1094,22 +1097,22 @@
         position: relative;
         height: 0;
         width: 100%;
-    
+
         &[data-ratio="16:9"] {
           padding-top: 56.25%;
         }
-    
+
         [data-ratio="4:3"] {
           padding-top: 75%;
         }
-    
+
         &>* {
           position: absolute;
           top: 0;
           left: 0;
           width: 100%;
           height: 100%;
-    
+
           video {
             width: 100%;
             height: 100%;
@@ -1129,7 +1132,7 @@
         align-items: center;
         text-align: center;
         padding: 0 10%;
-    
+
         h3 {
           color: #024f9d;
           font-weight: bold;
@@ -1204,7 +1207,7 @@
     .mt-5{
       margin-top: -5px !important;
     }
-  } 
+  }
   .textbookBtnLink{
     right: 0;
   }
