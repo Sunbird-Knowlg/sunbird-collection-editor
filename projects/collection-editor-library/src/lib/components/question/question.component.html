@@ -14,15 +14,15 @@
           </div>
           <div style="display: flex;align-items: flex-end;justify-content: flex-end;"
             *ngIf="showOptions || isChildQuestion ">
-            <div class="left" style="justify-content: flex-end;margin-right:10px">
-              <select (change)="conditionHandler($event)" [value]='condition'>
-                <option value="default">Select Condition</option>
-                <option value="eq">Equal to</option>
-                <option value="ne">Not equal</option>
-              </select>
+            <div class="options">
+              <sui-select [(ngModel)]="condition" valueField="value" class="selection multiselect"
+              labelField="label" [placeholder]="'Select Condition'" #select [isDisabled]="(editorService.editorMode === 'review') ? true : false">
+                <sui-select-option [value]="{label:'Equal to',value:'eq'}"></sui-select-option>
+                <sui-select-option [value]="{label:'Not equal',value:'ne'}"></sui-select-option>
+              </sui-select>
 
               <sui-multi-select class="selection multiselect" [(ngModel)]="selectedOptions" valueField="value"
-                labelField="label" [isSearchable]="false" #multiSelect>
+                labelField="label" [isSearchable]="false" #multiSelect [placeholder]="'Select options'" [isDisabled]="(editorService.editorMode === 'review') ? true : false" >
                 <sui-select-option *ngFor="let option of options" [value]="option">
                 </sui-select-option>
               </sui-multi-select>
@@ -159,7 +159,7 @@
               </ng-template>
             </div>
           </div>
-          <lib-translations *ngIf="showTranslation"></lib-translations>
+          <!-- <lib-translations *ngIf="showTranslation"></lib-translations> -->
           <!-- child question section -->
           <div class="b-1-100 br-4 my-15 px-32 py-10 sb-bg-color-primary-0"
             *ngFor="let question of dependentQuestions;let childindex=index">

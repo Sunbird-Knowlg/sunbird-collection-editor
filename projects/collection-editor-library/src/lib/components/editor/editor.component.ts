@@ -477,6 +477,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       case 'showReviewcomments':
         this.showReviewModal = !this.showReviewModal;
         break;
+      case 'reviewContent':
+        this.redirectToQuestionTab('review');
+        break;    
       // case 'showCorrectioncomments':
         // this.contentComment = _.get(this.editorConfig, 'context.correctionComments')
         // this.showReviewModal = !this.showReviewModal;
@@ -516,6 +519,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
   showQuestionLibraryComponentPage() {
+    if (_.isUndefined(this.libraryComponentInput.searchFormConfig) || _.isEmpty(this.libraryComponentInput.searchFormConfig)) {
+      this.toasterService.error(_.get(this.configService, 'labelConfig.err.searchConfigNotFound'));
+      return;
+    }
     if (this.editorService.checkIfContentsCanbeAdded('add')) {
       const questionCategory = [];
       this.buttonLoaders.addQuestionFromLibraryButtonLoader = true;
@@ -529,6 +536,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         const activeNode = this.treeService.getActiveNode();
         this.buttonLoaders.addQuestionFromLibraryButtonLoader = false;
         this.questionlibraryInput = {
+          libraryLabels: {
+            itemType: _.get(this.configService, 'labelConfig.lbl.questionsetAddFromLibraryItemLabel'),
+            collectionType: _.get(this.configService, 'labelConfig.lbl.questionsetAddFromLibraryCollectionLabel')
+          },
           targetPrimaryCategories: questionCategory,
           collectionId: this.collectionId,
           existingcontentCounts: this.editorService.getContentChildrens().length,
@@ -538,6 +549,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           searchFormConfig:  this.libraryComponentInput.searchFormConfig
         };
         this.pageId = 'question_library';
+        console.log(this.questionlibraryInput);
       }).catch(((error: string) => {
         this.toasterService.error(error);
         this.buttonLoaders.addQuestionFromLibraryButtonLoader = false;
@@ -928,7 +940,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   redirectToQuestionTab(mode, interactionType?) {
-    let questionId = mode === 'edit' ? this.selectedNodeData?.data?.metadata?.identifier : undefined;
+    let questionId = (mode === 'edit' || mode === 'review') ? this.selectedNodeData?.data?.metadata?.identifier : undefined;
     let questionCategory = '';
     if (this.objectType === 'question') {
       questionId = _.get(this.editorConfig, 'context.identifier');
@@ -956,11 +968,18 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       creationMode: mode
     };
 
-    if(mode === 'edit' && !_.isUndefined(this.editorConfig.config.renderTaxonomy)){
+    if((mode === 'edit' || mode === 'review') && !_.isUndefined(this.editorConfig.config.renderTaxonomy)){
       this.editorService.selectedChildren = {
         primaryCategory: _.get(this.selectedNodeData, 'data.metadata.primaryCategory'),
         interactionType: _.get(this.selectedNodeData, 'data.metadata.interactionTypes[0]')
       };
+        this.questionComponentInput = {
+          ...this.questionComponentInput,
+          creationContext:{
+            isReadOnlyMode: mode==='review' ?true : false,
+            correctionComments:this.contentComment
+        }
+      }
       this.editorService.getCategoryDefinition(this.selectedNodeData.data.metadata.primaryCategory, null, 'Question')
       .subscribe((res) => {
         const selectedtemplateDetails = res.result.objectCategoryDefinition;
@@ -1160,4 +1179,3 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 }
-

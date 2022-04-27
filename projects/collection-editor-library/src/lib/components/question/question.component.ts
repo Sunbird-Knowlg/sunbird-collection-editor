@@ -110,7 +110,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   sectionPrimaryCategory: any;
   public questionFormConfig: any;
   constructor(
-    private questionService: QuestionService, private editorService: EditorService, public telemetryService: EditorTelemetryService,
+    private questionService: QuestionService, public editorService: EditorService, public telemetryService: EditorTelemetryService,
     public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,
     private frameworkService: FrameworkService, private router: Router, public configService: ConfigService,
     private editorCursor: EditorCursor) {
@@ -180,7 +180,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.editorService.fetchCollectionHierarchy(this.questionSetId).subscribe((response) => {
       this.questionSetHierarchy = _.get(response, 'result.questionSet');
       const parentId = this.editorService.parentIdentifier ? this.editorService.parentIdentifier : this.questionId;
-      this.subMenuConfig();
       //only for observation,survey,observation with rubrics 
       if (!_.isUndefined(parentId) && !_.isUndefined(this.editorService.editorConfig.config.renderTaxonomy)) {
         this.getParentQuestionOptions(parentId);
@@ -272,6 +271,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
               if (this.questionMetaData.media) {
                 this.mediaArr = this.questionMetaData.media;
               }
+              /** for observation and survey to show hint,tip,dependent question option. */
+              if(!_.isUndefined(this.editorService?.editorConfig?.config?.renderTaxonomy)){
+                this.subMenuConfig();
+              }
               this.contentComment = _.get(this.creationContext, 'correctionComments');
               this.showLoader = false;
             }
@@ -298,6 +301,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         else if (this.questionInteractionType === 'choice') {
           this.editorState = new McqForm({ question: '', options: [] }, {numberOfOptions: _.get(this.questionInput, 'config.numberOfOptions')});
         }
+        /** for observation and survey to show hint,tip,dependent question option. */
+        if(!_.isUndefined(this.editorService?.editorConfig?.config?.renderTaxonomy)){
+          this.subMenuConfig();
+        }
         this.showLoader = false;
       }
     }, (err: ServerResponse) => {
@@ -306,7 +313,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       };
       this.editorService.apiErrorHandling(err, errInfo);
     });
-
   }
 
   get contentPolicyUrl() {
@@ -1123,8 +1129,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     const formConfig = _.cloneDeep(this.leafFormConfig);
     this.questionFormConfig = null;
     _.forEach(formConfig, (formFieldCategory) => {
-      if (_.has(formFieldCategory, 'editable')) {
-        formFieldCategory.editable = status ? _.find(this.initialLeafFormConfig, { code: formFieldCategory.code }).editable : status;
+      if (_.has(formFieldCategory, 'editable') && !_.isUndefined(formFieldCategory.editable)) {
+        formFieldCategory.editable = status ? _.find(this.leafFormConfig, { code: formFieldCategory.code }).editable : status;
         formFieldCategory.default = this.childFormData[formFieldCategory.code];
       }
     });
@@ -1179,6 +1185,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
     this.fetchFrameWorkDetails();
+    (this.isReadOnlyMode ===true && !_.isUndefined(this.editorService?.editorConfig?.config?.renderTaxonomy)) ? this.previewFormData(false) : this.previewFormData(true);
   }
 
   subMenuChange({ index, value }) {
@@ -1263,11 +1270,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       obj.step = val.step;
     }
     this.sliderDatas = obj;
-  }
-
-
-  conditionHandler(e) {
-    this.condition = e.target.value;
   }
 
   optionHandler(e) {
