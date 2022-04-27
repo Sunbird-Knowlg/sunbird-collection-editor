@@ -35,6 +35,7 @@ import { treeNodeData } from "../editor/editor.component.spec.data";
 const mockEditorService = {
   editorConfig: {
     config: {
+      renderTaxonomy:false,
       hierarchy: {
         level1: {
           name: "Module",
@@ -66,6 +67,7 @@ const mockEditorService = {
     subscribe: (fn) => fn({});
   },
   apiErrorHandling: () => {},
+  editorMode:'review'
 };
 
 describe("QuestionComponent", () => {
@@ -126,6 +128,7 @@ describe("QuestionComponent", () => {
     editorService.selectedChildren.label = "Slider";
     component.toolbarConfig.showPreview = false;
     component.creationContext = creationContextMock;
+    component.leafFormConfig = leafFormConfigMock;
     editorService.optionsLength = 4;
     editorService.selectedChildren.label = "MCQ";
     component.questionInput = {
@@ -171,6 +174,8 @@ describe("QuestionComponent", () => {
 
   it("Unit test for #ngOnInit()", () => {
     component.toolbarConfig = editorService.toolbarConfig;
+    component.leafFormConfig=leafFormConfigMock;
+    component.initialLeafFormConfig=leafFormConfigMock;
     component.questionFormConfig = leafFormConfigMock;
     component.questionInput = {
       questionSetId: "do_11330102570702438417",
@@ -194,6 +199,7 @@ describe("QuestionComponent", () => {
       of(mockData.mcqQuestionMetaData)
     );
     component.ngOnInit();
+    component.previewFormData(true);
     expect(component.questionInteractionType).toEqual("choice");
     expect(component.questionCategory).toEqual("MTF");
     expect(component.questionId).toEqual("do_11330103476396851218");
@@ -239,12 +245,13 @@ describe("QuestionComponent", () => {
   });
 
   it("#initialize should call when question page for question mcq", () => {
+    component.initialLeafFormConfig = leafFormConfigMock;
+    component.leafFormConfig = leafFormConfigMock;
+    component.questionFormConfig=leafFormConfigMock;
     spyOn(component, "initialize").and.callThrough();
     component.questionId = "do_11330103476396851218";
     editorService.parentIdentifier = undefined;
     component.questionPrimaryCategory = undefined;
-    component.initialLeafFormConfig = leafFormConfigMock;
-    component.leafFormConfig = leafFormConfigMock;
     spyOn(editorService, "getToolbarConfig").and.returnValue({
       title: "abcd",
       showDialcode: "No",
@@ -270,6 +277,7 @@ describe("QuestionComponent", () => {
       type:'vedio'
     }]
     component.initialize();
+    component.previewFormData(true);
     expect(component.initialize).toHaveBeenCalled();
   });
 
@@ -326,11 +334,12 @@ describe("QuestionComponent", () => {
 
   it("#initialize should call when question page for question text", () => {
     spyOn(component, "initialize").and.callThrough();
+    component.leafFormConfig=leafFormConfigMock;
+    component.initialLeafFormConfig=leafFormConfigMock;
+    component.childFormData = childMetaData;
     component.questionInteractionType = "text";
     component.questionId = "do_11330103476396851218";
     editorService.parentIdentifier = undefined;
-    component.questionFormConfig = leafFormConfigMock;
-    component.leafFormConfig = leafFormConfigMock;
     spyOn(editorService, "getToolbarConfig").and.returnValue({
       title: "abcd",
       showDialcode: "No",
@@ -349,15 +358,17 @@ describe("QuestionComponent", () => {
     component.editorState =
       mockData.textQuestionNetaData.result.question.editorState;
     component.initialize();
+    component.previewFormData(false);
     expect(component.initialize).toHaveBeenCalled();
   });
 
   it("#initialize should call when question page for question date", () => {
     spyOn(component, "initialize").and.callThrough();
     component.questionInteractionType = "date";
+    component.leafFormConfig=leafFormConfigMock;
+    component.initialLeafFormConfig=leafFormConfigMock;
+    component.childFormData = childMetaData;
     component.questionId = "do_11330103476396851218";
-    component.questionFormConfig = leafFormConfigMock;
-    component.leafFormConfig = leafFormConfigMock;
     editorService.parentIdentifier = undefined;
     spyOn(editorService, "getToolbarConfig").and.returnValue({
       title: "abcd",
@@ -385,8 +396,9 @@ describe("QuestionComponent", () => {
     spyOn(component, "initialize").and.callThrough();
     component.questionId = "do_11330103476396851218";
     editorService.parentIdentifier = undefined;
-    component.questionFormConfig = leafFormConfigMock;
-    component.leafFormConfig = leafFormConfigMock;
+    component.leafFormConfig=leafFormConfigMock;
+    component.initialLeafFormConfig=leafFormConfigMock;
+    component.childFormData = childMetaData;
     spyOn(editorService, "getToolbarConfig").and.returnValue({
       title: "abcd",
       showDialcode: "No",
@@ -610,20 +622,36 @@ describe("QuestionComponent", () => {
 
   it("Unit test for #populateFormData ", () => {
     component.childFormData = {};
+    component.isReadOnlyMode=false;
     component.questionMetaData=mockData.mcqQuestionMetaData.result.question;
     component.leafFormConfig = leafFormConfigMock;
     component.initialLeafFormConfig = leafFormConfigMock;
     component.questionFormConfig = leafFormConfigMock;
     component.questionId = "do_123";
     component.questionSetHierarchy = collectionHierarchyMock.result.questionSet;
+    component.previewFormData(false);
     component.populateFormData();
   });
+
+  it("Unit test for #populateFormData readonly mode true ", () => {
+    component.childFormData = {};
+    component.isReadOnlyMode=true;
+    component.questionMetaData=mockData.mcqQuestionMetaData.result.question;
+    component.leafFormConfig = leafFormConfigMock;
+    component.initialLeafFormConfig = leafFormConfigMock;
+    component.questionFormConfig = leafFormConfigMock;
+    component.questionId = "do_123";
+    component.questionSetHierarchy = collectionHierarchyMock.result.questionSet;
+    component.previewFormData(true);
+    component.populateFormData();
+  });
+
   it("should call previewFormData ", () => {
     spyOn(component, "previewFormData").and.callThrough();
+    component.leafFormConfig = mockData.childMetadata.properties;
     component.initialLeafFormConfig = mockData.childMetadata.properties;
     component.childFormData = childMetaData;
     component.questionFormConfig = mockData.childMetadata.properties;
-    component.leafFormConfig = mockData.childMetadata.properties;
     component.previewFormData(true);
     expect(component.leafFormConfig).toEqual(mockData.childMetadata.properties);
     expect(component.previewFormData).toHaveBeenCalled();

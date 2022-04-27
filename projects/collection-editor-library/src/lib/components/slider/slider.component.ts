@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ConfigService } from '../../services/config/config.service';
+import { EditorService } from '../../services/editor/editor.service';
 import * as _ from 'lodash-es';
 
 export class SilderEvent {
@@ -20,7 +21,7 @@ export class SliderComponent implements OnInit {
   rightAnchor: any;
   step: any;
   @Output() onChange: EventEmitter<SilderEvent> = new EventEmitter<SilderEvent>();
-  constructor(public configService: ConfigService) { }
+  constructor(public configService: ConfigService,public editorService: EditorService) { }
 
   ngOnInit(){
     if (_.get(this.editorDataInput,"step")) {

@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { QuestionOptionSubMenuComponent } from './question-option-sub-menu.component';
 import { mockData } from './question-option-sub-menu.spec.data';
 
@@ -9,6 +9,7 @@ describe('QuestionOptionSubMenuComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports:[HttpClientTestingModule],
       declarations: [QuestionOptionSubMenuComponent],
     }).compileComponents();
   }));

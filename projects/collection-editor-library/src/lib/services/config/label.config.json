@@ -221,6 +221,10 @@
        "alreadyContentPresent": "Already present in this folder",
        "loaderHeading": "Please wait",
        "loaderMessage": "We are fetching details.",
+       "slidervalue": "Set the minimum and maximum values with which the slider would start and end respectively.",
+       "stepSizeInfo": "The step size would define the gap/jump between two values on the slider.",
+       "minSizeInfo": "The minimum slider value",
+       "maxSizeInfo": "The maximum slider value",
        "questionsetAddFromLibraryItemLabel": "question",
        "questionsetAddFromLibraryCollectionLabel": "question set"
       },

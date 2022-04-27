@@ -1,4 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { EditorService } from '../../services/editor/editor.service';
+
 export class SubMenuEvent {
   index: number;
   value: any;
@@ -21,6 +23,9 @@ export class QuestionOptionSubMenuComponent {
   @Input() subMenus: SubMenu[];
   @Output() public onChange: EventEmitter<SubMenuEvent> = new EventEmitter<SubMenuEvent>();
 
+  constructor(public editorService: EditorService){
+
+  }
  
   onMenuClick(index) {
     const selectedMenu = this.subMenus[index];

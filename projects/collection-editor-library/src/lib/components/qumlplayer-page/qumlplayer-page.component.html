@@ -1,7 +1,7 @@
 <div>
     <div [ngClass]="{'potrait-mode': showPotrait}">
         <div class="b-1-100 br-2 mt-5" *ngIf="showPlayerPreview">
-            <lib-quml-player [questionSetHierarchy]="hierarchy" [isSingleQuestionPreview]="true" ></lib-quml-player>
+            <lib-quml-player [questionSetHierarchy]="hierarchy" [isSingleQuestionPreview]="true" (toolbarEmitter)="reviewQuestion()"></lib-quml-player>
         </div>
     </div>
 <div class="ui mt-20" *ngIf="(editorService.editorMode === 'edit')">
