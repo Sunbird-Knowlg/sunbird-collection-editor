@@ -4,13 +4,33 @@ var express = require('express'),
     proxy = require('express-http-proxy'),
     urlHelper = require('url');
 const latexService = require('./latexService.js')
-channelData = require('./data/channelReadData.json')
+// channelData = require('./data/channelReadData.json')
 userData = require('./data/userData.json')
+// frameworkData = require('./data/frameworkData.json')
+collaboratorUpdatData = require('./data/collaboratorUpdate.json')
+// hierarchyUpdate = require('./data/hierarchyUpdate.json')
+hierarchyRead = require('./data/hierarchyRead.json')
+hierarchyAdd = require('./data/hierarchyAdd.json')
+contentV3Review = require('./data/contentV3ReviewResponse.json')
+categoryDefinationRead = require('./data/categoryDefinationRead.json')
+contentV3Read = require('./data/contentV3Read.json')
+contentV3Reject = require('./data/contentV3Reject.json')
+contentV3Publish = require('./data/contentV3Publish.json')
+collectionV1Export = require('./data/collectionV1Export.json')
+contentV3UploadUrl = require('./data/contentV3UploadUrl.json')
+dialCodeV1Reserve = require('./data/dialCodeV1Reserve.json')
+dialCodeProcessStatus = require('./data/dialCodeProcessStatus.json')
+dialCodeSearch = require('./data/dialCodeSearch.json')
+collectionDialCodeLink = require('./data/collectionDialCodeLink.json')
+assetCreate = require('./data/assetCreate.json')
+contentUploadV3Url = require('./data/contentUploadV3Url.json')
+collectionV1Import = require('./data/collectionV1Import.json')
 
 // ENV Variables
 const BASE_URL = 'dev.sunbirded.org';
-
-
+const API_AUTH_TOKEN = "";
+const PORTAL_COOKIES= ""
+const USER_TOKEN = "";
 
 var app = express();
 app.set('port', 3000);
@@ -37,9 +57,6 @@ app.all(['/api/framework/v1/read/*',
 }));
 app.use(['/action/questionset/v1/*',
     '/action/question/v1/*',
-    '/action/collection/v1/*',
-    '/action/object/category/definition/v1/*',
-    '/action/collection/v1/*'
     ], proxy(BASE_URL, {
     https: true,
     limit: '30mb',
@@ -82,13 +99,90 @@ app.use(['/action/program/v1/*',
          return proxyReqOpts;
     }
 }));
-app.get('/api/channel/v1/read/*', function(req, res) {
-    console.log('channel');
-    res.status(200).json(channelData)
+app.get('/action/collection/v1/export/*', function(req, res) {
+    console.log('collectionV1Export');
+    res.status(200).json(collectionV1Export)
 });
+app.post('/action/collection/v1/import/*', function(req, res) {
+    console.log('collectionV1Import');
+    res.status(200).json(collectionV1Import)
+});
+// app.get('/api/channel/v1/read/*', function(req, res) {
+//     console.log('channel');
+//     res.status(200).json(channelData)
+// });
 app.post('/action/user/v1/*', function(req, res) {
     console.log('user');
     res.status(200).json(userData)
+});
+// app.get('/api/framework/v1/read/*', function(req, res) {
+//     console.log('framework');
+//     res.status(200).json(frameworkData)
+// });
+app.patch('/action/content/v1/collaborator/update/*', function(req, res) {
+    console.log('collaboratorUpdatData');
+    res.status(200).json(collaboratorUpdatData)
+});
+app.patch('/action/content/v3/hierarchy/update', function(req, res) {
+    console.log('hierarchy Update');
+    res.status(200).json(hierarchyUpdate)
+});
+app.patch('/action/content/v3/hierarchy/add', function(req, res) {
+    console.log('hierarchy add');
+    res.status(200).json(hierarchyAdd)
+});
+
+// app.get('/action/content/v3/hierarchy/*', function(req, res) {
+//     console.log('hierarchyRead');
+//     res.status(200).json(hierarchyRead)
+// });
+app.post('/action/content/v3/upload/url/*', function(req, res) {
+    console.log('contentV3UploadUrl');
+    res.status(200).json(contentV3UploadUrl)
+});
+app.post('/action/content/v3/review/*', function(req, res) {
+    console.log('content/v3/review');
+    res.status(200).json(contentV3Review)
+});
+app.post('/action/object/category/definition/v1/*', function(req, res) {
+    console.log('categoryDefinationRead');
+    res.status(200).json(categoryDefinationRead)
+});
+app.get('/action/content/v3/read/*', function(req, res) {
+    console.log('content v3 read');
+    res.status(200).json(contentV3Read)
+});
+app.post('/action/content/v3/reject/*', function(req, res) {
+    console.log('content reject');
+    res.status(200).json(contentV3Reject)
+});
+app.post('/action/content/v3/publish/*', function(req, res) {
+    console.log('content publish');
+    res.status(200).json(contentV3Publish)
+});
+app.post('/action/dialcode/v1/reserve/*', function(req, res) {
+    console.log('dialCodeV1Reserve');
+    res.status(200).json(dialCodeV1Reserve)
+});
+app.get('/action/dialcode/v1/process/status/*', function(req, res) {
+    console.log('dialCodeProcessStatus');
+    res.status(200).json(dialCodeProcessStatus)
+});
+app.post('/action/dialcode/v3/search', function(req, res) {
+    console.log('dialCodeSearch');
+    res.status(200).json(dialCodeSearch)
+});
+app.post('/action/collection/v3/dialcode/link/*', function(req, res) {
+    console.log('collectionDialCodeLink');
+    res.status(200).json(collectionDialCodeLink)
+});
+app.post('/action/asset/v1/create', function(req, res) {
+    console.log('assetCreate');
+    res.status(200).json(assetCreate)
+});
+app.post('/action/asset/v1/upload/*', function(req, res) {
+    console.log('contentUploadV3Url');
+    res.status(200).json(contentUploadV3Url)
 });
 app.use(['/api','/assets','/action'], proxy(BASE_URL, {
     https: true,

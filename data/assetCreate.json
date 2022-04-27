@@ -1,0 +1,18 @@
+{
+  "id": "api.asset.create",
+  "ver": "4.0",
+  "ts": "2022-04-27T10:01:36ZZ",
+  "params": {
+    "resmsgid": "bf91d357-ccbe-4a53-a637-b90e22917176",
+    "msgid": null,
+    "err": null,
+    "status": "successful",
+    "errmsg": null
+  },
+  "responseCode": "OK",
+  "result": {
+    "identifier": "do_113525431883071488170",
+    "node_id": "do_113525431883071488170",
+    "versionKey": "1651053696675"
+  }
+}

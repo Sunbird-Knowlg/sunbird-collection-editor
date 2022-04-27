@@ -1,0 +1,27 @@
+{
+  "id": "sunbird.dialcode.search",
+  "ver": "3.0",
+  "ts": "2022-04-27T08:27:35ZZ",
+  "params": {
+    "resmsgid": "1271358b-c197-4ed3-8f26-482327625784",
+    "msgid": null,
+    "err": null,
+    "status": "successful",
+    "errmsg": null
+  },
+  "responseCode": "OK",
+  "result": {
+    "dialcodes": [
+      {
+        "dialcode_index": 1.0613331e7,
+        "identifier": "G9T1P8",
+        "channel": "01309282781705830427",
+        "batchcode": "do_113525361459781632166",
+        "generated_on": "2022-04-27T07:42:08.889+0000",
+        "objectType": "DialCode",
+        "status": "Draft"
+      }
+    ],
+    "count": 1
+  }
+}

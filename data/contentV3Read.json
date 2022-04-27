@@ -1,0 +1,152 @@
+{
+    "id": "api.v3.read",
+    "ver": "1.0",
+    "ts": "2022-04-26T08:29:08.682Z",
+    "params": {
+      "resmsgid": "f12f32a0-c53a-11ec-8b57-c5cb801c89d2",
+      "msgid": "5e8c7dd9-fc5b-7ef2-5836-65cc8a1bc416",
+      "status": "successful",
+      "err": null,
+      "errmsg": null
+    },
+    "responseCode": "OK",
+    "result": {
+      "content": {
+        "ownershipType": [
+          "createdBy"
+        ],
+        "se_gradeLevelIds": [
+          "nit_k-12_gradelevel_grade-1"
+        ],
+        "previewUrl": "https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11342495269322752016475/artifact/sample.pdf",
+        "subject": [
+          "English"
+        ],
+        "channel": "01309282781705830427",
+        "downloadUrl": "https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11342495269322752016475/pdf_1638788875995_do_11342495269322752016475_1.ecar",
+        "language": [
+          "English"
+        ],
+        "source": "https://dock.sunbirded.org/api/content/v1/read/do_11342495269322752016475",
+        "mimeType": "application/pdf",
+        "variants": {
+          "full": {
+            "ecarUrl": "https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11342495269322752016475/pdf_1638788875995_do_11342495269322752016475_1.ecar",
+            "size": "2331"
+          },
+          "spine": {
+            "ecarUrl": "https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11342495269322752016475/pdf_1638788877303_do_11342495269322752016475_1_SPINE.ecar",
+            "size": "1281"
+          }
+        },
+        "objectType": "Content",
+        "se_mediums": [
+          "English"
+        ],
+        "gradeLevel": [
+          "Grade 1"
+        ],
+        "primaryCategory": "eTextbook",
+        "appId": "local.sunbird.portal",
+        "contentEncoding": "identity",
+        "artifactUrl": "https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11342495269322752016475/artifact/sample.pdf",
+        "contentType": "eTextBook",
+        "se_gradeLevels": [
+          "Grade 1"
+        ],
+        "identifier": "do_11342495269322752016475",
+        "audience": [
+          "Student"
+        ],
+        "se_boardIds": [
+          "nit_k-12_board_cbse"
+        ],
+        "subjectIds": [
+          "nit_k-12_subject_english"
+        ],
+        "visibility": "Default",
+        "author": "anusha",
+        "discussionForum": {
+          "enabled": "No"
+        },
+        "mediaType": "content",
+        "osId": "org.ekstep.quiz.app",
+        "languageCode": [
+          "en"
+        ],
+        "lastPublishedBy": "5a587cc1-e018-4859-a0a8-e842650b9d64",
+        "version": 2,
+        "pragma": [
+          "external"
+        ],
+        "se_subjects": [
+          "English"
+        ],
+        "license": "CC BY 4.0",
+        "prevState": "Review",
+        "size": 3028,
+        "lastPublishedOn": "2021-12-06T11:07:55.983+0000",
+        "name": "pdf",
+        "mediumIds": [
+          "nit_k-12_medium_english"
+        ],
+        "status": "Live",
+        "code": "3f92e124-152d-82e9-2aeb-2e607323ceaf",
+        "interceptionPoints": {},
+        "credentials": {
+          "enabled": "No"
+        },
+        "prevStatus": "Draft",
+        "origin": "do_11342495269322752016475",
+        "streamingUrl": "https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11342495269322752016475/artifact/sample.pdf",
+        "medium": [
+          "English"
+        ],
+        "idealScreenSize": "normal",
+        "createdOn": "2021-12-06T11:07:50.965+0000",
+        "se_boards": [
+          "CBSE"
+        ],
+        "se_mediumIds": [
+          "nit_k-12_medium_english"
+        ],
+        "processId": "f87029c2-2863-4fa0-b25b-6ff93c2b9d46",
+        "contentDisposition": "inline",
+        "lastUpdatedOn": "2021-12-06T11:07:57.841+0000",
+        "originData": {
+          "identifier": "do_11342495269322752016475",
+          "repository": "https://dock.sunbirded.org/api/content/v1/read/do_11342495269322752016475"
+        },
+        "dialcodeRequired": "No",
+        "lastStatusChangedOn": "2021-12-06T11:07:57.841+0000",
+        "createdFor": [
+          "01309282781705830427"
+        ],
+        "creator": "anusha",
+        "os": [
+          "All"
+        ],
+        "se_subjectIds": [
+          "nit_k-12_subject_english"
+        ],
+        "se_FWIds": [
+          "nit_k-12"
+        ],
+        "pkgVersion": 1,
+        "versionKey": "1638788873631",
+        "idealScreenDensity": "hdpi",
+        "framework": "nit_k-12",
+        "boardIds": [
+          "nit_k-12_board_cbse"
+        ],
+        "lastSubmittedOn": "2021-12-06T11:07:53.084+0000",
+        "createdBy": "19ba0e4e-9285-4335-8dd0-f674bf03fa4d",
+        "compatibilityLevel": 4,
+        "gradeLevelIds": [
+          "nit_k-12_gradelevel_grade-1"
+        ],
+        "board": "CBSE",
+        "programId": "12e4bba0-4d08-11ec-b831-d35d7ee5b6c9"
+      }
+    }
+  }
