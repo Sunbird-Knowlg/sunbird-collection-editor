@@ -57,4 +57,9 @@ export class QumlplayerPageComponent implements OnChanges {
   editQuestion() {
     this.toolbarEmitter.emit({button : 'editContent'});
   }
+
+  reviewQuestion(){
+    this.toolbarEmitter.emit({button : 'reviewContent'});
+  }
+
 }
