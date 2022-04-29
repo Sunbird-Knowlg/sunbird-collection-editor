@@ -26,13 +26,13 @@
     "Collection": {
       "HIERARCHY_READ": "content/v3/hierarchy",
       "HIERARCHY_UPDATE": "content/v3/hierarchy/update",
-      "CONTENT_REVIEW" : "content/v3/review/",
-      "CONTENT_REJECT" : "content/v3/reject/",
-      "CONTENT_PUBLISH" : "content/v3/publish/",
+      "CONTENT_REVIEW" : "content/v1/review/",
+      "CONTENT_REJECT" : "content/v1/reject/",
+      "CONTENT_PUBLISH" : "content/v1/publish/",
       "SYSYTEM_UPDATE": "system/v3/content/update/"
     },
     "COMPOSITE": {
-      "SEARCH": "composite/v3/search"
+      "SEARCH": "composite/v1/search"
     },
     "DIALCODE": {
       "RESERVE" : "dialcode/v1/reserve/",
@@ -45,7 +45,7 @@
     "getCategoryDefinition": "object/category/definition/v1/read?fields=objectMetadata,forms,name,label",
     "CONTENT": {
     "HIERARCHY_ADD":"content/v3/hierarchy/add",
-    "READ":"content/v3/read/",
+    "READ":"content/v1/read/",
     "CREATE":"content/v3/create",
     "UPLOAD":"content/v3/upload/",
     "UPLOAD_URL":"content/v3/upload/url/",
@@ -56,7 +56,7 @@
       "READ":"question/v1/read/"
     },
     "frameworkRead":"framework/v1/read/",
-    "compositSearch":"composite/v3/search",
+    "compositSearch":"composite/v1/search",
     "channelRead":"channel/v1/read/",
     "telemetry":"/data/v3/telemetry",
     "CSV": {

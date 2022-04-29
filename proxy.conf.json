@@ -1,72 +1,12 @@
 {
-    "/action/question/v1/bulkUpload": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/action/question/v1/bulkUploadStatus": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/action/program/v1": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/action/questionset/v1": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/action/collection/v1": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/action/object/category/definition/v1/": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/action/question/v1": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "action/user/v1": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/api/framework/v1/read/*": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/api/channel/v1/read/*": {
+    "/action/content/v3": {
         "target": "http://localhost:3000",
         "secure": false,
         "logLevel": "debug",
         "changeOrigin": true
     },
     "/api": {
-        "target": "http://localhost:3000/api",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/content": {
-        "target": "http://localhost:3000",
+        "target": "http://localhost:3000/",
         "secure": false,
         "logLevel": "debug",
         "changeOrigin": true
@@ -84,7 +24,7 @@
         "changeOrigin": true
     },
     "/action": {
-        "target": "http://localhost:3000/action",
+        "target": "http://localhost:3000",
         "secure": false,
         "logLevel": "debug",
         "changeOrigin": true

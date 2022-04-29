@@ -461,7 +461,7 @@ export const questionEditorConfig = {
 
 export const collectionEditorConfig = {
   context: {
-      identifier: 'do_113367576496021504151',
+      identifier: 'do_113523915743010816137',
       channel: '01309282781705830427',
       authToken: '',
       sid: 'vLpZ1rFl6-sxMVHi4RrmrlHw0HsX9ggC',
