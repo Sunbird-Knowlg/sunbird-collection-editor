@@ -1,162 +1,12 @@
 {
-    "/action/question/v1/bulkUpload": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/action/question/v1/bulkUploadStatus": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/action/program/v1": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/action/questionset/v1": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/action/collection/v1": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/action/object/category/definition/v1/": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/action/question/v1": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "action/user/v1": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/action/content/v3/review/*": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/action/content/v3/hierarchy/update": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/action/content/v3/read/*": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/action/content/v3/hierarchy/add": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/action/content/v3/reject/*": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/action/content/v3/publish/*": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/action/collection/v1/import/*": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/action/collection/v1/export/*": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/action/content/v3/upload/url/*": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/action/dialcode/v1/reserve/*": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/action/dialcode/v1/process/status/*": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/action/content/v1/collaborator/update/*": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/action/dialcode/v3/search": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/action/collection/v3/dialcode/link/*": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/action/asset/v1/create": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/action/asset/v1/upload/*": {
-        "target": "http://localhost:3000",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/action/user/v1/": {
+    "/action/content/v3/*": {
         "target": "http://localhost:3000",
         "secure": false,
         "logLevel": "debug",
         "changeOrigin": true
     },
     "/api": {
-        "target": "http://localhost:3000/api",
-        "secure": false,
-        "logLevel": "debug",
-        "changeOrigin": true
-    },
-    "/content": {
-        "target": "http://localhost:3000",
+        "target": "http://localhost:3000/",
         "secure": false,
         "logLevel": "debug",
         "changeOrigin": true
@@ -174,7 +24,7 @@
         "changeOrigin": true
     },
     "/action": {
-        "target": "http://localhost:3000/action",
+        "target": "http://localhost:3000",
         "secure": false,
         "logLevel": "debug",
         "changeOrigin": true
