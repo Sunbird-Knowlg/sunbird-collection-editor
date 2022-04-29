@@ -112,7 +112,7 @@ export class LibraryComponent implements OnInit, AfterViewInit, OnDestroy {
   fetchContentList(filters?, query?) {
     filters = filters || this.defaultFilters;
     const option = {
-      url: 'composite/v1/search',
+      url: 'composite/v3/search',
       data: {
         request: {
           query: query || '',
