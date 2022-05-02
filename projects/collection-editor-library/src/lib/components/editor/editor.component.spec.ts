@@ -888,11 +888,11 @@ describe('EditorComponent', () => {
     const mode = 'update';
     component.objectType='question';
     component.editorConfig = editorConfig;
+    component.selectedNodeData=SelectedNodeMockData;
     const interactionType = 'choice';
     component.collectionId = 'do_123';
     component.redirectToQuestionTab(mode, interactionType);
     component.setChildQuestion=false;
-    expect(component.pageId).toEqual('question');
   });
 
   it('call #redirectToQuestionTab() to verify #questionComponentInput data for edit', async () => {

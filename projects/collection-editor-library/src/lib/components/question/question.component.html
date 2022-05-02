@@ -16,13 +16,13 @@
             *ngIf="showOptions || isChildQuestion ">
             <div class="options">
               <sui-select [(ngModel)]="condition" valueField="value" class="selection multiselect"
-              labelField="label" [placeholder]="'Select Condition'" #select [isDisabled]="(editorService.editorMode === 'review') ? true : false">
+              labelField="label" [placeholder]="'Select Condition'" #select [isDisabled]="isReadOnlyMode">
                 <sui-select-option [value]="{label:'Equal to',value:'eq'}"></sui-select-option>
                 <sui-select-option [value]="{label:'Not equal',value:'ne'}"></sui-select-option>
               </sui-select>
 
               <sui-multi-select class="selection multiselect" [(ngModel)]="selectedOptions" valueField="value"
-                labelField="label" [isSearchable]="false" #multiSelect [placeholder]="'Select options'" [isDisabled]="(editorService.editorMode === 'review') ? true : false" >
+                labelField="label" [isSearchable]="false" #multiSelect [placeholder]="'Select options'" [isDisabled]="isReadOnlyMode" >
                 <sui-select-option *ngFor="let option of options" [value]="option">
                 </sui-select-option>
               </sui-multi-select>

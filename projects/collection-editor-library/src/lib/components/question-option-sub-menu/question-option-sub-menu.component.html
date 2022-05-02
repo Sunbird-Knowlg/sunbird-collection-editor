@@ -1,4 +1,4 @@
-<div class="d-flex" *ngIf="editorService.editorMode != 'review'">
+<div class="d-flex" *ngIf="editorService.editorMode === 'edit'">
   <div class="mr-30 my-10" *ngFor="let menu of subMenus; let i = index">
     <div *ngIf="menu?.show" (click)="onMenuClick(i)">
       <button class="sb-btn sb-btn-outline-primary sb-btn-xs sb-left-icon-btn text-inherit b-0 bg-none no-hover pl-0">
@@ -19,9 +19,9 @@
         class="sb-textbox false w-100 my-10"
         [placeholder]="menu.value || menu.name"
         type="text" 
-        [disabled]="(editorService.editorMode === 'review') ? true : false"
+        [disabled]="(editorService.editorMode !== 'edit') ? true : false"
       />
-      <button *ngIf="editorService.editorMode != 'review'"
+      <button *ngIf="editorService.editorMode === 'edit'"
         class="b-0 bg-none no-hover sb-btn sb-btn-dashed-gray"
         (click)="menu.enabled = !menu.enabled; menu.value = ''"
       >
