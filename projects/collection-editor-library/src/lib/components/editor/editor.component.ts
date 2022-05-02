@@ -940,7 +940,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   redirectToQuestionTab(mode, interactionType?) {
-    let questionId = (mode === 'edit' || mode === 'review') ? this.selectedNodeData?.data?.metadata?.identifier : undefined;
+    let questionId = !_.isUndefined(mode) ? this.selectedNodeData?.data?.metadata?.identifier : undefined;
     let questionCategory = '';
     if (this.objectType === 'question') {
       questionId = _.get(this.editorConfig, 'context.identifier');
@@ -968,7 +968,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       creationMode: mode
     };
 
-    if((mode === 'edit' || mode === 'review') && !_.isUndefined(this.editorConfig.config.renderTaxonomy)){
+    if(!_.isUndefined(mode) && !_.isUndefined(this.editorConfig.config.renderTaxonomy)){
       this.editorService.selectedChildren = {
         primaryCategory: _.get(this.selectedNodeData, 'data.metadata.primaryCategory'),
         interactionType: _.get(this.selectedNodeData, 'data.metadata.interactionTypes[0]')
@@ -976,7 +976,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.questionComponentInput = {
           ...this.questionComponentInput,
           creationContext:{
-            isReadOnlyMode: mode==='review' ?true : false,
+            isReadOnlyMode: mode!='edit' ?true : false,
             correctionComments:this.contentComment
         }
       }

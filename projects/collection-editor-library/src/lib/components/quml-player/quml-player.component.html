@@ -5,7 +5,7 @@
                     <quml-main-player *ngIf="showPreview" [playerConfig]="qumlPlayerConfig" (playerEvent)="getPlayerEvents($event)"
                         (telemetryEvent)="getTelemetryEvents($event)"></quml-main-player>
                 </div>
-                <div class="mt-25" *ngIf="(editorService?.editorMode === 'review' && showViewButton)">
+                <div class="mt-25" *ngIf="(editorService?.editorMode != 'edit' && showViewButton)">
                     <h5>Click on View details to view the question details.</h5>
                     <div class="ui  btn-align">
                         <div class="ui twelve column grid m-0">
