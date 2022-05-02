@@ -19,7 +19,7 @@
         class="sb-textbox false w-100 my-10"
         [placeholder]="menu.value || menu.name"
         type="text" 
-        [disabled]="(editorService.editorMode != 'edit') ? true : false"
+        [disabled]="(editorService.editorMode !== 'edit') ? true : false"
       />
       <button *ngIf="editorService.editorMode === 'edit'"
         class="b-0 bg-none no-hover sb-btn sb-btn-dashed-gray"
