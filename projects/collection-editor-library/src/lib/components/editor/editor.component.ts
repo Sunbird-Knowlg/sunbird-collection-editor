@@ -976,7 +976,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.questionComponentInput = {
           ...this.questionComponentInput,
           creationContext:{
-            isReadOnlyMode: mode!='edit' ?true : false,
+            isReadOnlyMode: mode !== 'edit' ? true : false,
             correctionComments:this.contentComment
         }
       }
