@@ -1666,7 +1666,7 @@ describe("QuestionComponent", () => {
    component.updateQuestion(); 
   });
 
-  xit("#updateQuestion() should call on question save isChildQuestion is false", () => {
+  it("#updateQuestion() should call on question save isChildQuestion is false", () => {
     spyOn(component,'updateQuestion').and.callThrough();
     component.sourcingSettings=sourcingSettingsMock;
     component.childFormData=childMetaData;
@@ -1682,8 +1682,9 @@ describe("QuestionComponent", () => {
         },
       });
     });
-   component.saveUpdateQuestions();  
-   component.updateQuestion(); 
+  spyOn(component, 'saveUpdateQuestions').and.callFake(()=>{});
+   component.updateQuestion();
+   expect(component.saveUpdateQuestions).toHaveBeenCalled();
   });
 
   xit("#updateQuestion() should call on question save isChildQuestion is false api fail", () => {
