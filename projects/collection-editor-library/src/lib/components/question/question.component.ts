@@ -19,7 +19,6 @@ import { SubMenu } from '../question-option-sub-menu/question-option-sub-menu.co
 import { ICreationContext } from '../../interfaces/CreationContext';
 
 const evidenceMimeType='';
-const maxScore=1;
 const evidenceSizeLimit='20480';
 
 @Component({
@@ -108,6 +107,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   branchingLogic: any;
   selectedSectionId: any;
   sectionPrimaryCategory: any;
+  maxScore = 1;
   public questionFormConfig: any;
   constructor(
     private questionService: QuestionService, public editorService: EditorService, public telemetryService: EditorTelemetryService,
@@ -758,6 +758,15 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       metadata.collectionId = _.get(this.editorService, 'editorConfig.context.collectionIdentifier');
       metadata.organisationId = _.get(this.editorService, 'editorConfig.context.contributionOrgId');
     }
+    if (_.has(metadata.responseDeclaration.response1, 'maxScore')) {
+      metadata.responseDeclaration.response1.maxScore = this.maxScore;
+    }
+    if (_.has(metadata.responseDeclaration.response1, 'correctResponse.outcomes.SCORE')) {
+      metadata.responseDeclaration.response1.correctResponse.outcomes.SCORE = this.maxScore;
+    }
+    if (this.questionInteractionType === 'choice') {
+      metadata.maxScore = this.maxScore;
+    }
     metadata = _.merge(metadata, _.pickBy(this.childFormData, _.identity));
     // tslint:disable-next-line:max-line-length
     return _.omit(metadata, ['question', 'numberOfOptions', 'options', 'allowMultiSelect', 'showEvidence', 'evidenceMimeType', 'showRemarks', 'markAsNotMandatory', 'leftAnchor', 'rightAnchor', 'step', 'numberOnly', 'characterLimit', 'dateFormat', 'autoCapture', 'remarksLimit']);
@@ -770,7 +779,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     };
     if (type === 'text' || type === 'slider') {
-      responseDeclaration.response1['maxScore'] = maxScore;
+      responseDeclaration.response1['maxScore'] = this.maxScore;
     }
     return responseDeclaration;
   }
@@ -1107,10 +1116,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   valueChanges(event) {
-    if (_.get(this.creationContext, 'objectType') === 'question') {
-      // tslint:disable-next-line:radix
-      event.maxScore = event.maxScore ? parseInt(event.maxScore) : null;
-    }
+    event.maxScore = !_.isNull(event.maxScore) ? parseInt(event.maxScore) : this.maxScore;
+    this.maxScore = event.maxScore;
     this.childFormData = event;
   }
 
@@ -1170,6 +1177,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
             if (formFieldCategory.code === 'markAsNotMandatory') {
               defaultValue === 'Yes' ? (defaultValue = 'No') : (defaultValue = 'Yes');
             }
+            if (formFieldCategory.code === 'maxScore' && this.questionInteractionType === 'choice') {
+              defaultValue = this.questionMetaData.maxScore ?
+              this.questionMetaData.maxScore : this.questionMetaData.responseDeclaration.response1.maxScore;
+            }
             formFieldCategory.default = defaultValue;
             this.childFormData[formFieldCategory.code] = defaultValue;
           }
@@ -1182,6 +1193,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         const defaultEditStatus = _.find(this.initialLeafFormConfig, {code: formFieldCategory.code}).editable === true;
         formFieldCategory.default = defaultEditStatus ? '' : questionSetDefaultValue;
         this.childFormData[formFieldCategory.code] = formFieldCategory.default;
+        if (formFieldCategory.code === 'maxScore' && this.questionInteractionType === 'choice') {
+          this.childFormData[formFieldCategory.code] = this.maxScore;
+        }
       }
     });
     this.fetchFrameWorkDetails();
