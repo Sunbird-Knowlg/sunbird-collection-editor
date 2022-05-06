@@ -758,14 +758,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       metadata.collectionId = _.get(this.editorService, 'editorConfig.context.collectionIdentifier');
       metadata.organisationId = _.get(this.editorService, 'editorConfig.context.contributionOrgId');
     }
-    if (_.has(metadata.responseDeclaration.response1, 'maxScore')) {
-      metadata.responseDeclaration.response1.maxScore = this.maxScore;
-    }
-    if (_.has(metadata.responseDeclaration.response1, 'correctResponse.outcomes.SCORE')) {
-      metadata.responseDeclaration.response1.correctResponse.outcomes.SCORE = this.maxScore;
-    }
     if (this.questionInteractionType === 'choice') {
-      metadata.maxScore = this.maxScore;
+      metadata.responseDeclaration.response1.maxScore = this.maxScore;
+      metadata.responseDeclaration.response1.correctResponse.outcomes.SCORE = this.maxScore;
     }
     metadata = _.merge(metadata, _.pickBy(this.childFormData, _.identity));
     // tslint:disable-next-line:max-line-length
@@ -1116,8 +1111,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   valueChanges(event) {
-    event.maxScore = !_.isNull(event.maxScore) ? parseInt(event.maxScore) : this.maxScore;
-    this.maxScore = event.maxScore;
+    if (_.has(event, 'maxScore')) {
+      event.maxScore = !_.isNull(event.maxScore) ? parseInt(event.maxScore) : this.maxScore;
+      this.maxScore = event.maxScore;
+    }
     this.childFormData = event;
   }
 
@@ -1178,8 +1175,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
               defaultValue === 'Yes' ? (defaultValue = 'No') : (defaultValue = 'Yes');
             }
             if (formFieldCategory.code === 'maxScore' && this.questionInteractionType === 'choice') {
-              defaultValue = this.questionMetaData.maxScore ?
-              this.questionMetaData.maxScore : this.questionMetaData.responseDeclaration.response1.maxScore;
+              defaultValue = this.maxScore;
             }
             formFieldCategory.default = defaultValue;
             this.childFormData[formFieldCategory.code] = defaultValue;
