@@ -40,7 +40,7 @@ app.use(['/api','/assets', '/action/content/v3/hierarchy/*'], proxy(BASE_URL, {
     }
 }));
 
-app.use(['/action/dialcode/v3/search'], proxy(BASE_URL, {
+app.use(['/action/dialcode/v3/search', 'action/asset/v1/create'], proxy(BASE_URL, {
     https: true,
     limit: '30mb',
     proxyReqPathResolver: function(req) {
