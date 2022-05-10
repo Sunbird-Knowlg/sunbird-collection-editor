@@ -226,7 +226,8 @@
        "minSizeInfo": "The minimum slider value",
        "maxSizeInfo": "The maximum slider value",
        "questionsetAddFromLibraryItemLabel": "question",
-       "questionsetAddFromLibraryCollectionLabel": "question set"
+       "questionsetAddFromLibraryCollectionLabel": "question set",
+       "maxScore": "Max score"
       },
     "err":{
        "somethingWentWrong":"Something went wrong",
