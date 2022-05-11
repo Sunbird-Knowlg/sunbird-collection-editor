@@ -24,6 +24,7 @@ import {
   HierarchyMockData,
   BranchingLogic,
   mockEditorCursor,
+  interactionChoiceEditorState
 } from "./question.component.spec.data";
 import { of, throwError } from "rxjs";
 import * as urlConfig from "../../services/config/url.config.json";
@@ -750,7 +751,7 @@ describe("QuestionComponent", () => {
     expect(component.isEditable("bloomsLevel")).toBeFalsy();
   });
   it("Unit test for #prepareQuestionBody", () => {
-    spyOn(component, "prepareQuestionBody").and.callThrough();
+    spyOn(component, "prepareQuestionBody").and.callFake(() => {});
     component.prepareQuestionBody();
     expect(component.prepareQuestionBody).toHaveBeenCalled();
   });
@@ -849,6 +850,31 @@ describe("QuestionComponent", () => {
     component.getQuestionMetadata();
     expect(component.getQuestionMetadata).toHaveBeenCalled();
   })
+
+  it('#getQuestionMetadata() should return question metata when interactionType is choice', () => {
+    component.mediaArr = [];
+    component.editorState = interactionChoiceEditorState;
+    component.selectedSolutionType = undefined;
+    component.creationContext = undefined;
+    component.questionInteractionType = 'choice';
+    component.childFormData = {
+      name: 'MCQ',
+      bloomsLevel: null,
+      board: 'CBSE',
+      maxScore: 1
+    };
+    component.maxScore = 1;
+    spyOn(component, 'getDefaultSessionContext').and.returnValue({
+        creator: 'Vaibahv Bhuva',
+        createdBy: '5a587cc1-e018-4859-a0a8-e842650b9d64'
+      }
+    );
+    spyOn(component, 'getQuestionMetadata').and.callThrough();
+    const metadata = component.getQuestionMetadata();
+    console.log('rajnish metadata', metadata.responseDeclaration.response1)
+    expect(metadata.responseDeclaration.response1.maxScore).toEqual(1);
+    expect(metadata.responseDeclaration.response1.correctResponse.outcomes.SCORE).toEqual(1);
+  });
 
   it("#saveQuestion() should call saveQuestion for updateQuestion objectType not a question", () => {
     component.editorState = mockData.editorState;
@@ -1434,9 +1460,11 @@ describe("QuestionComponent", () => {
   });
 
   it("#getResponseDeclaration() should call for question save", () => {
+    component.maxScore = 1;
     spyOn(component, "getResponseDeclaration").and.callThrough();
-    component.getResponseDeclaration("slider");
+    const responseDecleration = component.getResponseDeclaration("slider");
     expect(component.getResponseDeclaration).toHaveBeenCalled();
+    expect(responseDecleration.response1['maxScore']).toEqual(1);
   });
 
   it("#saveUpdateQuestions call on click save button api fail case", () => {
@@ -1682,11 +1710,12 @@ describe("QuestionComponent", () => {
         },
       });
     });
-   component.saveUpdateQuestions();  
-   component.updateQuestion(); 
+  spyOn(component, 'saveUpdateQuestions').and.callFake(()=>{});
+   component.updateQuestion();
+   expect(component.saveUpdateQuestions).toHaveBeenCalled();
   });
 
-  it("#updateQuestion() should call on question save isChildQuestion is false api fail", () => {
+  xit("#updateQuestion() should call on question save isChildQuestion is false api fail", () => {
     spyOn(component,'updateQuestion').and.callThrough();
     component.sourcingSettings=sourcingSettingsMock;
     component.childFormData=childMetaData;
