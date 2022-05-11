@@ -2942,3 +2942,75 @@ export const BranchingLogic = {
     },
   },
 };
+
+export const interactionChoiceEditorState = {
+  question: '<p>q</p>',
+  options: [
+      {
+          body: '<p>a</p>'
+      },
+      {
+          body: '<p>b</p>'
+      }
+  ],
+  templateId: 'mcq-vertical',
+  answer: '0',
+  numberOfOptions: 2,
+  interactions: {
+      response1: {
+          type: 'choice',
+          options: [
+              {
+                  label: '<p>a</p>',
+                  value: 0
+              },
+              {
+                  label: '<p>b</p>',
+                  value: 1
+              }
+          ]
+      },
+      validation: {
+          required: 'Yes'
+      }
+  },
+  name: 'Multiple Choice Question',
+  responseDeclaration: {
+      response1: {
+          maxScore: 1,
+          cardinality: 'single',
+          type: 'integer',
+          correctResponse: {
+              value: '0',
+              outcomes: {
+                  SCOR: 1
+              }
+          },
+          mapping: []
+      }
+  },
+  interactionTypes: [
+      'choice'
+  ],
+  editorState: {
+      options: [
+          {
+              answer: true,
+              value: {
+                  body: '<p>a</p>',
+                  value: 0
+              }
+          },
+          {
+              answer: false,
+              value: {
+                  body: '<p>b</p>',
+                  value: 1
+              }
+          }
+      ],
+      question: '<p>q</p>'
+  },
+  qType: 'MCQ',
+  primaryCategory: 'Multiple Choice Question'
+};
