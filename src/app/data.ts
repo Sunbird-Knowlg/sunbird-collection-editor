@@ -151,7 +151,7 @@ export const questionSetEditorConfig = {
       lastName: 'Bhuva',
       orgIds: ['01309282781705830427']
     },
-    identifier: 'do_113476420248436736138', // do_11330102570702438417 , do_113449692707643392118, //do_113449692707643392118 , do_113460158539554816151
+    identifier: 'do_113519645133357056176', // do_11330102570702438417 , do_113449692707643392118, //do_113449692707643392118 , do_113460158539554816151
     authToken: ' ',
     sid: 'iYO2K6dOSdA0rwq7NeT1TDzS-dbqduvV',
     did: '7e85b4967aebd6704ba1f604f20056b6',
@@ -258,7 +258,7 @@ export const questionSetEditorConfig = {
     sourcingResourceStatus: true,
   },
   config: {
-    mode: 'edit', // edit / review / read / sourcingReview // orgReview
+    mode: 'orgReview', // edit / review / read / sourcingReview // orgReview
     enableQuestionCreation: true,
     enableAddFromLibrary: true,
     editableFields: {
@@ -598,7 +598,7 @@ export const observationEditorConfig = {
       orgIds: ['01309282781705830427']
     },
     // identifier: 'do_113395089840529408131', // 'do_1132393548335759361558', // do_11330102570702438417
-    identifier: 'do_113480838751551488129',  // 'do_1133610108714352641210', // Observation
+    identifier: 'do_11353609444759961611541',  // 'do_1133610108714352641210', // Observation
     // identifier: 'do_113395099906416640139', // survey
     // identifier: 'do_1134357224765685761203', // Observation With Rubrics
     authToken: ' ',
