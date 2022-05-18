@@ -634,6 +634,19 @@ describe("QuestionComponent", () => {
     component.populateFormData();
   });
 
+  it("Unit test for #populateFormData without Question Id", () => {
+    component.childFormData = {};
+    component.questionId = undefined;
+    component.isReadOnlyMode=false;
+    component.leafFormConfig = leafFormConfigMock;
+    component.initialLeafFormConfig = leafFormConfigMock;
+    component.questionFormConfig = leafFormConfigMock;
+    component.questionMetaData=mockData.mcqQuestionMetaData.result.question;
+    component.questionSetHierarchy = collectionHierarchyMock.result.questionSet;
+    component.previewFormData(false);
+    component.populateFormData();
+  });
+
   it("Unit test for #populateFormData readonly mode true ", () => {
     component.childFormData = {};
     component.isReadOnlyMode=true;
@@ -801,10 +814,10 @@ describe("QuestionComponent", () => {
     expect(component.mediaArr).toBeDefined();
   });
   it("#saveQuestion() should call saveQuestion for updateQuestion throw error", () => {
-    component.editorState = mockData.editorState;
+    component.editorState = mockData.editorState.body;
     component.questionId = undefined;
     spyOn(treeService, "getFirstChild").and.callFake(() => {
-      return { data: { metadata: { identifier: "0123" } } };
+      return { data: { metadata: { identifier: "0123",allowScoring:'Yes' } } };
     });
     spyOn(treeService, "getActiveNode").and.callFake(() => {
       return { data: { root: true } };
@@ -1581,7 +1594,7 @@ describe("QuestionComponent", () => {
 
   it("#prepareRequestBody call when question save called slider", () => {
     spyOn(treeService, "getFirstChild").and.callFake(() => {
-      return { data: { metadata: { identifier: "0123" } } };
+      return { data: { metadata: { identifier: "0123",allowScoring:'Yes' } } };
     });
     spyOn(treeService, "getActiveNode").and.callFake(() => {
       return { data: { root: true } };
@@ -1597,7 +1610,7 @@ describe("QuestionComponent", () => {
 
   it("#prepareRequestBody call when question save called text", () => {
     spyOn(treeService, "getFirstChild").and.callFake(() => {
-      return { data: { metadata: { identifier: "0123" } } };
+      return { data: { metadata: { identifier: "0123",allowScoring:'Yes' } } };
     });
     spyOn(treeService, "getActiveNode").and.callFake(() => {
       return { data: { root: true } };
@@ -1621,7 +1634,10 @@ describe("QuestionComponent", () => {
     expect(component.questionId).toEqual("do_123");
   });
 
-  it("#upsertQuestion() should call on question save api fal case", () => {
+  it("#upsertQuestion() should call on question save api false case", () => {
+    spyOn(treeService, "getFirstChild").and.callFake(() => {
+      return { data: { metadata: { identifier: "0123",allowScoring:'Yes' } } };
+    });
     const metaData = mockData.textQuestionNetaData.result.question;
     component.questionPrimaryCategory = metaData.primaryCategory;
     component.childFormData = childMetaData;
@@ -1644,7 +1660,10 @@ describe("QuestionComponent", () => {
     component.upsertQuestion("");
   });
 
-  it("#upsertQuestion() should call on question save api fal case", () => {
+  it("#upsertQuestion() should call on question save api false case", () => {
+    spyOn(treeService, "getFirstChild").and.callFake(() => {
+      return { data: { metadata: { identifier: "0123",allowScoring:'Yes' } } };
+    });
     const metaData = mockData.textQuestionNetaData.result.question;
     component.questionPrimaryCategory = metaData.primaryCategory;
     component.childFormData = childMetaData;

@@ -552,6 +552,17 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // to handle when question type is mcq
     if (this.questionInteractionType === 'choice') {
+      const data = _.get(this.treeService.getFirstChild(), 'data.metadata');
+      if (_.get(this.editorState, 'interactionTypes[0]') === 'choice' &&
+        _.isEmpty(this.editorState?.responseDeclaration?.response1?.mapping) &&
+        !_.isUndefined(this.editorService?.editorConfig?.config?.renderTaxonomy) &&
+        _.get(data,'allowScoring') === 'Yes') {
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.005'));  
+        this.showFormError = true;
+        return;
+      } else {
+        this.showFormError = false;
+      }
       const optionValid = _.find(this.editorState.options, option =>
         (option.body === undefined || option.body === '' || option.length > this.setCharacterLimit));
       if (optionValid || (!this.editorState.answer && this.sourcingSettings?.enforceCorrectAnswer)) {
@@ -560,6 +571,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       } else {
         this.showFormError = false;
       }
+
     }
 
     if (this.questionInteractionType === 'slider') {
@@ -732,11 +744,11 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       media: this.mediaArr,
       editorState: {}
     };
-    console.log('getQuestionMetadata');
-    console.log(this.editorState);
     metadata = _.assign(metadata, this.editorState);
     metadata.editorState.question = metadata.question;
     metadata.body = metadata.question;
+    const treeNodeData = _.get(this.treeService.getFirstChild(), 'data.metadata');
+    _.get(treeNodeData,'allowScoring') === 'Yes' ? '' : metadata.responseDeclaration.response1.mapping=[]
 
     if (this.questionInteractionType === 'choice') {
       metadata.body = this.getMcqQuestionHtmlBody(this.editorState.question, this.editorState.templateId);
@@ -1111,6 +1123,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   valueChanges(event) {
+    console.log(event);
     if (_.has(event, 'maxScore')) {
       event.maxScore = !_.isNull(event.maxScore) ? parseInt(event.maxScore) : this.maxScore;
       this.maxScore = event.maxScore;
@@ -1167,7 +1180,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
             numberOnly: 'interactions.response1.type.number',
             characterLimit: 'interactions.response1.validation.limit.maxLength',
             remarksLimit: 'remarks.maxLength',
-            evidenceMimeType: 'evidence.mimeType'
+            evidenceMimeType: 'evidence.mimeType',
           };
           if (this.questionMetaData && _.has(availableAlias, formFieldCategory.code)) {
             let defaultValue = _.get(this.questionMetaData, availableAlias[formFieldCategory.code]);
@@ -1176,6 +1189,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
             }
             if (formFieldCategory.code === 'maxScore' && this.questionInteractionType === 'choice') {
               defaultValue = this.maxScore;
+            }
+            if (_.get(this.questionMetaData,'interactionTypes[0]') === 'choice') {
+              this.childFormData['allowMultiSelect'] = _.get(this.questionMetaData, 'responseDeclaration.response1.cardinality') === 'multiple' ? 'Yes' : 'No';
             }
             formFieldCategory.default = defaultValue;
             this.childFormData[formFieldCategory.code] = defaultValue;

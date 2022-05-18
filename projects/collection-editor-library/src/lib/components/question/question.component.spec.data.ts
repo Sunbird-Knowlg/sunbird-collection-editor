@@ -164,7 +164,7 @@ export const mockData = {
         responseDeclaration: {
           response1: {
             maxScore: 1,
-            cardinality: "single",
+            cardinality: "Multiple",
             type: "integer",
             correctResponse: {
               outcomes: {
@@ -173,6 +173,9 @@ export const mockData = {
             },
             mapping: [],
           },
+        },
+        remarksLimit:{
+          maxLength:100
         },
         interactionTypes: ["choice"],
         qType: "MCQ",
@@ -214,6 +217,7 @@ export const mockData = {
         body: "<p>Slider Question</p>",
         responseDeclaration: {
           response1: {
+            mapping:[],
             type: "integer",
             maxScore: 1,
           },
@@ -351,6 +355,7 @@ export const mockData = {
         body: "<p>Text Question</p>",
         responseDeclaration: {
           response1: {
+            mapping:[],
             type: "string",
             maxScore: 1,
           },
@@ -617,6 +622,11 @@ export const mockData = {
       name: "Subjective Question",
       qType: "SA",
       primaryCategory: "Subjective Question",
+      responseDeclaration:{
+        response1:{
+          mapping:[]
+        }
+      }
     },
     mediaobj: {},
   },
