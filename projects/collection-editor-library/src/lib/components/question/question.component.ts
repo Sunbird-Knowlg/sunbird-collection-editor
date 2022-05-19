@@ -1189,7 +1189,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
             if (formFieldCategory.code === 'maxScore' && this.questionInteractionType === 'choice') {
               defaultValue = this.maxScore;
             }
-            if (_.get(this.questionMetaData,'interactionTypes[0]') === 'choice' && !_.isUndefined(this.editorService?.editorConfig?.config?.renderTaxonomy)) {
+            if (_.get(this.questionMetaData,'interactionTypes[0]') === 'choice') {
               this.childFormData['allowMultiSelect'] = _.get(this.questionMetaData, 'responseDeclaration.response1.cardinality') === 'multiple' ? 'Yes' : 'No';
             }
             formFieldCategory.default = defaultValue;
