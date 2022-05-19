@@ -1123,7 +1123,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   valueChanges(event) {
-    console.log(event);
     if (_.has(event, 'maxScore')) {
       event.maxScore = !_.isNull(event.maxScore) ? parseInt(event.maxScore) : this.maxScore;
       this.maxScore = event.maxScore;
@@ -1190,7 +1189,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
             if (formFieldCategory.code === 'maxScore' && this.questionInteractionType === 'choice') {
               defaultValue = this.maxScore;
             }
-            if (_.get(this.questionMetaData,'interactionTypes[0]') === 'choice') {
+            if (_.get(this.questionMetaData,'interactionTypes[0]') === 'choice' && !_.isUndefined(this.editorService?.editorConfig?.config?.renderTaxonomy)) {
               this.childFormData['allowMultiSelect'] = _.get(this.questionMetaData, 'responseDeclaration.response1.cardinality') === 'multiple' ? 'Yes' : 'No';
             }
             formFieldCategory.default = defaultValue;
