@@ -242,6 +242,7 @@ describe("QuestionComponent", () => {
     );
     component.ngOnInit();
     expect(component.ngOnInit).toHaveBeenCalled();
+    expect(component.questionMetadataFormStatus).toBeTruthy();
     expect(component.questionInput.setChildQueston).toBeTruthy();
   });
 
@@ -741,6 +742,26 @@ describe("QuestionComponent", () => {
     expect(component.buttonLoaders.saveButtonLoader).toEqual(true);
     expect(component.buttonLoaders.review).toEqual(true);
   });
+  it("Unit test for #previewContent", () => {
+    spyOn(component, 'validateQuestionData').and.callFake(() => {});
+    spyOn(component, 'previewFormData').and.callFake(() => {});
+    component.showFormError = false;
+    component.questionMetadataFormStatus = true;
+    component.questionId = 'do_12345';
+    component.tempQuestionId = 'do_12345';
+    component.questionSetHierarchy = {
+      childNodes: ''
+    };
+    spyOn(component, 'setQumlPlayerData').and.callFake(() => {});
+    component.toolbarConfig = {
+      showPreview: true
+    }
+    spyOn(component, 'previewContent').and.callThrough();
+    component.previewContent();
+    expect(component.validateQuestionData).toHaveBeenCalled();
+    expect(component.showFormError).toBeFalsy();
+    expect(component.questionMetadataFormStatus).toBeTruthy();
+  });
   it("Unit test for #isEditable without queston id", () => {
     component.creationContext = creationContextMock;
     component.questionId=undefined;
@@ -760,8 +781,10 @@ describe("QuestionComponent", () => {
     spyOn(component, "validateFormFields");
     spyOn(component, "saveQuestion");
     component.showFormError = false;
+    component.questionMetadataFormStatus = true;
     component.saveContent();
     expect(component.showFormError).toBeFalsy();
+    expect(component.questionMetadataFormStatus).toBeTruthy();
     expect(component.saveQuestion).toHaveBeenCalled();
   });
   it("#redirectToQuestionset() should call redirectToQuestionset and set showConfirmPopup", () => {
@@ -961,6 +984,7 @@ describe("QuestionComponent", () => {
     component.questionId = "do_1134355571590184961168";
     component.selectedSectionId = "do_1134347209749299201119";
     component.showFormError = false;
+    component.questionMetadataFormStatus = true;
     component.showOptions = true;
     component.isChildQuestion = true;
     component.condition = "eq";

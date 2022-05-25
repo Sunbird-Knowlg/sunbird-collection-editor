@@ -89,6 +89,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     'review': false
   };
   public showTranslation = false;
+  public questionMetadataFormStatus = true;
   subMenus: SubMenu[];
   showAddSecondaryQuestionCat: boolean;
   sliderDatas: any = {};
@@ -109,7 +110,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   sectionPrimaryCategory: any;
   maxScore = 1;
   public questionFormConfig: any;
-  public questionMetadataFormStatus = true;
   constructor(
     private questionService: QuestionService, public editorService: EditorService, public telemetryService: EditorTelemetryService,
     public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,
