@@ -207,9 +207,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
             if (_.get(res,'result')) {
               this.questionMetaData = _.get(res,'result.question');
               this.questionPrimaryCategory = _.get(this.questionMetaData,'primaryCategory');
-              this.populateFormData();
               // tslint:disable-next-line:max-line-length
               this.questionInteractionType = _.get(this.questionMetaData,'interactionTypes') ? _.get(this.questionMetaData,'interactionTypes[0]') : 'default';
+              this.populateFormData();
               if (this.questionInteractionType === 'default') {
                 if (this.questionMetaData.editorState) {
                   this.editorState = this.questionMetaData.editorState;
@@ -1123,6 +1123,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   valueChanges(event) {
     if (_.has(event, 'maxScore')) {
+      // tslint:disable-next-line:radix
       event.maxScore = !_.isNull(event.maxScore) ? parseInt(event.maxScore) : this.maxScore;
       this.maxScore = event.maxScore;
     }
@@ -1152,6 +1153,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         formFieldCategory.default = this.childFormData[formFieldCategory.code];
       }
     });
+    this.questionFormConfig = formConfig;
     console.log('questionFormConfig', this.questionFormConfig);
   }
 
@@ -1169,7 +1171,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.childFormData = {};
     _.forEach(this.leafFormConfig, (formFieldCategory) => {
       if (!_.isUndefined(this.questionId)) {
-        if (this.questionMetaData && _.has(this.questionMetaData, formFieldCategory.code)) {
+        if (formFieldCategory.code === 'maxScore' && this.questionInteractionType === 'choice') {
+          this.childFormData[formFieldCategory.code] = _.has(this.questionMetaData, 'responseDeclaration.response1.maxScore') ?
+          _.get(this.questionMetaData, 'responseDeclaration.response1.maxScore') : this.maxScore;
+        } else if (this.questionMetaData && _.has(this.questionMetaData, formFieldCategory.code)) {
           formFieldCategory.default = this.questionMetaData[formFieldCategory.code];
           this.childFormData[formFieldCategory.code] = this.questionMetaData[formFieldCategory.code];
         }
@@ -1187,9 +1192,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
             let defaultValue = _.get(this.questionMetaData, availableAlias[formFieldCategory.code]);
             if (formFieldCategory.code === 'markAsNotMandatory') {
               defaultValue === 'Yes' ? (defaultValue = 'No') : (defaultValue = 'Yes');
-            }
-            if (formFieldCategory.code === 'maxScore' && this.questionInteractionType === 'choice') {
-              defaultValue = this.maxScore;
             }
             formFieldCategory.default = defaultValue;
             this.childFormData[formFieldCategory.code] = defaultValue;
