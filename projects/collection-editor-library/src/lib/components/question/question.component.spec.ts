@@ -762,6 +762,18 @@ describe("QuestionComponent", () => {
     expect(component.showFormError).toBeFalsy();
     expect(component.questionMetadataFormStatus).toBeTruthy();
   });
+  it("Unit test for #setQumlPlayerData", () => {
+    // spyOn(component, 'editorCursor.setQuestionMap').and.callFake(()=> {});
+    spyOn(component, 'getQuestionMetadata').and.returnValue(mockData.mcqQuestionMetaData.result.question);
+    component.questionSetHierarchy = {
+      children: [],
+      maxScore: '1'
+    };
+    spyOn(component, 'setQumlPlayerData').and.callThrough();
+    component.setQumlPlayerData('do_12345');
+    expect(component.getQuestionMetadata).toHaveBeenCalled();
+    expect(component.questionSetHierarchy.maxScore).toBeDefined();
+  });
   it("Unit test for #isEditable without queston id", () => {
     component.creationContext = creationContextMock;
     component.questionId=undefined;

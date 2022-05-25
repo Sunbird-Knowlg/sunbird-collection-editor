@@ -189,6 +189,8 @@ export const mockData = {
         channel: "01309282781705830427",
         framework: "nit_k-12",
         license: "CC BY 4.0",
+        maxScore: '1',
+        identifier: ''
       },
     },
   },
