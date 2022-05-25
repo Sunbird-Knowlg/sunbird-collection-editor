@@ -762,6 +762,17 @@ describe("QuestionComponent", () => {
     expect(component.showFormError).toBeFalsy();
     expect(component.questionMetadataFormStatus).toBeTruthy();
   });
+  it("#previewContent should call toasterService.error", () => {
+    spyOn(component, 'validateQuestionData').and.callFake(() => {});
+    component.showFormError = true;
+    component.questionMetadataFormStatus = false;
+    // tslint:disable-next-line:no-shadowed-variable
+    const toasterService = TestBed.get(ToasterService);
+    spyOn(toasterService, 'error').and.callFake(() => {});
+    spyOn(component, 'previewContent').and.callThrough();
+    component.previewContent();
+    expect(toasterService.error).toHaveBeenCalled();
+  });
   it("Unit test for #setQumlPlayerData", () => {
     // spyOn(component, 'editorCursor.setQuestionMap').and.callFake(()=> {});
     spyOn(component, 'getQuestionMetadata').and.returnValue(mockData.mcqQuestionMetaData.result.question);

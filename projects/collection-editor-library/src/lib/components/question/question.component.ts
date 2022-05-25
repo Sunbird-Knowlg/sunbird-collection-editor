@@ -1143,9 +1143,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   previewFormData(status) {
     let formConfig = _.cloneDeep(this.leafFormConfig);
-    // if (this.questionInteractionType === 'default') {
-    //   formConfig = _.filter(formConfig, (field: any) => field.code !== 'maxScore');
-    // }
+    /*if (this.questionInteractionType === 'default') {
+      formConfig = _.filter(formConfig, (field: any) => field.code !== 'maxScore');
+    }*/
     this.questionFormConfig = null;
     _.forEach(formConfig, (formFieldCategory) => {
       if (_.has(formFieldCategory, 'editable') && !_.isUndefined(formFieldCategory.editable)) {
@@ -1154,7 +1154,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
     this.questionFormConfig = formConfig;
-    console.log('questionFormConfig', this.questionFormConfig);
   }
 
   isEditable(fieldCode) {
