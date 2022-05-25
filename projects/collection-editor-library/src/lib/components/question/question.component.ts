@@ -109,6 +109,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   sectionPrimaryCategory: any;
   maxScore = 1;
   public questionFormConfig: any;
+  public questionMetadataFormStatus = true;
   constructor(
     private questionService: QuestionService, public editorService: EditorService, public telemetryService: EditorTelemetryService,
     public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,
@@ -386,8 +387,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   saveContent() {
     this.validateQuestionData();
-    if (this.showFormError === false) {
+    if (this.showFormError === false && this.questionMetadataFormStatus === true) {
       this.saveQuestion();
+    } else {
+      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.044'));
     }
   }
 
@@ -1038,13 +1041,15 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   previewContent() {
     this.validateQuestionData();
-    if (this.showFormError === false) {
+    if (this.showFormError === false && this.questionMetadataFormStatus === true) {
       this.previewFormData(false);
       const questionId = _.isUndefined(this.questionId) ? this.tempQuestionId : this.questionId;
       this.questionSetHierarchy.childNodes = [questionId];
       this.setQumlPlayerData(questionId);
       this.showPreview = true;
       this.toolbarConfig.showPreview = true;
+    } else {
+      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.044'));
     }
   }
 
@@ -1052,6 +1057,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     const questionMetadata: any = _.cloneDeep(this.getQuestionMetadata());
     questionMetadata.identifier = questionId;
     this.questionSetHierarchy.children = [questionMetadata];
+    if (questionMetadata.maxScore) {
+      this.questionSetHierarchy.maxScore = questionMetadata.maxScore;
+    }
     this.editorCursor.setQuestionMap(questionId, questionMetadata);
   }
 
@@ -1108,6 +1116,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onStatusChanges(event) {
     console.log(event);
+    if (_.has(event, 'isValid')) {
+      this.questionMetadataFormStatus = event.isValid;
+    }
   }
 
   valueChanges(event) {
@@ -1130,7 +1141,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   previewFormData(status) {
-    const formConfig = _.cloneDeep(this.leafFormConfig);
+    let formConfig = _.cloneDeep(this.leafFormConfig);
+    // if (this.questionInteractionType === 'default') {
+    //   formConfig = _.filter(formConfig, (field: any) => field.code !== 'maxScore');
+    // }
     this.questionFormConfig = null;
     _.forEach(formConfig, (formFieldCategory) => {
       if (_.has(formFieldCategory, 'editable') && !_.isUndefined(formFieldCategory.editable)) {
@@ -1138,7 +1152,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         formFieldCategory.default = this.childFormData[formFieldCategory.code];
       }
     });
-    this.questionFormConfig = formConfig;
+    console.log('questionFormConfig', this.questionFormConfig);
   }
 
   isEditable(fieldCode) {

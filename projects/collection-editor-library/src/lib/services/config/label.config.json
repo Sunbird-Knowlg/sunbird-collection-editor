@@ -284,7 +284,8 @@
          "040": "Unable to send content back for corrections",
          "041": "Cannot add question. reached limit of maximum number of questions allowed.",
          "042": "Cannot create content. reached limit of maximum number of contents allowed.",
-         "043": "Adding question to questionset failed. Please try again."
+         "043": "Adding question to questionset failed. Please try again.",
+         "044": "Please fill valid question details."
       },
       "success": {
          "001": "Content is saved",
