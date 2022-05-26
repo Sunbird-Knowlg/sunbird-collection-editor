@@ -810,6 +810,15 @@ describe("QuestionComponent", () => {
     expect(component.questionMetadataFormStatus).toBeTruthy();
     expect(component.saveQuestion).toHaveBeenCalled();
   });
+  it("#saveContent() should call toasterService.error ", () => {
+    spyOn(component, "validateQuestionData").and.callFake(() => {});
+    component.showFormError = true;
+    component.questionMetadataFormStatus = false;
+    spyOn(toasterService, 'error').and.callFake(() => {});
+    spyOn(component, 'saveContent').and.callThrough();
+    component.saveContent();
+    expect(toasterService.error).toHaveBeenCalled();
+  });
   it("#redirectToQuestionset() should call redirectToQuestionset and set showConfirmPopup", () => {
     spyOn(component.questionEmitter, "emit");
     component.redirectToQuestionset();
