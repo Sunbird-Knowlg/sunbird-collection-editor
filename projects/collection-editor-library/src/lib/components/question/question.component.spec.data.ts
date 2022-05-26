@@ -95,10 +95,21 @@ export const mockData = {
         mimeType: "application/vnd.sunbird.question",
         media: [
           {
-            id:'1',
-            type:'vedio'
+              "src": "/assets/public/content/do_1135205326975467521585/artifact/1650455654269.thumb.png",
+              "type": "image",
+              "id": "video_do_1135205326975467521585",
+              "baseUrl": "https://dock.sunbirded.org"
+          },
+          {
+              "id": "do_1135205326975467521585",
+              "src": "/assets/public/content/assets/do_1135205326975467521585/file_example_mp4_640_3mg.mp4",
+              "type": "video",
+              "assetId": "do_1135205326975467521585",
+              "name": "file_example_MP4_640_3MG",
+              "thumbnail": "/assets/public/content/do_1135205326975467521585/artifact/1650455654269.thumb.png",
+              "baseUrl": "https://dock.sunbirded.org"
           }
-        ],
+      ],
         editorState: {
           options: [
             {
@@ -129,7 +140,7 @@ export const mockData = {
         solutions: [
           {
             id:'1',
-            type:'vedio'
+            type:'video'
           }
         ],
         interactions: {

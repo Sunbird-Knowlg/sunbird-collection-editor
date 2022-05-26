@@ -32,7 +32,7 @@ import * as labelConfig from "../../services/config/label.config.json";
 import * as categoryConfig from "../../services/config/category.config.json";
 import { ConfigService } from "../../services/config/config.service";
 import { treeNodeData } from "../editor/editor.component.spec.data";
-
+import * as _ from 'lodash-es';
 const mockEditorService = {
   editorConfig: {
     config: {
@@ -421,39 +421,52 @@ describe("QuestionComponent", () => {
     expect(component.initialize).toHaveBeenCalled();
   });
 
-  it("#initialize should call when question page for question mcq", () => {
-    spyOn(component, "initialize").and.callThrough();
-    component.initialLeafFormConfig = leafFormConfigMock;
-    component.leafFormConfig = leafFormConfigMock;
-    component.questionFormConfig = leafFormConfigMock;
-    component.questionId = "do_11330103476396851218";
-    editorService.parentIdentifier = undefined;
-    spyOn(editorService, "getToolbarConfig").and.returnValue({
-      title: "abcd",
-      showDialcode: "No",
-      showPreview: "false",
-    });
-    component.toolbarConfig.showPreview = false;
+  it("#initialize should call when question page for question mcq with interactionTypes", () => {
+    component.questionSetId = "do_12345";
     spyOn(editorService, "fetchCollectionHierarchy").and.callFake(() => {
       return of(collectionHierarchyMock);
     });
-    component.questionId = undefined;
-    component.questionSetHierarchy = collectionHierarchyMock.result.questionSet;
+    editorService.parentIdentifier = undefined;
+    component.questionId = "do_11330103476396851218";
+    component.leafFormConfig = leafFormConfigMock;
     spyOn(questionService, "readQuestion").and.returnValue(
       of(mockData.mcqQuestionMetaData)
     );
-    component.questionMetaData = mockData.mcqQuestionMetaData.result.question;
-    component.editorState =
-      mockData.mcqQuestionMetaData.result.question.editorState;
-    spyOn(editorService, "apiErrorHandling").and.callFake(() => {});
+    spyOn(component, 'setQuestionTitle').and.callFake(() => {});
     spyOn(component, 'populateFormData').and.callFake(() => {});
-    component.questionMetaData = mockData.mcqQuestionMetaData;
-    component.questionInteractionType = "choice";
+    component.leafFormConfig = leafFormConfigMock;
+    spyOn(component, "initialize").and.callThrough();
     component.initialize();
     expect(component.initialize).toHaveBeenCalled();
     expect(component.questionPrimaryCategory).toBeDefined();
     expect(component.questionInteractionType).toBeDefined();
     expect(component.populateFormData).toHaveBeenCalled();
+    expect(component.setQuestionTitle).toHaveBeenCalled();
+  });
+
+  it("#initialize should call when question page for question mcq without interactionTypes", () => {
+    let questionMetadata = mockData.mcqQuestionMetaData.result.question;
+    questionMetadata = _.omit(questionMetadata, ['interactionTypes', 'primaryCategory'])
+    component.questionSetId = "do_12345";
+    spyOn(editorService, "fetchCollectionHierarchy").and.callFake(() => {
+      return of(collectionHierarchyMock);
+    });
+    editorService.parentIdentifier = undefined;
+    component.questionId = "do_11330103476396851218";
+    component.leafFormConfig = leafFormConfigMock;
+    spyOn(questionService, "readQuestion").and.returnValue(
+      of({result: {question: {questionMetadata}}})
+    );
+    spyOn(component, 'setQuestionTitle').and.callFake(() => {});
+    spyOn(component, 'populateFormData').and.callFake(() => {});
+    component.leafFormConfig = leafFormConfigMock;
+    spyOn(component, "initialize").and.callThrough();
+    component.initialize();
+    expect(component.initialize).toHaveBeenCalled();
+    expect(component.questionPrimaryCategory).toBeUndefined();
+    expect(component.questionInteractionType).toEqual("default");
+    expect(component.populateFormData).toHaveBeenCalled();
+    expect(component.setQuestionTitle).toHaveBeenCalled();
   });
 
   it("#initialize should call when question page for question slider", () => {
