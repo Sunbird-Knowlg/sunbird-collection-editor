@@ -84,12 +84,12 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   pageStartTime: any;
   public framework;
   public frameworkDetails: any = {};
+  public questionMetadataFormStatus = true;
   public buttonLoaders = {
     saveButtonLoader: false,
     'review': false
   };
   public showTranslation = false;
-  public questionMetadataFormStatus = true;
   subMenus: SubMenu[];
   showAddSecondaryQuestionCat: boolean;
   sliderDatas: any = {};
