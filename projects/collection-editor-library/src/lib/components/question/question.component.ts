@@ -1142,7 +1142,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   previewFormData(status) {
-    let formConfig = _.cloneDeep(this.leafFormConfig);
+    const formConfig = _.cloneDeep(this.leafFormConfig);
     this.questionFormConfig = null;
     _.forEach(formConfig, (formFieldCategory) => {
       if (_.has(formFieldCategory, 'editable') && !_.isUndefined(formFieldCategory.editable)) {
