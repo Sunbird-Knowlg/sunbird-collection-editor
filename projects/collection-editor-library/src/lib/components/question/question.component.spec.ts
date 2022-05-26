@@ -446,10 +446,14 @@ describe("QuestionComponent", () => {
     component.editorState =
       mockData.mcqQuestionMetaData.result.question.editorState;
     spyOn(editorService, "apiErrorHandling").and.callFake(() => {});
+    spyOn(component, 'populateFormData').and.callFake(() => {});
     component.questionMetaData = mockData.mcqQuestionMetaData;
     component.questionInteractionType = "choice";
     component.initialize();
     expect(component.initialize).toHaveBeenCalled();
+    expect(component.questionPrimaryCategory).toBeDefined();
+    expect(component.questionInteractionType).toBeDefined();
+    expect(component.populateFormData).toHaveBeenCalled();
   });
 
   it("#initialize should call when question page for question slider", () => {
