@@ -95,10 +95,21 @@ export const mockData = {
         mimeType: "application/vnd.sunbird.question",
         media: [
           {
-            id:'1',
-            type:'vedio'
+              "src": "/assets/public/content/do_1135205326975467521585/artifact/1650455654269.thumb.png",
+              "type": "image",
+              "id": "video_do_1135205326975467521585",
+              "baseUrl": "https://dock.sunbirded.org"
+          },
+          {
+              "id": "do_1135205326975467521585",
+              "src": "/assets/public/content/assets/do_1135205326975467521585/file_example_mp4_640_3mg.mp4",
+              "type": "video",
+              "assetId": "do_1135205326975467521585",
+              "name": "file_example_MP4_640_3MG",
+              "thumbnail": "/assets/public/content/do_1135205326975467521585/artifact/1650455654269.thumb.png",
+              "baseUrl": "https://dock.sunbirded.org"
           }
-        ],
+      ],
         editorState: {
           options: [
             {
@@ -129,7 +140,7 @@ export const mockData = {
         solutions: [
           {
             id:'1',
-            type:'vedio'
+            type:'video'
           }
         ],
         interactions: {
@@ -189,6 +200,8 @@ export const mockData = {
         channel: "01309282781705830427",
         framework: "nit_k-12",
         license: "CC BY 4.0",
+        maxScore: '1',
+        identifier: ''
       },
     },
   },
@@ -2808,6 +2821,32 @@ export const leafFormConfigMock = [
     visible: true,
     default: "No",
   },
+  {
+    code: 'maxScore',
+    dataType: 'text',
+    description: 'Marks',
+    editable: true,
+    inputType: 'text',
+    default: '',
+    label: 'Marks:',
+    name: 'Marks',
+    placeholder: 'Marks',
+    tooltip: 'Provide marks of this question.',
+    renderingHints: {
+        class: 'sb-g-col-lg-1 required'
+    },
+    validations: [
+        {
+            type: 'pattern',
+            value: '^([1-9][0-9]+|[1-9])$',
+            message: 'Input should be numeric'
+        },
+         {
+            type: 'required',
+            message: 'Marks is required'
+        }
+    ]
+  }
 ];
 export const creationContextMock: any = {
   objectType: "question",
