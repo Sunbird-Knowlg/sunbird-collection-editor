@@ -175,7 +175,7 @@ export const mockData = {
         responseDeclaration: {
           response1: {
             maxScore: 1,
-            cardinality: "multiple",
+            cardinality: "Multiple",
             type: "integer",
             correctResponse: {
               outcomes: {
@@ -194,6 +194,7 @@ export const mockData = {
         body: "<div class='question-body' tabindex='-1'><div class='mcq-title' tabindex='0'><p>MCQ Question</p></div><div data-choice-interaction='response1' class='mcq-vertical'></div></div>",
         creator: "Vaibahv Bhuva",
         createdBy: "5a587cc1-e018-4859-a0a8-e842650b9d64",
+        markAsNotMandatory:'No',
         board: "CBSE",
         medium: ["English"],
         gradeLevel: ["Grade 1"],
@@ -2831,7 +2832,32 @@ export const leafFormConfigMock = [
     visible: true,
     default: "No",
   },
- 
+  {
+    code: 'maxScore',
+    dataType: 'text',
+    description: 'Marks',
+    editable: true,
+    inputType: 'text',
+    default: '',
+    label: 'Marks:',
+    name: 'Marks',
+    placeholder: 'Marks',
+    tooltip: 'Provide marks of this question.',
+    renderingHints: {
+        class: 'sb-g-col-lg-1 required'
+    },
+    validations: [
+        {
+            type: 'pattern',
+            value: '^([1-9][0-9]+|[1-9])$',
+            message: 'Input should be numeric'
+        },
+         {
+            type: 'required',
+            message: 'Marks is required'
+        }
+    ]
+  }
 ];
 export const creationContextMock: any = {
   objectType: "question",
