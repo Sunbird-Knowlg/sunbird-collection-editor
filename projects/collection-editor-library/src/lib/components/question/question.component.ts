@@ -1195,15 +1195,16 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
             numberOnly: 'interactions.response1.type.number',
             characterLimit: 'interactions.response1.validation.limit.maxLength',
             remarksLimit: 'remarks.maxLength',
-            evidenceMimeType: 'evidence.mimeType'
+            evidenceMimeType: 'evidence.mimeType',
+            allowMultiSelect: 'responseDeclaration.response1.cardinality'
           };
           if (this.questionMetaData && _.has(availableAlias, formFieldCategory.code)) {
             let defaultValue = _.get(this.questionMetaData, availableAlias[formFieldCategory.code]);
             if (formFieldCategory.code === 'markAsNotMandatory') {
               defaultValue === 'Yes' ? (defaultValue = 'No') : (defaultValue = 'Yes');
             }
-            if (_.get(this.questionMetaData,'interactionTypes[0]') === 'choice') {
-              this.childFormData['allowMultiSelect'] = _.get(this.questionMetaData, 'responseDeclaration.response1.cardinality') === 'multiple' ? 'Yes' : 'No';
+            else if (formFieldCategory.code === 'allowMultiSelect') {
+              defaultValue === 'multiple' ? (defaultValue = 'Yes') : (defaultValue = 'No');
             }
             formFieldCategory.default = defaultValue;
             this.childFormData[formFieldCategory.code] = defaultValue;
