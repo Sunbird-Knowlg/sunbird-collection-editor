@@ -1179,7 +1179,31 @@ describe("QuestionComponent", () => {
   });
   it("#validateQuestionData() should call validateQuestionData and questionInteractionType is mcq", () => {
     component.sourcingSettings = sourcingSettingsMock;
+    spyOn(treeService, "getFirstChild").and.callFake(() => {
+      return { data: { metadata: { identifier: "0123",allowScoring:'Yes' } } };
+    });
     component.editorState = mockData.mcqQuestionMetaData.result.question;
+    editorService = TestBed.inject(EditorService);
+    editorService.editorConfig.renderTaxonomy=false;
+    component.editorState.question = "<p> Hi how are you </p>";
+    component.editorState.answer = "";
+    component.questionInteractionType = "choice";
+    component.validateQuestionData();
+    expect(component.showFormError).toBeTruthy();
+  });
+
+  it("#validateQuestionData() should call validateQuestionData and questionInteractionType is mcq when scoring is added", () => {
+    component.sourcingSettings = sourcingSettingsMock;
+    spyOn(treeService, "getFirstChild").and.callFake(() => {
+      return { data: { metadata: { identifier: "0123",allowScoring:'Yes' } } };
+    });
+    mockData.mcqQuestionMetaData.result.question.responseDeclaration.response1.mapping=[
+      {response:0,score:10},
+      {response:1,score:10}
+    ]
+    component.editorState = mockData.mcqQuestionMetaData.result.question;
+    editorService = TestBed.inject(EditorService);
+    editorService.editorConfig.renderTaxonomy=false;
     component.editorState.question = "<p> Hi how are you </p>";
     component.editorState.answer = "";
     component.questionInteractionType = "choice";
