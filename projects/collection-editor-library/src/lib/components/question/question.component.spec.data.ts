@@ -171,8 +171,12 @@ export const mockData = {
             ],
           },
           validation: {
-            required : 'Yes'
+            required : 'Yes',
+            pattern:'dd/mm/yyyy'
           }
+        },
+        evidence:{
+          mimeType:['audio','vedio']
         },
         name: "MCQ Question",
         responseDeclaration: {
@@ -2835,31 +2839,54 @@ export const leafFormConfigMock = [
     default: "No",
   },
   {
-    code: 'maxScore',
-    dataType: 'text',
-    description: 'Marks',
+    code: "maxScore",
+    dataType: "text",
+    description: "Marks",
     editable: true,
-    inputType: 'text',
-    default: '',
-    label: 'Marks:',
-    name: 'Marks',
-    placeholder: 'Marks',
-    tooltip: 'Provide marks of this question.',
+    inputType: "text",
+    default: "",
+    label: "Marks:",
+    name: "Marks",
+    placeholder: "Marks",
+    tooltip: "Provide marks of this question.",
     renderingHints: {
-        class: 'sb-g-col-lg-1 required'
+      class: "sb-g-col-lg-1 required",
     },
     validations: [
-        {
-            type: 'pattern',
-            value: '^([1-9][0-9]+|[1-9])$',
-            message: 'Input should be numeric'
-        },
-         {
-            type: 'required',
-            message: 'Marks is required'
-        }
-    ]
-  }
+      {
+        type: "pattern",
+        value: "^([1-9][0-9]+|[1-9])$",
+        message: "Input should be numeric",
+      },
+      {
+        type: "required",
+        message: "Marks is required",
+      },
+    ],
+  },
+  {
+    code: "dateFormat",
+    dataType: "text",
+    description: "Select format",
+    editable: true,
+    index: 5,
+    inputType: "select",
+    label: "Select format",
+    name: "dateFormat",
+    placeholder: "Select format",
+    renderingHints: {
+      class: "sb-g-col-lg-1 required",
+    },
+    required: true,
+    visible: true,
+    range: ["DD/MM/YYYY", "YYYY/MM/DD"],
+    validations: [
+      {
+        type: "required",
+        message: "Format is required",
+      },
+    ],
+  },
 ];
 export const creationContextMock: any = {
   objectType: "question",
