@@ -95,21 +95,22 @@ export const mockData = {
         mimeType: "application/vnd.sunbird.question",
         media: [
           {
-              "src": "/assets/public/content/do_1135205326975467521585/artifact/1650455654269.thumb.png",
-              "type": "image",
-              "id": "video_do_1135205326975467521585",
-              "baseUrl": "https://dock.sunbirded.org"
+            src: "/assets/public/content/do_1135205326975467521585/artifact/1650455654269.thumb.png",
+            type: "image",
+            id: "video_do_1135205326975467521585",
+            baseUrl: "https://dock.sunbirded.org",
           },
           {
-              "id": "do_1135205326975467521585",
-              "src": "/assets/public/content/assets/do_1135205326975467521585/file_example_mp4_640_3mg.mp4",
-              "type": "video",
-              "assetId": "do_1135205326975467521585",
-              "name": "file_example_MP4_640_3MG",
-              "thumbnail": "/assets/public/content/do_1135205326975467521585/artifact/1650455654269.thumb.png",
-              "baseUrl": "https://dock.sunbirded.org"
-          }
-      ],
+            id: "do_1135205326975467521585",
+            src: "/assets/public/content/assets/do_1135205326975467521585/file_example_mp4_640_3mg.mp4",
+            type: "video",
+            assetId: "do_1135205326975467521585",
+            name: "file_example_MP4_640_3MG",
+            thumbnail:
+              "/assets/public/content/do_1135205326975467521585/artifact/1650455654269.thumb.png",
+            baseUrl: "https://dock.sunbirded.org",
+          },
+        ],
         editorState: {
           options: [
             {
@@ -139,9 +140,9 @@ export const mockData = {
         templateId: "mcq-vertical",
         solutions: [
           {
-            id:'1',
-            type:'video'
-          }
+            id: "1",
+            type: "video",
+          },
         ],
         interactions: {
           response1: {
@@ -169,14 +170,18 @@ export const mockData = {
                 },
               },
             ],
+            autoCapture: "Yes",
+            validation: {
+              limit:{
+                maxLength:100
+              },
+              required: "Yes",
+              pattern: "dd/mm/yyyy",
+            },
           },
-          validation: {
-            required : 'Yes',
-            pattern:'dd/mm/yyyy'
-          }
         },
-        evidence:{
-          mimeType:['audio','vedio']
+        evidence: {
+          mimeType: ["audio", "vedio"],
         },
         name: "MCQ Question",
         responseDeclaration: {
@@ -192,8 +197,8 @@ export const mockData = {
             mapping: [],
           },
         },
-        remarksLimit:{
-          maxLength:100
+        remarks: {
+          maxLength: 100,
         },
         interactionTypes: ["choice"],
         qType: "MCQ",
@@ -210,8 +215,8 @@ export const mockData = {
         channel: "01309282781705830427",
         framework: "nit_k-12",
         license: "CC BY 4.0",
-        maxScore: '1',
-        identifier: ''
+        maxScore: "1",
+        identifier: "",
       },
     },
   },
@@ -237,7 +242,7 @@ export const mockData = {
         body: "<p>Slider Question</p>",
         responseDeclaration: {
           response1: {
-            mapping:[],
+            mapping: [],
             type: "integer",
             maxScore: 1,
           },
@@ -375,7 +380,7 @@ export const mockData = {
         body: "<p>Text Question</p>",
         responseDeclaration: {
           response1: {
-            mapping:[],
+            mapping: [],
             type: "string",
             maxScore: 1,
           },
@@ -642,11 +647,11 @@ export const mockData = {
       name: "Subjective Question",
       qType: "SA",
       primaryCategory: "Subjective Question",
-      responseDeclaration:{
-        response1:{
-          mapping:[]
-        }
-      }
+      responseDeclaration: {
+        response1: {
+          mapping: [],
+        },
+      },
     },
     mediaobj: {},
   },
@@ -2886,6 +2891,23 @@ export const leafFormConfigMock = [
         message: "Format is required",
       },
     ],
+  },
+  {
+    code: "autoCapture",
+    dataType: "text",
+    description: "Auto capture",
+    editable: true,
+    index: 5,
+    inputType: "checkbox",
+    label: "Auto capture",
+    name: "autoCapture",
+    placeholder: "Auto capture",
+    renderingHints: {
+      class: "sb-g-col-lg-1",
+    },
+    range: ["Yes", "No"],
+    required: true,
+    visible: true,
   },
 ];
 export const creationContextMock: any = {

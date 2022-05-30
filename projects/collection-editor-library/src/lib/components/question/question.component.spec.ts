@@ -656,8 +656,10 @@ describe("QuestionComponent", () => {
     component.leafFormConfig = leafFormConfigMock;
     component.questionId = "do_123";
     component.questionSetHierarchy = collectionHierarchyMock.result.questionSet;
+    spyOn(component,'fetchFrameWorkDetails').and.callFake(()=>{});
+    spyOn(component,'previewFormData').and.callFake(()=>{})
     component.populateFormData();
-    expect(component.populateFormData).toHaveBeenCalled();
+    expect(component.previewFormData).toHaveBeenCalled();
   });
 
   it("Unit test for #populateFormData without Question Id", () => {
@@ -670,11 +672,12 @@ describe("QuestionComponent", () => {
     component.questionFormConfig = leafFormConfigMock;
     component.questionMetaData=mockData.mcqQuestionMetaData.result.question;
     component.questionSetHierarchy = collectionHierarchyMock.result.questionSet;
-    component.previewFormData(false);
+    spyOn(component,'fetchFrameWorkDetails').and.callFake(()=>{});
     component.populateFormData();
-  });
+   });
 
   it("Unit test for #populateFormData readonly mode true ", () => {
+    spyOn(component,'populateFormData').and.callThrough();
     component.childFormData = {};
     component.isReadOnlyMode=true;
     component.questionInteractionType="choice";
@@ -684,8 +687,9 @@ describe("QuestionComponent", () => {
     component.questionFormConfig = leafFormConfigMock;
     component.questionId = "do_123";
     component.questionSetHierarchy = collectionHierarchyMock.result.questionSet;
-    component.previewFormData(true);
+    spyOn(component,'previewFormData').and.callFake(()=>{})
     component.populateFormData();
+    expect(component.previewFormData).toHaveBeenCalled(); 
   });
 
   it("should call previewFormData ", () => {
