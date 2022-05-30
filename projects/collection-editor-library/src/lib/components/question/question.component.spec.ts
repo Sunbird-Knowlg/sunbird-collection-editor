@@ -68,7 +68,8 @@ const mockEditorService = {
     subscribe: (fn) => fn({});
   },
   apiErrorHandling: () => {},
-  editorMode:'review'
+  editorMode:'review',
+  submitRequestChanges :() =>{}
 };
 
 describe("QuestionComponent", () => {
@@ -739,6 +740,30 @@ describe("QuestionComponent", () => {
     spyOn(component, "upsertQuestion");
     component.sendForReview();
     expect(component.upsertQuestion).toHaveBeenCalled();
+  });
+
+  it('Unit test for requestForChanges success', () => {
+    component.questionId = 'do_12345';
+    spyOn(component, 'requestForChanges').and.callThrough();
+    editorService = TestBed.inject(EditorService);
+    spyOn(editorService, 'submitRequestChanges').and.returnValue(of({}))
+    spyOn(toasterService, 'success').and.callFake(() => {})
+    spyOn(component, 'redirectToChapterList').and.callFake(() => {});
+    component.requestForChanges('test');
+    expect(toasterService.success).toHaveBeenCalled();
+    expect(component.redirectToChapterList).toHaveBeenCalled();
+  });
+
+  it('Unit test for requestForChanges error', () => {
+    component.questionId = 'do_12345';
+    spyOn(component, 'requestForChanges').and.callThrough();
+    editorService = TestBed.inject(EditorService);
+    spyOn(editorService, 'submitRequestChanges').and.returnValue(throwError({}))
+    spyOn(toasterService, 'error').and.callFake(() => {})
+    spyOn(component, 'redirectToChapterList').and.callFake(() => {});
+    component.requestForChanges('test');
+    expect(component.redirectToChapterList).not.toHaveBeenCalled();
+    expect(toasterService.error).toHaveBeenCalled();
   });
 
   it("Unit test for #setQuestionId", () => {
