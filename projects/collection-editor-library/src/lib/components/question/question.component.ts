@@ -574,7 +574,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       } else {
         this.showFormError = false;
       }
-
     }
 
     if (this.questionInteractionType === 'slider') {
@@ -1194,7 +1193,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
             numberOnly: 'interactions.response1.type.number',
             characterLimit: 'interactions.response1.validation.limit.maxLength',
             remarksLimit: 'remarks.maxLength',
-            evidenceMimeType: 'evidence.mimeType',
+            evidenceMimeType: 'evidence.mimeType'
           };
           if (this.questionMetaData && _.has(availableAlias, formFieldCategory.code)) {
             let defaultValue = _.get(this.questionMetaData, availableAlias[formFieldCategory.code]);

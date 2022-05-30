@@ -175,7 +175,7 @@ export const mockData = {
         responseDeclaration: {
           response1: {
             maxScore: 1,
-            cardinality: "Multiple",
+            cardinality: "multiple",
             type: "integer",
             correctResponse: {
               outcomes: {
