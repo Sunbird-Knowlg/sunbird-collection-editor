@@ -170,6 +170,9 @@ export const mockData = {
               },
             ],
           },
+          validation: {
+            required : 'Yes'
+          }
         },
         name: "MCQ Question",
         responseDeclaration: {
@@ -194,7 +197,6 @@ export const mockData = {
         body: "<div class='question-body' tabindex='-1'><div class='mcq-title' tabindex='0'><p>MCQ Question</p></div><div data-choice-interaction='response1' class='mcq-vertical'></div></div>",
         creator: "Vaibahv Bhuva",
         createdBy: "5a587cc1-e018-4859-a0a8-e842650b9d64",
-        markAsNotMandatory:'Yes',
         board: "CBSE",
         medium: ["English"],
         gradeLevel: ["Grade 1"],

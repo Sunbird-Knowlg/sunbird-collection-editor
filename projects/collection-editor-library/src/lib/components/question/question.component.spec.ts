@@ -646,18 +646,17 @@ describe("QuestionComponent", () => {
     expect(component.toolbarEventListener).toHaveBeenCalledWith(data);
   });
 
-  it("Unit test for #populateFormData ", () => {
+  it("Unit test for #populateFormData question markAsNotMandatory reqired yes", () => {
+    spyOn(component,'populateFormData').and.callThrough();
     component.childFormData = {};
     component.isReadOnlyMode=false;
     component.questionInteractionType="choice";
     component.questionMetaData=mockData.mcqQuestionMetaData.result.question;
     component.leafFormConfig = leafFormConfigMock;
-    component.initialLeafFormConfig = leafFormConfigMock;
-    component.questionFormConfig = leafFormConfigMock;
     component.questionId = "do_123";
     component.questionSetHierarchy = collectionHierarchyMock.result.questionSet;
-    component.previewFormData(false);
     component.populateFormData();
+    expect(component.populateFormData).toHaveBeenCalled();
   });
 
   it("Unit test for #populateFormData without Question Id", () => {
@@ -1368,9 +1367,9 @@ describe("QuestionComponent", () => {
     expect(component.videoSolutionData).toBeDefined();
   });
   it("#subMenuChange() should set the sub-menu value ", () => {
+    spyOn(component,'subMenuChange').and.callThrough();
     component.subMenus = mockData.subMenus;
     component.showFormError=false;
-    spyOn(component,'subMenuChange').and.callThrough();
     spyOn(component, 'saveContent').and.callFake(() => {});
     component.subMenuChange({ index: 1, value: "test" });
     expect(component.subMenus[1].value).toBe("test");
@@ -1384,7 +1383,6 @@ describe("QuestionComponent", () => {
     expect(component.subMenus[2].value).toEqual([{ id: 1 }]);
     expect(component.showAddSecondaryQuestionCat).toBeTruthy();
   });
-
   it("#dependentQuestions() should return dependentQuestions ", () => {
     spyOn(component, "dependentQuestions");
     component.subMenus = mockData.subMenus;

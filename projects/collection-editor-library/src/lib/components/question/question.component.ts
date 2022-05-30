@@ -746,6 +746,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       media: this.mediaArr,
       editorState: {}
     };
+    console.log('getQuestionMetadata');
+    console.log(this.editorState);
     metadata = _.assign(metadata, this.editorState);
     metadata.editorState.question = metadata.question;
     metadata.body = metadata.question;
