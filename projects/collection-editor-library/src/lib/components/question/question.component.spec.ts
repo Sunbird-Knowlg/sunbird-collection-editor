@@ -649,6 +649,7 @@ describe("QuestionComponent", () => {
   it("Unit test for #populateFormData ", () => {
     component.childFormData = {};
     component.isReadOnlyMode=false;
+    component.questionInteractionType="choice";
     component.questionMetaData=mockData.mcqQuestionMetaData.result.question;
     component.leafFormConfig = leafFormConfigMock;
     component.initialLeafFormConfig = leafFormConfigMock;
@@ -662,6 +663,7 @@ describe("QuestionComponent", () => {
   it("Unit test for #populateFormData without Question Id", () => {
     component.childFormData = {};
     component.questionId = undefined;
+    component.questionInteractionType="choice";
     component.isReadOnlyMode=false;
     component.leafFormConfig = leafFormConfigMock;
     component.initialLeafFormConfig = leafFormConfigMock;
@@ -675,6 +677,7 @@ describe("QuestionComponent", () => {
   it("Unit test for #populateFormData readonly mode true ", () => {
     component.childFormData = {};
     component.isReadOnlyMode=true;
+    component.questionInteractionType="choice";
     component.questionMetaData=mockData.mcqQuestionMetaData.result.question;
     component.leafFormConfig = leafFormConfigMock;
     component.initialLeafFormConfig = leafFormConfigMock;
@@ -1367,11 +1370,13 @@ describe("QuestionComponent", () => {
   it("#subMenuChange() should set the sub-menu value ", () => {
     component.subMenus = mockData.subMenus;
     component.showFormError=false;
+    spyOn(component,'subMenuChange').and.callThrough();
     spyOn(component, 'saveContent').and.callFake(() => {});
     component.subMenuChange({ index: 1, value: "test" });
     expect(component.subMenus[1].value).toBe("test");
   });
   it("#subMenuChange() should set the sub-menu value for dependent question forerror is true ", () => {
+    spyOn(component,'subMenuChange').and.callThrough();
     component.subMenus = mockData.subMenus;
     component.showFormError=false;
     spyOn(component, 'saveContent').and.callFake(() => {});

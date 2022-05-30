@@ -2831,32 +2831,7 @@ export const leafFormConfigMock = [
     visible: true,
     default: "No",
   },
-  {
-    code: 'maxScore',
-    dataType: 'text',
-    description: 'Marks',
-    editable: true,
-    inputType: 'text',
-    default: '',
-    label: 'Marks:',
-    name: 'Marks',
-    placeholder: 'Marks',
-    tooltip: 'Provide marks of this question.',
-    renderingHints: {
-        class: 'sb-g-col-lg-1 required'
-    },
-    validations: [
-        {
-            type: 'pattern',
-            value: '^([1-9][0-9]+|[1-9])$',
-            message: 'Input should be numeric'
-        },
-         {
-            type: 'required',
-            message: 'Marks is required'
-        }
-    ]
-  }
+ 
 ];
 export const creationContextMock: any = {
   objectType: "question",
