@@ -1183,7 +1183,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         if (formFieldCategory.code === 'maxScore' && this.questionInteractionType === 'choice') {
           this.childFormData[formFieldCategory.code] = _.has(this.questionMetaData, 'responseDeclaration.response1.maxScore') ?
           _.get(this.questionMetaData, 'responseDeclaration.response1.maxScore') : this.maxScore;
-        } else if (this.questionMetaData && _.has(this.questionMetaData, formFieldCategory.code)) {
+        } else if (formFieldCategory.code === 'allowMultiSelect' && this.questionInteractionType === 'choice') {
+          this.childFormData[formFieldCategory.code] = _.get(this.questionMetaData, 'responseDeclaration.response1.cardinality') === 'multiple' ? 'Yes' : 'No';
+        }
+        else if (this.questionMetaData && _.has(this.questionMetaData, formFieldCategory.code)) {
           formFieldCategory.default = this.questionMetaData[formFieldCategory.code];
           this.childFormData[formFieldCategory.code] = this.questionMetaData[formFieldCategory.code];
         }
@@ -1201,9 +1204,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
             let defaultValue = _.get(this.questionMetaData, availableAlias[formFieldCategory.code]);
             if (formFieldCategory.code === 'markAsNotMandatory') {
               defaultValue === 'Yes' ? (defaultValue = 'No') : (defaultValue = 'Yes');
-            }
-            if (_.get(this.questionMetaData,'interactionTypes[0]') === 'choice') {
-              this.childFormData['allowMultiSelect'] = _.get(this.questionMetaData, 'responseDeclaration.response1.cardinality') === 'multiple' ? 'Yes' : 'No';
             }
             formFieldCategory.default = defaultValue;
             this.childFormData[formFieldCategory.code] = defaultValue;
