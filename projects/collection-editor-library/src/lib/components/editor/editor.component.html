@@ -130,7 +130,7 @@
             {{configService.labelConfig?.lbl?.questionSetPreview}}
           </div>
           <div class="sb-modal-content">
-            <div class="br-2 b-1-100" id="previewPlayerContainer" tabindex="0">
+            <div class="br-2 b-1-100" id="previewPlayerContainer" tabindex="0" cdkTrapFocus>
               <lib-quml-player [questionSetHierarchy]="collectionTreeNodes?.data"></lib-quml-player>
             </div>
           </div>
