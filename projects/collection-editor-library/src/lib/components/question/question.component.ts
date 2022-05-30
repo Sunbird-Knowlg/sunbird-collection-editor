@@ -1202,7 +1202,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
             if (formFieldCategory.code === 'markAsNotMandatory') {
               defaultValue === 'Yes' ? (defaultValue = 'No') : (defaultValue = 'Yes');
             }
-            if (_.get(this.questionMetaData,'interactionTypes[0') === 'choice') {
+            if (_.get(this.questionMetaData,'interactionTypes[0]') === 'choice') {
               this.childFormData['allowMultiSelect'] = _.get(this.questionMetaData, 'responseDeclaration.response1.cardinality') === 'multiple' ? 'Yes' : 'No';
             }
             formFieldCategory.default = defaultValue;
