@@ -46,7 +46,8 @@
        "next_btn_label":"Next",
        "remove_btn_label":"Remove",
        "done_btn_label":"Done",
-       "add_translation_label":"Add Translation"
+       "add_translation_label":"Add Translation",
+       "add_page_numbers_to_questions_btn_label": "Pagination"
     },
     "lbl":{
        "search":"Search",

@@ -499,7 +499,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         break;
       case 'reviewContent':
         this.redirectToQuestionTab('review');
-        break;    
+        break;
+      case 'pagination':
+        this.pageId = 'pagination';
+        break;      
       // case 'showCorrectioncomments':
         // this.contentComment = _.get(this.editorConfig, 'context.correctionComments')
         // this.showReviewModal = !this.showReviewModal;
@@ -1198,4 +1201,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         })
     );
   }
+
+  assignPageEmitterListener(event: any) {
+    this.pageId = 'collection_editor';
+  }
+
 }
