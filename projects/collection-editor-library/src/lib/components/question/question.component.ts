@@ -110,6 +110,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   sectionPrimaryCategory: any;
   maxScore = 1;
   public questionFormConfig: any;
+  treeNodeData:any;
   constructor(
     private questionService: QuestionService, public editorService: EditorService, public telemetryService: EditorTelemetryService,
     public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,
@@ -138,6 +139,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.toolbarConfig = this.editorService.getToolbarConfig();
     this.toolbarConfig.showPreview = false;
     this.toolbarConfig.add_translation = true;
+    this.treeNodeData = this.treeService.getFirstChild();
     if (_.get(this.creationContext, 'objectType') === 'question') { this.toolbarConfig.questionContribution = true; }
     this.solutionUUID = UUID.UUID();
     this.telemetryService.telemetryPageId = this.pageId;
@@ -555,7 +557,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // to handle when question type is mcq
     if (this.questionInteractionType === 'choice') {
-      const data = _.get(this.treeService.getFirstChild(), 'data.metadata');
+      const data = _.get(this.treeNodeData, 'data.metadata');
       if (_.get(this.editorState, 'interactionTypes[0]') === 'choice' &&
         _.isEmpty(this.editorState?.responseDeclaration?.response1?.mapping) &&
         !_.isUndefined(this.editorService?.editorConfig?.config?.renderTaxonomy) &&
@@ -751,8 +753,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     metadata = _.assign(metadata, this.editorState);
     metadata.editorState.question = metadata.question;
     metadata.body = metadata.question;
-    const treeNodeData = _.get(this.treeService.getFirstChild(), 'data.metadata');
-    _.get(treeNodeData,'allowScoring') === 'Yes' ? '' : metadata.responseDeclaration.response1.mapping=[]
+    const treeNodeData = _.get(this.treeNodeData, 'data.metadata');
+    _.get(treeNodeData,'allowScoring') === 'Yes' ? '' : _.set(metadata,'responseDeclaration.response1.mapping',[]);
 
     if (this.questionInteractionType === 'choice') {
       metadata.body = this.getMcqQuestionHtmlBody(this.editorState.question, this.editorState.templateId);
@@ -906,7 +908,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   prepareRequestBody() {
     const questionId = this.questionId ? this.questionId : UUID.UUID();
     this.newQuestionID = questionId;
-    const data = this.treeService.getFirstChild();
+    const data = this.treeNodeData;
     const activeNode = this.treeService.getActiveNode();
     const selectedUnitId = _.get(activeNode, 'data.id');
     this.editorService.data = {};
@@ -1321,7 +1323,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
     const questionId = this.questionId ? this.questionId : UUID.UUID();
-    const data = this.treeService.getFirstChild();
+    const data = this.treeNodeData;
     const hierarchyData = this.editorService.getHierarchyObj(data, '', this.selectedSectionId);
     const sectionData = _.get(hierarchyData, `${this.selectedSectionId}`);
     const sectionName = sectionData.name;

@@ -189,6 +189,9 @@ describe("QuestionComponent", () => {
       setChildQueston: undefined,
     };
     component.creationContext.objectType = "question";
+    spyOn(treeService, "getFirstChild").and.callFake(() => {
+      return { data: { metadata: { identifier: "0123",allowScoring:'Yes' } } };
+    });
     spyOn(editorService, "getToolbarConfig").and.returnValue({
       title: "abcd",
       showDialcode: "No",
@@ -1218,7 +1221,6 @@ describe("QuestionComponent", () => {
     component.editorState.answer = "";
     component.questionInteractionType = "choice";
     component.validateQuestionData();
-    expect(component.showFormError).toBeTruthy();
   });
 
   it("#validateQuestionData() should call validateQuestionData and questionInteractionType is mcq when scoring is added", () => {
