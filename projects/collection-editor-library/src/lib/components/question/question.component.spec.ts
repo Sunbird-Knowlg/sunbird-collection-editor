@@ -68,7 +68,8 @@ const mockEditorService = {
     subscribe: (fn) => fn({});
   },
   apiErrorHandling: () => {},
-  editorMode:'review'
+  editorMode:'review',
+  submitRequestChanges :() =>{}
 };
 
 describe("QuestionComponent", () => {
@@ -188,6 +189,9 @@ describe("QuestionComponent", () => {
       setChildQueston: undefined,
     };
     component.creationContext.objectType = "question";
+    spyOn(treeService, "getFirstChild").and.callFake(() => {
+      return { data: { metadata: { identifier: "0123",allowScoring:'Yes' } } };
+    });
     spyOn(editorService, "getToolbarConfig").and.returnValue({
       title: "abcd",
       showDialcode: "No",
@@ -646,30 +650,49 @@ describe("QuestionComponent", () => {
     expect(component.toolbarEventListener).toHaveBeenCalledWith(data);
   });
 
-  it("Unit test for #populateFormData ", () => {
+  it("Unit test for #populateFormData question markAsNotMandatory reqired yes", () => {
+    spyOn(component,'populateFormData').and.callThrough();
     component.childFormData = {};
     component.isReadOnlyMode=false;
+    component.questionInteractionType="choice";
     component.questionMetaData=mockData.mcqQuestionMetaData.result.question;
     component.leafFormConfig = leafFormConfigMock;
-    component.initialLeafFormConfig = leafFormConfigMock;
-    component.questionFormConfig = leafFormConfigMock;
     component.questionId = "do_123";
     component.questionSetHierarchy = collectionHierarchyMock.result.questionSet;
-    component.previewFormData(false);
+    spyOn(component,'fetchFrameWorkDetails').and.callFake(()=>{});
+    spyOn(component,'previewFormData').and.callFake(()=>{})
     component.populateFormData();
+    expect(component.previewFormData).toHaveBeenCalled();
   });
 
+  it("Unit test for #populateFormData without Question Id", () => {
+    component.childFormData = {};
+    component.questionId = undefined;
+    component.questionInteractionType="choice";
+    component.isReadOnlyMode=false;
+    component.leafFormConfig = leafFormConfigMock;
+    component.initialLeafFormConfig = leafFormConfigMock;
+    component.questionFormConfig = leafFormConfigMock;
+    component.questionMetaData=mockData.mcqQuestionMetaData.result.question;
+    component.questionSetHierarchy = collectionHierarchyMock.result.questionSet;
+    spyOn(component,'fetchFrameWorkDetails').and.callFake(()=>{});
+    component.populateFormData();
+   });
+
   it("Unit test for #populateFormData readonly mode true ", () => {
+    spyOn(component,'populateFormData').and.callThrough();
     component.childFormData = {};
     component.isReadOnlyMode=true;
+    component.questionInteractionType="choice";
     component.questionMetaData=mockData.mcqQuestionMetaData.result.question;
     component.leafFormConfig = leafFormConfigMock;
     component.initialLeafFormConfig = leafFormConfigMock;
     component.questionFormConfig = leafFormConfigMock;
     component.questionId = "do_123";
     component.questionSetHierarchy = collectionHierarchyMock.result.questionSet;
-    component.previewFormData(true);
+    spyOn(component,'previewFormData').and.callFake(()=>{})
     component.populateFormData();
+    expect(component.previewFormData).toHaveBeenCalled(); 
   });
 
   it("should call previewFormData ", () => {
@@ -724,6 +747,30 @@ describe("QuestionComponent", () => {
     spyOn(component, "upsertQuestion");
     component.sendForReview();
     expect(component.upsertQuestion).toHaveBeenCalled();
+  });
+
+  it('Unit test for requestForChanges success', () => {
+    component.questionId = 'do_12345';
+    spyOn(component, 'requestForChanges').and.callThrough();
+    editorService = TestBed.inject(EditorService);
+    spyOn(editorService, 'submitRequestChanges').and.returnValue(of({}))
+    spyOn(toasterService, 'success').and.callFake(() => {})
+    spyOn(component, 'redirectToChapterList').and.callFake(() => {});
+    component.requestForChanges('test');
+    expect(toasterService.success).toHaveBeenCalled();
+    expect(component.redirectToChapterList).toHaveBeenCalled();
+  });
+
+  it('Unit test for requestForChanges error', () => {
+    component.questionId = 'do_12345';
+    spyOn(component, 'requestForChanges').and.callThrough();
+    editorService = TestBed.inject(EditorService);
+    spyOn(editorService, 'submitRequestChanges').and.returnValue(throwError({}))
+    spyOn(toasterService, 'error').and.callFake(() => {})
+    spyOn(component, 'redirectToChapterList').and.callFake(() => {});
+    component.requestForChanges('test');
+    expect(component.redirectToChapterList).not.toHaveBeenCalled();
+    expect(toasterService.error).toHaveBeenCalled();
   });
 
   it("Unit test for #setQuestionId", () => {
@@ -907,10 +954,10 @@ describe("QuestionComponent", () => {
     expect(component.mediaArr).toBeDefined();
   });
   it("#saveQuestion() should call saveQuestion for updateQuestion throw error", () => {
-    component.editorState = mockData.editorState;
+    component.editorState = mockData.editorState.body;
     component.questionId = undefined;
     spyOn(treeService, "getFirstChild").and.callFake(() => {
-      return { data: { metadata: { identifier: "0123" } } };
+      return { data: { metadata: { identifier: "0123",allowScoring:'Yes' } } };
     });
     spyOn(treeService, "getActiveNode").and.callFake(() => {
       return { data: { root: true } };
@@ -1164,7 +1211,30 @@ describe("QuestionComponent", () => {
   });
   it("#validateQuestionData() should call validateQuestionData and questionInteractionType is mcq", () => {
     component.sourcingSettings = sourcingSettingsMock;
+    spyOn(treeService, "getFirstChild").and.callFake(() => {
+      return { data: { metadata: { identifier: "0123",allowScoring:'Yes' } } };
+    });
     component.editorState = mockData.mcqQuestionMetaData.result.question;
+    editorService = TestBed.inject(EditorService);
+    editorService.editorConfig.renderTaxonomy=false;
+    component.editorState.question = "<p> Hi how are you </p>";
+    component.editorState.answer = "";
+    component.questionInteractionType = "choice";
+    component.validateQuestionData();
+  });
+
+  it("#validateQuestionData() should call validateQuestionData and questionInteractionType is mcq when scoring is added", () => {
+    component.sourcingSettings = sourcingSettingsMock;
+    spyOn(treeService, "getFirstChild").and.callFake(() => {
+      return { data: { metadata: { identifier: "0123",allowScoring:'Yes' } } };
+    });
+    mockData.mcqQuestionMetaData.result.question.responseDeclaration.response1.mapping=[
+      {response:0,score:10},
+      {response:1,score:10}
+    ]
+    component.editorState = mockData.mcqQuestionMetaData.result.question;
+    editorService = TestBed.inject(EditorService);
+    editorService.editorConfig.renderTaxonomy=false;
     component.editorState.question = "<p> Hi how are you </p>";
     component.editorState.answer = "";
     component.questionInteractionType = "choice";
@@ -1352,6 +1422,7 @@ describe("QuestionComponent", () => {
     expect(component.videoSolutionData).toBeDefined();
   });
   it("#subMenuChange() should set the sub-menu value ", () => {
+    spyOn(component,'subMenuChange').and.callThrough();
     component.subMenus = mockData.subMenus;
     component.showFormError=false;
     spyOn(component, 'saveContent').and.callFake(() => {});
@@ -1359,6 +1430,7 @@ describe("QuestionComponent", () => {
     expect(component.subMenus[1].value).toBe("test");
   });
   it("#subMenuChange() should set the sub-menu value for dependent question forerror is true ", () => {
+    spyOn(component,'subMenuChange').and.callThrough();
     component.subMenus = mockData.subMenus;
     component.showFormError=false;
     spyOn(component, 'saveContent').and.callFake(() => {});
@@ -1366,7 +1438,6 @@ describe("QuestionComponent", () => {
     expect(component.subMenus[2].value).toEqual([{ id: 1 }]);
     expect(component.showAddSecondaryQuestionCat).toBeTruthy();
   });
-
   it("#dependentQuestions() should return dependentQuestions ", () => {
     spyOn(component, "dependentQuestions");
     component.subMenus = mockData.subMenus;
@@ -1668,7 +1739,7 @@ describe("QuestionComponent", () => {
 
   it("#prepareRequestBody call when question save called slider", () => {
     spyOn(treeService, "getFirstChild").and.callFake(() => {
-      return { data: { metadata: { identifier: "0123" } } };
+      return { data: { metadata: { identifier: "0123",allowScoring:'Yes' } } };
     });
     spyOn(treeService, "getActiveNode").and.callFake(() => {
       return { data: { root: true } };
@@ -1684,7 +1755,7 @@ describe("QuestionComponent", () => {
 
   it("#prepareRequestBody call when question save called text", () => {
     spyOn(treeService, "getFirstChild").and.callFake(() => {
-      return { data: { metadata: { identifier: "0123" } } };
+      return { data: { metadata: { identifier: "0123",allowScoring:'Yes' } } };
     });
     spyOn(treeService, "getActiveNode").and.callFake(() => {
       return { data: { root: true } };
@@ -1708,7 +1779,10 @@ describe("QuestionComponent", () => {
     expect(component.questionId).toEqual("do_123");
   });
 
-  it("#upsertQuestion() should call on question save api fal case", () => {
+  it("#upsertQuestion() should call on question save api false case", () => {
+    spyOn(treeService, "getFirstChild").and.callFake(() => {
+      return { data: { metadata: { identifier: "0123",allowScoring:'Yes' } } };
+    });
     const metaData = mockData.textQuestionNetaData.result.question;
     component.questionPrimaryCategory = metaData.primaryCategory;
     component.childFormData = childMetaData;
@@ -1731,7 +1805,10 @@ describe("QuestionComponent", () => {
     component.upsertQuestion("");
   });
 
-  it("#upsertQuestion() should call on question save api fal case", () => {
+  it("#upsertQuestion() should call on question save api false case", () => {
+    spyOn(treeService, "getFirstChild").and.callFake(() => {
+      return { data: { metadata: { identifier: "0123",allowScoring:'Yes' } } };
+    });
     const metaData = mockData.textQuestionNetaData.result.question;
     component.questionPrimaryCategory = metaData.primaryCategory;
     component.childFormData = childMetaData;
