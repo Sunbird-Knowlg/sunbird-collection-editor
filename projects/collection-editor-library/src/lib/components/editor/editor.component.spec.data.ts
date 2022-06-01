@@ -509,6 +509,11 @@ export const hirearchyGet = {
 export const categoryDefinition = {
   result: {
     objectCategoryDefinition: {
+      objectMetadata: {
+        config: {
+          maximumOptions:20
+        },
+      },
       forms: {
         unitMetadata: {
           properties: { code: "name", editable: true },
