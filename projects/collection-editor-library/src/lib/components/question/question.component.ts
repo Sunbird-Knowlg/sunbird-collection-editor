@@ -244,13 +244,14 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.scoreMapping = _.get(responseDeclaration, 'response1.mapping');
                 const templateId = this.questionMetaData.templateId;
                 const numberOfOptions = this.questionMetaData?.editorState?.options?.length || 0;
+                const maximumOptions = _.get(this.questionInput, 'config.maximumOptions');
                 this.editorService.optionsLength = numberOfOptions;
                 const options = _.map(this.questionMetaData?.editorState?.options, option => ({ body: option.value.body }));
                 const question = this.questionMetaData?.editorState?.question;
                 const interactions = this.questionMetaData?.interactions;
                 this.editorState = new McqForm({
                   question, options, answer: _.get(responseDeclaration, 'response1.correctResponse.value')
-                }, { templateId, numberOfOptions });
+                }, { templateId, numberOfOptions,maximumOptions });
                 this.editorState.solutions = this.questionMetaData?.editorState?.solutions;
                 this.editorState.interactions = interactions;
               }
