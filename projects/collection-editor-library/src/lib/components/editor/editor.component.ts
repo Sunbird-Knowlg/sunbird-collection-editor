@@ -913,6 +913,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
       const catMetaData = _.get(selectedtemplateDetails, 'objectMetadata');
       this.sourcingSettings = _.get(catMetaData, 'config.sourcingSettings') || {};
+      !_.isUndefined(this.editorConfig.config.renderTaxonomy) ? (this.questionComponentInput.config ={maximumOptions:_.get(catMetaData, 'config.maximumOptions')}) : '' ;
       if (!_.has(this.sourcingSettings, 'enforceCorrectAnswer')) {
         this.sourcingSettings.enforceCorrectAnswer = true;
       }
@@ -987,6 +988,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         const selectedtemplateDetails = res.result.objectCategoryDefinition;
         this.editorService.selectedChildren['label']=selectedtemplateDetails.label;
         const selectedTemplateFormFields = _.get(selectedtemplateDetails, 'forms.create.properties');
+        this.questionComponentInput.config ={maximumOptions:_.get(selectedtemplateDetails, 'objectMetadata.config.maximumOptions')}
         if (!_.isEmpty(selectedTemplateFormFields)) {
           const questionCategoryConfig = selectedTemplateFormFields;
           questionCategoryConfig.forEach(field => {
