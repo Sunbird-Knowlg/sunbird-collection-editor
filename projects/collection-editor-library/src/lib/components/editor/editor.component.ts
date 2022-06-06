@@ -772,7 +772,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       this.showPreview = true;
       setTimeout(() => {
         const element: any = document.querySelector('#previewPlayerContainer');
-        element.focus();
+        if (element) {
+          element.focus();
+        }
       }, 500);
     }, error => {
       this.buttonLoaders.previewButtonLoader = false;
