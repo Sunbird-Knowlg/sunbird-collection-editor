@@ -54,7 +54,8 @@ export const mockData = {
       " QuestionSet Preview"
     ],
     "board": "CBSE",
-    "status": "Draft"
+    "status": "Draft",
+    "maxScore": "2"
   },
   questionSetHierarchy: {
     "copyright": "NIT123",
@@ -499,6 +500,7 @@ export const mockData = {
     "level": 1,
     "topic": "",
     "maxTime": "00:05:00",
-    "warningTime": "00:04:00"
+    "warningTime": "00:04:00",
+    "maxScore": "1"
   }
 }

@@ -6,6 +6,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { EditorService } from '../../services/editor/editor.service';
 import { mockData } from './qumlplayer-page.component.spec.data';
+import { TreeService } from '../../services/tree/tree.service';
 describe('QumlplayerPageComponent', () => {
   let component: QumlplayerPageComponent;
   let fixture: ComponentFixture<QumlplayerPageComponent>;
@@ -39,6 +40,16 @@ describe('QumlplayerPageComponent', () => {
     component.prevQuestionId = 'do_11326368076523929623';
     component.initQumlPlayer();
     expect(component.prevQuestionId).not.toBe(mockData.questionMetaData.identifier);
+  });
+  it('initQumlPlayer() should set hierarchy.maxScore', () => {
+    component.hierarchy = {children: [], childNodes: [], maxScore: undefined};
+    component.questionMetaData = { data: { metadata: mockData.questionMetaData}};
+    component.prevQuestionId = 'do_12345';
+    component.questionSetHierarchy = mockData.questionSetHierarchy;
+    const treeService = TestBed.get(TreeService);
+    spyOn(treeService, 'getNodeById').and.returnValue({data: {metadata: {}}});
+    component.initQumlPlayer();
+    expect(component.hierarchy.maxScore).toEqual('2');
   });
   it('#switchToPotraitMode() should set  showPotrait to true', () => {
     component.showPotrait = false;

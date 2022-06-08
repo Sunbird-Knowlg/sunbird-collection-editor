@@ -53,6 +53,7 @@ import { ResourceLibraryModule } from '@project-sunbird/sunbird-resource-library
 import { AppLoaderComponent } from './components/app-loader/app-loader.component';
 import { AssignPageNumberComponent } from './components/assign-page-number/assign-page-number.component';
 import { PlainTreeComponent } from './components/plain-tree/plain-tree.component';
+import { A11yModule } from '@angular/cdk/a11y';
 @NgModule({
   declarations: [CollectionEditorLibraryComponent, InterpolatePipe, SanitizeHtmlPipe, ContentplayerPageComponent,
     EditorComponent, QumlplayerPageComponent, HeaderComponent, FancyTreeComponent, MetaFormComponent, LibraryComponent,
@@ -66,7 +67,7 @@ import { PlainTreeComponent } from './components/plain-tree/plain-tree.component
     PlainTreeComponent],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule.forChild([]), SuiModule,
   CommonFormElementsModule, InfiniteScrollModule, HttpClientModule, SunbirdPdfPlayerModule, SunbirdVideoPlayerModule,
-  QumlLibraryModule, CarouselModule, SunbirdEpubPlayerModule, ResourceLibraryModule],
+  QumlLibraryModule, CarouselModule, SunbirdEpubPlayerModule, ResourceLibraryModule, A11yModule],
   providers: [
     CacheService,
     { provide: CacheStorageAbstract, useClass: CacheSessionStorage },

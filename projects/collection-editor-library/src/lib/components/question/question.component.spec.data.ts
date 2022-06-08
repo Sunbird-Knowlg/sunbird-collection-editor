@@ -95,9 +95,21 @@ export const mockData = {
         mimeType: "application/vnd.sunbird.question",
         media: [
           {
-            id:'1',
-            type:'vedio'
-          }
+            src: "/assets/public/content/do_1135205326975467521585/artifact/1650455654269.thumb.png",
+            type: "image",
+            id: "video_do_1135205326975467521585",
+            baseUrl: "https://dock.sunbirded.org",
+          },
+          {
+            id: "do_1135205326975467521585",
+            src: "/assets/public/content/assets/do_1135205326975467521585/file_example_mp4_640_3mg.mp4",
+            type: "video",
+            assetId: "do_1135205326975467521585",
+            name: "file_example_MP4_640_3MG",
+            thumbnail:
+              "/assets/public/content/do_1135205326975467521585/artifact/1650455654269.thumb.png",
+            baseUrl: "https://dock.sunbirded.org",
+          },
         ],
         editorState: {
           options: [
@@ -128,9 +140,9 @@ export const mockData = {
         templateId: "mcq-vertical",
         solutions: [
           {
-            id:'1',
-            type:'vedio'
-          }
+            id: "1",
+            type: "video",
+          },
         ],
         interactions: {
           response1: {
@@ -158,13 +170,24 @@ export const mockData = {
                 },
               },
             ],
+            autoCapture: "Yes",
+            validation: {
+              limit:{
+                maxLength:100
+              },
+              required: "Yes",
+              pattern: "dd/mm/yyyy",
+            },
           },
+        },
+        evidence: {
+          mimeType: ["audio", "vedio"],
         },
         name: "MCQ Question",
         responseDeclaration: {
           response1: {
             maxScore: 1,
-            cardinality: "single",
+            cardinality: "multiple",
             type: "integer",
             correctResponse: {
               outcomes: {
@@ -173,6 +196,9 @@ export const mockData = {
             },
             mapping: [],
           },
+        },
+        remarks: {
+          maxLength: 100,
         },
         interactionTypes: ["choice"],
         qType: "MCQ",
@@ -189,6 +215,8 @@ export const mockData = {
         channel: "01309282781705830427",
         framework: "nit_k-12",
         license: "CC BY 4.0",
+        maxScore: "1",
+        identifier: "",
       },
     },
   },
@@ -214,6 +242,7 @@ export const mockData = {
         body: "<p>Slider Question</p>",
         responseDeclaration: {
           response1: {
+            mapping: [],
             type: "integer",
             maxScore: 1,
           },
@@ -351,6 +380,7 @@ export const mockData = {
         body: "<p>Text Question</p>",
         responseDeclaration: {
           response1: {
+            mapping: [],
             type: "string",
             maxScore: 1,
           },
@@ -617,6 +647,11 @@ export const mockData = {
       name: "Subjective Question",
       qType: "SA",
       primaryCategory: "Subjective Question",
+      responseDeclaration: {
+        response1: {
+          mapping: [],
+        },
+      },
     },
     mediaobj: {},
   },
@@ -2808,6 +2843,72 @@ export const leafFormConfigMock = [
     visible: true,
     default: "No",
   },
+  {
+    code: "maxScore",
+    dataType: "text",
+    description: "Marks",
+    editable: true,
+    inputType: "text",
+    default: "",
+    label: "Marks:",
+    name: "Marks",
+    placeholder: "Marks",
+    tooltip: "Provide marks of this question.",
+    renderingHints: {
+      class: "sb-g-col-lg-1 required",
+    },
+    validations: [
+      {
+        type: "pattern",
+        value: "^([1-9][0-9]+|[1-9])$",
+        message: "Input should be numeric",
+      },
+      {
+        type: "required",
+        message: "Marks is required",
+      },
+    ],
+  },
+  {
+    code: "dateFormat",
+    dataType: "text",
+    description: "Select format",
+    editable: true,
+    index: 5,
+    inputType: "select",
+    label: "Select format",
+    name: "dateFormat",
+    placeholder: "Select format",
+    renderingHints: {
+      class: "sb-g-col-lg-1 required",
+    },
+    required: true,
+    visible: true,
+    range: ["DD/MM/YYYY", "YYYY/MM/DD"],
+    validations: [
+      {
+        type: "required",
+        message: "Format is required",
+      },
+    ],
+  },
+  {
+    code: "autoCapture",
+    dataType: "text",
+    description: "Auto capture",
+    editable: true,
+    index: 5,
+    inputType: "checkbox",
+    label: "Auto capture",
+    name: "autoCapture",
+    placeholder: "Auto capture",
+    renderingHints: {
+      class: "sb-g-col-lg-1",
+    },
+    range: ["Yes", "No"],
+    required: true,
+    visible: true,
+  },
 ];
 export const creationContextMock: any = {
   objectType: "question",
@@ -2941,4 +3042,76 @@ export const BranchingLogic = {
       ],
     },
   },
+};
+
+export const interactionChoiceEditorState = {
+  question: '<p>q</p>',
+  options: [
+      {
+          body: '<p>a</p>'
+      },
+      {
+          body: '<p>b</p>'
+      }
+  ],
+  templateId: 'mcq-vertical',
+  answer: '0',
+  numberOfOptions: 2,
+  interactions: {
+      response1: {
+          type: 'choice',
+          options: [
+              {
+                  label: '<p>a</p>',
+                  value: 0
+              },
+              {
+                  label: '<p>b</p>',
+                  value: 1
+              }
+          ]
+      },
+      validation: {
+          required: 'Yes'
+      }
+  },
+  name: 'Multiple Choice Question',
+  responseDeclaration: {
+      response1: {
+          maxScore: 1,
+          cardinality: 'single',
+          type: 'integer',
+          correctResponse: {
+              value: '0',
+              outcomes: {
+                  SCOR: 1
+              }
+          },
+          mapping: []
+      }
+  },
+  interactionTypes: [
+      'choice'
+  ],
+  editorState: {
+      options: [
+          {
+              answer: true,
+              value: {
+                  body: '<p>a</p>',
+                  value: 0
+              }
+          },
+          {
+              answer: false,
+              value: {
+                  body: '<p>b</p>',
+                  value: 1
+              }
+          }
+      ],
+      question: '<p>q</p>'
+  },
+  qType: 'MCQ',
+  primaryCategory: 'Multiple Choice Question'
 };
