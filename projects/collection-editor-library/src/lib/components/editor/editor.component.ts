@@ -90,9 +90,11 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public unSubscribeShowLibraryPageEmitter: Subscription;
   public unSubscribeshowQuestionLibraryPageEmitter: Subscription;
   public sourcingSettings: any;
-  setChildQuestion: any;
+  public setChildQuestion: any;
   public unsubscribe$ = new Subject<void>();
   public onComponentDestroy$ = new Subject<any>();
+  public outcomeDeclaration: any;
+  public levelsArray: any;
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
               private toasterService: ToasterService, private dialcodeService: DialcodeService,
@@ -196,11 +198,20 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.helperService.initialize(channel);
   }
 
-  getFrameworkDetails(categoryDefinitionData) {
+  async getFrameworkDetails(categoryDefinitionData) {
     let orgFWIdentifiers: any;
     let targetFWIdentifiers: any;
     let orgFWType: any;
     let targetFWType: any;
+    if (_.get(this.editorConfig, 'config.renderTaxonomy') === true) {
+      const orgId = _.get(this.editorConfig, 'context.identifier');
+      const data = await this.editorService.fetchOutComeDeclaration(orgId).toPromise();
+      if (data?.result) {
+        this.outcomeDeclaration = _.get(data?.result, 'questionset.outcomeDeclaration');
+        this.editorService.outcomeDeclaration = this.outcomeDeclaration;
+        this.levelsArray = Object.keys(this.outcomeDeclaration);
+      }
+    }
     orgFWIdentifiers = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.framework.enum') ||
       _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.framework.default');
     // tslint:disable-next-line:max-line-length
@@ -301,8 +312,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         evidenceMimeType = field.range;
         field.options = this.setEvidence;
         field.range = null;
-      }
-      if (field.code === 'ecm') {
+      } else if (field.code === 'allowECM') {
+        field.options = this.setAllowEcm;
+      } else if (field.code === 'ecm') {
         ecm = field.options;
         field.options = this.setEcm;
       }
@@ -1208,6 +1220,22 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   assignPageEmitterListener(event: any) {
     this.pageId = 'collection_editor';
+  }
+
+  setAllowEcm(control, depends: FormControl[], formGroup: FormGroup, loading, loaded) {
+    control.isVisible = 'no';
+    const response = merge(..._.map(depends, depend => depend.valueChanges)).pipe(
+        switchMap((value: any) => {
+             if (!_.isEmpty(value) && _.toLower(value) === 'self' ) {
+                control.isVisible = 'no';
+                return of(null);
+             } else {
+                control.isVisible = 'yes';
+                return of(null);
+             }
+        })
+    );
+    return response;
   }
 
 }
