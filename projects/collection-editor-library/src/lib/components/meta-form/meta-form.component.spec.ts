@@ -34,15 +34,16 @@ describe('MetaFormComponent', () => {
   });
 
   it('#valueChanges() should call updateNode and emit toolbarEmitter with appIcon', () => {
-    spyOn(component,'valueChanges').and.callThrough();
-    component.appIcon='https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png';
-    component.showAppIcon=true;
-    const event={
-      instances:"Add Student",
+    spyOn(component, 'valueChanges').and.callThrough();
+    // tslint:disable-next-line:max-line-length
+    component.appIcon = 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png';
+    component.showAppIcon = true;
+    const event = {
+      instances: 'Add Student',
       appIcon: 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png',
-    }
-    spyOn(component.toolbarEmitter, 'emit');
-    spyOn(component.treeService, 'updateNode');
+    };
+    spyOn(component.toolbarEmitter, 'emit').and.callFake(() => {});
+    spyOn(component.treeService, 'updateNode').and.callFake(() => {});
     component.valueChanges(event);
     expect(component.valueChanges).toHaveBeenCalledWith(event);
     expect(component.toolbarEmitter.emit).toHaveBeenCalled();
@@ -50,8 +51,9 @@ describe('MetaFormComponent', () => {
 
 
   it('#ngOnChanges() should call setAppIconData', () => {
-    spyOn(component, 'fetchFrameWorkDetails');
-    spyOn(component, 'setAppIconData');
+    spyOn(component, 'fetchFrameWorkDetails').and.callFake(() => {});
+    spyOn(component, 'setAppIconData').and.callFake(() => {});
+    spyOn(component, 'ngOnChanges').and.callThrough();
     component.ngOnChanges();
     expect(component.fetchFrameWorkDetails).toHaveBeenCalled();
     expect(component.setAppIconData).toHaveBeenCalled();
