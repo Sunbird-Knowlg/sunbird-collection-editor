@@ -40,7 +40,7 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
   ngOnChanges() {
     this.fetchFrameWorkDetails();
     this.setAppIconData();
-    if (_.get(this.nodeMetadata, 'data.metadata.shuffle')) {
+    if (_.has(this.nodeMetadata, 'data.metadata.shuffle')) {
       this.setShuffleValue(this.nodeMetadata.data.metadata.shuffle);
     }
   }
@@ -263,11 +263,7 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
 
   valueChanges(event: any) {
     if (_.has(event, 'shuffle')) {
-      this.subscription = this.helperService.shuffleValue.subscribe(shuffle => this.previousShuffleValue = shuffle);
-      if (event.shuffle === true && this.previousShuffleValue === false) {
-        this.toasterService.simpleInfo(_.get(this.configService, 'labelConfig.lbl.shuffleOnMessage'));
-      }
-      this.setShuffleValue(event.shuffle);
+      this.showShuffleMessage(event);
     }
     if (_.get(event, 'instances')) {
       event.instances = {
@@ -281,8 +277,18 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
     this.treeService.updateNode(event);
   }
 
+  showShuffleMessage(event) {
+    this.subscription = this.helperService.shuffleValue.subscribe(shuffle => this.previousShuffleValue = shuffle);
+    if (_.isBoolean(event.shuffle) && event.shuffle === true && this.previousShuffleValue === false) {
+      this.toasterService.simpleInfo(_.get(this.configService, 'labelConfig.lbl.shuffleOnMessage'));
+    }
+    this.setShuffleValue(event.shuffle);
+  }
+
   setShuffleValue(value) {
-    this.helperService.setShuffleValue(value);
+    if (_.isBoolean(value)) {
+      this.helperService.setShuffleValue(value);
+    }
   }
 
   appIconDataHandler(event) {

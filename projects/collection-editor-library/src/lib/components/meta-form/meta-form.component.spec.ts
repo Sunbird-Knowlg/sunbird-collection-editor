@@ -5,6 +5,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { mockData } from './meta-form.component.spec.data';
 import { TreeService } from '../../services/tree/tree.service';
 import { mockTreeService } from '../question/question.component.spec.data';
+import { HelperService } from '../../services/helper/helper.service';
 describe('MetaFormComponent', () => {
   let component: MetaFormComponent;
   let fixture: ComponentFixture<MetaFormComponent>;
@@ -33,23 +34,6 @@ describe('MetaFormComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('#valueChanges() should call updateNode and emit toolbarEmitter with appIcon', () => {
-    spyOn(component, 'valueChanges').and.callThrough();
-    // tslint:disable-next-line:max-line-length
-    component.appIcon = 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png';
-    component.showAppIcon = true;
-    const event = {
-      instances: 'Add Student',
-      appIcon: 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png',
-    };
-    spyOn(component.toolbarEmitter, 'emit').and.callFake(() => {});
-    spyOn(component.treeService, 'updateNode').and.callFake(() => {});
-    component.valueChanges(event);
-    expect(component.valueChanges).toHaveBeenCalledWith(event);
-    expect(component.toolbarEmitter.emit).toHaveBeenCalled();
-  });
-
-
   it('#ngOnChanges() should call setAppIconData', () => {
     spyOn(component, 'fetchFrameWorkDetails').and.callFake(() => {});
     spyOn(component, 'setAppIconData').and.callFake(() => {});
@@ -59,12 +43,58 @@ describe('MetaFormComponent', () => {
     expect(component.setAppIconData).toHaveBeenCalled();
   });
 
+  it('#ngOnChanges() should call helperService.setShuffleValue', () => {
+    component.nodeMetadata = {data: {metadata: {shuffle: false}}};
+    spyOn(component, 'fetchFrameWorkDetails').and.callFake(() => {});
+    spyOn(component, 'setAppIconData').and.callFake(() => {});
+    spyOn(component, 'setShuffleValue').and.callFake(() => {});
+    spyOn(component, 'ngOnChanges').and.callThrough();
+    component.ngOnChanges();
+    expect(component.fetchFrameWorkDetails).toHaveBeenCalled();
+    expect(component.setAppIconData).toHaveBeenCalled();
+    expect(component.setShuffleValue).toHaveBeenCalled();
+  });
+
+  it('#ngOnChanges() should not call helperService.setShuffleValue', () => {
+    component.nodeMetadata = {data: {metadata: {name: ''}}};
+    spyOn(component, 'fetchFrameWorkDetails').and.callFake(() => {});
+    spyOn(component, 'setAppIconData').and.callFake(() => {});
+    spyOn(component, 'setShuffleValue').and.callFake(() => {});
+    spyOn(component, 'ngOnChanges').and.callThrough();
+    component.ngOnChanges();
+    expect(component.fetchFrameWorkDetails).toHaveBeenCalled();
+    expect(component.setAppIconData).toHaveBeenCalled();
+    expect(component.setShuffleValue).not.toHaveBeenCalled();
+  });
+
   it('#onStatusChanges() should emit toolbarEmitter event', () => {
     const data = { button: 'onFormStatusChange', event: '' };
     spyOn(component.toolbarEmitter, 'emit');
     component.onStatusChanges(data.event);
     expect(component.toolbarEmitter.emit).toHaveBeenCalledWith(data);
   });
+
+  it('#valueChanges() should call updateNode and emit toolbarEmitter with appIcon', () => {
+    // tslint:disable-next-line:max-line-length
+    component.appIcon = 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png';
+    component.showAppIcon = true;
+    const event = {
+      instances: 'Add Student',
+      appIcon: 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png',
+      shuffle: true
+    };
+    const treeService = TestBed.get(TreeService);
+    spyOn(treeService, 'updateNode').and.callFake(() => {});
+    spyOn(component.toolbarEmitter, 'emit').and.callFake(() => {});
+    spyOn(component, 'showShuffleMessage').and.callFake(() => {});
+    spyOn(component, 'valueChanges').and.callThrough();
+    component.valueChanges(event);
+    expect(component.valueChanges).toHaveBeenCalledWith(event);
+    expect(component.showShuffleMessage).toHaveBeenCalledWith(event);
+    expect(component.toolbarEmitter.emit).toHaveBeenCalled();
+    expect(treeService.updateNode).toHaveBeenCalled();
+  });
+
   it('#appIconDataHandler() should call updateAppIcon method', () => {
     spyOn(component,'appIconDataHandler').and.callThrough();
     // tslint:disable-next-line:max-line-length
@@ -91,7 +121,6 @@ describe('MetaFormComponent', () => {
     expect(component.appIcon).toBeDefined();
   });
 
- 
   it('call #ifFieldIsEditable() verify returning value', () => {
     spyOn(component, 'isReviewMode').and.returnValue(false);
     expect(component.ifFieldIsEditable('bloomsLevel', false)).toEqual(false);
@@ -99,8 +128,7 @@ describe('MetaFormComponent', () => {
   it('call #isReviewMode() verify returning value', () => {
     expect(component.isReviewMode()).toEqual(false);
   });
- 
-  
+
   it('#attachDefaultValues() should set formFieldProperties', () => {
     component.rootFormConfig = mockData.rootFormConfig;
     component.nodeMetadata = mockData.nodeMetaData;
