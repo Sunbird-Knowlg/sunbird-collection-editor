@@ -6,6 +6,9 @@ import { mockData } from './meta-form.component.spec.data';
 import { TreeService } from '../../services/tree/tree.service';
 import { mockTreeService } from '../question/question.component.spec.data';
 import { HelperService } from '../../services/helper/helper.service';
+import { of } from 'rxjs/internal/observable/of';
+import { ToasterService } from '../../services/toaster/toaster.service';
+import { ConfigService } from '../../services/config/config.service';
 describe('MetaFormComponent', () => {
   let component: MetaFormComponent;
   let fixture: ComponentFixture<MetaFormComponent>;
@@ -15,7 +18,9 @@ describe('MetaFormComponent', () => {
       imports: [HttpClientTestingModule],
       declarations: [MetaFormComponent],
       providers:[
-        { provide: TreeService, useValue: mockTreeService }
+        { provide: TreeService, useValue: mockTreeService },
+        ConfigService,
+        ToasterService
       ],
       schemas: [NO_ERRORS_SCHEMA]
     })
@@ -93,6 +98,62 @@ describe('MetaFormComponent', () => {
     expect(component.showShuffleMessage).toHaveBeenCalledWith(event);
     expect(component.toolbarEmitter.emit).toHaveBeenCalled();
     expect(treeService.updateNode).toHaveBeenCalled();
+  });
+
+  it('#valueChanges() should not call not call showShuffleMessage', () => {
+  component.appIcon = '';
+  component.showAppIcon = false;
+  const treeService = TestBed.get(TreeService);
+  spyOn(treeService, 'updateNode').and.callFake(() => {});
+  spyOn(component.toolbarEmitter, 'emit').and.callFake(() => {});
+  spyOn(component, 'showShuffleMessage').and.callFake(() => {});
+  spyOn(component, 'valueChanges').and.callThrough();
+  component.valueChanges({});
+  expect(component.showShuffleMessage).not.toHaveBeenCalled();
+  expect(component.toolbarEmitter.emit).toHaveBeenCalled();
+  expect(treeService.updateNode).toHaveBeenCalled();
+  });
+
+  it('#showShuffleMessage() should show toaster message', () => {
+    const toasterService = TestBed.get(ToasterService);
+    component.previousShuffleValue = false;
+    spyOn(toasterService, 'simpleInfo').and.callFake(() => {});
+    spyOn(component, 'setShuffleValue').and.callFake(() => {});
+    spyOn(component, 'showShuffleMessage').and.callThrough();
+    component.showShuffleMessage({shuffle: true});
+    expect(toasterService.simpleInfo).toHaveBeenCalled();
+    expect(component.setShuffleValue).toHaveBeenCalled();
+  });
+
+  it('#showShuffleMessage() should not show toaster message', () => {
+    const toasterService = TestBed.get(ToasterService);
+    component.previousShuffleValue = false;
+    spyOn(toasterService, 'simpleInfo').and.callFake(() => {});
+    spyOn(component, 'setShuffleValue').and.callFake(() => {});
+    spyOn(component, 'showShuffleMessage').and.callThrough();
+    component.showShuffleMessage({shuffle: false});
+    expect(toasterService.simpleInfo).not.toHaveBeenCalled();
+    expect(component.setShuffleValue).toHaveBeenCalled();
+  });
+
+  it('#setShuffleValue() should call helperService.setShuffleValue', () => {
+    const helperService = TestBed.get(HelperService);
+    spyOn(helperService, 'setShuffleValue').and.callFake(() => {});
+    spyOn(component, 'setShuffleValue').and.callThrough();
+    component.setShuffleValue(true);
+    expect(component.setShuffleValue).toHaveBeenCalled();
+    expect(helperService.setShuffleValue).toHaveBeenCalled();
+
+  });
+
+  it('#setShuffleValue() should not call helperService.setShuffleValue', () => {
+    const helperService = TestBed.get(HelperService);
+    spyOn(helperService, 'setShuffleValue').and.callFake(() => {});
+    spyOn(component, 'setShuffleValue').and.callThrough();
+    component.setShuffleValue('true');
+    expect(component.setShuffleValue).toHaveBeenCalled();
+    expect(helperService.setShuffleValue).not.toHaveBeenCalled();
+
   });
 
   it('#appIconDataHandler() should call updateAppIcon method', () => {
