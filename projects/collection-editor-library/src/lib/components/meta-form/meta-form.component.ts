@@ -33,7 +33,7 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
   public subscription: Subscription;
   constructor(private editorService: EditorService, public treeService: TreeService,
               public frameworkService: FrameworkService, private helperService: HelperService,
-              public configService: ConfigService, private toasterService: ToasterService) {
+              private configService: ConfigService, private toasterService: ToasterService) {
                 framworkServiceTemp = frameworkService;
                }
 
@@ -264,17 +264,15 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
   valueChanges(event: any) {
     if (_.has(event, 'shuffle')) {
       this.subscription = this.helperService.shuffleValue.subscribe(shuffle => this.previousShuffleValue = shuffle);
-      if (event.shuffle === true) {
-        if (this.previousShuffleValue === false) {
-          this.toasterService.simpleInfo(_.get(this.configService, 'labelConfig.lbl.shuffleOnMessage'));
-        }
+      if (event.shuffle === true && this.previousShuffleValue === false) {
+        this.toasterService.simpleInfo(_.get(this.configService, 'labelConfig.lbl.shuffleOnMessage'));
       }
       this.setShuffleValue(event.shuffle);
     }
     if (_.get(event, 'instances')) {
       event.instances = {
-        label: event.instances
-      };
+        "label": event.instances
+      }
     }
     if (!_.isEmpty(this.appIcon) && this.showAppIcon) {
       event.appIcon = this.appIcon;
