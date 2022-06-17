@@ -71,6 +71,14 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
     }
   }
 
+  showShuffleMessage(event) {
+    this.subscription = this.helperService.shuffleValue.subscribe(shuffle => this.previousShuffleValue = shuffle);
+    if (_.isBoolean(event.shuffle) && event.shuffle === true && this.previousShuffleValue === false) {
+      this.toasterService.simpleInfo(_.get(this.configService, 'labelConfig.lbl.shuffleOnMessage'));
+    }
+    this.setShuffleValue(event.shuffle);
+  }
+
   fetchFrameWorkDetails() {
     if (this.frameworkService.organisationFramework) {
       this.frameworkService.frameworkData$.pipe(
@@ -264,14 +272,6 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
 
   onStatusChanges(event) {
     this.toolbarEmitter.emit({ button: 'onFormStatusChange', event });
-  }
-
-  showShuffleMessage(event) {
-    this.subscription = this.helperService.shuffleValue.subscribe(shuffle => this.previousShuffleValue = shuffle);
-    if (_.isBoolean(event.shuffle) && event.shuffle === true && this.previousShuffleValue === false) {
-      this.toasterService.simpleInfo(_.get(this.configService, 'labelConfig.lbl.shuffleOnMessage'));
-    }
-    this.setShuffleValue(event.shuffle);
   }
 
   valueChanges(event: any) {
