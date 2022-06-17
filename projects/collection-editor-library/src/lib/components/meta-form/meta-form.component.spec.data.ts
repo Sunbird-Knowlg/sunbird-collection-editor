@@ -438,24 +438,24 @@ export const mockData = {
                     {
                         associations: [
                             {
-                                'identifier': 'ekstep_ncert_k-12_learningoutcome_9686a2a712bdfdb43408555865cda57f2367699a',
-                                'code': '9686a2a712bdfdb43408555865cda57f2367699a',
-                                'translations': null,
-                                'name': 'Inequalities in a triangle.',
-                                'description': 'Inequalities in a triangle.',
-                                'index': 0,
-                                'category': 'learningoutcome',
-                                'status': 'Live'
+                                identifier: 'ekstep_ncert_k-12_learningoutcome_9686a2a712bdfdb43408555865cda57f2367699a',
+                                code: '9686a2a712bdfdb43408555865cda57f2367699a',
+                                translations: null,
+                                name: 'Inequalities in a triangle.',
+                                description: 'Inequalities in a triangle.',
+                                index: 0,
+                                category: 'learningoutcome',
+                                status: 'Live'
                             },
                             {
-                                'identifier': 'ekstep_ncert_k-12_topic_08859db5d07d93b99c12b3e5bceb975c582d31b7',
-                                'code': '08859db5d07d93b99c12b3e5bceb975c582d31b7',
-                                'translations': null,
-                                'name': 'Nature around the kids',
-                                'description': 'Nature around the kids',
-                                'index': 0,
-                                'category': 'topic',
-                                'status': 'Live'
+                                identifier: 'ekstep_ncert_k-12_topic_08859db5d07d93b99c12b3e5bceb975c582d31b7',
+                                code: '08859db5d07d93b99c12b3e5bceb975c582d31b7',
+                                translations: null,
+                                name: 'Nature around the kids',
+                                description: 'Nature around the kids',
+                                index: 0,
+                                category: 'topic',
+                                status: 'Live'
                             }],
                         identifier: 'ekstep_ncert_k-12_board_cbse',
                         code: 'cbse',
@@ -504,5 +504,33 @@ export const mockData = {
             required: true,
             visible: true
         }
-    ]
+    ],
+    frameworkResponse: {
+        result: {
+            framework: {
+                identifier: 'ekstep_ncert_k-12',
+                code: 'ekstep_ncert_k-12',
+                name: 'Centre',
+                description: 'Centre',
+                categories: {
+                    identifier: 'ekstep_ncert_k-12_board',
+                    code: 'board',
+                    terms: {
+                        associations: [
+                            {
+                                identifier: 'ekstep_ncert_k-12_learningoutcome_4a573f6d9045d16c8457df7aef8b9881c5e9a157',
+                                code: '4a573f6d9045d16c8457df7aef8b9881c5e9a157',
+                                translations: null,
+                                name: 'understand helpful attitude of Prashant',
+                                description: 'understand helpful attitude of Prashant',
+                                index: 0,
+                                category: 'learningoutcome',
+                                status: 'Live'
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }
 };

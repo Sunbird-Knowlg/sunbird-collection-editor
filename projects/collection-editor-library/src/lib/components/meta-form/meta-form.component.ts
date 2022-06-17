@@ -45,12 +45,6 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
     }
   }
 
-  setShuffleValue(value) {
-    if (_.isBoolean(value)) {
-      this.helperService.setShuffleValue(value);
-    }
-  }
-
   setAppIconData() {
     const isRootNode = _.get(this.nodeMetadata, 'data.root');
     this.appIconConfig = _.find(_.flatten(_.map(this.rootFormConfig, 'fields')), {code: 'appIcon'});
@@ -69,6 +63,12 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
       this.appIconConfig = {...this.appIconConfig , ... {isAppIconEditable: true}};
     }
     const ifEditable = this.ifFieldIsEditable('appIcon');
+  }
+
+  setShuffleValue(value) {
+    if (_.isBoolean(value)) {
+      this.helperService.setShuffleValue(value);
+    }
   }
 
   fetchFrameWorkDetails() {
@@ -266,6 +266,14 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
     this.toolbarEmitter.emit({ button: 'onFormStatusChange', event });
   }
 
+  showShuffleMessage(event) {
+    this.subscription = this.helperService.shuffleValue.subscribe(shuffle => this.previousShuffleValue = shuffle);
+    if (_.isBoolean(event.shuffle) && event.shuffle === true && this.previousShuffleValue === false) {
+      this.toasterService.simpleInfo(_.get(this.configService, 'labelConfig.lbl.shuffleOnMessage'));
+    }
+    this.setShuffleValue(event.shuffle);
+  }
+
   valueChanges(event: any) {
     if (_.has(event, 'shuffle')) {
       this.showShuffleMessage(event);
@@ -280,14 +288,6 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
     }
     this.toolbarEmitter.emit({ button: 'onFormValueChange', event });
     this.treeService.updateNode(event);
-  }
-
-  showShuffleMessage(event) {
-    this.subscription = this.helperService.shuffleValue.subscribe(shuffle => this.previousShuffleValue = shuffle);
-    if (_.isBoolean(event.shuffle) && event.shuffle === true && this.previousShuffleValue === false) {
-      this.toasterService.simpleInfo(_.get(this.configService, 'labelConfig.lbl.shuffleOnMessage'));
-    }
-    this.setShuffleValue(event.shuffle);
   }
 
   appIconDataHandler(event) {

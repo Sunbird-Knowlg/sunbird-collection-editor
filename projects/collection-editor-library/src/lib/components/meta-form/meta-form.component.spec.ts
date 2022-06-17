@@ -9,6 +9,8 @@ import { HelperService } from '../../services/helper/helper.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
 import { ConfigService } from '../../services/config/config.service';
 import { EditorService } from '../../services/editor/editor.service';
+import { FrameworkService } from '../../services/framework/framework.service';
+import { of, throwError } from 'rxjs';
 describe('MetaFormComponent', () => {
   let component: MetaFormComponent;
   let fixture: ComponentFixture<MetaFormComponent>;
@@ -130,9 +132,9 @@ describe('MetaFormComponent', () => {
   });
 
   it('#fetchFrameWorkDetails() should set fetchFrameWorkDetails and for targetFrameworkIds', () => {
-    component.frameworkService.organisationFramework = 'ekstep_ncert_k-12';
-    component.frameworkService.targetFrameworkIds = 'ekstep_ncert_k-12';
-    component.frameworkDetails = mockData.frameWorkDetails;
+    const frameworkService = TestBed.get(FrameworkService);
+    spyOn(frameworkService, 'getFrameworkCategories').and.returnValue(of(mockData.frameworkResponse));
+    frameworkService.initialize('ekstep_ncert_k-12');
     spyOn(component, 'attachDefaultValues').and.callFake(() => {});
     spyOn(component, 'fetchFrameWorkDetails').and.callThrough();
     component.fetchFrameWorkDetails();
@@ -177,9 +179,15 @@ describe('MetaFormComponent', () => {
     expect(isFieldEditable).toBeTruthy();
   });
 
+  it('outputData should be called', () => {
+    spyOn(component, 'outputData').and.callThrough();
+    component.outputData({});
+    expect(component.outputData).toHaveBeenCalledWith({});
+  });
+
   it('#onStatusChanges() should emit toolbarEmitter event', () => {
     const data = { button: 'onFormStatusChange', event: '' };
-    spyOn(component.toolbarEmitter, 'emit');
+    spyOn(component.toolbarEmitter, 'emit').and.callFake(() => {});
     component.onStatusChanges(data.event);
     expect(component.toolbarEmitter.emit).toHaveBeenCalledWith(data);
   });
