@@ -45,6 +45,11 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
     }
   }
 
+  setShuffleValue(value) {
+    if (_.isBoolean(value)) {
+      this.helperService.setShuffleValue(value);
+    }
+  }
 
   setAppIconData() {
     const isRootNode = _.get(this.nodeMetadata, 'data.root');
@@ -283,12 +288,6 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
       this.toasterService.simpleInfo(_.get(this.configService, 'labelConfig.lbl.shuffleOnMessage'));
     }
     this.setShuffleValue(event.shuffle);
-  }
-
-  setShuffleValue(value) {
-    if (_.isBoolean(value)) {
-      this.helperService.setShuffleValue(value);
-    }
   }
 
   appIconDataHandler(event) {
