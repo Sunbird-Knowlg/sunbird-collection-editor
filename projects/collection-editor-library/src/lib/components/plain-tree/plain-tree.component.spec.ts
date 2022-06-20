@@ -4,6 +4,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { treeData } from '../fancy-tree/fancy-tree.component.spec.data';
 import { collectionHierarchyMock } from '../question/question.component.spec.data';
 import { EditorService } from '../../services/editor/editor.service';
+import { mockTreedata } from './plain-tree.component.spec.data';
 
 const mockEditorService = {
   editorConfig: {
@@ -44,7 +45,7 @@ const mockEditorService = {
   submitRequestChanges :() =>{}
 };
 
-xdescribe('PlainTreeComponent', () => {
+describe('PlainTreeComponent', () => {
   let component: PlainTreeComponent;
   let fixture: ComponentFixture<PlainTreeComponent>;
   let editorService;
@@ -70,7 +71,15 @@ xdescribe('PlainTreeComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('#buildTreeData should call', () => {
+     spyOn(component, 'buildTreeData').and.callThrough();
+     editorService = mockEditorService;
+     component.buildTreeData(mockTreedata);
+     expect(component.buildTreeData).toHaveBeenCalledWith(mockTreedata);
+  });
+
   it('#ngAfterViewInit() should call #getTreeConfig() and #renderTree()', () => {
+    spyOn(component, 'ngAfterViewInit').and.callThrough();
     editorService = mockEditorService;
     spyOn(component, 'renderTree');
     spyOn(component, 'getTreeConfig');
