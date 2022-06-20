@@ -8,32 +8,33 @@ import {
   Output,
   ViewChild,
 } from "@angular/core";
-import "jquery.fancytree";
-import * as _ from "lodash-es";
+import 'jquery.fancytree';
+import * as _ from 'lodash-es';
 import { EditorService } from '../../services/editor/editor.service';
 
 declare var $: any;
 
 @Component({
-  selector: "lib-plain-tree",
-  templateUrl: "./plain-tree.component.html",
-  styleUrls: ["./plain-tree.component.scss"],
+  selector: 'lib-plain-tree',
+  templateUrl: './plain-tree.component.html',
+  styleUrls: ['./plain-tree.component.scss'],
 })
 export class PlainTreeComponent implements OnInit, AfterViewInit {
-  @ViewChild("plainTree") public tree: ElementRef;
+  @ViewChild('plainTree') public tree: ElementRef;
   @Input() treeData;
   @Output() treeEmitter: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(private editorService: EditorService) {}
 
-  ngOnInit(){
+  ngOnInit() {
   }
 
   buildTreeData(data) {
-    let tree = [];
-    _.forEach(data, (child:any) => {
+    const tree = [];
+    _.forEach(data, (child: any) => {
       if (child.children) {
-        _.forEach(child.children, (data) => {
+        // tslint:disable-next-line:no-shadowed-variable
+        _.forEach(child.children, (data: any) => {
           tree.push({
             id: data?.id,
             title: data?.title,
@@ -64,23 +65,23 @@ export class PlainTreeComponent implements OnInit, AfterViewInit {
   getTreeConfig() {
     const rootNode = [
       {
-        title: "Criteria Name",
-        key: "2",
+        title: 'Criteria Name',
+        key: '2',
         folder: true,
         icon: 'fa fa-folder-o',
         children: this.buildTreeData(this.treeData)
       }
     ];
     const options: any = {
-      extensions: ["glyph", "dnd5"],
+      extensions: ['glyph', 'dnd5'],
       clickFolderMode: 3,
       source: rootNode,
       escapeTitles: true,
       glyph: {
-        preset: "awesome4",
+        preset: 'awesome4',
         map: {
-          folder: "icon folder sb-fancyTree-icon",
-          folderOpen: "icon folder outline sb-fancyTree-icon",
+          folder: 'icon folder sb-fancyTree-icon',
+          folderOpen: 'icon folder outline sb-fancyTree-icon',
         },
       },
       dnd5: {
@@ -107,24 +108,25 @@ export class PlainTreeComponent implements OnInit, AfterViewInit {
         return true;
       },
       activate: (event, data) => {
-       !_.isUndefined(data.node.data.id) ? this.getQuestionsList(_.get(data,'node.data.id')) : '';
+       // tslint:disable-next-line:no-unused-expression
+       !_.isUndefined(data.node.data.id) ? this.getQuestionsList(_.get(data, 'node.data.id')) : '';
       },
       renderNode: (event, data) => {
         const node = data.node;
         const $nodeSpan = $(node.span);
 
         // check if span of node already rendered
-        if (!$nodeSpan.data("rendered")) {
+        if (!$nodeSpan.data('rendered')) {
           // span rendered
-          $nodeSpan.data("rendered", true);
+          $nodeSpan.data('rendered', true);
         }
       },
     };
     return options;
   }
 
-  getQuestionsList(id){
-    this.treeEmitter.emit({identifier:id})
+  getQuestionsList(id) {
+    this.treeEmitter.emit({identifier: id});
   }
 
 }

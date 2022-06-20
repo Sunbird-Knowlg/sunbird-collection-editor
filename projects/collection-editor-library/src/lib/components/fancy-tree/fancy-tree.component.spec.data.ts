@@ -974,7 +974,8 @@ export const mockTreeService = {
   },
   updateTreeNodeMetadata: () => {
     return {}
-  }
+  },
+  getHierarchyObj : () => {}
 };
 
 

@@ -577,6 +577,15 @@ describe('EditorComponent', () => {
     expect(component.redirectToQuestionTab).toHaveBeenCalled();
   });
 
+  it('#toolbarEventListener() should set pagination ', () => {
+    spyOn(component, 'toolbarEventListener').and.callThrough();
+    const event = {
+      button: 'pagination'
+    };
+    component.toolbarEventListener(event);
+    expect(component.pageId).toEqual('pagination');
+  });
+
   it('#redirectToChapterListTab() should emit #editorEmitter event', () => {
     component.actionType = 'dummyCase';
     component.collectionId = 'do_12345';
