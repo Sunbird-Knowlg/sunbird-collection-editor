@@ -54,6 +54,7 @@ describe('AssignPageNumberComponent', () => {
   });
 
   it('#toolbarEventListener() should call #handleRedirectToQuestionSet() if event is backContent', () => {
+    spyOn(component, 'toolbarEventListener').and.callThrough()
     spyOn(component, 'redirectToQuestionSet').and.callThrough();
     const event = {
       button: 'backContent'

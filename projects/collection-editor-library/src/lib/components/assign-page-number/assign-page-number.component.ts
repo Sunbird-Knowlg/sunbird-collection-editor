@@ -26,14 +26,6 @@ export class AssignPageNumberComponent implements OnInit {
     this.treeData = this.editorService.treeData;
   }
 
-  toolbarEventListener(event) {
-    switch (event.button) {
-      case 'backContent':
-        this.redirectToQuestionSet();
-        break;
-    }
-  }
-
   treeEventListener(event) {
     const data = this.treeService.getFirstChild();
     const hierarchy = this.editorService.getHierarchyObj(data, '', event?.identifier);
@@ -43,6 +35,14 @@ export class AssignPageNumberComponent implements OnInit {
     }, (error: any) => {
       console.log(error);
     });
+  }
+
+  toolbarEventListener(event) {
+    switch (event.button) {
+      case 'backContent':
+        this.redirectToQuestionSet();
+        break;
+    }
   }
 
   redirectToQuestionSet() {

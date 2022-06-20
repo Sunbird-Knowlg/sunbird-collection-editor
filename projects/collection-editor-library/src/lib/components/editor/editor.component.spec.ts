@@ -615,6 +615,7 @@ describe('EditorComponent', () => {
     const event = {
       button: 'pagination'
     };
+    component.pageId = 'pagination';
     component.toolbarEventListener(event);
     expect(component.pageId).toEqual('pagination');
   });
@@ -1492,6 +1493,12 @@ describe('EditorComponent', () => {
     expect(treeService.clearTreeCache).not.toHaveBeenCalled();
     // tslint:disable-next-line:no-string-literal
     expect(component['modal'].deny).toHaveBeenCalled();
+  });
+
+  it('#assignPageEmitterListener should call', () => {
+    spyOn(component, 'assignPageEmitterListener').and.callThrough();
+    component.assignPageEmitterListener({});
+    expect(component.pageId).toEqual('collection_editor');
   });
 
 });
