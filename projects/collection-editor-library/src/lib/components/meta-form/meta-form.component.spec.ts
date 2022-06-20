@@ -61,11 +61,9 @@ describe('MetaFormComponent', () => {
       setPeriod : 'No'
     };
     spyOn(component, 'createLeavels').and.returnValue({
-      levels : {
         L1: {
             label: 'Good'
         }
-    }
     });
     component.valueChanges(event);
     expect(component.valueChanges).toHaveBeenCalledWith(event);
