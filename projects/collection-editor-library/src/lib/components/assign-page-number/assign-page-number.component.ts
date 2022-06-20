@@ -35,13 +35,11 @@ export class AssignPageNumberComponent implements OnInit {
   }
 
   treeEventListener(event) {
-    console.log(event);
     const data = this.treeService.getFirstChild();
     const hierarchy = this.editorService.getHierarchyObj(data, '', event?.identifier);
     this.questionService.getQuestionList(_.get(hierarchy[event?.identifier], 'children'))
     .subscribe((response: any) => {
       this.questions = _.get(response, 'result.questions');
-      console.log(this.questions);
     }, (error: any) => {
       console.log(error);
     });
