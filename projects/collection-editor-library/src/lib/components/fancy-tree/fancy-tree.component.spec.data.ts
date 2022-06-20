@@ -519,6 +519,7 @@ export const tree = [
 
 export const editorConfig = {
   config: {
+    renderTaxonomy:false,
     "rejectCommentsMaxLength": 500,
     "setDefaultCopyRight": true,
     "showOriginPreviewUrl": false,

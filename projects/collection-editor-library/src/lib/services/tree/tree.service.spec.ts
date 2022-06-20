@@ -33,7 +33,7 @@ describe('TreeService', () => {
     spyOn(treeService, 'setNodeTitle');
     spyOn(treeService, 'updateTreeNodeMetadata');
     treeService.updateNode(metadata,'','Observation');
-    treeService.updateTreeNodeMetadata(treeNode,undefined,'Observation');
+    treeService.updateTreeNodeMetadata(treeNode,undefined,'Observation','QuestionSet');
     expect(treeService.setNodeTitle).toHaveBeenCalled();
     expect(treeService.updateTreeNodeMetadata).toHaveBeenCalled();
   })
@@ -57,7 +57,7 @@ describe('TreeService', () => {
 
   it("#updateTreeNodeMetadata() should call #setTreeCache()", ()=> {
     spyOn(treeService, 'getActiveNode').and.callFake(()=> treeNode);
-    treeService.updateTreeNodeMetadata(treeNode,undefined,'Observation');
+    treeService.updateTreeNodeMetadata(treeNode,undefined,'Observation', 'QuestionSet');
   })
 
   it("#updateTreeNodeMetadata() should call #setTreeCache() with primaryCategory", ()=> {
@@ -66,7 +66,7 @@ describe('TreeService', () => {
       return { visit(cb) { cb({ data: { metadata: {} } }); } }});
 
     spyOn(treeService, 'setTreeCache');
-    treeService.updateTreeNodeMetadata(treeNode,undefined,'Observation');
+    treeService.updateTreeNodeMetadata(treeNode,undefined,'Observation', 'QuestionSet');
     expect(treeService.setTreeCache).toHaveBeenCalled();
   })
 

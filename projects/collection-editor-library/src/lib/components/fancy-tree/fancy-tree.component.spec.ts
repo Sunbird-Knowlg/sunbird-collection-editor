@@ -59,6 +59,19 @@ describe('FancyTreeComponent', () => {
     expect(component.initialize).toHaveBeenCalled();
   });
 
+  it('#ngOnInit() should call #initialize() when primaryCategory os obs with rubrics', () => {
+    // tslint:disable-next-line:no-shadowed-variable
+    const editorService = TestBed.get(EditorService);
+    component.nodes = {
+      data: treeData
+    };
+    editorConfig.config.renderTaxonomy = true ;
+    spyOnProperty(editorService, 'editorConfig', 'get').and.returnValue(editorConfig);
+    spyOn(component, 'initialize');
+    component.ngOnInit();
+    expect(component.initialize).toHaveBeenCalled();
+  });
+
   it('#initialize() should call #buildTree()', () => {
     component.nodes = {
       data: treeData
@@ -67,8 +80,6 @@ describe('FancyTreeComponent', () => {
     component.initialize();
     expect(component.buildTree).toHaveBeenCalled();
   });
-
-  
 
   it('#addFromLibrary() should call #emitshowLibraryPageEvent()', () => {
     const editorService: EditorService = TestBed.get(EditorService);

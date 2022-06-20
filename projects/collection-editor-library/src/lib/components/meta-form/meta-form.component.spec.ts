@@ -48,6 +48,28 @@ describe('MetaFormComponent', () => {
     expect(component.toolbarEmitter.emit).toHaveBeenCalled();
   });
 
+  it('#valueChanges() should call updateNode and emit data for obs with rubrics', () => {
+    spyOn(component, 'valueChanges').and.callThrough();
+    // tslint:disable-next-line:max-line-length
+    component.appIcon = 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png';
+    component.showAppIcon = true;
+    const event = {
+      instances: 'Add Student',
+      appIcon: 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png',
+      allowECM : 'No',
+      levels : ['good', 'bad', 'average'],
+      setPeriod : 'No'
+    };
+    spyOn(component, 'createLeavels').and.returnValue({
+      levels : {
+        L1: {
+            label: 'Good'
+        }
+    }
+    });
+    component.valueChanges(event);
+    expect(component.valueChanges).toHaveBeenCalledWith(event);
+  });
 
   it('#ngOnChanges() should call setAppIconData', () => {
     spyOn(component, 'fetchFrameWorkDetails');

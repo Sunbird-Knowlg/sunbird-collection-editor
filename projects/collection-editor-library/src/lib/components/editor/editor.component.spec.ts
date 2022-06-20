@@ -229,6 +229,40 @@ describe('EditorComponent', () => {
     expect(component.setEditorForms).toHaveBeenCalled();
   });
 
+  it('Unit test for #getFrameworkDetails() when primaryCategory is Obs with rubrics', () => {
+    const treeService = TestBed.inject(TreeService);
+    const frameworkService = TestBed.inject(FrameworkService);
+    const editorService = TestBed.inject(EditorService);
+    component.organisationFramework = 'dummy';
+    editorConfig.config.renderTaxonomy = true;
+    component.editorConfig = editorConfig;
+    spyOn(editorService, 'fetchOutComeDeclaration').and.returnValue({
+      result: {
+        questionset: {
+            identifier: 'do_1234',
+            outcomeDeclaration: {
+              levels: {
+                    L1: {
+                      label: 'Good'
+                    }
+                }
+            }
+        }
+    }
+    });
+    spyOn(component, 'getFrameworkDetails').and.callThrough();
+    spyOn(treeService, 'updateMetaDataProperty').and.callFake(() => { });
+    spyOn(frameworkService, 'getTargetFrameworkCategories').and.callFake(() => { });
+    spyOn(frameworkService, 'getFrameworkData').and.returnValue(of({}));
+    spyOn(component, 'setEditorForms').and.callFake(() => { });
+    component.getFrameworkDetails(categoryDefinitionData);
+    expect(treeService.updateMetaDataProperty).not.toHaveBeenCalled();
+    expect(frameworkService.getTargetFrameworkCategories).not.toHaveBeenCalled();
+    expect(component.targetFramework).toBeUndefined();
+    expect(treeService.updateMetaDataProperty).not.toHaveBeenCalled();
+    expect(frameworkService.getTargetFrameworkCategories).not.toHaveBeenCalled();
+  });
+
   it('#setEditorForms() should set variable values for questionset', () => {
     component.objectType = 'questionset';
     spyOn(component, 'setEditorForms').and.callThrough();
@@ -318,7 +352,6 @@ describe('EditorComponent', () => {
     spyOn(component, 'getHierarchyChildrenConfig').and.callFake(() => {});
     component.sethierarchyConfig(categoryDefinitionData);
     expect(component.getHierarchyChildrenConfig).toHaveBeenCalled();
-    expect(component.ishierarchyConfigSet).toBeTruthy();
   });
 
   it('#toggleCollaboratorModalPoup() should set addCollaborator to true', () => {

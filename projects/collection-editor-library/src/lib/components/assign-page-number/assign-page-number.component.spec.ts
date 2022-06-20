@@ -9,7 +9,8 @@ import { of, throwError } from 'rxjs';
 
 const mockEditorService = {
   getToolbarConfig: () => { },
-  getHierarchyObj: () => { }
+  getHierarchyObj: () => { },
+  treeData: () => { }
 };
 
 describe('AssignPageNumberComponent', () => {
@@ -36,9 +37,7 @@ describe('AssignPageNumberComponent', () => {
     editorService = TestBed.inject(EditorService);
     questionService = TestBed.get(QuestionService);
     spyOn(editorService, 'getToolbarConfig').and.returnValue({
-      title: 'abcd',
-      showDialcode: 'No',
-      showPreview: 'true',
+      title: 'Observation Form'
     });
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -48,18 +47,18 @@ describe('AssignPageNumberComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('#ngOnInit should called', () => {
+    spyOn(editorService, 'treeData').and.callFake(() => {});
+    component.ngOnInit();
+    expect(component.toolbarConfig.title).toEqual('Observation Form');
+  });
+
   it('#toolbarEventListener() should call #handleRedirectToQuestionSet() if event is backContent', () => {
+    spyOn(component, 'redirectToQuestionSet').and.callThrough();
     const event = {
       button: 'backContent'
     };
-    spyOn(component, 'handleRedirectToQuestionSet');
     component.toolbarEventListener(event);
-    expect(component.handleRedirectToQuestionSet);
-  });
-
-  it('#handleRedirectToQuestionSet should be called', () => {
-    spyOn(component, 'redirectToQuestionSet').and.callThrough();
-    component.handleRedirectToQuestionSet();
     expect(component.redirectToQuestionSet).toHaveBeenCalled();
   });
 

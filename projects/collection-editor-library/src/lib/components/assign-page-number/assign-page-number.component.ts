@@ -20,7 +20,7 @@ export class AssignPageNumberComponent implements OnInit {
   constructor(private editorService: EditorService, private treeService: TreeService,
               private questionService: QuestionService) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.toolbarConfig = this.editorService.getToolbarConfig();
     this.toolbarConfig.title = 'Observation Form';
     this.treeData = this.editorService.treeData;
@@ -29,13 +29,9 @@ export class AssignPageNumberComponent implements OnInit {
   toolbarEventListener(event) {
     switch (event.button) {
       case 'backContent':
-        this.handleRedirectToQuestionSet();
+        this.redirectToQuestionSet();
         break;
     }
-  }
-
-  handleRedirectToQuestionSet() {
-    this.redirectToQuestionSet();
   }
 
   treeEventListener(event) {
