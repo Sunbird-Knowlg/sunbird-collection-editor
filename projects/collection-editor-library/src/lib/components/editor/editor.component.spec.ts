@@ -214,7 +214,6 @@ describe('EditorComponent', () => {
     const treeService = TestBed.inject(TreeService);
     const frameworkService = TestBed.inject(FrameworkService);
     component.organisationFramework = 'dummy';
-    editorConfig.config.renderTaxonomy = true;
     spyOn(component, 'getFrameworkDetails').and.callThrough();
     spyOn(treeService, 'updateMetaDataProperty').and.callFake(() => { });
     spyOn(frameworkService, 'getTargetFrameworkCategories').and.callFake(() => { });
@@ -230,7 +229,7 @@ describe('EditorComponent', () => {
     expect(component.setEditorForms).toHaveBeenCalled();
   });
 
-  it('Unit test for #getFrameworkDetails() when primaryCategory is Obs with rubrics', () => {
+  it('Unit test for #getFrameworkDetails() when primaryCategory is Obs with rubrics api success', () => {
     const treeService = TestBed.inject(TreeService);
     const frameworkService = TestBed.inject(FrameworkService);
     const editorService = TestBed.inject(EditorService);
@@ -251,6 +250,27 @@ describe('EditorComponent', () => {
         }
     }
     });
+    spyOn(component, 'getFrameworkDetails').and.callThrough();
+    spyOn(treeService, 'updateMetaDataProperty').and.callFake(() => { });
+    spyOn(frameworkService, 'getTargetFrameworkCategories').and.callFake(() => { });
+    spyOn(frameworkService, 'getFrameworkData').and.returnValue(of({}));
+    spyOn(component, 'setEditorForms').and.callFake(() => { });
+    component.getFrameworkDetails(categoryDefinitionData);
+    expect(treeService.updateMetaDataProperty).not.toHaveBeenCalled();
+    expect(frameworkService.getTargetFrameworkCategories).not.toHaveBeenCalled();
+    expect(component.targetFramework).toBeUndefined();
+    expect(treeService.updateMetaDataProperty).not.toHaveBeenCalled();
+    expect(frameworkService.getTargetFrameworkCategories).not.toHaveBeenCalled();
+  });
+
+  it('Unit test for #getFrameworkDetails() when primaryCategory is Obs with rubrics outcome declaration api fail', () => {
+    const treeService = TestBed.inject(TreeService);
+    const frameworkService = TestBed.inject(FrameworkService);
+    const editorService = TestBed.inject(EditorService);
+    component.organisationFramework = 'dummy';
+    editorConfig.config.renderTaxonomy = true;
+    component.editorConfig = editorConfig;
+    spyOn(editorService, 'fetchOutComeDeclaration').and.returnValue(throwError('error'));
     spyOn(component, 'getFrameworkDetails').and.callThrough();
     spyOn(treeService, 'updateMetaDataProperty').and.callFake(() => { });
     spyOn(frameworkService, 'getTargetFrameworkCategories').and.callFake(() => { });

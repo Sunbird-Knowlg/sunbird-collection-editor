@@ -255,6 +255,7 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
     this.toolbarEmitter.emit({ button: 'onFormStatusChange', event });
   }
 
+
   appIconDataHandler(event) {
     this.appIcon = event.url;
     this.treeService.updateAppIcon(event.url);
@@ -283,9 +284,8 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
   }
 
   valueChanges(event: any) {
-    event.instances = {
-      label : event?.instances
-    };
+    // tslint:disable-next-line:no-unused-expression
+    event?.instance ? event.instances = { label : event?.instances } : '';
     const data = _.omit(event, ['allowECM', 'levels', 'setPeriod']);
     if (!_.isEmpty(event?.levels)) {
       data.outcomeDeclaration = {
@@ -307,7 +307,8 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
        };
     });
     return obj;
-  }
+}
+
 
   getFramework(control, depends: FormControl[], formGroup: FormGroup, loading, loaded) {
     const response =  control.valueChanges.pipe(
