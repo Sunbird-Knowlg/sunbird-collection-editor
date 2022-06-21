@@ -36,11 +36,9 @@ describe('AssignPageNumberComponent', () => {
     treeService = TestBed.get(TreeService);
     editorService = TestBed.inject(EditorService);
     questionService = TestBed.get(QuestionService);
-    spyOn(editorService, 'getToolbarConfig').and.returnValue({
-      title: 'Observation Form'
-    });
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    component.toolbarConfig = {title : 'Observation Form'};
+    // fixture.detectChanges();
   });
 
   it('should create', () => {
@@ -49,12 +47,17 @@ describe('AssignPageNumberComponent', () => {
 
   it('#ngOnInit should called', () => {
     spyOn(editorService, 'treeData').and.callFake(() => {});
+    spyOn(editorService, 'getToolbarConfig').and.returnValue({
+      title: 'Observation Form'
+    });
     component.ngOnInit();
+    expect(editorService.getToolbarConfig).toHaveBeenCalled();
+    expect(component.toolbarConfig).toBeDefined();
     expect(component.toolbarConfig.title).toEqual('Observation Form');
   });
 
   it('#toolbarEventListener() should call #handleRedirectToQuestionSet() if event is backContent', () => {
-    spyOn(component, 'toolbarEventListener').and.callThrough()
+    spyOn(component, 'toolbarEventListener').and.callThrough();
     spyOn(component, 'redirectToQuestionSet').and.callThrough();
     const event = {
       button: 'backContent'

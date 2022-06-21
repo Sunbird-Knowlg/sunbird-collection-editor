@@ -214,6 +214,7 @@ describe('EditorComponent', () => {
     const treeService = TestBed.inject(TreeService);
     const frameworkService = TestBed.inject(FrameworkService);
     component.organisationFramework = 'dummy';
+    editorConfig.config.renderTaxonomy = true;
     spyOn(component, 'getFrameworkDetails').and.callThrough();
     spyOn(treeService, 'updateMetaDataProperty').and.callFake(() => { });
     spyOn(frameworkService, 'getTargetFrameworkCategories').and.callFake(() => { });
