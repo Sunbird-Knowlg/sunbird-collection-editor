@@ -19,11 +19,18 @@ export class AssignPageNumberComponent implements OnInit {
 
   constructor(private editorService: EditorService, private treeService: TreeService,
               private questionService: QuestionService) { }
-
   ngOnInit() {
     this.toolbarConfig = this.editorService.getToolbarConfig();
     this.toolbarConfig.title = 'Observation Form';
     this.treeData = this.editorService.treeData;
+  }
+
+  toolbarEventListener(event) {
+    switch (event.button) {
+      case 'backContent':
+        this.redirectToQuestionSet();
+        break;
+    }
   }
 
   treeEventListener(event) {
@@ -35,14 +42,6 @@ export class AssignPageNumberComponent implements OnInit {
     }, (error: any) => {
       console.log(error);
     });
-  }
-
-  toolbarEventListener(event) {
-    switch (event.button) {
-      case 'backContent':
-        this.redirectToQuestionSet();
-        break;
-    }
   }
 
   redirectToQuestionSet() {

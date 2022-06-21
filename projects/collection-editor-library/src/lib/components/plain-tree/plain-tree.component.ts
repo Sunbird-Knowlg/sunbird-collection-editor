@@ -23,7 +23,6 @@ export class PlainTreeComponent implements OnInit, AfterViewInit {
   @ViewChild('plainTree') public tree: ElementRef;
   @Input() treeData;
   @Output() treeEmitter: EventEmitter<any> = new EventEmitter<any>();
-
   constructor(private editorService: EditorService) {}
 
   ngOnInit() {
@@ -38,7 +37,7 @@ export class PlainTreeComponent implements OnInit, AfterViewInit {
           tree.push({
             id: data?.id,
             title: data?.title,
-            tooltip: data?.title,
+            tooltip: data?.tooltip,
             primaryCategory: _.get(this.editorService, 'editorConfig.config.primaryCategory'),
             metadata: {
               objectType: _.get(this.editorService, 'editorConfig.config.objectType'),

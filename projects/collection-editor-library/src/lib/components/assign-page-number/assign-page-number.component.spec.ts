@@ -8,9 +8,11 @@ import { QuestionService } from '../../services/question/question.service';
 import { of, throwError } from 'rxjs';
 
 const mockEditorService = {
-  getToolbarConfig: () => { },
+  getToolbarConfig: () => {
+    return { title : 'abc'};
+  },
   getHierarchyObj: () => { },
-  treeData: () => { }
+  treeData: {}
 };
 
 describe('AssignPageNumberComponent', () => {
@@ -37,7 +39,6 @@ describe('AssignPageNumberComponent', () => {
     editorService = TestBed.inject(EditorService);
     questionService = TestBed.get(QuestionService);
     component = fixture.componentInstance;
-    component.toolbarConfig = {title : 'Observation Form'};
     // fixture.detectChanges();
   });
 
@@ -46,12 +47,12 @@ describe('AssignPageNumberComponent', () => {
   });
 
   it('#ngOnInit should called', () => {
-    spyOn(editorService, 'treeData').and.callFake(() => {});
+    spyOn(component, 'ngOnInit').and.callThrough();
     spyOn(editorService, 'getToolbarConfig').and.returnValue({
       title: 'Observation Form'
     });
+    component.toolbarConfig.title = 'Observation Form';
     component.ngOnInit();
-    expect(editorService.getToolbarConfig).toHaveBeenCalled();
     expect(component.toolbarConfig).toBeDefined();
     expect(component.toolbarConfig.title).toEqual('Observation Form');
   });
