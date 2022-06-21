@@ -32,6 +32,8 @@ export class AssignPageNumberComponent implements OnInit {
     }
   }
 
+  treeEventListener(event) {}
+
   redirectToQuestionSet() {
       this.assignPageEmitter.emit({ status: false });
   }
