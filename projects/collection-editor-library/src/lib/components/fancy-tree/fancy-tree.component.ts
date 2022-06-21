@@ -94,7 +94,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       treeData = this.buildTree(this.nodes.data);
     }
-    this.editorService.treeData=treeData;
+    this.editorService.treeData = treeData;
     this.rootNode = [{
       id: data.identifier || UUID.UUID(),
       title: data.name,
@@ -138,6 +138,8 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   buildTreeFromFramework(data, tree?, level?) {
+    console.log('buildTreeFromFramework');
+    console.log(data);
     tree = tree || [];
     if (data.children) { data.children = _.sortBy(data.children, ['index']); }
     _.forEach(data.children, (child) => {
@@ -614,6 +616,8 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   removeIntermediateLevelsFromFramework(data, parentData?) {
+    console.log('removeIntermediateLevelsFromFramework');
+    console.log(data);
     const tree = [];
     _.forEach(data, child => {
       if (child.depth === 0 || child.depth === this.helperService.treeDepth) {

@@ -6,7 +6,7 @@ import { NO_ERRORS_SCHEMA, ChangeDetectorRef } from '@angular/core';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { config, treeData, tree, editorConfig, TargetNodeMockData,
-  CurrentNodeMockData, mockTreeService, mockData, observationWithRubricsMockData } from './fancy-tree.component.spec.data';
+  CurrentNodeMockData, mockTreeService, mockData, observationWithRubricsMockData, RubricstreeData } from './fancy-tree.component.spec.data';
 import { Router } from '@angular/router';
 import { TreeService } from '../../services/tree/tree.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
@@ -81,6 +81,26 @@ describe('FancyTreeComponent', () => {
     expect(component.buildTree).toHaveBeenCalled();
   });
 
+  it('#initialize() should call  #buildTreeFromFramework() when primarycategory is obs with rubrics', () => {
+    component.nodes = {
+      data: {}
+    };
+    // tslint:disable-next-line:no-shadowed-variable
+    const editorService: EditorService = TestBed.get(EditorService);
+    editorConfig.config.renderTaxonomy = true;
+    spyOnProperty(editorService, 'editorConfig', 'get').and.returnValue(editorConfig);
+    spyOn(component, 'buildTreeFromFramework');
+    spyOn(component, 'removeIntermediateLevelsFromFramework');
+    component.initialize();
+    // expect(component.removeIntermediateLevelsFromFramework).toHaveBeenCalledWith(RubricstreeData);
+  });
+
+  it('#removeIntermediateLevelsFromFramework should call when primaryCategory obs with rubrics', () => {
+    spyOn(component, 'removeIntermediateLevelsFromFramework').and.callThrough();
+    component.removeIntermediateLevelsFromFramework(RubricstreeData);
+    expect(component.removeIntermediateLevelsFromFramework).toHaveBeenCalledWith(RubricstreeData);
+  });
+  
   it('#addFromLibrary() should call #emitshowLibraryPageEvent()', () => {
     const editorService: EditorService = TestBed.get(EditorService);
     spyOn(editorService, 'emitshowLibraryPageEvent').and.returnValue('showLibraryPage');
