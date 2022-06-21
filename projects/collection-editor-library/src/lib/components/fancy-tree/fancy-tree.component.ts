@@ -187,6 +187,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   renderTree(options) {
+    console.log(options);
     options = { ...options, ...this.options };
     $(this.tree.nativeElement).fancytree(options);
     this.treeService.setTreeElement(this.tree.nativeElement);
