@@ -33,21 +33,6 @@ describe('MetaFormComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // it('#valueChanges() should call updateNode and emit toolbarEmitter with appIcon', () => {
-  //   spyOn(component,'valueChanges').and.callThrough();
-  //   component.appIcon='https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png';
-  //   component.showAppIcon=true;
-  //   const event={
-  //     instances:"Add Student",
-  //     appIcon: 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png',
-  //   }
-  //   spyOn(component.toolbarEmitter, 'emit');
-  //   spyOn(component.treeService, 'updateNode');
-  //   component.valueChanges(event);
-  //   expect(component.valueChanges).toHaveBeenCalledWith(event);
-  //   expect(component.toolbarEmitter.emit).toHaveBeenCalled();
-  // });
-
   it('#valueChanges() should call updateNode and emit data for obs with rubrics', () => {
     spyOn(component, 'valueChanges').and.callThrough();
     // tslint:disable-next-line:max-line-length

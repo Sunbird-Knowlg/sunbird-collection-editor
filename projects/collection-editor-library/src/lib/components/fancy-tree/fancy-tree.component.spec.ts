@@ -12,19 +12,19 @@ import { TreeService } from '../../services/tree/tree.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
 import { ConfigService } from '../../services/config/config.service';
 import { SuiModule } from 'ng2-semantic-ui-v9';
-import { HelperService } from 'collection-editor-library/lib/services/helper/helper.service';
+import { HelperService } from '../../services/helper/helper.service';
 import { BranchingLogic } from '../question/question.component.spec.data';
 describe('FancyTreeComponent', () => {
   let component: FancyTreeComponent;
   let fixture: ComponentFixture<FancyTreeComponent>;
-  let editorService,helperService;
+  let editorService, helperService;
   class RouterStub {
     navigate = jasmine.createSpy('navigate');
   }
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      providers: [EditorTelemetryService, EditorService,
+      providers: [EditorTelemetryService, EditorService, HelperService,
           { provide: Router, useClass: RouterStub }, ToasterService,
           { provide: ConfigService, useValue: config },
           { provide: TreeService, useValue: mockTreeService },
@@ -40,6 +40,7 @@ describe('FancyTreeComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(FancyTreeComponent);
     editorService = TestBed.get(EditorService);
+    helperService = TestBed.get(HelperService);
     component = fixture.componentInstance;
     // fixture.detectChanges();
   });
@@ -88,11 +89,14 @@ describe('FancyTreeComponent', () => {
     // tslint:disable-next-line:no-shadowed-variable
     const editorService: EditorService = TestBed.get(EditorService);
     editorConfig.config.renderTaxonomy = true;
+    editorConfig.config.primaryCategory = 'Observation';
+    editorConfig.config.objectType = 'QuestionSet';
+    // spyOn(helperService, 'addDepthToHierarchy').and.callFake(() => {});
     spyOnProperty(editorService, 'editorConfig', 'get').and.returnValue(editorConfig);
     spyOn(component, 'buildTreeFromFramework');
     spyOn(component, 'removeIntermediateLevelsFromFramework');
     component.initialize();
-    // expect(component.removeIntermediateLevelsFromFramework).toHaveBeenCalledWith(RubricstreeData);
+    expect(component.removeIntermediateLevelsFromFramework).toHaveBeenCalled();
   });
 
   it('#removeIntermediateLevelsFromFramework should call when primaryCategory obs with rubrics', () => {

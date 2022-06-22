@@ -1,5 +1,6 @@
 import { IEditorConfig } from 'collection-editor-library/lib/interfaces/editor';
 export let editorConfig: IEditorConfig | undefined;
+// tslint:disable-next-line:variable-name
 export let editorConfig_question: IEditorConfig | undefined;
 
 editorConfig = {

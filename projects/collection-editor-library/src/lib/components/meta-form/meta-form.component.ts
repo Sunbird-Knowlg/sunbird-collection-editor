@@ -284,14 +284,13 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
   }
 
   valueChanges(event: any) {
-    // tslint:disable-next-line:no-unused-expression
-    event?.instance ? event.instances = { label : event?.instances } : '';
     const data = _.omit(event, ['allowECM', 'levels', 'setPeriod']);
     if (!_.isEmpty(event?.levels)) {
       data.outcomeDeclaration = {
         levels: this.createLeavels(event.levels)
       };
     }
+    data?.instance ? data.instances = { label : data?.instances } : '';
     if (!_.isEmpty(this.appIcon) && this.showAppIcon) {
       data.appIcon = this.appIcon;
     }
