@@ -50,6 +50,7 @@ describe('MetaFormComponent', () => {
             label: 'Good'
         }
     });
+    spyOn(component.toolbarEmitter, 'emit');
     component.valueChanges(event);
     expect(component.valueChanges).toHaveBeenCalledWith(event);
   });

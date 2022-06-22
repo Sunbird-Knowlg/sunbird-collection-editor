@@ -255,7 +255,6 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
     this.toolbarEmitter.emit({ button: 'onFormStatusChange', event });
   }
 
-
   appIconDataHandler(event) {
     this.appIcon = event.url;
     this.treeService.updateAppIcon(event.url);
@@ -283,32 +282,6 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
     return response;
   }
 
-  valueChanges(event: any) {
-    const data = _.omit(event, ['allowECM', 'levels', 'setPeriod']);
-    if (!_.isEmpty(event?.levels)) {
-      data.outcomeDeclaration = {
-        levels: this.createLeavels(event.levels)
-      };
-    }
-    data?.instance ? data.instances = { label : data?.instances } : '';
-    if (!_.isEmpty(this.appIcon) && this.showAppIcon) {
-      data.appIcon = this.appIcon;
-    }
-    this.toolbarEmitter.emit({ button: 'onFormValueChange', data });
-    this.treeService.updateNode(data);
-  }
-
-  createLeavels(levels) {
-    const obj = {};
-    _.forEach(levels, (el, index) => {
-      obj[`L${index + 1}`] = {
-         label : el
-       };
-    });
-    return obj;
-}
-
-
   getFramework(control, depends: FormControl[], formGroup: FormGroup, loading, loaded) {
     const response =  control.valueChanges.pipe(
       switchMap((value: any) => {
@@ -325,6 +298,32 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
     );
     return response;
   }
+
+  valueChanges(event: any) {
+    const data = _.omit(event, ['allowECM', 'levels', 'setPeriod']);
+    if (!_.isEmpty(event?.levels)) {
+      data.outcomeDeclaration = {
+        levels: this.createLeavels(event.levels)
+      };
+    }
+    event?.instance ? data.instances = { label : event?.instances } : '';
+    if (!_.isEmpty(this.appIcon) && this.showAppIcon) {
+      data.appIcon = this.appIcon;
+    }
+    this.toolbarEmitter.emit({ button: 'onFormValueChange', data });
+    this.treeService.updateNode(data);
+  }
+
+  createLeavels(levels) {
+    const obj = {};
+    _.forEach(levels, (el, index) => {
+      obj[`L${index + 1}`] = {
+         label : el
+       };
+    });
+    return obj;
+  }
+
 
   ngOnDestroy() {
     this.onComponentDestroy$.next();
