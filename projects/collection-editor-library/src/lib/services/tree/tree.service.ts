@@ -83,6 +83,9 @@ export class TreeService {
     if (copyrightYear) {
       newData.copyrightYear = _.toNumber(copyrightYear);
     }
+    if (objectType) {
+      newData.objectType = objectType;
+    }
     const timeLimits: any = {};
     if (maxTime) {
       timeLimits.maxTime = this.helperService.hmsToSeconds(maxTime);
@@ -97,9 +100,6 @@ export class TreeService {
     delete newData.warningTime;
     if (primaryCategory) {
       newData.primaryCategory = primaryCategory;
-    }
-    if (objectType) {
-      newData.objectType = objectType;
     }
     this.setTreeCache(nodeId, newData, activeNode.data);
   }
