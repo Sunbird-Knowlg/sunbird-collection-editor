@@ -46,6 +46,20 @@ export class TreeService {
     this.updateTreeNodeMetadata(metadata, nodeToBeUpdated, primaryCategory);
   }
 
+  updateAppIcon(appIconUrl) {
+    const activeNode = this.getActiveNode();
+    const nodeId = activeNode.data.id;
+    activeNode.data.metadata = {...activeNode.data.metadata, appIcon : appIconUrl};
+    this.setTreeCache(nodeId, {appIcon : appIconUrl}, activeNode.data);
+  }
+
+  updateMetaDataProperty(key, value) {
+    const node = this.getFirstChild();
+    const nodeId = node.data.id;
+    node.data.metadata = {...node.data.metadata, [key] : value};
+    this.setTreeCache(nodeId, _.merge({}, {[key] : value}, _.pick(node.data.metadata, ['objectType'])));
+  }
+
   updateTreeNodeMetadata(newData: any, nodeToBeUpdated?: any, primaryCategory?: any, objectType?: any) {
     const activeNode = !_.isUndefined(nodeToBeUpdated) ? this.getNodeById(nodeToBeUpdated) : this.getActiveNode();
     const nodeId = nodeToBeUpdated  || activeNode.data.id;
@@ -88,20 +102,6 @@ export class TreeService {
       newData.objectType = objectType;
     }
     this.setTreeCache(nodeId, newData, activeNode.data);
-  }
-
-  updateAppIcon(appIconUrl) {
-    const activeNode = this.getActiveNode();
-    const nodeId = activeNode.data.id;
-    activeNode.data.metadata = {...activeNode.data.metadata, appIcon : appIconUrl};
-    this.setTreeCache(nodeId, {appIcon : appIconUrl}, activeNode.data);
-  }
-
-  updateMetaDataProperty(key, value) {
-    const node = this.getFirstChild();
-    const nodeId = node.data.id;
-    node.data.metadata = {...node.data.metadata, [key] : value};
-    this.setTreeCache(nodeId, _.merge({}, {[key] : value}, _.pick(node.data.metadata, ['objectType'])));
   }
 
   addNode(createType) {
