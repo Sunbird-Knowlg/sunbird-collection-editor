@@ -213,7 +213,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.editorService.outcomeDeclaration = this.outcomeDeclaration;
         this.levelsArray = Object.keys(this.outcomeDeclaration);
       }
-    };
+    }
     // tslint:disable-next-line:max-line-length
     this.publishchecklist = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.publishchecklist.properties') || _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.review.properties') || [];
     if (_.isEmpty(this.targetFramework || _.get(this.editorConfig, 'context.targetFWIds'))) {
