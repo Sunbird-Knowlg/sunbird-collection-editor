@@ -1172,10 +1172,6 @@ export const categoryDefinitionData = {
               enum: ['Yes', 'No'],
               default: 'Yes',
             },
-            framework: {
-              enum : ['yes'],
-              default : 'yes'
-            }
           },
         },
       },
