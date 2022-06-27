@@ -1024,7 +1024,6 @@ describe("QuestionComponent", () => {
     );
     spyOn(component, 'getQuestionMetadata').and.callThrough();
     const metadata = component.getQuestionMetadata();
-    console.log('rajnish metadata', metadata.responseDeclaration.response1)
     expect(metadata.responseDeclaration.response1.maxScore).toEqual(1);
     expect(metadata.responseDeclaration.response1.correctResponse.outcomes.SCORE).toEqual(1);
   });

@@ -54,6 +54,12 @@ describe('HelperService', () => {
     expect(service.channelInfo).toBeTruthy();
   });
 
+  it('setShuffleValue should be called', () => {
+    service.setShuffleValue(true);
+    service.shuffleValue.subscribe(value =>
+      expect(value).toEqual(true));
+  });
+
   it('#contentPrimaryCategories should return primary categories', () => {
     expect(service.contentPrimaryCategories).toBeTruthy();
   });

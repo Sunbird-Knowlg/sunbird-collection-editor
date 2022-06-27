@@ -493,6 +493,10 @@ describe('EditorService', () => {
 
   it('#getMaxScore should return maxScore', async () => {
     spyOn(editorService.treeService, 'getFirstChild').and.returnValue(mockData.rootNode);
+    spyOn(editorService.treeService, 'getNodeById').and.returnValue({
+      parent: { data: {metadata: {shuffle: true} }},
+      data: {metadata: mockData.questionsData[1]}
+    });
     spyOn(editorService, 'setQuestionIds').and.callFake(() => {
       editorService.questionIds = ['do_1135097615298723841131', 'do_1135097709808189441133'];
     });
@@ -503,10 +507,14 @@ describe('EditorService', () => {
     expect(editorService.questionIds.length).toEqual(2);
     expect(editorService.getQuestionList).toHaveBeenCalled();
     expect(editorService.calculateMaxScore).toHaveBeenCalled();
-    expect(maxScore).toEqual(1);
+    expect(maxScore).toEqual(2);
   });
 
   it('#calculateMaxScore should return calculated Max Score as 1', () => {
+    spyOn(editorService.treeService, 'getNodeById').and.returnValue({
+      parent: { data: {metadata: {shuffle: true} }},
+      data: {metadata: mockData.questionsData[1]}
+    });
     spyOn(editorService, 'calculateMaxScore').and.callThrough();
     const questions = [{
       responseDeclaration: {
@@ -521,6 +529,10 @@ describe('EditorService', () => {
   });
 
   it('#calculateMaxScore should return calculated Max Score as 0', () => {
+    spyOn(editorService.treeService, 'getNodeById').and.returnValue({
+      parent: { data: {metadata: {shuffle: true} }},
+      data: {metadata: mockData.questionsData[0]}
+    });
     spyOn(editorService, 'calculateMaxScore').and.callThrough();
     const questions = [{
       responseDeclaration: {
