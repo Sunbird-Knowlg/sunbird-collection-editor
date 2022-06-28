@@ -228,7 +228,8 @@
        "maxSizeInfo": "The maximum slider value",
        "questionsetAddFromLibraryItemLabel": "question",
        "questionsetAddFromLibraryCollectionLabel": "question set",
-       "marks": "Marks"
+       "marks": "Marks",
+       "shuffleOnMessage": "Each question will carry equal weightage of 1 mark when using Shuffle. To provide different weightage to individual questions please turn off Shuffle."
       },
     "err":{
        "somethingWentWrong":"Something went wrong",

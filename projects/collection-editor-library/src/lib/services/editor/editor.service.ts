@@ -318,11 +318,11 @@ export class EditorService {
     for (const children of childrens) {
       if (children.data.objectType === 'QuestionSet') {
         let questionCount = 0;
-        if (children?.data?.metadata?.maxQuestions) {
+        if (children?.data?.metadata?.maxQuestions && (children?.data?.metadata?.maxQuestions < children?.children?.length)) {
           questionCount = children.data.metadata.maxQuestions;
         } else {
-          questionCount = children.children ?
-          children.children.length : 0;
+          questionCount = children?.children ?
+          children?.children?.length : 0;
         }
         if (questionCount > 0) {
           for (let i = 0; i < questionCount; i++) {
@@ -361,7 +361,13 @@ export class EditorService {
 
   calculateMaxScore(questions: Array<any>) {
    return _.reduce(questions, (sum, question) => {
-      return sum + (question?.responseDeclaration?.response1?.maxScore ? _.get(question, 'responseDeclaration.response1.maxScore') : 0);
+      const nodeData = this.treeService.getNodeById(question.identifier);
+      if (_.has(nodeData.parent.data.metadata, 'shuffle') && nodeData.parent.data.metadata.shuffle === true &&
+      nodeData.data.metadata.qType === 'MCQ') {
+        return sum + 1;
+      } else {
+        return sum + (question?.responseDeclaration?.response1?.maxScore ? _.get(question, 'responseDeclaration.response1.maxScore') : 0);
+      }
     }, 0);
   }
 
