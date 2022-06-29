@@ -1,5 +1,5 @@
 import { EditorService } from './../../services/editor/editor.service';
-import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { async, ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 import { EditorComponent } from './editor.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -211,7 +211,7 @@ describe('EditorComponent', () => {
     expect(helperService.initialize).toHaveBeenCalledWith('01309282781705830427');
   });
 
-  it('Unit test for #getFrameworkDetails()', fakeAsync (() => {
+  it('Unit test for #getFrameworkDetails()', () => {
     const treeService = TestBed.inject(TreeService);
     const frameworkService = TestBed.inject(FrameworkService);
     const editorService = TestBed.inject(EditorService);
@@ -229,8 +229,7 @@ describe('EditorComponent', () => {
     expect(treeService.updateMetaDataProperty).not.toHaveBeenCalled();
     expect(frameworkService.getTargetFrameworkCategories).not.toHaveBeenCalled();
     expect(component.setEditorForms).toHaveBeenCalled();
-    tick();
-  }));
+  });
 
   it('Unit test for #getFrameworkDetails() when primaryCategory is Obs with rubrics api success', () => {
     const treeService = TestBed.inject(TreeService);
