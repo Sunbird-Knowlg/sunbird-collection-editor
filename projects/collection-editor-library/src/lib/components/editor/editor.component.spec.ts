@@ -1,5 +1,5 @@
 import { EditorService } from './../../services/editor/editor.service';
-import { async, ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { EditorComponent } from './editor.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -14,7 +14,8 @@ import {
   categoryDefinition, categoryDefinitionData, csvExport, hirearchyGet,
   SelectedNodeMockData, outcomeDeclarationData, observationAndRubericsField,
   questionsetRead, questionsetHierarchyRead, nodesModifiedData, treeNodeData,
-  questionSetEditorConfig} from './editor.component.spec.data';
+  questionSetEditorConfig,
+  mockOutcomeDeclaration} from './editor.component.spec.data';
 import { ConfigService } from '../../services/config/config.service';
 import { of, throwError } from 'rxjs';
 import { DialcodeService } from '../../services/dialcode/dialcode.service';
@@ -210,9 +211,10 @@ describe('EditorComponent', () => {
     expect(helperService.initialize).toHaveBeenCalledWith('01309282781705830427');
   });
 
-  it('Unit test for #getFrameworkDetails()', () => {
+  it('Unit test for #getFrameworkDetails()', fakeAsync (() => {
     const treeService = TestBed.inject(TreeService);
     const frameworkService = TestBed.inject(FrameworkService);
+    const editorService = TestBed.inject(EditorService);
     component.organisationFramework = 'dummy';
     spyOn(component, 'getFrameworkDetails').and.callThrough();
     spyOn(treeService, 'updateMetaDataProperty').and.callFake(() => { });
@@ -227,7 +229,8 @@ describe('EditorComponent', () => {
     expect(treeService.updateMetaDataProperty).not.toHaveBeenCalled();
     expect(frameworkService.getTargetFrameworkCategories).not.toHaveBeenCalled();
     expect(component.setEditorForms).toHaveBeenCalled();
-  });
+    tick();
+  }));
 
   it('Unit test for #getFrameworkDetails() when primaryCategory is Obs with rubrics api success', () => {
     const treeService = TestBed.inject(TreeService);
@@ -236,20 +239,7 @@ describe('EditorComponent', () => {
     component.organisationFramework = 'dummy';
     editorConfig.config.renderTaxonomy = true;
     component.editorConfig = editorConfig;
-    spyOn(editorService, 'fetchOutComeDeclaration').and.returnValue({
-      result: {
-        questionset: {
-            identifier: 'do_1234',
-            outcomeDeclaration: {
-              levels: {
-                    L1: {
-                      label: 'Good'
-                    }
-                }
-            }
-        }
-    }
-    });
+    spyOn(editorService, 'fetchOutComeDeclaration').and.returnValue(mockOutcomeDeclaration);
     spyOn(component, 'getFrameworkDetails').and.callThrough();
     spyOn(treeService, 'updateMetaDataProperty').and.callFake(() => { });
     spyOn(frameworkService, 'getTargetFrameworkCategories').and.callFake(() => { });

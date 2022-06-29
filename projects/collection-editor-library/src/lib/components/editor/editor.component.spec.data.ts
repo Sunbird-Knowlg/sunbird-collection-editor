@@ -4255,3 +4255,18 @@ export const questionSetEditorConfig = {
       }
   }
 };
+
+export const mockOutcomeDeclaration = {
+  result: {
+    questionset: {
+        identifier: 'do_1234',
+        outcomeDeclaration: {
+          levels: {
+                L1: {
+                  label: 'Good'
+                }
+            }
+        }
+    }
+}
+};
