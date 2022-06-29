@@ -7,11 +7,9 @@ import {
   OnInit,
   Output,
   ViewChild,
-} from "@angular/core";
+} from '@angular/core';
 import 'jquery.fancytree';
 import * as _ from 'lodash-es';
-import { EditorService } from '../../services/editor/editor.service';
-
 declare var $: any;
 
 @Component({
@@ -23,10 +21,9 @@ export class PlainTreeComponent implements OnInit, AfterViewInit {
   @ViewChild('plainTree') public tree: ElementRef;
   @Input() treeData;
   @Output() treeEmitter: EventEmitter<any> = new EventEmitter<any>();
-  constructor(private editorService: EditorService) {}
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   ngAfterViewInit() {
     this.renderTree(this.getTreeConfig());
