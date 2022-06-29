@@ -2,9 +2,9 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { PlainTreeComponent } from './plain-tree.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { editorConfig, treeData } from '../fancy-tree/fancy-tree.component.spec.data';
-import { collectionHierarchyMock } from '../question/question.component.spec.data';
 import { EditorService } from '../../services/editor/editor.service';
 import { mockTreedata } from './plain-tree.component.spec.data';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('PlainTreeComponent', () => {
   let component: PlainTreeComponent;
@@ -17,6 +17,7 @@ describe('PlainTreeComponent', () => {
       providers: [
         EditorService
       ],
+      schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();
   }));
@@ -41,12 +42,11 @@ describe('PlainTreeComponent', () => {
   });
 
   it('#ngAfterViewInit() should call #getTreeConfig() and #renderTree()', () => {
-    spyOn(component, 'ngAfterViewInit').and.callThrough();
-    spyOn(component, 'renderTree');
     spyOn(component, 'getTreeConfig');
+    spyOn(component, 'renderTree');
     component.ngAfterViewInit();
-    expect(component.renderTree).toHaveBeenCalled();
     expect(component.getTreeConfig).toHaveBeenCalled();
+    expect(component.renderTree).toHaveBeenCalled();
   });
 
   it('#getQuestionsList should call', () => {

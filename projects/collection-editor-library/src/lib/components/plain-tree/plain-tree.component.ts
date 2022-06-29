@@ -28,31 +28,6 @@ export class PlainTreeComponent implements OnInit, AfterViewInit {
   ngOnInit() {
   }
 
-  buildTreeData(data) {
-    const tree = [];
-    _.forEach(data, (child: any) => {
-      if (child.children) {
-        // tslint:disable-next-line:no-shadowed-variable
-        _.forEach(child.children, (data: any) => {
-          tree.push({
-            id: data?.id,
-            title: data?.title,
-            tooltip: data?.tooltip,
-            primaryCategory: _.get(this.editorService, 'editorConfig.config.primaryCategory'),
-            metadata: {
-              objectType: _.get(this.editorService, 'editorConfig.config.objectType'),
-              name: data?.title
-            },
-            folder: true,
-            root: false,
-            icon: 'fa fa-folder-o'
-          });
-        });
-      }
-     });
-    return tree;
-  }
-
   ngAfterViewInit() {
     this.renderTree(this.getTreeConfig());
   }
@@ -122,6 +97,26 @@ export class PlainTreeComponent implements OnInit, AfterViewInit {
       },
     };
     return options;
+  }
+
+  buildTreeData(data) {
+    const tree = [];
+    _.forEach(data, (child) => {
+      if (child?.children) {
+        // tslint:disable-next-line:no-shadowed-variable
+        _.forEach(child?.children, (data) => {
+          tree.push({
+            id: data?.id,
+            title: data?.title,
+            tooltip: data?.tooltip,
+            folder: true,
+            root: false,
+            icon: 'fa fa-folder-o'
+          });
+        });
+      }
+     });
+    return tree;
   }
 
   getQuestionsList(id) {
