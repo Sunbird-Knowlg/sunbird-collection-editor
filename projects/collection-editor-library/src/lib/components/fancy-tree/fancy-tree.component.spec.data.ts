@@ -454,7 +454,7 @@ export const tree = [
 
 export const editorConfig = {
   config: {
-    renderTaxonomy: false,
+    renderTaxonomy: true,
     rejectCommentsMaxLength: 500,
     setDefaultCopyRight: true,
     showOriginPreviewUrl: false,
