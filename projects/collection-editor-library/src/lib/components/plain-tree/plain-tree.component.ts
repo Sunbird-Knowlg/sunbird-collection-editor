@@ -1,37 +1,21 @@
 import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ViewChild,
+  AfterViewInit, Component, ElementRef, EventEmitter, Input,
+  Output, ViewChild
 } from '@angular/core';
 import 'jquery.fancytree';
 import * as _ from 'lodash-es';
 declare var $: any;
 
+
 @Component({
   selector: 'lib-plain-tree',
   templateUrl: './plain-tree.component.html',
-  styleUrls: ['./plain-tree.component.scss'],
+  styleUrls: ['./plain-tree.component.scss']
 })
-export class PlainTreeComponent implements OnInit, AfterViewInit {
+export class PlainTreeComponent implements AfterViewInit {
   @ViewChild('plainTree') public tree: ElementRef;
-  @Input() treeData;
+  @Input() public treeData;
   @Output() treeEmitter: EventEmitter<any> = new EventEmitter<any>();
-  constructor() {}
-
-  ngOnInit() {}
-
-  ngAfterViewInit() {
-    this.renderTree(this.getTreeConfig());
-  }
-
-  renderTree(options) {
-    $(this.tree.nativeElement).fancytree(options);
-  }
 
   getTreeConfig() {
     const rootNode = [
@@ -39,11 +23,12 @@ export class PlainTreeComponent implements OnInit, AfterViewInit {
         title: 'Criteria Name',
         key: '2',
         folder: true,
+        root: true,
         icon: 'fa fa-folder-o',
         children: this.buildTreeData(this.treeData)
       }
     ];
-    const options: any = {
+    const options = {
       extensions: ['glyph', 'dnd5'],
       clickFolderMode: 3,
       source: rootNode,
@@ -114,6 +99,14 @@ export class PlainTreeComponent implements OnInit, AfterViewInit {
       }
      });
     return tree;
+  }
+
+  ngAfterViewInit() {
+    this.renderTree(this.getTreeConfig());
+  }
+
+  renderTree(options) {
+    $(this.tree.nativeElement).fancytree(options);
   }
 
   getQuestionsList(id) {
