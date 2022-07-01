@@ -34,8 +34,9 @@ describe('PlainTreeComponent', () => {
   });
 
   it('#ngAfterViewInit() should call #getTreeConfig() and #renderTree()', () => {
+    spyOn(component, 'ngAfterViewInit').and.callThrough();
     spyOn(component, 'getTreeConfig').and.returnValue(mockTreedata);
-    spyOn(component, 'renderTree');
+    spyOn(component, 'renderTree').and.callFake(() => {} );
     component.ngAfterViewInit();
     expect(component.renderTree).toHaveBeenCalled();
     expect(component.getTreeConfig).toHaveBeenCalled();
@@ -47,4 +48,13 @@ describe('PlainTreeComponent', () => {
     component.getQuestionsList('do_123');
     expect(component.treeEmitter.emit).toHaveBeenCalledWith({identifier : 'do_123'});
   });
+
+  it('getTreeConfig should call', () => {
+    spyOn(component, 'getTreeConfig').and.callThrough();
+    let data;
+    data = component.getTreeConfig();
+    expect(component.getTreeConfig).toHaveBeenCalled();
+    expect(data).toBeDefined();
+  });
+
 });

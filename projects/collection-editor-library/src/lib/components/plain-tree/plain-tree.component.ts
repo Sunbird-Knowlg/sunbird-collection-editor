@@ -18,20 +18,19 @@ export class PlainTreeComponent implements AfterViewInit {
   @Output() treeEmitter: EventEmitter<any> = new EventEmitter<any>();
 
   getTreeConfig() {
-    const rootNode = [
-      {
-        title: 'Criteria Name',
-        key: '2',
-        folder: true,
-        root: true,
-        icon: 'fa fa-folder-o',
-        children: this.buildTreeData(this.treeData)
-      }
-    ];
     const options = {
       extensions: ['glyph', 'dnd5'],
       clickFolderMode: 3,
-      source: rootNode,
+      source: [
+        {
+          title: 'Criteria Name',
+          key: '2',
+          folder: true,
+          root: true,
+          icon: 'fa fa-folder-o',
+          children: this.buildTreeData(this.treeData)
+        }
+      ],
       escapeTitles: true,
       glyph: {
         preset: 'awesome4',
@@ -70,7 +69,6 @@ export class PlainTreeComponent implements AfterViewInit {
       renderNode: (event, data) => {
         const node = data.node;
         const $nodeSpan = $(node.span);
-
         // check if span of node already rendered
         if (!$nodeSpan.data('rendered')) {
           // span rendered
@@ -88,11 +86,10 @@ export class PlainTreeComponent implements AfterViewInit {
         // tslint:disable-next-line:no-shadowed-variable
         _.forEach(child?.children, (data) => {
           tree.push({
+            root: false,
+            folder: true,
             id: data?.id,
             title: data?.title,
-            tooltip: data?.tooltip,
-            folder: true,
-            root: false,
             icon: 'fa fa-folder-o'
           });
         });
