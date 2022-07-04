@@ -108,14 +108,6 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       root: true,
       icon: _.get(this.config, 'iconClass')
     }];
-    if (_.get(this.editorService, 'editorConfig.config.renderTaxonomy') === true && _.isEmpty(_.get(this.nodes, 'data.children'))) {
-      _.forEach(this.rootNode[0]?.children, (child) => {
-          this.treeService.updateTreeNodeMetadata(child.metadata, child.id, child.primaryCategory, child.objectType);
-          _.forEach(child.children, (el) => {
-            this.treeService.updateTreeNodeMetadata(el.metadata, el.id, el.primaryCategory, el.objectType);
-          });
-      });
-    }
   }
 
   buildTree(data, tree?, level?) {
@@ -220,6 +212,14 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.treeService.nextTreeStatus('loaded');
       this.showTree = true;
     });
+    if (_.get(this.editorService, 'editorConfig.config.renderTaxonomy') === true && _.isEmpty(_.get(this.nodes, 'data.children'))) {
+      _.forEach(this.rootNode[0]?.children, (child) => {
+          this.treeService.updateTreeNodeMetadata(child.metadata, child.id, child.primaryCategory, child.objectType);
+          _.forEach(child.children, (el) => {
+            this.treeService.updateTreeNodeMetadata(el.metadata, el.id, el.primaryCategory, el.objectType);
+          });
+      });
+    }
   }
 
   getTreeConfig() {
