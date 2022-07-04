@@ -187,7 +187,6 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   renderTree(options) {
-    console.log(options);
     options = { ...options, ...this.options };
     $(this.tree.nativeElement).fancytree(options);
     this.treeService.setTreeElement(this.tree.nativeElement);
@@ -383,7 +382,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     const $nodeSpan = $(node.span);
     // tslint:disable-next-line:max-line-length   // TODO:: (node.data.contentType === 'CourseUnit') check this condition
-    const menuTemplate =  _.get(this.editorService, 'editorConfig.config.renderTaxonomy') === false ? (node.data.root === true ? this.rootMenuTemplate : (node.data.root === false && node.folder === true  ? this.folderMenuTemplate : this.contentMenuTemplate) ) : '';
+    const menuTemplate = node.data.root === true ? this.rootMenuTemplate : (node.data.root === false && node.folder === true  ? this.folderMenuTemplate : this.contentMenuTemplate);
     const iconsButton = $(menuTemplate);
     if ((node.getLevel() - 1) >= this.config.maxDepth) {
       iconsButton.find('#addchild').remove();
@@ -637,7 +636,6 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     });
     return !_.isEmpty(tree) ? tree : _.flatten(parentData.children);
   }
-
 
   ngOnDestroy() {
     this.onComponentDestroy$.next();
