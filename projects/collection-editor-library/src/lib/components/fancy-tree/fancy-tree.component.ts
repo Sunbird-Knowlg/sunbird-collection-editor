@@ -79,12 +79,9 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.initialize();
   }
 
-  ngAfterViewInit() {
-    this.renderTree(this.getTreeConfig());
-  }
-
   initialize() {
     const data = this.nodes.data;
+    console.log(data);
     this.nodeParentDependentMap = this.editorService.getParentDependentMap(this.nodes.data);
     let treeData;
     if (_.get(this.editorService, 'editorConfig.config.renderTaxonomy') === true && _.isEmpty(_.get(this.nodes, 'data.children'))) {
@@ -109,6 +106,11 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       icon: _.get(this.config, 'iconClass')
     }];
   }
+
+  ngAfterViewInit() {
+    this.renderTree(this.getTreeConfig());
+  }
+
 
   buildTree(data, tree?, level?) {
     tree = tree || [];
@@ -146,7 +148,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         id: UUID.UUID(),
         title: child.name,
         tooltip: child.name,
-        primaryCategory: _.get(this.editorService, 'editorConfig.config.primaryCategory'),
+        primaryCategory: child?.primaryCategory,
         metadata: {
           objectType: _.get(this.editorService, 'editorConfig.config.objectType'),
           name: child.name
@@ -213,7 +215,6 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.showTree = true;
     });
     if (_.get(this.editorService, 'editorConfig.config.renderTaxonomy') === true && _.isEmpty(_.get(this.nodes, 'data.children'))) {
-      console.log(this.rootNode);
       _.forEach(this.rootNode[0]?.children, (child) => {
           this.treeService.updateTreeNodeMetadata(child.metadata, child.id, child.primaryCategory, child.objectType);
           _.forEach(child.children, (el) => {
@@ -342,8 +343,8 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
     if (_.get(this.editorService, 'editorConfig.config.renderTaxonomy') === true){
-      this.visibility.addChild=false;
-      this.visibility.addSibling=false;
+      this.visibility.addChild = false;
+      this.visibility.addSibling = false;
     }
     this.cdr.detectChanges();
   }

@@ -128,10 +128,11 @@ describe('FancyTreeComponent', () => {
       folder: true,
       data: { root: true },
     };
+    spyOnProperty(editorService, 'editorConfig', 'get').and.returnValue(editorConfig);
     component.eachNodeActionButton(rootNode);
     expect(component.visibility.addFromLibrary).toBeFalsy();
     expect(component.visibility.createNew).toBeFalsy();
-    expect(component.visibility.addChild).toBeTruthy();
+    expect(component.visibility.addChild).toBeFalsy();
     expect(component.visibility.addSibling).toBeFalsy();
     expect(component.eachNodeActionButton).toHaveBeenCalled();
   });
