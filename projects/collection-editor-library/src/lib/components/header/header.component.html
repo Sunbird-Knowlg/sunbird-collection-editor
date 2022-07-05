@@ -44,7 +44,7 @@
     class="sb-btn sb-btn-normal sb-btn-primary mr-10" (click)="buttonEmitter({type:'pagination'})" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('submit','click','submit', telemetryService.telemetryPageId)"
     >
-      <i class="{{labelConfigData.submit_collection_btn_icon}}"></i>
+      <em class="{{labelConfigData.submit_collection_btn_icon}}"></em>
       {{labelConfigData.add_page_numbers_to_questions_btn_label}}
     </button>
     <lib-bulk-upload *ngIf="visibility && visibility?.bulkUpload && labelConfigData?.showBulkUploadBtn" class="d-flex flex-ai-center mr-10" (bulkUploadEmitter)="bulkUploadListener($event)" ></lib-bulk-upload>

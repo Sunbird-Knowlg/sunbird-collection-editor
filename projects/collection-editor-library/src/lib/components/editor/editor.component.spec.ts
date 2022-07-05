@@ -5,7 +5,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TreeService } from '../../services/tree/tree.service';
 import {
@@ -1509,6 +1509,14 @@ describe('EditorComponent', () => {
     spyOn(component, 'assignPageEmitterListener').and.callThrough();
     component.assignPageEmitterListener({});
     expect(component.pageId).toEqual('collection_editor');
+  });
+
+  it('#setAllowEcm should call for obs with rubrics', () => {
+    spyOn(component, 'setAllowEcm').and.callThrough();
+    const control = {
+      isVisible: 'no',
+    };
+    component.setAllowEcm(control, []);
   });
 
 });

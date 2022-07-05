@@ -1222,7 +1222,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.pageId = 'collection_editor';
   }
 
-  setAllowEcm(control, depends: FormControl[], formGroup: FormGroup, loading, loaded) {
+  setAllowEcm(control, depends: FormControl[]) {
     control.isVisible = 'no';
     const response = merge(..._.map(depends, depend => depend.valueChanges)).pipe(
         switchMap((value: any) => {
