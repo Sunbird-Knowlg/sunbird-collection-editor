@@ -1165,6 +1165,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  assignPageEmitterListener(event: any) {
+    this.pageId = 'collection_editor';
+  }
+
   ngOnDestroy() {
     if (this.telemetryService) {
       this.generateTelemetryEndEvent();
@@ -1216,10 +1220,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
             }
         })
     );
-  }
-
-  assignPageEmitterListener(event: any) {
-    this.pageId = 'collection_editor';
   }
 
   setAllowEcm(control, depends: FormControl[]) {

@@ -1485,6 +1485,12 @@ describe('EditorComponent', () => {
     expect(component['formStatusMapper']).toEqual(expectedResult);
   });
 
+  it('#assignPageEmitterListener should call', () => {
+    spyOn(component, 'assignPageEmitterListener').and.callThrough();
+    component.assignPageEmitterListener({});
+    expect(component.pageId).toEqual('collection_editor');
+  });
+
   it('#ngOnDestroy should call modal.deny()', () => {
     component.telemetryService = undefined;
     component.treeService = undefined;
@@ -1504,12 +1510,6 @@ describe('EditorComponent', () => {
     expect(component['modal'].deny).toHaveBeenCalled();
   });
 
-  it('#assignPageEmitterListener should call', () => {
-    spyOn(component, 'assignPageEmitterListener').and.callThrough();
-    component.assignPageEmitterListener({});
-    expect(component.pageId).toEqual('collection_editor');
-  });
-
   it('#setAllowEcm should call for obs with rubrics', () => {
     spyOn(component, 'setAllowEcm').and.callThrough();
     const control = {
@@ -1517,27 +1517,6 @@ describe('EditorComponent', () => {
     };
     component.setAllowEcm(control, []);
   });
-
-  // it('#fetchFrameWorkDetails should set collectionTreeNodes for categoryInstance', () => {
-  //   component.organisationFramework = 'tpd';
-  //   component.collectionTreeNodes = {
-  //     data : {
-  //       children : undefined
-  //     }
-  //   };
-  //   component.editorConfig = editorConfig;
-  //   const frameworkService = TestBed.inject(FrameworkService);
-  //   frameworkService.organisationFramework ='tpd';
-  //   spyOn(component, 'fetchFrameWorkDetails').and.callThrough();
-  //   // spyOn(frameworkService, 'frameworkData$').and.returnValue(of(frameworkData));
-  //   // component.initializeFrameworkAndChannel();
-  //   frameworkService.organisationFramework = 'tpd';
-  //   spyOn(frameworkService, 'getFrameworkCategories').and.returnValue(of(frameworkData));
-  //   // frameworkService.initialize('tpd');
-  //   component.fetchFrameWorkDetails();
-  //   expect(component.organisationFramework).toBe('tpd');
-  //   // expect(component.collectionTreeNodes.data.children).toBeDefined();
-  // });
 
   it('fetchFrameWorkDetails should set collectionTreeNodes', () => {
     component.collectionTreeNodes = {
