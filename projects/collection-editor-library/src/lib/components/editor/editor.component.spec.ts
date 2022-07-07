@@ -237,7 +237,7 @@ describe('EditorComponent', () => {
     component.organisationFramework = 'dummy';
     editorConfig.config.renderTaxonomy = true;
     component.editorConfig = editorConfig;
-    spyOn(editorService, 'fetchOutComeDeclaration').and.returnValue(mockOutcomeDeclaration);
+    spyOn(editorService, 'fetchOutComeDeclaration').and.returnValue(of(mockOutcomeDeclaration));
     spyOn(component, 'getFrameworkDetails').and.callThrough();
     spyOn(treeService, 'updateMetaDataProperty').and.callFake(() => { });
     spyOn(frameworkService, 'getTargetFrameworkCategories').and.callFake(() => { });
