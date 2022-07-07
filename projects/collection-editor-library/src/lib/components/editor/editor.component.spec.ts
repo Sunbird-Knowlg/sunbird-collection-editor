@@ -5,7 +5,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TreeService } from '../../services/tree/tree.service';
 import {
@@ -15,9 +15,10 @@ import {
   SelectedNodeMockData, outcomeDeclarationData, observationAndRubericsField,
   questionsetRead, questionsetHierarchyRead, nodesModifiedData, treeNodeData,
   questionSetEditorConfig,
-  mockOutcomeDeclaration} from './editor.component.spec.data';
+  mockOutcomeDeclaration,
+  frameworkData} from './editor.component.spec.data';
 import { ConfigService } from '../../services/config/config.service';
-import { of, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { DialcodeService } from '../../services/dialcode/dialcode.service';
 import { treeData } from './../fancy-tree/fancy-tree.component.spec.data';
 import * as urlConfig from '../../services/config/url.config.json';
@@ -26,8 +27,6 @@ import * as categoryConfig from '../../services/config/category.config.json';
 import { FrameworkService } from '../../services/framework/framework.service';
 import { HelperService } from '../../services/helper/helper.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
-import { sourcingSettingsMock } from '../question/question.component.spec.data';
-import { TelemetryService } from '@project-sunbird/client-services/telemetry';
 
 describe('EditorComponent', () => {
   const configStub = {
@@ -1517,6 +1516,42 @@ describe('EditorComponent', () => {
       isVisible: 'no',
     };
     component.setAllowEcm(control, []);
+  });
+
+  // it('#fetchFrameWorkDetails should set collectionTreeNodes for categoryInstance', () => {
+  //   component.organisationFramework = 'tpd';
+  //   component.collectionTreeNodes = {
+  //     data : {
+  //       children : undefined
+  //     }
+  //   };
+  //   component.editorConfig = editorConfig;
+  //   const frameworkService = TestBed.inject(FrameworkService);
+  //   frameworkService.organisationFramework ='tpd';
+  //   spyOn(component, 'fetchFrameWorkDetails').and.callThrough();
+  //   // spyOn(frameworkService, 'frameworkData$').and.returnValue(of(frameworkData));
+  //   // component.initializeFrameworkAndChannel();
+  //   frameworkService.organisationFramework = 'tpd';
+  //   spyOn(frameworkService, 'getFrameworkCategories').and.returnValue(of(frameworkData));
+  //   // frameworkService.initialize('tpd');
+  //   component.fetchFrameWorkDetails();
+  //   expect(component.organisationFramework).toBe('tpd');
+  //   // expect(component.collectionTreeNodes.data.children).toBeDefined();
+  // });
+
+  it('fetchFrameWorkDetails should set collectionTreeNodes', () => {
+    component.collectionTreeNodes = {
+        data: {
+            children: undefined
+        }
+    };
+    component.editorConfig = editorConfig;
+    const frameworkService = TestBed.get(FrameworkService);
+    frameworkService.organisationFramework = 'tpd';
+    // tslint:disable-next-line:max-line-length
+    frameworkService.frameworkData$ = of({frameworkdata: {tpd: of({'frameworkdata' : frameworkData})}});
+    spyOn(component, 'fetchFrameWorkDetails').and.callThrough();
+    component.fetchFrameWorkDetails();
   });
 
 });
