@@ -219,98 +219,6 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  getTreeConfig() {
-    const options: any = {
-      extensions: ['glyph', 'dnd5'],
-      clickFolderMode: 3,
-      source: this.rootNode,
-      escapeTitles: true,
-      glyph: {
-        preset: 'awesome4',
-        map: {
-          folder: 'icon folder sb-fancyTree-icon',
-          folderOpen: 'icon folder outline sb-fancyTree-icon'
-        }
-      },
-      dnd5: {
-        autoExpandMS: 400,
-        // focusOnClick: true,
-        preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
-        preventRecursion: true, // Prevent dropping nodes on own descendants
-        dragStart: (node, data) => {
-          /** This function MUST be defined to enable dragging for the tree.
-           *  Return false to cancel dragging of node.
-           */
-          const draggable = _.get(this.config, 'mode') === 'edit' ? true : false;
-          return draggable;
-        },
-        dragEnter: (node, data) => {
-          /** data.otherNode may be null for non-fancytree droppables.
-           *  Return false to disallow dropping on node. In this case
-           *  dragOver and dragLeave are not called.
-           *  Return 'over', 'before, or 'after' to force a hitMode.
-           *  Return ['before', 'after'] to restrict available hitModes.
-           *  Any other return value will calc the hitMode from the cursor position.
-           */
-          // Prevent dropping a parent below another parent (only sort
-          // nodes under the same parent)
-          /*           if(node.parent !== data.otherNode.parent){
-                      return false;
-                    }
-                    // Don't allow dropping *over* a node (would create a child)
-                    return ["before", "after"];
-          */
-          return true;
-        },
-        dragDrop: (node, data) => {
-          /** This function MUST be defined to enable dropping of items on
-           *  the tree.
-           */
-          // data.otherNode.moveTo(node, data.hitMode);
-          return this.dragDrop(node, data);
-        },
-        filter: {
-          autoApply: true,
-          autoExpand: false,
-          counter: true,
-          fuzzy: false,
-          hideExpandedCounter: true,
-          hideExpanders: false,
-          highlight: true,
-          leavesOnly: false,
-          nodata: true,
-          mode: 'dimm'
-        }
-      },
-      init: (event, data) => { },
-      click: (event, data): boolean => {
-        this.tree.nativeElement.click();
-        this.telemetryService.interact({ edata: this.getTelemetryInteractEdata() });
-        return true;
-      },
-      activate: (event, data) => {
-        this.treeEventEmitter.emit({ type: 'nodeSelect', data: data.node });
-        this.treeService.previousNode = _.get(data, 'node.data.id');
-        setTimeout(() => {
-          this.attachContextMenu(data.node, true);
-          this.eachNodeActionButton(data.node);
-        }, 10);
-      },
-      renderNode: (event, data) => {
-        const node = data.node;
-        const $nodeSpan = $(node.span);
-
-        // check if span of node already rendered
-        if (!$nodeSpan.data('rendered')) {
-          this.attachContextMenu(node);
-          // span rendered
-          $nodeSpan.data('rendered', true);
-        }
-      }
-    };
-    return options;
-  }
-
   eachNodeActionButton(node) {
     this.visibility = {};
     if (this.bulkUploadProcessingStatus) {
@@ -637,4 +545,97 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.onComponentDestroy$.next();
     this.onComponentDestroy$.complete();
   }
+
+  getTreeConfig() {
+    const options: any = {
+      extensions: ['glyph', 'dnd5'],
+      clickFolderMode: 3,
+      source: this.rootNode,
+      escapeTitles: true,
+      glyph: {
+        preset: 'awesome4',
+        map: {
+          folder: 'icon folder sb-fancyTree-icon',
+          folderOpen: 'icon folder outline sb-fancyTree-icon'
+        }
+      },
+      dnd5: {
+        autoExpandMS: 400,
+        // focusOnClick: true,
+        preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
+        preventRecursion: true, // Prevent dropping nodes on own descendants
+        dragStart: (node, data) => {
+          /** This function MUST be defined to enable dragging for the tree.
+           *  Return false to cancel dragging of node.
+           */
+          const draggable = _.get(this.config, 'mode') === 'edit' ? true : false;
+          return draggable;
+        },
+        dragEnter: (node, data) => {
+          /** data.otherNode may be null for non-fancytree droppables.
+           *  Return false to disallow dropping on node. In this case
+           *  dragOver and dragLeave are not called.
+           *  Return 'over', 'before, or 'after' to force a hitMode.
+           *  Return ['before', 'after'] to restrict available hitModes.
+           *  Any other return value will calc the hitMode from the cursor position.
+           */
+          // Prevent dropping a parent below another parent (only sort
+          // nodes under the same parent)
+          /*           if(node.parent !== data.otherNode.parent){
+                      return false;
+                    }
+                    // Don't allow dropping *over* a node (would create a child)
+                    return ["before", "after"];
+          */
+          return true;
+        },
+        dragDrop: (node, data) => {
+          /** This function MUST be defined to enable dropping of items on
+           *  the tree.
+           */
+          // data.otherNode.moveTo(node, data.hitMode);
+          return this.dragDrop(node, data);
+        },
+        filter: {
+          autoApply: true,
+          autoExpand: false,
+          counter: true,
+          fuzzy: false,
+          hideExpandedCounter: true,
+          hideExpanders: false,
+          highlight: true,
+          leavesOnly: false,
+          nodata: true,
+          mode: 'dimm'
+        }
+      },
+      init: (event, data) => { },
+      click: (event, data): boolean => {
+        this.tree.nativeElement.click();
+        this.telemetryService.interact({ edata: this.getTelemetryInteractEdata() });
+        return true;
+      },
+      activate: (event, data) => {
+        this.treeEventEmitter.emit({ type: 'nodeSelect', data: data.node });
+        this.treeService.previousNode = _.get(data, 'node.data.id');
+        setTimeout(() => {
+          this.attachContextMenu(data.node, true);
+          this.eachNodeActionButton(data.node);
+        }, 10);
+      },
+      renderNode: (event, data) => {
+        const node = data.node;
+        const $nodeSpan = $(node.span);
+
+        // check if span of node already rendered
+        if (!$nodeSpan.data('rendered')) {
+          this.attachContextMenu(node);
+          // span rendered
+          $nodeSpan.data('rendered', true);
+        }
+      }
+    };
+    return options;
+  }
+
 }
