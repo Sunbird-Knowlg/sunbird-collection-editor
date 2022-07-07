@@ -221,8 +221,9 @@ describe('FancyTreeComponent', () => {
 
   it('#removeIntermediateLevelsFromFramework should call when primaryCategory obs with rubrics', () => {
     spyOn(component, 'removeIntermediateLevelsFromFramework').and.callThrough();
-    component.removeIntermediateLevelsFromFramework(RubricstreeData);
+    const retunedObject = component.removeIntermediateLevelsFromFramework(RubricstreeData);
     expect(component.removeIntermediateLevelsFromFramework).toHaveBeenCalledWith(RubricstreeData);
+    expect(retunedObject).toBeDefined();
   });
   
   it('#addFromLibrary() should call #emitshowLibraryPageEvent()', () => {
