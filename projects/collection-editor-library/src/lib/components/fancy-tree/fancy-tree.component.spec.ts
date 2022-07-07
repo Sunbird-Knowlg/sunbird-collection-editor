@@ -50,6 +50,7 @@ describe('FancyTreeComponent', () => {
   });
 
   it('#ngOnInit() should call #initialize()', () => {
+    // tslint:disable-next-line:no-shadowed-variable
     const editorService = TestBed.get(EditorService);
     component.nodes = {
       data: treeData
@@ -64,29 +65,94 @@ describe('FancyTreeComponent', () => {
     // tslint:disable-next-line:no-shadowed-variable
     const editorService = TestBed.get(EditorService);
     component.nodes = {
-      data: treeData
+      data: observationWithRubricsMockData.data
     };
     editorConfig.config.renderTaxonomy = true ;
     spyOnProperty(editorService, 'editorConfig', 'get').and.returnValue(editorConfig);
-    spyOn(component, 'initialize');
+    spyOn(component, 'ngOnInit').and.callThrough();
+    spyOn(component, 'initialize').and.callThrough();
     component.ngOnInit();
     expect(component.initialize).toHaveBeenCalled();
   });
 
-  it('#initialize() should call #buildTree()', () => {
-    component.nodes = {
-      data: treeData
+  it('#initialize() should call #buildTreeFromFramework() when primarycategory is obs with rubrics', () => {
+    component.nodes = { data: {
+      children: {},
+      name: 'untitled',
+      identifier: '12345',
+      contentType: 'content',
+      primaryCategory: 'Practise Questionset',
+      objectType: 'Questionset'
+    }
     };
-    spyOn(component, 'buildTree');
+    component.rootNode = undefined;
+    component.nodeParentDependentMap = undefined;
+    // tslint:disable-next-line:no-shadowed-variable
+    const editorService: EditorService = TestBed.get(EditorService);
+    editorService.treeData = undefined;
+    spyOn(editorService, 'getParentDependentMap').and.returnValue({});
+    editorConfig.config.renderTaxonomy = true;
+    editorConfig.config.primaryCategory = 'Observation';
+    editorConfig.config.objectType = 'QuestionSet';
+    // tslint:disable-next-line:no-shadowed-variable
+    const helperService = TestBed.get(HelperService);
+    spyOn(helperService, 'addDepthToHierarchy').and.callFake(() => {});
+    spyOnProperty(editorService, 'editorConfig', 'get').and.returnValue(editorConfig);
+    spyOn(component, 'removeIntermediateLevelsFromFramework').and.returnValue({});
+    spyOn(component, 'buildTreeFromFramework').and.returnValue({});
+    spyOn(component, 'buildTree').and.callFake(() => {});
+    spyOn(component, 'initialize').and.callThrough();
     component.initialize();
+    expect(editorService.getParentDependentMap).toHaveBeenCalled();
+    expect(component.nodeParentDependentMap).toBeDefined();
+    expect(helperService.addDepthToHierarchy).toHaveBeenCalled();
+    expect(component.removeIntermediateLevelsFromFramework).toHaveBeenCalled();
+    expect(component.buildTreeFromFramework).toHaveBeenCalled();
+    expect(component.buildTree).not.toHaveBeenCalled();
+    expect(editorService.treeData).toBeDefined();
+    expect(component.rootNode).toBeDefined();
+  });
+
+  it('#initialize() should not call  #buildTreeFromFramework() when primarycategory is obs with rubrics', () => {
+    component.nodes = { data: {
+      children: {name: 'test'},
+      name: 'untitled',
+      identifier: undefined,
+      contentType: 'content',
+      primaryCategory: 'Practise Questionset',
+      objectType: 'Questionset'
+    }
+    };
+    component.rootNode = undefined;
+    component.nodeParentDependentMap = undefined;
+    // tslint:disable-next-line:no-shadowed-variable
+    const editorService: EditorService = TestBed.get(EditorService);
+    editorService.treeData = undefined;
+    spyOn(editorService, 'getParentDependentMap').and.returnValue({});
+    editorConfig.config.renderTaxonomy = true;
+    editorConfig.config.primaryCategory = 'Observation';
+    editorConfig.config.objectType = 'QuestionSet';
+    // tslint:disable-next-line:no-shadowed-variable
+    const helperService = TestBed.get(HelperService);
+    spyOn(helperService, 'addDepthToHierarchy').and.callFake(() => {});
+    spyOnProperty(editorService, 'editorConfig', 'get').and.returnValue(editorConfig);
+    spyOn(component, 'removeIntermediateLevelsFromFramework').and.returnValue({});
+    spyOn(component, 'buildTreeFromFramework').and.returnValue({});
+    spyOn(component, 'buildTree').and.returnValue({});
+    spyOn(component, 'initialize').and.callThrough();
+    component.initialize();
+    expect(editorService.getParentDependentMap).toHaveBeenCalled();
+    expect(component.nodeParentDependentMap).toBeDefined();
+    expect(helperService.addDepthToHierarchy).not.toHaveBeenCalled();
+    expect(component.removeIntermediateLevelsFromFramework).not.toHaveBeenCalled();
+    expect(component.buildTreeFromFramework).not.toHaveBeenCalled();
     expect(component.buildTree).toHaveBeenCalled();
+    expect(editorService.treeData).toBeDefined();
+    expect(component.rootNode).toBeDefined();
   });
 
   it('#initialize() should call #buildTreeFromFramework()', () => {
-    // tslint:disable-next-line:no-shadowed-variable
-    const editorServices: EditorService = TestBed.get(EditorService);
     spyOn(component, 'buildTreeFromFramework').and.callThrough();
-    spyOnProperty(editorServices, 'editorConfig', 'get').and.returnValue(editorConfig);
     component.buildTreeFromFramework(observationWithRubricsMockData.data);
     expect(observationWithRubricsMockData.data.children.length).toBeGreaterThan(1);
   });

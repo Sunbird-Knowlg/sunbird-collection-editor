@@ -146,11 +146,8 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         id: UUID.UUID(),
         title: child.name,
         tooltip: child.name,
-        primaryCategory: _.get(this.editorService, 'editorConfig.config.primaryCategory'),
-        metadata: {
-          objectType: _.get(this.editorService, 'editorConfig.config.objectType'),
-          name: child.name
-        },
+        primaryCategory: child.primaryCategory,
+        metadata: _.omit(child, ['children', 'collections']),
         folder: true,
         children: childTree,
         root: false,
