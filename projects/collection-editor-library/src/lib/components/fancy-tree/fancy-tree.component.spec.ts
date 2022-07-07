@@ -14,6 +14,9 @@ import { ConfigService } from '../../services/config/config.service';
 import { SuiModule } from 'ng2-semantic-ui-v9';
 import { HelperService } from '../../services/helper/helper.service';
 import { BranchingLogic } from '../question/question.component.spec.data';
+import * as _ from 'lodash-es';
+import { of } from 'rxjs';
+
 describe('FancyTreeComponent', () => {
   let component: FancyTreeComponent;
   let fixture: ComponentFixture<FancyTreeComponent>;
@@ -49,15 +52,37 @@ describe('FancyTreeComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('#ngOnInit() should call #initialize()', () => {
+  it('#ngOnInit() should set bulkUploadProcessingStatus to true', () => {
+    component.config = { mode: undefined };
     // tslint:disable-next-line:no-shadowed-variable
     const editorService = TestBed.get(EditorService);
-    component.nodes = {
-      data: treeData
-    };
+    component.bulkUploadProcessingStatus = false;
     spyOnProperty(editorService, 'editorConfig', 'get').and.returnValue(editorConfig);
-    spyOn(component, 'initialize');
+    // tslint:disable-next-line:no-string-literal
+    editorService['bulkUploadStatus$'] = of('processing');
+    spyOn(component, 'initialize').and.callFake(() => {});
+    spyOn(component, 'ngOnInit').and.callThrough();
     component.ngOnInit();
+    expect(component.config.mode).toEqual(editorConfig.config.mode);
+    expect(component.bulkUploadProcessingStatus).toBeTruthy();
+    expect(component.initialize).toHaveBeenCalled();
+  });
+
+  it('#ngOnInit() should set bulkUploadProcessingStatus to false', () => {
+    component.config = { mode: undefined, maxDepth: 0 };
+    // tslint:disable-next-line:no-shadowed-variable
+    const editorService = TestBed.get(EditorService);
+    component.bulkUploadProcessingStatus = true;
+    const mockEditorConfig = _.omit(editorConfig, 'config.maxDepth');
+    spyOnProperty(editorService, 'editorConfig', 'get').and.returnValue(mockEditorConfig);
+    // tslint:disable-next-line:no-string-literal
+    editorService['bulkUploadStatus$'] = of('completed');
+    spyOn(component, 'initialize').and.callFake(() => {});
+    spyOn(component, 'ngOnInit').and.callThrough();
+    component.ngOnInit();
+    expect(component.config.mode).toEqual(editorConfig.config.mode);
+    expect(component.config.maxDepth).toEqual(4);
+    expect(component.bulkUploadProcessingStatus).toBeFalsy();
     expect(component.initialize).toHaveBeenCalled();
   });
 
@@ -152,9 +177,29 @@ describe('FancyTreeComponent', () => {
   });
 
   it('#initialize() should call #buildTreeFromFramework()', () => {
+    const nodeData = {
+      children: [
+        {
+          name: 'test',
+          objectType: 'QuestionSet',
+          primaryCategory: 'Observation With Rubrics',
+          index : 0,
+          children: [
+            {
+              name: 'test1',
+              objectType: 'QuestionSet',
+              primaryCategory: 'Observation With Rubrics',
+              index : 1,
+              children : []
+            }
+          ]
+        }
+      ]
+    };
     spyOn(component, 'buildTreeFromFramework').and.callThrough();
-    component.buildTreeFromFramework(observationWithRubricsMockData.data);
-    expect(observationWithRubricsMockData.data.children.length).toBeGreaterThan(1);
+    let returnObject;
+    returnObject = component.buildTreeFromFramework(nodeData);
+    expect(returnObject).toBeDefined();
   });
 
   it('#initialize() should call  #buildTreeFromFramework() when primarycategory is obs with rubrics', () => {
@@ -188,12 +233,13 @@ describe('FancyTreeComponent', () => {
   });
 
   it('#ngAfterViewInit() should call #getTreeConfig() and #renderTree()', () => {
-    spyOn(component, 'getTreeConfig');
-    spyOn(component, 'renderTree');
+    spyOn(component, 'getTreeConfig').and.callFake(() => {});
+    spyOn(component, 'renderTree').and.callFake(() => {});
+    spyOn(component, 'ngAfterViewInit').and.callThrough();
     component.ngAfterViewInit();
     expect(component.getTreeConfig).toHaveBeenCalled();
     expect(component.renderTree).toHaveBeenCalled();
-  });
+  }); 
 
   it('call #eachNodeActionButton() to verify #visibility for root node', () => {
     spyOn(component,'eachNodeActionButton').and.callThrough();
