@@ -110,33 +110,6 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     }];
   }
 
-  buildTree(data, tree?, level?) {
-    tree = tree || [];
-    if (data.children) { data.children = _.sortBy(data.children, ['index']); }
-    data.level = level ? (level + 1) : 1;
-    _.forEach(data.children, (child) => {
-      const childTree = [];
-      tree.push({
-        id: child.identifier || UUID.UUID(),
-        title: child.name,
-        tooltip: child.name,
-        ...(child.contentType && {contentType: child.contentType}),
-        primaryCategory: child.primaryCategory,
-        objectType: child.objectType,
-        metadata: _.omit(child, ['children', 'collections']),
-        folder: this.isFolder(child),
-        children: childTree,
-        root: false,
-        extraClasses: !_.isEmpty(this.nodeParentDependentMap[child.identifier]) ? this.nodeParentDependentMap[child.identifier] : '',
-        icon: this.getIconClass(child, data.level)
-      });
-      if (child.visibility === 'Parent') {
-        this.buildTree(child, childTree, data.level);
-      }
-    });
-    return tree;
-  }
-
   buildTreeFromFramework(data, tree?, level?) {
     tree = tree || [];
     if (data.children) { data.children = _.sortBy(data.children, ['index']); }
@@ -182,6 +155,33 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
     return !_.isEmpty(tree) ? tree : _.flatten(parentData.children);
+  }
+
+  buildTree(data, tree?, level?) {
+    tree = tree || [];
+    if (data.children) { data.children = _.sortBy(data.children, ['index']); }
+    data.level = level ? (level + 1) : 1;
+    _.forEach(data.children, (child) => {
+      const childTree = [];
+      tree.push({
+        id: child.identifier || UUID.UUID(),
+        title: child.name,
+        tooltip: child.name,
+        ...(child.contentType && {contentType: child.contentType}),
+        primaryCategory: child.primaryCategory,
+        objectType: child.objectType,
+        metadata: _.omit(child, ['children', 'collections']),
+        folder: this.isFolder(child),
+        children: childTree,
+        root: false,
+        extraClasses: !_.isEmpty(this.nodeParentDependentMap[child.identifier]) ? this.nodeParentDependentMap[child.identifier] : '',
+        icon: this.getIconClass(child, data.level)
+      });
+      if (child.visibility === 'Parent') {
+        this.buildTree(child, childTree, data.level);
+      }
+    });
+    return tree;
   }
 
   isFolder(child: any) {

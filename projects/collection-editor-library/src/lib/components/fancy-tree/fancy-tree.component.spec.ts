@@ -102,7 +102,7 @@ describe('FancyTreeComponent', () => {
 
   it('#initialize() should call #buildTreeFromFramework() when primarycategory is obs with rubrics', () => {
     component.nodes = { data: {
-      children: {},
+      children: [],
       name: 'untitled',
       identifier: '12345',
       contentType: 'content',
@@ -130,7 +130,7 @@ describe('FancyTreeComponent', () => {
     component.initialize();
     expect(editorService.getParentDependentMap).toHaveBeenCalled();
     expect(component.nodeParentDependentMap).toBeDefined();
-    expect(helperService.addDepthToHierarchy).toHaveBeenCalled();
+    expect(helperService.addDepthToHierarchy).toHaveBeenCalledWith([]);
     expect(component.removeIntermediateLevelsFromFramework).toHaveBeenCalled();
     expect(component.buildTreeFromFramework).toHaveBeenCalled();
     expect(component.buildTree).not.toHaveBeenCalled();
