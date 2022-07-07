@@ -82,6 +82,15 @@ describe('FancyTreeComponent', () => {
     expect(component.buildTree).toHaveBeenCalled();
   });
 
+  it('#initialize() should call #buildTreeFromFramework()', () => {
+    // tslint:disable-next-line:no-shadowed-variable
+    const editorServices: EditorService = TestBed.get(EditorService);
+    spyOn(component, 'buildTreeFromFramework').and.callThrough();
+    spyOnProperty(editorServices, 'editorConfig', 'get').and.returnValue(editorConfig);
+    component.buildTreeFromFramework(observationWithRubricsMockData.data);
+    expect(observationWithRubricsMockData.data.children.length).toBeGreaterThan(1);
+  });
+
   it('#initialize() should call  #buildTreeFromFramework() when primarycategory is obs with rubrics', () => {
     component.nodes = {
       data: {}
