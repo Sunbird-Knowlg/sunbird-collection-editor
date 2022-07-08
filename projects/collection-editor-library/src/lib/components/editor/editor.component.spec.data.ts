@@ -1,10 +1,11 @@
 import { IEditorConfig } from 'collection-editor-library/lib/interfaces/editor';
 export let editorConfig: IEditorConfig | undefined;
+// tslint:disable-next-line:variable-name
 export let editorConfig_question: IEditorConfig | undefined;
 
 editorConfig = {
   context: {
-    framework: 'test',
+    framework: 'tpd',
     user: {
       id: '5a587cc1-e018-4859-a0a8-e842650b9d64',
       name: 'Vaibhav',
@@ -79,6 +80,7 @@ editorConfig = {
     iconClass: 'fa fa-book',
     children: {},
     renderTaxonomy: false,
+    categoryInstance: 'topic',
     hierarchy: {
       level1: {
         name: 'Module',
@@ -4253,4 +4255,85 @@ export const questionSetEditorConfig = {
           }
       }
   }
+};
+
+export const mockOutcomeDeclaration = {
+  result: {
+    questionset: {
+        identifier: 'do_1234',
+        outcomeDeclaration: {
+          levels: {
+                L1: {
+                  label: 'Good'
+                }
+            }
+        }
+    }
+}
+};
+
+export const frameworkData = {
+  tpd: {
+    identifier: 'tpd',
+    code: 'tpd',
+    name: 'TPD',
+    description: 'TPD Framework',
+    categories: [
+      {
+        identifier: 'tpd_topic',
+        code: 'topic',
+        terms: [
+          {
+            identifier: 'tpd_topic_science',
+            code: 'science',
+            children: [
+              {
+                identifier: 'tpd_topic_chemistry',
+                code: 'chemistry',
+                translations: null,
+                name: 'Chemistry',
+                description: 'Chemistry',
+                index: 2,
+                category: 'topic',
+                status: 'Live',
+              },
+              {
+                identifier: 'tpd_topic_biology',
+                code: 'biology',
+                translations: null,
+                name: 'Biology',
+                description: 'Biology',
+                index: 3,
+                category: 'topic',
+                status: 'Live',
+              },
+              {
+                identifier: 'tpd_topic_general_science',
+                code: 'general_science',
+                translations: null,
+                name: 'General Science',
+                description: 'General Science',
+                index: 4,
+                category: 'topic',
+                status: 'Live',
+              },
+            ],
+            translations: null,
+            name: 'Science',
+            description: 'Science',
+            index: 1,
+            category: 'topic',
+            status: 'Live',
+          },
+        ],
+        translations: '{\"hi\":\"विषय\"}',
+        name: 'Topics',
+        description: 'Topics',
+        index: 2,
+        status: 'Live',
+      },
+    ],
+    type: "TPD",
+    objectType: "Framework",
+  },
 };

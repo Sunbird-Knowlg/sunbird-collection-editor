@@ -86,7 +86,15 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   initialize() {
     const data = this.nodes.data;
     this.nodeParentDependentMap = this.editorService.getParentDependentMap(this.nodes.data);
-    const treeData = this.buildTree(this.nodes.data);
+    let treeData;
+    if (_.get(this.editorService, 'editorConfig.config.renderTaxonomy') === true && _.isEmpty(_.get(this.nodes, 'data.children'))) {
+      this.helperService.addDepthToHierarchy(this.nodes.data.children);
+      this.nodes.data.children =   this.removeIntermediateLevelsFromFramework(this.nodes.data.children);
+      treeData = this.buildTreeFromFramework(this.nodes.data);
+    } else {
+      treeData = this.buildTree(this.nodes.data);
+    }
+    this.editorService.treeData = treeData;
     this.rootNode = [{
       id: data.identifier || UUID.UUID(),
       title: data.name,
@@ -100,6 +108,53 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       root: true,
       icon: _.get(this.config, 'iconClass')
     }];
+  }
+
+  buildTreeFromFramework(data, tree?, level?) {
+    tree = tree || [];
+    if (data.children) { data.children = _.sortBy(data.children, ['index']); }
+    _.forEach(data.children, (child) => {
+      const childTree = [];
+      tree.push({
+        id: UUID.UUID(),
+        title: child.name,
+        tooltip: child.name,
+        primaryCategory: child.primaryCategory,
+        metadata: _.omit(child, ['children', 'collections']),
+        folder: true,
+        children: childTree,
+        root: false,
+        icon: 'fa fa-folder-o'
+      });
+      if (child.children) {
+        this.buildTreeFromFramework(child, childTree);
+      }
+    });
+    return tree;
+  }
+
+  removeIntermediateLevelsFromFramework(data, parentData?) {
+    const tree = [];
+    _.forEach(data, child => {
+      if (child.depth === 0 || child.depth === this.helperService.treeDepth) {
+        const node = {
+          ..._.omit(child, ['children']),
+          ...(child.children && {children: this.removeIntermediateLevelsFromFramework(child.children, child)})
+        };
+        tree.push(
+          node
+        );
+      } else if ((child.depth !== 0 || child.depth !== this.helperService.treeDepth)) {
+        parentData.children  = _.filter(parentData.children, item => (item.depth === 0 || item.depth === this.helperService.treeDepth));
+        if (child.children && child.children.length > 0) {
+          const children = this.removeIntermediateLevelsFromFramework(child.children, child);
+          parentData.children = _.concat(parentData.children, children);
+        } else {
+          parentData.children = _.concat(parentData.children, child.children);
+        }
+      }
+    });
+    return !_.isEmpty(tree) ? tree : _.flatten(parentData.children);
   }
 
   buildTree(data, tree?, level?) {
@@ -178,6 +233,14 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.treeService.nextTreeStatus('loaded');
       this.showTree = true;
     });
+    if (_.get(this.editorService, 'editorConfig.config.renderTaxonomy') === true && _.isEmpty(_.get(this.nodes, 'data.children'))) {
+      _.forEach(this.rootNode[0]?.children, (child) => {
+          this.treeService.updateTreeNodeMetadata(child.metadata, child.id, child.primaryCategory, child.objectType);
+          _.forEach(child.children, (el) => {
+            this.treeService.updateTreeNodeMetadata(el.metadata, el.id, el.primaryCategory, el.objectType);
+          });
+      });
+    }
   }
 
   getTreeConfig() {
@@ -297,6 +360,10 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.visibility.createNew = ((node.folder === false) || _.isEmpty(_.get(hierarchylevelData, 'children')) || _.get(this.config, 'enableQuestionCreation') === false) ? false : true;
         this.visibility.addQuestionFromLibrary = ((node.folder === true) && !_.isEmpty(_.get(hierarchylevelData, 'children')) && _.get(this.config, 'enableAddFromLibrary') === true) ? true : false;
       }
+    }
+    if (_.get(this.editorService, 'editorConfig.config.renderTaxonomy') === true){
+      this.visibility.addChild=false;
+      this.visibility.addSibling=false;
     }
     this.cdr.detectChanges();
   }

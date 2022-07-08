@@ -24,7 +24,8 @@ import {
   HierarchyMockData,
   BranchingLogic,
   mockEditorCursor,
-  interactionChoiceEditorState
+  interactionChoiceEditorState,
+  RubricData
 } from "./question.component.spec.data";
 import { of, throwError } from "rxjs";
 import * as urlConfig from "../../services/config/url.config.json";
@@ -1889,5 +1890,11 @@ describe("QuestionComponent", () => {
    component.saveUpdateQuestions();  
    component.updateQuestion(); 
   });
+
+  it('#getBranchingLogic should call for branchingLogic', () => {
+    spyOn(component, 'getBranchingLogic').and.callThrough();
+    component.getBranchingLogic(RubricData);
+    expect(RubricData[0].allowBranching).toBe('Yes');
+  })
 
 });

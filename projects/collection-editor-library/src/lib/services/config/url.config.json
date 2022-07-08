@@ -12,7 +12,8 @@
       "CONTENT_PUBLISH" : "questionset/v1/publish/",
       "DEFAULT_PARAMS_FIELDS": "instructions",
       "SYSYTEM_UPDATE": "questionset/v4/system/update/",
-      "DELETENODE" : "questionset/v1/remove"
+      "DELETENODE" : "questionset/v1/remove",
+      "QUESTION_LIST" : "question/v1/list"
     },
     "Question": {
       "HIERARCHY_READ": "questionset/v1/hierarchy",

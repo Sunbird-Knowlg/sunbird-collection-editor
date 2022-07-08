@@ -38,6 +38,8 @@ export class EditorService {
   selectedPrimaryCategory: any;
   leafParentIdentifier: any;
   questionIds = [];
+  treeData: any;
+  outcomeDeclaration: any;
   constructor(public treeService: TreeService, private toasterService: ToasterService,
               public configService: ConfigService, private telemetryService: EditorTelemetryService,
               private publicDataService: PublicDataService, private dataService: DataService, public httpClient: HttpClient) {
@@ -700,6 +702,24 @@ getDependentNodes(identifier) {
   getPrimaryCategoryName(sectionId) {
     const nodeData = this.treeService.getNodeById(sectionId);
     return _.get(nodeData, 'data.primaryCategory');
+  }
+
+  /**
+   * fetch Outcome Declaration levels using the questionsetId
+   * only for Observation with Rubrics
+   * @param identifier questionset identifier
+   */
+   fetchOutComeDeclaration(questionSetId, option: any = { params: {} }): Observable<any> {
+    const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
+    const param = {
+      fields: 'outcomeDeclaration'
+    };
+    const hierarchyUrl = `${url.READ}/${questionSetId}`;
+    const req = {
+      url: hierarchyUrl,
+      param: { ...param, ...option.params }
+    };
+    return this.publicDataService.get(req);
   }
 
 }

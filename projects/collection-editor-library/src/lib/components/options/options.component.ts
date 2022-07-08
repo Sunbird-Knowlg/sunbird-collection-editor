@@ -139,7 +139,7 @@ export class OptionsComponent implements OnInit {
 
   setScore(value, scoreIndex) {
     const obj = {
-      respone: scoreIndex,
+      response: scoreIndex,
       outcomes: {
         score: value,
       },

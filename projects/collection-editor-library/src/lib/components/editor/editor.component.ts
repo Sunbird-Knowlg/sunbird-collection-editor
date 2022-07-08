@@ -11,7 +11,7 @@ import { HelperService } from '../../services/helper/helper.service';
 import { IEditorConfig } from '../../interfaces/editor';
 import { ICreationContext } from '../../interfaces/CreationContext';
 import { Router } from '@angular/router';
-import { map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { Observable, throwError, forkJoin, Subscription, Subject, merge, of } from 'rxjs';
 import * as _ from 'lodash-es';
 import { ConfigService } from '../../services/config/config.service';
@@ -90,8 +90,11 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public unSubscribeShowLibraryPageEmitter: Subscription;
   public unSubscribeshowQuestionLibraryPageEmitter: Subscription;
   public sourcingSettings: any;
-  setChildQuestion: any;
+  public setChildQuestion: any;
   public unsubscribe$ = new Subject<void>();
+  public onComponentDestroy$ = new Subject<any>();
+  public outcomeDeclaration: any;
+  public levelsArray: any;
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
               private toasterService: ToasterService, private dialcodeService: DialcodeService,
@@ -195,13 +198,22 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.helperService.initialize(channel);
   }
 
-  getFrameworkDetails(categoryDefinitionData) {
+  async getFrameworkDetails(categoryDefinitionData) {
     let orgFWIdentifiers: any;
     let targetFWIdentifiers: any;
     let orgFWType: any;
     let targetFWType: any;
     orgFWIdentifiers = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.framework.enum') ||
       _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.framework.default');
+    if (_.get(this.editorConfig, 'config.renderTaxonomy') === true) {
+      const orgId = _.get(this.editorConfig, 'context.identifier');
+      const data = await this.editorService.fetchOutComeDeclaration(orgId).toPromise();
+      if (data?.result) {
+        this.outcomeDeclaration = _.get(data?.result, 'questionset.outcomeDeclaration');
+        this.editorService.outcomeDeclaration = this.outcomeDeclaration;
+        this.levelsArray = Object.keys(this.outcomeDeclaration);
+      }
+    }
     // tslint:disable-next-line:max-line-length
     this.publishchecklist = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.publishchecklist.properties') || _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.review.properties') || [];
     if (_.isEmpty(this.targetFramework || _.get(this.editorConfig, 'context.targetFWIds'))) {
@@ -300,8 +312,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         evidenceMimeType = field.range;
         field.options = this.setEvidence;
         field.range = null;
-      }
-      if (field.code === 'ecm') {
+      } else if (field.code === 'allowECM') {
+        field.options = this.setAllowEcm;
+      } else if (field.code === 'ecm') {
         ecm = field.options;
         field.options = this.setEcm;
       }
@@ -366,8 +379,27 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         });
       }
     }
-    this.ishierarchyConfigSet = true;
     this.editorConfig.config = _.assign(this.editorConfig.config, hierarchyConfig);
+    if (_.get(this.editorConfig, 'config.renderTaxonomy') === true && _.isEmpty(_.get(this.collectionTreeNodes, 'data.children'))) {
+      this.fetchFrameWorkDetails();
+    } else {
+      this.ishierarchyConfigSet = true;
+    }
+  }
+
+  fetchFrameWorkDetails() {
+    this.frameworkService.frameworkData$.pipe(
+      takeUntil(this.onComponentDestroy$),
+      filter(data => _.get(data, `frameworkdata.${this.frameworkService.organisationFramework}`)),
+      take(1)
+    ).subscribe((frameworkDetails: any) => {
+      if (frameworkDetails && !frameworkDetails.err) {
+        const orgFrameworkData = _.get(frameworkDetails, `frameworkdata.${this.frameworkService.organisationFramework}.categories`);
+        const categoryInstanceData = _.find(orgFrameworkData, {code: _.get(this.editorConfig, 'config.categoryInstance')});
+        this.collectionTreeNodes.data.children = _.get(categoryInstanceData, 'terms');
+        this.ishierarchyConfigSet = true;
+      }
+    });
   }
 
   getHierarchyChildrenConfig(childrenData) {
@@ -479,7 +511,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         break;
       case 'reviewContent':
         this.redirectToQuestionTab('review');
-        break;    
+        break;
+      case 'pagination':
+        this.pageId = 'pagination';
+        break;      
       // case 'showCorrectioncomments':
         // this.contentComment = _.get(this.editorConfig, 'context.correctionComments')
         // this.showReviewModal = !this.showReviewModal;
@@ -1130,6 +1165,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  assignPageEmitterListener(event: any) {
+    this.pageId = 'collection_editor';
+  }
+
   ngOnDestroy() {
     if (this.telemetryService) {
       this.generateTelemetryEndEvent();
@@ -1182,4 +1221,21 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         })
     );
   }
+
+  setAllowEcm(control, depends: FormControl[]) {
+    control.isVisible = 'no';
+    const response = merge(..._.map(depends, depend => depend.valueChanges)).pipe(
+        switchMap((value: any) => {
+             if (!_.isEmpty(value) && _.toLower(value) === 'self' ) {
+                control.isVisible = 'no';
+                return of(null);
+             } else {
+                control.isVisible = 'yes';
+                return of(null);
+             }
+        })
+    );
+    return response;
+  }
+
 }

@@ -1,0 +1,26 @@
+<div class="sb-editor-container mb-0">
+  <lib-header [labelConfigData]="toolbarConfig" [pageId]="pageId" (toolbarEmitter)="toolbarEventListener($event)">
+  </lib-header>
+  <div class="add-to-library mb-0">
+    <div class="h-100vh sb-bg-white">
+      <div class="ui">
+        <div class="ui twelve column grid m-0">
+          <div class="three wide column p-0 overflow-y  mb-40 h-100vh">
+            <lib-plain-tree class="sb-collectionTree-fancyTree sb-collectionTree-fancyTreelist sb-questionset-scroll" 
+            [treeData]="treeData" (treeEmitter)="treeEventListener($event)">
+            </lib-plain-tree>
+          </div>
+          <!-- Right Player Sections -->
+          <div class="eight wide column bg-white pl-40 mb-10 w-73">
+            <table *ngIf="questions" aria-describedby="questionsTable">
+              <tr>
+                <th>Questions</th>
+                <th>Page No</th>
+              </tr>
+              </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

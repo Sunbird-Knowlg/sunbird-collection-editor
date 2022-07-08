@@ -136,4 +136,31 @@ describe('HelperService', () => {
     service.updateCollaborator('do_12345', ['12345']);
     expect(publicDataService.patch).toHaveBeenCalled();
   });
+
+  it('#addDepthToHierarchy should call', () => {
+    spyOn(service, 'addDepthToHierarchy').and.callThrough();
+    const data = [
+      {
+        name: 'test',
+        objectType: 'QuestionSet',
+        primaryCategory: 'Observation With Rubrics',
+        index : 0,
+        depth : 0,
+        children: [
+          {
+            name: 'test1',
+            objectType: 'QuestionSet',
+            primaryCategory: 'Observation With Rubrics',
+            index : 1,
+            depth : 0,
+            children : []
+          }
+        ]
+      }
+    ];
+    // tslint:disable-next-line:prefer-const
+    service.addDepthToHierarchy(data);
+    expect(service.treeDepth).toEqual(1);
+  });
+
 });

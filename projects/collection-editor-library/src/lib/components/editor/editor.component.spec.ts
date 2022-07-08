@@ -14,9 +14,11 @@ import {
   categoryDefinition, categoryDefinitionData, csvExport, hirearchyGet,
   SelectedNodeMockData, outcomeDeclarationData, observationAndRubericsField,
   questionsetRead, questionsetHierarchyRead, nodesModifiedData, treeNodeData,
-  questionSetEditorConfig} from './editor.component.spec.data';
+  questionSetEditorConfig,
+  mockOutcomeDeclaration,
+  frameworkData} from './editor.component.spec.data';
 import { ConfigService } from '../../services/config/config.service';
-import { of, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { DialcodeService } from '../../services/dialcode/dialcode.service';
 import { treeData } from './../fancy-tree/fancy-tree.component.spec.data';
 import * as urlConfig from '../../services/config/url.config.json';
@@ -25,8 +27,6 @@ import * as categoryConfig from '../../services/config/category.config.json';
 import { FrameworkService } from '../../services/framework/framework.service';
 import { HelperService } from '../../services/helper/helper.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
-import { sourcingSettingsMock } from '../question/question.component.spec.data';
-import { TelemetryService } from '@project-sunbird/client-services/telemetry';
 
 describe('EditorComponent', () => {
   const configStub = {
@@ -213,6 +213,7 @@ describe('EditorComponent', () => {
   it('Unit test for #getFrameworkDetails()', () => {
     const treeService = TestBed.inject(TreeService);
     const frameworkService = TestBed.inject(FrameworkService);
+    const editorService = TestBed.inject(EditorService);
     component.organisationFramework = 'dummy';
     spyOn(component, 'getFrameworkDetails').and.callThrough();
     spyOn(treeService, 'updateMetaDataProperty').and.callFake(() => { });
@@ -227,6 +228,48 @@ describe('EditorComponent', () => {
     expect(treeService.updateMetaDataProperty).not.toHaveBeenCalled();
     expect(frameworkService.getTargetFrameworkCategories).not.toHaveBeenCalled();
     expect(component.setEditorForms).toHaveBeenCalled();
+  });
+
+  it('Unit test for #getFrameworkDetails() when primaryCategory is Obs with rubrics api success', () => {
+    const treeService = TestBed.inject(TreeService);
+    const frameworkService = TestBed.inject(FrameworkService);
+    const editorService = TestBed.inject(EditorService);
+    component.organisationFramework = 'dummy';
+    editorConfig.config.renderTaxonomy = true;
+    component.editorConfig = editorConfig;
+    spyOn(editorService, 'fetchOutComeDeclaration').and.returnValue(of(mockOutcomeDeclaration));
+    spyOn(component, 'getFrameworkDetails').and.callThrough();
+    spyOn(treeService, 'updateMetaDataProperty').and.callFake(() => { });
+    spyOn(frameworkService, 'getTargetFrameworkCategories').and.callFake(() => { });
+    spyOn(frameworkService, 'getFrameworkData').and.returnValue(of({}));
+    spyOn(component, 'setEditorForms').and.callFake(() => { });
+    component.getFrameworkDetails(categoryDefinitionData);
+    expect(treeService.updateMetaDataProperty).not.toHaveBeenCalled();
+    expect(frameworkService.getTargetFrameworkCategories).not.toHaveBeenCalled();
+    expect(component.targetFramework).toBeUndefined();
+    expect(treeService.updateMetaDataProperty).not.toHaveBeenCalled();
+    expect(frameworkService.getTargetFrameworkCategories).not.toHaveBeenCalled();
+  });
+
+  it('Unit test for #getFrameworkDetails() when primaryCategory is Obs with rubrics outcome declaration api fail', () => {
+    const treeService = TestBed.inject(TreeService);
+    const frameworkService = TestBed.inject(FrameworkService);
+    const editorService = TestBed.inject(EditorService);
+    component.organisationFramework = 'dummy';
+    editorConfig.config.renderTaxonomy = true;
+    component.editorConfig = editorConfig;
+    spyOn(editorService, 'fetchOutComeDeclaration').and.returnValue(throwError('error'));
+    spyOn(component, 'getFrameworkDetails').and.callThrough();
+    spyOn(treeService, 'updateMetaDataProperty').and.callFake(() => { });
+    spyOn(frameworkService, 'getTargetFrameworkCategories').and.callFake(() => { });
+    spyOn(frameworkService, 'getFrameworkData').and.returnValue(of({}));
+    spyOn(component, 'setEditorForms').and.callFake(() => { });
+    component.getFrameworkDetails(categoryDefinitionData);
+    expect(treeService.updateMetaDataProperty).not.toHaveBeenCalled();
+    expect(frameworkService.getTargetFrameworkCategories).not.toHaveBeenCalled();
+    expect(component.targetFramework).toBeUndefined();
+    expect(treeService.updateMetaDataProperty).not.toHaveBeenCalled();
+    expect(frameworkService.getTargetFrameworkCategories).not.toHaveBeenCalled();
   });
 
   it('#setEditorForms() should set variable values for questionset', () => {
@@ -318,7 +361,6 @@ describe('EditorComponent', () => {
     spyOn(component, 'getHierarchyChildrenConfig').and.callFake(() => {});
     component.sethierarchyConfig(categoryDefinitionData);
     expect(component.getHierarchyChildrenConfig).toHaveBeenCalled();
-    expect(component.ishierarchyConfigSet).toBeTruthy();
   });
 
   it('#toggleCollaboratorModalPoup() should set addCollaborator to true', () => {
@@ -575,6 +617,16 @@ describe('EditorComponent', () => {
     };
     component.toolbarEventListener(event);
     expect(component.redirectToQuestionTab).toHaveBeenCalled();
+  });
+
+  it('#toolbarEventListener() should set pagination ', () => {
+    spyOn(component, 'toolbarEventListener').and.callThrough();
+    const event = {
+      button: 'pagination'
+    };
+    component.pageId = 'pagination';
+    component.toolbarEventListener(event);
+    expect(component.pageId).toEqual('pagination');
   });
 
   it('#redirectToChapterListTab() should emit #editorEmitter event', () => {
@@ -1433,6 +1485,12 @@ describe('EditorComponent', () => {
     expect(component['formStatusMapper']).toEqual(expectedResult);
   });
 
+  it('#assignPageEmitterListener should call', () => {
+    spyOn(component, 'assignPageEmitterListener').and.callThrough();
+    component.assignPageEmitterListener({});
+    expect(component.pageId).toEqual('collection_editor');
+  });
+
   it('#ngOnDestroy should call modal.deny()', () => {
     component.telemetryService = undefined;
     component.treeService = undefined;
@@ -1450,6 +1508,29 @@ describe('EditorComponent', () => {
     expect(treeService.clearTreeCache).not.toHaveBeenCalled();
     // tslint:disable-next-line:no-string-literal
     expect(component['modal'].deny).toHaveBeenCalled();
+  });
+
+  it('#setAllowEcm should call for obs with rubrics', () => {
+    spyOn(component, 'setAllowEcm').and.callThrough();
+    const control = {
+      isVisible: 'no',
+    };
+    component.setAllowEcm(control, []);
+  });
+
+  it('fetchFrameWorkDetails should set collectionTreeNodes', () => {
+    component.collectionTreeNodes = {
+        data: {
+            children: undefined
+        }
+    };
+    component.editorConfig = editorConfig;
+    const frameworkService = TestBed.get(FrameworkService);
+    frameworkService.organisationFramework = 'tpd';
+    // tslint:disable-next-line:max-line-length
+    frameworkService.frameworkData$ = of({frameworkdata: {tpd: of({'frameworkdata' : frameworkData})}});
+    spyOn(component, 'fetchFrameWorkDetails').and.callThrough();
+    component.fetchFrameWorkDetails();
   });
 
 });

@@ -274,22 +274,6 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
     this.toolbarEmitter.emit({ button: 'onFormStatusChange', event });
   }
 
-  valueChanges(event: any) {
-    if (_.has(event, 'shuffle')) {
-      this.showShuffleMessage(event);
-    }
-    if (_.get(event, 'instances')) {
-      event.instances = {
-        "label": event.instances
-      }
-    }
-    if (!_.isEmpty(this.appIcon) && this.showAppIcon) {
-      event.appIcon = this.appIcon;
-    }
-    this.toolbarEmitter.emit({ button: 'onFormValueChange', event });
-    this.treeService.updateNode(event);
-  }
-
   appIconDataHandler(event) {
     this.appIcon = event.url;
     this.treeService.updateAppIcon(event.url);
@@ -333,6 +317,35 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
     );
     return response;
   }
+
+  valueChanges(event: any) {
+    if (_.has(event, 'shuffle')) {
+      this.showShuffleMessage(event);
+    }
+    const data = _.omit(event, ['allowECM', 'levels', 'setPeriod']);
+    if (!_.isEmpty(event?.levels)) {
+      data.outcomeDeclaration = {
+        levels: this.createLeavels(event.levels)
+      };
+    }
+    event?.instance ? data.instances = { label : event?.instances } : '';
+    if (!_.isEmpty(this.appIcon) && this.showAppIcon) {
+      data.appIcon = this.appIcon;
+    }
+    this.toolbarEmitter.emit({ button: 'onFormValueChange', data });
+    this.treeService.updateNode(data);
+  }
+
+  createLeavels(levels) {
+    const obj = {};
+    _.forEach(levels, (el, index) => {
+      obj[`L${index + 1}`] = {
+         label : el
+       };
+    });
+    return obj;
+  }
+
 
   ngOnDestroy() {
     this.onComponentDestroy$.next();
