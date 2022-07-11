@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { EditorService } from '../../services/editor/editor.service';
+import { QuestionService } from '../../services/question/question.service';
 import { TreeService } from '../../services/tree/tree.service';
 import * as _ from 'lodash-es';
 
@@ -16,7 +17,8 @@ export class AssignPageNumberComponent implements OnInit {
   questions: any;
   @Output() assignPageEmitter = new EventEmitter<any>();
 
-  constructor(private editorService: EditorService, private treeService: TreeService) { }
+  constructor(private editorService: EditorService, private treeService: TreeService,
+              private questionService: QuestionService) { }
 
   ngOnInit() {
     this.toolbarConfig = this.editorService.getToolbarConfig();
@@ -32,10 +34,19 @@ export class AssignPageNumberComponent implements OnInit {
     }
   }
 
-  treeEventListener(event) {}
-
   redirectToQuestionSet() {
       this.assignPageEmitter.emit({ status: false });
+  }
+
+  treeEventListener(event) {
+    const data = this.treeService.getFirstChild();
+    const hierarchy = this.editorService.getHierarchyObj(data, '', event?.identifier);
+    this.questionService.getQuestionList(_.get(hierarchy[event?.identifier], 'children'))
+    .subscribe((response: any) => {
+      this.questions = _.get(response, 'result.questions');
+    }, (error: any) => {
+      console.log(error);
+    });
   }
 
 }
