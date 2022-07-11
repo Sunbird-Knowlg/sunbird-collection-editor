@@ -5,6 +5,7 @@ import { TreeService } from '../../services/tree/tree.service';
 import { mockTreeService } from '../fancy-tree/fancy-tree.component.spec.data';
 import { EditorService } from '../../services/editor/editor.service';
 import { of, throwError } from 'rxjs';
+import { QuestionService } from '../../services/question/question.service';
 
 const mockEditorService = {
   getToolbarConfig: () => { },
@@ -16,12 +17,13 @@ describe('AssignPageNumberComponent', () => {
   let component: AssignPageNumberComponent;
   let fixture: ComponentFixture<AssignPageNumberComponent>;
   // tslint:disable-next-line:one-variable-per-declaration
-  let treeService, editorService;
+  let treeService, editorService, questionService;
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       declarations: [AssignPageNumberComponent],
       providers: [
+        QuestionService,
         { provide: TreeService, useValue: mockTreeService },
         { provide: EditorService, useValue: mockEditorService },
       ]
@@ -33,6 +35,7 @@ describe('AssignPageNumberComponent', () => {
     fixture = TestBed.createComponent(AssignPageNumberComponent);
     treeService = TestBed.get(TreeService);
     editorService = TestBed.inject(EditorService);
+    questionService = TestBed.get(QuestionService);
     component = fixture.componentInstance;
     // fixture.detectChanges();
   });
@@ -67,5 +70,65 @@ describe('AssignPageNumberComponent', () => {
     component.redirectToQuestionSet();
     expect(component.assignPageEmitter.emit).toHaveBeenCalledWith({ status: false });
   });
+
+  it('#treeEventListener should call api call success', () => {
+    spyOn(component, 'treeEventListener').and.callThrough();
+    spyOn(editorService, 'getHierarchyObj').and.callFake(() => {
+      return {
+        '1234': {
+          children : []
+        }
+      };
+    });
+    spyOn(treeService, 'getFirstChild').and.callFake(() => {
+      return { data: { metadata: { identifier: '0123', allowScoring: 'Yes' } } };
+    });
+    spyOn(questionService, 'getQuestionList').and.returnValue(of({
+      result: {
+        questions: [
+          {
+            editorState: {
+              options: [
+                {
+                  answer: false,
+                  value: {
+                    body: '<p>Yes</p>',
+                    value: 0
+                  }
+                },
+              ],
+              question: '<p>Yes or No?</p>'
+            },
+            identifier: '1234',
+            languageCode: [
+              'en'
+            ]
+          }
+        ],
+        count: 1
+      }
+    }));
+    component.treeEventListener({ event: { identifier: '1234' } });
+  });
+
+  it('#treeEventListener should call api call fail', () => {
+    spyOn(component, 'treeEventListener').and.callThrough();
+    spyOn(editorService, 'getHierarchyObj').and.callFake(() => {
+      return {
+        '1234': {
+          children : []
+        }
+      };
+    });
+    spyOn(treeService, 'getFirstChild').and.callFake(() => {
+      return { data: { metadata: { identifier: '0123', allowScoring: 'Yes' } } };
+    });
+    spyOn(treeService, 'getHierarchyObj').and.callFake(() => {
+      return { 1234: { children: ['1234567'] } };
+    });
+    spyOn(questionService, 'getQuestionList').and.returnValue(throwError({}));
+    component.treeEventListener({ event: { identifier: '1234' } });
+  });
+
 
 });
