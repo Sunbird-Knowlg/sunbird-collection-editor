@@ -6,18 +6,26 @@
       <div class="ui">
         <div class="ui twelve column grid m-0">
           <div class="three wide column p-0 overflow-y  mb-40 h-100vh">
-            <lib-plain-tree class="sb-collectionTree-fancyTree sb-collectionTree-fancyTreelist sb-questionset-scroll" 
-            [treeData]="treeData" (treeEmitter)="treeEventListener($event)">
+            <lib-plain-tree class="sb-collectionTree-fancyTree sb-collectionTree-fancyTreelist sb-questionset-scroll"
+              [treeData]="treeData" (treeEmitter)="treeEventListener($event)">
             </lib-plain-tree>
           </div>
           <!-- Right Player Sections -->
           <div class="eight wide column bg-white pl-40 mb-10 w-73">
-            <!-- <table *ngIf="questions" aria-describedby="questionsTable">
-              <tr>
-                <th>Questions</th>
-                <th>Page No</th>
-              </tr>
-              </table> -->
+            <table>
+              <thead>
+                <tr>
+                  <th>Questions</th>
+                  <th class="right">Page no</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let question of questions;">
+                  <td innerHtml="{{question}}"></td>
+                  <td><i class="close icon close-button"></i><input type="number" name="pageNo" value="{{question?.pageNo}}"></td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
