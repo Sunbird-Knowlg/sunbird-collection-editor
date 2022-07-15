@@ -209,7 +209,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       const orgId = _.get(this.editorConfig, 'context.identifier');
       const data = await this.editorService.fetchOutComeDeclaration(orgId).toPromise();
       if (data?.result) {
-        this.outcomeDeclaration = _.get(data?.result, 'questionset.outcomeDeclaration');
+        this.outcomeDeclaration = _.get(data?.result, 'questionset.outcomeDeclaration.levels');
         this.editorService.outcomeDeclaration = this.outcomeDeclaration;
         this.levelsArray = Object.keys(this.outcomeDeclaration);
       }
@@ -306,7 +306,20 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     let formData;
     if (this.rootFormConfig.length) {
       formData = this.rootFormConfig[0].fields || [];
+      console.log(formData);
     }
+    // if (_.get(this.editorConfig, 'config.renderTaxonomy') === true) {
+    //   this.levelsArray.forEach((level, index) => {
+    //     let obj = {
+    //       // name: this.outcomeDeclaration[level].label,
+    //       renderingHints: {
+    //         class: 'grid three-column-grid hidden-sectionName',
+    //       },
+    //       fields: this.constructFields(level, index, this.outcomeDeclaration[level].label),
+    //     };
+    //     this.unitFormConfig.push(obj);
+    //   });
+    // }
     formData.forEach((field) => {
       if (field.code === 'evidenceMimeType') {
         evidenceMimeType = field.range;
@@ -317,6 +330,12 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       } else if (field.code === 'ecm') {
         ecm = field.options;
         field.options = this.setEcm;
+      } else if (field.code === 'levels') {
+        const defaultValue = [];
+        this.levelsArray.forEach((level) => {
+          defaultValue.push(this.outcomeDeclaration[level].label);
+        });
+        field.default = defaultValue;
       }
     });
     if ( this.objectType === 'questionset' && _.has(formsConfigObj, 'searchConfig')) {
@@ -514,7 +533,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         break;
       case 'pagination':
         this.pageId = 'pagination';
-        break;      
+        break;
       // case 'showCorrectioncomments':
         // this.contentComment = _.get(this.editorConfig, 'context.correctionComments')
         // this.showReviewModal = !this.showReviewModal;
@@ -1236,6 +1255,92 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         })
     );
     return response;
+  }
+
+  constructFields(level, index, labelName) {
+    let levelName = level.toLowerCase();
+    let fieldArray = [
+      {
+        code: levelName,
+        name: levelName,
+        label: `Level ${index + 1}`,
+        placeholder: `Level ${index + 1}`,
+        description: `Level ${index + 1}`,
+        dataType: 'text',
+        inputType: 'text',
+        editable: false,
+        default: labelName,
+        required: true,
+        visible: true,
+        renderingHints: {
+          class: 'sb-g-col-lg-1 required',
+        },
+        validations: [
+          {
+            type: 'maxLength',
+            value: '120',
+            message: 'Entered name is too long',
+          },
+          {
+            type: 'required',
+            message: 'Name is required',
+          },
+        ],
+      },
+      {
+        code: `${levelName}min`,
+        name: `${levelName}min`,
+        label: 'Minimum',
+        placeholder: 'Minimum',
+        description: 'Minimum',
+        dataType: 'text',
+        inputType: 'text',
+        editable: true,
+        required: true,
+        visible: true,
+        renderingHints: {
+          class: 'sb-g-col-lg-1 required',
+        },
+        validations: [
+          {
+            type: 'maxLength',
+            value: '120',
+            message: 'Entered name is too long',
+          },
+          {
+            type: 'required',
+            message: 'Name is required',
+          },
+        ],
+      },
+      {
+        code: `${levelName}max`,
+        name: `${levelName}max`,
+        label: 'Maximum',
+        placeholder: 'Maximum',
+        description: 'Maximum',
+        dataType: 'text',
+        inputType: 'text',
+        editable: true,
+        required: true,
+        visible: true,
+        renderingHints: {
+          class: 'sb-g-col-lg-1- required',
+        },
+        validations: [
+          {
+            type: 'maxLength',
+            value: '120',
+            message: 'Entered name is too long',
+          },
+          {
+            type: 'required',
+            message: 'Name is required',
+          },
+        ],
+      },
+    ];
+    return fieldArray;
   }
 
 }
