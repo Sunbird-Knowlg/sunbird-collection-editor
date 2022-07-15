@@ -54,6 +54,7 @@ import { AppLoaderComponent } from './components/app-loader/app-loader.component
 import { AssignPageNumberComponent } from './components/assign-page-number/assign-page-number.component';
 import { PlainTreeComponent } from './components/plain-tree/plain-tree.component';
 import { A11yModule } from '@angular/cdk/a11y';
+import { ProgressStatusComponent } from './components/progress-status/progress-status.component';
 @NgModule({
   declarations: [CollectionEditorLibraryComponent, InterpolatePipe, SanitizeHtmlPipe, ContentplayerPageComponent,
     EditorComponent, QumlplayerPageComponent, HeaderComponent, FancyTreeComponent, MetaFormComponent, LibraryComponent,
@@ -64,7 +65,8 @@ import { A11yModule } from '@angular/cdk/a11y';
     PublishChecklistComponent, QuestionOptionSubMenuComponent, SliderComponent, TranslationsComponent,AppLoaderComponent,
     RelationalMetadataComponent,
     AssignPageNumberComponent,
-    PlainTreeComponent],
+    PlainTreeComponent,
+    ProgressStatusComponent],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule.forChild([]), SuiModule,
   CommonFormElementsModule, InfiniteScrollModule, HttpClientModule, SunbirdPdfPlayerModule, SunbirdVideoPlayerModule,
   QumlLibraryModule, CarouselModule, SunbirdEpubPlayerModule, ResourceLibraryModule, A11yModule],
