@@ -14,7 +14,8 @@ export class AssignPageNumberComponent implements OnInit {
   toolbarConfig: any = {};
   pageId = 'pagination';
   treeData: any;
-  questions: any;
+  questions=[]
+
   @Output() assignPageEmitter = new EventEmitter<any>();
 
   constructor(private editorService: EditorService, private treeService: TreeService,
@@ -24,6 +25,7 @@ export class AssignPageNumberComponent implements OnInit {
     this.toolbarConfig = this.editorService.getToolbarConfig();
     this.toolbarConfig.title = 'Observation Form';
     this.treeData = this.editorService.treeData;
+    this.treeEventListener({identifier: this.treeData[0].children[0].id})    
   }
 
   toolbarEventListener(event) {
@@ -43,7 +45,11 @@ export class AssignPageNumberComponent implements OnInit {
     const hierarchy = this.editorService.getHierarchyObj(data, '', event?.identifier);
     this.questionService.getQuestionList(_.get(hierarchy[event?.identifier], 'children'))
     .subscribe((response: any) => {
-      this.questions = _.get(response, 'result.questions');
+      this.questions=[];
+      let questionsArray = _.get(response, 'result.questions')
+      questionsArray.forEach(element => {
+        this.questions.push(element.editorState.question);
+      });
     }, (error: any) => {
       console.log(error);
     });
