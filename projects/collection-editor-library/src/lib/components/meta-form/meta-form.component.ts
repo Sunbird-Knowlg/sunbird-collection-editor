@@ -324,7 +324,16 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
     if (_.has(event, 'shuffle')) {
       this.showShuffleMessage(event);
     }
-    const data = _.omit(event, ['allowECM', 'levels', 'setPeriod']);
+    const data = _.omit(event, ['allowECM', 'levels', 'setPeriod', 'ecm']);
+    if (!_.isEmpty(event?.ecm)) {
+      event.ecm.map(ecm => {
+        if (ecm?.label) {
+          data.ecm.push(ecm.label);
+        } else {
+        data.ecm.push(ecm);
+        }
+      });
+    }
     if (!_.isEmpty(event?.levels)) {
       data.outcomeDeclaration = {
         levels: this.createLeavels(event.levels)
@@ -334,6 +343,7 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
     if (!_.isEmpty(this.appIcon) && this.showAppIcon) {
       data.appIcon = this.appIcon;
     }
+    console.log(data);
     this.toolbarEmitter.emit({ button: 'onFormValueChange', data });
     this.treeService.updateNode(data);
   }
