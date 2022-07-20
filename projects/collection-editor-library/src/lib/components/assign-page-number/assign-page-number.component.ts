@@ -14,7 +14,6 @@ export class AssignPageNumberComponent implements OnInit {
   toolbarConfig: any = {};
   pageId = 'pagination';
   treeData: any;
-  questions: any;
   @Output() assignPageEmitter = new EventEmitter<any>();
 
   constructor(private editorService: EditorService, private treeService: TreeService,
@@ -23,7 +22,6 @@ export class AssignPageNumberComponent implements OnInit {
   ngOnInit() {
     this.toolbarConfig = this.editorService.getToolbarConfig();
     this.toolbarConfig.title = 'Observation Form';
-    this.treeData = this.editorService.treeData;
   }
 
   toolbarEventListener(event) {

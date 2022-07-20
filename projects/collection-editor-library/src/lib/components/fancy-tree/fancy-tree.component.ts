@@ -94,7 +94,6 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       treeData = this.buildTree(this.nodes.data);
     }
-    this.editorService.treeData = treeData;
     this.rootNode = [{
       id: data.identifier || UUID.UUID(),
       title: data.name,

@@ -114,7 +114,6 @@ describe('FancyTreeComponent', () => {
     component.nodeParentDependentMap = undefined;
     // tslint:disable-next-line:no-shadowed-variable
     const editorService: EditorService = TestBed.get(EditorService);
-    editorService.treeData = undefined;
     spyOn(editorService, 'getParentDependentMap').and.returnValue({});
     editorConfig.config.renderTaxonomy = true;
     editorConfig.config.primaryCategory = 'Observation';
@@ -134,7 +133,6 @@ describe('FancyTreeComponent', () => {
     expect(component.removeIntermediateLevelsFromFramework).toHaveBeenCalled();
     expect(component.buildTreeFromFramework).toHaveBeenCalled();
     expect(component.buildTree).not.toHaveBeenCalled();
-    expect(editorService.treeData).toBeDefined();
     expect(component.rootNode).toBeDefined();
   });
 
@@ -152,7 +150,6 @@ describe('FancyTreeComponent', () => {
     component.nodeParentDependentMap = undefined;
     // tslint:disable-next-line:no-shadowed-variable
     const editorService: EditorService = TestBed.get(EditorService);
-    editorService.treeData = undefined;
     spyOn(editorService, 'getParentDependentMap').and.returnValue({});
     editorConfig.config.renderTaxonomy = true;
     editorConfig.config.primaryCategory = 'Observation';
@@ -172,7 +169,6 @@ describe('FancyTreeComponent', () => {
     expect(component.removeIntermediateLevelsFromFramework).not.toHaveBeenCalled();
     expect(component.buildTreeFromFramework).not.toHaveBeenCalled();
     expect(component.buildTree).toHaveBeenCalled();
-    expect(editorService.treeData).toBeDefined();
     expect(component.rootNode).toBeDefined();
   });
 

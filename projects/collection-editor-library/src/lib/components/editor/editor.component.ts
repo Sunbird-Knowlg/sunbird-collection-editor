@@ -198,7 +198,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.helperService.initialize(channel);
   }
 
-  async getFrameworkDetails(categoryDefinitionData) {
+  getFrameworkDetails(categoryDefinitionData) {
     let orgFWIdentifiers: any;
     let targetFWIdentifiers: any;
     let orgFWType: any;
@@ -207,12 +207,13 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.framework.default');
     if (_.get(this.editorConfig, 'config.renderTaxonomy') === true) {
       const orgId = _.get(this.editorConfig, 'context.identifier');
-      const data = await this.editorService.fetchOutComeDeclaration(orgId).toPromise();
-      if (data?.result) {
-        this.outcomeDeclaration = _.get(data?.result, 'questionset.outcomeDeclaration');
-        this.editorService.outcomeDeclaration = this.outcomeDeclaration;
-        this.levelsArray = Object.keys(this.outcomeDeclaration);
-      }
+      this.editorService.fetchOutComeDeclaration(orgId).toPromise()
+      .then(data => {
+        if (data?.result) {
+          this.outcomeDeclaration = _.get(data?.result, 'questionset.outcomeDeclaration');
+          this.levelsArray = Object.keys(this.outcomeDeclaration);
+        }
+      });
     }
     // tslint:disable-next-line:max-line-length
     this.publishchecklist = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.publishchecklist.properties') || _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.review.properties') || [];
