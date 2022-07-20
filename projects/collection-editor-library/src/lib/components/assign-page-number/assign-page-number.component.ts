@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { EditorService } from '../../services/editor/editor.service';
 import { TreeService } from '../../services/tree/tree.service';
 import * as _ from 'lodash-es';
+import { ConfigService } from '../../services/config/config.service';
 
 @Component({
   selector: 'lib-assign-page-number',
@@ -16,7 +17,8 @@ export class AssignPageNumberComponent implements OnInit {
   questions: any;
   @Output() assignPageEmitter = new EventEmitter<any>();
 
-  constructor(private editorService: EditorService, private treeService: TreeService) { }
+  constructor(private editorService: EditorService, private treeService: TreeService,
+              public configService: ConfigService) { }
 
   ngOnInit() {
     this.toolbarConfig = this.editorService.getToolbarConfig();

@@ -135,6 +135,7 @@
        "correctAns":"Correct answer",
        "addOption":"Add option",
        "question":"Question",
+       "pageNumber":"Page No",
        "confirmQuestionNotSaved":"This question will not be saved, are you sure you want to go back to questionset?",
        "video":"Video",
        "textImage":"Text+Image",

@@ -361,9 +361,9 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.visibility.addQuestionFromLibrary = ((node.folder === true) && !_.isEmpty(_.get(hierarchylevelData, 'children')) && _.get(this.config, 'enableAddFromLibrary') === true) ? true : false;
       }
     }
-    if (_.get(this.editorService, 'editorConfig.config.renderTaxonomy') === true){
-      this.visibility.addChild=false;
-      this.visibility.addSibling=false;
+    if (_.get(this.editorService, 'editorConfig.config.renderTaxonomy') === true) {
+      this.visibility.addChild = false;
+      this.visibility.addSibling = false;
     }
     this.cdr.detectChanges();
   }
