@@ -187,19 +187,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       if (!_.isUndefined(parentId) && !_.isUndefined(this.editorService.editorConfig.config.renderTaxonomy)) {
         this.getParentQuestionOptions(parentId);
         const sectionData = this.treeService.getNodeById(parentId);
-        const childerns = _.get(response, 'result.questionSet.children');
+        const children = _.get(response, 'result.questionSet.children');
         this.sectionPrimaryCategory = _.get(response, 'result.questionSet.primaryCategory');
         this.selectedSectionId = _.get(sectionData, 'data.metadata.parent');
-        _.forEach(childerns, (data) => {
-          if (data.identifier === this.selectedSectionId) {
-            this.branchingLogic = data?.branchingLogic ? data?.branchingLogic : {};
-            if (_.get(data?.branchingLogic, `${this.questionId}.source[0]`)) {
-              this.isChildQuestion = true;
-              this.getParentQuestionOptions(data.branchingLogic[this.questionId].source[0]);
-              this.setCondition(data);
-            }
-          }
-        });
+        this.getBranchingLogic(children);
       }
       this.questionFormConfig=_.cloneDeep(this.leafFormConfig);
       const leafFormConfigFields = _.join(_.map(this.leafFormConfig, value => (value.code)), ',');
@@ -1424,4 +1415,19 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.selectedOptions = Condition[getCondition][1];
   }
 
+  getBranchingLogic(children) {
+    _.forEach(children, (data) => {
+      if (data.identifier === this.selectedSectionId) {
+        this.branchingLogic = data?.branchingLogic ? data?.branchingLogic : {};
+        if (_.get(data?.branchingLogic, `${this.questionId}.source[0]`)) {
+          this.isChildQuestion = true;
+          this.getParentQuestionOptions(data.branchingLogic[this.questionId].source[0]);
+          this.setCondition(data);
+        }
+      }
+      if (data?.children) {
+        this.getBranchingLogic(data?.children);
+      }
+    });
+  }
 }

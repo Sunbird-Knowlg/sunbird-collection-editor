@@ -702,4 +702,22 @@ getDependentNodes(identifier) {
     return _.get(nodeData, 'data.primaryCategory');
   }
 
+  /**
+   * fetch Outcome Declaration levels using the questionsetId
+   * only for Observation with Rubrics
+   * @param identifier questionset identifier
+   */
+   fetchOutComeDeclaration(questionSetId, option: any = { params: {} }): Observable<any> {
+    const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
+    const param = {
+      fields: 'outcomeDeclaration'
+    };
+    const hierarchyUrl = `${url.READ}/${questionSetId}`;
+    const req = {
+      url: hierarchyUrl,
+      param: { ...param, ...option.params }
+    };
+    return this.publicDataService.get(req);
+  }
+
 }

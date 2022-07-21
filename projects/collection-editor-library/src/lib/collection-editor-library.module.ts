@@ -51,6 +51,8 @@ import { BulkUploadComponent  } from './components/bulk-upload/bulk-upload.compo
 import { RelationalMetadataComponent } from './components/relational-metadata/relational-metadata.component';
 import { ResourceLibraryModule } from '@project-sunbird/sunbird-resource-library';
 import { AppLoaderComponent } from './components/app-loader/app-loader.component';
+import { AssignPageNumberComponent } from './components/assign-page-number/assign-page-number.component';
+import { PlainTreeComponent } from './components/plain-tree/plain-tree.component';
 import { A11yModule } from '@angular/cdk/a11y';
 @NgModule({
   declarations: [CollectionEditorLibraryComponent, InterpolatePipe, SanitizeHtmlPipe, ContentplayerPageComponent,
@@ -60,7 +62,9 @@ import { A11yModule } from '@angular/cdk/a11y';
     TelemetryInteractDirective, AssetBrowserComponent, CollectionIconComponent,
     QumlPlayerComponent, DialcodeComponent, BulkUploadComponent, CsvUploadComponent, ManageCollaboratorComponent,
     PublishChecklistComponent, QuestionOptionSubMenuComponent, SliderComponent, TranslationsComponent,AppLoaderComponent,
-    RelationalMetadataComponent],
+    RelationalMetadataComponent,
+    AssignPageNumberComponent,
+    PlainTreeComponent],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule.forChild([]), SuiModule,
   CommonFormElementsModule, InfiniteScrollModule, HttpClientModule, SunbirdPdfPlayerModule, SunbirdVideoPlayerModule,
   QumlLibraryModule, CarouselModule, SunbirdEpubPlayerModule, ResourceLibraryModule, A11yModule],

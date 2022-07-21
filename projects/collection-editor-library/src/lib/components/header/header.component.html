@@ -40,6 +40,13 @@
       <i class="icon user plus mr-0" aria-hidden="true"></i>
     </div>
     <lib-dialcode *ngIf="visibility && visibility?.dialcode && labelConfigData?.showDialcode === 'yes'" class="d-flex flex-ai-center"></lib-dialcode>
+    <button *ngIf="visibility && visibility?.submitContent && !bulkUploadStatus && labelConfigData?.hasChildren && !visibility.hideSubmitForReviewBtn && visibility.showPaginationBtn"
+    class="sb-btn sb-btn-normal sb-btn-primary mr-10" (click)="buttonEmitter({type:'pagination'})" libTelemetryInteract
+    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('submit','click','submit', telemetryService.telemetryPageId)"
+    >
+      <em class="{{labelConfigData.submit_collection_btn_icon}}"></em>
+      {{labelConfigData.add_page_numbers_to_questions_btn_label}}
+    </button>
     <lib-bulk-upload *ngIf="visibility && visibility?.bulkUpload && labelConfigData?.showBulkUploadBtn" class="d-flex flex-ai-center mr-10" (bulkUploadEmitter)="bulkUploadListener($event)" ></lib-bulk-upload>
     <button *ngIf="visibility && visibility?.previewContent  && labelConfigData?.hasChildren && !bulkUploadStatus" class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10"
       [ngClass]="!buttonLoaders?.previewButtonLoader ? '': 'sb-btn-loading-spinner sb-btn-outline-disabled'"

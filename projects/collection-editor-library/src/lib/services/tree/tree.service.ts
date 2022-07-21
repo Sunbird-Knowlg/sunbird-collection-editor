@@ -60,7 +60,7 @@ export class TreeService {
     this.setTreeCache(nodeId, _.merge({}, {[key] : value}, _.pick(node.data.metadata, ['objectType'])));
   }
 
-  updateTreeNodeMetadata(newData: any, nodeToBeUpdated?: any, primaryCategory?: any) {
+  updateTreeNodeMetadata(newData: any, nodeToBeUpdated?: any, primaryCategory?: any, objectType?: any) {
     const activeNode = !_.isUndefined(nodeToBeUpdated) ? this.getNodeById(nodeToBeUpdated) : this.getActiveNode();
     const nodeId = nodeToBeUpdated  || activeNode.data.id;
     if (newData.instructions) {
@@ -82,6 +82,9 @@ export class TreeService {
 
     if (copyrightYear) {
       newData.copyrightYear = _.toNumber(copyrightYear);
+    }
+    if (objectType) {
+      newData.objectType = objectType;
     }
     const timeLimits: any = {};
     if (maxTime) {

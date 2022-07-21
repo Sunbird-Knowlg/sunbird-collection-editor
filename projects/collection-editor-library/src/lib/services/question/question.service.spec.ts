@@ -20,8 +20,8 @@ describe('QuestionService', () => {
         labelConfig: (labelConfig as any).default,
         categoryConfig: (categoryConfig as any).default,
         editorConfig: {
-            'config': {
-                'objectType': 'QuestionSet'
+            config: {
+                objectType: 'QuestionSet'
             }
         }
     };
@@ -36,7 +36,7 @@ describe('QuestionService', () => {
         });
         questionService = TestBed.inject(QuestionService);
         publicDataService = TestBed.inject(PublicDataService);
-    })
+    });
 
     it('should be created', () => {
         expect(questionService).toBeTruthy();
@@ -49,7 +49,7 @@ describe('QuestionService', () => {
         }));
         questionService.readQuestion(questionId).subscribe(data => {
             expect(data.responseCode).toEqual('OK');
-        })
+        });
     });
 
     it('#updateHierarchyQuestionCreate() it should update hierarchy on question create', () => {
@@ -59,7 +59,7 @@ describe('QuestionService', () => {
         }));
         questionService.updateHierarchyQuestionCreate(hierarchyBody).subscribe(data => {
             expect(data.responseCode).toEqual('OK');
-        })
+        });
     });
 
     it('#updateHierarchyQuestionUpdate() it should update hierarchy on question update', () => {
@@ -69,7 +69,7 @@ describe('QuestionService', () => {
         }));
         questionService.updateHierarchyQuestionUpdate(hierarchyBody).subscribe(data => {
             expect(data.responseCode).toEqual('OK');
-        })
+        });
     });
 
     it('#getAssetMedia() it should return assets on API success', () => {
@@ -78,7 +78,7 @@ describe('QuestionService', () => {
         }));
         questionService.getAssetMedia().subscribe(data => {
             expect(data.responseCode).toEqual('OK');
-        })
+        });
     });
 
     it('#createMediaAsset() it should create asset on API success', () => {
@@ -87,7 +87,7 @@ describe('QuestionService', () => {
         }));
         questionService.createMediaAsset().subscribe(data => {
             expect(data.responseCode).toEqual('OK');
-        })
+        });
     });
 
     it('#uploadMedia() it should upload asset on API success', () => {
@@ -98,8 +98,8 @@ describe('QuestionService', () => {
         const assetId = 'do_123';
         questionService.uploadMedia(req, assetId).subscribe(data => {
             expect(data.responseCode).toEqual('OK');
-        })
-    })
+        });
+    });
 
     it('#generatePreSignedUrl() it should generate pre signed url on API success', () => {
         spyOn(publicDataService, 'post').and.returnValue(of({
@@ -109,8 +109,8 @@ describe('QuestionService', () => {
         const contentId = 'do_123';
         questionService.generatePreSignedUrl(req, contentId).subscribe(data => {
             expect(data.responseCode).toEqual('OK');
-        })
-    })
+        });
+    });
 
     it('#getVideo() it should return video details on API success', () => {
         spyOn(publicDataService, 'get').and.returnValue(of({
@@ -119,8 +119,8 @@ describe('QuestionService', () => {
         const videoId = 'do_123';
         questionService.getVideo(videoId).subscribe(data => {
             expect(data.responseCode).toEqual('OK');
-        })
-    })
+        });
+    });
 
     it('#upsertQuestion() it should update question on API success', () => {
         const questionId = 'do_123';
@@ -130,6 +130,16 @@ describe('QuestionService', () => {
         questionService.upsertQuestion(questionId, {}).subscribe(data => {
             expect(data.responseCode).toEqual('OK');
         });
-    })
+    });
 
-})
+    it('#getQuestionList() it should update question on API success', () => {
+        const questionId = 'do_123';
+        spyOn(publicDataService, 'post').and.returnValue(of({
+            responseCode: 'OK'
+        }));
+        questionService.getQuestionList(['do_123', 'do_1234']).subscribe(data => {
+            expect(data.responseCode).toEqual('OK');
+        });
+    });
+
+});

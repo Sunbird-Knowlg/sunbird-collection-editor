@@ -258,7 +258,7 @@ export const questionSetEditorConfig = {
     sourcingResourceStatus: true,
   },
   config: {
-    mode: 'edit', // edit / review / read / sourcingReview // orgReview
+    mode: 'orgReview', // edit / review / read / sourcingReview // orgReview
     enableQuestionCreation: true,
     enableAddFromLibrary: true,
     editableFields: {
@@ -598,7 +598,7 @@ export const observationEditorConfig = {
       orgIds: ['01309282781705830427']
     },
     // identifier: 'do_113395089840529408131', // 'do_1132393548335759361558', // do_11330102570702438417
-    identifier: 'do_113480838751551488129',  // 'do_1133610108714352641210', // Observation
+    identifier: 'do_1135439342598225921356',  // 'do_1133610108714352641210', // Observation
     // identifier: 'do_113395099906416640139', // survey
     // identifier: 'do_1134357224765685761203', // Observation With Rubrics
     authToken: ' ',
@@ -641,9 +641,6 @@ export const observationEditorConfig = {
     framework: 'ekstep_ncert_k-12',
     cloudStorageUrls: ['https://s3.ap-south-1.amazonaws.com/ekstep-public-qa/', 'https://ekstep-public-qa.s3-ap-south-1.amazonaws.com/',
                       'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/'],
-    board: 'CBSE',
-    medium: ['English'],
-    gradeLevel: ['Class 1'],
     subject: ['Environmental Studies'],
     topic: ['Forest'],
     additionalCategories: [
@@ -912,6 +909,7 @@ export const surveyEditorConfig = {
     iconClass: 'fa fa-book',
     showAddCollaborator: false,
     enableBulkUpload: true,
+    enablePagination: true,
     publicStorageAccount: 'https://dockstorage.blob.core.windows.net/',
     children: {
       Question: [
@@ -1106,6 +1104,7 @@ export const observationRubricsEditorConfig = {
     iconClass: 'fa fa-book',
     showAddCollaborator: false,
     enableBulkUpload: true,
+    enablePagination:true,
     publicStorageAccount: 'https://dockstorage.blob.core.windows.net/',
     children: {
       Question: [

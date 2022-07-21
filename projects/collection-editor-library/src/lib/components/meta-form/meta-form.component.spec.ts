@@ -32,8 +32,9 @@ describe('MetaFormComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(MetaFormComponent);
     component = fixture.componentInstance;
-    component.appIcon='https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png';
-    component.showAppIcon=true;
+    // tslint:disable-next-line:max-line-length
+    component.appIcon = 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png';
+    component.showAppIcon = true;
     fixture.detectChanges();
   });
 
@@ -41,6 +42,34 @@ describe('MetaFormComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('#valueChanges() should call updateNode and emit data for obs with rubrics', () => {
+    spyOn(component, 'valueChanges').and.callThrough();
+    // tslint:disable-next-line:max-line-length
+    component.appIcon = 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png';
+    component.showAppIcon = true;
+    const event = {
+      instances: 'Add Student',
+      appIcon: 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png',
+      allowECM : 'No',
+      levels : ['good', 'bad', 'average'],
+      setPeriod : 'No'
+    };
+    spyOn(component, 'createLeavels').and.returnValue({
+        L1: {
+            label: 'Good'
+        }
+    });
+    spyOn(component.toolbarEmitter, 'emit');
+    component.valueChanges(event);
+    expect(component.valueChanges).toHaveBeenCalledWith(event);
+  });
+
+  it('#createLeavels should call when the levels are defined', () => {
+    spyOn(component, 'createLeavels').and.callThrough();
+    const levels = ['good'];
+    component.createLeavels(levels);
+    expect(component.createLeavels).toHaveBeenCalledWith(levels);
+  });
   it('#ngOnChanges() should call setAppIconData', () => {
     spyOn(component, 'fetchFrameWorkDetails').and.callFake(() => {});
     spyOn(component, 'setAppIconData').and.callFake(() => {});
