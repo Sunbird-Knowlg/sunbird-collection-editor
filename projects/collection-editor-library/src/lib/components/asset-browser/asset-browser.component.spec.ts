@@ -28,6 +28,9 @@ const mockEditorService = {
       },
       channel: 'sunbird'
     }
+  },
+  appendCloudStorageHeaders: (config) => {
+    return config;
   }
 };
 describe('AssetBrowserComponent', () => {

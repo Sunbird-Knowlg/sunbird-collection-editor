@@ -52,13 +52,13 @@ describe('EditorService', () => {
         PublicDataService,
         { provide: ConfigService, useValue: configStub }]
     });
-    editorService = TestBed.get(EditorService);
-    treeService=TestBed.get(TreeService);
+    editorService = TestBed.inject(EditorService);
+    treeService= TestBed.inject(TreeService);
     editorService.initialize(editorConfig);
   });
 
   it('should be created', () => {
-    const service: EditorService = TestBed.get(EditorService);
+    const service: EditorService = TestBed.inject(EditorService);
     expect(service).toBeTruthy();
   });
 
@@ -534,46 +534,59 @@ describe('EditorService', () => {
     expect(maxScore).toEqual(0);
   });
 
-  it('#getCollectionHierarchy should call',()=>{
+  it('#getCollectionHierarchy should call', () => {
     spyOn(editorService,'getCollectionHierarchy').and.callThrough();
     spyOn(treeService, 'getFirstChild').and.callFake(() => {
       return { data: { metadata: { identifier: '0123'} } };
     });
-    hierarchyRootNodeData.folder=true;
+    hierarchyRootNodeData.folder = true;
+    editorService.getHierarchyObj(hierarchyRootNodeData, 'do_113432866096922624110','do_113432866096922624110','do_1134468013653114881310');
+    editorService.getCollectionHierarchy();
+    expect(editorService.getCollectionHierarchy).toHaveBeenCalled();
+  });
+
+  it('#getCollectionHierarchy should call when folder false', () => {
+    spyOn(editorService,'getCollectionHierarchy').and.callThrough();
+    spyOn(treeService, 'getFirstChild').and.callFake(() => {
+      return { data: { metadata: { identifier: '0123'} } };
+    });
+    hierarchyRootNodeData.folder = false;
     editorService.getHierarchyObj(hierarchyRootNodeData,'do_113432866096922624110','do_113432866096922624110','do_1134468013653114881310');
     editorService.getCollectionHierarchy();
     expect(editorService.getCollectionHierarchy).toHaveBeenCalled();
-  })
+  });
 
-  it('#getCollectionHierarchy should call when folder false',()=>{
+  it('#getCollectionHierarchy should call when no section id and parent', () => {
     spyOn(editorService,'getCollectionHierarchy').and.callThrough();
     spyOn(treeService, 'getFirstChild').and.callFake(() => {
       return { data: { metadata: { identifier: '0123'} } };
     });
-    hierarchyRootNodeData.folder=false;
-    editorService.getHierarchyObj(hierarchyRootNodeData,'do_113432866096922624110','do_113432866096922624110','do_1134468013653114881310');
-    editorService.getCollectionHierarchy();
-    expect(editorService.getCollectionHierarchy).toHaveBeenCalled();
-  })
-
-  it('#getCollectionHierarchy should call when no section id and parent',()=>{
-    spyOn(editorService,'getCollectionHierarchy').and.callThrough();
-    spyOn(treeService, 'getFirstChild').and.callFake(() => {
-      return { data: { metadata: { identifier: '0123'} } };
-    });
-    hierarchyRootNodeData.folder=false;
+    hierarchyRootNodeData.folder = false;
     editorService.getHierarchyObj(hierarchyRootNodeData);
     editorService.getCollectionHierarchy();
     expect(editorService.getCollectionHierarchy).toHaveBeenCalled();
-  })
+  });
 
-  it('#_toFlatObjFromHierarchy should call',()=>{
-    spyOn(editorService,'_toFlatObjFromHierarchy').and.callThrough();
+  it('#_toFlatObjFromHierarchy should call', () => {
+    spyOn(editorService, '_toFlatObjFromHierarchy').and.callThrough();
     spyOn(treeService, 'getFirstChild').and.callFake(() => {
       return { data: { metadata: { identifier: '0123'} } };
     });
     editorService._toFlatObjFromHierarchy(rootNodeData);
     expect(editorService._toFlatObjFromHierarchy).toHaveBeenCalled();
-  })
+  });
+
+  it('#appendCloudStorageHeaders should set cloud storage headers if exist', () => {
+    const config = editorService.appendCloudStorageHeaders({});
+    expect(config).toEqual({headers: { 'x-ms-blob-type': 'BlockBlob' }});
+  });
+
+  it('#appendCloudStorageHeaders should not set cloud storage headers if not exist', () => {
+    const editorConfigMock: any = {config: editorConfig.config, context: _.omit(editorConfig.context, 'cloudStorage') };
+    editorService.initialize(editorConfigMock);
+    const config = editorService.appendCloudStorageHeaders({});
+    expect(config).toEqual({});
+  });
+
 
 });

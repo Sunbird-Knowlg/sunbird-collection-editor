@@ -66,6 +66,11 @@ editorConfig = {
       'https://dockstorage.blob.core.windows.net/sunbird-content-dock/',
     ],
     mode: 'edit',
+    cloudStorage: {
+      presigned_headers: {
+        'x-ms-blob-type': 'BlockBlob'
+      }
+    }
   },
   config: {
     mode: 'edit',
