@@ -351,6 +351,8 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
   ngOnDestroy() {
     this.onComponentDestroy$.next();
     this.onComponentDestroy$.complete();
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 }
