@@ -534,9 +534,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   updateToolbarTitle(data: any) {
     const selectedNode = this.treeService.getActiveNode();
-    if (!_.isEmpty(data?.event?.name) && selectedNode?.data?.root) {
-      this.toolbarConfig.title = data.event.name;
-    } else if (_.isEmpty(data?.event?.name) && selectedNode?.data?.root) {
+    if (!_.isEmpty(data?.data?.name) && selectedNode?.data?.root) {
+      this.toolbarConfig.title = data.data.name;
+    } else if (_.isEmpty(data?.data?.name) && selectedNode?.data?.root) {
       this.toolbarConfig.title = 'Untitled';
     }
   }
