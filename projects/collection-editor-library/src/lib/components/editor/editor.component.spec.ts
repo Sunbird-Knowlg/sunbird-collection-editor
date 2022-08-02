@@ -656,7 +656,7 @@ describe('EditorComponent', () => {
     spyOn(treeService, 'getActiveNode').and.callFake(() => {
       return { data: { root: true } };
     });
-    component.updateToolbarTitle({ event: { name: 'test' } });
+    component.updateToolbarTitle({ data: { name: 'test' } });
     expect(treeService.getActiveNode).toHaveBeenCalled();
     expect(component.toolbarConfig.title).toEqual('test');
   });
