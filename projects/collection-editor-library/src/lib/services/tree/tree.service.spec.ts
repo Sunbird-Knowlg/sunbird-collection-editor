@@ -12,12 +12,12 @@ describe('TreeService', () => {
       providers: [HttpClient]
     });
 
-    treeService = TestBed.get(TreeService);
+    treeService = TestBed.inject(TreeService);
     treeService.initialize(editorConfig);
   });
 
   it('should be created', () => {
-    const service: TreeService = TestBed.get(TreeService);
+    const service: TreeService = TestBed.inject(TreeService);
     expect(service).toBeTruthy();
   });
 

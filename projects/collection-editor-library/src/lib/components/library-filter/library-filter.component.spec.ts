@@ -49,7 +49,7 @@ describe('LibraryFilterComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(LibraryFilterComponent);
     component = fixture.componentInstance;
-    const treeService = TestBed.get(TreeService);
+    const treeService = TestBed.inject(TreeService);
     spyOn(treeService, 'getActiveNode').and.callFake(() => {
       return { getLevel: () => 2 };
     });

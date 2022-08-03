@@ -75,12 +75,12 @@ describe('PlayerService', () => {
   });
 
   it('should be created', () => {
-    const service: PlayerService = TestBed.get(PlayerService);
+    const service: PlayerService = TestBed.inject(PlayerService);
     expect(service).toBeTruthy();
   });
 
   it('#getQumlPlayerConfig() should return QUML player config', () => {
-    const service: PlayerService = TestBed.get(PlayerService);
+    const service: PlayerService = TestBed.inject(PlayerService);
     const result = service.getQumlPlayerConfig();
     expect(result.context.userData).toBeTruthy();
     expect(result.config).toBeTruthy();
@@ -90,7 +90,7 @@ describe('PlayerService', () => {
   })
 
   it('#getPlayerConfig() should return player config', () => {
-    const service: PlayerService = TestBed.get(PlayerService);
+    const service: PlayerService = TestBed.inject(PlayerService);
     const contentDetails = {
       contentId: 'do_123',
       courseId: 'do_1234',

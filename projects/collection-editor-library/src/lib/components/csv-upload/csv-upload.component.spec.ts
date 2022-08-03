@@ -128,7 +128,7 @@ describe('CsvUploadComponent', () => {
       fileType: 'csv',
       fileName: component.collectionId
     };
-    const editorService = TestBed.get(EditorService);
+    const editorService = TestBed.inject(EditorService);
     //spyOn(editorService, 'downloadBlobUrlFile').and.callThrough();
     component.downloadSampleCSVFile();
     //expect(editorService.downloadBlobUrlFile).toHaveBeenCalledWith(config);

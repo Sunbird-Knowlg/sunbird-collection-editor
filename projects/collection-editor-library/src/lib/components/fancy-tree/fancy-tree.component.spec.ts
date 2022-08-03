@@ -42,8 +42,8 @@ describe('FancyTreeComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(FancyTreeComponent);
-    editorService = TestBed.get(EditorService);
-    helperService = TestBed.get(HelperService);
+    editorService = TestBed.inject(EditorService);
+    helperService = TestBed.inject(HelperService);
     component = fixture.componentInstance;
     // fixture.detectChanges();
   });
@@ -55,7 +55,7 @@ describe('FancyTreeComponent', () => {
   it('#ngOnInit() should set bulkUploadProcessingStatus to true', () => {
     component.config = { mode: undefined };
     // tslint:disable-next-line:no-shadowed-variable
-    const editorService = TestBed.get(EditorService);
+    const editorService = TestBed.inject(EditorService);
     component.bulkUploadProcessingStatus = false;
     spyOnProperty(editorService, 'editorConfig', 'get').and.returnValue(editorConfig);
     // tslint:disable-next-line:no-string-literal
@@ -71,7 +71,7 @@ describe('FancyTreeComponent', () => {
   it('#ngOnInit() should set bulkUploadProcessingStatus to false', () => {
     component.config = { mode: undefined, maxDepth: 0 };
     // tslint:disable-next-line:no-shadowed-variable
-    const editorService = TestBed.get(EditorService);
+    const editorService = TestBed.inject(EditorService);
     component.bulkUploadProcessingStatus = true;
     const mockEditorConfig = _.omit(editorConfig, 'config.maxDepth');
     spyOnProperty(editorService, 'editorConfig', 'get').and.returnValue(mockEditorConfig);
@@ -88,7 +88,7 @@ describe('FancyTreeComponent', () => {
 
   it('#ngOnInit() should call #initialize() when primaryCategory os obs with rubrics', () => {
     // tslint:disable-next-line:no-shadowed-variable
-    const editorService = TestBed.get(EditorService);
+    const editorService = TestBed.inject(EditorService);
     component.nodes = {
       data: observationWithRubricsMockData.data
     };
@@ -113,13 +113,13 @@ describe('FancyTreeComponent', () => {
     component.rootNode = undefined;
     component.nodeParentDependentMap = undefined;
     // tslint:disable-next-line:no-shadowed-variable
-    const editorService: EditorService = TestBed.get(EditorService);
+    const editorService: EditorService = TestBed.inject(EditorService);
     spyOn(editorService, 'getParentDependentMap').and.returnValue({});
     editorConfig.config.renderTaxonomy = true;
     editorConfig.config.primaryCategory = 'Observation';
     editorConfig.config.objectType = 'QuestionSet';
     // tslint:disable-next-line:no-shadowed-variable
-    const helperService = TestBed.get(HelperService);
+    const helperService = TestBed.inject(HelperService);
     spyOn(helperService, 'addDepthToHierarchy').and.callFake(() => {});
     spyOnProperty(editorService, 'editorConfig', 'get').and.returnValue(editorConfig);
     spyOn(component, 'removeIntermediateLevelsFromFramework').and.returnValue({});
@@ -149,13 +149,13 @@ describe('FancyTreeComponent', () => {
     component.rootNode = undefined;
     component.nodeParentDependentMap = undefined;
     // tslint:disable-next-line:no-shadowed-variable
-    const editorService: EditorService = TestBed.get(EditorService);
+    const editorService: EditorService = TestBed.inject(EditorService);
     spyOn(editorService, 'getParentDependentMap').and.returnValue({});
     editorConfig.config.renderTaxonomy = true;
     editorConfig.config.primaryCategory = 'Observation';
     editorConfig.config.objectType = 'QuestionSet';
     // tslint:disable-next-line:no-shadowed-variable
-    const helperService = TestBed.get(HelperService);
+    const helperService = TestBed.inject(HelperService);
     spyOn(helperService, 'addDepthToHierarchy').and.callFake(() => {});
     spyOnProperty(editorService, 'editorConfig', 'get').and.returnValue(editorConfig);
     spyOn(component, 'removeIntermediateLevelsFromFramework').and.returnValue({});
@@ -203,7 +203,7 @@ describe('FancyTreeComponent', () => {
       data: {}
     };
     // tslint:disable-next-line:no-shadowed-variable
-    const editorService: EditorService = TestBed.get(EditorService);
+    const editorService: EditorService = TestBed.inject(EditorService);
     editorConfig.config.renderTaxonomy = true;
     editorConfig.config.primaryCategory = 'Observation';
     editorConfig.config.objectType = 'QuestionSet';
@@ -223,7 +223,7 @@ describe('FancyTreeComponent', () => {
   });
   
   it('#addFromLibrary() should call #emitshowLibraryPageEvent()', () => {
-    const editorService: EditorService = TestBed.get(EditorService);
+    const editorService: EditorService = TestBed.inject(EditorService);
     spyOn(editorService, 'emitshowLibraryPageEvent').and.returnValue('showLibraryPage');
     component.addFromLibrary();
     expect(editorService.emitshowLibraryPageEvent).toHaveBeenCalledWith('showLibraryPage');
@@ -302,7 +302,7 @@ describe('FancyTreeComponent', () => {
   });
 
   it('#addFromLibrary() should call #emitshowLibraryPageEvent()', () => {
-    const editorService: EditorService = TestBed.get(EditorService);
+    const editorService: EditorService = TestBed.inject(EditorService);
     spyOn(editorService, 'emitshowLibraryPageEvent');
     component.addFromLibrary();
     expect(editorService.emitshowLibraryPageEvent).toHaveBeenCalled();
