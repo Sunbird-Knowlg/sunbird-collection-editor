@@ -11,7 +11,7 @@ jobs:
   test-cases:
     working_directory: ~/sunbird-collection-editor
     machine:
-      image: ubuntu-2004:202010-01
+      image: ubuntu-2004:202111-02
     steps:
       - checkout:
           path: ~/sunbird-collection-editor
@@ -20,7 +20,7 @@ jobs:
           command: 'node --version'
       - run:
           name: Installing angular cli
-          command: 'npm install -g @angular/cli@6.0.8 --no-progress'
+          command: 'npm install -g @angular/cli@10.2.4 --no-progress'
       #~ - restore_cache:
           #~ key: dependency-cache-{{ checksum "package.json" }}
       - run:

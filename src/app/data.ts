@@ -7,7 +7,7 @@ export const courseEditorConfig = {
       lastName: 'Bhuva',
       orgIds: ['01309282781705830427']
     },
-    identifier: 'do_1133618765350748161337',
+    identifier: 'do_1135494290843156481150',
     channel: '01309282781705830427',
     // framework: 'nit_k-12',
     // targetFWIds: ['nit_k-12'],

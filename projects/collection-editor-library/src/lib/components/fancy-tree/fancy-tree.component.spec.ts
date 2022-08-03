@@ -55,7 +55,7 @@ describe('FancyTreeComponent', () => {
   it('#ngOnInit() should set bulkUploadProcessingStatus to true', () => {
     component.config = { mode: undefined };
     // tslint:disable-next-line:no-shadowed-variable
-    const editorService = TestBed.inject(EditorService);
+    const editorService: any = TestBed.inject(EditorService);
     component.bulkUploadProcessingStatus = false;
     spyOnProperty(editorService, 'editorConfig', 'get').and.returnValue(editorConfig);
     // tslint:disable-next-line:no-string-literal
@@ -71,7 +71,7 @@ describe('FancyTreeComponent', () => {
   it('#ngOnInit() should set bulkUploadProcessingStatus to false', () => {
     component.config = { mode: undefined, maxDepth: 0 };
     // tslint:disable-next-line:no-shadowed-variable
-    const editorService = TestBed.inject(EditorService);
+    const editorService: any = TestBed.inject(EditorService);
     component.bulkUploadProcessingStatus = true;
     const mockEditorConfig = _.omit(editorConfig, 'config.maxDepth');
     spyOnProperty(editorService, 'editorConfig', 'get').and.returnValue(mockEditorConfig);
