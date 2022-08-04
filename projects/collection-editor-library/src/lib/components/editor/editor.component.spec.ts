@@ -1070,7 +1070,7 @@ describe('EditorComponent', () => {
         }
       }
     };
-    const treeService = TestBed.inject(TreeService);
+    const treeService: any = TestBed.inject(TreeService);
     treeService.nativeElement = nativeElement;
     spyOn(treeService, 'setTreeElement').and.callFake((el) => {
       treeService.nativeElement = nativeElement;
@@ -1525,7 +1525,7 @@ describe('EditorComponent', () => {
         }
     };
     component.editorConfig = editorConfig;
-    const frameworkService = TestBed.inject(FrameworkService);
+    const frameworkService: any = TestBed.inject(FrameworkService);
     frameworkService.organisationFramework = 'tpd';
     // tslint:disable-next-line:max-line-length
     frameworkService.frameworkData$ = of({frameworkdata: {tpd: of({'frameworkdata' : frameworkData})}});
