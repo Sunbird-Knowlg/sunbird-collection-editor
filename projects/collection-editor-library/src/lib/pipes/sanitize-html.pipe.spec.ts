@@ -10,7 +10,7 @@ describe('TitleCasePipe', () => {
   });
 
   it('should create an instance', () => {
-    const domSanitizer = TestBed.get(DomSanitizer);
+    const domSanitizer = TestBed.inject(DomSanitizer);
     const pipe = new SanitizeHtmlPipe(domSanitizer);
     expect(pipe).toBeTruthy();
   });

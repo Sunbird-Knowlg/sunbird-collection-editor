@@ -23,14 +23,14 @@ describe('DialcodeService', () => {
   });
 
   it('should be created', () => {
-    const service: DialcodeService = TestBed.get(DialcodeService);
+    const service: DialcodeService = TestBed.inject(DialcodeService);
     expect(service).toBeTruthy();
   });
 
   it('#reserveDialCode() should reserve dialcode when API success', () => {
-    const publicDataService: PublicDataService = TestBed.get(PublicDataService);
+    const publicDataService: PublicDataService = TestBed.inject(PublicDataService);
     spyOn(publicDataService, 'post').and.returnValue(of({ responseCode: 'ok' }));
-    const service: DialcodeService = TestBed.get(DialcodeService);
+    const service: DialcodeService = TestBed.inject(DialcodeService);
     const observable = service.reserveDialCode('do_123', 3);
     observable.subscribe((data) => {
       expect(data).toEqual({responseCode: 'ok'});
@@ -38,9 +38,9 @@ describe('DialcodeService', () => {
   });
 
   it('#linkDialcode() should link dialcode when API success', () => {
-    const publicDataService: PublicDataService = TestBed.get(PublicDataService);
+    const publicDataService: PublicDataService = TestBed.inject(PublicDataService);
     spyOn(publicDataService, 'post').and.returnValue(of({responseCode: 'ok'}));
-    const service: DialcodeService = TestBed.get(DialcodeService);
+    const service: DialcodeService = TestBed.inject(DialcodeService);
     const observable = service.linkDialcode('do_123', ['ABC', 'BHD']);
     observable.subscribe((data) => {
       expect(data).toEqual({responseCode: 'ok'});
@@ -48,9 +48,9 @@ describe('DialcodeService', () => {
   });
 
   it('#downloadQRCode() should download dialcode when API success', () => {
-    const publicDataService: PublicDataService = TestBed.get(PublicDataService);
+    const publicDataService: PublicDataService = TestBed.inject(PublicDataService);
     spyOn(publicDataService, 'get').and.returnValue(of({}));
-    const service: DialcodeService = TestBed.get(DialcodeService);
+    const service: DialcodeService = TestBed.inject(DialcodeService);
     const observable = service.downloadQRCode('do_123');
     observable.subscribe((data) => {
       expect(data).toEqual({});
@@ -58,9 +58,9 @@ describe('DialcodeService', () => {
   });
 
   it('#searchDialCode() should fetch dialcode when API success', () => {
-    const publicDataService: PublicDataService = TestBed.get(PublicDataService);
+    const publicDataService: PublicDataService = TestBed.inject(PublicDataService);
     spyOn(publicDataService, 'post').and.returnValue(of({}));
-    const service: DialcodeService = TestBed.get(DialcodeService);
+    const service: DialcodeService = TestBed.inject(DialcodeService);
     const observable = service.searchDialCode('do_123');
     observable.subscribe((data) => {
       expect(data).toEqual({});
@@ -68,7 +68,7 @@ describe('DialcodeService', () => {
   });
 
   it('#updateDialCode() should not update dialcode when empty', () => {
-    const service: DialcodeService = TestBed.get(DialcodeService);
+    const service: DialcodeService = TestBed.inject(DialcodeService);
     const observable = service.updateDialCode([]);
     observable.subscribe((data) => {
       expect(data.isEditable).toBeFalsy();
@@ -76,7 +76,7 @@ describe('DialcodeService', () => {
   });
 
   it('#updateDialCode() should not call  #searchDialCode when dialcode exists in the #dialcodeList', () => {
-    const service: DialcodeService = TestBed.get(DialcodeService);
+    const service: DialcodeService = TestBed.inject(DialcodeService);
     spyOn(service, 'searchDialCode').and.callThrough();
     service.dialcodeList = ['ABC123'];
     const observable = service.updateDialCode(['ABC123']);
@@ -88,7 +88,7 @@ describe('DialcodeService', () => {
   });
 
   it('#updateDialCode() should update the dialcode value ', () => {
-    const service: DialcodeService = TestBed.get(DialcodeService);
+    const service: DialcodeService = TestBed.inject(DialcodeService);
     spyOn(service, 'searchDialCode').and.callFake(() => {
       return of({ result: { count: 1, dialcodes: [{ identifier: 'ABC123' }]} });
     });
@@ -100,24 +100,24 @@ describe('DialcodeService', () => {
   });
 
   it('#clearDialCode() should clear dialcode', () => {
-    const treeService: TreeService = TestBed.get(TreeService);
+    const treeService: TreeService = TestBed.inject(TreeService);
     spyOn(treeService, 'getActiveNode').and.callFake(() => {
       return { data : { id: 'do_123', metadata: { dialcodes: null } } };
     });
     spyOn(treeService, 'nextTreeStatus').and.callThrough();
-    const service: DialcodeService = TestBed.get(DialcodeService);
+    const service: DialcodeService = TestBed.inject(DialcodeService);
     spyOn(service, 'searchDialCode').and.callThrough();
     service.clearDialCode();
     expect(treeService.nextTreeStatus).toHaveBeenCalledWith('modified');
   });
 
   it('#clearDialCode() should remove dialcode from the #dialCodeMap', () => {
-    const treeService: TreeService = TestBed.get(TreeService);
+    const treeService: TreeService = TestBed.inject(TreeService);
     spyOn(treeService, 'getActiveNode').and.callFake(() => {
       return { data : { id: 'do_123', metadata: { dialcodes: null } } };
     });
     spyOn(treeService, 'nextTreeStatus').and.callThrough();
-    const service: DialcodeService = TestBed.get(DialcodeService);
+    const service: DialcodeService = TestBed.inject(DialcodeService);
     service.dialCodeMap = { do_123 : 'ABC123' };
     spyOn(service, 'searchDialCode').and.callThrough();
     service.clearDialCode();
@@ -126,23 +126,23 @@ describe('DialcodeService', () => {
   });
 
   it('#changeDialCode should not call #nextTreeStatus when passing parameter', () => {
-    const treeService: TreeService = TestBed.get(TreeService);
+    const treeService: TreeService = TestBed.inject(TreeService);
     spyOn(treeService, 'getActiveNode').and.callFake(() => {
       return { data : { id: 'do_123', metadata: { dialcodes: 'XYA1H5' } }};
     });
     spyOn(treeService, 'nextTreeStatus').and.callThrough();
-    const service: DialcodeService = TestBed.get(DialcodeService);
+    const service: DialcodeService = TestBed.inject(DialcodeService);
     service.changeDialCode('ABC123');
     expect(treeService.nextTreeStatus).not.toHaveBeenCalled();
   });
 
   it('#changeDialCode should call #nextTreeStatus when passing empty parameter', () => {
-    const treeService: TreeService = TestBed.get(TreeService);
+    const treeService: TreeService = TestBed.inject(TreeService);
     spyOn(treeService, 'getActiveNode').and.callFake(() => {
       return { data : { id: 'do_123', metadata: { dialcodes: 'XYA1H5' } } };
     });
     spyOn(treeService, 'nextTreeStatus').and.callThrough();
-    const service: DialcodeService = TestBed.get(DialcodeService);
+    const service: DialcodeService = TestBed.inject(DialcodeService);
     service.dialCodeMap = { do_123 : 'XYA1H5' };
     service.invaliddialCodeMap = { do_123 : 'XYA1H5' };
     service.changeDialCode('');
@@ -150,7 +150,7 @@ describe('DialcodeService', () => {
   });
 
   it('#validateDialCode should throw error msg when duplicate dialcode', () => {
-    const service: DialcodeService = TestBed.get(DialcodeService);
+    const service: DialcodeService = TestBed.inject(DialcodeService);
     spyOn(service, 'checkDuplicateDialCode').and.returnValue(true);
     const observable = service.validateDialCode('ABC123');
     observable.subscribe((data) => {
@@ -161,12 +161,12 @@ describe('DialcodeService', () => {
   });
 
   it('#validateDialCode should return expected result when dialcode exists in the #dialcodeList', () => {
-    const treeService: TreeService = TestBed.get(TreeService);
+    const treeService: TreeService = TestBed.inject(TreeService);
     spyOn(treeService, 'getActiveNode').and.callFake(() => {
       return { data : { id: 'do_123', metadata: { dialcodes: 'ABC123' } } };
     });
     spyOn(treeService, 'nextTreeStatus').and.callThrough();
-    const service: DialcodeService = TestBed.get(DialcodeService);
+    const service: DialcodeService = TestBed.inject(DialcodeService);
     spyOn(service, 'checkDuplicateDialCode').and.returnValue(false);
     service.dialcodeList = ['ABC123'];
     service.invaliddialCodeMap = { do_123 : 'XYA1H5' };
@@ -179,12 +179,12 @@ describe('DialcodeService', () => {
   });
 
   it('#validateDialCode should return expected result when #searchDialCode API success', () => {
-    const treeService: TreeService = TestBed.get(TreeService);
+    const treeService: TreeService = TestBed.inject(TreeService);
     spyOn(treeService, 'getActiveNode').and.callFake(() => {
       return { data : { id: 'do_123', metadata: { dialcodes: 'ABC123' } } };
     });
     spyOn(treeService, 'nextTreeStatus').and.callThrough();
-    const service: DialcodeService = TestBed.get(DialcodeService);
+    const service: DialcodeService = TestBed.inject(DialcodeService);
     spyOn(service, 'searchDialCode').and.callFake(() => {
       return of({ result: { count: 1, dialcodes: [{ identifier: 'ABC123' }] } });
     });
@@ -199,12 +199,12 @@ describe('DialcodeService', () => {
   });
 
   it('should highlight node for invalid dialcode', () => {
-    const treeService: TreeService = TestBed.get(TreeService);
+    const treeService: TreeService = TestBed.inject(TreeService);
     spyOn(treeService, 'highlightNode').and.callFake(() => {});
     spyOn(treeService, 'getNodeById').and.callFake(() => {
       return { data : { id: 'do_123', metadata: { dialcodes: 'ABC123' } } };
     });
-    const service: DialcodeService = TestBed.get(DialcodeService);
+    const service: DialcodeService = TestBed.inject(DialcodeService);
     const res = { content_id: 'do_456', identifiers: { do_123 : 'do_456' } };
     const nodesModified = { do_123 : { metadata: { dialcodes: null } } };
     service.invaliddialCodeMap = { do_123 : 'XYA1H5' };
@@ -215,7 +215,7 @@ describe('DialcodeService', () => {
   });
 
   it('should not call #dialcodeLink method ', () => {
-    const service: DialcodeService = TestBed.get(DialcodeService);
+    const service: DialcodeService = TestBed.inject(DialcodeService);
     spyOn(service, 'dialcodeLink').and.callThrough();
     const res = {};
     const nodesModified = {};
@@ -224,26 +224,26 @@ describe('DialcodeService', () => {
   });
 
   it('#checkDuplicateDialCode should return expected', () => {
-    const treeService: TreeService = TestBed.get(TreeService);
+    const treeService: TreeService = TestBed.inject(TreeService);
     spyOn(treeService, 'getTreeObject').and.callFake(() => {});
-    const service: DialcodeService = TestBed.get(DialcodeService);
+    const service: DialcodeService = TestBed.inject(DialcodeService);
     const result = service.checkDuplicateDialCode('ABC123');
     expect(result).toBeFalsy();
   });
 
   it('#dialcodeLink() should throw warning msg when #invaliddialCodeMap not empty  ', () => {
-    const toasterService: ToasterService = TestBed.get(ToasterService);
+    const toasterService: ToasterService = TestBed.inject(ToasterService);
     spyOn(toasterService, 'warning').and.callThrough();
-    const service: DialcodeService = TestBed.get(DialcodeService);
+    const service: DialcodeService = TestBed.inject(DialcodeService);
     service.invaliddialCodeMap = { do_123 : 'XYA1H5' };
     service.dialcodeLink([], 'do_123');
     expect(toasterService.warning).toHaveBeenCalledWith(configStub.labelConfig.messages.warning['002']);
   });
 
   it('#dialcodeLink() should throw warning msg when #invaliddialCodeMap and #dialCodeMap not empty', () => {
-    const toasterService: ToasterService = TestBed.get(ToasterService);
+    const toasterService: ToasterService = TestBed.inject(ToasterService);
     spyOn(toasterService, 'warning').and.callThrough();
-    const service: DialcodeService = TestBed.get(DialcodeService);
+    const service: DialcodeService = TestBed.inject(DialcodeService);
     service.invaliddialCodeMap = { do_123 : 'XYA1H5' };
     service.dialCodeMap = { do_123 : 'ABC123' };
     spyOn(service, 'linkDialcode').and.returnValue(of({}));
@@ -252,18 +252,18 @@ describe('DialcodeService', () => {
   });
 
   it('#dialcodeLink() should show success msg when API success', () => {
-    const toasterService: ToasterService = TestBed.get(ToasterService);
+    const toasterService: ToasterService = TestBed.inject(ToasterService);
     spyOn(toasterService, 'success').and.callThrough();
-    const service: DialcodeService = TestBed.get(DialcodeService);
+    const service: DialcodeService = TestBed.inject(DialcodeService);
     spyOn(service, 'linkDialcode').and.returnValue(of({}));
     service.dialcodeLink(['ABC123'], 'do_123');
     expect(toasterService.success).toHaveBeenCalledWith(configStub.labelConfig.messages.success['009']);
   });
 
   it('#dialcodeLink() should throw error msg when API failed', () => {
-    const toasterService: ToasterService = TestBed.get(ToasterService);
+    const toasterService: ToasterService = TestBed.inject(ToasterService);
     spyOn(toasterService, 'error').and.callThrough();
-    const service: DialcodeService = TestBed.get(DialcodeService);
+    const service: DialcodeService = TestBed.inject(DialcodeService);
     spyOn(service, 'linkDialcode').and.returnValue(throwError({}));
     service.dialcodeLink(['ABC123'], 'do_123');
     expect(toasterService.error).toHaveBeenCalledWith(configStub.labelConfig.messages.error['012']);

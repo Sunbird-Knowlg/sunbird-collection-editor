@@ -124,9 +124,9 @@ describe("QuestionComponent", () => {
     editorService = TestBed.inject(EditorService);
     configService = TestBed.inject(ConfigService);
     telemetryService = TestBed.inject(EditorTelemetryService);
-    treeService = TestBed.get(TreeService);
-    questionService = TestBed.get(QuestionService);
-    toasterService = TestBed.get(ToasterService);
+    treeService = TestBed.inject(TreeService);
+    questionService = TestBed.inject(QuestionService);
+    toasterService = TestBed.inject(ToasterService);
     spyOn(telemetryService, "impression").and.callFake(() => {});
     editorService.selectedChildren.label = "Slider";
     component.toolbarConfig.showPreview = false;
@@ -713,7 +713,7 @@ describe("QuestionComponent", () => {
   it("should call validateFormFields", () => {
     component.leafFormConfig = mockData.childMetadata;
     component.childFormData = childMetaData;
-    const toasterService = TestBed.get(ToasterService);
+    const toasterService = TestBed.inject(ToasterService);
     spyOn(toasterService, "error").and.callThrough();
     component.validateFormFields();
     expect(component.showFormError).toBeFalsy();
@@ -836,7 +836,7 @@ describe("QuestionComponent", () => {
     component.showFormError = true;
     component.questionMetadataFormStatus = false;
     // tslint:disable-next-line:no-shadowed-variable
-    const toasterService = TestBed.get(ToasterService);
+    const toasterService = TestBed.inject(ToasterService);
     spyOn(toasterService, 'error').and.callFake(() => {});
     spyOn(component, 'previewContent').and.callThrough();
     component.previewContent();
@@ -1309,7 +1309,7 @@ describe("QuestionComponent", () => {
         },
       },
     };
-    const toasterService = TestBed.get(ToasterService);
+    const toasterService = TestBed.inject(ToasterService);
     spyOn(toasterService, 'success').and.callFake(() => { });
     component.sourcingUpdate(data);
   });
@@ -1335,7 +1335,7 @@ describe("QuestionComponent", () => {
         },
       },
     };
-    const toasterService = TestBed.get(ToasterService);
+    const toasterService = TestBed.inject(ToasterService);
     spyOn(toasterService, 'success').and.callFake(() => { });
     component.sourcingUpdate(data);
     // expect(editorService.updateCollection).toHaveBeenCalledWith('do_11330102570702438417', { ...data, requestBody });
@@ -1351,7 +1351,7 @@ describe("QuestionComponent", () => {
     component.questionId = "do_11326368076523929611";
     component.actionType = "sourcingApproveQuestion";
     const data = { button: "sourcingApproveQuestion" };
-    const toasterService = TestBed.get(ToasterService);
+    const toasterService = TestBed.inject(ToasterService);
     spyOn(toasterService, 'success').and.callFake(() => { });
     component.sourcingUpdate(data);
     expect(component.redirectToChapterList);
