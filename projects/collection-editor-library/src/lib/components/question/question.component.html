@@ -202,6 +202,11 @@
   </div>
 </sui-modal>
 
+<lib-term-and-condition
+        [showEditingConsent]="editorService.isReviewerEditEnable"
+        [showSubmitConfirmPopup]="showSubmitConfirmPopup" (sendForReviewOutput)="onConsentSubmit($event)">
+</lib-term-and-condition>
+
 <sui-modal *ngIf='showSubmitConfirmPopup' [mustScroll]="false" [isClosable]="true" [transitionDuration]="0" [size]="'normal'"
 class="sb-modal overflow-modal" appBodyScroll (dismissed)="showSubmitConfirmPopup = !showSubmitConfirmPopup; terms = false;" #submitModal>
 <div class="sb-modal-header">
