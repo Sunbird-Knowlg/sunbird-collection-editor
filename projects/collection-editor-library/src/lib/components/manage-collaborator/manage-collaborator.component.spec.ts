@@ -143,30 +143,30 @@ describe('ManageCollaboratorComponent', () => {
   });
 
   it('#toggleSelectionUser() should set selectedUsers', () => {
-    component.users = mockData.alluserRes.result.response.content;
+    component.users = [{...mockData.alluserRes.result.response.content[0], isSelected: false}];
     spyOn(component, 'toggleSelectionUser').and.callThrough();
     component.toggleSelectionUser(mockData.alluserRes.result.response.content[0].identifier);
-    expect(component.selectedUsers).toContain(mockData.alluserRes.result.response.content[0].identifier);
+    expect(component.selectedUsers.length).toEqual(1);
   });
 
   it('#toggleSelectionUser() should set selectedUsers to empty', () => {
     component.selectedUsers = [mockData.alluserRes.result.response.content[0].identifier];
-    component.users = mockData.alluserRes.result.response.content;
+    component.users = [{...mockData.alluserRes.result.response.content[0], isSelected: true}];
     spyOn(component, 'toggleSelectionUser').and.callThrough();
     component.toggleSelectionUser(mockData.alluserRes.result.response.content[0].identifier);
     expect(component.selectedUsers.length).toEqual(0);
   });
 
   it('#toggleSelectionCollaborator() should set selectedcollaborators', () => {
-    component.collaborators = mockData.alluserRes.result.response.content;
+    component.collaborators = [{...mockData.alluserRes.result.response.content[0], isSelected: false}];
     spyOn(component, 'toggleSelectionCollaborator').and.callThrough();
     component.toggleSelectionCollaborator(mockData.alluserRes.result.response.content[0].identifier);
-    expect(component.selectedcollaborators).toContain(mockData.alluserRes.result.response.content[0].identifier);
+    expect(component.selectedcollaborators.length).toEqual(1);
   });
 
   it('#toggleSelectionCollaborator() should set selectedcollaborators to empty', () => {
     component.selectedcollaborators = [mockData.alluserRes.result.response.content[0].identifier];
-    component.collaborators = mockData.alluserRes.result.response.content;
+    component.collaborators = [{...mockData.alluserRes.result.response.content[0], isSelected: true}];
     spyOn(component, 'toggleSelectionCollaborator').and.callThrough();
     component.toggleSelectionCollaborator(mockData.alluserRes.result.response.content[0].identifier);
     expect(component.selectedcollaborators.length).toEqual(0);
