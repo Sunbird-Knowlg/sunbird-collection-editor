@@ -304,9 +304,11 @@ export class BulkUploadComponent implements OnInit {
   uploadToBlob(signedURL, file) {
     let config: any = {
       processData: false,
-      contentType: 'text/csv'
+      contentType: 'text/csv',
+      headers: {
+        'x-ms-blob-type': 'BlockBlob'
+      }
     };
-    config = this.editorService.appendCloudStorageHeaders(config);
     return this.editorService.httpClient.put(signedURL, file, config).pipe(catchError(err => {
       const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.036')};
       this.uploader.reset();

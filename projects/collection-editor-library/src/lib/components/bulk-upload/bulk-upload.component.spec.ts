@@ -9,7 +9,6 @@ import { TreeService } from '../../services/tree/tree.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { of } from 'rxjs';
 describe('BulkUploadComponent', () => {
   let component: BulkUploadComponent;
   let fixture: ComponentFixture<BulkUploadComponent>;
@@ -61,19 +60,6 @@ describe('BulkUploadComponent', () => {
     spyOn(component, 'initiateDocumentUploadModal').and.callThrough();
     component.updateBulkUploadState('increment');
     expect(component.initiateDocumentUploadModal).toHaveBeenCalled();
-  });
-
-  it('#uploadToBlob should upload file to blob and return URL', () => {
-    const editorService = TestBed.inject(EditorService);
-    spyOn(editorService, 'appendCloudStorageHeaders').and.callFake((config) => {
-      return {...config, headers: { 'x-ms-blob-type': 'BlockBlob' }}
-    });
-    spyOn(editorService.httpClient, 'put').and.returnValue(of({}));
-    const pre_signed_url = 'https://ekstep-public-dev.s3-ap-south-1.amazonaws.com/content/assets/do_11359481407042355211/test.pdf?X-Amz';
-    component.uploadToBlob(pre_signed_url, {}).subscribe((data) => {
-      expect(data).toEqual('https://ekstep-public-dev.s3-ap-south-1.amazonaws.com/content/assets/do_11359481407042355211/test.pdf');
-      expect(editorService.appendCloudStorageHeaders).toHaveBeenCalled();
-    })
   });
 
 });
