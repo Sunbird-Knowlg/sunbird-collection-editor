@@ -61,5 +61,4 @@ describe('BulkUploadComponent', () => {
     component.updateBulkUploadState('increment');
     expect(component.initiateDocumentUploadModal).toHaveBeenCalled();
   });
-
 });
