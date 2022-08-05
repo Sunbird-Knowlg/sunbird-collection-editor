@@ -500,7 +500,25 @@ export const collectionEditorConfig = {
           isRootOrgAdmin: true
       },
       channelData: {},
-      framework: 'ekstep_ncert_k-12'
+      framework: 'ekstep_ncert_k-12',
+      cloudStorage: {
+        presigned_headers: {
+          'x-ms-blob-type': 'BlockBlob' // This header is specific to azure storage provider.
+          /* TODO: if more configurations comes for cloud service provider
+             than we have do in more generic way like below:
+             For example:
+             cloudStorage: {
+                provider: 'azure' // azure, aws, etc..
+                azure: {
+                  url: 'https://www.azureblogstorage.com'
+                  presigned_headers: {
+                    x-ms-blob-type: 'BlockBlob'
+                  }
+                }
+             }
+          */
+        }
+      }
   },
   config: {
       mode: 'edit',

@@ -226,13 +226,11 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
         return throwError(this.editorService.apiErrorHandling(err, errInfo));
       })).subscribe((response) => {
         const signedURL = response.result.pre_signed_url;
-        const blobConfig = {
+        let blobConfig = {
           processData: false,
-          contentType: 'Asset',
-          headers: {
-            'x-ms-blob-type': 'BlockBlob'
-          }
+          contentType: 'Asset'
         };
+        blobConfig = this.editorService.appendCloudStorageHeaders(blobConfig);
         this.uploadToBlob(signedURL, this.imageFile, blobConfig).subscribe(() => {
           const fileURL = signedURL.split('?')[0];
           const data = new FormData();

@@ -696,4 +696,14 @@ getDependentNodes(identifier) {
     return _.get(nodeData, 'data.primaryCategory');
   }
 
+  appendCloudStorageHeaders(config) {
+    const headers =  _.get(this.editorConfig, 'context.cloudStorage.presigned_headers', {});
+    if (!_.isEmpty(headers)) {
+      config.headers = {...config.headers, ...headers};
+      return config;
+    } else {
+      return config;
+    }
+  }
+
 }
