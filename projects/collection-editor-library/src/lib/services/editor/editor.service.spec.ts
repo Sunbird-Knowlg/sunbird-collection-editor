@@ -576,12 +576,12 @@ describe('EditorService', () => {
     expect(editorService._toFlatObjFromHierarchy).toHaveBeenCalled();
   });
 
-  xit('#appendCloudStorageHeaders should set cloud storage headers if exist', () => {
+  it('#appendCloudStorageHeaders should set cloud storage headers if exist', () => {
     const config = editorService.appendCloudStorageHeaders({});
     expect(config).toEqual({headers: { 'x-ms-blob-type': 'BlockBlob' }});
   });
 
-  xit('#appendCloudStorageHeaders should not set cloud storage headers if not exist', () => {
+  it('#appendCloudStorageHeaders should not set cloud storage headers if not exist', () => {
     const editorConfigMock: any = {config: editorConfig.config, context: _.omit(editorConfig.context, 'cloudStorage') };
     editorService.initialize(editorConfigMock);
     const config = editorService.appendCloudStorageHeaders({});
