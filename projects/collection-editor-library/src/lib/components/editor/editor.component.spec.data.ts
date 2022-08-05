@@ -1,4 +1,4 @@
-import { IEditorConfig } from 'collection-editor-library/lib/interfaces/editor';
+import { IEditorConfig } from '../../interfaces/editor';
 export let editorConfig: IEditorConfig | undefined;
 export let editorConfig_question: IEditorConfig | undefined;
 
