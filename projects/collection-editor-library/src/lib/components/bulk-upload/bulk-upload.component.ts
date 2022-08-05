@@ -302,7 +302,7 @@ export class BulkUploadComponent implements OnInit {
   }
 
   uploadToBlob(signedURL, file) {
-    let config: any = {
+    const config: any = {
       processData: false,
       contentType: 'text/csv',
       headers: {
