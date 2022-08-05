@@ -18,6 +18,7 @@ module.exports = function (config) {
     browserNoActivityTimeout: 100000,
     client: {
       jasmine: {
+        random: false,
         timeoutInterval: 50000
       },
       args: [tags],
