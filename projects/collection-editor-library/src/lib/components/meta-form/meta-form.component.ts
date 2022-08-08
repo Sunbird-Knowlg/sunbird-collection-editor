@@ -73,7 +73,7 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
 
   showShuffleMessage(event) {
     this.subscription = this.helperService.shuffleValue.subscribe(shuffle => this.previousShuffleValue = shuffle);
-    if (_.isBoolean(event.shuffle) && event.shuffle === true && this.previousShuffleValue === false) {
+    if (_.isBoolean(event.shuffle) && event.shuffle === true && _.isBoolean(this.previousShuffleValue) && this.previousShuffleValue === false) {
       this.toasterService.simpleInfo(_.get(this.configService, 'labelConfig.lbl.shuffleOnMessage'));
     }
     this.setShuffleValue(event.shuffle);
@@ -115,143 +115,145 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
   }
 
   attachDefaultValues() {
-    const metaDataFields = _.get(this.nodeMetadata, 'data.metadata');
-    const isRootNode = _.get(this.nodeMetadata, 'data.root');
-    const categoryMasterList = this.frameworkDetails.frameworkData ||
-    !isRootNode && this.frameworkService.selectedOrganisationFramework &&
-     _.get(this.frameworkService.selectedOrganisationFramework, 'framework.categories');
-    // tslint:disable-next-line:max-line-length
-    let formConfig: any = (_.get(metaDataFields, 'visibility') === 'Default') || isRootNode ? _.cloneDeep(this.rootFormConfig) : _.cloneDeep(this.unitFormConfig);
-    formConfig = formConfig && _.has(_.first(formConfig), 'fields') ? formConfig : [{name: '', fields: formConfig}];
-    if (!_.isEmpty(this.frameworkDetails.targetFrameworks)) {
-      _.forEach(this.frameworkDetails.targetFrameworks, (framework) => {
-        _.forEach(formConfig, (section) => {
-          _.forEach(section.fields, field => {
-            const frameworkCategory = _.find(framework.categories, category => {
-              return category.code === field.sourceCategory && _.includes(field.code, 'target');
+    if (this.nodeMetadata) {
+      const metaDataFields = _.get(this.nodeMetadata, 'data.metadata');
+      const isRootNode = _.get(this.nodeMetadata, 'data.root');
+      const categoryMasterList = this.frameworkDetails.frameworkData ||
+      !isRootNode && this.frameworkService.selectedOrganisationFramework &&
+      _.get(this.frameworkService.selectedOrganisationFramework, 'framework.categories');
+      // tslint:disable-next-line:max-line-length
+      let formConfig: any = (_.get(metaDataFields, 'visibility') === 'Default') || isRootNode ? _.cloneDeep(this.rootFormConfig) : _.cloneDeep(this.unitFormConfig);
+      formConfig = formConfig && _.has(_.first(formConfig), 'fields') ? formConfig : [{name: '', fields: formConfig}];
+      if (!_.isEmpty(this.frameworkDetails.targetFrameworks)) {
+        _.forEach(this.frameworkDetails.targetFrameworks, (framework) => {
+          _.forEach(formConfig, (section) => {
+            _.forEach(section.fields, field => {
+              const frameworkCategory = _.find(framework.categories, category => {
+                return category.code === field.sourceCategory && _.includes(field.code, 'target');
+              });
+              if (!_.isEmpty(frameworkCategory)) { // field.code
+                field.terms = frameworkCategory.terms;
+              }
             });
-            if (!_.isEmpty(frameworkCategory)) { // field.code
-              field.terms = frameworkCategory.terms;
-            }
           });
         });
-      });
-    }
+      }
 
-    _.forEach(formConfig, (section) => {
-      _.forEach(section.fields, field => {
+      _.forEach(formConfig, (section) => {
+        _.forEach(section.fields, field => {
 
-        if (metaDataFields) {
-          if (_.has(metaDataFields, field.code)) {
+          if (metaDataFields) {
+            if (_.has(metaDataFields, field.code)) {
+              field.default = _.get(metaDataFields, field.code);
+            } else if (_.includes(['maxTime', 'warningTime'], field.code)) {
+              const value = _.get(metaDataFields, `timeLimits.${field.code}`);
+              field.default = !_.isEmpty(value) ?
+              moment.utc(moment.duration(value, 'seconds').asMilliseconds()).format(this.helperService.getTimerFormat(field)) : '';
+            }
+          }
+
+          if (field.code === 'framework') {
+            field.range = this.frameworkService.frameworkValues;
+            field.options = this.getFramework;
+          }
+
+          if (!_.includes(field.depends, 'framework') && !_.includes(field.code, 'target')) {
+            const frameworkCategory = _.find(categoryMasterList, category => {
+                return (category.code === field.sourceCategory || category.code === field.code);
+            });
+            if (!_.isEmpty(frameworkCategory)) {
+                field.terms = frameworkCategory.terms;
+            }
+          }
+
+          if (field.code === 'license') {
+            const defaultLicense = _.get(metaDataFields, field.code);
+            field.default = !_.isEmpty(defaultLicense) ? defaultLicense : this.editorService.editorConfig.context.defaultLicense;
+            const licenses = this.helperService.getAvailableLicenses();
+            field.range = licenses ? _.map(licenses, 'name') : [];
+          }
+
+          if (field.code === 'additionalCategories') {
+            const channelInfo = this.helperService.channelInfo;
+            const additionalCategories = _.uniq(_.get(channelInfo,
+              `${this.configService.categoryConfig.additionalCategories[this.editorService.editorConfig.config.objectType]}`) ||
+            _.get(this.editorService.editorConfig, 'context.additionalCategories'));
+            if (!_.isEmpty(additionalCategories)) {
+              field.range = _.uniq(additionalCategories);
+            }
+          }
+
+          if (field.code  === 'copyright') {
+            const channelData = this.helperService.channelInfo;
             field.default = _.get(metaDataFields, field.code);
-          } else if (_.includes(['maxTime', 'warningTime'], field.code)) {
-            const value = _.get(metaDataFields, `timeLimits.${field.code}`);
-            field.default = !_.isEmpty(value) ?
-            moment.utc(moment.duration(value, 'seconds').asMilliseconds()).format(this.helperService.getTimerFormat(field)) : '';
-          }
-        }
-        
-        if (field.code === 'framework') {
-          field.range = this.frameworkService.frameworkValues;
-          field.options = this.getFramework;
-        }
-
-        if (!_.includes(field.depends, 'framework') && !_.includes(field.code, 'target')) {
-          const frameworkCategory = _.find(categoryMasterList, category => {
-              return (category.code === field.sourceCategory || category.code === field.code);
-          });
-          if (!_.isEmpty(frameworkCategory)) {
-              field.terms = frameworkCategory.terms;
-          }
-        }
-
-        if (field.code === 'license') {
-          const defaultLicense = _.get(metaDataFields, field.code);
-          field.default = !_.isEmpty(defaultLicense) ? defaultLicense : this.editorService.editorConfig.context.defaultLicense;
-          const licenses = this.helperService.getAvailableLicenses();
-          field.range = licenses ? _.map(licenses, 'name') : [];
-        }
-
-        if (field.code === 'additionalCategories') {
-          const channelInfo = this.helperService.channelInfo;
-          const additionalCategories = _.uniq(_.get(channelInfo,
-            `${this.configService.categoryConfig.additionalCategories[this.editorService.editorConfig.config.objectType]}`) ||
-           _.get(this.editorService.editorConfig, 'context.additionalCategories'));
-          if (!_.isEmpty(additionalCategories)) {
-            field.range = _.uniq(additionalCategories);
-          }
-        }
-
-        if (field.code  === 'copyright') {
-          const channelData = this.helperService.channelInfo;
-          field.default = _.get(metaDataFields, field.code);
-          if (_.isEmpty(field.default) && this.editorService.editorConfig.config.setDefaultCopyRight) {
-            field.default = channelData && channelData.name;
-          }
-        }
-
-        if (field.code === 'maxQuestions') {
-          const activeNode = this.treeService.getActiveNode();
-          const rootFirstChildNode = this.editorService.getContentChildrens(activeNode);
-          if (rootFirstChildNode && rootFirstChildNode.length > 0) {
-            field.range = _.times(_.size(rootFirstChildNode), index => index + 1);
-          }
-        }
-
-        if (field.code === 'author') {
-          const defaultAuthor = _.get(metaDataFields, field.code);
-          field.default = !_.isEmpty(defaultAuthor) ? defaultAuthor :  _.get(this.editorService.editorConfig, 'context.user.fullName');
-        }
-
-        if (field.code === 'showTimer') {
-          field.options = this.showTimer;
-        }
-        if (field.code === 'instructions') {
-          field.default = _.get(metaDataFields, 'instructions.default') || '' ;
-        }
-        if(field.code === 'setPeriod'){
-          field.default = !_.isEmpty(metaDataFields, 'endDate') ? 'Yes' : 'No' ;
-        }
-
-        if(field.code === 'instances'){
-          field.default =  !_.isEmpty(metaDataFields, 'instances') ? _.get(metaDataFields,'instances.label') : '' ;
-        }
-
-        if ((_.isEmpty(field.range) || _.isEmpty(field.terms)) &&
-          !field.editable && !_.isEmpty(field.default)) {
-          if (_.has(field, 'terms')) {
-            field.terms = [];
-            if (_.isArray(field.default)) {
-              field.terms = field.default || [];
-            } else {
-              field.terms.push(field.default);
-            }
-          } else {
-            field.range = [];
-            if (_.isArray(field.default)) {
-              field.range = field.default;
-            } else {
-              field.range.push(field.default);
+            if (_.isEmpty(field.default) && this.editorService.editorConfig.config.setDefaultCopyRight) {
+              field.default = channelData && channelData.name;
             }
           }
-        }
 
-        if (field.inputType === 'nestedselect') {
-          _.map(field.range, val => {
-            return {
-              value: val.value || val,
-              label: val.value || val
-            };
-          });
-        }
+          if (field.code === 'maxQuestions') {
+            const activeNode = this.treeService.getActiveNode();
+            const rootFirstChildNode = this.editorService.getContentChildrens(activeNode);
+            if (rootFirstChildNode && rootFirstChildNode.length > 0) {
+              field.range = _.times(_.size(rootFirstChildNode), index => index + 1);
+            }
+          }
 
-        const ifEditable = this.ifFieldIsEditable(field.code, field.editable);
-        _.set(field, 'editable', ifEditable);
+          if (field.code === 'author') {
+            const defaultAuthor = _.get(metaDataFields, field.code);
+            field.default = !_.isEmpty(defaultAuthor) ? defaultAuthor :  _.get(this.editorService.editorConfig, 'context.user.fullName');
+          }
 
+          if (field.code === 'showTimer') {
+            field.options = this.showTimer;
+          }
+          if (field.code === 'instructions') {
+            field.default = _.get(metaDataFields, 'instructions.default') || '' ;
+          }
+          if(field.code === 'setPeriod'){
+            field.default = !_.isEmpty(metaDataFields, 'endDate') ? 'Yes' : 'No' ;
+          }
+
+          if(field.code === 'instances'){
+            field.default =  !_.isEmpty(metaDataFields, 'instances') ? _.get(metaDataFields,'instances.label') : '' ;
+          }
+
+          if ((_.isEmpty(field.range) || _.isEmpty(field.terms)) &&
+            !field.editable && !_.isEmpty(field.default)) {
+            if (_.has(field, 'terms')) {
+              field.terms = [];
+              if (_.isArray(field.default)) {
+                field.terms = field.default || [];
+              } else {
+                field.terms.push(field.default);
+              }
+            } else {
+              field.range = [];
+              if (_.isArray(field.default)) {
+                field.range = field.default;
+              } else {
+                field.range.push(field.default);
+              }
+            }
+          }
+
+          if (field.inputType === 'nestedselect') {
+            _.map(field.range, val => {
+              return {
+                value: val.value || val,
+                label: val.value || val
+              };
+            });
+          }
+
+          const ifEditable = this.ifFieldIsEditable(field.code, field.editable);
+          _.set(field, 'editable', ifEditable);
+
+        });
       });
-    });
 
-    this.formFieldProperties = _.cloneDeep(formConfig);
+      this.formFieldProperties = _.cloneDeep(formConfig);
+    }
   }
   isReviewMode() {
     return  _.includes([ 'review', 'read', 'sourcingreview', 'orgreview' ], this.editorService.editorMode);
