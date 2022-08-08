@@ -73,9 +73,9 @@ describe('ContentplayerPageComponent', () => {
   });
 
   it('#getContentDetails should fetch content details when API success', () => {
-    const editorService = TestBed.get(EditorService);
+    const editorService = TestBed.inject(EditorService);
     spyOn(editorService, 'fetchContentDetails').and.returnValue(of({result: { content: { name: 'test' }}}));
-    const playerService = TestBed.get(PlayerService);
+    const playerService = TestBed.inject(PlayerService);
     spyOn(playerService, 'getPlayerConfig').and.returnValue({});
     spyOn(component, 'setPlayerType').and.callThrough();
     spyOn(component, 'loadDefaultPlayer').and.callFake(() => {});

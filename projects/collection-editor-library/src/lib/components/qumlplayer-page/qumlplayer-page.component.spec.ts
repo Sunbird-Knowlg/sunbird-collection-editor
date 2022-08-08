@@ -46,7 +46,7 @@ describe('QumlplayerPageComponent', () => {
     component.questionMetaData = { data: { metadata: mockData.questionMetaData}};
     component.prevQuestionId = 'do_12345';
     component.questionSetHierarchy = mockData.questionSetHierarchy;
-    const treeService = TestBed.get(TreeService);
+    const treeService = TestBed.inject(TreeService);
     spyOn(treeService, 'getNodeById').and.returnValue({data: {metadata: {}}});
     component.initQumlPlayer();
     expect(component.hierarchy.maxScore).toEqual('2');

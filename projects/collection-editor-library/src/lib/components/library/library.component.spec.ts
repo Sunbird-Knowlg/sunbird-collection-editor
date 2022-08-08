@@ -37,8 +37,8 @@ describe('LibraryComponent', () => {
   });
 
   xit('#fetchCollectionHierarchy should call after ngOnInit', fakeAsync(() => {
-    const treeService = TestBed.get(TreeService);
-    const editorService = TestBed.get(EditorService);
+    const treeService = TestBed.inject(TreeService);
+    const editorService = TestBed.inject(EditorService);
     spyOn(treeService, 'getActiveNode').and.callFake(() => {
       return { getLevel: () => 2 };
     });

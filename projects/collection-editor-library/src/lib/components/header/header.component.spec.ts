@@ -52,7 +52,7 @@ describe('HeaderComponent', () => {
   });
 
   it('#handleActionButtons() visibility should be defined ', () => {
-    const editorservice = TestBed.get(EditorService);
+    const editorservice = TestBed.inject(EditorService);
     spyOn(editorservice, 'editorMode');
     component.handleActionButtons();
     expect(component.visibility).toBeDefined();
