@@ -31,7 +31,7 @@ describe('AssignPageNumberComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AssignPageNumberComponent);
-    treeService = TestBed.get(TreeService);
+    treeService = TestBed.inject(TreeService);
     editorService = TestBed.inject(EditorService);
     component = fixture.componentInstance;
     // fixture.detectChanges();

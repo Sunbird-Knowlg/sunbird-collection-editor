@@ -49,10 +49,10 @@ describe('OptionsComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(OptionsComponent);
-    treeService = TestBed.get(TreeService);
-    telemetryService=TestBed.get(EditorTelemetryService);
+    treeService = TestBed.inject(TreeService);
+    telemetryService = TestBed.inject(EditorTelemetryService);
     component = fixture.componentInstance;
-    component.sourcingSettings=sourcingSettingsMock;
+    component.sourcingSettings = sourcingSettingsMock;
     spyOn(treeService, 'setTreeElement').and.callFake((el) => {
       treeService.nativeElement = nativeElement;
     });

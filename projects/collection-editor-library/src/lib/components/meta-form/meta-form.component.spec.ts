@@ -104,7 +104,7 @@ describe('MetaFormComponent', () => {
   });
 
   it('#setShuffleValue() should call helperService.setShuffleValue', () => {
-    const helperService = TestBed.get(HelperService);
+    const helperService = TestBed.inject(HelperService);
     spyOn(helperService, 'setShuffleValue').and.callFake(() => {});
     spyOn(component, 'setShuffleValue').and.callThrough();
     component.setShuffleValue(true);
@@ -113,7 +113,7 @@ describe('MetaFormComponent', () => {
   });
 
   it('#setShuffleValue() should not call helperService.setShuffleValue', () => {
-    const helperService = TestBed.get(HelperService);
+    const helperService = TestBed.inject(HelperService);
     spyOn(helperService, 'setShuffleValue').and.callFake(() => {});
     spyOn(component, 'setShuffleValue').and.callThrough();
     component.setShuffleValue('true');
@@ -161,7 +161,7 @@ describe('MetaFormComponent', () => {
   });
 
   it('#fetchFrameWorkDetails() should set fetchFrameWorkDetails and for targetFrameworkIds', () => {
-    const frameworkService = TestBed.get(FrameworkService);
+    const frameworkService = TestBed.inject(FrameworkService);
     spyOn(frameworkService, 'getFrameworkCategories').and.returnValue(of(mockData.frameworkResponse));
     frameworkService.initialize('ekstep_ncert_k-12');
     spyOn(component, 'attachDefaultValues').and.callFake(() => {});
@@ -191,7 +191,7 @@ describe('MetaFormComponent', () => {
   });
 
   it('call #isReviewMode() verify returning value', () => {
-    const editorService = TestBed.get(EditorService);
+    const editorService = TestBed.inject(EditorService);
     spyOnProperty(editorService, 'editorMode').and.returnValue('review');
     spyOn(component, 'isReviewMode').and.callThrough();
     const isReviewMode = component.isReviewMode();
@@ -199,7 +199,7 @@ describe('MetaFormComponent', () => {
   });
 
   it('call #ifFieldIsEditable() verify returning value', () => {
-    const editorService = TestBed.get(EditorService);
+    const editorService = TestBed.inject(EditorService);
     spyOnProperty(editorService, 'editorMode').and.returnValue('review');
     spyOnProperty(editorService, 'editorConfig').and.returnValue({config: {editableFields: {review: ['name']}}});
     spyOn(component, 'isReviewMode').and.returnValue(true);
@@ -230,7 +230,7 @@ describe('MetaFormComponent', () => {
       appIcon: 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/do_11320764935163904015/artifact/2020101299.png',
       shuffle: true
     };
-    const treeService = TestBed.get(TreeService);
+    const treeService = TestBed.inject(TreeService);
     spyOn(treeService, 'updateNode').and.callFake(() => {});
     spyOn(component.toolbarEmitter, 'emit').and.callFake(() => {});
     spyOn(component, 'showShuffleMessage').and.callFake(() => {});
@@ -245,7 +245,7 @@ describe('MetaFormComponent', () => {
   it('#valueChanges() should not call not call showShuffleMessage', () => {
   component.appIcon = '';
   component.showAppIcon = false;
-  const treeService = TestBed.get(TreeService);
+  const treeService = TestBed.inject(TreeService);
   spyOn(treeService, 'updateNode').and.callFake(() => {});
   spyOn(component.toolbarEmitter, 'emit').and.callFake(() => {});
   spyOn(component, 'showShuffleMessage').and.callFake(() => {});
@@ -257,7 +257,7 @@ describe('MetaFormComponent', () => {
   });
 
   it('#showShuffleMessage() should show toaster message', () => {
-    const toasterService = TestBed.get(ToasterService);
+    const toasterService = TestBed.inject(ToasterService);
     component.previousShuffleValue = false;
     spyOn(toasterService, 'simpleInfo').and.callFake(() => {});
     spyOn(component, 'setShuffleValue').and.callFake(() => {});
@@ -268,7 +268,7 @@ describe('MetaFormComponent', () => {
   });
 
   it('#showShuffleMessage() should not show toaster message', () => {
-    const toasterService = TestBed.get(ToasterService);
+    const toasterService = TestBed.inject(ToasterService);
     component.previousShuffleValue = false;
     spyOn(toasterService, 'simpleInfo').and.callFake(() => {});
     spyOn(component, 'setShuffleValue').and.callFake(() => {});

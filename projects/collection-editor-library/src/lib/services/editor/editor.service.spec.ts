@@ -52,13 +52,13 @@ describe('EditorService', () => {
         PublicDataService,
         { provide: ConfigService, useValue: configStub }]
     });
-    editorService = TestBed.get(EditorService);
-    treeService = TestBed.get(TreeService);
+    editorService = TestBed.inject(EditorService);
+    treeService = TestBed.inject(TreeService);
     editorService.initialize(editorConfig);
   });
 
   it('should be created', () => {
-    const service: EditorService = TestBed.get(EditorService);
+    const service: EditorService = TestBed.inject(EditorService);
     expect(service).toBeTruthy();
   });
 
@@ -116,14 +116,14 @@ describe('EditorService', () => {
   });
 
   it('#contentsCountAddedInLibraryPage() should increase value of contentsCount', () => {
-    const service: EditorService = TestBed.get(EditorService);
+    const service: EditorService = TestBed.inject(EditorService);
     service.contentsCount = 0;
     service.contentsCountAddedInLibraryPage(undefined);
     expect(service.contentsCount).toBe(1);
   });
 
   it('#contentsCountAddedInLibraryPage() should set value of contentsCount to zero', () => {
-    const service: EditorService = TestBed.get(EditorService);
+    const service: EditorService = TestBed.inject(EditorService);
     service.contentsCount = 2;
     service.contentsCountAddedInLibraryPage(true);
     expect(service.contentsCount).toBe(0);
@@ -144,7 +144,7 @@ describe('EditorService', () => {
       'do_11330103476396851218',
       'do_113301035530600448110'
     ];
-    const dataService = TestBed.get(DataService);
+    const dataService = TestBed.inject(DataService);
     spyOn(dataService, 'post').and.returnValue(of({
       id: 'api.questions.list',
       result: {
@@ -160,7 +160,7 @@ describe('EditorService', () => {
 
   it('#fetchCollectionHierarchy() should return collection hierarchy', async () => {
     const collectionId = 'do_11330102570702438417';
-    const publicDataService = TestBed.get(PublicDataService);
+    const publicDataService = TestBed.inject(PublicDataService);
     spyOn(publicDataService, 'get').and.returnValue(of({ responseCode: 'OK' }));
     editorService.fetchCollectionHierarchy(collectionId).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
@@ -169,7 +169,7 @@ describe('EditorService', () => {
 
   it('#readQuestionSet() should return question set', async () => {
     const questionSetId = 'do_11330102570702438417';
-    const publicDataService = TestBed.get(PublicDataService);
+    const publicDataService = TestBed.inject(PublicDataService);
     spyOn(publicDataService, 'get').and.returnValue(of({ responseCode: 'OK' }));
     editorService.readQuestionSet(questionSetId);
     expect(publicDataService.get).toHaveBeenCalled();
@@ -178,14 +178,14 @@ describe('EditorService', () => {
   it('#fetchContentDetails() should return content details', async () => {
     spyOn(editorService, 'fetchContentDetails').and.callThrough();
     const contentId = 'do_113297001817145344190';
-    const publicDataService = TestBed.get(PublicDataService);
+    const publicDataService = TestBed.inject(PublicDataService);
     spyOn(publicDataService, 'get').and.returnValue(of({ responseCode: 'OK' }));
     editorService.fetchContentDetails(contentId);
     expect(publicDataService.get).toHaveBeenCalled();
   });
 
   it('#updateHierarchy() should update hierarchy', async () => {
-    const publicDataService = TestBed.get(PublicDataService);
+    const publicDataService = TestBed.inject(PublicDataService);
     spyOn(editorService, 'getCollectionHierarchy').and.callFake(() => {
       return {
         id: 'api.content.hierarchy.get',
@@ -205,7 +205,7 @@ describe('EditorService', () => {
 
   it('#reviewContent() should update hierarchy', async () => {
     const contentId = 'do_11326714211239526417';
-    const publicDataService = TestBed.get(PublicDataService);
+    const publicDataService = TestBed.inject(PublicDataService);
     spyOn(publicDataService, 'post').and.returnValue(of({ responseCode: 'OK' }));
     editorService.reviewContent(contentId).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
@@ -215,7 +215,7 @@ describe('EditorService', () => {
   it('#submitRequestChanges() should submit change request', async () => {
     const contentId = 'do_11326714211239526417';
     const comment = 'No appropriate description'
-    const publicDataService = TestBed.get(PublicDataService);
+    const publicDataService = TestBed.inject(PublicDataService);
     spyOn(publicDataService, 'post').and.returnValue(of({ responseCode: 'OK' }));
     editorService.submitRequestChanges(contentId, comment).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
@@ -224,7 +224,7 @@ describe('EditorService', () => {
 
   it('#publishContent() should publish content when API success', async () => {
     const contentId = 'do_11326714211239526417';
-    const publicDataService = TestBed.get(PublicDataService);
+    const publicDataService = TestBed.inject(PublicDataService);
     spyOn(publicDataService, 'post').and.returnValue(of({ responseCode: 'OK' }));
     editorService.publishContent(contentId, {}).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
@@ -235,7 +235,7 @@ describe('EditorService', () => {
     const collection = 'do_11326714211239526417';
     const unitIdentifier = 'do_11326714211239526417';
     const contentId = 'do_11326714211239526417';
-    const publicDataService = TestBed.get(PublicDataService);
+    const publicDataService = TestBed.inject(PublicDataService);
     spyOn(publicDataService, 'patch').and.returnValue(of({ responseCode: 'OK' }));
     editorService.addResourceToHierarchy(collection, unitIdentifier, contentId).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
@@ -246,7 +246,7 @@ describe('EditorService', () => {
     const categoryName = 'objectMetadata';
     const channel = 'forms';
     const objectType = 'name';
-    const publicDataService = TestBed.get(PublicDataService);
+    const publicDataService = TestBed.inject(PublicDataService);
     spyOn(publicDataService, 'post').and.returnValue(of({ responseCode: 'OK' }));
     editorService.getCategoryDefinition(categoryName, channel, objectType).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
@@ -275,9 +275,9 @@ describe('EditorService', () => {
     expect(result).toBe(false);
   });
   it('#downloadBlobUrlFile() should download the file', () => {
-    const service: EditorService = TestBed.get(EditorService);
-    const http = TestBed.get(HttpClient);
-    const toasterService = TestBed.get(ToasterService);
+    const service: EditorService = TestBed.inject(EditorService);
+    const http = TestBed.inject(HttpClient);
+    const toasterService = TestBed.inject(ToasterService);
     spyOn(toasterService, 'success').and.callThrough();
     spyOn(URL, 'createObjectURL').and.callFake((data) => { });
     spyOn(http, 'get').and.returnValue(of({ test: 'ok' }));
@@ -295,9 +295,9 @@ describe('EditorService', () => {
     expect(toasterService.success).toHaveBeenCalledWith(configServiceData.labelConfig.messages.success['011']);
   });
   it('#downloadBlobUrlFile() should download the file and dose not show toaster message', () => {
-    const service: EditorService = TestBed.get(EditorService);
-    const http = TestBed.get(HttpClient);
-    const toasterService = TestBed.get(ToasterService);
+    const service: EditorService = TestBed.inject(EditorService);
+    const http = TestBed.inject(HttpClient);
+    const toasterService = TestBed.inject(ToasterService);
     spyOn(toasterService, 'success').and.callThrough();
     spyOn(URL, 'createObjectURL').and.callFake((data) => { });
     spyOn(http, 'get').and.returnValue(of({ test: 'ok' }));
@@ -315,7 +315,7 @@ describe('EditorService', () => {
     expect(toasterService.success).not.toHaveBeenCalledWith(configServiceData.labelConfig.messages.success['011']);
   });
   it('#downloadHierarchyCsv() should downloadHierarchyCsv', async () => {
-    const publicDataService: PublicDataService = TestBed.get(PublicDataService);
+    const publicDataService: PublicDataService = TestBed.inject(PublicDataService);
     spyOn(publicDataService, 'get').and.returnValue(of({
       id: 'api.collection.export',
       ver: '4.0',
@@ -341,7 +341,7 @@ describe('EditorService', () => {
     });
   });
   it('#validateCSVFile() should validateCSVFile', async () => {
-    const publicDataService: PublicDataService = TestBed.get(PublicDataService);
+    const publicDataService: PublicDataService = TestBed.inject(PublicDataService);
     const file = new File([''], 'filename', { type: 'csv/text' });
     const event = {
       target: {
@@ -374,7 +374,7 @@ describe('EditorService', () => {
       });
   });
   it('#generatePreSignedUrl() should call generatePreSignedUrl', () => {
-    const publicDataService: PublicDataService = TestBed.get(PublicDataService);
+    const publicDataService: PublicDataService = TestBed.inject(PublicDataService);
     spyOn(publicDataService, 'post').and.returnValue(of());
     const returnValue = editorService.generatePreSignedUrl({}, 'do_113312173590659072160', 'hierarchy');
     expect(publicDataService.post).toHaveBeenCalled();
@@ -384,7 +384,7 @@ describe('EditorService', () => {
     const questionId = 'do_123';
     const collectionId = 'do_11330102570702438417';
     const unitIdentifier = 'do_11326714211239526417';
-    const publicDataService: PublicDataService = TestBed.get(PublicDataService);
+    const publicDataService: PublicDataService = TestBed.inject(PublicDataService);
     spyOn(publicDataService, 'patch').and.returnValue(of({
       responseCode: 'OK'
     }));
@@ -396,7 +396,7 @@ describe('EditorService', () => {
     const questionIds = ['do_123', 'do_1234'];
     const collectionId = 'do_11330102570702438417';
     const unitIdentifier = 'do_11326714211239526417';
-    const publicDataService: PublicDataService = TestBed.get(PublicDataService);
+    const publicDataService: PublicDataService = TestBed.inject(PublicDataService);
     spyOn(publicDataService, 'patch').and.returnValue(of({
       responseCode: 'OK'
     }));
@@ -413,7 +413,7 @@ describe('EditorService', () => {
         }
       }
     };
-    const publicDataService: PublicDataService = TestBed.get(PublicDataService);
+    const publicDataService: PublicDataService = TestBed.inject(PublicDataService);
     editorConfig.context.collectionObjectType = 'QuestionSet';
     spyOn(publicDataService, 'patch').and.returnValue(of({
       responseCode: 'OK'
@@ -590,7 +590,7 @@ describe('EditorService', () => {
 
   it('#fetchOutComeDeclaration() should return the levels for rubrics', async()=> {
     const questionSetId = 'do_11330102570702438417';
-    const publicDataService = TestBed.get(PublicDataService);
+    const publicDataService = TestBed.inject(PublicDataService);
     spyOn(publicDataService, 'get').and.returnValue(of({responseCode: 'OK'}));
     editorService.fetchOutComeDeclaration(questionSetId).subscribe(data => {
       expect(data.responseCode).toEqual('OK');

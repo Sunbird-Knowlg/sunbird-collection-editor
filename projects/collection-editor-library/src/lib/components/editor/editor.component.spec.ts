@@ -53,7 +53,7 @@ describe('EditorComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(EditorComponent);
     component = fixture.componentInstance;
-    toasterService = TestBed.get(ToasterService);
+    toasterService = TestBed.inject(ToasterService);
     // tslint:disable-next-line:no-string-literal
     editorConfig.context['targetFWIds'] = ['nit_k12'];
     // tslint:disable-next-line:no-string-literal
@@ -694,7 +694,7 @@ describe('EditorComponent', () => {
   it('#showQuestionLibraryComponentPage() should set #addQuestionFromLibraryButtonLoader to false and call #saveContent()',
   fakeAsync(() => {
     const editorService = TestBed.inject(EditorService);
-    const treeService = TestBed.get(TreeService);
+    const treeService = TestBed.inject(TreeService);
     editorService.templateList = ['Subjective Question'];
     component.collectionId = 'do_12345';
     component.organisationFramework = 'nit_k12';
@@ -755,8 +755,8 @@ describe('EditorComponent', () => {
   });
 
   it('#addResourceToQuestionset() should call #libraryEventListener()', () => {
-    const treeService = TestBed.get(TreeService);
-    const editorService = TestBed.get(EditorService);
+    const treeService = TestBed.inject(TreeService);
+    const editorService = TestBed.inject(EditorService);
     spyOn(treeService, 'getActiveNode').and.returnValue({data: {id: 'do_123456'}});
     spyOn(editorService, 'addResourceToQuestionset').and.returnValue(of({responseCode: 'OK'}));
     spyOn(component, 'libraryEventListener').and.callFake(() => {});
@@ -766,8 +766,8 @@ describe('EditorComponent', () => {
   });
 
   it('#addResourceToQuestionset() should call editorService.apiErrorHandling()', () => {
-    const treeService = TestBed.get(TreeService);
-    const editorService = TestBed.get(EditorService);
+    const treeService = TestBed.inject(TreeService);
+    const editorService = TestBed.inject(EditorService);
     spyOn(treeService, 'getActiveNode').and.returnValue({data: {id: 'do_123456'}});
     spyOn(editorService, 'apiErrorHandling').and.callFake(() => {});
     spyOn(editorService, 'addResourceToQuestionset').and.returnValue(throwError('error'));
@@ -778,8 +778,8 @@ describe('EditorComponent', () => {
 
   it('#saveContent() should call #validateFormStatus()', () => {
     component.objectType = 'questionset';
-    const editorService = TestBed.get(EditorService);
-    const treeService = TestBed.get(TreeService);
+    const editorService = TestBed.inject(EditorService);
+    const treeService = TestBed.inject(TreeService);
     spyOn(editorService, 'getCollectionHierarchy').and.returnValue({nodesModified: nodesModifiedData});
     spyOn(editorService, 'getMaxScore').and.returnValue(5);
     spyOn(treeService, 'updateMetaDataProperty').and.callFake(() => {});
@@ -1009,7 +1009,7 @@ describe('EditorComponent', () => {
   it('#setUpdatedTreeNodeData() should call updateTreeNodeData() when success', () => {
     component.buttonLoaders.previewButtonLoader = true;
     component.showPreview = false;
-    const editorService = TestBed.get(EditorService);
+    const editorService = TestBed.inject(EditorService);
     spyOn(editorService, 'fetchCollectionHierarchy').and.returnValue(of(questionsetHierarchyRead));
     component.collectionTreeNodes = undefined;
     spyOn(component, 'setUpdatedTreeNodeData').and.callThrough();
@@ -1023,7 +1023,7 @@ describe('EditorComponent', () => {
 
   it('#setUpdatedTreeNodeData() should not call updateTreeNodeData() when error', () => {
     component.buttonLoaders.previewButtonLoader = true;
-    const editorService = TestBed.get(EditorService);
+    const editorService = TestBed.inject(EditorService);
     spyOn(toasterService, 'error').and.callFake(() => {});
     spyOn(editorService, 'fetchCollectionHierarchy').and.returnValue(throwError('error'));
     spyOn(component, 'setUpdatedTreeNodeData').and.callThrough();
@@ -1037,7 +1037,7 @@ describe('EditorComponent', () => {
 
   it('#updateTreeNodeData() should call treeService.getFirstChild()', () => {
     component.collectionTreeNodes = {data: undefined};
-    const helperService = TestBed.get(HelperService);
+    const helperService = TestBed.inject(HelperService);
     spyOn(helperService, 'hmsToSeconds').and.returnValue('300');
     const treeNodeMockData = treeNodeData;
     // tslint:disable-next-line:no-string-literal
@@ -1046,7 +1046,7 @@ describe('EditorComponent', () => {
     treeNodeMockData.data.metadata['maxTime'] = '00:05';
     // tslint:disable-next-line:no-string-literal
     treeNodeMockData.data.metadata['warningTime'] = '00:01';
-    const treeService = TestBed.get(TreeService);
+    const treeService = TestBed.inject(TreeService);
     spyOn(treeService, 'getFirstChild').and.returnValue(treeNodeData);
     spyOn(component, 'updateTreeNodeData').and.callThrough();
     component.updateTreeNodeData();
@@ -1070,7 +1070,7 @@ describe('EditorComponent', () => {
         }
       }
     };
-    const treeService = TestBed.get(TreeService);
+    const treeService: any = TestBed.inject(TreeService);
     treeService.nativeElement = nativeElement;
     spyOn(treeService, 'setTreeElement').and.callFake((el) => {
       treeService.nativeElement = nativeElement;
@@ -1150,7 +1150,7 @@ describe('EditorComponent', () => {
         childNodes: []
       }
     };
-    const treeService = TestBed.get(TreeService);
+    const treeService = TestBed.inject(TreeService);
     spyOn(treeService, 'getActiveNode').and.callFake(() => {
       return {
         data: {
@@ -1176,7 +1176,7 @@ describe('EditorComponent', () => {
 
   it('#updateSubmitBtnVisibility() should set toolbarConfig.hasChildren to true', () => {
     component.toolbarConfig = { hasChildren: false };
-    const treeService = TestBed.get(TreeService);
+    const treeService = TestBed.inject(TreeService);
     spyOn(treeService, 'getFirstChild').and.returnValue({children: ['Subjective']});
     spyOn(component, 'updateSubmitBtnVisibility').and.callThrough();
     component.updateSubmitBtnVisibility();
@@ -1186,7 +1186,7 @@ describe('EditorComponent', () => {
 
   it('#updateSubmitBtnVisibility() should set toolbarConfig.hasChildren to false', () => {
     component.toolbarConfig = { hasChildren: true };
-    const treeService = TestBed.get(TreeService);
+    const treeService = TestBed.inject(TreeService);
     spyOn(treeService, 'getFirstChild').and.returnValue({});
     spyOn(component, 'updateSubmitBtnVisibility').and.callThrough();
     component.updateSubmitBtnVisibility();
@@ -1197,7 +1197,7 @@ describe('EditorComponent', () => {
   it('generateTelemetryEndEvent() ', () => {
     component.editorMode = 'edit';
     component.pageStartTime = '1654413557409';
-    const telemetryService = TestBed.get(EditorTelemetryService);
+    const telemetryService = TestBed.inject(EditorTelemetryService);
     telemetryService.telemetryPageId = 'questionset_editor';
     spyOn(telemetryService, 'end').and.callFake(() => {});
     spyOn(component, 'generateTelemetryEndEvent').and.callThrough();
@@ -1219,7 +1219,7 @@ describe('EditorComponent', () => {
 
   it('#handleTemplateSelection should call editorService.apiErrorHandling', () => {
     const event = 'Multiple Choice Question';
-    const editorService = TestBed.get(EditorService);
+    const editorService = TestBed.inject(EditorService);
     component.editorConfig = editorConfig;
     spyOn(editorService, 'apiErrorHandling').and.callFake(() => {});
     spyOn(editorService, 'getCategoryDefinition').and.returnValue(throwError('error'));
@@ -1230,7 +1230,7 @@ describe('EditorComponent', () => {
 
   it('#handleTemplateSelection should call #redirectToQuestionTab()', async () => {
     const event = 'Multiple Choice Question';
-    const editorService = TestBed.get(EditorService);
+    const editorService = TestBed.inject(EditorService);
     component.editorConfig = editorConfig;
     component.editorConfig.config.showSourcingStatus = false;
     spyOn(component, 'redirectToQuestionTab').and.callFake(() => {});
@@ -1264,7 +1264,7 @@ describe('EditorComponent', () => {
 
   it('#redirectToQuestionTab() should call getCategoryDefinition', () => {
     component.leafFormConfig = undefined;
-    const editorService = TestBed.get(EditorService);
+    const editorService = TestBed.inject(EditorService);
     component.contentComment = 'test';
     component.pageId = '';
     component.editorConfig = questionSetEditorConfig;
@@ -1430,7 +1430,7 @@ describe('EditorComponent', () => {
     component.collectionId = 'do_113274017771085824116';
     // tslint:disable-next-line:max-line-length
     const blobUrl = 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/course/toc/do_11331579492804198413_untitled-course_1625465046239.csv';
-    const editorService = TestBed.get(EditorService);
+    const editorService = TestBed.inject(EditorService);
     spyOn(window, 'open').and.callFake(() => {});
     component.downloadCSVFile(blobUrl);
     expect(window.open).toHaveBeenCalled();
@@ -1496,7 +1496,7 @@ describe('EditorComponent', () => {
     component.treeService = undefined;
     component.unSubscribeShowLibraryPageEmitter = undefined;
     component.unSubscribeshowQuestionLibraryPageEmitter = undefined;
-    const treeService = TestBed.get(TreeService);
+    const treeService = TestBed.inject(TreeService);
     // tslint:disable-next-line:no-string-literal
     component['modal'] = {
       deny: jasmine.createSpy('deny')
@@ -1525,7 +1525,7 @@ describe('EditorComponent', () => {
         }
     };
     component.editorConfig = editorConfig;
-    const frameworkService = TestBed.get(FrameworkService);
+    const frameworkService: any = TestBed.inject(FrameworkService);
     frameworkService.organisationFramework = 'tpd';
     // tslint:disable-next-line:max-line-length
     frameworkService.frameworkData$ = of({frameworkdata: {tpd: of({'frameworkdata' : frameworkData})}});
