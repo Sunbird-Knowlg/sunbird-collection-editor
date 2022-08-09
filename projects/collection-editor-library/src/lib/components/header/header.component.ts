@@ -19,14 +19,20 @@ export class HeaderComponent implements OnDestroy, OnInit {
   @Input() buttonLoaders: any;
   @Input() showComment: any;
   @Input() publishchecklist: any;
+  @Input() set requestChange(action:string){
+    if(action)
+    this.openRequestChangePopup(action)
+  }
   @Output() toolbarEmitter = new EventEmitter<any>();
   @Output() bulkUploadEmitter = new EventEmitter<any>();
   @ViewChild('FormControl') FormControl: NgForm;
   @ViewChild('modal') public modal;
+  @Output() qualityParamEmitter = new EventEmitter<any>();
   public visibility: any;
   public showReviewModal: boolean;
-  public showRequestChangesPopup: boolean;
   public showPublishCollectionPopup: boolean;
+  public showQualityParameterPopup: boolean;
+  public showRequestChangesPopup: boolean;
   public rejectComment: string;
   public actionType: string;
   public objectType: string;
@@ -36,6 +42,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
   public correctionComments: string;
   public unsubscribe$ = new Subject<void>();
   public bulkUploadStatus = false;
+  public qualityFormConfig: any;
 
   constructor(private editorService: EditorService,
     public telemetryService: EditorTelemetryService,
@@ -50,6 +57,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
       }
     });
     this.objectType = _.get(this.editorService, 'editorConfig.config.objectType');
+    this.qualityFormConfig = this.editorService.qualityFormConfig;
     await this.handleActionButtons();
     this.getSourcingData();
   }
@@ -93,7 +101,11 @@ export class HeaderComponent implements OnDestroy, OnInit {
   }
   openPublishCheckListPopup(action) {
     this.actionType = action;
-    this.showPublishCollectionPopup = true;
+    if (this.editorService.isReviewerQualityCheckEnabled) {
+      this.showPublishCollectionPopup = true;
+    } else {
+      this.toolbarEmitter.emit({button: 'saveQualityParameters'});
+    }
   }
   publishEmitter(event) {
     this.showPublishCollectionPopup = false;
