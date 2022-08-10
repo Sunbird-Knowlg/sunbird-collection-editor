@@ -140,7 +140,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.showPreview = this.editorService.editorMode !== 'edit';
     this.toolbarConfig.showPreview = this.showPreview;
     this.toolbarConfig.add_translation = true;
-    // this.treeNodeData = this.treeService.getFirstChild();
+    this.treeNodeData = this.treeService.getFirstChild();
     if (_.get(this.creationContext, 'objectType') === 'question') { this.toolbarConfig.questionContribution = true; }
     this.solutionUUID = UUID.UUID();
     this.telemetryService.telemetryPageId = this.pageId;

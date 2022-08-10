@@ -17,9 +17,8 @@
                 <div class="sb-checkbox sb-checkbox-primary font-italic p-0 m-0">
                     <input [(ngModel)]="termsConsent" id="termAndConditions" name="example" type="checkbox">
                     <label for="termAndConditions" class="fsmall pl-32">
-                        <span class="sb-required">*</span>
                         <span class="font-weight-bold mb-4 d-block">
-                            "{{configService.labelConfig?.lbl?.iAgreeSubmit}}
+                            {{configService.labelConfig?.lbl?.iAgreeSubmit}}
                         </span>
                         <div class="sb-color-gray-300">{{configService.labelConfig?.lbl?.iconfirmContent}}
                             <a class="sb-color-primary font-weight-bold cursor-pointer"
@@ -32,7 +31,7 @@
                                 {{configService.labelConfig?.lbl?.contentPolicy}}
                             </a>
                             {{configService.labelConfig?.lbl?.privacyRights}}
-                            "
+                            <span class="sb-required">*</span>
                         </div>
                     </label>
                 </div>

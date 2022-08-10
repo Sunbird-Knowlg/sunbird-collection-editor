@@ -174,7 +174,7 @@ export class TreeService {
   }
 
   getFirstChild() {
-    return $(this.treeNativeElement).fancytree('getRootNode').getFirstChild();
+    return this.treeNativeElement ? $(this.treeNativeElement).fancytree('getRootNode').getFirstChild() : null;
   }
 
   findNode(nodeId) {
