@@ -75,15 +75,15 @@ describe('AssetBrowserComponent', () => {
   });
 
   it('#getMyImages() should return images on API success', async () => {
+    const response = mockData.serverResponse;
+    response.result = {
+      count: 1,
+      content: [{
+        downloadUrl: '/test'
+      }]
+    }
     let questionService: QuestionService = TestBed.inject(QuestionService);
-    spyOn(questionService, 'getAssetMedia').and.returnValue(of({
-      result: {
-        count: 1,
-        content: [{
-          downloadUrl: '/test'
-        }]
-      }
-    }));
+    spyOn(questionService, 'getAssetMedia').and.returnValue(of(response));
     const offset = 0;
     component.getMyImages(offset);
     expect(component.assetsCount).toEqual(1);
@@ -103,21 +103,21 @@ describe('AssetBrowserComponent', () => {
 
   it('#addImageInEditor() should emit proper event', () => {
     spyOn(component, 'addImageInEditor').and.callThrough();
-    spyOn(component.assetBrowserEmitter, 'emit').and.returnValue(mockData.assetBrowserEvent);
+    spyOn(component.assetBrowserEmitter, 'emit').and.callFake(() => {});
     component.addImageInEditor(mockData.assetBrowserEvent.url, '12345');
     expect(component.assetBrowserEmitter.emit).toHaveBeenCalledWith(mockData.assetBrowserEvent);
   });
 
   it('#getAllImages() should return images on API success', async () => {
+    const response = mockData.serverResponse;
+    response.result = {
+      count: 1,
+      content: [{
+        downloadUrl: '/test'
+      }]
+    }
     let questionService: QuestionService = TestBed.inject(QuestionService);
-    spyOn(questionService, 'getAssetMedia').and.returnValue(of({
-      result: {
-        count: 1,
-        content: [{
-          downloadUrl: '/test'
-        }]
-      }
-    }));
+    spyOn(questionService, 'getAssetMedia').and.returnValue(of(response));
     const offset = 0;
     component.getAllImages(offset);
     spyOn(component.allImages, 'push');
@@ -130,19 +130,19 @@ describe('AssetBrowserComponent', () => {
     expect(component.formConfig).toBeTruthy();
   })
   it('#uploadAndUseImage should upload image on API success', async () => {
+    const createMediaAssetResponse = mockData.serverResponse;
+    createMediaAssetResponse.result = {
+      node_id: 'do_123'
+    }
+    const preSignedResponse = mockData.serverResponse;
+    preSignedResponse.result = {
+      node_id: 'do_234',
+      pre_signed_url: '/test'
+    }
     let questionService: QuestionService = TestBed.inject(QuestionService);
     let modal = true;
-    spyOn(questionService, 'createMediaAsset').and.returnValue(of({
-      result: {
-        node_id: 'do_123'
-      }
-    }));
-    spyOn(questionService, 'generatePreSignedUrl').and.returnValue(of({
-      result: {
-        node_id: 'do_234',
-        pre_signed_url: '/test'
-      }
-    }));
+    spyOn(questionService, 'createMediaAsset').and.returnValue(of(createMediaAssetResponse));
+    spyOn(questionService, 'generatePreSignedUrl').and.returnValue(of(preSignedResponse));
     spyOn(component, 'addImageInEditor').and.callThrough();
     spyOn(component, 'dismissPops').and.callThrough();
     component.uploadAndUseImage(modal);
@@ -152,27 +152,27 @@ describe('AssetBrowserComponent', () => {
     expect(component.imageFormValid).toEqual(false);
   });
   it('#uploadAndUseImage should upload image and call upload to blob', async () => {
+    const createMediaAssetResponse = mockData.serverResponse;
+    createMediaAssetResponse.result = {
+      node_id: 'do_123'
+    }
+    const preSignedResponse = mockData.serverResponse;
+    preSignedResponse.result = {
+      node_id: 'do_234',
+      pre_signed_url: '/test'
+    }
+    const uploadMediaResponse = mockData.serverResponse;
+    uploadMediaResponse.result = {
+      node_id: 'do_234',
+      content_url: '/test'
+    }
     component.showImageUploadModal = false;
     let questionService: QuestionService = TestBed.inject(QuestionService);
     let modal = true;
-    spyOn(questionService, 'createMediaAsset').and.returnValue(of({
-      result: {
-        node_id: 'do_123'
-      }
-    }));
-    spyOn(questionService, 'generatePreSignedUrl').and.returnValue(of({
-      result: {
-        node_id: 'do_234',
-        pre_signed_url: '/test'
-      }
-    }));
+    spyOn(questionService, 'createMediaAsset').and.returnValue(of(createMediaAssetResponse));
+    spyOn(questionService, 'generatePreSignedUrl').and.returnValue(of(preSignedResponse));
     spyOn(component, 'uploadToBlob').and.returnValue(of(true));
-    spyOn(questionService, 'uploadMedia').and.returnValue(of({
-      result: {
-        node_id: 'do_234',
-        content_url: '/test'
-      }
-    }));
+    spyOn(questionService, 'uploadMedia').and.returnValue(of(uploadMediaResponse));
     spyOn(component, 'addImageInEditor').and.callThrough();
     spyOn(component, 'dismissPops').and.callThrough();
     component.uploadAndUseImage(modal);

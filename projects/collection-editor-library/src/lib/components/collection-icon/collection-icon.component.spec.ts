@@ -40,7 +40,7 @@ describe('CollectionIconComponent', () => {
 
   it('#collectionIconHandler() should emit proper event', () => {
     spyOn(component, 'collectionIconHandler').and.callThrough();
-    spyOn(component.iconEmitter, 'emit').and.returnValue(mockData.assetBrowserEvent);
+    spyOn(component.iconEmitter, 'emit').and.callFake(() => {});
     component.collectionIconHandler(mockData.assetBrowserEvent);
     expect(component.iconEmitter.emit).toHaveBeenCalledWith(mockData.assetBrowserEvent);
   });
