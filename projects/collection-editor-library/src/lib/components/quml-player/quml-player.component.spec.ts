@@ -72,12 +72,12 @@ describe('QumlPlayerComponent', () => {
     expect(component.qumlPlayerConfig).toBeDefined();
   });
   it('#getPlayerEvents() should call getPlayerEvents', () => {
-    spyOn(component, 'getPlayerEvents').and.returnValue(mockData.playerEvent);
+    spyOn(component, 'getPlayerEvents').and.callFake(() => {});
     component.getPlayerEvents(mockData.playerEvent);
     expect(component.getPlayerEvents).toHaveBeenCalled();
   });
   it('#getTelemetryEvents() should call getTelemetryEvents', () => {
-    spyOn(component, 'getTelemetryEvents').and.returnValue(mockData.telemetryEvent);
+    spyOn(component, 'getTelemetryEvents').and.callFake(() => {});
     component.getTelemetryEvents(mockData.telemetryEvent);
     expect(component.getTelemetryEvents).toHaveBeenCalled();
   });

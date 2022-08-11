@@ -49,7 +49,7 @@ describe('ResourceReorderComponent', () => {
   }));
 
   it('should call #closePopup() to close the hierarchy popup', () => {
-    spyOn(component.moveEvent, 'emit').and.returnValue(testData.closePopUp);
+    spyOn(component.moveEvent, 'emit').and.callFake(() => {});
     component.closePopup();
     expect(component.moveEvent.emit).toHaveBeenCalledWith(testData.closePopUp);
   });

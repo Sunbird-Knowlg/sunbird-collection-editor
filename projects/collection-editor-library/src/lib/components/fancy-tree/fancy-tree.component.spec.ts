@@ -2,7 +2,7 @@ import { EditorService } from './../../services/editor/editor.service';
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { FancyTreeComponent } from './fancy-tree.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { NO_ERRORS_SCHEMA, ChangeDetectorRef } from '@angular/core';
+import { NO_ERRORS_SCHEMA, ChangeDetectorRef, EventEmitter } from '@angular/core';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { config, treeData, tree, editorConfig, TargetNodeMockData,
@@ -224,7 +224,7 @@ describe('FancyTreeComponent', () => {
   
   it('#addFromLibrary() should call #emitshowLibraryPageEvent()', () => {
     const editorService: EditorService = TestBed.inject(EditorService);
-    spyOn(editorService, 'emitshowLibraryPageEvent').and.returnValue('showLibraryPage');
+    spyOn(editorService, 'emitshowLibraryPageEvent').and.callFake(() => {});
     component.addFromLibrary();
     expect(editorService.emitshowLibraryPageEvent).toHaveBeenCalledWith('showLibraryPage');
   });
