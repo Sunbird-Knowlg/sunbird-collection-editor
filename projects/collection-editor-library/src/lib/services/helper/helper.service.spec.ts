@@ -16,6 +16,24 @@ describe('HelperService', () => {
     categoryConfig: (categoryConfig as any).default,
     editorConfig: { contentPrimaryCategories: [] }
   };
+
+  const serverResponse = {
+    id: '',
+      params: {
+        resmsgid: '',
+        msgid: '',
+        err: '',
+        status: '',
+        errmsg: ''
+      },
+      responseCode: 'OK',
+      result: {
+      },
+      ts: '',
+      ver: '',
+      headers: {}
+  };
+
   let service: HelperService;
 
   beforeEach(() => {
@@ -66,16 +84,15 @@ describe('HelperService', () => {
 
   it('#getLicenses() should return license on API success', async () => {
     const publicDataService: PublicDataService = TestBed.inject(PublicDataService);
-    spyOn(publicDataService, 'post').and.returnValue(of(
-      {
-        result: {
-          license: [{
-            identifier: '458552951',
-            name: '-458552951',
-            status: 'Live'
-          }]
-        }
-      }));
+    const response = serverResponse;
+    response.result = {
+      license: [{
+        identifier: '458552951',
+        name: '-458552951',
+        status: 'Live'
+      }]
+    };
+    spyOn(publicDataService, 'post').and.returnValue(of(response));
     service.getLicenses().subscribe(data => {
       expect(data.license).toBeTruthy();
     });
@@ -87,12 +104,12 @@ describe('HelperService', () => {
 
   it('#getChannelData should be truthy', () => {
     const dataService: DataService = TestBed.inject(DataService);
-    spyOn(dataService, 'get').and.returnValue(of({
-      result: {
-        channel: {
-        }
+    const response = serverResponse;
+    response.result = {
+      channel: {
       }
-    }));
+    };
+    spyOn(dataService, 'get').and.returnValue(of(response));
     const channelId = '01309282781705830427';
     service.getChannelData(channelId).subscribe(data => {
       expect(data).toBeTruthy();
@@ -123,7 +140,7 @@ describe('HelperService', () => {
         }
       }
     };
-    spyOn(publicDataService, 'post').and.returnValue(of({}));
+    spyOn(publicDataService, 'post').and.returnValue(of(serverResponse));
     spyOn(service, 'getAllUser').and.callThrough();
     service.getAllUser(userSearchBody);
     expect(publicDataService.post).toHaveBeenCalled();
@@ -131,7 +148,7 @@ describe('HelperService', () => {
 
   it('#updateCollaborator() should call publicDataService.patch()', () => {
     const publicDataService: PublicDataService = TestBed.inject(PublicDataService);
-    spyOn(publicDataService, 'patch').and.returnValue(of({}));
+    spyOn(publicDataService, 'patch').and.returnValue(of(serverResponse));
     spyOn(service, 'updateCollaborator').and.callThrough();
     service.updateCollaborator('do_12345', ['12345']);
     expect(publicDataService.patch).toHaveBeenCalled();

@@ -128,7 +128,7 @@ describe('MetaFormComponent', () => {
     component.rootFormConfig = mockData.rootFormConfig;
     spyOn(component, 'isReviewMode').and.returnValue(false);
     spyOn(component, 'setAppIconData').and.callThrough();
-    spyOn(component, 'ifFieldIsEditable').and.callFake(() => {});
+    spyOn(component, 'ifFieldIsEditable').and.callFake(() => {return false});
     component.appIconConfig = {
       isAppIconEditable: true
     };
@@ -147,7 +147,7 @@ describe('MetaFormComponent', () => {
     component.rootFormConfig = mockData.rootFormConfigWithoutGrouping;
     spyOn(component, 'isReviewMode').and.returnValue(true);
     spyOn(component, 'setAppIconData').and.callThrough();
-    spyOn(component, 'ifFieldIsEditable').and.callFake(() => {});
+    spyOn(component, 'ifFieldIsEditable').and.callFake(() => {return false});
     component.appIconConfig = {
       isAppIconEditable: true
     };
@@ -162,7 +162,9 @@ describe('MetaFormComponent', () => {
 
   it('#fetchFrameWorkDetails() should set fetchFrameWorkDetails and for targetFrameworkIds', () => {
     const frameworkService = TestBed.inject(FrameworkService);
-    spyOn(frameworkService, 'getFrameworkCategories').and.returnValue(of(mockData.frameworkResponse));
+    const response = mockData.serverResponse;
+    response.result = mockData.frameworkResponse.result;
+    spyOn(frameworkService, 'getFrameworkCategories').and.returnValue(of(response));
     frameworkService.initialize('ekstep_ncert_k-12');
     spyOn(component, 'attachDefaultValues').and.callFake(() => {});
     spyOn(component, 'fetchFrameWorkDetails').and.callThrough();

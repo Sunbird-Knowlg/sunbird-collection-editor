@@ -30,14 +30,14 @@ describe('LibraryPlayerComponent', () => {
   });
   it('#addToLibrary() should call moveEvent and emit value', () => {
     spyOn(component.editorService, 'checkIfContentsCanbeAdded').and.returnValue(true);
-    spyOn(component.moveEvent, 'emit').and.returnValue(mockData);
+    spyOn(component.moveEvent, 'emit').and.callFake(() => {});
     component.addToLibrary();
     expect(component.editorService.checkIfContentsCanbeAdded).toBeTruthy();
     expect(component.moveEvent.emit).toHaveBeenCalledWith(mockData);
   });
   it('#addToLibrary() should not call moveEvent when limit reached to max ', () => {
     spyOn(component.editorService, 'checkIfContentsCanbeAdded').and.returnValue(false);
-    spyOn(component.moveEvent, 'emit').and.returnValue(mockData);
+    spyOn(component.moveEvent, 'emit').and.callFake(() => {});
     component.addToLibrary();
     expect(component.moveEvent.emit).not.toHaveBeenCalledWith(mockData);
   });

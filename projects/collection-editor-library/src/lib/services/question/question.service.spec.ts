@@ -9,6 +9,7 @@ import { of } from 'rxjs';
 import { PublicDataService } from '../public-data/public-data.service';
 import { EditorService } from '../../services/editor/editor.service';
 import { editorConfig } from './../../components/editor/editor.component.spec.data';
+import { mockRes } from "./question.service.spec.data";
 
 
 describe('QuestionService', () => {
@@ -44,9 +45,7 @@ describe('QuestionService', () => {
 
     it('#readQuestion() it should read the question on API success', () => {
         const questionId = 'do_123';
-        spyOn(publicDataService, 'get').and.returnValue(of({
-            responseCode: 'OK'
-        }));
+        spyOn(publicDataService, 'get').and.returnValue(of(mockRes.serverResponse));
         questionService.readQuestion(questionId).subscribe(data => {
             expect(data.responseCode).toEqual('OK');
         });
@@ -54,9 +53,7 @@ describe('QuestionService', () => {
 
     it('#updateHierarchyQuestionCreate() it should update hierarchy on question create', () => {
         const hierarchyBody = {};
-        spyOn(publicDataService, 'patch').and.returnValue(of({
-            responseCode: 'OK'
-        }));
+        spyOn(publicDataService, 'patch').and.returnValue(of(mockRes.serverResponse));
         questionService.updateHierarchyQuestionCreate(hierarchyBody).subscribe(data => {
             expect(data.responseCode).toEqual('OK');
         });
@@ -64,36 +61,28 @@ describe('QuestionService', () => {
 
     it('#updateHierarchyQuestionUpdate() it should update hierarchy on question update', () => {
         const hierarchyBody = {};
-        spyOn(publicDataService, 'patch').and.returnValue(of({
-            responseCode: 'OK'
-        }));
+        spyOn(publicDataService, 'patch').and.returnValue(of(mockRes.serverResponse));
         questionService.updateHierarchyQuestionUpdate(hierarchyBody).subscribe(data => {
             expect(data.responseCode).toEqual('OK');
         });
     });
 
     it('#getAssetMedia() it should return assets on API success', () => {
-        spyOn(publicDataService, 'post').and.returnValue(of({
-            responseCode: 'OK'
-        }));
+        spyOn(publicDataService, 'post').and.returnValue(of(mockRes.serverResponse));
         questionService.getAssetMedia().subscribe(data => {
             expect(data.responseCode).toEqual('OK');
         });
     });
 
     it('#createMediaAsset() it should create asset on API success', () => {
-        spyOn(publicDataService, 'post').and.returnValue(of({
-            responseCode: 'OK'
-        }));
+        spyOn(publicDataService, 'post').and.returnValue(of(mockRes.serverResponse));
         questionService.createMediaAsset().subscribe(data => {
             expect(data.responseCode).toEqual('OK');
         });
     });
 
     it('#uploadMedia() it should upload asset on API success', () => {
-        spyOn(publicDataService, 'post').and.returnValue(of({
-            responseCode: 'OK'
-        }));
+        spyOn(publicDataService, 'post').and.returnValue(of(mockRes.serverResponse));
         const req = {};
         const assetId = 'do_123';
         questionService.uploadMedia(req, assetId).subscribe(data => {
@@ -102,9 +91,7 @@ describe('QuestionService', () => {
     });
 
     it('#generatePreSignedUrl() it should generate pre signed url on API success', () => {
-        spyOn(publicDataService, 'post').and.returnValue(of({
-            responseCode: 'OK'
-        }));
+        spyOn(publicDataService, 'post').and.returnValue(of(mockRes.serverResponse));
         const req = {};
         const contentId = 'do_123';
         questionService.generatePreSignedUrl(req, contentId).subscribe(data => {
@@ -113,9 +100,7 @@ describe('QuestionService', () => {
     });
 
     it('#getVideo() it should return video details on API success', () => {
-        spyOn(publicDataService, 'get').and.returnValue(of({
-            responseCode: 'OK'
-        }));
+        spyOn(publicDataService, 'get').and.returnValue(of(mockRes.serverResponse));
         const videoId = 'do_123';
         questionService.getVideo(videoId).subscribe(data => {
             expect(data.responseCode).toEqual('OK');
@@ -124,9 +109,7 @@ describe('QuestionService', () => {
 
     it('#upsertQuestion() it should update question on API success', () => {
         const questionId = 'do_123';
-        spyOn(publicDataService, 'patch').and.returnValue(of({
-            responseCode: 'OK'
-        }));
+        spyOn(publicDataService, 'patch').and.returnValue(of(mockRes.serverResponse));
         questionService.upsertQuestion(questionId, {}).subscribe(data => {
             expect(data.responseCode).toEqual('OK');
         });
@@ -134,9 +117,7 @@ describe('QuestionService', () => {
 
     it('#getQuestionList() it should update question on API success', () => {
         const questionId = 'do_123';
-        spyOn(publicDataService, 'post').and.returnValue(of({
-            responseCode: 'OK'
-        }));
+        spyOn(publicDataService, 'post').and.returnValue(of(mockRes.serverResponse));
         questionService.getQuestionList(['do_123', 'do_1234']).subscribe(data => {
             expect(data.responseCode).toEqual('OK');
         });

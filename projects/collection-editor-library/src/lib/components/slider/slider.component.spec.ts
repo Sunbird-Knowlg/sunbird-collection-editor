@@ -48,11 +48,12 @@ describe("SliderComponent", () => {
   });
 
   it("#onValueChange() should emit  onChange with data for rightAnchor", () => {
+    component.sliderValue['rightAnchor'] = {};
     spyOn(component,'onValueChange').and.callThrough();
-    spyOn(component.onChange, "emit");
+    spyOn(component.onChange, "emit").and.callFake(() => {});
     component.onValueChange(mockData.changeEvent.event, "rightAnchor");
-    expect(component.onChange.emit).toHaveBeenCalledWith({ rightAnchor: 10 });
     expect(component.onValueChange).toHaveBeenCalled();
+    expect(component.onChange.emit).toHaveBeenCalled();
     expect(component.sliderValue.rightAnchor).toBe(10);
   });
 

@@ -224,7 +224,7 @@ describe('FancyTreeComponent', () => {
   
   it('#addFromLibrary() should call #emitshowLibraryPageEvent()', () => {
     const editorService: EditorService = TestBed.inject(EditorService);
-    spyOn(editorService, 'emitshowLibraryPageEvent').and.returnValue('showLibraryPage');
+    spyOn(editorService, 'emitshowLibraryPageEvent').and.callFake(() => {});
     component.addFromLibrary();
     expect(editorService.emitshowLibraryPageEvent).toHaveBeenCalledWith('showLibraryPage');
   });

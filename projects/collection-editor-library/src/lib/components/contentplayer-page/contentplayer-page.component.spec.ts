@@ -73,10 +73,25 @@ describe('ContentplayerPageComponent', () => {
   });
 
   it('#getContentDetails should fetch content details when API success', () => {
+    const response = {
+      id: '',
+        params: {
+          resmsgid: '',
+          msgid: '',
+          err: '',
+          status: '',
+          errmsg: ''
+        },
+        responseCode: '200',
+        result: { content: { name: 'test' }},
+        ts: '',
+        ver: '',
+        headers: {}
+    }
     const editorService = TestBed.inject(EditorService);
-    spyOn(editorService, 'fetchContentDetails').and.returnValue(of({result: { content: { name: 'test' }}}));
+    spyOn(editorService, 'fetchContentDetails').and.returnValue(of(response));
     const playerService = TestBed.inject(PlayerService);
-    spyOn(playerService, 'getPlayerConfig').and.returnValue({});
+    spyOn(playerService, 'getPlayerConfig').and.returnValue({config: {}, context: {}, data: {}, metadata: {}});
     spyOn(component, 'setPlayerType').and.callThrough();
     spyOn(component, 'loadDefaultPlayer').and.callFake(() => {});
     component.contentId = 'do_1234';

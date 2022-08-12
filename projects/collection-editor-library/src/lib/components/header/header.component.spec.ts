@@ -53,7 +53,7 @@ describe('HeaderComponent', () => {
 
   it('#handleActionButtons() visibility should be defined ', () => {
     const editorservice = TestBed.inject(EditorService);
-    spyOn(editorservice, 'editorMode');
+    spyOnProperty(editorservice, 'editorMode', 'get').and.returnValue('edit');
     component.handleActionButtons();
     expect(component.visibility).toBeDefined();
   });
@@ -65,7 +65,7 @@ describe('HeaderComponent', () => {
   it('#buttonEmitter() should call buttonEmitter', () => {
     const data = { type: 'previewContent' };
     spyOn(component.toolbarEmitter, 'emit');
-    spyOn(component, 'buttonEmitter').and.returnValue(data);
+    spyOn(component, 'buttonEmitter').and.callFake(() => {});
     component.buttonEmitter(data);
     expect(component.buttonEmitter).toHaveBeenCalledWith(data);
   });
