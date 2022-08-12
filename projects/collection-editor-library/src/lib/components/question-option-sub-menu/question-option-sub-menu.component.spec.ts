@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { QuestionOptionSubMenuComponent } from './question-option-sub-menu.component';
 import { mockData } from './question-option-sub-menu.spec.data';
@@ -7,7 +7,7 @@ describe('QuestionOptionSubMenuComponent', () => {
   let component: QuestionOptionSubMenuComponent;
   let fixture: ComponentFixture<QuestionOptionSubMenuComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports:[HttpClientTestingModule],
       declarations: [QuestionOptionSubMenuComponent],

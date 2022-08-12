@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { LibraryPlayerComponent } from './library-player.component';
@@ -9,7 +9,7 @@ describe('LibraryPlayerComponent', () => {
   let component: LibraryPlayerComponent;
   let fixture: ComponentFixture<LibraryPlayerComponent>;
   const mockData = {action: 'openHierarchyPopup'};
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       providers: [EditorTelemetryService],
       imports: [HttpClientTestingModule],

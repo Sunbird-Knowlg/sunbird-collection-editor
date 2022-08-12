@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { ComponentFixture, TestBed, inject, waitForAsync } from '@angular/core/testing';
 import { ResourceReorderComponent } from './resource-reorder.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EditorService } from '../../services/editor/editor.service';
@@ -10,7 +10,7 @@ describe('ResourceReorderComponent', () => {
   let component: ResourceReorderComponent;
   let fixture: ComponentFixture<ResourceReorderComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule ],
       providers: [ EditorService ],

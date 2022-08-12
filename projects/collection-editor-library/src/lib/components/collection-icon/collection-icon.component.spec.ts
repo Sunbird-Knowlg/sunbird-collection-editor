@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { CollectionIconComponent } from './collection-icon.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {mockData} from './collection-icon.component.spec.data';
@@ -7,7 +7,7 @@ describe('CollectionIconComponent', () => {
   let component: CollectionIconComponent;
   let fixture: ComponentFixture<CollectionIconComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ CollectionIconComponent ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ]

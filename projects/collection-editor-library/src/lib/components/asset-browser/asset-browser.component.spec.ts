@@ -1,5 +1,5 @@
 import { QuestionService } from './../../services/question/question.service';
-import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { ComponentFixture, TestBed, inject, waitForAsync } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AssetBrowserComponent } from './asset-browser.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
@@ -34,7 +34,7 @@ describe('AssetBrowserComponent', () => {
   let component: AssetBrowserComponent;
   let fixture: ComponentFixture<AssetBrowserComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [InfiniteScrollModule, HttpClientTestingModule, FormsModule],
       declarations: [AssetBrowserComponent],

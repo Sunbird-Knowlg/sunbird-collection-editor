@@ -1,5 +1,5 @@
 import { QuestionService } from "./../../services/question/question.service";
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { QuestionComponent } from "./question.component";
 import { Router } from "@angular/router";
@@ -91,7 +91,7 @@ describe("QuestionComponent", () => {
   class RouterStub {
     navigate = jasmine.createSpy("navigate");
   }
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [QuestionComponent, TelemetryInteractDirective],
       imports: [HttpClientTestingModule, SuiModule],

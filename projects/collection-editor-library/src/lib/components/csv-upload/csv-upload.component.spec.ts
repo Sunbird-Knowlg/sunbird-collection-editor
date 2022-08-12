@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { CsvUploadComponent } from './csv-upload.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -20,7 +20,7 @@ describe('CsvUploadComponent', () => {
     labelConfig: (labelConfig as any).default,
     categoryConfig: (categoryConfig as any).default
   };
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [CsvUploadComponent, TelemetryInteractDirective],
       imports: [HttpClientTestingModule],
