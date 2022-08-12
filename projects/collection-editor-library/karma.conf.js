@@ -22,6 +22,7 @@ module.exports = function (config) {
         timeoutInterval: 50000
       },
       args: [tags],
+      captureConsole: false,
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
     coverageIstanbulReporter: {
