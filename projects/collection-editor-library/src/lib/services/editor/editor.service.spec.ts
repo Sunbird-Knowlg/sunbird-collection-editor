@@ -267,13 +267,11 @@ describe('EditorService', () => {
     expect(editorService.getContentChildrens).toHaveBeenCalled();
     expect(result).toBe(false);
   });
-  xit('#downloadBlobUrlFile() should download the file', () => {
+  it('#downloadBlobUrlFile() should download the file', () => {
     const service: EditorService = TestBed.inject(EditorService);
-    const http = TestBed.inject(HttpClient);
+    const httpClient = TestBed.inject(HttpClient);
     const toasterService = TestBed.inject(ToasterService);
-    spyOn(toasterService, 'success').and.callThrough();
-    // spyOnProperty(URL, 'createObjectURL').and.callFake((data) => {});
-    spyOn(http, 'get').and.returnValue(of({ test: 'ok' }));
+    spyOn(toasterService, 'success').and.callFake(() => {});
     const downloadConfig = {
       // tslint:disable-next-line:max-line-length
       blobUrl: 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/textbook/toc/do_113312173590659072160_dev-testing-1_1625022971409.csv',
@@ -281,11 +279,10 @@ describe('EditorService', () => {
       fileType: 'csv',
       fileName: 'do_113312173590659072160'
     };
+    spyOn(httpClient, 'get').and.returnValue(of(new Blob([downloadConfig.blobUrl], {})));
     spyOn(service, 'downloadBlobUrlFile').and.callThrough();
     service.downloadBlobUrlFile(downloadConfig);
-    expect(http.get).toHaveBeenCalled();
-    expect(http.get).toHaveBeenCalledTimes(1);
-    expect(http.get).toHaveBeenCalled();
+    expect(httpClient.get).toHaveBeenCalled();
     expect(toasterService.success).toHaveBeenCalledWith(configServiceData.labelConfig.messages.success['011']);
   });
   it('#downloadBlobUrlFile() should download the file and dose not show toaster message', () => {
@@ -293,7 +290,6 @@ describe('EditorService', () => {
     const http = TestBed.inject(HttpClient);
     const toasterService = TestBed.inject(ToasterService);
     spyOn(toasterService, 'success').and.callThrough();
-    // spyOnProperty(URL, 'createObjectURL').and.callFake((data) => { });
     spyOn(http, 'get').and.returnValue(of({ test: 'ok' }));
     const downloadConfig = {
       // tslint:disable-next-line:max-line-length

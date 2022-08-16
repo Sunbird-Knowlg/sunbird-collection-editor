@@ -54,16 +54,17 @@ describe('AssetBrowserComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  xit('#ngOnInit() should call #getAcceptType()', () => {
+  it('#ngOnInit() should call #getAcceptType()', () => {
     spyOn(component, 'ngOnInit').and.callThrough();
     spyOn(component, 'getAcceptType').and.callFake(() => {return ''});
     component.ngOnInit();
     expect(component.getAcceptType).toHaveBeenCalledWith(mockEditorService.editorConfig.config.assetConfig.image.accepted, 'image');
   });
 
-  xit("#getAcceptType should return accepted content types", () => {
+  it("#getAcceptType should return accepted content types", () => {
     const typeList = "png, jpeg";
     const type = "image";
+    spyOn(component, 'getAcceptType').and.callThrough();
     const result = component.getAcceptType(typeList, type);
     expect(result).toEqual("image/png,image/jpeg");
   });
@@ -227,8 +228,8 @@ describe('AssetBrowserComponent', () => {
     component.lazyloadAllImages();
     expect(component.getAllImages).toHaveBeenCalledWith(0, undefined, true);
   });
-  xit('#uploadImage() should create asset on API success', () => {
-    const file = new File([''], 'filename', { type: 'image/png' });
+  it('#uploadImage() should create asset on API success', () => {
+    const file = new File([''], 'filename', { type: 'image' });
     const event = {
       target: {
         files: [
@@ -236,9 +237,20 @@ describe('AssetBrowserComponent', () => {
         ]
       }
     }
-    spyOn(component, 'generateAssetCreateRequest');
-    spyOn(component, 'populateFormData');
-    component.ngOnInit();
+    component.assetConfig = {
+      "image": {
+          "size": "1",
+          "sizeType": "MB",
+          "accepted": "png, jpeg"
+        }
+      }
+    spyOn(component, 'generateAssetCreateRequest').and.returnValue({
+        name: 'flower', mediaType: 'image',
+        mimeType: 'image', createdBy: '12345',
+        creator: 'n11', channel: '0110986543'
+    })
+    spyOn(component, 'populateFormData').and.callFake(() => {});
+    spyOn(component, 'uploadImage').and.callThrough();
     component.uploadImage(event);
     expect(component.imageUploadLoader).toEqual(true);
     expect(component.imageFormValid).toEqual(true);
