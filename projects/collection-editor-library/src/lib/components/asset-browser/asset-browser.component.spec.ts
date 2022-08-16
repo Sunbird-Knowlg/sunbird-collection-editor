@@ -130,7 +130,7 @@ describe('AssetBrowserComponent', () => {
     expect(component.imageFormValid).toEqual(false);
     expect(component.formConfig).toBeTruthy();
   })
-  xit('#uploadAndUseImage should upload image on API success', async () => {
+  it('#uploadAndUseImage should upload image on API success', async () => {
     const createMediaAssetResponse = mockData.serverResponse;
     createMediaAssetResponse.result = {
       node_id: 'do_123'
@@ -160,7 +160,7 @@ describe('AssetBrowserComponent', () => {
     const preSignedResponse = mockData.serverResponse;
     preSignedResponse.result = {
       node_id: 'do_234',
-      pre_signed_url: '/test'
+      pre_signed_url: '/test?'
     }
     const uploadMediaResponse = mockData.serverResponse;
     uploadMediaResponse.result = {
@@ -175,7 +175,8 @@ describe('AssetBrowserComponent', () => {
     spyOn(component, 'uploadToBlob').and.returnValue(of(true));
     spyOn(questionService, 'uploadMedia').and.returnValue(of(uploadMediaResponse));
     spyOn(component, 'addImageInEditor').and.callThrough();
-    spyOn(component, 'dismissPops').and.callThrough();
+    spyOn(component, 'dismissPops').and.callFake(()=> {});
+    spyOn(component, 'uploadAndUseImage').and.callThrough();
     component.uploadAndUseImage(modal);
     expect(questionService.createMediaAsset).toHaveBeenCalled();
     expect(questionService.generatePreSignedUrl).toHaveBeenCalled();
