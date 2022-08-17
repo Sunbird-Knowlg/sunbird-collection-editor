@@ -86,11 +86,11 @@ export class EditorService {
     return this._isReviewerEditEnable = value;
   }
 
-  get isCollaborationEnabled() {
+  get isReviewModificationAllowed() {
     return this._isCollaborationEnabled;
   }
 
-  setCollaborationEnabled(value: boolean) {
+  setIsReviewModificationAllowed(value: boolean) {
     return this._isCollaborationEnabled = value;
   }
 

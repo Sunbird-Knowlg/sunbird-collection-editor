@@ -70,7 +70,10 @@ const mockEditorService = {
   },
   apiErrorHandling: () => {},
   editorMode:'review',
-  submitRequestChanges :() =>{}
+  submitRequestChanges :() =>{},
+  setIsReviewModificationAllowed: (value: boolean) => {
+    subscribe: (fn) => fn({});
+  }
 };
 
 describe("QuestionComponent", () => {
@@ -216,7 +219,7 @@ describe("QuestionComponent", () => {
       creationContextMock.isReadOnlyMode
     );
     expect(component.toolbarConfig).toBeDefined();
-    expect(component.toolbarConfig.showPreview).toBeFalsy();
+    expect(component.toolbarConfig.showPreview).toBeTruthy();
     expect(component.questionInput.setChildQueston).toBeFalsy();
   });
 

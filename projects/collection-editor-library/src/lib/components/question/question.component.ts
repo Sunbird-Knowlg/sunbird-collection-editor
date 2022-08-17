@@ -195,7 +195,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       }
       this.questionFormConfig = _.cloneDeep(this.leafFormConfig);
       let leafFormConfigFields = _.join(_.map(this.leafFormConfig, value => (value.code)), ',');
-      leafFormConfigFields += ',isCollaborationEnabled';
+      leafFormConfigFields += ',isReviewModificationAllowed';
       if (!_.isUndefined(this.questionId)) {
         this.questionService.readQuestion(this.questionId, leafFormConfigFields)
           .subscribe((res) => {
@@ -204,7 +204,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
               this.questionPrimaryCategory = _.get(this.questionMetaData,'primaryCategory');
               // tslint:disable-next-line:max-line-length
               this.questionInteractionType = _.get(this.questionMetaData,'interactionTypes') ? _.get(this.questionMetaData,'interactionTypes[0]') : 'default';
-              this.editorService.setCollaborationEnabled(_.get(this.questionMetaData, 'isCollaborationEnabled', false));
+              this.editorService.setIsReviewModificationAllowed(_.get(this.questionMetaData, 'isReviewModificationAllowed', false));
               this.populateFormData();
               if (this.questionInteractionType === 'default') {
                 if (this.questionMetaData.editorState) {
@@ -397,7 +397,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   onConsentSubmit(event) {
     this.showSubmitConfirmPopup = false;
     if (event) {
-      this.questionMetaData = _.assign(this.questionMetaData, {isCollaborationEnabled: event.editingConsent});
+      this.questionMetaData = _.assign(this.questionMetaData, {isReviewModificationAllowed: event.editingConsent});
       this.sendForReview();
     }
   }
@@ -658,10 +658,14 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   saveQuestion() {
     if(_.get(this.creationContext, 'objectType') === 'question') {
       if(this.creationMode === 'edit') {
-        let callback = this.addResourceToQuestionset.bind(this);
+        const callback = this.addResourceToQuestionset.bind(this);
         this.upsertQuestion(callback);
+      } else if (this.creationMode === 'sourcingReview') {
+        const callback = this.sendQuestionForPublish.bind(this);
+        this.upsertQuestion(callback);
+      } else {
+        this.upsertQuestion(undefined);
       }
-      else this.upsertQuestion(undefined);
     }
     else {
       if (_.isUndefined(this.questionId)) {
@@ -784,7 +788,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       metadata.responseDeclaration.response1.correctResponse.outcomes.SCORE = this.maxScore;
     }
     metadata = _.merge(metadata, _.pickBy(this.childFormData, _.identity));
-    metadata.isCollaborationEnabled = !!_.get(this.questionMetaData, 'isCollaborationEnabled');
+    metadata.isReviewModificationAllowed = !!_.get(this.questionMetaData, 'isReviewModificationAllowed');
     // tslint:disable-next-line:max-line-length
     return _.omit(metadata, ['question', 'numberOfOptions', 'options', 'allowMultiSelect', 'showEvidence', 'evidenceMimeType', 'showRemarks', 'markAsNotMandatory', 'leftAnchor', 'rightAnchor', 'step', 'numberOnly', 'characterLimit', 'dateFormat', 'autoCapture', 'remarksLimit','maximumOptions']);
   }
