@@ -25,6 +25,8 @@ export class EditorService {
   public questionStream$ = new Subject<any>();
   private _editorConfig: IEditorConfig;
   private _editorMode = 'edit';
+  private _isReviewerEditEnable = false;
+  private _isCollaborationEnabled = false;
   public showLibraryPage: EventEmitter<number> = new EventEmitter();
   public showQuestionLibraryPage: EventEmitter<number> = new EventEmitter();
   private _bulkUploadStatus$ = new BehaviorSubject<any>(undefined);
@@ -49,6 +51,7 @@ export class EditorService {
       this._editorConfig.config = _.assign(this.configService.editorConfig.default, this._editorConfig.config);
     }
     this._editorMode = _.get(this._editorConfig, 'config.mode').toLowerCase();
+    this.setIsReviewerEditEnable(_.get(this._editorConfig, 'context.enableReviewEdit', false));
   }
 
   set selectedChildren(value: SelectedChildren) {
@@ -73,6 +76,22 @@ export class EditorService {
 
   get editorMode() {
     return this._editorMode;
+  }
+
+  get isReviewerEditEnable() {
+    return this._isReviewerEditEnable;
+  }
+
+  private setIsReviewerEditEnable(value: boolean) {
+    return this._isReviewerEditEnable = value;
+  }
+
+  get isReviewModificationAllowed() {
+    return this._isCollaborationEnabled;
+  }
+
+  setIsReviewModificationAllowed(value: boolean) {
+    return this._isCollaborationEnabled = value;
   }
 
   get contentPolicyUrl() {

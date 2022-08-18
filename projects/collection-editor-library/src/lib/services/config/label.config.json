@@ -230,7 +230,9 @@
        "questionsetAddFromLibraryItemLabel": "question",
        "questionsetAddFromLibraryCollectionLabel": "question set",
        "marks": "Marks",
-       "shuffleOnMessage": "Each question will carry equal weightage of 1 mark when using Shuffle. To provide different weightage to individual questions please turn off Shuffle."
+       "shuffleOnMessage": "Each question will carry equal weightage of 1 mark when using Shuffle. To provide different weightage to individual questions please turn off Shuffle.",
+       "editingConsentNote": "I confirm that I am allowing my reviewer to make edits to the content and metadata of the content. I consent my reviewer make changes, if any and publish the contain thereafter.",
+       "acceptBothConsentNote": "Agree to both conditions"
       },
     "err":{
        "somethingWentWrong":"Something went wrong",
