@@ -143,7 +143,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.showPreview = this.editorService.editorMode !== 'edit';
     this.toolbarConfig.showPreview = this.showPreview;
     this.toolbarConfig.add_translation = true;
-    // this.treeNodeData = this.treeService.getFirstChild();
+    this.treeNodeData = this.treeService.getFirstChild();
     if (_.get(this.creationContext, 'objectType') === 'question') { this.toolbarConfig.questionContribution = true; }
     this.solutionUUID = UUID.UUID();
     this.telemetryService.telemetryPageId = this.pageId;
@@ -369,6 +369,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         break;
       case 'saveQualityParameters' :
         this.showQualityParameterPopup = true;
+        break;
       default:
         break;
     }
@@ -522,28 +523,28 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       })
     }
 
-    sendBackQuestion(event) {
-      this.questionService.readQuestion(this.questionId, 'status')
-        .subscribe((res) => {
-          const requestObj = {
-            question: {
-              prevStatus: _.get(res.result, `question.status`),
-              status: 'Draft',
-              requestChanges: event.comment
-            }
-          };
-          this.questionService.updateQuestion(this.questionId, requestObj).subscribe(res => {
-              this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.040'));
-              this.redirectToChapterList();
-          });
-        }, (err: ServerResponse) => {
-          const errInfo = {
-            errorMsg: 'Cannot update question status. Please try again...',
-          };
-          this.editorService.apiErrorHandling(err, errInfo);
+  sendBackQuestion(event) {
+    this.questionService.readQuestion(this.questionId, 'status')
+      .subscribe((res) => {
+        const requestObj = {
+          question: {
+            prevStatus: _.get(res.result, `question.status`),
+            status: 'Draft',
+            requestChanges: event.comment
+          }
+        };
+        this.questionService.updateQuestion(this.questionId, requestObj).subscribe(res => {
+            this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.040'));
+            this.redirectToChapterList();
         });
-    }
-    
+      }, (err: ServerResponse) => {
+        const errInfo = {
+          errorMsg: 'Cannot update question status. Please try again...',
+        };
+        this.editorService.apiErrorHandling(err, errInfo);
+      });
+  }
+
   validateQuestionData() {
 
     if ([undefined, ''].includes(this.editorState.question)) {
@@ -1452,18 +1453,35 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  saveQualityParameters(qualityParameters) {
+  onQualityFormSubmit(event) {
+    switch (event.action) {
+      case 'submit':
+        this.saveQualityParameters(event.data, this.sendQuestionForPublish.bind(this, {}));
+        break;
+      case 'requestChange':
+        this.requestChangesPopupAction = null;
+        this.saveQualityParameters(event.data, this.openRequestChangesPopup.bind(this, {}));
+        break;
+      default:
+        this.showQualityParameterPopup = false;
+    }
+  }
+
+  saveQualityParameters(qualityParameters, callback) {
     const requestObj = {
       question: {
         reviewerQualityChecks: qualityParameters
       }
     };
     this.questionService.updateQuestion(this.questionId, requestObj).subscribe(res => {
-        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.040'));
-        this.sendQuestionForPublish({});
-    }, err => {this.sendQuestionForPublish({});});
+        this.showQualityParameterPopup = false;
+        if (callback) {
+          callback();
+        }
+    });
 
   }
+
   openRequestChangesPopup() {
     this.requestChangesPopupAction = 'sendForCorrectionsQuestion';
   }

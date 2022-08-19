@@ -156,7 +156,7 @@
       {{labelConfigData.reject_collection_btn_label}}
     </button>
 
-    <button *ngIf="visibility && visibility?.publishContent && labelConfigData?.questionContribution" class="sb-btn sb-btn-secondary sb-btn-normal ripple" (click)="buttonEmitter({type:'publishQuestion'})" libTelemetryInteract
+    <button *ngIf="visibility && visibility?.publishContent && labelConfigData?.questionContribution" class="sb-btn sb-btn-secondary sb-btn-normal ripple" (click)="firstLevelPublish()" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('publish','click','submit', telemetryService.telemetryPageId)">
       <i class="{{labelConfigData.publish_collection_btn_icon}}"></i>
       {{labelConfigData.publish_collection_btn_label}}

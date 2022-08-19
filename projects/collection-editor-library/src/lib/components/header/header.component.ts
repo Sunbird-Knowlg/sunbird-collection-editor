@@ -19,9 +19,10 @@ export class HeaderComponent implements OnDestroy, OnInit {
   @Input() buttonLoaders: any;
   @Input() showComment: any;
   @Input() publishchecklist: any;
-  @Input() set requestChange(action:string){
-    if(action)
-    this.openRequestChangePopup(action)
+  @Input() set requestChange(action: string) {
+    if (action) {
+      this.openRequestChangePopup(action);
+    }
   }
   @Output() toolbarEmitter = new EventEmitter<any>();
   @Output() bulkUploadEmitter = new EventEmitter<any>();
@@ -31,7 +32,6 @@ export class HeaderComponent implements OnDestroy, OnInit {
   public visibility: any;
   public showReviewModal: boolean;
   public showPublishCollectionPopup: boolean;
-  public showQualityParameterPopup: boolean;
   public showRequestChangesPopup: boolean;
   public rejectComment: string;
   public actionType: string;
@@ -42,7 +42,6 @@ export class HeaderComponent implements OnDestroy, OnInit {
   public correctionComments: string;
   public unsubscribe$ = new Subject<void>();
   public bulkUploadStatus = false;
-  public qualityFormConfig: any;
 
   constructor(private editorService: EditorService,
     public telemetryService: EditorTelemetryService,
@@ -57,7 +56,6 @@ export class HeaderComponent implements OnDestroy, OnInit {
       }
     });
     this.objectType = _.get(this.editorService, 'editorConfig.config.objectType');
-    this.qualityFormConfig = this.editorService.qualityFormConfig;
     await this.handleActionButtons();
     this.getSourcingData();
   }
@@ -99,18 +97,24 @@ export class HeaderComponent implements OnDestroy, OnInit {
   buttonEmitter(action) {
     this.toolbarEmitter.emit({ button: action.type, ...(action.comment && { comment: this.rejectComment }) });
   }
+
   openPublishCheckListPopup(action) {
     this.actionType = action;
+    this.showPublishCollectionPopup = true;
+  }
+
+  firstLevelPublish() {
     if (this.editorService.isReviewerQualityCheckEnabled) {
-      this.showPublishCollectionPopup = true;
-    } else {
       this.toolbarEmitter.emit({button: 'saveQualityParameters'});
+    } else {
+      this.buttonEmitter({type: 'publishQuestion'});
     }
   }
+
   publishEmitter(event) {
     this.showPublishCollectionPopup = false;
     if (event.button === 'publishContent' || event.button === 'publishQuestion' || event.button === 'sourcingApprove' || event.button === 'sourcingApproveQuestion') {
-      this.toolbarEmitter.emit(event)
+      this.toolbarEmitter.emit(event);
     }
   }
 

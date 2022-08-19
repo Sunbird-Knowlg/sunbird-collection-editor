@@ -54,8 +54,8 @@ export class EditorService {
     }
     this._editorMode = _.get(this._editorConfig, 'config.mode').toLowerCase();
     this.setIsReviewerEditEnable(_.get(this._editorConfig, 'context.enableReviewEdit', false));
-    this.setQualityFormConfig(_.get(this._editorConfig, 'config.qualityFormConfig', null))
-    this.setIsReviewerQualityCheckEnabled(_.get(this._editorConfig, 'config.isReviewerQualityCheckEnabled', false))
+    this.setQualityFormConfig(_.get(this._editorConfig, 'config.qualityFormConfig', null));
+    this.setIsReviewerQualityCheckEnabled(_.get(this._editorConfig, 'config.isReviewerQualityCheckEnabled', false));
   }
 
   set selectedChildren(value: SelectedChildren) {

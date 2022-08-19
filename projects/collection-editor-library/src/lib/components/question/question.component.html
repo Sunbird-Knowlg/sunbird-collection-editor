@@ -253,9 +253,9 @@ class="sb-modal overflow-modal" appBodyScroll (dismissed)="showSubmitConfirmPopu
     libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('close','click','cancel', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'review_comments'})">{{configService.labelConfig?.button_labels?.close_btn_label}}</button>
   </div>
 </sui-modal>
-<lib-quality-params-modal 
+<lib-quality-params-modal
+  [labelConfigData]="toolbarConfig"
   [showQualityParameterPopup]="showQualityParameterPopup"
   [qualityFormConfig]="qualityFormConfig"
-  (qualityParamChanged)="saveQualityParameters($event)"
-  (requestChangesEmitter)="openRequestChangesPopup()">
+  (qualityParamChanged)="onQualityFormSubmit($event)">
 </lib-quality-params-modal>
