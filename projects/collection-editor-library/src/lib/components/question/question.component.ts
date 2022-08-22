@@ -111,6 +111,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   maxScore = 1;
   public questionFormConfig: any;
   treeNodeData:any;
+  showQualityParameterPopup: boolean =false;
+  public qualityFormConfig: any;
+  requestChangesPopupAction: string;
   constructor(
     private questionService: QuestionService, public editorService: EditorService, public telemetryService: EditorTelemetryService,
     public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,
@@ -147,6 +150,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.initialLeafFormConfig = _.cloneDeep(this.leafFormConfig);
     this.initialize();
     this.framework = _.get(this.editorService.editorConfig, 'context.framework');
+    this.qualityFormConfig = this.editorService.qualityFormConfig;
   }
 
   fetchFrameWorkDetails() {
@@ -362,6 +366,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         break;
       case 'showReviewcomments':
         this.showReviewModal = !this.showReviewModal;
+        break;
+      case 'saveQualityParameters' :
+        this.showQualityParameterPopup = true;
         break;
       default:
         break;
@@ -1444,5 +1451,38 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         this.getBranchingLogic(data?.children);
       }
     });
+  }
+
+  onQualityFormSubmit(event) {
+    switch (event.action) {
+      case 'submit':
+        this.saveQualityParameters(event.data, this.sendQuestionForPublish.bind(this, {}));
+        break;
+      case 'requestChange':
+        this.requestChangesPopupAction = null;
+        this.saveQualityParameters(event.data, this.openRequestChangesPopup.bind(this, {}));
+        break;
+      default:
+        this.showQualityParameterPopup = false;
+    }
+  }
+
+  saveQualityParameters(qualityParameters, callback) {
+    const requestObj = {
+      question: {
+        reviewerQualityChecks: qualityParameters
+      }
+    };
+    this.questionService.updateQuestion(this.questionId, requestObj).subscribe(res => {
+        this.showQualityParameterPopup = false;
+        if (callback) {
+          callback();
+        }
+    });
+
+  }
+
+  openRequestChangesPopup() {
+    this.requestChangesPopupAction = 'sendForCorrectionsQuestion';
   }
 }
