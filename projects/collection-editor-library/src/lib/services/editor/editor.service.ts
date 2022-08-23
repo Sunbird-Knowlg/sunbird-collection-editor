@@ -758,4 +758,14 @@ getDependentNodes(identifier) {
     private setIsReviewerQualityCheckEnabled(value: boolean){
       return this._isReviewerQualityCheckEnabled = value;
     }
+
+  appendCloudStorageHeaders(config) {
+    const headers =  _.get(this.editorConfig, 'context.cloudStorage.presigned_headers', {});
+    if (!_.isEmpty(headers)) {
+      config.headers = {...config.headers, ...headers};
+      return config;
+    } else {
+      return config;
+    }
+  }
 }
