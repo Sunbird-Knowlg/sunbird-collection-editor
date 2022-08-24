@@ -13,6 +13,7 @@ export class QualityParamsModalComponent implements OnInit {
     @Input() labelConfigData: any;
     formData: any;
     isApprovalBtnEnable: boolean;
+    isRequestChangeBtnEnable: boolean;
     totalScoreValue = 0;
 
     constructor(public configService: ConfigService) {
@@ -23,6 +24,7 @@ export class QualityParamsModalComponent implements OnInit {
 
     onStatusChanges(event) {
         this.isApprovalBtnEnable = event?.isValid;
+        this.isRequestChangeBtnEnable = event?.isValid;
     }
 
     valueChanges(event) {
