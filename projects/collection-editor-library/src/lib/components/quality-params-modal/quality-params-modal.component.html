@@ -18,7 +18,7 @@
     <button class="sb-btn sb-btn-normal sb-btn-outline-primary" [disabled]="!isApprovalBtnEnable" (click)="submitApproval()">
         {{configService.labelConfig?.button_labels?.publish_collection_btn_label}}
     </button>
-    <button class="sb-btn sb-btn-normal sb-btn-outline-primary" (click)="requestChanges()">
+    <button class="sb-btn sb-btn-normal sb-btn-outline-primary" [disabled] = "!isRequestChangeBtnEnable" (click)="requestChanges()">
         {{configService.labelConfig?.button_labels?.reject_collection_btn_label}}
     </button>
   </div>
