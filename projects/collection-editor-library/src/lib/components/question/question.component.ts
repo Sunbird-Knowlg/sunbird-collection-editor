@@ -252,6 +252,12 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
                 }, { templateId, numberOfOptions,maximumOptions });
                 this.editorState.solutions = this.questionMetaData?.editorState?.solutions;
                 this.editorState.interactions = interactions;
+                if (_.has(this.questionMetaData, 'primaryCategory')) {
+                  this.editorState.primaryCategory = _.get(this.questionMetaData, 'primaryCategory');
+                }
+                if (_.has(this.questionMetaData, 'responseDeclaration')) {
+                  this.editorState.responseDeclaration = _.get(this.questionMetaData, 'responseDeclaration');
+                }
               }
               this.setQuestionTitle(this.questionId);
               if (!_.isEmpty(this.editorState.solutions)) {
@@ -278,6 +284,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.subMenuConfig();
               }
               this.contentComment = _.get(this.creationContext, 'correctionComments');
+              if (this.showPreview) {
+                this.previewContent();
+              }
               this.showLoader = false;
             }
           }, (err: ServerResponse) => {
