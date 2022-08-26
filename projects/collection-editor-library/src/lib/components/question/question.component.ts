@@ -252,12 +252,12 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
                 }, { templateId, numberOfOptions,maximumOptions });
                 this.editorState.solutions = this.questionMetaData?.editorState?.solutions;
                 this.editorState.interactions = interactions;
-                if (_.has(this.questionMetaData, 'primaryCategory')) {
-                  this.editorState.primaryCategory = _.get(this.questionMetaData, 'primaryCategory');
-                }
                 if (_.has(this.questionMetaData, 'responseDeclaration')) {
                   this.editorState.responseDeclaration = _.get(this.questionMetaData, 'responseDeclaration');
                 }
+              }
+              if (_.has(this.questionMetaData, 'primaryCategory')) {
+                this.editorState.primaryCategory = _.get(this.questionMetaData, 'primaryCategory');
               }
               this.setQuestionTitle(this.questionId);
               if (!_.isEmpty(this.editorState.solutions)) {
