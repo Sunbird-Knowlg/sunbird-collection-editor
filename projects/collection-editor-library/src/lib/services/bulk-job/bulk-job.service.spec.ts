@@ -12,6 +12,22 @@ xdescribe('BulkJobService', () => {
     urlConFig: (urlConfig as any).default,
     labelConfig: (labelConfig as any).default
   };
+  const serverResponse = {
+    id: '',
+      params: {
+        resmsgid: '',
+        msgid: '',
+        err: '',
+        status: '',
+        errmsg: ''
+      },
+      responseCode: '200',
+      result: {
+      },
+      ts: '',
+      ver: '',
+      headers: {}
+  }
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientModule],
@@ -25,7 +41,7 @@ xdescribe('BulkJobService', () => {
   });
   it('#getBulkOperationStatus() should get bulk operation status', () => {
     const publicDataService: PublicDataService = TestBed.inject(PublicDataService);
-    spyOn(publicDataService, 'post').and.returnValue(of({}));
+    spyOn(publicDataService, 'post').and.returnValue(of(serverResponse));
     const service: BulkJobService = TestBed.inject(BulkJobService);
     const observable = service.getBulkOperationStatus('do_123');
     observable.subscribe((data) => {
@@ -34,7 +50,7 @@ xdescribe('BulkJobService', () => {
   });
   it('#createBulkJob() should get bulk operation status', () => {
     const publicDataService: PublicDataService = TestBed.inject(PublicDataService);
-    spyOn(publicDataService, 'post').and.returnValue(of({}));
+    spyOn(publicDataService, 'post').and.returnValue(of(serverResponse));
     const service: BulkJobService = TestBed.inject(BulkJobService);
     const observable = service.createBulkJob('do_123');
     observable.subscribe((data) => {

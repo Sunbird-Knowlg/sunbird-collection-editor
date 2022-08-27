@@ -105,14 +105,14 @@ describe('EditorService', () => {
     spyOn(editorService, 'emitshowLibraryPageEvent').and.callThrough();
     spyOn(editorService.showLibraryPage, 'emit').and.callFake(() => { });
     editorService.emitshowLibraryPageEvent('test');
-    expect(editorService.showLibraryPage.emit).toHaveBeenCalledWith('test');
+    expect(editorService.showLibraryPage.emit).toHaveBeenCalled();
   });
 
   it('#emitshowQuestionLibraryPageEvent() should call #showQuestionLibraryPage.emit event', () => {
     spyOn(editorService, 'emitshowQuestionLibraryPageEvent').and.callThrough();
     spyOn(editorService.showQuestionLibraryPage, 'emit').and.callFake(() => { });
     editorService.emitshowQuestionLibraryPageEvent('test');
-    expect(editorService.showQuestionLibraryPage.emit).toHaveBeenCalledWith('test');
+    expect(editorService.showQuestionLibraryPage.emit).toHaveBeenCalled();
   });
 
   it('#contentsCountAddedInLibraryPage() should increase value of contentsCount', () => {
@@ -145,14 +145,13 @@ describe('EditorService', () => {
       'do_113301035530600448110'
     ];
     const dataService = TestBed.inject(DataService);
-    spyOn(dataService, 'post').and.returnValue(of({
-      id: 'api.questions.list',
-      result: {
-        questions: [
-        ],
-        count: 0
-      }
-    }));
+    const response = mockData.serverResponse;
+    response.result = {
+      questions: [
+      ],
+      count: 0
+    };
+    spyOn(dataService, 'post').and.returnValue(of(response));
     editorService.getQuestionList(questionIds).subscribe(data => {
       expect(data.questions).toBeTruthy();
     });
@@ -161,7 +160,7 @@ describe('EditorService', () => {
   it('#fetchCollectionHierarchy() should return collection hierarchy', async () => {
     const collectionId = 'do_11330102570702438417';
     const publicDataService = TestBed.inject(PublicDataService);
-    spyOn(publicDataService, 'get').and.returnValue(of({ responseCode: 'OK' }));
+    spyOn(publicDataService, 'get').and.returnValue(of(mockData.serverResponse));
     editorService.fetchCollectionHierarchy(collectionId).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
     });
@@ -170,7 +169,7 @@ describe('EditorService', () => {
   it('#readQuestionSet() should return question set', async () => {
     const questionSetId = 'do_11330102570702438417';
     const publicDataService = TestBed.inject(PublicDataService);
-    spyOn(publicDataService, 'get').and.returnValue(of({ responseCode: 'OK' }));
+    spyOn(publicDataService, 'get').and.returnValue(of(mockData.serverResponse));
     editorService.readQuestionSet(questionSetId);
     expect(publicDataService.get).toHaveBeenCalled();
   });
@@ -179,25 +178,19 @@ describe('EditorService', () => {
     spyOn(editorService, 'fetchContentDetails').and.callThrough();
     const contentId = 'do_113297001817145344190';
     const publicDataService = TestBed.inject(PublicDataService);
-    spyOn(publicDataService, 'get').and.returnValue(of({ responseCode: 'OK' }));
+    spyOn(publicDataService, 'get').and.returnValue(of(mockData.serverResponse));
     editorService.fetchContentDetails(contentId);
     expect(publicDataService.get).toHaveBeenCalled();
   });
 
   it('#updateHierarchy() should update hierarchy', async () => {
     const publicDataService = TestBed.inject(PublicDataService);
-    spyOn(editorService, 'getCollectionHierarchy').and.callFake(() => {
-      return {
-        id: 'api.content.hierarchy.get',
-        ver: '3.0',
-        ts: '2021-06-29T09:17:27ZZ',
-        responseCode: 'OK',
-        result: {
-          content: {}
-        }
-      };
-    })
-    spyOn(publicDataService, 'patch').and.returnValue(of({ responseCode: 'OK' }));
+    const response  = {
+      nodesModified: {},
+      hierarchy: {}
+    };
+    spyOn(editorService, 'getCollectionHierarchy').and.returnValue(response);
+    spyOn(publicDataService, 'patch').and.returnValue(of(mockData.serverResponse));
     editorService.updateHierarchy().subscribe(data => {
       expect(data.responseCode).toEqual('OK');
     });
@@ -206,7 +199,7 @@ describe('EditorService', () => {
   it('#reviewContent() should update hierarchy', async () => {
     const contentId = 'do_11326714211239526417';
     const publicDataService = TestBed.inject(PublicDataService);
-    spyOn(publicDataService, 'post').and.returnValue(of({ responseCode: 'OK' }));
+    spyOn(publicDataService, 'post').and.returnValue(of(mockData.serverResponse));
     editorService.reviewContent(contentId).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
     });
@@ -216,7 +209,7 @@ describe('EditorService', () => {
     const contentId = 'do_11326714211239526417';
     const comment = 'No appropriate description'
     const publicDataService = TestBed.inject(PublicDataService);
-    spyOn(publicDataService, 'post').and.returnValue(of({ responseCode: 'OK' }));
+    spyOn(publicDataService, 'post').and.returnValue(of(mockData.serverResponse));
     editorService.submitRequestChanges(contentId, comment).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
     });
@@ -225,7 +218,7 @@ describe('EditorService', () => {
   it('#publishContent() should publish content when API success', async () => {
     const contentId = 'do_11326714211239526417';
     const publicDataService = TestBed.inject(PublicDataService);
-    spyOn(publicDataService, 'post').and.returnValue(of({ responseCode: 'OK' }));
+    spyOn(publicDataService, 'post').and.returnValue(of(mockData.serverResponse));
     editorService.publishContent(contentId, {}).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
     });
@@ -236,7 +229,7 @@ describe('EditorService', () => {
     const unitIdentifier = 'do_11326714211239526417';
     const contentId = 'do_11326714211239526417';
     const publicDataService = TestBed.inject(PublicDataService);
-    spyOn(publicDataService, 'patch').and.returnValue(of({ responseCode: 'OK' }));
+    spyOn(publicDataService, 'patch').and.returnValue(of(mockData.serverResponse));
     editorService.addResourceToHierarchy(collection, unitIdentifier, contentId).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
     });
@@ -247,7 +240,7 @@ describe('EditorService', () => {
     const channel = 'forms';
     const objectType = 'name';
     const publicDataService = TestBed.inject(PublicDataService);
-    spyOn(publicDataService, 'post').and.returnValue(of({ responseCode: 'OK' }));
+    spyOn(publicDataService, 'post').and.returnValue(of(mockData.serverResponse));
     editorService.getCategoryDefinition(categoryName, channel, objectType).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
     });
@@ -276,11 +269,9 @@ describe('EditorService', () => {
   });
   it('#downloadBlobUrlFile() should download the file', () => {
     const service: EditorService = TestBed.inject(EditorService);
-    const http = TestBed.inject(HttpClient);
+    const httpClient = TestBed.inject(HttpClient);
     const toasterService = TestBed.inject(ToasterService);
-    spyOn(toasterService, 'success').and.callThrough();
-    spyOn(URL, 'createObjectURL').and.callFake((data) => { });
-    spyOn(http, 'get').and.returnValue(of({ test: 'ok' }));
+    spyOn(toasterService, 'success').and.callFake(() => {});
     const downloadConfig = {
       // tslint:disable-next-line:max-line-length
       blobUrl: 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/textbook/toc/do_113312173590659072160_dev-testing-1_1625022971409.csv',
@@ -288,10 +279,10 @@ describe('EditorService', () => {
       fileType: 'csv',
       fileName: 'do_113312173590659072160'
     };
+    spyOn(httpClient, 'get').and.returnValue(of(new Blob([downloadConfig.blobUrl], {})));
+    spyOn(service, 'downloadBlobUrlFile').and.callThrough();
     service.downloadBlobUrlFile(downloadConfig);
-    expect(http.get).toHaveBeenCalled();
-    expect(http.get).toHaveBeenCalledTimes(1);
-    expect(http.get).toHaveBeenCalledWith(downloadConfig.blobUrl, { responseType: 'blob' });
+    expect(httpClient.get).toHaveBeenCalled();
     expect(toasterService.success).toHaveBeenCalledWith(configServiceData.labelConfig.messages.success['011']);
   });
   it('#downloadBlobUrlFile() should download the file and dose not show toaster message', () => {
@@ -299,7 +290,6 @@ describe('EditorService', () => {
     const http = TestBed.inject(HttpClient);
     const toasterService = TestBed.inject(ToasterService);
     spyOn(toasterService, 'success').and.callThrough();
-    spyOn(URL, 'createObjectURL').and.callFake((data) => { });
     spyOn(http, 'get').and.returnValue(of({ test: 'ok' }));
     const downloadConfig = {
       // tslint:disable-next-line:max-line-length
@@ -308,10 +298,11 @@ describe('EditorService', () => {
       fileType: 'csv',
       fileName: 'do_113312173590659072160'
     };
+    spyOn(service, 'downloadBlobUrlFile').and.callThrough();
     service.downloadBlobUrlFile(downloadConfig);
     expect(http.get).toHaveBeenCalled();
     expect(http.get).toHaveBeenCalledTimes(1);
-    expect(http.get).toHaveBeenCalledWith(downloadConfig.blobUrl, { responseType: 'blob' });
+    expect(http.get).toHaveBeenCalled();
     expect(toasterService.success).not.toHaveBeenCalledWith(configServiceData.labelConfig.messages.success['011']);
   });
   it('#downloadHierarchyCsv() should downloadHierarchyCsv', async () => {
@@ -385,9 +376,7 @@ describe('EditorService', () => {
     const collectionId = 'do_11330102570702438417';
     const unitIdentifier = 'do_11326714211239526417';
     const publicDataService: PublicDataService = TestBed.inject(PublicDataService);
-    spyOn(publicDataService, 'patch').and.returnValue(of({
-      responseCode: 'OK'
-    }));
+    spyOn(publicDataService, 'patch').and.returnValue(of(mockData.serverResponse));
     editorService.addResourceToQuestionset(collectionId, unitIdentifier, questionId).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
     });
@@ -397,9 +386,7 @@ describe('EditorService', () => {
     const collectionId = 'do_11330102570702438417';
     const unitIdentifier = 'do_11326714211239526417';
     const publicDataService: PublicDataService = TestBed.inject(PublicDataService);
-    spyOn(publicDataService, 'patch').and.returnValue(of({
-      responseCode: 'OK'
-    }));
+    spyOn(publicDataService, 'patch').and.returnValue(of(mockData.serverResponse));
     editorService.addResourceToQuestionset(collectionId, unitIdentifier, questionIds);
     expect(publicDataService.patch).toHaveBeenCalled();
   });
@@ -415,9 +402,7 @@ describe('EditorService', () => {
     };
     const publicDataService: PublicDataService = TestBed.inject(PublicDataService);
     editorConfig.context.collectionObjectType = 'QuestionSet';
-    spyOn(publicDataService, 'patch').and.returnValue(of({
-      responseCode: 'OK'
-    }));
+    spyOn(publicDataService, 'patch').and.returnValue(of(mockData.serverResponse));
     editorService.updateCollection(collectionId, event).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
     });
@@ -480,7 +465,7 @@ describe('EditorService', () => {
   it('#getMaxScore should not call calculateMaxScore', async () => {
     spyOn(editorService.treeService, 'getFirstChild').and.returnValue({});
     spyOn(editorService, 'setQuestionIds').and.callFake(() => { });
-    spyOn(await editorService, 'getQuestionList').and.callFake(() => { });
+    spyOn(await editorService, 'getQuestionList').and.returnValue(of({}));
     spyOn(editorService, 'calculateMaxScore').and.callFake(() => { });
     spyOn(editorService, 'getMaxScore').and.callThrough();
     const maxScore = await editorService.getMaxScore();
@@ -591,7 +576,7 @@ describe('EditorService', () => {
   it('#fetchOutComeDeclaration() should return the levels for rubrics', async()=> {
     const questionSetId = 'do_11330102570702438417';
     const publicDataService = TestBed.inject(PublicDataService);
-    spyOn(publicDataService, 'get').and.returnValue(of({responseCode: 'OK'}));
+    spyOn(publicDataService, 'get').and.returnValue(of(mockData.serverResponse));
     editorService.fetchOutComeDeclaration(questionSetId).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
     });

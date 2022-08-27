@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { LibraryListComponent } from './library-list.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -9,7 +9,7 @@ describe('LibraryListComponent', () => {
   let component: LibraryListComponent;
   let fixture: ComponentFixture<LibraryListComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       providers: [EditorTelemetryService],
       imports: [HttpClientTestingModule],
@@ -30,49 +30,49 @@ describe('LibraryListComponent', () => {
   });
   it('#addToLibrary() should call addToLibrary to open the hierarchy popup', () => {
     spyOn(component.editorService, 'checkIfContentsCanbeAdded').and.returnValue(true);
-    spyOn(component.moveEvent, 'emit').and.returnValue(mockData.openPopUp);
+    spyOn(component.moveEvent, 'emit').and.callFake(() => {});
     component.addToLibrary();
     expect(component.editorService.checkIfContentsCanbeAdded).toBeTruthy();
     expect(component.moveEvent.emit).toHaveBeenCalledWith(mockData.openPopUp);
   });
   it('#addToLibrary() should not call moveEvent when limit reached to max ', () => {
     spyOn(component.editorService, 'checkIfContentsCanbeAdded').and.returnValue(false);
-    spyOn(component.moveEvent, 'emit').and.returnValue(mockData);
+    spyOn(component.moveEvent, 'emit').and.callFake(() => {});
     component.addToLibrary();
     expect(component.moveEvent.emit).not.toHaveBeenCalledWith(mockData);
   });
   it('#onShowAddedContentChange() should call onShowAddedContentChange to show the added content', () => {
     component.showAddedContent = true;
-    spyOn(component.moveEvent, 'emit').and.returnValue(mockData.showAddedContent);
+    spyOn(component.moveEvent, 'emit').and.callFake(() => {});
     component.onShowAddedContentChange();
     expect(component.moveEvent.emit).toHaveBeenCalledWith(mockData.showAddedContent);
   });
   it('#onShowAddedContentChange() should call onShowAddedContentChange to hide added content', () => {
     component.showAddedContent = false;
-    spyOn(component.moveEvent, 'emit').and.returnValue(mockData.hideAddedContent);
+    spyOn(component.moveEvent, 'emit').and.callFake(() => {});
     component.onShowAddedContentChange();
     expect(component.moveEvent.emit).toHaveBeenCalledWith(mockData.hideAddedContent);
   });
   it('#changeFilter() should call  moveEvent event', () => {
-    spyOn(component.moveEvent, 'emit').and.returnValue(mockData.showFilter);
+    spyOn(component.moveEvent, 'emit').and.callFake(() => {});
     component.changeFilter();
     expect(component.moveEvent.emit).toHaveBeenCalledWith(mockData.showFilter);
   });
   it('#onContentChange() should call onContentChange and emit contentChangeEvent event', () => {
-    spyOn(component.contentChangeEvent, 'emit').and.returnValue(mockData.selectedContent);
+    spyOn(component.contentChangeEvent, 'emit').and.callFake(() => {});
     component.onContentChange(mockData.selectedContent.content);
     expect(component.contentChangeEvent.emit).toHaveBeenCalledWith(mockData.selectedContent);
   });
   it('#sortContentList() should call sortContentList and sort content list', () => {
     component.sortContent = false;
-    spyOn(component.moveEvent, 'emit').and.returnValue(mockData.sortContentList);
+    spyOn(component.moveEvent, 'emit').and.callFake(() => {});
     component.sortContentList();
     expect(component.moveEvent.emit).toHaveBeenCalledWith(mockData.sortContentList);
     expect(component.sortContent).toBeTruthy();
   });
   it('#sortContentList() should call sortContentList and set to previous order', () => {
     component.sortContent = true;
-    spyOn(component.moveEvent, 'emit').and.returnValue(mockData.unSortContentList);
+    spyOn(component.moveEvent, 'emit').and.callFake(() => {});
     component.sortContentList();
     expect(component.moveEvent.emit).toHaveBeenCalledWith(mockData.unSortContentList);
     expect(component.sortContent).toBeFalsy();

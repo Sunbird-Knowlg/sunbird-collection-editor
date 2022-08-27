@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MetaFormComponent } from './meta-form.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -15,7 +15,7 @@ describe('MetaFormComponent', () => {
   let component: MetaFormComponent;
   let fixture: ComponentFixture<MetaFormComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       declarations: [MetaFormComponent],
@@ -128,7 +128,7 @@ describe('MetaFormComponent', () => {
     component.rootFormConfig = mockData.rootFormConfig;
     spyOn(component, 'isReviewMode').and.returnValue(false);
     spyOn(component, 'setAppIconData').and.callThrough();
-    spyOn(component, 'ifFieldIsEditable').and.callFake(() => {});
+    spyOn(component, 'ifFieldIsEditable').and.callFake(() => {return false});
     component.appIconConfig = {
       isAppIconEditable: true
     };
@@ -147,7 +147,7 @@ describe('MetaFormComponent', () => {
     component.rootFormConfig = mockData.rootFormConfigWithoutGrouping;
     spyOn(component, 'isReviewMode').and.returnValue(true);
     spyOn(component, 'setAppIconData').and.callThrough();
-    spyOn(component, 'ifFieldIsEditable').and.callFake(() => {});
+    spyOn(component, 'ifFieldIsEditable').and.callFake(() => {return false});
     component.appIconConfig = {
       isAppIconEditable: true
     };
@@ -162,7 +162,9 @@ describe('MetaFormComponent', () => {
 
   it('#fetchFrameWorkDetails() should set fetchFrameWorkDetails and for targetFrameworkIds', () => {
     const frameworkService = TestBed.inject(FrameworkService);
-    spyOn(frameworkService, 'getFrameworkCategories').and.returnValue(of(mockData.frameworkResponse));
+    const response = mockData.serverResponse;
+    response.result = mockData.frameworkResponse.result;
+    spyOn(frameworkService, 'getFrameworkCategories').and.returnValue(of(response));
     frameworkService.initialize('ekstep_ncert_k-12');
     spyOn(component, 'attachDefaultValues').and.callFake(() => {});
     spyOn(component, 'fetchFrameWorkDetails').and.callThrough();

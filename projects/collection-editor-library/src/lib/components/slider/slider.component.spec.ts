@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { mockConfigService, mockData } from "./slider.component.spec.data";
 import { SliderComponent } from "./slider.component";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
@@ -9,7 +9,7 @@ describe("SliderComponent", () => {
   let component: SliderComponent;
   let fixture: ComponentFixture<SliderComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports:[HttpClientTestingModule],
       declarations: [SliderComponent],
@@ -48,11 +48,12 @@ describe("SliderComponent", () => {
   });
 
   it("#onValueChange() should emit  onChange with data for rightAnchor", () => {
+    component.sliderValue['rightAnchor'] = {};
     spyOn(component,'onValueChange').and.callThrough();
-    spyOn(component.onChange, "emit");
+    spyOn(component.onChange, "emit").and.callFake(() => {});
     component.onValueChange(mockData.changeEvent.event, "rightAnchor");
-    expect(component.onChange.emit).toHaveBeenCalledWith({ rightAnchor: 10 });
     expect(component.onValueChange).toHaveBeenCalled();
+    expect(component.onChange.emit).toHaveBeenCalled();
     expect(component.sliderValue.rightAnchor).toBe(10);
   });
 

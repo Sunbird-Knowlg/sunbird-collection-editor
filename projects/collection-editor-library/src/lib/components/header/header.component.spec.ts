@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { HeaderComponent } from './header.component';
 import { CUSTOM_ELEMENTS_SCHEMA, EventEmitter } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -10,7 +10,7 @@ describe('HeaderComponent', () => {
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
       providers: [EditorService],
@@ -53,7 +53,7 @@ describe('HeaderComponent', () => {
 
   it('#handleActionButtons() visibility should be defined ', () => {
     const editorservice = TestBed.inject(EditorService);
-    spyOn(editorservice, 'editorMode');
+    spyOnProperty(editorservice, 'editorMode', 'get').and.returnValue('edit');
     component.handleActionButtons();
     expect(component.visibility).toBeDefined();
   });
@@ -65,7 +65,7 @@ describe('HeaderComponent', () => {
   it('#buttonEmitter() should call buttonEmitter', () => {
     const data = { type: 'previewContent' };
     spyOn(component.toolbarEmitter, 'emit');
-    spyOn(component, 'buttonEmitter').and.returnValue(data);
+    spyOn(component, 'buttonEmitter').and.callFake(() => {});
     component.buttonEmitter(data);
     expect(component.buttonEmitter).toHaveBeenCalledWith(data);
   });
