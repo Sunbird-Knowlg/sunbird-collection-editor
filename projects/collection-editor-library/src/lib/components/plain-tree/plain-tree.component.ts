@@ -66,8 +66,11 @@ export class PlainTreeComponent implements OnInit, AfterViewInit {
     return tree;
   }
 
-  getQuestionsList(id) {
-    this.treeEmitter.emit({ identifier: id });
+  getQuestionsList(data) {
+    this.treeEmitter.emit({
+      identifier: _.get(data, 'id'),
+      criteriaName: _.get(data, 'metadata.name')
+    });
   }
 
   getTreeConfig() {
@@ -119,7 +122,7 @@ export class PlainTreeComponent implements OnInit, AfterViewInit {
       },
       activate: (event, data) => {
         !_.isUndefined(data.node.data.id)
-          ? this.getQuestionsList(_.get(data, 'node.data.id'))
+          ? this.getQuestionsList(_.get(data, 'node.data'))
           : '';
       },
       renderNode: (event, data) => {

@@ -21,8 +21,9 @@
               </thead>
               <tbody>
                 <tr *ngFor="let question of questions;">
-                  <td innerHtml="{{question}}"></td>
-                  <td><i class="close icon close-button"></i><input type="number" name="pageNo" value="{{question?.pageNo}}"></td>
+                  <td innerHtml="{{question?.question}}"></td>
+                  <td><i class="close icon close-button"></i><input type="number" name="pageNo"
+                      (input)="onValueChange($event.target.value,question)" value="{{question?.pageNo}}"></td>
                 </tr>
               </tbody>
             </table>

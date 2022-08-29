@@ -306,20 +306,34 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     let formData;
     if (this.rootFormConfig.length) {
       formData = this.rootFormConfig[0].fields || [];
-      console.log(formData);
     }
-    // if (_.get(this.editorConfig, 'config.renderTaxonomy') === true) {
-    //   this.levelsArray.forEach((level, index) => {
-    //     let obj = {
-    //       // name: this.outcomeDeclaration[level].label,
-    //       renderingHints: {
-    //         class: 'grid three-column-grid hidden-sectionName',
-    //       },
-    //       fields: this.constructFields(level, index, this.outcomeDeclaration[level].label),
-    //     };
-    //     this.unitFormConfig.push(obj);
-    //   });
-    // }
+    if (_.get(this.editorConfig, 'config.renderTaxonomy') === true) {
+      this.unitFormConfig[0]?.fields.push(
+            {
+              code: 'matrix',
+              dataType: ['text', 'number', 'number'],
+              description: 'Name of the Instruction',
+              editable: true,
+              disabled: [true , null , null],
+              inputType: 'matrix',
+              label: 'Define Score range for Each levels',
+              name: 'Instruction',
+              placeholder: ['label', 'minimum', 'maximum'],
+              default: [[null, null, null], [null, null, null], [null, null, null]],
+              renderingHints: {
+                class: 'sb-g-col-lg-2 required'
+              },
+              validations: [
+                {
+                  type: 'required',
+                  message: 'Score range for Each levels is required'
+                }
+              ],
+              required: true,
+              visible: true,
+             }
+      );
+    }
     formData.forEach((field) => {
       if (field.code === 'evidenceMimeType') {
         evidenceMimeType = field.range;
@@ -698,7 +712,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   validateFormStatus() {
+    console.log(this.formStatusMapper);
     const isValid = _.every(this.formStatusMapper, Boolean);
+    console.log('validateFormStatus :', isValid);
     if (isValid) { return true; }
     _.forIn(this.formStatusMapper, (value, key) => {
       if (value) {
@@ -1258,92 +1274,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         })
     );
     return response;
-  }
-
-  constructFields(level, index, labelName) {
-    let levelName = level.toLowerCase();
-    let fieldArray = [
-      {
-        code: levelName,
-        name: levelName,
-        label: `Level ${index + 1}`,
-        placeholder: `Level ${index + 1}`,
-        description: `Level ${index + 1}`,
-        dataType: 'text',
-        inputType: 'text',
-        editable: false,
-        default: labelName,
-        required: true,
-        visible: true,
-        renderingHints: {
-          class: 'sb-g-col-lg-1 required',
-        },
-        validations: [
-          {
-            type: 'maxLength',
-            value: '120',
-            message: 'Entered name is too long',
-          },
-          {
-            type: 'required',
-            message: 'Name is required',
-          },
-        ],
-      },
-      {
-        code: `${levelName}min`,
-        name: `${levelName}min`,
-        label: 'Minimum',
-        placeholder: 'Minimum',
-        description: 'Minimum',
-        dataType: 'text',
-        inputType: 'text',
-        editable: true,
-        required: true,
-        visible: true,
-        renderingHints: {
-          class: 'sb-g-col-lg-1 required',
-        },
-        validations: [
-          {
-            type: 'maxLength',
-            value: '120',
-            message: 'Entered name is too long',
-          },
-          {
-            type: 'required',
-            message: 'Name is required',
-          },
-        ],
-      },
-      {
-        code: `${levelName}max`,
-        name: `${levelName}max`,
-        label: 'Maximum',
-        placeholder: 'Maximum',
-        description: 'Maximum',
-        dataType: 'text',
-        inputType: 'text',
-        editable: true,
-        required: true,
-        visible: true,
-        renderingHints: {
-          class: 'sb-g-col-lg-1- required',
-        },
-        validations: [
-          {
-            type: 'maxLength',
-            value: '120',
-            message: 'Entered name is too long',
-          },
-          {
-            type: 'required',
-            message: 'Name is required',
-          },
-        ],
-      },
-    ];
-    return fieldArray;
   }
 
 }
