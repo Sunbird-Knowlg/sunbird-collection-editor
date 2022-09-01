@@ -207,36 +207,6 @@
         [showSubmitConfirmPopup]="showSubmitConfirmPopup" (sendForReviewOutput)="onConsentSubmit($event)">
 </lib-term-and-condition>
 
-<sui-modal *ngIf='showSubmitConfirmPopup' [mustScroll]="false" [isClosable]="true" [transitionDuration]="0" [size]="'normal'"
-class="sb-modal overflow-modal" appBodyScroll (dismissed)="showSubmitConfirmPopup = !showSubmitConfirmPopup; terms = false;" #submitModal>
-<div class="sb-modal-header">
-  {{configService.labelConfig?.lbl?.acceptTerms}}
-</div>
-<div class="sb-modal-content">
-  <div class="ui grid">
-    <div class="twelve wide column sb-checkbox-tnc mt-10">
-      <div class="sb-checkbox sb-checkbox-primary font-italic p-0 m-0"><input [(ngModel)]="terms" id="termAndConditions"
-          name="example" type="checkbox">
-        <label for="termAndConditions" class="fsmall pl-32"><span class="sb-required">*</span><span
-            class="font-weight-bold mb-4 d-block">"{{configService.labelConfig?.lbl?.iAgreeSubmit}}</span>
-          <div class="sb-color-gray-300">{{configService.labelConfig?.lbl?.iconfirmContent}}<a
-              class="sb-color-primary font-weight-bold cursor-pointer" href="https://creativecommons.org/licenses" target="_blank" > {{configService.labelConfig?.lbl?.createCommonFramework}}</a>
-              {{configService.labelConfig?.lbl?.accordance}}
-           <a class="sb-color-primary font-weight-bold cursor-pointer" href="{{contentPolicyUrl}}" target="_blank" >{{configService.labelConfig?.lbl?.contentPolicy}}</a> {{configService.labelConfig?.lbl?.privacyRights}}"</div>
-        </label>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="sb-modal-actions">
-  <button type="button" class="sb-btn sb-btn-normal" [ngClass]="!terms ? 'sb-btn-disabled' : 'sb-btn-primary'" [disabled]="!terms"
-    (click)="showSubmitConfirmPopup = false; sendForReview()" libTelemetryInteract
-    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('submit','click','submit', this.telemetryService.telemetryPageId,{key: 'dialog_id', value: 'accepting_terms_conditions','termAndConditions' : terms})">
-    {{configService.labelConfig?.button_labels?.submit_btn_label}}
-  </button>
-</div>
-</sui-modal>
-
 <sui-modal *ngIf="showReviewModal" [mustScroll]="true" [isClosable]="false" [transitionDuration]="0"
   [size]="'normal'" class="sb-modal bx-none overflow-modal" appBodyScroll #modal (dismissed)="showReviewModal = false;">
   <div class="sb-modal-header">
@@ -253,6 +223,7 @@ class="sb-modal overflow-modal" appBodyScroll (dismissed)="showSubmitConfirmPopu
     libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('close','click','cancel', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'review_comments'})">{{configService.labelConfig?.button_labels?.close_btn_label}}</button>
   </div>
 </sui-modal>
+
 <lib-quality-params-modal
   [labelConfigData]="toolbarConfig"
   [showQualityParameterPopup]="showQualityParameterPopup"

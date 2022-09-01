@@ -7,7 +7,8 @@
         <div class="ui grid">
             <div class="twelve wide column sb-checkbox-tnc" *ngIf="showEditingConsent">
                 <div class="sb-checkbox sb-checkbox-primary font-italic p-0 m-0">
-                    <input (change)="checkAll($event)" id="checkAll" name="example" type="checkbox">
+                    <input [(ngModel)]="allConsent" (change)="onConsentChange($event, 'ALL')" id="checkAll" name="example"
+                           type="checkbox">
                     <label for="checkAll" class="fsmall pl-32">
                         {{configService.labelConfig?.lbl?.acceptBothConsentNote}}
                     </label>
@@ -15,8 +16,9 @@
             </div>
             <div class="twelve wide column sb-checkbox-tnc">
                 <div class="sb-checkbox sb-checkbox-primary font-italic p-0 m-0">
-                    <input [(ngModel)]="termsConsent" id="mandatoryTerms" name="example" type="checkbox">
-                    <label for="mandatoryTerms" class="fsmall pl-32">
+                    <input [(ngModel)]="termsConsent" (change)="onConsentChange($event, 'TERM')" id="termsConsent"
+                           name="example" type="checkbox">
+                    <label for="termsConsent" class="fsmall pl-32">
                         <span class="font-weight-bold mb-4 d-block">
                             {{configService.labelConfig?.lbl?.iAgreeSubmit}}
                         </span>
@@ -38,7 +40,8 @@
             </div>
             <div class="twelve wide column sb-checkbox-tnc" *ngIf="showEditingConsent">
                 <div class="sb-checkbox sb-checkbox-primary font-italic p-0 m-0">
-                    <input [(ngModel)]="editingConsent" id="editingConsent" name="example" type="checkbox">
+                    <input [(ngModel)]="editingConsent" (change)="onConsentChange($event, 'EDITING')" id="editingConsent"
+                           name="example" type="checkbox">
                     <label for="editingConsent" class="fsmall pl-32">
                         {{configService.labelConfig?.lbl?.editingConsentNote}}
                     </label>
