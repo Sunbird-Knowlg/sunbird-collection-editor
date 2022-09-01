@@ -42,7 +42,7 @@ export class QualityParamsModalComponent implements OnInit {
     }
 
     requestChanges() {
-        this.qualityParamChanged.emit({action: 'requestChange'});
+        this.qualityParamChanged.emit({action: 'requestChange', data: this.formData});
     }
 
     onModalClose() {

@@ -1490,10 +1490,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
           callback();
         }
     });
-
   }
 
   openRequestChangesPopup() {
-    this.requestChangesPopupAction = 'sendForCorrectionsQuestion';
+    this.requestChangesPopupAction = 'rejectQuestion';
   }
 }
