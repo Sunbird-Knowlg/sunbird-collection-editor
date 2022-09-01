@@ -4337,20 +4337,3 @@ export const frameworkData = {
     objectType: "Framework",
   },
 };
-
-export const serverResponse = {
-  id: '',
-    params: {
-      resmsgid: '',
-      msgid: '',
-      err: '',
-      status: '',
-      errmsg: ''
-    },
-    responseCode: 'OK',
-    result: {
-    },
-    ts: '',
-    ver: '',
-    headers: {}
-};

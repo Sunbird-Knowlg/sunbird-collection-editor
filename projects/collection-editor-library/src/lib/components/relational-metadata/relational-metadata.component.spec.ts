@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import * as _ from 'lodash-es';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RelationalMetadataComponent } from './relational-metadata.component';
@@ -10,7 +10,7 @@ describe('RelationalMetadataComponent', () => {
   let component: RelationalMetadataComponent;
   let fixture: ComponentFixture<RelationalMetadataComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       declarations: [ RelationalMetadataComponent ],

@@ -1,5 +1,5 @@
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AbstractControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DialcodeComponent } from './dialcode.component';
@@ -32,7 +32,7 @@ describe('DialcodeComponent', () => {
       }
     }
   };
-  beforeEach(waitForAsync(() => {
+  beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule, HttpClientTestingModule ],
       declarations: [ DialcodeComponent, TelemetryInteractDirective ],

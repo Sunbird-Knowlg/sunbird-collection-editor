@@ -10,7 +10,7 @@ This guide explains how to set up your Angular project to begin using the collec
 If you are new to Angular or getting started with a new Angular application, see [Angular's full Getting Started Guide](https://angular.io/start) and [Setting up your environment](https://angular.io/guide/setup-local).
 
 > **_NOTE:_**
-  `@project-sunbird/sunbird-collection-editor@5.1.1-beta.*` versions will refer to angular 9 to 11 upgradation changes.
+  `@project-sunbird/sunbird-collection-editor@5.1.0-beta.*` versions will refer to angular 9 to 10 upgradation changes
 
 
 For existing applications, follow the steps below to begin using Collection editor library.
@@ -55,7 +55,7 @@ npm i @project-sunbird/sb-styles
 ```
 
 
-Note: *As Collection library is build with angular version 11, we are using **bootstrap@4.6.1** and **ngx-bootstrap@6.0.0** which are the compatible versions.
+Note: *As Collection library is build with angular version 10, we are using **bootstrap@4.6.1** and **ngx-bootstrap@6.0.0** which are the compatible versions.  
 For more reference Check compatibility document for ng-bootstrap [here](https://valor-software.com/ngx-bootstrap/#/documentation#compatibility)*  
 
 ## :label: Step 2: create and copy required assests

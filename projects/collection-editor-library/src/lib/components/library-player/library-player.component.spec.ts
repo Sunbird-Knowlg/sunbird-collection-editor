@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { LibraryPlayerComponent } from './library-player.component';
@@ -9,7 +9,7 @@ describe('LibraryPlayerComponent', () => {
   let component: LibraryPlayerComponent;
   let fixture: ComponentFixture<LibraryPlayerComponent>;
   const mockData = {action: 'openHierarchyPopup'};
-  beforeEach(waitForAsync(() => {
+  beforeEach(async(() => {
     TestBed.configureTestingModule({
       providers: [EditorTelemetryService],
       imports: [HttpClientTestingModule],
@@ -30,14 +30,14 @@ describe('LibraryPlayerComponent', () => {
   });
   it('#addToLibrary() should call moveEvent and emit value', () => {
     spyOn(component.editorService, 'checkIfContentsCanbeAdded').and.returnValue(true);
-    spyOn(component.moveEvent, 'emit').and.callFake(() => {});
+    spyOn(component.moveEvent, 'emit').and.returnValue(mockData);
     component.addToLibrary();
     expect(component.editorService.checkIfContentsCanbeAdded).toBeTruthy();
     expect(component.moveEvent.emit).toHaveBeenCalledWith(mockData);
   });
   it('#addToLibrary() should not call moveEvent when limit reached to max ', () => {
     spyOn(component.editorService, 'checkIfContentsCanbeAdded').and.returnValue(false);
-    spyOn(component.moveEvent, 'emit').and.callFake(() => {});
+    spyOn(component.moveEvent, 'emit').and.returnValue(mockData);
     component.addToLibrary();
     expect(component.moveEvent.emit).not.toHaveBeenCalledWith(mockData);
   });

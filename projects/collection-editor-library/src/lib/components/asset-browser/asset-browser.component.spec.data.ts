@@ -74,21 +74,5 @@ export const mockData = {
       },
       'required': true,
       'visible': true
-  }],
-  serverResponse: {
-    id: '',
-      params: {
-        resmsgid: '',
-        msgid: '',
-        err: '',
-        status: '',
-        errmsg: ''
-      },
-      responseCode: '200',
-      result: {
-      },
-      ts: '',
-      ver: '',
-      headers: {}
-  }
+  }]
 };

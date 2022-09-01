@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ManageCollaboratorComponent } from './manage-collaborator.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -39,7 +39,7 @@ describe('ManageCollaboratorComponent', () => {
   let editorService;
   let helperService;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule ],
       declarations: [ ManageCollaboratorComponent ],
@@ -285,17 +285,27 @@ describe('ManageCollaboratorComponent', () => {
   it('#selectUser() should call toggleSelectionUser method', () => {
     component.users = mockData.alluserRes.result.response.content;
     component.selectedUsers = [];
+    spyOn(component.users, 'splice').and.callFake(() => {});
+    spyOn(component.users, 'unshift').and.callFake(() => {});
+    spyOn(component.selectedUsers, 'push').and.callFake(() => {});
     spyOn(component, 'selectUser').and.callThrough();
     component.selectUser(mockData.alluserRes.result.response.content[0]);
-    expect(component.selectedUsers.length).toEqual(1);
+    expect(component.users.splice).toHaveBeenCalledWith(0,1);
+    expect(component.users.unshift).toHaveBeenCalledWith(mockData.alluserRes.result.response.content[0]);
+    expect(component.selectedUsers.push).toHaveBeenCalledWith(mockData.alluserRes.result.response.content[0].identifier);
   });
 
   it('#selectUser() should call toggleSelectionUser method', () => {
-    component.users = [{name: 'dummy', identifier: '12345'}]
+    component.users = mockData.alluserRes.result.response.content;
     component.selectedUsers = ['12345'];
+    spyOn(component.users, 'splice').and.callFake(() => {});
+    spyOn(component.users, 'unshift').and.callFake(() => {});
+    spyOn(component.selectedUsers, 'push').and.callFake(() => {});
     spyOn(component, 'selectUser').and.callThrough();
     component.selectUser({name: 'dummy', identifier: '12345'});
-    expect(component.selectedUsers.length).toEqual(1);
+    expect(component.users.splice).not.toHaveBeenCalled();
+    expect(component.users.unshift).not.toHaveBeenCalled();
+    expect(component.selectedUsers.push).not.toHaveBeenCalled();
   });
 
   it('#viewAllResults() should set user data', () => {

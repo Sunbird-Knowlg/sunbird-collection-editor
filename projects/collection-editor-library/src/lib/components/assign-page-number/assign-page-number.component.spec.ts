@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { AssignPageNumberComponent } from './assign-page-number.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TreeService } from '../../services/tree/tree.service';
@@ -17,7 +17,7 @@ describe('AssignPageNumberComponent', () => {
   let fixture: ComponentFixture<AssignPageNumberComponent>;
   // tslint:disable-next-line:one-variable-per-declaration
   let treeService, editorService;
-  beforeEach(waitForAsync(() => {
+  beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       declarations: [AssignPageNumberComponent],

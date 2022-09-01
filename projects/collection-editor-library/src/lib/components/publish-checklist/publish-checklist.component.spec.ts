@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PublishChecklistComponent } from './publish-checklist.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -13,7 +13,7 @@ describe('PublishChecklistComponent', () => {
   let component: PublishChecklistComponent;
   let fixture: ComponentFixture<PublishChecklistComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
       providers: [EditorService],

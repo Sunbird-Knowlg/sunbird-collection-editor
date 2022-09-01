@@ -15,7 +15,7 @@ import { EditorCursorImplementationService } from './editor-cursor-implementatio
     BrowserModule,
     CollectionEditorLibraryModule,
     BrowserAnimationsModule,
-    RouterModule.forRoot([], { relativeLinkResolution: 'legacy' })
+    RouterModule.forRoot([])
   ],
   providers: [
     { provide: QuestionCursor, useExisting: EditorCursorImplementationService },

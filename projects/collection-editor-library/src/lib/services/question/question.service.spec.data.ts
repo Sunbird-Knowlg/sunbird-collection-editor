@@ -29,21 +29,5 @@ export const mockRes = {
                 name: 'untitled SA'
             }
         }
-    },
-    serverResponse: {
-        id: '',
-          params: {
-            resmsgid: '',
-            msgid: '',
-            err: '',
-            status: '',
-            errmsg: ''
-          },
-          responseCode: 'OK',
-          result: {
-          },
-          ts: '',
-          ver: '',
-          headers: {}
-      }
+    }
 };

@@ -15,22 +15,6 @@ describe('DialcodeService', () => {
     urlConFig: (urlConfig as any).default,
     labelConfig: (labelConfig as any).default
   };
-  const serverResponse = {
-    id: '',
-      params: {
-        resmsgid: '',
-        msgid: '',
-        err: '',
-        status: '',
-        errmsg: ''
-      },
-      responseCode: 'OK',
-      result: {
-      },
-      ts: '',
-      ver: '',
-      headers: {}
-  }
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientModule],
@@ -45,41 +29,41 @@ describe('DialcodeService', () => {
 
   it('#reserveDialCode() should reserve dialcode when API success', () => {
     const publicDataService: PublicDataService = TestBed.inject(PublicDataService);
-    spyOn(publicDataService, 'post').and.returnValue(of(serverResponse));
+    spyOn(publicDataService, 'post').and.returnValue(of({ responseCode: 'ok' }));
     const service: DialcodeService = TestBed.inject(DialcodeService);
     const observable = service.reserveDialCode('do_123', 3);
     observable.subscribe((data) => {
-      expect(data.responseCode).toEqual('OK');
+      expect(data).toEqual({responseCode: 'ok'});
     });
   });
 
   it('#linkDialcode() should link dialcode when API success', () => {
     const publicDataService: PublicDataService = TestBed.inject(PublicDataService);
-    spyOn(publicDataService, 'post').and.returnValue(of(serverResponse));
+    spyOn(publicDataService, 'post').and.returnValue(of({responseCode: 'ok'}));
     const service: DialcodeService = TestBed.inject(DialcodeService);
     const observable = service.linkDialcode('do_123', ['ABC', 'BHD']);
     observable.subscribe((data) => {
-      expect(data.responseCode).toEqual('OK');
+      expect(data).toEqual({responseCode: 'ok'});
     });
   });
 
   it('#downloadQRCode() should download dialcode when API success', () => {
     const publicDataService: PublicDataService = TestBed.inject(PublicDataService);
-    spyOn(publicDataService, 'get').and.returnValue(of(serverResponse));
+    spyOn(publicDataService, 'get').and.returnValue(of({}));
     const service: DialcodeService = TestBed.inject(DialcodeService);
     const observable = service.downloadQRCode('do_123');
     observable.subscribe((data) => {
-      expect(data.responseCode).toEqual('OK');
+      expect(data).toEqual({});
     });
   });
 
   it('#searchDialCode() should fetch dialcode when API success', () => {
     const publicDataService: PublicDataService = TestBed.inject(PublicDataService);
-    spyOn(publicDataService, 'post').and.returnValue(of(serverResponse));
+    spyOn(publicDataService, 'post').and.returnValue(of({}));
     const service: DialcodeService = TestBed.inject(DialcodeService);
     const observable = service.searchDialCode('do_123');
     observable.subscribe((data) => {
-      expect(data.responseCode).toEqual('OK');
+      expect(data).toEqual({});
     });
   });
 

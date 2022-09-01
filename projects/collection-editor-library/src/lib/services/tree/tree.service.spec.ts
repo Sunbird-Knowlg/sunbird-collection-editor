@@ -59,7 +59,7 @@ describe('TreeService', () => {
 
   it('#updateMetaDataProperty() should call #getFirstChild() and #setTreeCache()', ()=> {
     spyOn(treeService, 'getFirstChild').and.callFake(()=> treeNode);
-    spyOn(treeService, 'setTreeCache').and.callFake(() => {});
+    spyOn(treeService, 'setTreeCache');
     treeService.updateMetaDataProperty('maxScore', 2);
     expect(treeService.getFirstChild).toHaveBeenCalled();
     expect(treeService.setTreeCache).toHaveBeenCalled();

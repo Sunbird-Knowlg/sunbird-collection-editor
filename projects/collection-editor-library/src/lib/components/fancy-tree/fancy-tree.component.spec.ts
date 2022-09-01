@@ -1,5 +1,5 @@
 import { EditorService } from './../../services/editor/editor.service';
-import { ComponentFixture, TestBed, inject, waitForAsync } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { FancyTreeComponent } from './fancy-tree.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA, ChangeDetectorRef } from '@angular/core';
@@ -25,7 +25,7 @@ describe('FancyTreeComponent', () => {
     navigate = jasmine.createSpy('navigate');
   }
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async(() => {
     TestBed.configureTestingModule({
       providers: [EditorTelemetryService, EditorService, HelperService,
           { provide: Router, useClass: RouterStub }, ToasterService,
@@ -224,7 +224,7 @@ describe('FancyTreeComponent', () => {
   
   it('#addFromLibrary() should call #emitshowLibraryPageEvent()', () => {
     const editorService: EditorService = TestBed.inject(EditorService);
-    spyOn(editorService, 'emitshowLibraryPageEvent').and.callFake(() => {});
+    spyOn(editorService, 'emitshowLibraryPageEvent').and.returnValue('showLibraryPage');
     component.addFromLibrary();
     expect(editorService.emitshowLibraryPageEvent).toHaveBeenCalledWith('showLibraryPage');
   });

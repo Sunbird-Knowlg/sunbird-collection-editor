@@ -1,5 +1,5 @@
 import { QuestionService } from "./../../services/question/question.service";
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { QuestionComponent } from "./question.component";
 import { Router } from "@angular/router";
@@ -91,7 +91,7 @@ describe("QuestionComponent", () => {
   class RouterStub {
     navigate = jasmine.createSpy("navigate");
   }
-  beforeEach(waitForAsync(() => {
+  beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [QuestionComponent, TelemetryInteractDirective],
       imports: [HttpClientTestingModule, SuiModule],
@@ -864,12 +864,9 @@ describe("QuestionComponent", () => {
     expect(component.isEditable("bloomsLevel")).toBeFalsy();
   });
   it("Unit test for #prepareQuestionBody", () => {
-    component.questionId = undefined;
-    spyOn(component, 'getQuestionMetadata').and.returnValue({});
-    spyOn(component, "prepareQuestionBody").and.callThrough();
-    const response = component.prepareQuestionBody();
+    spyOn(component, "prepareQuestionBody").and.callFake(() => {});
+    component.prepareQuestionBody();
     expect(component.prepareQuestionBody).toHaveBeenCalled();
-    expect(response).toBeDefined();
   });
   it("#submitHandler() should set showSubmitConfirmPopup true", () => {
     component.showSubmitConfirmPopup = false;
@@ -877,7 +874,7 @@ describe("QuestionComponent", () => {
     spyOn(component, 'validateQuestionData').and.callFake(() => {
       component.showFormError = false;
     });
-    spyOn(component, 'validateFormFields').and.callFake(() => {return true});
+    spyOn(component, 'validateFormFields').and.callFake(() => {});
     component.submitHandler();
     expect(component.submitHandler).toHaveBeenCalled();
     expect(component.validateQuestionData).toHaveBeenCalled();
@@ -890,7 +887,7 @@ describe("QuestionComponent", () => {
     spyOn(component, 'validateQuestionData').and.callFake(() => {
       component.showFormError = true;
     });
-    spyOn(component, 'validateFormFields').and.callFake(() => {return false});
+    spyOn(component, 'validateFormFields').and.callFake(() => {});
     component.submitHandler();
     expect(component.submitHandler).toHaveBeenCalled();
     expect(component.validateQuestionData).toHaveBeenCalled();
@@ -1442,12 +1439,11 @@ describe("QuestionComponent", () => {
     expect(component.showAddSecondaryQuestionCat).toBeTruthy();
   });
   it("#dependentQuestions() should return dependentQuestions ", () => {
-    spyOn(component, 'subMenuChange').and.callThrough();
-    spyOn(component, 'saveContent').and.callFake(() => {});
+    spyOn(component, "dependentQuestions");
     component.subMenus = mockData.subMenus;
     component.subMenuChange({ index: 2, value: "test" });
-    // expect(component.dependentQuestions.length).toBe(1);
-    expect(component.showAddSecondaryQuestionCat).toBeTruthy();
+    expect(component.dependentQuestions.length).toBe(1);
+    expect(component.dependentQuestions);
   });
 
   it("#saveContent() should call saveContent when questionId exits ", () => {

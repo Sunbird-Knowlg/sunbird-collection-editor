@@ -1,5 +1,5 @@
 import { QuestionService } from './../../services/question/question.service';
-import { ComponentFixture, TestBed, inject, waitForAsync } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AssetBrowserComponent } from './asset-browser.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
@@ -34,7 +34,7 @@ describe('AssetBrowserComponent', () => {
   let component: AssetBrowserComponent;
   let fixture: ComponentFixture<AssetBrowserComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [InfiniteScrollModule, HttpClientTestingModule, FormsModule],
       declarations: [AssetBrowserComponent],
@@ -56,7 +56,7 @@ describe('AssetBrowserComponent', () => {
 
   it('#ngOnInit() should call #getAcceptType()', () => {
     spyOn(component, 'ngOnInit').and.callThrough();
-    spyOn(component, 'getAcceptType').and.callFake(() => {return ''});
+    spyOn(component, 'getAcceptType').and.callThrough();
     component.ngOnInit();
     expect(component.getAcceptType).toHaveBeenCalledWith(mockEditorService.editorConfig.config.assetConfig.image.accepted, 'image');
   });
@@ -64,7 +64,6 @@ describe('AssetBrowserComponent', () => {
   it("#getAcceptType should return accepted content types", () => {
     const typeList = "png, jpeg";
     const type = "image";
-    spyOn(component, 'getAcceptType').and.callThrough();
     const result = component.getAcceptType(typeList, type);
     expect(result).toEqual("image/png,image/jpeg");
   });
@@ -76,15 +75,15 @@ describe('AssetBrowserComponent', () => {
   });
 
   it('#getMyImages() should return images on API success', async () => {
-    const response = mockData.serverResponse;
-    response.result = {
-      count: 1,
-      content: [{
-        downloadUrl: '/test'
-      }]
-    }
     let questionService: QuestionService = TestBed.inject(QuestionService);
-    spyOn(questionService, 'getAssetMedia').and.returnValue(of(response));
+    spyOn(questionService, 'getAssetMedia').and.returnValue(of({
+      result: {
+        count: 1,
+        content: [{
+          downloadUrl: '/test'
+        }]
+      }
+    }));
     const offset = 0;
     component.getMyImages(offset);
     expect(component.assetsCount).toEqual(1);
@@ -104,21 +103,21 @@ describe('AssetBrowserComponent', () => {
 
   it('#addImageInEditor() should emit proper event', () => {
     spyOn(component, 'addImageInEditor').and.callThrough();
-    spyOn(component.assetBrowserEmitter, 'emit').and.callFake(() => {});
+    spyOn(component.assetBrowserEmitter, 'emit').and.returnValue(mockData.assetBrowserEvent);
     component.addImageInEditor(mockData.assetBrowserEvent.url, '12345');
     expect(component.assetBrowserEmitter.emit).toHaveBeenCalledWith(mockData.assetBrowserEvent);
   });
 
   it('#getAllImages() should return images on API success', async () => {
-    const response = mockData.serverResponse;
-    response.result = {
-      count: 1,
-      content: [{
-        downloadUrl: '/test'
-      }]
-    }
     let questionService: QuestionService = TestBed.inject(QuestionService);
-    spyOn(questionService, 'getAssetMedia').and.returnValue(of(response));
+    spyOn(questionService, 'getAssetMedia').and.returnValue(of({
+      result: {
+        count: 1,
+        content: [{
+          downloadUrl: '/test'
+        }]
+      }
+    }));
     const offset = 0;
     component.getAllImages(offset);
     spyOn(component.allImages, 'push');
@@ -131,19 +130,19 @@ describe('AssetBrowserComponent', () => {
     expect(component.formConfig).toBeTruthy();
   })
   it('#uploadAndUseImage should upload image on API success', async () => {
-    const createMediaAssetResponse = mockData.serverResponse;
-    createMediaAssetResponse.result = {
-      node_id: 'do_123'
-    }
-    const preSignedResponse = mockData.serverResponse;
-    preSignedResponse.result = {
-      node_id: 'do_234',
-      pre_signed_url: '/test'
-    }
     let questionService: QuestionService = TestBed.inject(QuestionService);
     let modal = true;
-    spyOn(questionService, 'createMediaAsset').and.returnValue(of(createMediaAssetResponse));
-    spyOn(questionService, 'generatePreSignedUrl').and.returnValue(of(preSignedResponse));
+    spyOn(questionService, 'createMediaAsset').and.returnValue(of({
+      result: {
+        node_id: 'do_123'
+      }
+    }));
+    spyOn(questionService, 'generatePreSignedUrl').and.returnValue(of({
+      result: {
+        node_id: 'do_234',
+        pre_signed_url: '/test'
+      }
+    }));
     spyOn(component, 'addImageInEditor').and.callThrough();
     spyOn(component, 'dismissPops').and.callThrough();
     component.uploadAndUseImage(modal);
@@ -152,31 +151,30 @@ describe('AssetBrowserComponent', () => {
     expect(component.isClosable).toEqual(false);
     expect(component.imageFormValid).toEqual(false);
   });
-  xit('#uploadAndUseImage should upload image and call upload to blob', async () => {
-    const createMediaAssetResponse = mockData.serverResponse;
-    createMediaAssetResponse.result = {
-      node_id: 'do_123'
-    }
-    const preSignedResponse = mockData.serverResponse;
-    preSignedResponse.result = {
-      node_id: 'do_234',
-      pre_signed_url: '/test?'
-    }
-    const uploadMediaResponse = mockData.serverResponse;
-    uploadMediaResponse.result = {
-      node_id: 'do_234',
-      content_url: '/test'
-    }
+  it('#uploadAndUseImage should upload image and call upload to blob', async () => {
     component.showImageUploadModal = false;
     let questionService: QuestionService = TestBed.inject(QuestionService);
     let modal = true;
-    spyOn(questionService, 'createMediaAsset').and.returnValue(of(createMediaAssetResponse));
-    spyOn(questionService, 'generatePreSignedUrl').and.returnValue(of(preSignedResponse));
+    spyOn(questionService, 'createMediaAsset').and.returnValue(of({
+      result: {
+        node_id: 'do_123'
+      }
+    }));
+    spyOn(questionService, 'generatePreSignedUrl').and.returnValue(of({
+      result: {
+        node_id: 'do_234',
+        pre_signed_url: '/test'
+      }
+    }));
     spyOn(component, 'uploadToBlob').and.returnValue(of(true));
-    spyOn(questionService, 'uploadMedia').and.returnValue(of(uploadMediaResponse));
+    spyOn(questionService, 'uploadMedia').and.returnValue(of({
+      result: {
+        node_id: 'do_234',
+        content_url: '/test'
+      }
+    }));
     spyOn(component, 'addImageInEditor').and.callThrough();
-    spyOn(component, 'dismissPops').and.callFake(()=> {});
-    spyOn(component, 'uploadAndUseImage').and.callThrough();
+    spyOn(component, 'dismissPops').and.callThrough();
     component.uploadAndUseImage(modal);
     expect(questionService.createMediaAsset).toHaveBeenCalled();
     expect(questionService.generatePreSignedUrl).toHaveBeenCalled();
@@ -230,7 +228,7 @@ describe('AssetBrowserComponent', () => {
     expect(component.getAllImages).toHaveBeenCalledWith(0, undefined, true);
   });
   it('#uploadImage() should create asset on API success', () => {
-    const file = new File([''], 'filename', { type: 'image' });
+    const file = new File([''], 'filename', { type: 'image/png' });
     const event = {
       target: {
         files: [
@@ -238,20 +236,9 @@ describe('AssetBrowserComponent', () => {
         ]
       }
     }
-    component.assetConfig = {
-      "image": {
-          "size": "1",
-          "sizeType": "MB",
-          "accepted": "png, jpeg"
-        }
-      }
-    spyOn(component, 'generateAssetCreateRequest').and.returnValue({
-        name: 'flower', mediaType: 'image',
-        mimeType: 'image', createdBy: '12345',
-        creator: 'n11', channel: '0110986543'
-    })
-    spyOn(component, 'populateFormData').and.callFake(() => {});
-    spyOn(component, 'uploadImage').and.callThrough();
+    spyOn(component, 'generateAssetCreateRequest');
+    spyOn(component, 'populateFormData');
+    component.ngOnInit();
     component.uploadImage(event);
     expect(component.imageUploadLoader).toEqual(true);
     expect(component.imageFormValid).toEqual(true);

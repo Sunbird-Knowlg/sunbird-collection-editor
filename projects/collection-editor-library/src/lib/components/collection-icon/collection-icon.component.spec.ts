@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CollectionIconComponent } from './collection-icon.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {mockData} from './collection-icon.component.spec.data';
@@ -7,7 +7,7 @@ describe('CollectionIconComponent', () => {
   let component: CollectionIconComponent;
   let fixture: ComponentFixture<CollectionIconComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ CollectionIconComponent ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
@@ -40,7 +40,7 @@ describe('CollectionIconComponent', () => {
 
   it('#collectionIconHandler() should emit proper event', () => {
     spyOn(component, 'collectionIconHandler').and.callThrough();
-    spyOn(component.iconEmitter, 'emit').and.callFake(() => {});
+    spyOn(component.iconEmitter, 'emit').and.returnValue(mockData.assetBrowserEvent);
     component.collectionIconHandler(mockData.assetBrowserEvent);
     expect(component.iconEmitter.emit).toHaveBeenCalledWith(mockData.assetBrowserEvent);
   });

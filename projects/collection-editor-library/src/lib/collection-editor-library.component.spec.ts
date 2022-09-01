@@ -1,11 +1,11 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CollectionEditorLibraryComponent } from './collection-editor-library.component';
 
 describe('CollectionEditorLibraryComponent', () => {
   let component: CollectionEditorLibraryComponent;
   let fixture: ComponentFixture<CollectionEditorLibraryComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ CollectionEditorLibraryComponent ]
     })

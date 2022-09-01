@@ -23,23 +23,6 @@ describe('FrameworkService', () => {
     }
   };
 
-  const serverResponse = {
-    id: '',
-      params: {
-        resmsgid: '',
-        msgid: '',
-        err: '',
-        status: '',
-        errmsg: ''
-      },
-      responseCode: 'OK',
-      result: {
-      },
-      ts: '',
-      ver: '',
-      headers: {}
-  };
-
   const frameworkMockData = {
     "responseCode": "OK",
     "result": {
@@ -63,9 +46,7 @@ describe('FrameworkService', () => {
       }, DataService, PublicDataService]
     });
     frameworkService = TestBed.inject(FrameworkService);
-    const frameworkResponse = serverResponse;
-    frameworkResponse.result = frameworkMockData.result;
-    spyOn(frameworkService, 'getFrameworkCategories').and.returnValue(of(frameworkResponse));
+    spyOn(frameworkService, 'getFrameworkCategories').and.returnValue(of(frameworkMockData));
     frameworkService.initialize(framework);
   });
 
@@ -75,7 +56,7 @@ describe('FrameworkService', () => {
 
   it('#getFrameworkCategories() should return framework categories', () => {
     const dataService = TestBed.inject(DataService);
-    spyOn(dataService, 'get').and.returnValue(of(serverResponse))
+    spyOn(dataService, 'get').and.returnValue(of({ responseCode: 'OK' }))
     frameworkService.getFrameworkCategories(framework).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
     })
@@ -98,7 +79,7 @@ describe('FrameworkService', () => {
 
   it('#getFrameworkData() should return framework data on API success', () => {
     const publicDataService: PublicDataService = TestBed.inject(PublicDataService);
-    spyOn(publicDataService, 'post').and.returnValue(of(serverResponse));
+    spyOn(publicDataService, 'post').and.returnValue(of({ responseCode: 'OK' }));
     frameworkService.getFrameworkData().subscribe(data => {
       expect(data.responseCode).toEqual('OK');
     })
