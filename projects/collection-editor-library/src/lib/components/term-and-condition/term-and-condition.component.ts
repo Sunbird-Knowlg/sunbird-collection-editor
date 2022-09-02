@@ -12,6 +12,7 @@ export class TermAndConditionComponent implements OnInit {
     @Input() showEditingConsent = true;
     @Input() showSubmitConfirmPopup;
     @Output() sendForReviewOutput = new EventEmitter();
+    allConsent = false;
     termsConsent = false;
     editingConsent = false;
 
@@ -26,9 +27,17 @@ export class TermAndConditionComponent implements OnInit {
         return this.editorService.contentPolicyUrl;
     }
 
-    checkAll($event) {
-        this.termsConsent = $event.target.checked;
-        this.editingConsent = $event.target.checked;
+    onConsentChange(event, consentType) {
+        switch (consentType) {
+            case 'ALL':
+                this.termsConsent = event.target.checked;
+                this.editingConsent = event.target.checked;
+                break;
+            case 'TERM':
+            case 'EDITING':
+                this.allConsent = this.termsConsent && this.editingConsent;
+                break;
+        }
     }
 
     sendForReview() {
@@ -48,5 +57,6 @@ export class TermAndConditionComponent implements OnInit {
         this.showSubmitConfirmPopup = false;
         this.termsConsent = false;
         this.editingConsent = false;
+        this.allConsent = false;
     }
 }

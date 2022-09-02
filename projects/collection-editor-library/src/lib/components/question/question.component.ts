@@ -804,9 +804,11 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       metadata.responseDeclaration.response1.correctResponse.outcomes.SCORE = this.maxScore;
     }
     metadata = _.merge(metadata, _.pickBy(this.childFormData, _.identity));
-    metadata.isReviewModificationAllowed = !!_.get(this.questionMetaData, 'isReviewModificationAllowed');
+    if (_.get(this.creationContext, 'objectType') === 'question') {
+      metadata.isReviewModificationAllowed = !!_.get(this.questionMetaData, 'isReviewModificationAllowed');
+    }
     // tslint:disable-next-line:max-line-length
-    return _.omit(metadata, ['question', 'numberOfOptions', 'options', 'allowMultiSelect', 'showEvidence', 'evidenceMimeType', 'showRemarks', 'markAsNotMandatory', 'leftAnchor', 'rightAnchor', 'step', 'numberOnly', 'characterLimit', 'dateFormat', 'autoCapture', 'remarksLimit','maximumOptions']);
+    return _.omit(metadata, ['question', 'numberOfOptions', 'options', 'allowMultiSelect', 'showEvidence', 'evidenceMimeType', 'showRemarks', 'markAsNotMandatory', 'leftAnchor', 'rightAnchor', 'step', 'numberOnly', 'characterLimit', 'dateFormat', 'autoCapture', 'remarksLimit', 'maximumOptions']);
   }
 
   getResponseDeclaration(type) {
@@ -1488,10 +1490,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
           callback();
         }
     });
-
   }
 
   openRequestChangesPopup() {
-    this.requestChangesPopupAction = 'sendForCorrectionsQuestion';
+    this.requestChangesPopupAction = 'rejectQuestion';
   }
 }
