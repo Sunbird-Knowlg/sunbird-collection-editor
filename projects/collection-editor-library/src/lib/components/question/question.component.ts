@@ -457,7 +457,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   sendQuestionForPublish(event) {
     this.editorService.publishContent(this.questionId, event).subscribe(res => {
-      this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.037'));
+      if (!(this.creationMode === 'sourcingReview' && this.editorService.isReviewModificationAllowed)) {
+        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.037'));
+      }
       this.redirectToChapterList();
     }, err => {
       this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.038'));
