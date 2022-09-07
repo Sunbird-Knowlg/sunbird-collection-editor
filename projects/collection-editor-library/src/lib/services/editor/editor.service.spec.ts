@@ -537,6 +537,7 @@ describe('EditorService', () => {
       return { data: { metadata: { identifier: '0123' } } };
     });
     hierarchyRootNodeData.folder = true;
+    // tslint:disable-next-line:max-line-length
     editorService.getHierarchyObj(hierarchyRootNodeData, 'do_113432866096922624110', 'do_113432866096922624110', 'do_1134468013653114881310');
     editorService.getCollectionHierarchy();
     expect(editorService.getCollectionHierarchy).toHaveBeenCalled();
@@ -548,6 +549,7 @@ describe('EditorService', () => {
       return { data: { metadata: { identifier: '0123' } } };
     });
     hierarchyRootNodeData.folder = false;
+    // tslint:disable-next-line:max-line-length
     editorService.getHierarchyObj(hierarchyRootNodeData, 'do_113432866096922624110', 'do_113432866096922624110', 'do_1134468013653114881310');
     editorService.getCollectionHierarchy();
     expect(editorService.getCollectionHierarchy).toHaveBeenCalled();
@@ -580,6 +582,18 @@ describe('EditorService', () => {
     editorService.fetchOutComeDeclaration(questionSetId).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
     });
+  });
+
+  it('#appendCloudStorageHeaders should set cloud storage headers if exist', () => {
+    const config = editorService.appendCloudStorageHeaders({});
+    expect(config).toEqual({headers: { 'x-ms-blob-type': 'BlockBlob' }});
+  });
+
+  it('#appendCloudStorageHeaders should not set cloud storage headers if not exist', () => {
+    const editorConfigMock: any = {config: editorConfig.config, context: _.omit(editorConfig.context, 'cloudStorage') };
+    editorService.initialize(editorConfigMock);
+    const config = editorService.appendCloudStorageHeaders({});
+    expect(config).toEqual({});
   });
 
 });

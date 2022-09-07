@@ -25,6 +25,8 @@ export class EditorService {
   public questionStream$ = new Subject<any>();
   private _editorConfig: IEditorConfig;
   private _editorMode = 'edit';
+  private _isReviewerEditEnable = false;
+  private _isReviewModificationAllowed = false;
   public showLibraryPage: EventEmitter<any> = new EventEmitter();
   public showQuestionLibraryPage: EventEmitter<any> = new EventEmitter();
   private _bulkUploadStatus$ = new BehaviorSubject<any>(undefined);
@@ -38,6 +40,8 @@ export class EditorService {
   selectedPrimaryCategory: any;
   leafParentIdentifier: any;
   questionIds = [];
+  private _qualityFormConfig: any;
+  private _isReviewerQualityCheckEnabled: boolean;
   constructor(public treeService: TreeService, private toasterService: ToasterService,
               public configService: ConfigService, private telemetryService: EditorTelemetryService,
               private publicDataService: PublicDataService, private dataService: DataService, public httpClient: HttpClient) {
@@ -49,6 +53,9 @@ export class EditorService {
       this._editorConfig.config = _.assign(this.configService.editorConfig.default, this._editorConfig.config);
     }
     this._editorMode = _.get(this._editorConfig, 'config.mode').toLowerCase();
+    this.setIsReviewerEditEnable(_.get(this._editorConfig, 'context.enableReviewEdit', false));
+    this.setQualityFormConfig(_.get(this._editorConfig, 'config.qualityFormConfig', null));
+    this.setIsReviewerQualityCheckEnabled(_.get(this._editorConfig, 'config.isReviewerQualityCheckEnabled', false));
   }
 
   set selectedChildren(value: SelectedChildren) {
@@ -73,6 +80,22 @@ export class EditorService {
 
   get editorMode() {
     return this._editorMode;
+  }
+
+  get isReviewerEditEnable() {
+    return this._isReviewerEditEnable;
+  }
+
+  private setIsReviewerEditEnable(value: boolean) {
+    return this._isReviewerEditEnable = value;
+  }
+
+  get isReviewModificationAllowed() {
+    return this._isReviewModificationAllowed;
+  }
+
+  setIsReviewModificationAllowed(value: boolean) {
+    return this._isReviewModificationAllowed = value;
   }
 
   get contentPolicyUrl() {
@@ -720,4 +743,29 @@ getDependentNodes(identifier) {
     return this.publicDataService.get(req);
   }
 
+  get qualityFormConfig(){
+    return this._qualityFormConfig;
+  }
+
+  private setQualityFormConfig(value: any){
+    return this._qualityFormConfig = value;
+  }
+
+  get isReviewerQualityCheckEnabled(){
+    return this._isReviewerQualityCheckEnabled;
+    }
+  
+    private setIsReviewerQualityCheckEnabled(value: boolean){
+      return this._isReviewerQualityCheckEnabled = value;
+    }
+
+  appendCloudStorageHeaders(config) {
+    const headers =  _.get(this.editorConfig, 'context.cloudStorage.presigned_headers', {});
+    if (!_.isEmpty(headers)) {
+      config.headers = {...config.headers, ...headers};
+      return config;
+    } else {
+      return config;
+    }
+  }
 }
