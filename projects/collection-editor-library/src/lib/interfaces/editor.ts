@@ -42,6 +42,7 @@ export interface Context {
     collectionObjectType?: string;
     collectionPrimaryCategory?: string;
     targetFWIds?: string[];
+    cloudStorage?: any;
 }
 export interface User {
     id: string;
