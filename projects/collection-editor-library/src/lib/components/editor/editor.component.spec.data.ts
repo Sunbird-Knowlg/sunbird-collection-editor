@@ -1,4 +1,4 @@
-import { IEditorConfig } from 'collection-editor-library/lib/interfaces/editor';
+import { IEditorConfig } from '../../interfaces/editor';
 export let editorConfig: IEditorConfig | undefined;
 // tslint:disable-next-line:variable-name
 export let editorConfig_question: IEditorConfig | undefined;
@@ -67,6 +67,11 @@ editorConfig = {
       'https://dockstorage.blob.core.windows.net/sunbird-content-dock/',
     ],
     mode: 'edit',
+    cloudStorage: {
+      presigned_headers: {
+        'x-ms-blob-type': 'BlockBlob'
+      }
+    }
   },
   config: {
     mode: 'edit',

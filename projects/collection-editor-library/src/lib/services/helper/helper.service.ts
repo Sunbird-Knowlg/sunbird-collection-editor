@@ -23,7 +23,7 @@ export class HelperService {
 
   public readonly channelData$: Observable<any> = this._channelData$
   .asObservable().pipe(skipWhile(data => data === undefined || data === null));
-  private shuffle = new BehaviorSubject<any>(false);
+  private shuffle = new BehaviorSubject<any>(undefined);
   shuffleValue = this.shuffle.asObservable();
 
   constructor(private publicDataService: PublicDataService, private configService: ConfigService, private dataService: DataService) { }

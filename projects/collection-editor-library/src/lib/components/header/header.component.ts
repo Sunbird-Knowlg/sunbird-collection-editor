@@ -19,14 +19,20 @@ export class HeaderComponent implements OnDestroy, OnInit {
   @Input() buttonLoaders: any;
   @Input() showComment: any;
   @Input() publishchecklist: any;
+  @Input() set requestChange(action: string) {
+    if (action) {
+      this.openRequestChangePopup(action);
+    }
+  }
   @Output() toolbarEmitter = new EventEmitter<any>();
   @Output() bulkUploadEmitter = new EventEmitter<any>();
   @ViewChild('FormControl') FormControl: NgForm;
   @ViewChild('modal') public modal;
+  @Output() qualityParamEmitter = new EventEmitter<any>();
   public visibility: any;
   public showReviewModal: boolean;
-  public showRequestChangesPopup: boolean;
   public showPublishCollectionPopup: boolean;
+  public showRequestChangesPopup: boolean;
   public rejectComment: string;
   public actionType: string;
   public objectType: string;
@@ -56,8 +62,8 @@ export class HeaderComponent implements OnDestroy, OnInit {
 
   async handleActionButtons() {
     this.visibility = {};
-    this.visibility.editContent = this.editorService.editorMode === 'edit';
-    this.visibility.saveContent = this.editorService.editorMode === 'edit';
+    this.visibility.editContent = this.editorService.editorMode === 'edit' || ((this.editorService.editorMode === 'orgreview' || this.editorService.editorMode === 'sourcingreview') && this.editorService.isReviewModificationAllowed);
+    this.visibility.saveContent = this.editorService.editorMode === 'edit' || ((this.editorService.editorMode === 'orgreview' || this.editorService.editorMode === 'sourcingreview') && this.editorService.isReviewModificationAllowed);
     this.visibility.submitContent = this.editorService.editorMode === 'edit';
     this.visibility.rejectContent = this.editorService.editorMode === 'review' || this.editorService.editorMode === 'orgreview';
     this.visibility.publishContent = this.editorService.editorMode === 'review' || this.editorService.editorMode === 'orgreview';
@@ -91,14 +97,24 @@ export class HeaderComponent implements OnDestroy, OnInit {
   buttonEmitter(action) {
     this.toolbarEmitter.emit({ button: action.type, ...(action.comment && { comment: this.rejectComment }) });
   }
+
   openPublishCheckListPopup(action) {
     this.actionType = action;
     this.showPublishCollectionPopup = true;
   }
+
+  firstLevelPublish() {
+    if (this.editorService.isReviewerQualityCheckEnabled) {
+      this.toolbarEmitter.emit({button: 'saveQualityParameters'});
+    } else {
+      this.buttonEmitter({type: 'publishQuestion'});
+    }
+  }
+
   publishEmitter(event) {
     this.showPublishCollectionPopup = false;
     if (event.button === 'publishContent' || event.button === 'publishQuestion' || event.button === 'sourcingApprove' || event.button === 'sourcingApproveQuestion') {
-      this.toolbarEmitter.emit(event)
+      this.toolbarEmitter.emit(event);
     }
   }
 
