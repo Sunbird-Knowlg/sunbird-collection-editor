@@ -140,8 +140,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.unitId = this.creationContext?.unitIdentifier;
     this.isReadOnlyMode = this.creationContext?.isReadOnlyMode;
     this.toolbarConfig = this.editorService.getToolbarConfig();
-    this.showPreview = this.editorService.editorMode !== 'edit';
-    this.toolbarConfig.showPreview = this.showPreview;
+    this.toolbarConfig.showPreview = this.editorService.editorMode !== 'edit';
     this.toolbarConfig.add_translation = true;
     this.treeNodeData = this.treeService.getFirstChild();
     if (_.get(this.creationContext, 'objectType') === 'question') { this.toolbarConfig.questionContribution = true; }
@@ -458,7 +457,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   sendQuestionForPublish(event) {
     this.editorService.publishContent(this.questionId, event).subscribe(res => {
-      this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.037'));
+      if (!(this.creationMode === 'sourcingReview' && this.editorService.isReviewModificationAllowed)) {
+        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.037'));
+      }
       this.redirectToChapterList();
     }, err => {
       this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.038'));

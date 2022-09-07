@@ -26,7 +26,7 @@ export class EditorService {
   private _editorConfig: IEditorConfig;
   private _editorMode = 'edit';
   private _isReviewerEditEnable = false;
-  private _isCollaborationEnabled = false;
+  private _isReviewModificationAllowed = false;
   public showLibraryPage: EventEmitter<number> = new EventEmitter();
   public showQuestionLibraryPage: EventEmitter<number> = new EventEmitter();
   private _bulkUploadStatus$ = new BehaviorSubject<any>(undefined);
@@ -91,11 +91,11 @@ export class EditorService {
   }
 
   get isReviewModificationAllowed() {
-    return this._isCollaborationEnabled;
+    return this._isReviewModificationAllowed;
   }
 
   setIsReviewModificationAllowed(value: boolean) {
-    return this._isCollaborationEnabled = value;
+    return this._isReviewModificationAllowed = value;
   }
 
   get contentPolicyUrl() {
