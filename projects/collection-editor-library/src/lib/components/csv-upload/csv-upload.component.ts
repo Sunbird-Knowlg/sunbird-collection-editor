@@ -140,14 +140,12 @@ export class CsvUploadComponent implements OnInit {
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     })).subscribe((response) => {
       const signedURL = _.get(response.result, 'pre_signed_url');
-      const config = {
+      let blobConfig = {
         processData: false,
-        contentType: 'text/csv',
-        headers: {
-          'x-ms-blob-type': 'BlockBlob'
-        }
+        contentType: 'text/csv'
       };
-      this.uploadToBlob(signedURL, this.file, config).subscribe(() => {
+      blobConfig = this.editorService.appendCloudStorageHeaders(blobConfig);
+      this.uploadToBlob(signedURL, this.file, blobConfig).subscribe(() => {
         const fileURL = signedURL.split('?')[0];
         this.updateContentWithURL(fileURL, this.file.type, this.collectionId);
       });

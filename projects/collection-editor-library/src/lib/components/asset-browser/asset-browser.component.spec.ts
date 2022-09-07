@@ -28,6 +28,9 @@ const mockEditorService = {
       },
       channel: 'sunbird'
     }
+  },
+  appendCloudStorageHeaders: (config) => {
+    return {...config, headers: { 'x-ms-blob-type': 'BlockBlob' }};
   }
 };
 describe('AssetBrowserComponent', () => {
@@ -144,10 +147,13 @@ describe('AssetBrowserComponent', () => {
     let modal = true;
     spyOn(questionService, 'createMediaAsset').and.returnValue(of(createMediaAssetResponse));
     spyOn(questionService, 'generatePreSignedUrl').and.returnValue(of(preSignedResponse));
+    const editorService = TestBed.inject(EditorService);
+    spyOn(editorService, 'appendCloudStorageHeaders').and.callThrough();
     spyOn(component, 'addImageInEditor').and.callThrough();
     spyOn(component, 'dismissPops').and.callThrough();
     component.uploadAndUseImage(modal);
     expect(questionService.createMediaAsset).toHaveBeenCalled();
+    expect(editorService.appendCloudStorageHeaders).toHaveBeenCalled();
     expect(component.loading).toEqual(true);
     expect(component.isClosable).toEqual(false);
     expect(component.imageFormValid).toEqual(false);

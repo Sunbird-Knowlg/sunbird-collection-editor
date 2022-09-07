@@ -54,7 +54,7 @@
             </div>
             <!-- Right Player Sections -->
             <div class="eight wide column bg-white pl-40 mb-10 w-73">
-              <ng-container *ngIf="(isCurrentNodeFolder === true || isCurrentNodeRoot === true) && unitFormConfig">
+              <ng-container *ngIf="(isCurrentNodeFolder === true || isCurrentNodeRoot === true) && unitFormConfig && selectedNodeData && rootFormConfig">
                 <lib-meta-form [rootFormConfig]="rootFormConfig" [nodeMetadata]="selectedNodeData" [unitFormConfig]="unitFormConfig"
                 (toolbarEmitter)="toolbarEventListener($event)"></lib-meta-form>
               </ng-container>
@@ -105,8 +105,11 @@
               <div class="twelve wide column sb-checkbox-tnc mt-10">
                 <div class="sb-checkbox sb-checkbox-primary font-italic p-0 m-0"><input [(ngModel)]="terms" id="termAndConditions"
                     name="example" type="checkbox">
-                  <label for="termAndConditions" class="fsmall pl-32"><span class="sb-required">*</span><span
-                      class="font-weight-bold mb-4 d-block">"{{configService.labelConfig?.lbl?.iAgreeSubmit}}</span>
+                  <label for="termAndConditions" class="fsmall pl-32">
+                    <div class="d-flex flex-ai-center">
+                      <span class="sb-required">*</span><span
+                        class="font-weight-bold mb-4 d-block">"{{configService.labelConfig?.lbl?.iAgreeSubmit}}</span>
+                    </div>
                     <div class="sb-color-gray-300">{{configService.labelConfig?.lbl?.iconfirmContent}}<a
                         class="sb-color-primary font-weight-bold cursor-pointer" href="https://creativecommons.org/licenses" target="_blank" > {{configService.labelConfig?.lbl?.createCommonFramework}}</a>
                         {{configService.labelConfig?.lbl?.accordance}}
