@@ -290,7 +290,6 @@ describe('EditorService', () => {
     const http = TestBed.inject(HttpClient);
     const toasterService = TestBed.inject(ToasterService);
     spyOn(toasterService, 'success').and.callThrough();
-    // spyOn(http, 'get').and.returnValue(of({ test: 'ok' }));
     const downloadConfig = {
       // tslint:disable-next-line:max-line-length
       blobUrl: 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/textbook/toc/do_113312173590659072160_dev-testing-1_1625022971409.csv',
