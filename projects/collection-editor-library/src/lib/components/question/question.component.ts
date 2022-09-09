@@ -958,7 +958,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   prepareQuestionBody () {
     return this.questionId ?
     {
-      question: _.omit(this.getQuestionMetadata(), ['mimeType', 'creator', 'createdBy'])
+      question: _.omit(this.getQuestionMetadata(), ['mimeType', 'creator', 'createdBy', 'organisationId'])
     } :
     {
       question: {
