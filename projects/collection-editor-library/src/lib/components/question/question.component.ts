@@ -198,7 +198,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       }
       this.questionFormConfig = _.cloneDeep(this.leafFormConfig);
       let leafFormConfigFields = _.join(_.map(this.leafFormConfig, value => (value.code)), ',');
-      leafFormConfigFields += ',isReviewModificationAllowed,programId';
+      leafFormConfigFields += ',isReviewModificationAllowed';
       if (!_.isUndefined(this.questionId)) {
         this.questionService.readQuestion(this.questionId, leafFormConfigFields)
           .subscribe((res) => {
