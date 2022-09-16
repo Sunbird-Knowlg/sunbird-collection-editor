@@ -62,7 +62,10 @@ export class HeaderComponent implements OnDestroy, OnInit {
 
   async handleActionButtons() {
     this.visibility = {};
-    this.visibility.editContent = this.editorService.editorMode === 'edit' || ((this.editorService.editorMode === 'orgreview' || this.editorService.editorMode === 'sourcingreview') && this.editorService.isReviewModificationAllowed);
+    // Edit button visibility
+    // 1. if the editor in edit mode
+    // 2. if ReviewModificationAllowed is allowed and review/org-reviewer is viewing and the question is not added from library the question
+    this.visibility.editContent = this.editorService.editorMode === 'edit' || ((this.editorService.editorMode === 'orgreview' || this.editorService.editorMode === 'sourcingreview') && this.editorService.isReviewModificationAllowed && !_.get(this.editorService, 'editorConfig.context.isAddedFromLibrary', false));
     this.visibility.saveContent = this.editorService.editorMode === 'edit' || ((this.editorService.editorMode === 'orgreview' || this.editorService.editorMode === 'sourcingreview') && this.editorService.isReviewModificationAllowed);
     this.visibility.submitContent = this.editorService.editorMode === 'edit';
     this.visibility.rejectContent = this.editorService.editorMode === 'review' || this.editorService.editorMode === 'orgreview';
