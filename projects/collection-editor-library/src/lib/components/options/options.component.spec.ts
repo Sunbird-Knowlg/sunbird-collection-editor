@@ -1,5 +1,5 @@
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 import { OptionsComponent } from './options.component';
@@ -36,7 +36,7 @@ describe('OptionsComponent', () => {
   let component: OptionsComponent;
   let fixture: ComponentFixture<OptionsComponent>;
   let treeService,telemetryService;
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule, FormsModule, SuiModule ],
       declarations: [ OptionsComponent, TelemetryInteractDirective ],
@@ -49,10 +49,10 @@ describe('OptionsComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(OptionsComponent);
-    treeService = TestBed.get(TreeService);
-    telemetryService=TestBed.get(EditorTelemetryService);
+    treeService = TestBed.inject(TreeService);
+    telemetryService = TestBed.inject(EditorTelemetryService);
     component = fixture.componentInstance;
-    component.sourcingSettings=sourcingSettingsMock;
+    component.sourcingSettings = sourcingSettingsMock;
     spyOn(treeService, 'setTreeElement').and.callFake((el) => {
       treeService.nativeElement = nativeElement;
     });

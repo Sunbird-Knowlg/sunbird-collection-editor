@@ -1,5 +1,5 @@
 import { QuestionService } from "./../../services/question/question.service";
-import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { QuestionComponent } from "./question.component";
 import { Router } from "@angular/router";
@@ -91,7 +91,7 @@ describe("QuestionComponent", () => {
   class RouterStub {
     navigate = jasmine.createSpy("navigate");
   }
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [QuestionComponent, TelemetryInteractDirective],
       imports: [HttpClientTestingModule, SuiModule],
@@ -124,9 +124,9 @@ describe("QuestionComponent", () => {
     editorService = TestBed.inject(EditorService);
     configService = TestBed.inject(ConfigService);
     telemetryService = TestBed.inject(EditorTelemetryService);
-    treeService = TestBed.get(TreeService);
-    questionService = TestBed.get(QuestionService);
-    toasterService = TestBed.get(ToasterService);
+    treeService = TestBed.inject(TreeService);
+    questionService = TestBed.inject(QuestionService);
+    toasterService = TestBed.inject(ToasterService);
     spyOn(telemetryService, "impression").and.callFake(() => {});
     editorService.selectedChildren.label = "Slider";
     component.toolbarConfig.showPreview = false;
@@ -713,7 +713,7 @@ describe("QuestionComponent", () => {
   it("should call validateFormFields", () => {
     component.leafFormConfig = mockData.childMetadata;
     component.childFormData = childMetaData;
-    const toasterService = TestBed.get(ToasterService);
+    const toasterService = TestBed.inject(ToasterService);
     spyOn(toasterService, "error").and.callThrough();
     component.validateFormFields();
     expect(component.showFormError).toBeFalsy();
@@ -836,7 +836,7 @@ describe("QuestionComponent", () => {
     component.showFormError = true;
     component.questionMetadataFormStatus = false;
     // tslint:disable-next-line:no-shadowed-variable
-    const toasterService = TestBed.get(ToasterService);
+    const toasterService = TestBed.inject(ToasterService);
     spyOn(toasterService, 'error').and.callFake(() => {});
     spyOn(component, 'previewContent').and.callThrough();
     component.previewContent();
@@ -864,9 +864,12 @@ describe("QuestionComponent", () => {
     expect(component.isEditable("bloomsLevel")).toBeFalsy();
   });
   it("Unit test for #prepareQuestionBody", () => {
-    spyOn(component, "prepareQuestionBody").and.callFake(() => {});
-    component.prepareQuestionBody();
+    component.questionId = undefined;
+    spyOn(component, 'getQuestionMetadata').and.returnValue({});
+    spyOn(component, "prepareQuestionBody").and.callThrough();
+    const response = component.prepareQuestionBody();
     expect(component.prepareQuestionBody).toHaveBeenCalled();
+    expect(response).toBeDefined();
   });
   it("#submitHandler() should set showSubmitConfirmPopup true", () => {
     component.showSubmitConfirmPopup = false;
@@ -874,7 +877,7 @@ describe("QuestionComponent", () => {
     spyOn(component, 'validateQuestionData').and.callFake(() => {
       component.showFormError = false;
     });
-    spyOn(component, 'validateFormFields').and.callFake(() => {});
+    spyOn(component, 'validateFormFields').and.callFake(() => {return true});
     component.submitHandler();
     expect(component.submitHandler).toHaveBeenCalled();
     expect(component.validateQuestionData).toHaveBeenCalled();
@@ -887,7 +890,7 @@ describe("QuestionComponent", () => {
     spyOn(component, 'validateQuestionData').and.callFake(() => {
       component.showFormError = true;
     });
-    spyOn(component, 'validateFormFields').and.callFake(() => {});
+    spyOn(component, 'validateFormFields').and.callFake(() => {return false});
     component.submitHandler();
     expect(component.submitHandler).toHaveBeenCalled();
     expect(component.validateQuestionData).toHaveBeenCalled();
@@ -1309,7 +1312,7 @@ describe("QuestionComponent", () => {
         },
       },
     };
-    const toasterService = TestBed.get(ToasterService);
+    const toasterService = TestBed.inject(ToasterService);
     spyOn(toasterService, 'success').and.callFake(() => { });
     component.sourcingUpdate(data);
   });
@@ -1335,7 +1338,7 @@ describe("QuestionComponent", () => {
         },
       },
     };
-    const toasterService = TestBed.get(ToasterService);
+    const toasterService = TestBed.inject(ToasterService);
     spyOn(toasterService, 'success').and.callFake(() => { });
     component.sourcingUpdate(data);
     // expect(editorService.updateCollection).toHaveBeenCalledWith('do_11330102570702438417', { ...data, requestBody });
@@ -1351,7 +1354,7 @@ describe("QuestionComponent", () => {
     component.questionId = "do_11326368076523929611";
     component.actionType = "sourcingApproveQuestion";
     const data = { button: "sourcingApproveQuestion" };
-    const toasterService = TestBed.get(ToasterService);
+    const toasterService = TestBed.inject(ToasterService);
     spyOn(toasterService, 'success').and.callFake(() => { });
     component.sourcingUpdate(data);
     expect(component.redirectToChapterList);
@@ -1439,11 +1442,12 @@ describe("QuestionComponent", () => {
     expect(component.showAddSecondaryQuestionCat).toBeTruthy();
   });
   it("#dependentQuestions() should return dependentQuestions ", () => {
-    spyOn(component, "dependentQuestions");
+    spyOn(component, 'subMenuChange').and.callThrough();
+    spyOn(component, 'saveContent').and.callFake(() => {});
     component.subMenus = mockData.subMenus;
     component.subMenuChange({ index: 2, value: "test" });
-    expect(component.dependentQuestions.length).toBe(1);
-    expect(component.dependentQuestions);
+    // expect(component.dependentQuestions.length).toBe(1);
+    expect(component.showAddSecondaryQuestionCat).toBeTruthy();
   });
 
   it("#saveContent() should call saveContent when questionId exits ", () => {

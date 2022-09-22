@@ -12,6 +12,22 @@ xdescribe('BulkJobService', () => {
     urlConFig: (urlConfig as any).default,
     labelConfig: (labelConfig as any).default
   };
+  const serverResponse = {
+    id: '',
+      params: {
+        resmsgid: '',
+        msgid: '',
+        err: '',
+        status: '',
+        errmsg: ''
+      },
+      responseCode: '200',
+      result: {
+      },
+      ts: '',
+      ver: '',
+      headers: {}
+  }
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientModule],
@@ -20,22 +36,22 @@ xdescribe('BulkJobService', () => {
   });
 
   it('should be created', () => {
-    const service: BulkJobService = TestBed.get(BulkJobService);
+    const service: BulkJobService = TestBed.inject(BulkJobService);
     expect(service).toBeTruthy();
   });
   it('#getBulkOperationStatus() should get bulk operation status', () => {
-    const publicDataService: PublicDataService = TestBed.get(PublicDataService);
-    spyOn(publicDataService, 'post').and.returnValue(of({}));
-    const service: BulkJobService = TestBed.get(BulkJobService);
+    const publicDataService: PublicDataService = TestBed.inject(PublicDataService);
+    spyOn(publicDataService, 'post').and.returnValue(of(serverResponse));
+    const service: BulkJobService = TestBed.inject(BulkJobService);
     const observable = service.getBulkOperationStatus('do_123');
     observable.subscribe((data) => {
       expect(data).toEqual({});
     });
   });
   it('#createBulkJob() should get bulk operation status', () => {
-    const publicDataService: PublicDataService = TestBed.get(PublicDataService);
-    spyOn(publicDataService, 'post').and.returnValue(of({}));
-    const service: BulkJobService = TestBed.get(BulkJobService);
+    const publicDataService: PublicDataService = TestBed.inject(PublicDataService);
+    spyOn(publicDataService, 'post').and.returnValue(of(serverResponse));
+    const service: BulkJobService = TestBed.inject(BulkJobService);
     const observable = service.createBulkJob('do_123');
     observable.subscribe((data) => {
       expect(data).toEqual({});

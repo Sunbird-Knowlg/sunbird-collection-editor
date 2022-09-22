@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { QumlplayerPageComponent } from './qumlplayer-page.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
@@ -11,7 +11,7 @@ describe('QumlplayerPageComponent', () => {
   let component: QumlplayerPageComponent;
   let fixture: ComponentFixture<QumlplayerPageComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule ],
       declarations: [ QumlplayerPageComponent, TelemetryInteractDirective ],
@@ -46,7 +46,7 @@ describe('QumlplayerPageComponent', () => {
     component.questionMetaData = { data: { metadata: mockData.questionMetaData}};
     component.prevQuestionId = 'do_12345';
     component.questionSetHierarchy = mockData.questionSetHierarchy;
-    const treeService = TestBed.get(TreeService);
+    const treeService = TestBed.inject(TreeService);
     spyOn(treeService, 'getNodeById').and.returnValue({data: {metadata: {}}});
     component.initQumlPlayer();
     expect(component.hierarchy.maxScore).toEqual('2');

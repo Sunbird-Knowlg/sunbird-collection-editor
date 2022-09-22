@@ -1,5 +1,5 @@
 import { TreeService } from './../../services/tree/tree.service';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { LibraryFilterComponent } from './library-filter.component';
 import { FormsModule } from '@angular/forms';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
@@ -37,7 +37,7 @@ describe('LibraryFilterComponent', () => {
     navigate = jasmine.createSpy('navigate');
   }
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       providers: [EditorTelemetryService, { provide: Router, useClass: RouterStub }, TreeService,
          { provide: EditorService, useValue: mockEditorService }],
@@ -49,7 +49,7 @@ describe('LibraryFilterComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(LibraryFilterComponent);
     component = fixture.componentInstance;
-    const treeService = TestBed.get(TreeService);
+    const treeService = TestBed.inject(TreeService);
     spyOn(treeService, 'getActiveNode').and.callFake(() => {
       return { getLevel: () => 2 };
     });

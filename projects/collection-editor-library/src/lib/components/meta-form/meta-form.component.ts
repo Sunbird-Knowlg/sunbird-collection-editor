@@ -339,6 +339,7 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
         levels: this.createLeavels(event.levels)
       };
     }
+    // tslint:disable-next-line:no-unused-expression
     event?.instance ? data.instances = { label : event?.instances } : '';
     if (!_.isEmpty(this.appIcon) && this.showAppIcon) {
       data.appIcon = this.appIcon;
@@ -361,6 +362,8 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
   ngOnDestroy() {
     this.onComponentDestroy$.next();
     this.onComponentDestroy$.complete();
-    // this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 }

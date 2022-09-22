@@ -12,12 +12,12 @@ describe('TreeService', () => {
       providers: [HttpClient]
     });
 
-    treeService = TestBed.get(TreeService);
+    treeService = TestBed.inject(TreeService);
     treeService.initialize(editorConfig);
   });
 
   it('should be created', () => {
-    const service: TreeService = TestBed.get(TreeService);
+    const service: TreeService = TestBed.inject(TreeService);
     expect(service).toBeTruthy();
   });
 
@@ -59,7 +59,7 @@ describe('TreeService', () => {
 
   it('#updateMetaDataProperty() should call #getFirstChild() and #setTreeCache()', ()=> {
     spyOn(treeService, 'getFirstChild').and.callFake(()=> treeNode);
-    spyOn(treeService, 'setTreeCache');
+    spyOn(treeService, 'setTreeCache').and.callFake(() => {});
     treeService.updateMetaDataProperty('maxScore', 2);
     expect(treeService.getFirstChild).toHaveBeenCalled();
     expect(treeService.setTreeCache).toHaveBeenCalled();

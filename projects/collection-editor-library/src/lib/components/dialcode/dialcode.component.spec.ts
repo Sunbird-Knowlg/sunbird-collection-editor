@@ -1,5 +1,5 @@
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AbstractControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DialcodeComponent } from './dialcode.component';
@@ -32,7 +32,7 @@ describe('DialcodeComponent', () => {
       }
     }
   };
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule, HttpClientTestingModule ],
       declarations: [ DialcodeComponent, TelemetryInteractDirective ],
@@ -67,7 +67,7 @@ describe('DialcodeComponent', () => {
   });
 
   it('#setQRCodeCriteria() should set #dialcodeMinLength and #dialcodeMaxLength', () => {
-    const treeService = TestBed.get(TreeService);
+    const treeService = TestBed.inject(TreeService);
     treeService.config = { dialcodeMinLength: 5, dialcodeMaxLength: 100 };
     component.setQRCodeCriteria();
     expect(component.minQRCode).toBe(5);
@@ -92,14 +92,14 @@ describe('DialcodeComponent', () => {
   });
 
   xit('#treeStatusListener() should set to true disables the download QR button', () => {
-    const treeService = TestBed.get(TreeService);
+    const treeService = TestBed.inject(TreeService);
     treeService.nextTreeStatus('saved');
     component.treeStatusListener();
     expect(component.disableQRGenerateBtn).toBeTruthy();
   });
 
   it('#resolveQRDownloadBtn() should enables the QR download button  ', () => {
-    const treeService = TestBed.get(TreeService);
+    const treeService = TestBed.inject(TreeService);
     spyOn(treeService, 'getFirstChild').and.callFake(() => {
       return { data: { metadata: { qrCodeProcessId: '0123'} } };
     });
@@ -108,7 +108,7 @@ describe('DialcodeComponent', () => {
   });
 
   it('#resolveQRDownloadBtn() should disables the QR download button  ', () => {
-    const treeService = TestBed.get(TreeService);
+    const treeService = TestBed.inject(TreeService);
     spyOn(treeService, 'getFirstChild').and.callFake(() => {
       return { data: { metadata: { } } };
     });
@@ -117,7 +117,7 @@ describe('DialcodeComponent', () => {
   });
 
   it('#doQRCodeCount() should count #request and #reserve based on data', () => {
-    const treeService = TestBed.get(TreeService);
+    const treeService = TestBed.inject(TreeService);
     spyOn(treeService, 'getTreeObject').and.callFake(() => {
       return { visit(cb) { cb({ data: { metadata: { dialcodeRequired: 'Yes'} } }); } };
     });
@@ -153,16 +153,16 @@ describe('DialcodeComponent', () => {
   });
 
   it('#reserveDialCode() should reserve dialcode when API success', () => {
-    const toasterService = TestBed.get(ToasterService);
+    const toasterService = TestBed.inject(ToasterService);
     spyOn(toasterService, 'success').and.callThrough();
-    const treeService = TestBed.get(TreeService);
+    const treeService = TestBed.inject(TreeService);
     spyOn(treeService, 'getTreeObject').and.callFake(() => {
       return { visit(cb) { cb({ data: { metadata: { dialcodeRequired: 'Yes'} } }); } };
     });
     spyOn(treeService, 'getFirstChild').and.callFake(() => {
       return { data: { metadata: { reservedDialcodes: ['ABC'], qrCodeProcessId: '1234' } } };
     });
-    const dialcodeService = TestBed.get(DialcodeService);
+    const dialcodeService = TestBed.inject(DialcodeService);
     spyOn(dialcodeService, 'reserveDialCode').and.returnValues(of(mockData.dialcodeReserveSuccess));
     component.reserveDialCode(1);
     expect(component.isGeneratingQRCodes).toBeFalsy();
@@ -170,16 +170,16 @@ describe('DialcodeComponent', () => {
   });
 
   it('#reserveDialCode() should thorw error msg when API failed', () => {
-    const toasterService = TestBed.get(ToasterService);
+    const toasterService = TestBed.inject(ToasterService);
     spyOn(toasterService, 'error').and.callThrough();
-    const treeService = TestBed.get(TreeService);
+    const treeService = TestBed.inject(TreeService);
     spyOn(treeService, 'getTreeObject').and.callFake(() => {
       return { visit(cb) { cb({ data: { metadata: { dialcodeRequired: 'Yes'} } }); } };
     });
     spyOn(treeService, 'getFirstChild').and.callFake(() => {
       return { data: { metadata: { reservedDialcodes: ['ABC'], qrCodeProcessId: '1234' } } };
     });
-    const dialcodeService = TestBed.get(DialcodeService);
+    const dialcodeService = TestBed.inject(DialcodeService);
     spyOn(dialcodeService, 'reserveDialCode').and.returnValues(throwError({error: mockData.dialcodeReserveFailed}));
     component.reserveDialCode(1);
     expect(component.isGeneratingQRCodes).toBeFalsy();
@@ -187,11 +187,11 @@ describe('DialcodeComponent', () => {
   });
 
   it('#downloadQRCodes() should show info msg if status is #in-process', () => {
-    const toasterService = TestBed.get(ToasterService);
+    const toasterService = TestBed.inject(ToasterService);
     spyOn(toasterService, 'info').and.callThrough();
-    const dialcodeService = TestBed.get(DialcodeService);
+    const dialcodeService = TestBed.inject(DialcodeService);
     spyOn(dialcodeService, 'downloadQRCode').and.returnValues(of(mockData.downloadQRcodeInProcess));
-    const treeService = TestBed.get(TreeService);
+    const treeService = TestBed.inject(TreeService);
     spyOn(treeService, 'getFirstChild').and.callFake(() => {
       return { data: { metadata: { qrCodeProcessId: '0123'} } };
     });
@@ -202,9 +202,9 @@ describe('DialcodeComponent', () => {
   it('#downloadQRCodes() should download QR codes', () => {
     component.contentId = 'do_123';
     spyOn(component, 'downloadFile').and.callThrough();
-    const dialcodeService = TestBed.get(DialcodeService);
+    const dialcodeService = TestBed.inject(DialcodeService);
     spyOn(dialcodeService, 'downloadQRCode').and.returnValues(of(mockData.downloadQRcodeCompleted));
-    const treeService = TestBed.get(TreeService);
+    const treeService = TestBed.inject(TreeService);
     spyOn(treeService, 'getFirstChild').and.callFake(() => {
       return { data: { metadata: { qrCodeProcessId: '0123', name: 'test'} } };
     });
@@ -213,7 +213,7 @@ describe('DialcodeComponent', () => {
   });
 
   it('#contentMetadata() should return expected data', () => {
-    const treeService = TestBed.get(TreeService);
+    const treeService = TestBed.inject(TreeService);
     spyOn(treeService, 'getFirstChild').and.callFake(() => {
       return { data: { metadata: { name: 'test'} } };
     });
@@ -229,7 +229,7 @@ describe('DialcodeComponent', () => {
        fileType: 'zip',
        fileName: 'test'
   };
-    const editorService = TestBed.get(EditorService);
+    const editorService = TestBed.inject(EditorService);
     spyOn(editorService, 'downloadBlobUrlFile').and.callThrough();
     component.downloadFile(mockData.downloadQRcodeCompleted.result.url, 'test');
     expect(editorService.downloadBlobUrlFile).toHaveBeenCalledWith(config);

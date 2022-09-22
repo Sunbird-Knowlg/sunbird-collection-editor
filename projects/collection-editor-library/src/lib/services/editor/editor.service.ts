@@ -25,8 +25,8 @@ export class EditorService {
   public questionStream$ = new Subject<any>();
   private _editorConfig: IEditorConfig;
   private _editorMode = 'edit';
-  public showLibraryPage: EventEmitter<number> = new EventEmitter();
-  public showQuestionLibraryPage: EventEmitter<number> = new EventEmitter();
+  public showLibraryPage: EventEmitter<any> = new EventEmitter();
+  public showQuestionLibraryPage: EventEmitter<any> = new EventEmitter();
   private _bulkUploadStatus$ = new BehaviorSubject<any>(undefined);
   public readonly bulkUploadStatus$: Observable<any> = this._bulkUploadStatus$;
   public contentsCount = 0;
@@ -38,8 +38,6 @@ export class EditorService {
   selectedPrimaryCategory: any;
   leafParentIdentifier: any;
   questionIds = [];
-  treeData: any;
-  outcomeDeclaration: any;
   constructor(public treeService: TreeService, private toasterService: ToasterService,
               public configService: ConfigService, private telemetryService: EditorTelemetryService,
               private publicDataService: PublicDataService, private dataService: DataService, public httpClient: HttpClient) {

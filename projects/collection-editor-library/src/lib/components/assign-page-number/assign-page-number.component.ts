@@ -3,6 +3,7 @@ import { EditorService } from '../../services/editor/editor.service';
 import { QuestionService } from '../../services/question/question.service';
 import { TreeService } from '../../services/tree/tree.service';
 import * as _ from 'lodash-es';
+import { ConfigService } from '../../services/config/config.service';
 
 @Component({
   selector: 'lib-assign-page-number',

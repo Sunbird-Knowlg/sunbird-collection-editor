@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { AssignPageNumberComponent } from './assign-page-number.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TreeService } from '../../services/tree/tree.service';
@@ -33,7 +33,7 @@ describe('AssignPageNumberComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AssignPageNumberComponent);
-    treeService = TestBed.get(TreeService);
+    treeService = TestBed.inject(TreeService);
     editorService = TestBed.inject(EditorService);
     questionService = TestBed.get(QuestionService);
     component = fixture.componentInstance;
