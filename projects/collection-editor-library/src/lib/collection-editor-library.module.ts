@@ -29,7 +29,7 @@ import { QuestionComponent } from './components/question/question.component';
 import {SunbirdPdfPlayerModule} from '@project-sunbird/sunbird-pdf-player-v9';
 import { SunbirdEpubPlayerModule } from '@project-sunbird/sunbird-epub-player-v9';
 import { SunbirdVideoPlayerModule } from '@project-sunbird/sunbird-video-player-v9';
-import { QumlLibraryModule } from '@project-sunbird/sunbird-quml-player-v9';
+import { QumlLibraryModule } from '@project-sunbird/sunbird-quml-player';
 import {CarouselModule} from 'ngx-bootstrap/carousel';
 import { TelemetryInteractDirective } from './directives/telemetry-interact/telemetry-interact.directive';
 import { DateFormatPipe } from './directives/date-format/date-format.pipe';
