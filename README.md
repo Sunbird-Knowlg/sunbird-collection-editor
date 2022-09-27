@@ -38,7 +38,7 @@ npm i @project-sunbird/ckeditor-build-classic --save
 npm i @project-sunbird/sunbird-pdf-player-v9 --save
 npm i @project-sunbird/sunbird-epub-player-v9 --save
 npm i @project-sunbird/sunbird-video-player-v9 --save
-npm i @project-sunbird/sunbird-quml-player-v9 --save
+npm i @project-sunbird/sunbird-quml-player --save
 npm i ngx-bootstrap@6.0.0 --save
 npm i ng2-cache-service --save
 npm i fine-uploader --save
@@ -106,7 +106,7 @@ Now open the `angular.json` file and add the following under `architect.build.as
 +        },
 +        {
 +          "glob": "**/*",
-+          "input": "node_modules/@project-sunbird/sunbird-quml-player-v9/lib/assets/",
++          "input": "node_modules/@project-sunbird/sunbird-quml-player/lib/assets/",
 +          "output": "/assets/"
 +        }
       ],
@@ -159,7 +159,7 @@ Now open `app.module.ts` file and import like this:
  
 ```diff
 + import { EditorCursor } from 'collection-editor-library';
-+ import { QuestionCursor } from '@project-sunbird/sunbird-quml-player-v9';
++ import { QuestionCursor } from '@project-sunbird/sunbird-quml-player';
 + import { EditorCursorImplementationService } from './editor-cursor-implementation.service';
 
 @NgModule({
@@ -187,7 +187,7 @@ Include `CollectionEditorLibraryModule` in your app module:
   import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 +  import { CollectionEditorLibraryModule, EditorCursor } from '@project-sunbird/sunbird-collection-editor';
   import { RouterModule } from '@angular/router';
-  import { QuestionCursor } from '@project-sunbird/sunbird-quml-player-v9';
+  import { QuestionCursor } from '@project-sunbird/sunbird-quml-player';
   import { EditorCursorImplementationService } from './editor-cursor-implementation.service';
 
   @NgModule({
