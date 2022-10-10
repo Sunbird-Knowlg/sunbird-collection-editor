@@ -48,9 +48,11 @@ describe('QumlplayerPageComponent', () => {
     component.questionSetHierarchy = mockData.questionSetHierarchy;
     const treeService = TestBed.inject(TreeService);
     spyOn(treeService, 'getNodeById').and.returnValue({data: {metadata: {}}});
-    spyOn(treeService, 'getParent').and.returnValue({ data: { metadata: { showSolutions: "Yes", showFeedback: "Yes" } } });
+    spyOn(treeService, 'getParent').and.returnValue({ data: { metadata: { showSolutions: 'Yes', showFeedback: 'Yes' } } });
     component.initQumlPlayer();
     expect(component.hierarchy.maxScore).toEqual('2');
+    expect(component.hierarchy.showSolutions).toEqual('Yes');
+    expect(component.hierarchy.showFeedback).toEqual('Yes');
   });
   it('#switchToPotraitMode() should set  showPotrait to true', () => {
     component.showPotrait = false;
