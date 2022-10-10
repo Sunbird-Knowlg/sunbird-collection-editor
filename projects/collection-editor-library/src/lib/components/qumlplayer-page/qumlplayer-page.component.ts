@@ -39,6 +39,9 @@ export class QumlplayerPageComponent implements OnChanges {
       if (this.questionMetaData.maxScore) {
         this.hierarchy.maxScore = this.questionMetaData.maxScore;
       }
+      const parent = this.treeService.getParent()?.data?.metadata;
+      this.hierarchy.showSolutions = parent?.showSolutions || "No";
+      this.hierarchy.showFeedback = parent?.showFeedback || "No";
       this.prevQuestionId = newQuestionId;
       setTimeout(() => {
         this.showPlayerPreview = true;
