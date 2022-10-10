@@ -48,6 +48,7 @@ describe('QumlplayerPageComponent', () => {
     component.questionSetHierarchy = mockData.questionSetHierarchy;
     const treeService = TestBed.inject(TreeService);
     spyOn(treeService, 'getNodeById').and.returnValue({data: {metadata: {}}});
+    spyOn(treeService, 'getParent').and.returnValue({ data: { metadata: { showSolutions: "Yes", showFeedback: "Yes" } } });
     component.initQumlPlayer();
     expect(component.hierarchy.maxScore).toEqual('2');
   });
