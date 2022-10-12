@@ -51,7 +51,7 @@ export class AssignPageNumberComponent implements OnInit {
     this.criteriaId = event?.identifier;
     const data = this.treeService.getFirstChild();
     const hierarchy = this.editorService.getHierarchyObj(data, '', event?.identifier);
-    this.questionService.getQuestionList(_.get(hierarchy[event?.identifier], 'children'))
+    this.questionService.getQuestionList('editorState', _.get(hierarchy[event?.identifier], 'children'))
     .subscribe((response: any) => {
       this.questions = [];
       const questionsArray = _.get(response, 'result.questions');
@@ -76,11 +76,13 @@ export class AssignPageNumberComponent implements OnInit {
       numArray.push(question.page_no);
     });
     const createArray = new Array(Math.max(...numArray));
-
+    console.log(createArray);
     for (let i = 0; i < createArray.length; i++) {
       createArray[i] = new Array(1);
     }
-    console.log(question?.identifier);
+    for (const [index, data] of this.questions.entries()){
+      console.log(index);
+    }
     _.forEach(this.rendering_sequence?.sequence, (data) => {
       if (data.value === this.criteriaId) {
         data.pages = createArray;

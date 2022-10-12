@@ -198,7 +198,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.helperService.initialize(channel);
   }
 
-  getFrameworkDetails(categoryDefinitionData) {
+  async getFrameworkDetails(categoryDefinitionData) {
     let orgFWIdentifiers: any;
     let targetFWIdentifiers: any;
     let orgFWType: any;
@@ -307,33 +307,33 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.rootFormConfig.length) {
       formData = this.rootFormConfig[0].fields || [];
     }
-    if (_.get(this.editorConfig, 'config.renderTaxonomy') === true) {
-      this.unitFormConfig[0]?.fields.push(
-            {
-              code: 'matrix',
-              dataType: ['text', 'number', 'number'],
-              description: 'Name of the Instruction',
-              editable: true,
-              disabled: [true , null , null],
-              inputType: 'matrix',
-              label: 'Define Score range for Each levels',
-              name: 'Instruction',
-              placeholder: ['label', 'minimum', 'maximum'],
-              default: [[null, null, null], [null, null, null], [null, null, null]],
-              renderingHints: {
-                class: 'sb-g-col-lg-2 required'
-              },
-              validations: [
-                {
-                  type: 'required',
-                  message: 'Score range for Each levels is required'
-                }
-              ],
-              required: true,
-              visible: true,
-             }
-      );
-    }
+    // if (_.get(this.editorConfig, 'config.renderTaxonomy') === true) {
+    //   this.unitFormConfig[0]?.fields.push(
+    //         {
+    //           code: 'matrix',
+    //           dataType: ['text', 'number', 'number'],
+    //           description: 'Name of the Instruction',
+    //           editable: true,
+    //           disabled: [true , null , null],
+    //           inputType: 'matrix',
+    //           label: 'Define Score range for Each levels',
+    //           name: 'Instruction',
+    //           placeholder: ['label', 'minimum', 'maximum'],
+    //           default: [[null, null, null], [null, null, null], [null, null, null]],
+    //           renderingHints: {
+    //             class: 'sb-g-col-lg-2 required'
+    //           },
+    //           validations: [
+    //             {
+    //               type: 'required',
+    //               message: 'Score range for Each levels is required'
+    //             }
+    //           ],
+    //           required: true,
+    //           visible: true,
+    //          }
+    //   );
+    // }
     formData.forEach((field) => {
       if (field.code === 'evidenceMimeType') {
         evidenceMimeType = field.range;
@@ -712,9 +712,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   validateFormStatus() {
-    console.log(this.formStatusMapper);
     const isValid = _.every(this.formStatusMapper, Boolean);
-    console.log('validateFormStatus :', isValid);
     if (isValid) { return true; }
     _.forIn(this.formStatusMapper, (value, key) => {
       if (value) {
@@ -1038,7 +1036,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       questionSetId: this.collectionId,
       questionId: questionId,
       type: interactionType,
-      setChildQueston:mode === 'edit' ? false : this.setChildQuestion,
+      setChildQuestion: mode === 'edit' ? false : this.setChildQuestion,
       category: questionCategory,
       creationContext: this.creationContext, // Pass the creation context to the question-component
       creationMode: mode

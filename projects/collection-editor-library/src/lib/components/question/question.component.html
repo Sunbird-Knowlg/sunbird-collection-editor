@@ -12,9 +12,8 @@
           <div *ngIf="showPreview" class="br-2 b-1-100">
             <lib-quml-player [questionSetHierarchy]="questionSetHierarchy" [isSingleQuestionPreview]="true"></lib-quml-player>
           </div>
-          <div style="display: flex;align-items: flex-end;justify-content: flex-end;"
-            *ngIf="showOptions || isChildQuestion ">
-            <div class="options">
+          <div class="select-picker">
+            <div class="options" *ngIf="showOptions || isChildQuestion">
               <sui-select [(ngModel)]="condition" valueField="value" class="selection multiselect"
               labelField="label" [placeholder]="'Select Condition'" #select [isDisabled]="isReadOnlyMode">
                 <sui-select-option [value]="{label:'Equal to',value:'eq'}"></sui-select-option>
@@ -26,6 +25,13 @@
                 <sui-select-option *ngFor="let option of options" [value]="option">
                 </sui-select-option>
               </sui-multi-select>
+            </div>
+            <div class="options" *ngIf="showEcmList && !isChildQuestion">
+              <sui-select [(ngModel)]="selectedEcm" valueField="value" class="selection multiselect"
+              labelField="label" [placeholder]="'Select Ecm'" #select [isDisabled]="isReadOnlyMode">
+                <sui-select-option *ngFor="let option of ecmList" [value]="option"></sui-select-option>
+              </sui-select>
+
             </div>
           </div>
           <div class="py-20 px-32 br-4 b-1-100" *ngIf="!showPreview" [ngClass]="{'sb-bg-color-primary-0': !isReadOnlyMode}">

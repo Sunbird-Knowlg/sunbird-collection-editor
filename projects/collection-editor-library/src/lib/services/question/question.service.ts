@@ -144,9 +144,9 @@ export class QuestionService {
     return this.publicDataService.get(reqParam);
   }
 
-  getQuestionList(req) {
+  getQuestionList(field, req) {
     const param = {
-      fields: 'editorState'
+      fields: field
     };
     const reqParam = {
       url: this.configService.urlConFig.URLS.QuestionSet.QUESTION_LIST,
