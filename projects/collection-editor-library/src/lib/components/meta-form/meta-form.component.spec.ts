@@ -260,6 +260,8 @@ describe('MetaFormComponent', () => {
 
   it('#showShuffleMessage() should show toaster message', () => {
     const toasterService = TestBed.inject(ToasterService);
+    const helperService = TestBed.inject(HelperService);
+    helperService.shuffleValue = of(false);
     component.previousShuffleValue = false;
     spyOn(toasterService, 'simpleInfo').and.callFake(() => {});
     spyOn(component, 'setShuffleValue').and.callFake(() => {});

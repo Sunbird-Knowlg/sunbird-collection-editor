@@ -58,7 +58,7 @@ describe('EditorService', () => {
   });
 
   it('should be created', () => {
-    const service: EditorService = TestBed.inject(EditorService);
+    const service: EditorService = TestBed.get(EditorService);
     expect(service).toBeTruthy();
   });
 
@@ -290,7 +290,6 @@ describe('EditorService', () => {
     const http = TestBed.inject(HttpClient);
     const toasterService = TestBed.inject(ToasterService);
     spyOn(toasterService, 'success').and.callThrough();
-    spyOn(http, 'get').and.returnValue(of({ test: 'ok' }));
     const downloadConfig = {
       // tslint:disable-next-line:max-line-length
       blobUrl: 'https://sunbirddev.blob.core.windows.net/sunbird-content-dev/content/textbook/toc/do_113312173590659072160_dev-testing-1_1625022971409.csv',
@@ -298,6 +297,7 @@ describe('EditorService', () => {
       fileType: 'csv',
       fileName: 'do_113312173590659072160'
     };
+    spyOn(http, 'get').and.returnValue(of(new Blob([downloadConfig.blobUrl], {})));
     spyOn(service, 'downloadBlobUrlFile').and.callThrough();
     service.downloadBlobUrlFile(downloadConfig);
     expect(http.get).toHaveBeenCalled();
@@ -537,6 +537,7 @@ describe('EditorService', () => {
       return { data: { metadata: { identifier: '0123' } } };
     });
     hierarchyRootNodeData.folder = true;
+    // tslint:disable-next-line:max-line-length
     editorService.getHierarchyObj(hierarchyRootNodeData, 'do_113432866096922624110', 'do_113432866096922624110', 'do_1134468013653114881310');
     editorService.getCollectionHierarchy();
     expect(editorService.getCollectionHierarchy).toHaveBeenCalled();
@@ -548,6 +549,7 @@ describe('EditorService', () => {
       return { data: { metadata: { identifier: '0123' } } };
     });
     hierarchyRootNodeData.folder = false;
+    // tslint:disable-next-line:max-line-length
     editorService.getHierarchyObj(hierarchyRootNodeData, 'do_113432866096922624110', 'do_113432866096922624110', 'do_1134468013653114881310');
     editorService.getCollectionHierarchy();
     expect(editorService.getCollectionHierarchy).toHaveBeenCalled();
@@ -580,6 +582,18 @@ describe('EditorService', () => {
     editorService.fetchOutComeDeclaration(questionSetId).subscribe(data => {
       expect(data.responseCode).toEqual('OK');
     });
+  });
+
+  it('#appendCloudStorageHeaders should set cloud storage headers if exist', () => {
+    const config = editorService.appendCloudStorageHeaders({});
+    expect(config).toEqual({headers: { 'x-ms-blob-type': 'BlockBlob' }});
+  });
+
+  it('#appendCloudStorageHeaders should not set cloud storage headers if not exist', () => {
+    const editorConfigMock: any = {config: editorConfig.config, context: _.omit(editorConfig.context, 'cloudStorage') };
+    editorService.initialize(editorConfigMock);
+    const config = editorService.appendCloudStorageHeaders({});
+    expect(config).toEqual({});
   });
 
 });

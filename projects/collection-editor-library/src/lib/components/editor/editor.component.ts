@@ -159,6 +159,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           // tslint:disable-next-line:max-line-length
           const enableBulkUpload = _.get(response, 'result.objectCategoryDefinition.objectMetadata.config.sourcingSettings.collection.enableBulkUpload');
           this.toolbarConfig.showBulkUploadBtn = enableBulkUpload ? enableBulkUpload : false;
+
+          this.sourcingSettings = _.get(response, 'result.objectCategoryDefinition.objectMetadata.config.sourcingSettings', {});
           this.helperService.channelData$.subscribe(
             (channelResponse) => {
               this.primaryCategoryDef = response;

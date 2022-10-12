@@ -115,6 +115,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   ecmList = [];
   selectedEcm: any;
   groups: any;
+  showQualityParameterPopup: boolean =false;
+  public qualityFormConfig: any;
+  requestChangesPopupAction: string;
   constructor(
     private questionService: QuestionService, public editorService: EditorService, public telemetryService: EditorTelemetryService,
     public playerService: PlayerService, private toasterService: ToasterService, private treeService: TreeService,
@@ -142,7 +145,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.unitId = this.creationContext?.unitIdentifier;
     this.isReadOnlyMode = this.creationContext?.isReadOnlyMode;
     this.toolbarConfig = this.editorService.getToolbarConfig();
-    this.toolbarConfig.showPreview = false;
+    this.toolbarConfig.showPreview = this.editorService.editorMode !== 'edit';
     this.toolbarConfig.add_translation = true;
     this.isChildQuestion  = !_.isUndefined(setChildQuestion) ? setChildQuestion : false;
     this.treeNodeData = this.treeService.getFirstChild();
@@ -153,6 +156,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.initialLeafFormConfig = _.cloneDeep(this.leafFormConfig);
     this.initialize();
     this.framework = _.get(this.editorService.editorConfig, 'context.framework');
+    this.qualityFormConfig = this.editorService.qualityFormConfig;
   }
 
   fetchFrameWorkDetails() {
@@ -207,16 +211,18 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
           this.getBranchingLogic(children);
         }
       }
-      this.questionFormConfig=_.cloneDeep(this.leafFormConfig);
-      const leafFormConfigFields = _.join(_.map(this.leafFormConfig, value => (value.code)), ',');
+      this.questionFormConfig = _.cloneDeep(this.leafFormConfig);
+      let leafFormConfigFields = _.join(_.map(this.leafFormConfig, value => (value.code)), ',');
+      leafFormConfigFields += ',isReviewModificationAllowed';
       if (!_.isUndefined(this.questionId)) {
         this.questionService.readQuestion(this.questionId, leafFormConfigFields)
           .subscribe((res) => {
-            if (_.get(res,'result')) {
-              this.questionMetaData = _.get(res,'result.question');
+            if (_.get(res, 'result')) {
+              this.questionMetaData = _.get(res, 'result.question');
               this.questionPrimaryCategory = _.get(this.questionMetaData,'primaryCategory');
               // tslint:disable-next-line:max-line-length
               this.questionInteractionType = _.get(this.questionMetaData,'interactionTypes') ? _.get(this.questionMetaData,'interactionTypes[0]') : 'default';
+              this.editorService.setIsReviewModificationAllowed(_.get(this.questionMetaData, 'isReviewModificationAllowed', false));
               this.populateFormData();
               if (this.questionInteractionType === 'default') {
                 if (this.questionMetaData.editorState) {
@@ -260,6 +266,12 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
                 }, { templateId, numberOfOptions,maximumOptions });
                 this.editorState.solutions = this.questionMetaData?.editorState?.solutions;
                 this.editorState.interactions = interactions;
+                if (_.has(this.questionMetaData, 'responseDeclaration')) {
+                  this.editorState.responseDeclaration = _.get(this.questionMetaData, 'responseDeclaration');
+                }
+              }
+              if (_.has(this.questionMetaData, 'primaryCategory')) {
+                this.editorState.primaryCategory = _.get(this.questionMetaData, 'primaryCategory');
               }
               this.setQuestionTitle(this.questionId);
               if (!_.isEmpty(this.editorState.solutions)) {
@@ -286,6 +298,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.subMenuConfig();
               }
               this.contentComment = _.get(this.creationContext, 'correctionComments');
+              if (this.showPreview) {
+                this.previewContent();
+              }
               this.showLoader = false;
             }
           }, (err: ServerResponse) => {
@@ -367,12 +382,16 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         this.previewContent();
         break;
       case 'editContent':
-        this.previewFormData(true);
+        this.isReadOnlyMode = false;
         this.showPreview = false;
         this.toolbarConfig.showPreview = false;
+        this.previewFormData(!this.toolbarConfig.showPreview);
         break;
       case 'showReviewcomments':
         this.showReviewModal = !this.showReviewModal;
+        break;
+      case 'saveQualityParameters' :
+        this.showQualityParameterPopup = true;
         break;
       default:
         break;
@@ -391,7 +410,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   submitHandler() {
     this.validateQuestionData();
     this.validateFormFields();
-    if(this.showFormError === false)  this.showSubmitConfirmPopup = true;
+    if (this.showFormError === false) {
+      this.showSubmitConfirmPopup = true;
+    }
   }
 
   saveContent() {
@@ -400,6 +421,14 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       this.saveQuestion();
     } else {
       this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.044'));
+    }
+  }
+
+  onConsentSubmit(event) {
+    this.showSubmitConfirmPopup = false;
+    if (event) {
+      this.questionMetaData = _.assign(this.questionMetaData, {isReviewModificationAllowed: event.editingConsent});
+      this.sendForReview();
     }
   }
 
@@ -425,13 +454,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       }
       callback = callback.bind(this);
       this.upsertQuestion(callback);
-    }
-    else {
+    } else {
       const publishCallback = this.sendQuestionForPublish.bind(this);
       const callback = this.addResourceToQuestionset.bind(this, publishCallback);
       this.upsertQuestion(callback);
-      //this.saveQuestion()
-      //this.sendQuestionForPublish({})
     }
   }
 
@@ -446,7 +472,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   sendQuestionForPublish(event) {
     this.editorService.publishContent(this.questionId, event).subscribe(res => {
-      this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.037'));
+      if (!(this.creationMode === 'sourcingReview' && this.editorService.isReviewModificationAllowed)) {
+        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.037'));
+      }
       this.redirectToChapterList();
     }, err => {
       this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.038'));
@@ -662,10 +690,14 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   saveQuestion() {
     if(_.get(this.creationContext, 'objectType') === 'question') {
       if(this.creationMode === 'edit') {
-        let callback = this.addResourceToQuestionset.bind(this);
+        const callback = this.addResourceToQuestionset.bind(this);
         this.upsertQuestion(callback);
+      } else if (this.creationMode === 'sourcingReview') {
+        const callback = this.sendQuestionForPublish.bind(this);
+        this.upsertQuestion(callback);
+      } else {
+        this.upsertQuestion(undefined);
       }
-      else this.upsertQuestion(undefined);
     }
     else {
       if (_.isUndefined(this.questionId)) {
@@ -798,8 +830,11 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       // metadata.responseDeclaration.response1.correctResponse.outcomes.SCORE = this.maxScore;
     }
     metadata = _.merge(metadata, _.pickBy(this.childFormData, _.identity));
+    if (_.get(this.creationContext, 'objectType') === 'question') {
+      metadata.isReviewModificationAllowed = !!_.get(this.questionMetaData, 'isReviewModificationAllowed');
+    }
     // tslint:disable-next-line:max-line-length
-    return _.omit(metadata, ['question', 'numberOfOptions', 'options', 'allowMultiSelect', 'showEvidence', 'evidenceMimeType', 'showRemarks', 'markAsNotMandatory', 'leftAnchor', 'rightAnchor', 'step', 'numberOnly', 'characterLimit', 'dateFormat', 'autoCapture', 'remarksLimit','maximumOptions']);
+    return _.omit(metadata, ['question', 'numberOfOptions', 'options', 'allowMultiSelect', 'showEvidence', 'evidenceMimeType', 'showRemarks', 'markAsNotMandatory', 'leftAnchor', 'rightAnchor', 'step', 'numberOnly', 'characterLimit', 'dateFormat', 'autoCapture', 'remarksLimit', 'maximumOptions']);
   }
 
   getResponseDeclaration(type) {
@@ -944,9 +979,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   prepareQuestionBody () {
-    const requestBody = this.questionId ?
+    return this.questionId ?
     {
-      question: _.omit(this.getQuestionMetadata(), ['mimeType'])
+      question: _.omit(this.getQuestionMetadata(), ['mimeType', 'creator', 'createdBy', 'organisationId'])
     } :
     {
       question: {
@@ -954,7 +989,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         ...this.getQuestionMetadata()
       }
     };
-    return requestBody;
   }
 
   prepareSourcingUpdateBody (questionIds, comments?) {
@@ -1464,6 +1498,38 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         this.getBranchingLogic(data?.children);
       }
     });
+  }
+
+  onQualityFormSubmit(event) {
+    switch (event.action) {
+      case 'submit':
+        this.saveQualityParameters(event.data, this.sendQuestionForPublish.bind(this, {}));
+        break;
+      case 'requestChange':
+        this.requestChangesPopupAction = null;
+        this.saveQualityParameters(event.data, this.openRequestChangesPopup.bind(this, {}));
+        break;
+      default:
+        this.showQualityParameterPopup = false;
+    }
+  }
+
+  saveQualityParameters(qualityParameters, callback) {
+    const requestObj = {
+      question: {
+        reviewerQualityChecks: qualityParameters
+      }
+    };
+    this.questionService.updateQuestion(this.questionId, requestObj).subscribe(res => {
+        this.showQualityParameterPopup = false;
+        if (callback) {
+          callback();
+        }
+    });
+  }
+
+  openRequestChangesPopup() {
+    this.requestChangesPopupAction = 'rejectQuestion';
   }
 
   getAllQuestionDetails(id?: any){

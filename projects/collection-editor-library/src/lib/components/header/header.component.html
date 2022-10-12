@@ -113,41 +113,44 @@
 
   </div>
   <div class="d-flex flex-ai-center" *ngIf="pageId === 'question' && labelConfigData">
-    <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10" *ngIf="visibility && visibility?.editContent && labelConfigData.showPreview"
-      (click)="buttonEmitter({type: 'editContent'})" libTelemetryInteract
-      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('edit','click','launch', telemetryService.telemetryPageId)">
-      <i *ngIf="labelConfigData.edit_question_btn_icon" class="{{labelConfigData.edit_question_btn_icon}}"></i>
-      {{ labelConfigData.edit_question_btn_label}}
-    </button>
+    <ng-container *ngIf="labelConfigData.showPreview; else editMode">
+      <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10" *ngIf="visibility && visibility?.editContent"
+              (click)="buttonEmitter({type: 'editContent'})" libTelemetryInteract
+              [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('edit','click','launch', telemetryService.telemetryPageId)">
+        <i *ngIf="labelConfigData.edit_question_btn_icon" class="{{labelConfigData.edit_question_btn_icon}}"></i>
+        {{ labelConfigData.edit_question_btn_label}}
+      </button>
+    </ng-container>
+    <ng-template #editMode>
+      <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10" *ngIf="!labelConfigData.showPreview"
+              [ngClass]="!buttonLoaders?.previewButtonLoader ? '': 'sb-btn-loading-spinner sb-btn-outline-disabled'"
+              (click)="buttonEmitter({type: 'previewContent'})" libTelemetryInteract
+              [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('preview','click','launch', telemetryService.telemetryPageId)">
+        <div class="sb-loading-spinner" *ngIf="buttonLoaders?.previewButtonLoader" role="status" aria-hidden="true"></div>
+        <i *ngIf="labelConfigData.preview_question_btn_icon && !buttonLoaders?.previewButtonLoader" class="{{labelConfigData.preview_question_btn_icon}}"></i>
+        {{ labelConfigData.preview_question_btn_label}}
+      </button>
+      <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10"
+              (click)="buttonEmitter({type: 'cancelContent'})" libTelemetryInteract *ngIf="visibility?.saveContent"
+              [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('cancel','click','launch', telemetryService.telemetryPageId)">
+        <i *ngIf="labelConfigData.cancel_question_btn_icon" class="{{labelConfigData.cancel_question_btn_icon}}"></i>
+        {{ labelConfigData.cancel_question_btn_label}}
+      </button>
+      <button class="sb-btn sb-btn-normal sb-btn-primary mr-10" (click)="buttonEmitter({type: 'saveContent'})" *ngIf="visibility?.saveContent"
+              [ngClass]="!buttonLoaders?.saveButtonLoader ? '': 'sb-btn-loading-spinner sb-btn-outline-disabled'"
+              libTelemetryInteract
+              [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('save','click','submit', telemetryService.telemetryPageId)">
+        <div class="sb-loading-spinner" *ngIf="buttonLoaders?.saveButtonLoader" role="status" aria-hidden="true"></div>
+        <i *ngIf="labelConfigData.save_question_btn_icon && !buttonLoaders?.saveButtonLoader" class="{{labelConfigData.save_question_btn_icon}}"></i>
+        {{ labelConfigData.save_question_btn_label}}
+      </button>
+    </ng-template>
 
     <!-- <button *ngIf="labelConfigData.add_translation" class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10"
     (click)="buttonEmitter({type: 'showTranslation'})">
     <i class="plus circle icon"></i>
     {{ labelConfigData.add_translation_label}}
     </button> -->
-
-    <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10" *ngIf="!labelConfigData.showPreview"
-      [ngClass]="!buttonLoaders?.previewButtonLoader ? '': 'sb-btn-loading-spinner sb-btn-outline-disabled'"
-      (click)="buttonEmitter({type: 'previewContent'})" libTelemetryInteract
-      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('preview','click','launch', telemetryService.telemetryPageId)">
-      <div class="sb-loading-spinner" *ngIf="buttonLoaders?.previewButtonLoader" role="status" aria-hidden="true"></div>
-      <i *ngIf="labelConfigData.preview_question_btn_icon && !buttonLoaders?.previewButtonLoader" class="{{labelConfigData.preview_question_btn_icon}}"></i>
-      {{ labelConfigData.preview_question_btn_label}}
-    </button>
-    <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10"
-      (click)="buttonEmitter({type: 'cancelContent'})" libTelemetryInteract *ngIf="visibility?.saveContent"
-      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('cancel','click','launch', telemetryService.telemetryPageId)">
-      <i *ngIf="labelConfigData.cancel_question_btn_icon" class="{{labelConfigData.cancel_question_btn_icon}}"></i>
-      {{ labelConfigData.cancel_question_btn_label}}
-    </button>
-    <button class="sb-btn sb-btn-normal sb-btn-primary mr-10" (click)="buttonEmitter({type: 'saveContent'})" *ngIf="visibility?.saveContent"
-      [ngClass]="!buttonLoaders?.saveButtonLoader ? '': 'sb-btn-loading-spinner sb-btn-outline-disabled'"
-      libTelemetryInteract
-      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('save','click','submit', telemetryService.telemetryPageId)">
-      <div class="sb-loading-spinner" *ngIf="buttonLoaders?.saveButtonLoader" role="status" aria-hidden="true"></div>
-      <i *ngIf="labelConfigData.save_question_btn_icon && !buttonLoaders?.saveButtonLoader" class="{{labelConfigData.save_question_btn_icon}}"></i>
-      {{ labelConfigData.save_question_btn_label}}
-    </button>
     <button *ngIf="visibility && visibility?.submitContent && labelConfigData?.questionContribution && !visibility.hideSubmitForReviewBtn && !visibility.showSourcingStatus" class="sb-btn sb-btn-normal sb-btn-secondary" (click)="buttonEmitter({type:'submitQuestion'})" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('submit','click','submit', telemetryService.telemetryPageId)"
     >
@@ -160,7 +163,7 @@
       {{labelConfigData.reject_collection_btn_label}}
     </button>
 
-    <button *ngIf="visibility && visibility?.publishContent && labelConfigData?.questionContribution" class="sb-btn sb-btn-secondary sb-btn-normal ripple" (click)="buttonEmitter({type:'publishQuestion'})" libTelemetryInteract
+    <button *ngIf="visibility && visibility?.publishContent && labelConfigData?.questionContribution" class="sb-btn sb-btn-secondary sb-btn-normal ripple" (click)="firstLevelPublish()" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('publish','click','submit', telemetryService.telemetryPageId)">
       <i class="{{labelConfigData.publish_collection_btn_icon}}"></i>
       {{labelConfigData.publish_collection_btn_label}}
@@ -222,3 +225,5 @@
 <lib-publish-checklist *ngIf="showPublishCollectionPopup" [actionType]="actionType" [objectType]="objectType" [publishchecklist]="publishchecklist"
  (publishEmitter)="publishEmitter($event)">
 </lib-publish-checklist>
+
+

@@ -29,7 +29,7 @@ import { QuestionComponent } from './components/question/question.component';
 import {SunbirdPdfPlayerModule} from '@project-sunbird/sunbird-pdf-player-v9';
 import { SunbirdEpubPlayerModule } from '@project-sunbird/sunbird-epub-player-v9';
 import { SunbirdVideoPlayerModule } from '@project-sunbird/sunbird-video-player-v9';
-import { QumlLibraryModule } from '@project-sunbird/sunbird-quml-player-v9';
+import { QumlLibraryModule } from '@project-sunbird/sunbird-quml-player';
 import {CarouselModule} from 'ngx-bootstrap/carousel';
 import { TelemetryInteractDirective } from './directives/telemetry-interact/telemetry-interact.directive';
 import { DateFormatPipe } from './directives/date-format/date-format.pipe';
@@ -55,6 +55,9 @@ import { AssignPageNumberComponent } from './components/assign-page-number/assig
 import { PlainTreeComponent } from './components/plain-tree/plain-tree.component';
 import { A11yModule } from '@angular/cdk/a11y';
 import { ProgressStatusComponent } from './components/progress-status/progress-status.component';
+import {TermAndConditionComponent} from './components/term-and-condition/term-and-condition.component';
+
+import { QualityParamsModalComponent } from './components/quality-params-modal/quality-params-modal.component';
 @NgModule({
   declarations: [
     CollectionEditorLibraryComponent,
@@ -95,24 +98,12 @@ import { ProgressStatusComponent } from './components/progress-status/progress-s
     AssignPageNumberComponent,
     PlainTreeComponent,
     ProgressStatusComponent,
+    TermAndConditionComponent,
+    QualityParamsModalComponent
   ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    RouterModule.forChild([]),
-    SuiModule,
-    CommonFormElementsModule,
-    InfiniteScrollModule,
-    HttpClientModule,
-    SunbirdPdfPlayerModule,
-    SunbirdVideoPlayerModule,
-    QumlLibraryModule,
-    CarouselModule,
-    SunbirdEpubPlayerModule,
-    ResourceLibraryModule,
-    A11yModule,
-  ],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule.forChild([]), SuiModule,
+  CommonFormElementsModule, InfiniteScrollModule, HttpClientModule, SunbirdPdfPlayerModule, SunbirdVideoPlayerModule,
+  QumlLibraryModule, CarouselModule, SunbirdEpubPlayerModule, ResourceLibraryModule, A11yModule],
   providers: [
     CacheService,
     { provide: CacheStorageAbstract, useClass: CacheSessionStorage },

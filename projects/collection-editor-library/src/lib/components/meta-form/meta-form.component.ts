@@ -73,7 +73,7 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
 
   showShuffleMessage(event) {
     this.subscription = this.helperService.shuffleValue.subscribe(shuffle => this.previousShuffleValue = shuffle);
-    if (_.isBoolean(event.shuffle) && event.shuffle === true && this.previousShuffleValue === false) {
+    if (_.isBoolean(event.shuffle) && event.shuffle === true && _.isBoolean(this.previousShuffleValue) &&  this.previousShuffleValue === false) {
       this.toasterService.simpleInfo(_.get(this.configService, 'labelConfig.lbl.shuffleOnMessage'));
     }
     this.setShuffleValue(event.shuffle);
