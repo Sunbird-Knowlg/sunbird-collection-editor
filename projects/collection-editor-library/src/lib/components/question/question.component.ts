@@ -1086,6 +1086,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       this.previewFormData(false);
       const questionId = _.isUndefined(this.questionId) ? this.tempQuestionId : this.questionId;
       this.questionSetHierarchy.childNodes = [questionId];
+      this.questionSetHierarchy.showSolutions = 'Yes';
       this.setQumlPlayerData(questionId);
       this.showPreview = true;
       this.toolbarConfig.showPreview = true;
@@ -1101,6 +1102,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     if (questionMetadata.maxScore) {
       this.questionSetHierarchy.maxScore = questionMetadata.maxScore;
     }
+    // const parent = this.treeService.getParent()?.data?.metadata;
+    //   this.questionSetHierarchy.showSolutions = parent?.showSolutions || "No";
+    //   this.questionSetHierarchy.showFeedback = parent?.showFeedback || "No";
     this.editorCursor.setQuestionMap(questionId, questionMetadata);
   }
 
