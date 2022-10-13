@@ -9,7 +9,6 @@ import { EditorService } from '../../services/editor/editor.service';
   selector: 'lib-options',
   templateUrl: './options.component.html',
   styleUrls: ['./options.component.scss'],
-  encapsulation: ViewEncapsulation.None,
 })
 export class OptionsComponent implements OnInit {
   @Input() editorState: any;

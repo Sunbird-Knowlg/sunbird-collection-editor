@@ -365,6 +365,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         break;
       case 'previewContent':
         this.previewContent();
+        this.toolbarConfig.showPreview = false;
         break;
       case 'editContent':
         this.isReadOnlyMode = false;
