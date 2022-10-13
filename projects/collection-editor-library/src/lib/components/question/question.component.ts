@@ -1102,9 +1102,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     if (questionMetadata.maxScore) {
       this.questionSetHierarchy.maxScore = questionMetadata.maxScore;
     }
-    // const parent = this.treeService.getParent()?.data?.metadata;
-    //   this.questionSetHierarchy.showSolutions = parent?.showSolutions || "No";
-    //   this.questionSetHierarchy.showFeedback = parent?.showFeedback || "No";
     this.editorCursor.setQuestionMap(questionId, questionMetadata);
   }
 
