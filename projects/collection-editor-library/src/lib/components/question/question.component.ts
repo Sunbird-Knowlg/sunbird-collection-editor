@@ -1118,6 +1118,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       this.previewFormData(false);
       const questionId = _.isUndefined(this.questionId) ? this.tempQuestionId : this.questionId;
       this.questionSetHierarchy.childNodes = [questionId];
+      this.questionSetHierarchy.showSolutions = 'Yes';
       this.setQumlPlayerData(questionId);
       this.showPreview = true;
       this.toolbarConfig.showPreview = true;
