@@ -56,3 +56,6 @@ body {
         width: 95% !important;
     }  
 }
+.ck-rounded-corners .ck.ck-editor__main>.ck-editor__editable, .ck.ck-editor__main>.ck-editor__editable.ck-rounded-corners{
+  word-break: break-all !important;
+}
