@@ -1100,11 +1100,11 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     const questionMetadata: any = _.cloneDeep(this.getQuestionMetadata());
     questionMetadata.identifier = questionId;
     this.questionSetHierarchy.children = [questionMetadata];
-    if (questionMetadata.maxScore) {
-      this.questionSetHierarchy.maxScore = questionMetadata.maxScore;
-    }
     if (questionMetadata.qType === 'SA') {
       this.questionSetHierarchy = _.omit(this.questionSetHierarchy, 'maxScore');
+    } else if (questionMetadata.maxScore) {
+      // tslint:disable-next-line:no-string-literal
+      this.questionSetHierarchy['maxScore'] = questionMetadata.maxScore;
     }
     this.editorCursor.setQuestionMap(questionId, questionMetadata);
   }
