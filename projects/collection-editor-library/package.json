@@ -1,6 +1,6 @@
 {
   "name": "@project-sunbird/sunbird-collection-editor",
-  "version": "5.2.0-beta.7",
+  "version": "5.2.0-beta.8",
   "dependencies": {
     "tslib": "^2.0.0"
   },

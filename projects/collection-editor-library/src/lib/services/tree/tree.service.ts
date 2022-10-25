@@ -156,7 +156,13 @@ export class TreeService {
   }
 
   getActiveNode() {
-    return this.getTreeObject().getActiveNode();
+    let activeNode;
+    try {
+      activeNode = this.getTreeObject().getActiveNode();
+    } catch {
+      activeNode = {};
+    }
+    return activeNode;
   }
 
   setActiveNode(node?) {
