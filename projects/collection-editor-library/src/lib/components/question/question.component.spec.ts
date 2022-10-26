@@ -828,6 +828,10 @@ describe("QuestionComponent", () => {
     component.toolbarConfig = {
       showPreview: true
     }
+    spyOn(treeService , 'getActiveNode').and.returnValue({
+      parent:{ data:{ metadata:{shuffle: true, showSolutions: 'Yes', showFeedback: 'Yes'}}}
+    });
+    spyOn(component, 'setParentConfig').and.callFake(() => {});
     spyOn(component, 'previewContent').and.callThrough();
     component.previewContent();
     expect(component.validateQuestionData).toHaveBeenCalled();
@@ -845,6 +849,18 @@ describe("QuestionComponent", () => {
     component.previewContent();
     expect(toasterService.error).toHaveBeenCalled();
   });
+
+  it('#setParentConfig should set questionset behaviour', () => {
+    component.questionSetHierarchy = {
+      shuffle: false, showSolutions: 'No', showFeedback: 'No'
+    }
+    spyOn(component, 'setParentConfig').and.callThrough();
+    component.setParentConfig({shuffle: true, showSolutions: 'Yes', showFeedback: 'Yes'});
+    expect(component.questionSetHierarchy.shuffle).toBeTruthy();
+    expect(component.questionSetHierarchy.showSolutions).toEqual('Yes');
+    expect(component.questionSetHierarchy.showFeedback).toEqual('Yes');
+  });
+
   it("Unit test for #setQumlPlayerData", () => {
     // spyOn(component, 'editorCursor.setQuestionMap').and.callFake(()=> {});
     spyOn(component, 'getQuestionMetadata').and.returnValue(mockData.mcqQuestionMetaData.result.question);
