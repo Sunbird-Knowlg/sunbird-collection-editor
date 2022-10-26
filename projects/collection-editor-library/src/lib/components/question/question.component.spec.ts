@@ -850,7 +850,7 @@ describe("QuestionComponent", () => {
     expect(toasterService.error).toHaveBeenCalled();
   });
 
-  it('#setParentConfig should set questionset behaviour', () => {
+  it('#setParentConfig should set questionset behaviour with parentConfig', () => {
     component.questionSetHierarchy = {
       shuffle: false, showSolutions: 'No', showFeedback: 'No'
     }
@@ -859,6 +859,17 @@ describe("QuestionComponent", () => {
     expect(component.questionSetHierarchy.shuffle).toBeTruthy();
     expect(component.questionSetHierarchy.showSolutions).toEqual('Yes');
     expect(component.questionSetHierarchy.showFeedback).toEqual('Yes');
+  });
+
+  it('#setParentConfig should set questionset behaviour without parentConfig', () => {
+    component.questionSetHierarchy = {
+      shuffle: false, showSolutions: 'Yes', showFeedback: 'Yes'
+    }
+    spyOn(component, 'setParentConfig').and.callThrough();
+    component.setParentConfig({});
+    expect(component.questionSetHierarchy.shuffle).toBeTruthy();
+    expect(component.questionSetHierarchy.showSolutions).toEqual('No');
+    expect(component.questionSetHierarchy.showFeedback).toEqual('No');
   });
 
   it("Unit test for #setQumlPlayerData", () => {
