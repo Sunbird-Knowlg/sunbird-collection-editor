@@ -1103,8 +1103,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   setParentConfig(parentConfig) {
-    this.questionSetHierarchy.showSolution = parentConfig?.showSolutions || 'Yes';
+    this.questionSetHierarchy.showSolutions = parentConfig?.showSolutions || 'Yes';
     this.questionSetHierarchy.shuffle = parentConfig?.shuffle || false;
+    this.questionSetHierarchy.showFeedback = parentConfig?.showFeedback || 'No';
   }
 
   setQumlPlayerData(questionId: string) {
