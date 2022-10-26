@@ -1103,8 +1103,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   setParentConfig(parentConfig) {
-    this.questionSetHierarchy.showSolutions = parentConfig?.showSolutions || 'Yes';
-    this.questionSetHierarchy.shuffle = parentConfig?.shuffle || false;
+    this.questionSetHierarchy.showSolutions = parentConfig?.showSolutions || 'No';
+    this.questionSetHierarchy.shuffle = parentConfig?.shuffle || true;
     this.questionSetHierarchy.showFeedback = parentConfig?.showFeedback || 'No';
   }
 
