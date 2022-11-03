@@ -1084,9 +1084,16 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.validateQuestionData();
     if (this.showFormError === false && this.questionMetadataFormStatus === true) {
       this.previewFormData(false);
-      const questionId = _.isUndefined(this.questionId) ? this.tempQuestionId : this.questionId;
+      const activeNode = this.treeService.getActiveNode();
+      let questionId = '';
+      if (_.isUndefined(this.questionId)) {
+        questionId = this.tempQuestionId;
+        this.setParentConfig(activeNode?.data?.metadata);
+      } else {
+        questionId = this.questionId;
+        this.setParentConfig(activeNode?.parent?.data?.metadata);
+      }
       this.questionSetHierarchy.childNodes = [questionId];
-      this.questionSetHierarchy.showSolutions = 'Yes';
       this.setQumlPlayerData(questionId);
       this.showPreview = true;
       this.toolbarConfig.showPreview = true;
@@ -1095,12 +1102,29 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  setParentConfig(parentConfig) {
+    this.questionSetHierarchy.showSolutions = !_.isUndefined(parentConfig?.showSolutions) ?
+    parentConfig.showSolutions : 'No';
+    this.questionSetHierarchy.shuffle = !_.isUndefined(parentConfig?.shuffle) ?
+    parentConfig.shuffle : true;
+    this.questionSetHierarchy.showFeedback = !_.isUndefined(parentConfig?.showFeedback) ?
+    parentConfig.showFeedback : 'No';
+  }
+
   setQumlPlayerData(questionId: string) {
     const questionMetadata: any = _.cloneDeep(this.getQuestionMetadata());
     questionMetadata.identifier = questionId;
     this.questionSetHierarchy.children = [questionMetadata];
-    if (questionMetadata.maxScore) {
-      this.questionSetHierarchy.maxScore = questionMetadata.maxScore;
+    if (this.questionSetHierarchy.shuffle === true) {
+      // tslint:disable-next-line:no-string-literal
+      this.questionSetHierarchy['maxScore'] = 1;
+    } else {
+      if (questionMetadata.qType === 'SA') {
+        this.questionSetHierarchy = _.omit(this.questionSetHierarchy, 'maxScore');
+      } else if (questionMetadata.maxScore) {
+        // tslint:disable-next-line:no-string-literal
+        this.questionSetHierarchy['maxScore'] = this.maxScore;
+      }
     }
     this.editorCursor.setQuestionMap(questionId, questionMetadata);
   }
