@@ -20,13 +20,14 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
   @Output() hasError = new EventEmitter<any>();
   @Output() videoDataOutput = new EventEmitter<any>();
   @Input() videoShow;
-  @Input() setCharacterLimit: any;
+  @Input() setCharacterLimit: number;
   @Input() setImageLimit: any;
   public editorConfig: any;
   public imageUploadLoader = false;
   public editorInstance: any;
   public isEditorFocused: boolean;
   public limitExceeded: boolean;
+  public charactersLeft: number;
   public isAssetBrowserReadOnly = false;
   public characterCount;
   public mediaobj;
@@ -292,6 +293,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
         this.attachEvent(this.editorInstance);
         // this.pasteTracker(this.editorInstance);
         this.characterCount = this.countCharacters(this.editorInstance.model.document);
+        this.charactersLeft = this.getCharactersLeft();
       })
       .catch(error => {
         console.error(error.stack);
@@ -334,6 +336,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
   }
   checkCharacterLimit() {
     this.characterCount = this.countCharacters(this.editorInstance.model.document);
+    this.charactersLeft = this.getCharactersLeft();
     this.limitExceeded = (this.characterCount <= this.setCharacterLimit) ? false : true;
     this.hasError.emit(this.limitExceeded);
   }
@@ -919,5 +922,13 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
         });
       }
     });
+  }
+
+  getCharactersLeft() {
+    if (this.setCharacterLimit) {
+      let charRemaining = this.setCharacterLimit - this.characterCount;
+      return charRemaining > 0 ? charRemaining : 0;
+    }
+    return null;
   }
 }
