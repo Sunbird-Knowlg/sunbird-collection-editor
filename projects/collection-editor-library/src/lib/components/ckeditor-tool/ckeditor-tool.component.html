@@ -7,7 +7,7 @@
   <textarea class="editor" #editor name="question" placeholder=""></textarea>
   <div *ngIf="setCharacterLimit > 0">
     <div class="characterCount">
-      {{configService.labelConfig?.lbl?.charactersLeft}} {{setCharacterLimit - characterCount}}
+      {{configService.labelConfig?.lbl?.charactersLeft}} {{charactersLeft}}
     </div>
   </div>
 </div>

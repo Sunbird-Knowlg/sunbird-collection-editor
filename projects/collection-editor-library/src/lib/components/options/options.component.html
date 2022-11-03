@@ -19,7 +19,7 @@
           [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('delete_option','click','submit',telemetryService.telemetryPageId)">
           <i class="icon close"></i>
         </button>
-        <lib-ckeditor-tool (editorDataOutput)="option.body = $event.body; option.length = $event.length; editorDataHandler($event)"
+        <lib-ckeditor-tool [setCharacterLimit]="setCharacterLimit" (editorDataOutput)="option.body = $event.body; option.length = $event.length; editorDataHandler($event)"
           [editorDataInput]="option.body" class="ckeditor-tool__option mb-10"
           [class.mb-5]="showFormError && ([undefined, ''].includes(option.body) || option.length > setCharacterLimit)">
         </lib-ckeditor-tool>
