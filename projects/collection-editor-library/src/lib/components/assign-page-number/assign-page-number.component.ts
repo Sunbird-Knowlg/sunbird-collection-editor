@@ -28,7 +28,6 @@ export class AssignPageNumberComponent implements OnInit {
     this.toolbarConfig = this.editorService.getToolbarConfig();
     this.toolbarConfig.title = 'Observation Form';
     this.treeData = this.editorService.treeData;
-    this.createSequence(this.treeData);
     this.treeEventListener({
       identifier: _.get(this.treeData[0], 'children[0].id'),
       criteriaName: _.get(this.treeData[0], 'children[0].title')
@@ -48,6 +47,7 @@ export class AssignPageNumberComponent implements OnInit {
   }
 
   treeEventListener(event) {
+    this.createSequence(this.treeData);
     this.criteriaId = event?.identifier;
     const data = this.treeService.getFirstChild();
     const hierarchy = this.editorService.getHierarchyObj(data, '', event?.identifier);
@@ -62,6 +62,7 @@ export class AssignPageNumberComponent implements OnInit {
           page_no: null,
         });
       });
+      console.log(this.questions);
     }, (error: any) => {
       console.log(error);
     });

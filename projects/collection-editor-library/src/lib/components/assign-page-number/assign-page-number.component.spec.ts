@@ -6,6 +6,7 @@ import { mockTreeService } from '../fancy-tree/fancy-tree.component.spec.data';
 import { EditorService } from '../../services/editor/editor.service';
 import { of, throwError } from 'rxjs';
 import { QuestionService } from '../../services/question/question.service';
+import { mockQuestionData, mockTreeData } from './assign-page-number.component.spec.data';
 
 const mockEditorService = {
   getToolbarConfig: () => { },
@@ -18,7 +19,7 @@ describe('AssignPageNumberComponent', () => {
   let fixture: ComponentFixture<AssignPageNumberComponent>;
   // tslint:disable-next-line:one-variable-per-declaration
   let treeService, editorService, questionService;
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       declarations: [AssignPageNumberComponent],
@@ -29,7 +30,7 @@ describe('AssignPageNumberComponent', () => {
       ]
     })
       .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AssignPageNumberComponent);
@@ -45,14 +46,16 @@ describe('AssignPageNumberComponent', () => {
   });
 
   it('#ngOnInit should called', () => {
-    spyOn(component, 'ngOnInit').and.callThrough();
     spyOn(editorService, 'getToolbarConfig').and.returnValue({
       title: 'Observation Form'
     });
-    component.toolbarConfig.title = 'Observation Form';
+    editorService.treeData = mockTreeData;
+    spyOn(component, 'ngOnInit').and.callThrough();
+    spyOn(component, 'treeEventListener').and.callFake(() => {});
     component.ngOnInit();
     expect(component.toolbarConfig).toBeDefined();
     expect(component.toolbarConfig.title).toEqual('Observation Form');
+    expect(component.treeData).toBe(editorService.treeData);
   });
 
   it('#toolbarEventListener() should call #handleRedirectToQuestionSet() if event is backContent', () => {
@@ -99,7 +102,7 @@ describe('AssignPageNumberComponent', () => {
               ],
               question: '<p>Yes or No?</p>'
             },
-            identifier: '1234',
+            identifier: 'do_1234',
             languageCode: [
               'en'
             ]
@@ -130,9 +133,23 @@ describe('AssignPageNumberComponent', () => {
     component.treeEventListener({ event: { identifier: '1234' } });
   });
 
+  it('#onValueChange should call to assign the page numbers', () => {
+    spyOn(component, 'onValueChange').and.callThrough();
+    component.questions = mockQuestionData;
+    const question = mockQuestionData[0];
+    component.onValueChange(1, question);
+    expect(component.onValueChange).toHaveBeenCalledWith(1, question);
+    expect(question.page_no).toBe(1);
+  });
+
+  it('#createSequence should call to create the sequence for pagination', () => {
+    spyOn(component, 'createSequence').and.callThrough();
+    component.treeData = mockTreeData;
+    component.createSequence(component.treeData);
+    expect(component.createSequence).toHaveBeenCalledWith(component.treeData);
+  });
+
 
 });
-function async(arg0: () => void): (done: DoneFn) => Promise<void> {
-  throw new Error('Function not implemented.');
-}
+
 

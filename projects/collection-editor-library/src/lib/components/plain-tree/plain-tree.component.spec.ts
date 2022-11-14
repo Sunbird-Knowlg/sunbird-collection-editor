@@ -45,8 +45,8 @@ describe('PlainTreeComponent', () => {
   it('#getQuestionsList should call', () => {
     spyOn(component, 'getQuestionsList').and.callThrough();
     spyOn(component.treeEmitter, 'emit');
-    component.getQuestionsList('do_123');
-    expect(component.treeEmitter.emit).toHaveBeenCalledWith({identifier : 'do_123'});
+    component.getQuestionsList({id: 'do_123', metadata: {name: 'Classroom'}});
+    expect(component.treeEmitter.emit).toHaveBeenCalledWith({identifier : 'do_123', criteriaName : 'Classroom'});
   });
 
   it('getTreeConfig should call', () => {
