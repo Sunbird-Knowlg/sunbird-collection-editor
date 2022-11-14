@@ -132,3 +132,7 @@ describe('AssignPageNumberComponent', () => {
 
 
 });
+function async(arg0: () => void): (done: DoneFn) => Promise<void> {
+  throw new Error('Function not implemented.');
+}
+

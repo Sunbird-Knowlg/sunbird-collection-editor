@@ -3,6 +3,7 @@ import { PlainTreeComponent } from './plain-tree.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { mockTreedata } from './plain-tree.component.spec.data';
+import { of, throwError } from 'rxjs';
 
 describe('PlainTreeComponent', () => {
   let component: PlainTreeComponent;
@@ -49,7 +50,7 @@ describe('PlainTreeComponent', () => {
   });
 
   it('getTreeConfig should call', () => {
-    spyOn(component, 'buildTreeData').and.returnValue(mockTreedata);
+    // spyOn(component, 'buildTreeData').and.returnValue(of(mockTreedata));
     expect(component.getTreeConfig).toBeDefined();
     component.getTreeConfig();
   });
