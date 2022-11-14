@@ -36,8 +36,17 @@ export class QumlplayerPageComponent implements OnChanges {
       const selectedNode = this.treeService.getNodeById(newQuestionId);
       this.hierarchy.children = _.castArray(_.get(selectedNode, 'data.metadata'));
       this.hierarchy.childNodes = [newQuestionId];
-      if (this.questionMetaData.maxScore) {
-        this.hierarchy.maxScore = this.questionMetaData.maxScore;
+      this.hierarchy.shuffle = selectedNode.parent.data.metadata.shuffle;
+      if (selectedNode.parent.data.metadata.shuffle === true) {
+        // tslint:disable-next-line:no-string-literal
+        this.hierarchy['maxScore'] = 1;
+      } else {
+        if (this.questionMetaData.qType === 'SA') {
+          this.hierarchy = _.omit(this.hierarchy, 'maxScore');
+        } else if (this.questionMetaData.maxScore) {
+          // tslint:disable-next-line:no-string-literal
+          this.hierarchy['maxScore'] = this.questionMetaData.maxScore;
+        }
       }
       const parent = this.treeService.getParent()?.data?.metadata;
       this.hierarchy.showSolutions = parent?.showSolutions || "No";

@@ -306,7 +306,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.unitFormConfig = _.get(formsConfigObj, 'unitMetadata.properties');
     this.rootFormConfig = _.get(formsConfigObj, 'create.properties');
     let formData;
-    if (this.rootFormConfig.length) {
+    if (this.rootFormConfig?.length) {
       formData = this.rootFormConfig[0].fields || [];
     }
     // if (_.get(this.editorConfig, 'config.renderTaxonomy') === true) {

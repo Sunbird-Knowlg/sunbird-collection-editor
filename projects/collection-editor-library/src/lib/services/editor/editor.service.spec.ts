@@ -513,7 +513,7 @@ describe('EditorService', () => {
     expect(maxScore).toEqual(1);
   });
 
-  it('#calculateMaxScore should return calculated Max Score as 0', () => {
+  it('#calculateMaxScore should return calculated Max Score as 1', () => {
     spyOn(editorService.treeService, 'getNodeById').and.returnValue({
       parent: { data: { metadata: { shuffle: true } } },
       data: { metadata: mockData.questionsData[0] }
@@ -528,7 +528,7 @@ describe('EditorService', () => {
       primaryCategory: 'Subjective Question'
     }];
     const maxScore = editorService.calculateMaxScore(questions);
-    expect(maxScore).toEqual(0);
+    expect(maxScore).toEqual(1);
   });
 
   it('#getCollectionHierarchy should call', () => {
