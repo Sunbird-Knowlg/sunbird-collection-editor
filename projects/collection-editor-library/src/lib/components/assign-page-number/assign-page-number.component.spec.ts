@@ -54,6 +54,8 @@ describe('AssignPageNumberComponent', () => {
     spyOn(component, 'treeEventListener').and.callFake(() => {});
     component.ngOnInit();
     expect(component.toolbarConfig).toBeDefined();
+    expect(component.treeEventListener).toHaveBeenCalled();
+    expect(component.createSequence).toHaveBeenCalled();
     expect(component.toolbarConfig.title).toEqual('Observation Form');
     expect(component.treeData).toBe(editorService.treeData);
   });
