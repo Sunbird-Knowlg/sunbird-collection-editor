@@ -32,6 +32,8 @@ export class AssignPageNumberComponent implements OnInit {
       identifier: _.get(this.treeData[0], 'children[0].id'),
       criteriaName: _.get(this.treeData[0], 'children[0].title')
     });
+    this.createSequence(this.treeData);
+
   }
 
   toolbarEventListener(event) {
@@ -47,7 +49,6 @@ export class AssignPageNumberComponent implements OnInit {
   }
 
   treeEventListener(event) {
-    this.createSequence(this.treeData);
     this.criteriaId = event?.identifier;
     const data = this.treeService.getFirstChild();
     const hierarchy = this.editorService.getHierarchyObj(data, '', event?.identifier);
@@ -62,7 +63,6 @@ export class AssignPageNumberComponent implements OnInit {
           page_no: null,
         });
       });
-      console.log(this.questions);
     }, (error: any) => {
       console.log(error);
     });
@@ -70,26 +70,20 @@ export class AssignPageNumberComponent implements OnInit {
 
   onValueChange(event, question) {
     question.page_no = +event;
-    console.log(this.questions);
     const numArray = [];
-    // tslint:disable-next-line:no-shadowed-variable
-    _.forEach(this.questions, (question) => {
-      numArray.push(question.page_no);
+    _.forEach(this.questions, (data: any) => {
+      numArray.push(data.page_no);
     });
     const createArray = new Array(Math.max(...numArray));
     console.log(createArray);
     for (let i = 0; i < createArray.length; i++) {
       createArray[i] = new Array(1);
     }
-    for (const [index, data] of this.questions.entries()){
-      console.log(index);
-    }
     _.forEach(this.rendering_sequence?.sequence, (data) => {
       if (data.value === this.criteriaId) {
         data.pages = createArray;
       }
     });
-    console.log(this.rendering_sequence);
   }
 
   createSequence(data) {
@@ -116,7 +110,6 @@ export class AssignPageNumberComponent implements OnInit {
         index: i
       });
     });
-    console.log(this.rendering_sequence);
   }
 
   renderingSequence() {
