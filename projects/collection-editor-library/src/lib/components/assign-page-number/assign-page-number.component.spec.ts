@@ -51,13 +51,14 @@ describe('AssignPageNumberComponent', () => {
     });
     editorService.treeData = mockTreeData;
     spyOn(component, 'ngOnInit').and.callThrough();
+    spyOn(component, 'createSequence').and.callFake(() => {});
     spyOn(component, 'treeEventListener').and.callFake(() => {});
     component.ngOnInit();
     expect(component.toolbarConfig).toBeDefined();
-    expect(component.treeEventListener).toHaveBeenCalled();
-    expect(component.createSequence).toHaveBeenCalled();
     expect(component.toolbarConfig.title).toEqual('Observation Form');
     expect(component.treeData).toBe(editorService.treeData);
+    expect(component.treeEventListener).toHaveBeenCalled();
+    expect(component.createSequence).toHaveBeenCalled();
   });
 
   it('#toolbarEventListener() should call #handleRedirectToQuestionSet() if event is backContent', () => {
