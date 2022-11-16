@@ -1576,12 +1576,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       this.questionService.getQuestionList('responseDeclaration', questionList)
       .subscribe((response: any) => {
         const result = _.get(response, 'result.questions').map((data) => data?.identifier);
-        Object.keys(branchingLogic).
-          filter((key) => {
-            if (result.includes(key)) {
-              target[key] = branchingLogic[key];
-            }
-          });
       });
     }
   }
@@ -1629,7 +1623,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         },
         hierarchy: this.editorService.getHierarchyObj(this.treeNodeData, QuestionId, identifier)
       };
-      console.log(finalResult);
       this.selectedEcm = '';
       this.saveQuestions(finalResult);
     }
