@@ -134,7 +134,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
-    const { questionSetId, questionId, type, category, config, creationContext, creationMode, setChildQuestion } = this.questionInput;
+    const { questionSetId, questionId, type, category, creationContext, creationMode, setChildQuestion } = this.questionInput;
     console.log(this.questionInput);
     this.questionInteractionType = type;
     this.questionCategory = category;
@@ -149,7 +149,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.toolbarConfig.add_translation = true;
     this.isChildQuestion  = !_.isUndefined(setChildQuestion) ? setChildQuestion : false;
     this.treeNodeData = this.treeService.getFirstChild();
-    // this.getAllQuestionDetails();
     if (_.get(this.creationContext, 'objectType') === 'question') { this.toolbarConfig.questionContribution = true; }
     this.solutionUUID = UUID.UUID();
     this.telemetryService.telemetryPageId = this.pageId;
@@ -825,9 +824,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         // tslint:disable-next-line:max-line-length
         this.maxScore = _.get(this.childFormData, 'allowMultiSelect') === 'No' ? Math.max(...scoreArray) : _.sum(scoreArray) ;
         metadata.responseDeclaration.response1.minScore = Math.min(...scoreArray);
+        metadata.responseDeclaration.response1.maxScore = this.maxScore;
+      } else {
+        metadata.responseDeclaration.response1.correctResponse.outcomes.SCORE = this.maxScore;
       }
-      metadata.responseDeclaration.response1.maxScore = this.maxScore;
-      // metadata.responseDeclaration.response1.correctResponse.outcomes.SCORE = this.maxScore;
     }
     metadata = _.merge(metadata, _.pickBy(this.childFormData, _.identity));
     if (_.get(this.creationContext, 'objectType') === 'question') {
@@ -1568,14 +1568,11 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         questionList.push(_.get(child, 'data.metadata.identifier'));
       }
     });
-    const branchingLogic = _.get(parentData, 'data.metadata.branchingLogic');
     if (id) {questionList.push(id); }
-    const target = {};
 
     if (!_.isEmpty(questionList)){
       this.questionService.getQuestionList('responseDeclaration', questionList)
       .subscribe((response: any) => {
-        const result = _.get(response, 'result.questions').map((data) => data?.identifier);
       });
     }
   }

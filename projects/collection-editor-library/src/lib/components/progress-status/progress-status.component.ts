@@ -28,6 +28,8 @@ export class ProgressStatusComponent implements OnInit {
       case 'backContent':
         this.redirectToQuestionSet();
         break;
+      default :
+        break;
     }
   }
 
