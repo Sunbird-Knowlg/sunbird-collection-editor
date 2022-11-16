@@ -121,9 +121,9 @@ export class PlainTreeComponent implements OnInit, AfterViewInit {
         return true;
       },
       activate: (event, data) => {
-        !_.isUndefined(data.node.data.id)
-          ? this.getQuestionsList(_.get(data, 'node.data'))
-          : '';
+        if (!_.isUndefined(data.node.data.id)){
+          this.getQuestionsList(_.get(data, 'node.data'));
+        }
       },
       renderNode: (event, data) => {
         const node = data.node;

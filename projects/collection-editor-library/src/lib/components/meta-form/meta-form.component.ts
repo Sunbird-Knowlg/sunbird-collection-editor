@@ -326,7 +326,6 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
     }
     const data = _.omit(event, ['allowECM', 'levels', 'setPeriod', 'ecm']);
     if (!_.isEmpty(event?.ecm)) {
-      data.ecm = [];
       event.ecm.map(ecm => {
         if (ecm?.label) {
           data.ecm.push(ecm.label);

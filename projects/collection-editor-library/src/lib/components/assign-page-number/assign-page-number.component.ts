@@ -112,7 +112,4 @@ export class AssignPageNumberComponent implements OnInit {
     });
   }
 
-  renderingSequence() {
-  }
-
 }

@@ -200,7 +200,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.helperService.initialize(channel);
   }
 
-  async getFrameworkDetails(categoryDefinitionData) {
+  getFrameworkDetails(categoryDefinitionData) {
     let orgFWIdentifiers: any;
     let targetFWIdentifiers: any;
     let orgFWType: any;
@@ -209,7 +209,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.framework.default');
     if (_.get(this.editorConfig, 'config.renderTaxonomy') === true) {
       const orgId = _.get(this.editorConfig, 'context.identifier');
-      const data = await this.editorService.fetchOutComeDeclaration(orgId).toPromise();
+      const data: any = this.editorService.fetchOutComeDeclaration(orgId).toPromise();
       if (data?.result) {
         this.outcomeDeclaration = _.get(data?.result, 'questionset.outcomeDeclaration.levels');
         this.editorService.outcomeDeclaration = this.outcomeDeclaration;
@@ -309,33 +309,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.rootFormConfig?.length) {
       formData = this.rootFormConfig[0].fields || [];
     }
-    // if (_.get(this.editorConfig, 'config.renderTaxonomy') === true) {
-    //   this.unitFormConfig[0]?.fields.push(
-    //         {
-    //           code: 'matrix',
-    //           dataType: ['text', 'number', 'number'],
-    //           description: 'Name of the Instruction',
-    //           editable: true,
-    //           disabled: [true , null , null],
-    //           inputType: 'matrix',
-    //           label: 'Define Score range for Each levels',
-    //           name: 'Instruction',
-    //           placeholder: ['label', 'minimum', 'maximum'],
-    //           default: [[null, null, null], [null, null, null], [null, null, null]],
-    //           renderingHints: {
-    //             class: 'sb-g-col-lg-2 required'
-    //           },
-    //           validations: [
-    //             {
-    //               type: 'required',
-    //               message: 'Score range for Each levels is required'
-    //             }
-    //           ],
-    //           required: true,
-    //           visible: true,
-    //          }
-    //   );
-    // }
     formData.forEach((field) => {
       if (field.code === 'evidenceMimeType') {
         evidenceMimeType = field.range;
