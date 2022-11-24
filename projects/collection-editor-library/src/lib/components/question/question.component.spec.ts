@@ -1069,6 +1069,8 @@ describe("QuestionComponent", () => {
     );
     spyOn(component, 'getQuestionMetadata').and.callThrough();
     const metadata = component.getQuestionMetadata();
+    expect(metadata.responseDeclaration.response1.maxScore).toEqual(1);
+    expect(metadata.responseDeclaration.response1.correctResponse.outcomes.SCORE).toEqual(1);
   });
 
   it("#saveQuestion() should call saveQuestion for updateQuestion objectType not a question", () => {

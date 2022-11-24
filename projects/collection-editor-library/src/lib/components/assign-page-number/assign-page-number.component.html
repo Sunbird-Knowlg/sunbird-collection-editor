@@ -12,7 +12,7 @@
           </div>
           <!-- Right Player Sections -->
           <div class="eight wide column bg-white pl-40 mb-10 w-73">
-            <table aria-describedby="pagination">
+            <table>
               <thead>
                 <tr>
                   <th>Questions</th>
@@ -20,10 +20,11 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let question of questions;">
+                <tr *ngFor="let question of questions; let i=index">
                   <td innerHtml="{{question?.question}}"></td>
-                  <td><i class="close icon close-button"></i><input type="number" name="pageNo"
-                      (input)="onValueChange($event.target.value,question)" value="{{question?.pageNo}}"></td>
+                  <td><i *ngIf="question?.page_no > 0" class="close icon close-button" (click)="clearInput($event.target.value, question, i)"></i>
+                    <input type="number" name="pageNo" pattern="^[1-9][0-9]*$" oninput="if(!this.value.match('^[1-9][0-9]*$'))this.value='';"
+                      (input)="onValueChange($event.target.value,question, i)" value="{{question?.page_no}}"  /></td>
                 </tr>
               </tbody>
             </table>

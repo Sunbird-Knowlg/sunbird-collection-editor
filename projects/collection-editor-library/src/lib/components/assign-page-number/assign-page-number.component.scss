@@ -30,13 +30,14 @@ tr {
 
   td {
     input {
-      float: right;
-      width: 14%;
+      // float: right;
+      width: 5rem;
       border-radius: 6px;
       border-width: 1px;
       height: 42px;
       text-align: center;
-      margin-right: 10px;
+      // margin-right: 10px;
+      margin-left: 69%;
     }
   }
 
@@ -50,19 +51,19 @@ h2 {
 }
 
 .close-button {
-  opacity: 0;
+  opacity: 1;
   float: right;
   margin-top: 5px;
-  margin-right: 15px;
+  // margin-right: 30px;
   color: #8b8080;
   font-size: 20px;
 }
 
-.close-button:hover {
-  opacity: 1;
-  color: #8b8080;
-  float: right;
-  margin-top: 5px;
-  margin-right: 15px;
-  font-size: 20px;
-}
+// .close-button:hover {
+//   opacity: 1;
+//   color: #8b8080;
+//   float: right;
+//   margin-top: 5px;
+//   margin-right: 15px;
+//   font-size: 20px;
+// }

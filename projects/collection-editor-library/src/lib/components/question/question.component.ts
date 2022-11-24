@@ -110,11 +110,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   sectionPrimaryCategory: any;
   maxScore = 1;
   public questionFormConfig: any;
-  treeNodeData: any;
-  showEcmList = false;
-  ecmList = [];
-  selectedEcm: any;
-  groups: any;
+  treeNodeData:any;
   showQualityParameterPopup: boolean =false;
   public qualityFormConfig: any;
   requestChangesPopupAction: string;
@@ -134,8 +130,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
-    const { questionSetId, questionId, type, category, creationContext, creationMode, setChildQuestion } = this.questionInput;
-    console.log(this.questionInput);
+    const { questionSetId, questionId, type, category, config, creationContext, creationMode } = this.questionInput;
     this.questionInteractionType = type;
     this.questionCategory = category;
     this.questionId = questionId;
@@ -147,7 +142,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.toolbarConfig = this.editorService.getToolbarConfig();
     this.toolbarConfig.showPreview = this.editorService.editorMode !== 'edit';
     this.toolbarConfig.add_translation = true;
-    this.isChildQuestion  = !_.isUndefined(setChildQuestion) ? setChildQuestion : false;
     this.treeNodeData = this.treeService.getFirstChild();
     if (_.get(this.creationContext, 'objectType') === 'question') { this.toolbarConfig.questionContribution = true; }
     this.solutionUUID = UUID.UUID();
@@ -193,22 +187,14 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.editorService.fetchCollectionHierarchy(this.questionSetId).subscribe((response) => {
       this.questionSetHierarchy = _.get(response, 'result.questionSet');
       const parentId = this.editorService.parentIdentifier ? this.editorService.parentIdentifier : this.questionId;
-      // only for observation,survey,observation with rubrics
-      if (!_.isUndefined(this.editorService.editorConfig.config.renderTaxonomy)) {
-        this.showEcmList = _.get(this.editorService, 'editorConfig.config.renderTaxonomy');
-        const ecmData = _.get(this.treeNodeData, 'data.metadata.ecm');
-        _.forEach(ecmData, (ecm) => {
-          this.ecmList.push({ value: ecm, label: ecm });
-        });
-        if (!_.isUndefined(parentId)) {
-          this.getParentQuestionOptions(parentId);
-          const sectionData = this.treeService.getNodeById(parentId);
-          const children = _.get(response, 'result.questionSet.children');
-          this.sectionPrimaryCategory = _.get(response, 'result.questionSet.primaryCategory');
-          this.selectedSectionId = _.get(sectionData, 'data.metadata.parent');
-          this.setQuestionEcm();
-          this.getBranchingLogic(children);
-        }
+      //only for observation,survey,observation with rubrics 
+      if (!_.isUndefined(parentId) && !_.isUndefined(this.editorService.editorConfig.config.renderTaxonomy)) {
+        this.getParentQuestionOptions(parentId);
+        const sectionData = this.treeService.getNodeById(parentId);
+        const children = _.get(response, 'result.questionSet.children');
+        this.sectionPrimaryCategory = _.get(response, 'result.questionSet.primaryCategory');
+        this.selectedSectionId = _.get(sectionData, 'data.metadata.parent');
+        this.getBranchingLogic(children);
       }
       this.questionFormConfig = _.cloneDeep(this.leafFormConfig);
       let leafFormConfigFields = _.join(_.map(this.leafFormConfig, value => (value.code)), ',');
@@ -815,19 +801,8 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       metadata.organisationId = _.get(this.editorService, 'editorConfig.context.contributionOrgId');
     }
     if (this.questionInteractionType === 'choice') {
-      if (!_.isUndefined(this.editorService.editorConfig.config.renderTaxonomy)){
-        const scoreArray = [];
-        const score = _.get(metadata, 'responseDeclaration.response1.mapping');
-        _.forEach(score, (data) => {
-          scoreArray.push(+_.get(data, 'outcomes.score'));
-        });
-        // tslint:disable-next-line:max-line-length
-        this.maxScore = _.get(this.childFormData, 'allowMultiSelect') === 'No' ? Math.max(...scoreArray) : _.sum(scoreArray) ;
-        metadata.responseDeclaration.response1.minScore = Math.min(...scoreArray);
-        metadata.responseDeclaration.response1.maxScore = this.maxScore;
-      } else {
-        metadata.responseDeclaration.response1.correctResponse.outcomes.SCORE = this.maxScore;
-      }
+      metadata.responseDeclaration.response1.maxScore = this.maxScore;
+      metadata.responseDeclaration.response1.correctResponse.outcomes.SCORE = this.maxScore;
     }
     metadata = _.merge(metadata, _.pickBy(this.childFormData, _.identity));
     if (_.get(this.creationContext, 'objectType') === 'question') {
@@ -896,7 +871,9 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     metaData.interactions = metaData.interactions || {};
 
     metaData.interactions.validation = { required: this.childFormData.markAsNotMandatory === 'Yes' ? 'No' : 'Yes'};
-    metaData.responseDeclaration.response1.cardinality = _.get(this.childFormData, 'allowMultiSelect') === 'Yes' ? 'multiple' : 'single';
+    if (this.childFormData.allowMultiSelect === 'Yes') {
+      metaData.responseDeclaration.response1.cardinality = 'multiple';
+    }
 
     _.forEach(this.subMenus, (el: any) => {
       if (el.id === 'addHint') {
@@ -1031,7 +1008,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   createQuestion() {
-    console.log('CreateQuestion');
     if (this.showOptions) {
       this.buildCondition('create');
     } else {
@@ -1041,26 +1017,23 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 }
 
 
-  saveQuestions(requestBody, type?) {
+  saveQuestions(requestBody, type) {
     this.showHideSpinnerLoader(true);
     this.questionService.updateHierarchyQuestionCreate(requestBody).pipe(
       finalize(() => {
         this.showHideSpinnerLoader(false);
       })).subscribe((response: ServerResponse) => {
-        const result = _.get(response.result.identifiers, this.newQuestionID);
         if (this.showAddSecondaryQuestionCat) {
+          const result = _.get(response.result.identifiers, this.newQuestionID);
           this.editorService.parentIdentifier = result;
         }
-        if (!_.isEmpty(this.selectedEcm)){
-          this.buildEcm(result);
-        } else{
-          if (type === 'create') {
-            this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.007'));
-          } else {
-            this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.008'));
-          }
-          this.redirectToQuestionset();
+
+        if (type === 'create') {
+          this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.007'));
+        } else {
+          this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.008'));
         }
+        this.redirectToQuestionset();
       }, (err: ServerResponse) => {
           const errInfo = {
             errorMsg: 'Question creating failed. Please try again...',
@@ -1071,7 +1044,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   updateQuestion() {
-    console.log('updateQuestion');
     if (this.isChildQuestion) {
       this.buildCondition('update');
     } else {
@@ -1086,17 +1058,13 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       finalize(() => {
         this.showHideSpinnerLoader(false);
       })).subscribe((response: ServerResponse) => {
-        const result = _.get(response.result.identifiers, this.questionId);
         if (this.showAddSecondaryQuestionCat) {
+          const result = _.get(response.result.identifiers, this.questionId);
           this.editorService.parentIdentifier = result;
         }
 
-        if (!_.isEmpty(this.selectedEcm)){
-          this.buildEcm(result);
-        } else{
-          this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.008'));
-          this.redirectToQuestionset();
-        }
+        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.008'));
+        this.redirectToQuestionset();
       }, (err: ServerResponse) => {
         const errInfo = {
           errorMsg: 'Question updating failed. Please try again...',
@@ -1213,6 +1181,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   output(event) { }
 
   onStatusChanges(event) {
+    console.log(event);
     if (_.has(event, 'isValid')) {
       this.questionMetadataFormStatus = event.isValid;
     }
@@ -1307,8 +1276,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
     this.fetchFrameWorkDetails();
-    // tslint:disable-next-line:max-line-length
-    (this.isReadOnlyMode === true && !_.isUndefined(this.editorService?.editorConfig?.config?.renderTaxonomy)) ? this.previewFormData(false) : this.previewFormData(true);
+    (this.isReadOnlyMode ===true && !_.isUndefined(this.editorService?.editorConfig?.config?.renderTaxonomy)) ? this.previewFormData(false) : this.previewFormData(true);
   }
 
   subMenuChange({ index, value }) {
@@ -1357,13 +1325,13 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         value: [],
         enabled: false,
         type: '',
-        show: _.get(this.sourcingSettings, 'showAddSecondaryQuestion') && !this.questionInput.setChildQuestion
+        show: _.get(this.sourcingSettings, 'showAddSecondaryQuestion') && !this.questionInput.setChildQueston
       },
     ];
-    if (!_.get(this.sourcingSettings, 'showAddSecondaryQuestion') && !this.questionInput.setChildQuestion) {
+    if (!_.get(this.sourcingSettings, 'showAddSecondaryQuestion') && !this.questionInput.setChildQueston) {
       this.showOptions = false;
     } else {
-    this.showOptions = (this.questionInput.setChildQuestion === true) ? true : false;
+    this.showOptions = (this.questionInput.setChildQueston === true) ? true : false;
   }
   }
   ngOnDestroy() {
@@ -1509,9 +1477,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   getBranchingLogic(children) {
     _.forEach(children, (data) => {
       if (data.identifier === this.selectedSectionId) {
-        if (!_.isUndefined(data?.groups)){
-          this.groups = _.get(data, 'groups');
-        }
         this.branchingLogic = data?.branchingLogic ? data?.branchingLogic : {};
         if (_.get(data?.branchingLogic, `${this.questionId}.source[0]`)) {
           this.isChildQuestion = true;
@@ -1556,89 +1521,4 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   openRequestChangesPopup() {
     this.requestChangesPopupAction = 'rejectQuestion';
   }
-
-  getAllQuestionDetails(id?: any){
-    const questionList = [];
-    const activeNode = this.treeService.getActiveNode();
-    const identifier = !activeNode.folder ? _.get(activeNode, 'parent.data.id') : _.get(activeNode, 'data.id');
-    const parentData = this.treeService.getNodeById(identifier);
-    const children = _.get(parentData, 'children');
-    _.forEach(children, (child) => {
-      if (_.get(child, 'data.metadata.interactionTypes[0]') === 'choice') {
-        questionList.push(_.get(child, 'data.metadata.identifier'));
-      }
-    });
-    if (id) {questionList.push(id); }
-
-    if (!_.isEmpty(questionList)){
-      this.questionService.getQuestionList('responseDeclaration', questionList)
-      .subscribe((response: any) => {
-      });
-    }
-  }
-
-  optionCombination(numArray?: any) {
-    if (numArray.length === 1) {
-      return [numArray];
-    } else {
-      const tail = this.optionCombination(numArray.slice(1));
-      return tail.reduce(
-        (combos, combo) => { combos.push([numArray[0], ...combo]); return combos; },
-        [[numArray[0]], ...tail]
-      );
-    }
-}
-
-  buildEcm(QuestionId) {
-    if (_.get(this.editorService, 'editorConfig.config.renderTaxonomy')) {
-      const activeNode = this.treeService.getActiveNode();
-      const identifier = !activeNode.folder ? _.get(activeNode, 'parent.data.id') : _.get(activeNode, 'data.id');
-      const sectionData = this.treeService.getNodeById(identifier);
-      const section = _.get(sectionData, 'data.metadata');
-      const ecmData = _.get(sectionData, 'data.metadata.groups') || {};
-      const keys = _.keys(ecmData);
-      const isKey = _.includes(keys, this.selectedEcm);
-      if (isKey){
-        if (!_.includes(ecmData[this.selectedEcm], QuestionId)) {
-          ecmData[this.selectedEcm].push(QuestionId);
-        }
-      }else{
-        ecmData[this.selectedEcm] = [];
-        ecmData[this.selectedEcm].push(QuestionId);
-      }
-      const metadata = {
-        name: section?.name,
-        primaryCategory: section?.primaryCategory,
-        groups: ecmData
-      };
-      this.treeService.updateNode(metadata, identifier, section?.primaryCategory);
-      const finalResult = {
-        nodesModified: {
-          [identifier]: {
-            ...this.treeService.treeCache.nodesModified[identifier]
-          }
-        },
-        hierarchy: this.editorService.getHierarchyObj(this.treeNodeData, QuestionId, identifier)
-      };
-      this.selectedEcm = '';
-      this.saveQuestions(finalResult);
-    }
-  }
-
-  setQuestionEcm() {
-    if (_.get(this.editorService, 'editorConfig.config.renderTaxonomy')) {
-      const sectionData = this.treeService.getNodeById(this.selectedSectionId);
-      const ecmData = _.get(sectionData, 'data.metadata.groups');
-      const keys = _.keys(ecmData);
-      _.forEach(keys, (key) => {
-        _.forEach(ecmData[key], (arr) => {
-          if (arr === this.questionId) {
-            this.selectedEcm = key.toString();
-          }
-        });
-      });
-    }
-  }
-
-
 }
