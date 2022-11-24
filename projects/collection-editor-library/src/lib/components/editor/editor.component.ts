@@ -209,12 +209,13 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.framework.default');
     if (_.get(this.editorConfig, 'config.renderTaxonomy') === true) {
       const orgId = _.get(this.editorConfig, 'context.identifier');
-      const data: any = this.editorService.fetchOutComeDeclaration(orgId).toPromise();
-      if (data?.result) {
-        this.outcomeDeclaration = _.get(data?.result, 'questionset.outcomeDeclaration.levels');
-        this.editorService.outcomeDeclaration = this.outcomeDeclaration;
-        this.levelsArray = Object.keys(this.outcomeDeclaration);
-      }
+      this.editorService.fetchOutComeDeclaration(orgId).toPromise()
+      .then(data => {
+        if (data?.result) {
+          this.outcomeDeclaration = _.get(data?.result, 'questionset.outcomeDeclaration');
+          this.levelsArray = Object.keys(this.outcomeDeclaration);
+        }
+      });
     }
     // tslint:disable-next-line:max-line-length
     this.publishchecklist = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.publishchecklist.properties') || _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.review.properties') || [];
@@ -319,12 +320,6 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       } else if (field.code === 'ecm') {
         ecm = field.options;
         field.options = this.setEcm;
-      } else if (field.code === 'levels') {
-        const defaultValue = [];
-        this.levelsArray.forEach((level) => {
-          defaultValue.push(this.outcomeDeclaration[level].label);
-        });
-        field.default = defaultValue;
       }
     });
     if ( this.objectType === 'questionset' && _.has(formsConfigObj, 'searchConfig')) {
@@ -522,10 +517,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         break;
       case 'pagination':
         this.pageId = 'pagination';
-        break;
-      case 'progressStatus':
-        this.pageId = 'progressStatus'
-        break;
+        break;      
       // case 'showCorrectioncomments':
         // this.contentComment = _.get(this.editorConfig, 'context.correctionComments')
         // this.showReviewModal = !this.showReviewModal;
@@ -1011,7 +1003,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       questionSetId: this.collectionId,
       questionId: questionId,
       type: interactionType,
-      setChildQuestion: mode === 'edit' ? false : this.setChildQuestion,
+      setChildQueston:mode === 'edit' ? false : this.setChildQuestion,
       category: questionCategory,
       creationContext: this.creationContext, // Pass the creation context to the question-component
       creationMode: mode
