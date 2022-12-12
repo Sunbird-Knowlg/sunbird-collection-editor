@@ -146,7 +146,7 @@ export class QuestionService {
 
   getQuestionList(req, field?: any) {
     const param = {
-      fields: field
+      fields: field ? field : ''
     };
     const reqParam = {
       url: this.configService.urlConFig.URLS.QuestionSet.QUESTION_LIST,
