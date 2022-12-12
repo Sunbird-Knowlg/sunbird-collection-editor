@@ -145,12 +145,8 @@ export class QuestionService {
   }
 
   getQuestionList(req, field?: any) {
-    const param = {
-      fields: field ? field : ''
-    };
-    const reqParam = {
+    const reqParam: any = {
       url: this.configService.urlConFig.URLS.QuestionSet.QUESTION_LIST,
-      param: { ...param },
       data: {
         request: {
           search: {
@@ -159,6 +155,9 @@ export class QuestionService {
         }
       }
     };
+    if (field){
+      reqParam.param = { fields: field };
+    }
     return this.publicDataService.post(reqParam);
   }
 
