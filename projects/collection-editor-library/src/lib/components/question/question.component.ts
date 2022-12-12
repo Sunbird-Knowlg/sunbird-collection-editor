@@ -187,7 +187,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.editorService.fetchCollectionHierarchy(this.questionSetId).subscribe((response) => {
       this.questionSetHierarchy = _.get(response, 'result.questionSet');
       const parentId = this.editorService.parentIdentifier ? this.editorService.parentIdentifier : this.questionId;
-      //only for observation,survey,observation with rubrics 
+      //only for observation,survey,observation with rubrics
       if (!_.isUndefined(parentId) && !_.isUndefined(this.editorService.editorConfig.config.renderTaxonomy)) {
         this.getParentQuestionOptions(parentId);
         const sectionData = this.treeService.getNodeById(parentId);
@@ -582,7 +582,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         _.isEmpty(this.editorState?.responseDeclaration?.response1?.mapping) &&
         !_.isUndefined(this.editorService?.editorConfig?.config?.renderTaxonomy) &&
         _.get(data,'allowScoring') === 'Yes') {
-        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.005'));  
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.005'));
         this.showFormError = true;
         return;
       } else {

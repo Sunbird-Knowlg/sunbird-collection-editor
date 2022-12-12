@@ -70,7 +70,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
     this.visibility.submitContent = this.editorService.editorMode === 'edit';
     this.visibility.rejectContent = this.editorService.editorMode === 'review' || this.editorService.editorMode === 'orgreview';
     this.visibility.publishContent = this.editorService.editorMode === 'review' || this.editorService.editorMode === 'orgreview';
-    this.visibility.sendForCorrectionsContent = this.editorService.editorMode === 'sourcingreview';
+    this.visibility.sendForCorrectionsContent = this.editorService.editorMode === 'sourcingreview' && !_.get(this.editorService, 'editorConfig.context.isAddedFromLibrary', false);
     this.visibility.sourcingApproveContent = this.editorService.editorMode === 'sourcingreview';
     this.visibility.sourcingRejectContent = this.editorService.editorMode === 'sourcingreview';
     this.visibility.previewContent = _.get(this.editorService, 'editorConfig.config.objectType') === 'QuestionSet';
