@@ -80,7 +80,7 @@ export class AssignPageNumberComponent implements OnInit {
     for (let i = 0; i < createArray.length; i++) {
       createArray[i] = new Array(1);
     }
-    for (const [index, data] of this.questions.entries()){
+    for (const [index] of this.questions.entries()){
       console.log(index);
     }
     _.forEach(this.rendering_sequence?.sequence, (data) => {

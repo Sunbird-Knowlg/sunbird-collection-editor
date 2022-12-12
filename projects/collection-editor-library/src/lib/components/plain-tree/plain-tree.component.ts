@@ -26,7 +26,7 @@ export class PlainTreeComponent implements OnInit, AfterViewInit {
 
   constructor(private editorService: EditorService) {}
 
-  ngOnInit() {}
+  ngOnInit(): void {}
 
   ngAfterViewInit() {
     this.renderTree(this.getTreeConfig());
