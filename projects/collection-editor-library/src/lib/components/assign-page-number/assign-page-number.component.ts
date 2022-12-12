@@ -51,7 +51,7 @@ export class AssignPageNumberComponent implements OnInit {
     this.criteriaId = event?.identifier;
     const data = this.treeService.getFirstChild();
     const hierarchy = this.editorService.getHierarchyObj(data, '', event?.identifier);
-    this.questionService.getQuestionList('editorState', _.get(hierarchy[event?.identifier], 'children'))
+    this.questionService.getQuestionList(_.get(hierarchy[event?.identifier], 'children'), 'editorState')
     .subscribe((response: any) => {
       this.questions = [];
       const questionsArray = _.get(response, 'result.questions');

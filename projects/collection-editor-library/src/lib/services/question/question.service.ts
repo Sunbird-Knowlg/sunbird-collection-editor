@@ -144,7 +144,7 @@ export class QuestionService {
     return this.publicDataService.get(reqParam);
   }
 
-  getQuestionList(field, req) {
+  getQuestionList(req, field?: any) {
     const param = {
       fields: field
     };
