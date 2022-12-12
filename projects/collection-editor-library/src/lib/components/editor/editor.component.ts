@@ -517,7 +517,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         break;
       case 'pagination':
         this.pageId = 'pagination';
-        break;      
+        break;
+      case 'progressStatus':
+        this.pageId = 'progressStatus';
+        break;
       // case 'showCorrectioncomments':
         // this.contentComment = _.get(this.editorConfig, 'context.correctionComments')
         // this.showReviewModal = !this.showReviewModal;

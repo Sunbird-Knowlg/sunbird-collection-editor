@@ -150,7 +150,6 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
             moment.utc(moment.duration(value, 'seconds').asMilliseconds()).format(this.helperService.getTimerFormat(field)) : '';
           }
         }
-        
         if (field.code === 'framework') {
           field.range = this.frameworkService.frameworkValues;
           field.options = this.getFramework;
@@ -209,12 +208,15 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
         if (field.code === 'instructions') {
           field.default = _.get(metaDataFields, 'instructions.default') || '' ;
         }
-        if(field.code === 'setPeriod'){
+        if (field.code === 'setPeriod') {
           field.default = !_.isEmpty(metaDataFields, 'endDate') ? 'Yes' : 'No' ;
         }
+        if (field.code === 'allowECM') {
+          field.default = _.get(metaDataFields, 'recordedBy') !== 'Self' ? 'Yes' : 'No' ;
+        }
 
-        if(field.code === 'instances'){
-          field.default =  !_.isEmpty(metaDataFields, 'instances') ? _.get(metaDataFields,'instances.label') : '' ;
+        if (field.code === 'instances') {
+          field.default =  !_.isEmpty(metaDataFields, 'instances') ? _.get(metaDataFields, 'instances.label') : '' ;
         }
 
         if ((_.isEmpty(field.range) || _.isEmpty(field.terms)) &&

@@ -40,6 +40,8 @@ export class EditorService {
   selectedPrimaryCategory: any;
   leafParentIdentifier: any;
   questionIds = [];
+  outcomeDeclaration: any;
+  treeData: any;
   private _qualityFormConfig: any;
   private _isReviewerQualityCheckEnabled: boolean;
   constructor(public treeService: TreeService, private toasterService: ToasterService,
