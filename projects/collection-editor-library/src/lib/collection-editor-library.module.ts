@@ -50,7 +50,6 @@ import { PlainTreeComponent } from './components/plain-tree/plain-tree.component
 import { A11yModule } from '@angular/cdk/a11y';
 import { ProgressStatusComponent } from './components/progress-status/progress-status.component';
 import {TermAndConditionComponent} from './components/term-and-condition/term-and-condition.component';
-import { QualityParamsModalComponent } from './components/quality-params-modal/quality-params-modal.component';
 @NgModule({
   declarations: [
     CollectionEditorLibraryComponent,
@@ -85,8 +84,7 @@ import { QualityParamsModalComponent } from './components/quality-params-modal/q
     AssignPageNumberComponent,
     PlainTreeComponent,
     ProgressStatusComponent,
-    TermAndConditionComponent,
-    QualityParamsModalComponent
+    TermAndConditionComponent
   ],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule.forChild([]), SuiModule,
   CommonFormElementsModule, InfiniteScrollModule, HttpClientModule, SunbirdPdfPlayerModule, SunbirdVideoPlayerModule,
