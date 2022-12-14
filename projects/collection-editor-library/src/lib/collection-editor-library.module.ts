@@ -44,7 +44,6 @@ import { BulkUploadComponent  } from './components/bulk-upload/bulk-upload.compo
 import { RelationalMetadataComponent } from './components/relational-metadata/relational-metadata.component';
 import { ResourceLibraryModule } from '@project-sunbird/sunbird-resource-library';
 import { AppLoaderComponent } from './components/app-loader/app-loader.component';
-import { PlainTreeComponent } from './components/plain-tree/plain-tree.component';
 import { A11yModule } from '@angular/cdk/a11y';
 import {TermAndConditionComponent} from './components/term-and-condition/term-and-condition.component';
 @NgModule({
@@ -77,7 +76,6 @@ import {TermAndConditionComponent} from './components/term-and-condition/term-an
     PublishChecklistComponent,
     AppLoaderComponent,
     RelationalMetadataComponent,
-    PlainTreeComponent,
     TermAndConditionComponent
   ],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule.forChild([]), SuiModule,
