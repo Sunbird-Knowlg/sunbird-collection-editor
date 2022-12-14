@@ -21,7 +21,6 @@ import { LibraryPlayerComponent } from './components/library-player/library-play
 import { ResourceReorderComponent } from './components/resource-reorder/resource-reorder.component';
 import { SkeletonLoaderComponent } from './components/skeleton-loader/skeleton-loader.component';
 import { QumlplayerPageComponent } from './components/qumlplayer-page/qumlplayer-page.component';
-import { CkeditorToolComponent } from './components/ckeditor-tool/ckeditor-tool.component';
 import {SunbirdPdfPlayerModule} from '@project-sunbird/sunbird-pdf-player-v9';
 import { SunbirdEpubPlayerModule } from '@project-sunbird/sunbird-epub-player-v9';
 import { SunbirdVideoPlayerModule } from '@project-sunbird/sunbird-video-player-v9';
@@ -60,7 +59,6 @@ import {TermAndConditionComponent} from './components/term-and-condition/term-an
     LibraryComponent,
     LibraryFilterComponent,
     LibraryListComponent,
-    CkeditorToolComponent,
     LibraryPlayerComponent,
     ResourceReorderComponent,
     SkeletonLoaderComponent,
