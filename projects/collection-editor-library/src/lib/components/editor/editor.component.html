@@ -150,9 +150,7 @@
   <ng-container *ngSwitchCase="'pagination'">
     <lib-assign-page-number (assignPageEmitter)="assignPageEmitterListener($event)"></lib-assign-page-number>
   </ng-container>
-  <ng-container *ngSwitchCase="'progressStatus'">
-    <lib-progress-status (assignPageEmitter)="assignPageEmitterListener($event)"></lib-progress-status>
-  </ng-container>
+ 
 </ng-container>
 <ng-container *ngIf="addCollaborator">
   <lib-manage-collaborator [addCollaborator]="addCollaborator" [collectionId]="collectionId" (modalDismissEmitter)="toggleCollaboratorModalPoup()"></lib-manage-collaborator>
