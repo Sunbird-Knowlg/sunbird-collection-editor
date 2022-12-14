@@ -147,9 +147,6 @@
     <lib-content-library [libraryInput]="libraryComponentInput" (libraryEmitter)="libraryEventListener($event)">
     </lib-content-library>
   </ng-container>
-  <ng-container *ngSwitchCase="'pagination'">
-    <lib-assign-page-number (assignPageEmitter)="assignPageEmitterListener($event)"></lib-assign-page-number>
-  </ng-container>
  
 </ng-container>
 <ng-container *ngIf="addCollaborator">
