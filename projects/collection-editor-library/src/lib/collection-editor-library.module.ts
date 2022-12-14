@@ -40,7 +40,6 @@ import { DialcodeService } from './services/dialcode/dialcode.service';
 import { QuestionOptionSubMenuComponent } from './components/question-option-sub-menu/question-option-sub-menu.component';
 import { CsvUploadComponent } from './components/csv-upload/csv-upload.component';
 import { ManageCollaboratorComponent } from './components/manage-collaborator/manage-collaborator.component';
-import { SliderComponent } from './components/slider/slider.component';
 import { PublishChecklistComponent } from './components/publish-checklist/publish-checklist.component';
 import { BulkUploadComponent  } from './components/bulk-upload/bulk-upload.component';
 import { RelationalMetadataComponent } from './components/relational-metadata/relational-metadata.component';
@@ -81,7 +80,6 @@ import { QualityParamsModalComponent } from './components/quality-params-modal/q
     ManageCollaboratorComponent,
     PublishChecklistComponent,
     QuestionOptionSubMenuComponent,
-    SliderComponent,
     AppLoaderComponent,
     RelationalMetadataComponent,
     AssignPageNumberComponent,
