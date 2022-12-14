@@ -37,7 +37,6 @@ import { CacheSessionStorage } from 'ng2-cache-service/dist/src/services/storage
 import { QumlPlayerComponent } from './components/quml-player/quml-player.component';
 import { DialcodeComponent } from './components/dialcode/dialcode.component';
 import { DialcodeService } from './services/dialcode/dialcode.service';
-import { QuestionOptionSubMenuComponent } from './components/question-option-sub-menu/question-option-sub-menu.component';
 import { CsvUploadComponent } from './components/csv-upload/csv-upload.component';
 import { ManageCollaboratorComponent } from './components/manage-collaborator/manage-collaborator.component';
 import { PublishChecklistComponent } from './components/publish-checklist/publish-checklist.component';
@@ -78,7 +77,6 @@ import {TermAndConditionComponent} from './components/term-and-condition/term-an
     CsvUploadComponent,
     ManageCollaboratorComponent,
     PublishChecklistComponent,
-    QuestionOptionSubMenuComponent,
     AppLoaderComponent,
     RelationalMetadataComponent,
     AssignPageNumberComponent,
