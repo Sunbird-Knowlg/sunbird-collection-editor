@@ -23,7 +23,6 @@ import { ResourceReorderComponent } from './components/resource-reorder/resource
 import { SkeletonLoaderComponent } from './components/skeleton-loader/skeleton-loader.component';
 import { QumlplayerPageComponent } from './components/qumlplayer-page/qumlplayer-page.component';
 import { CkeditorToolComponent } from './components/ckeditor-tool/ckeditor-tool.component';
-import { QuestionComponent } from './components/question/question.component';
 import {SunbirdPdfPlayerModule} from '@project-sunbird/sunbird-pdf-player-v9';
 import { SunbirdEpubPlayerModule } from '@project-sunbird/sunbird-epub-player-v9';
 import { SunbirdVideoPlayerModule } from '@project-sunbird/sunbird-video-player-v9';
@@ -70,7 +69,6 @@ import { QualityParamsModalComponent } from './components/quality-params-modal/q
     LibraryComponent,
     LibraryFilterComponent,
     LibraryListComponent,
-    QuestionComponent,
     CkeditorToolComponent,
     LibraryPlayerComponent,
     ResourceReorderComponent,
