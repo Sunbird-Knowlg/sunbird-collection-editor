@@ -22,7 +22,6 @@ import { TemplateComponent } from './components/template/template.component';
 import { ResourceReorderComponent } from './components/resource-reorder/resource-reorder.component';
 import { SkeletonLoaderComponent } from './components/skeleton-loader/skeleton-loader.component';
 import { QumlplayerPageComponent } from './components/qumlplayer-page/qumlplayer-page.component';
-import { OptionsComponent } from './components/options/options.component';
 import { CkeditorToolComponent } from './components/ckeditor-tool/ckeditor-tool.component';
 import { QuestionComponent } from './components/question/question.component';
 import {SunbirdPdfPlayerModule} from '@project-sunbird/sunbird-pdf-player-v9';
@@ -72,7 +71,6 @@ import { QualityParamsModalComponent } from './components/quality-params-modal/q
     LibraryFilterComponent,
     LibraryListComponent,
     QuestionComponent,
-    OptionsComponent,
     CkeditorToolComponent,
     LibraryPlayerComponent,
     ResourceReorderComponent,

@@ -53,12 +53,7 @@
               <lib-question-option-sub-menu *ngIf="subMenus?.length" [subMenus]="subMenus"
                 (onChange)="subMenuChange($event)"></lib-question-option-sub-menu>
            
-              <lib-options *ngIf="questionInteractionType === 'choice'"
-                [questionPrimaryCategory]="questionPrimaryCategory"
-                [editorState]="editorState" [showFormError]="showFormError"
-                (editorDataOutput)="editorDataHandler($event)"
-                [sourcingSettings]="sourcingSettings" [mapping]="scoreMapping"
-                [isReadOnlyMode]="isReadOnlyMode"></lib-options>
+             
 
               <lib-slider *ngIf="questionInteractionType === 'slider'" [editorDataInput]="sliderOptions"
                 (onChange)="sliderData($event)"></lib-slider>
