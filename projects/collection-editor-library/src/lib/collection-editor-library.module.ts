@@ -39,7 +39,6 @@ import { DialcodeService } from './services/dialcode/dialcode.service';
 import { CsvUploadComponent } from './components/csv-upload/csv-upload.component';
 import { ManageCollaboratorComponent } from './components/manage-collaborator/manage-collaborator.component';
 import { PublishChecklistComponent } from './components/publish-checklist/publish-checklist.component';
-import { BulkUploadComponent  } from './components/bulk-upload/bulk-upload.component';
 import { RelationalMetadataComponent } from './components/relational-metadata/relational-metadata.component';
 import { ResourceLibraryModule } from '@project-sunbird/sunbird-resource-library';
 import { AppLoaderComponent } from './components/app-loader/app-loader.component';
@@ -68,7 +67,6 @@ import {TermAndConditionComponent} from './components/term-and-condition/term-an
     CollectionIconComponent,
     QumlPlayerComponent,
     DialcodeComponent,
-    BulkUploadComponent,
     CsvUploadComponent,
     ManageCollaboratorComponent,
     PublishChecklistComponent,
