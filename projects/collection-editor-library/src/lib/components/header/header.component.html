@@ -54,7 +54,6 @@
       <em class="{{labelConfigData.submit_collection_btn_icon}}"></em>
       Progress
     </button>
-    <lib-bulk-upload *ngIf="visibility && visibility?.bulkUpload && labelConfigData?.showBulkUploadBtn" class="d-flex flex-ai-center mr-10" (bulkUploadEmitter)="bulkUploadListener($event)" ></lib-bulk-upload>
     <button *ngIf="visibility && visibility?.previewContent  && labelConfigData?.hasChildren && !bulkUploadStatus" class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10"
       [ngClass]="!buttonLoaders?.previewButtonLoader ? '': 'sb-btn-loading-spinner sb-btn-outline-disabled'"
       (click)="buttonEmitter({type: 'previewContent'})" libTelemetryInteract
