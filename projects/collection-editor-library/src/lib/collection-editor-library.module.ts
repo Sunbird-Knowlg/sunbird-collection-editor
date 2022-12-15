@@ -43,7 +43,6 @@ import { RelationalMetadataComponent } from './components/relational-metadata/re
 import { ResourceLibraryModule } from '@project-sunbird/sunbird-resource-library';
 import { AppLoaderComponent } from './components/app-loader/app-loader.component';
 import { A11yModule } from '@angular/cdk/a11y';
-import {TermAndConditionComponent} from './components/term-and-condition/term-and-condition.component';
 @NgModule({
   declarations: [
     CollectionEditorLibraryComponent,
@@ -71,8 +70,7 @@ import {TermAndConditionComponent} from './components/term-and-condition/term-an
     ManageCollaboratorComponent,
     PublishChecklistComponent,
     AppLoaderComponent,
-    RelationalMetadataComponent,
-    TermAndConditionComponent
+    RelationalMetadataComponent
   ],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule.forChild([]), SuiModule,
   CommonFormElementsModule, InfiniteScrollModule, HttpClientModule, SunbirdPdfPlayerModule, SunbirdVideoPlayerModule,
