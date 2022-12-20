@@ -45,7 +45,9 @@
        "delete_btn_label":"Delete",
        "next_btn_label":"Next",
        "remove_btn_label":"Remove",
-       "done_btn_label":"Done"
+       "done_btn_label":"Done",
+       "add_translation_label":"Add Translation",
+       "add_page_numbers_to_questions_btn_label": "Pagination"
     },
     "lbl":{
        "search":"Search",
@@ -121,8 +123,8 @@
        "viewComments":"View Comments",
        "addReviewComments":"Add Review Comments",
        "enterYourComments":"Enter your comments",
-       "publishCollection":"Publish Collection",
-       "confirmPublishCollection":"Are you sure you want to publish this collection?",
+       "publishCollection":"Publish ${objectType}",
+       "confirmPublishCollection":"Are you sure you want to publish this ${objectType}?",
        "fillComments":"Fill comments",
        "searchLibrary":"Search Library",
        "options":"Options",
@@ -133,6 +135,7 @@
        "correctAns":"Correct answer",
        "addOption":"Add option",
        "question":"Question",
+       "pageNumber":"Page No",
        "confirmQuestionNotSaved":"This question will not be saved, are you sure you want to go back to questionset?",
        "video":"Video",
        "textImage":"Text+Image",
@@ -174,15 +177,72 @@
        "collaborators": "Collaborators",
        "addCollaborators": "Add Collaborators",
        "manageCollaborators": "Manage Collaborators",
+       "sliderValue":"Slider Value",
+       "left":"Left",
+       "stepSize":"Step size",
+       "right":"Right",
+       "translation":"Translation",
        "publishchecklistTitle": "Please confirm that ALL the following items are verified (by ticking the check-boxes) before you can publish:",
-       "alreadyContentPresent": "Already present in this folder"
+       "bulkUploadErrorMessage" : "The metadata file has following errors. Please check and upload again",
+       "bulkUploadQuestion": "Bulk Upload Question",
+       "lastUploaded": "Last uploaded",
+       "bulkInProgress": "Bulk upload in progress",
+       "viewDetails": "View Details",
+       "downloadSampleMetadataCsvFileAndCreate": "Download sample metadata CSV file and create your own metadata file using the format",
+       "makeSureYourFile": "Make sure your file",
+       "allColumnsAreAvailableShownFormat": "All columns are available as shown in format.",
+       "hasAllMandatoryColumnsFilledAsMarkedInFormat": "Has all mandatory columns filled, as marked in the format",
+       "hasNoDuplicateUrlsFilepathColumn": "Has no duplicate URLs in the filepath column",
+       "downloadSampleMetadataCsv": "Download sample metadata CSV",
+       "processingDroppedFiles" : "Processing dropped files...",
+       "retry": "retry",
+       "dragAndDrop": "Drag and Drop file",
+       "or" : "or",
+       "selectFile": "Select file",
+       "uploadCSVXlEntries": "Upload csv upto 300 entries",
+       "no": "No",
+       "yes": "Yes",
+       "cancel": "Cancel",
+       "ok": "OK",
+       "validatingCSVFile": "Validating CSV file",
+       "metadataFileValidationFailed": "Metadata file validation failed.",
+       "metadataFollowingError": "The metadata file has following errors. Please check and upload again",
+       "uploadingYourContentFromCSV": "Uploading your question from CSV",
+       "uploadFail" : "Upload failed",
+       "uploadSuccessful" : "Upload successful",
+       "uploadRemaining" : "Upload remaining",
+       "bulkUploadComplete" : "Bulk upload complete!",
+       "contentUploaded" : "Question uploaded",
+       "downloadReport": "Download report",
+       "next": "Next",
+       "back": "Back",
+       "close": "Close",
+       "bulkUploadNoticeLine1": "Uploading in bulk may take some time, click on",
+       "bulkUploadNoticeLine2": "to continue using Vidyadaan.",
+       "bulkUploadNoticeLine3": "Your upload will keep running in the background.",
+       "alreadyContentPresent": "Already present in this folder",
+       "loaderHeading": "Please wait",
+       "loaderMessage": "We are fetching details.",
+       "slidervalue": "Set the minimum and maximum values with which the slider would start and end respectively.",
+       "stepSizeInfo": "The step size would define the gap/jump between two values on the slider.",
+       "minSizeInfo": "The minimum slider value",
+       "maxSizeInfo": "The maximum slider value",
+       "questionsetAddFromLibraryItemLabel": "question",
+       "questionsetAddFromLibraryCollectionLabel": "question set",
+       "marks": "Marks",
+       "shuffleOnMessage": "Each question will carry equal weightage of 1 mark when using Shuffle. To provide different weightage to individual questions please turn off Shuffle.",
+       "editingConsentNote": "I confirm that I am allowing my reviewer to make edits to the content and metadata of the content. I consent my reviewer make changes, if any and publish the contain thereafter.",
+       "acceptBothConsentNote": "Agree to both conditions",
+       "totalScore": "Total Score",
+       "qualityReview": "If the score is less than or equal to 15 please re-evaluate the question and send back for corrections."
       },
     "err":{
        "somethingWentWrong":"Something went wrong",
        "contentNotFoundonOrigin": "The content not found in consumption",
        "resultNotFound": "No Results Found",
        "userNotFound": "No users found",
-       "collaboratorsNotFound": "No collaborators found for this content"
+       "collaboratorsNotFound": "No collaborators found for this content",
+       "searchConfigNotFound": "Search filters configuration not available. Please contact system admin for support."
     },
     "termsAndConditions": {
      "001": "I understand and confirm that all resources and assets created through the content editor or uploaded on the platform shall be available for free and public use without limitations on the platform (web portal, applications and any other end user interface that the platform would enable) and will be licensed under terms & conditions and policy guidelines of the platform. In doing so, the copyright and license of the original author is not infringed."
@@ -222,8 +282,18 @@
          "031": "Cannot create question. reached limit of maximum number of questions allowed.",
          "032": "Cannot add content. reached limit of maximum number of contents allowed.",
          "033": "failed to convert url to blob ",
-         "034": "failed to download {FILE_TYPE} file using blob url "
-      }, 
+         "034": "failed to download {FILE_TYPE} file using blob url ",
+         "035": "Unable to get pre_signed_url and Question bulk upload Failed, Please Try Again",
+         "036": "Unable to upload to Blob and Question bulk upload Failed, Please Try Again",
+         "037": "Unable to accepted question",
+         "038": "Unable to approve content",
+         "039": "Unable to reject content",
+         "040": "Unable to send content back for corrections",
+         "041": "Cannot add question. reached limit of maximum number of questions allowed.",
+         "042": "Cannot create content. reached limit of maximum number of contents allowed.",
+         "043": "Adding question to questionset failed. Please try again.",
+         "044": "Please fill valid question details."
+      },
       "success": {
          "001": "Content is saved",
          "002": "Content is sent for review",
@@ -236,7 +306,12 @@
          "009": "QR code(s) updated successfully",
          "010": "QR code generated.",
          "011": "QR codes downloaded" ,
-         "012": "Collaborators updated successfully" 
+         "012": "Collaborators updated successfully",
+         "013": "Question saved successfully",
+         "037": "Question accepted successfully",
+         "038": "Content is successfully approved",
+         "039": "Content is successfully rejected",
+         "040": "Content sent back for corrections"
       },
       "warning" : {
          "001" : "Errors found in linked QR Codes. Please check and correct.",
@@ -245,5 +320,8 @@
       "info" : {
          "001" : "QR code image generation is in progress. Please try downloading after sometime"
       }
-    }
+    },
+    "categoryLabels": {
+      "Multiselect Multiple Choice Question": "Multiple Choice Question"
+   }
  }

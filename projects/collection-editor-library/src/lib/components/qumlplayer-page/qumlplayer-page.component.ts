@@ -36,6 +36,9 @@ export class QumlplayerPageComponent implements OnChanges {
       const selectedNode = this.treeService.getNodeById(newQuestionId);
       this.hierarchy.children = _.castArray(_.get(selectedNode, 'data.metadata'));
       this.hierarchy.childNodes = [newQuestionId];
+      if (this.questionMetaData.maxScore) {
+        this.hierarchy.maxScore = this.questionMetaData.maxScore;
+      }
       this.prevQuestionId = newQuestionId;
       setTimeout(() => {
         this.showPlayerPreview = true;
@@ -57,4 +60,9 @@ export class QumlplayerPageComponent implements OnChanges {
   editQuestion() {
     this.toolbarEmitter.emit({button : 'editContent'});
   }
+
+  reviewQuestion(){
+    this.toolbarEmitter.emit({button : 'reviewContent'});
+  }
+
 }

@@ -6,7 +6,6 @@ import { ServerResponse } from '../../interfaces/serverResponse';
 import * as _ from 'lodash-es';
 import { UUID } from 'angular2-uuid';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
 import { ConfigService } from '../config/config.service';
 import { EditorService } from '../editor/editor.service';
 @Injectable({
@@ -30,6 +29,29 @@ export class QuestionService {
       }
     };
     return this.publicDataService.get(option);
+  }
+
+  upsertQuestion(questionId, questionBody) {
+    let mode = questionId ? 'UPDATE' : 'CREATE';
+    const req = {
+      url: `${this.configService.urlConFig.URLS[this.editorService.editorConfig.config.objectType][mode]}${mode === 'UPDATE' ? questionId : ''}`,
+      data: {
+        request: questionBody
+      }
+    }
+    return mode === 'UPDATE' ? this.publicDataService.patch(req)
+      : this.publicDataService.post(req);
+  }
+
+  updateQuestion(questionId, requestObj) {
+    const objectType = _.get(this.editorService.editorConfig, 'config.objectType');
+    const req = {
+      url: `${this.configService.urlConFig.URLS[objectType].SYSYTEM_UPDATE}${questionId}`,
+      data: {
+        request: requestObj
+      }
+    };
+    return this.publicDataService.patch(req);
   }
 
   updateHierarchyQuestionCreate(hierarchyBody): Observable<ServerResponse> {
@@ -81,11 +103,11 @@ export class QuestionService {
 
   createMediaAsset(req?: object) {
     const reqParam = {
-      url: _.get(this.configService.urlConFig, 'URLS.CONTENT.CREATE'),
+      url: _.get(this.configService.urlConFig, 'URLS.ASSET.CREATE'),
       data: {
         request: {
-          content: {
-            contentType: 'Asset',
+          asset: {
+            primaryCategory: 'asset',
             language: ['English'],
             code: UUID.UUID(),
           }
@@ -98,7 +120,7 @@ export class QuestionService {
 
   uploadMedia(req, assetId: any) {
     let reqParam = {
-      url: `${this.configService.urlConFig.URLS.CONTENT.UPLOAD}${assetId}`,
+      url: `${this.configService.urlConFig.URLS.ASSET.UPLOAD}${assetId}`,
       data: req.data
     };
     reqParam = req ? _.merge({}, reqParam, req) : reqParam;
@@ -117,9 +139,23 @@ export class QuestionService {
 
   getVideo(videoId) {
     const reqParam = {
-      url: `${this.configService.urlConFig.URLS.CONTENT.READ}${videoId}`
+      url: `${this.configService.urlConFig.URLS.ASSET.READ}${videoId}`
     };
     return this.publicDataService.get(reqParam);
+  }
+
+  getQuestionList(req){
+    const reqParam = {
+      url: this.configService.urlConFig.URLS.QuestionSet.QUESTION_LIST,
+      data: {
+        request: {
+          search: {
+            identifier: req
+          }
+        }
+      }
+    };
+    return this.publicDataService.post(reqParam);
   }
 
 }

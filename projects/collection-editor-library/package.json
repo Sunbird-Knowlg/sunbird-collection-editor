@@ -1,11 +1,15 @@
 {
-  "name": "@project-sunbird/sunbird-collection-editor-v9",
-  "version": "4.5.1",
+  "name": "@project-sunbird/sunbird-collection-editor",
+  "version": "5.1.3",
+  "dependencies": {
+    "tslib": "^2.0.0"
+  },
   "peerDependencies": {
-    "@angular/common": "~9.1.13",
-    "@angular/core": "~9.1.13",
-    "common-form-elements-web-v9": "4.4.6",
+    "@angular/common": "~12.2.16",
+    "@angular/core": "~12.2.16",
+    "common-form-elements-web-v9": "4.7.2",
     "@project-sunbird/ckeditor-build-classic": "4.1.3",
-    "ng2-semantic-ui-v9": "0.0.3"
+    "ng2-semantic-ui-v9": "0.0.3",
+    "@angular/cdk": "11.2.13"
   }
 }

@@ -5,7 +5,7 @@ describe('CourseEditorLibraryService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: CollectionEditorLibraryService = TestBed.get(CollectionEditorLibraryService);
+    const service: CollectionEditorLibraryService = TestBed.inject(CollectionEditorLibraryService);
     expect(service).toBeTruthy();
   });
 });

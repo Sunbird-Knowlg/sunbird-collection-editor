@@ -1,21 +1,47 @@
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 import { OptionsComponent } from './options.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { mockOptionData } from './options.component.spec.data';
+import { mockOptionData, nativeElement, sourcingSettingsMock } from './options.component.spec.data';
 import { ConfigService } from '../../services/config/config.service';
 import { SuiModule } from 'ng2-semantic-ui-v9';
+import { TreeService } from '../../services/tree/tree.service';
+import { treeData } from './../fancy-tree/fancy-tree.component.spec.data';
+import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
+import { EditorService } from "../../services/editor/editor.service";
+
+const mockEditorService = {
+  editorConfig: {
+    config: {
+      renderTaxonomy:true,
+      hierarchy: {
+        level1: {
+          name: "Module",
+          type: "Unit",
+          mimeType: "application/vnd.ekstep.content-collection",
+          contentType: "Course Unit",
+          iconClass: "fa fa-folder-o",
+          children: {},
+        },
+      },
+    },
+  },
+  parentIdentifier: ""
+};
+
 
 describe('OptionsComponent', () => {
   let component: OptionsComponent;
   let fixture: ComponentFixture<OptionsComponent>;
-  beforeEach(async(() => {
+  let treeService,telemetryService;
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule, FormsModule, SuiModule ],
       declarations: [ OptionsComponent, TelemetryInteractDirective ],
-      providers: [ConfigService],
+      providers: [ConfigService,TreeService,EditorTelemetryService,
+        { provide: EditorService, useValue: mockEditorService },],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
     })
     .compileComponents();
@@ -23,7 +49,18 @@ describe('OptionsComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(OptionsComponent);
+    treeService = TestBed.inject(TreeService);
+    telemetryService = TestBed.inject(EditorTelemetryService);
     component = fixture.componentInstance;
+    component.sourcingSettings = sourcingSettingsMock;
+    spyOn(treeService, 'setTreeElement').and.callFake((el) => {
+      treeService.nativeElement = nativeElement;
+    });
+    spyOn(treeService, 'getFirstChild').and.callFake(() => {
+      return { data: { metadata: treeData } };
+    });
+    component.editorState = mockOptionData.editorOptionData;
+
     // fixture.detectChanges();
   });
 
@@ -57,6 +94,7 @@ describe('OptionsComponent', () => {
     spyOn(component.editorDataOutput, 'emit').and.callThrough();
     component.editorState = mockOptionData.editorOptionData;
     component.editorDataHandler();
+    component.questionPrimaryCategory='Multiselect Multiple Choice Question';
     expect(component.prepareMcqBody).toHaveBeenCalledWith(mockOptionData.editorOptionData);
     expect(component.editorDataOutput.emit).toHaveBeenCalled();
   });
@@ -65,19 +103,23 @@ describe('OptionsComponent', () => {
     spyOn(component, 'getResponseDeclaration').and.callThrough();
     spyOn(component, 'getInteractions').and.callThrough();
     const result = component.prepareMcqBody(mockOptionData.editorOptionData);
-    expect(mockOptionData.prepareMcqBody).toEqual(result);
+    // expect(mockOptionData.prepareMcqBody).toEqual(result);
     expect(component.getResponseDeclaration).toHaveBeenCalledWith(mockOptionData.editorOptionData);
     expect(component.getInteractions).toHaveBeenCalledWith(mockOptionData.editorOptionData.options);
   });
 
   it('#getResponseDeclaration() should return expected response declaration', () => {
-    const result = component.getResponseDeclaration(mockOptionData.editorOptionData);
-    expect(mockOptionData.prepareMcqBody.responseDeclaration).toEqual(result);
+    spyOn(component,"getResponseDeclaration").and.callThrough();
+    component.getResponseDeclaration(mockOptionData.editorOptionData);
+    expect(component.getResponseDeclaration).toHaveBeenCalled();
+    // expect(mockOptionData.prepareMcqBody.responseDeclaration).toEqual(result);
   });
 
   it('#getInteractions() should return expected response declaration', () => {
-    const result = component.getInteractions(mockOptionData.editorOptionData.options);
-    expect(mockOptionData.prepareMcqBody.interactions).toEqual(result);
+    spyOn(component,"getInteractions").and.callThrough();
+    component.getInteractions(mockOptionData.editorOptionData.options);
+    expect(component.getInteractions).toHaveBeenCalled();
+    // expect(mockOptionData.prepareMcqBody.interactions).toEqual(result);
   });
 
   it('#setTemplete() should set #templateType to "mcq-vertical-split"  ', () => {
@@ -87,6 +129,33 @@ describe('OptionsComponent', () => {
     component.setTemplete(templateType);
     expect(component.templateType).toEqual(templateType);
     expect(component.editorDataHandler).toHaveBeenCalled();
+  });
+
+  it('#subMenuChange() should set the sub-menu value ', () => {
+    component.subMenus =  mockOptionData.subMenus;
+    spyOn(component, 'subMenuChange').and.callThrough();
+    component.subMenuChange({index:1,value:'test'},1)
+    expect(component.subMenus[0][0].value).toBe('test');
+  })
+
+  it('#subMenuConfig() should set on initialize', () => {
+    spyOn(component,'subMenuConfig').and.callThrough();
+    const options = [
+      {
+        "body": "<p>true</p>"
+      }
+    ];
+    component.subMenuConfig(options);
+    expect(component.subMenuConfig).toHaveBeenCalledWith(options)
+  })
+
+  it('#setScore() should call if score is entered', () => {
+    spyOn(component,'setScore').and.callThrough();
+    const value = "20";
+    const scoreIndex = 1;
+    component.setScore(value,scoreIndex);
+    component.editorDataHandler();
+    expect(component.setScore).toHaveBeenCalled();    
   });
 
 });

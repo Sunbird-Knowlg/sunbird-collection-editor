@@ -2,7 +2,7 @@
   <ng-container *ngSwitchCase="'collection_editor'">
     <div class="add-to-library mb-10">
       <lib-header [pageId]="pageId" [publishchecklist]="publishchecklist"
-      [labelConfigData]="toolbarConfig" [buttonLoaders]="buttonLoaders" (toolbarEmitter)="toolbarEventListener($event)"> </lib-header>
+      [labelConfigData]="toolbarConfig" [buttonLoaders]="buttonLoaders" (toolbarEmitter)="toolbarEventListener($event)" (bulkUploadEmitter)= "hanndleCsvEmitter($event)"> </lib-header>
       <div class="h-100vh sb-bg-white">
         <div class="ui">
           <div class="ui twelve column grid m-0 ">
@@ -13,7 +13,7 @@
               <div suiDropdown class="ui dropdown right top pointing z-index-9"  id="dropdown-menu-list-header">
                   <i class="icon ellipsis vertical h-1" aria-hidden="true"  [ngClass]="{'sb-disable-icon': isStatusReviewMode}" (click)="onClickFolder()"></i>
                   <div class="menu" suiDropdownMenu *ngIf="!isStatusReviewMode">
-                    <button type="button" class="item fs-0-785 bg-none"  
+                    <button type="button" class="item fs-0-785 bg-none"
                     libTelemetryInteract
                     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('open_popup','click',configService.labelConfig?.lbl?.createHierarchyCsv,
                      this.telemetryService.telemetryPageId,{key: 'dialog_id', value: configService.labelConfig?.lbl?.createHierarchyCsv})"
@@ -26,19 +26,19 @@
                   [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('csv_download','click',configService.labelConfig?.lbl?.downloadFoldersInCSV,
                    this.telemetryService.telemetryPageId,{key: 'identifier', value: collectionId})"
                   type="button" class="item fs-0-785 bg-none" (click)="hanndleCsvEmitter({type: 'downloadCsv'})" [disabled]="csvDropDownOptions.isDisableDownloadCsv">
-                      <i class="icon download sb-color-primary" [ngClass]="{'sb-disable-icon': csvDropDownOptions.isDisableDownloadCsv}" aria-hidden="true"></i> 
-                    <span class="text" [ngClass]="{'label-disable': csvDropDownOptions.isDisableDownloadCsv}" > 
+                      <i class="icon download sb-color-primary" [ngClass]="{'sb-disable-icon': csvDropDownOptions.isDisableDownloadCsv}" aria-hidden="true"></i>
+                    <span class="text" [ngClass]="{'label-disable': csvDropDownOptions.isDisableDownloadCsv}" >
                        {{configService.labelConfig?.lbl?.downloadFoldersInCSV}}</span>
                   </button>
                   <div class="ui divider">
                   </div>
-                  <button 
+                  <button
                   libTelemetryInteract
                   [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('open_popup','click',configService.labelConfig?.lbl?.uploadUpdateCSV,
                    this.telemetryService.telemetryPageId,{key: 'dialog_id', value: configService.labelConfig?.lbl?.uploadUpdateCSV})"
                   type="button" class="item fs-0-785 bg-none" (click)="hanndleCsvEmitter({type: 'updateCsv'})" [disabled]="csvDropDownOptions.isDisableUpdateCsv">
-                      <i class="icon upload sb-color-primary" aria-hidden="true" [ngClass]="{'label-disable': csvDropDownOptions.isDisableUpdateCsv}"></i> 
-                    <span class="text" [ngClass]="{'label-disable': csvDropDownOptions.isDisableUpdateCsv}" > 
+                      <i class="icon upload sb-color-primary" aria-hidden="true" [ngClass]="{'label-disable': csvDropDownOptions.isDisableUpdateCsv}"></i>
+                    <span class="text" [ngClass]="{'label-disable': csvDropDownOptions.isDisableUpdateCsv}" >
                       {{configService.labelConfig?.lbl?.uploadUpdateCSV}}
                       </span>
                   </button>
@@ -54,7 +54,7 @@
             </div>
             <!-- Right Player Sections -->
             <div class="eight wide column bg-white pl-40 mb-10 w-73">
-              <ng-container *ngIf="(isCurrentNodeFolder === true || isCurrentNodeRoot === true) && unitFormConfig">
+              <ng-container *ngIf="(isCurrentNodeFolder === true || isCurrentNodeRoot === true) && unitFormConfig && selectedNodeData && rootFormConfig">
                 <lib-meta-form [rootFormConfig]="rootFormConfig" [nodeMetadata]="selectedNodeData" [unitFormConfig]="unitFormConfig"
                 (toolbarEmitter)="toolbarEventListener($event)"></lib-meta-form>
               </ng-container>
@@ -63,6 +63,10 @@
                   <lib-qumlplayer-page *ngIf="isQumlPlayer" [questionMetaData]="selectedNodeData" [questionSetHierarchy]="collectionTreeNodes?.data"
                       (toolbarEmitter)="toolbarEventListener($event)">
                     </lib-qumlplayer-page>
+                  <div *ngIf="relationFormConfig" class="p-2">
+                    <hr>
+                    <lib-relational-metadata [contentMetadata]="selectedNodeData" [formConfig]="relationFormConfig" (statusChanges)="onFormStatusChange($event)"></lib-relational-metadata>
+                  </div>
               </ng-container>
             </div>
           </div>
@@ -101,11 +105,14 @@
               <div class="twelve wide column sb-checkbox-tnc mt-10">
                 <div class="sb-checkbox sb-checkbox-primary font-italic p-0 m-0"><input [(ngModel)]="terms" id="termAndConditions"
                     name="example" type="checkbox">
-                  <label for="termAndConditions" class="fsmall pl-32"><span class="sb-required">*</span><span
-                      class="font-weight-bold mb-4 d-block">"{{configService.labelConfig?.lbl?.iAgreeSubmit}}</span>
+                  <label for="termAndConditions" class="fsmall pl-32">
+                    <div class="d-flex flex-ai-center">
+                      <span class="sb-required">*</span><span
+                        class="font-weight-bold mb-4 d-block">"{{configService.labelConfig?.lbl?.iAgreeSubmit}}</span>
+                    </div>
                     <div class="sb-color-gray-300">{{configService.labelConfig?.lbl?.iconfirmContent}}<a
                         class="sb-color-primary font-weight-bold cursor-pointer" href="https://creativecommons.org/licenses" target="_blank" > {{configService.labelConfig?.lbl?.createCommonFramework}}</a>
-                        {{configService.labelConfig?.lbl?.accordance}} 
+                        {{configService.labelConfig?.lbl?.accordance}}
                      <a class="sb-color-primary font-weight-bold cursor-pointer" href="{{contentPolicyUrl}}" target="_blank" >{{configService.labelConfig?.lbl?.contentPolicy}}</a> {{configService.labelConfig?.lbl?.privacyRights}}"</div>
                   </label>
                 </div>
@@ -126,7 +133,7 @@
             {{configService.labelConfig?.lbl?.questionSetPreview}}
           </div>
           <div class="sb-modal-content">
-            <div class="br-2 b-1-100">
+            <div class="br-2 b-1-100" id="previewPlayerContainer" tabindex="0" cdkTrapFocus>
               <lib-quml-player [questionSetHierarchy]="collectionTreeNodes?.data"></lib-quml-player>
             </div>
           </div>
@@ -136,13 +143,19 @@
       </lib-template>
     </div>
   </ng-container>
+  <ng-container *ngSwitchCase="'question_library'">
+    <lib-library [libraryInput]="questionlibraryInput" (libraryEmitter)="onQuestionLibraryChange($event)"></lib-library>
+  </ng-container>
   <ng-container *ngSwitchCase="'library'">
-    <lib-library [libraryInput]="libraryComponentInput" (libraryEmitter)="libraryEventListener($event)">
-    </lib-library>
+    <lib-content-library [libraryInput]="libraryComponentInput" (libraryEmitter)="libraryEventListener($event)">
+    </lib-content-library>
   </ng-container>
   <ng-container *ngSwitchCase="'question'">
-    <lib-question [questionInput]="questionComponentInput" [leafFormConfig]="leafFormConfig"   (questionEmitter)="questionEventListener($event)">
+    <lib-question *ngIf="leafFormConfig" [questionInput]="questionComponentInput" [leafFormConfig]="leafFormConfig" [sourcingSettings]="sourcingSettings"  (questionEmitter)="questionEventListener($event)" >
     </lib-question>
+  </ng-container>
+  <ng-container *ngSwitchCase="'pagination'">
+    <lib-assign-page-number (assignPageEmitter)="assignPageEmitterListener($event)"></lib-assign-page-number>
   </ng-container>
 </ng-container>
 <ng-container *ngIf="addCollaborator">

@@ -15,6 +15,7 @@ export interface McqData {
 export interface McqConfig {
   templateId?: string;
   numberOfOptions?: number;
+  maximumOptions?:number;
 }
 
 export class McqForm {
@@ -26,7 +27,8 @@ export class McqForm {
   public bloomsLevel;
   public maxScore;
   public numberOfOptions;
-  constructor({question, options, answer, learningOutcome, bloomsLevel, maxScore}: McqData, {templateId, numberOfOptions}: McqConfig) {
+  public maximumOptions;
+  constructor({question, options, answer, learningOutcome, bloomsLevel, maxScore}: McqData, {templateId, numberOfOptions, maximumOptions}: McqConfig) {
     this.question = question;
     this.options = options || [];
     this.templateId = templateId;
@@ -35,6 +37,7 @@ export class McqForm {
     this.bloomsLevel = bloomsLevel;
     this.maxScore = maxScore;
     this.numberOfOptions = numberOfOptions || 2;
+    this.maximumOptions = maximumOptions || 4
     if (!this.options || !this.options.length) {
       _.times(this.numberOfOptions, index => this.options.push(new McqOptions('')));
     }

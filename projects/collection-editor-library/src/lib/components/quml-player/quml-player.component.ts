@@ -1,4 +1,4 @@
-import { Component, Input, OnInit , ViewEncapsulation} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit , Output, ViewEncapsulation} from '@angular/core';
 import * as _ from 'lodash-es';
 import { ConfigService } from '../../services/config/config.service';
 import { PlayerService } from '../../services/player/player.service';
@@ -14,11 +14,16 @@ export class QumlPlayerComponent implements OnInit {
   @Input() questionSetHierarchy: any;
   @Input() isSingleQuestionPreview = false;
   showPreview = false;
+  showViewButton = false;
+  @Output() public toolbarEmitter: EventEmitter<any> = new EventEmitter();
   constructor(private configService: ConfigService, private playerService: PlayerService,
-    private editorService: EditorService ) { }
+    public editorService: EditorService ) { }
 
   ngOnInit() {
     this.initialize();
+    if(!_.isUndefined(this.editorService?.editorConfig?.config?.renderTaxonomy)){
+      this.showViewButton = true
+    }
   }
 
   initialize() {
@@ -35,7 +40,7 @@ export class QumlPlayerComponent implements OnInit {
       let childNodes = this.qumlPlayerConfig.metadata.childNodes;
       childNodes = _.filter(childNodes, (identifier) => !_.endsWith(identifier, '.img'));
       this.qumlPlayerConfig.metadata.childNodes = childNodes;
-      const allQuestions = this.editorService.getContentChildrens();
+      const allQuestions = _.get(this.qumlPlayerConfig, 'config.objectType') === 'Question' ? [] : this.editorService.getContentChildrens();
       this.qumlPlayerConfig.metadata.maxQuestions = this.qumlPlayerConfig.metadata.maxQuestions || allQuestions.length;
       if (this.isSingleQuestionPreview) {
         this.qumlPlayerConfig.context.threshold = 1;
@@ -43,6 +48,7 @@ export class QumlPlayerComponent implements OnInit {
         this.qumlPlayerConfig.metadata.showStartPage = 'No';
         this.qumlPlayerConfig.metadata.showTimer = 'No';
         this.qumlPlayerConfig.metadata.requiresSubmit = 'No';
+        this.qumlPlayerConfig.config.showLegend = false;
       }
     }
     console.log('qumlPlayerConfig:: ', this.qumlPlayerConfig);
@@ -54,6 +60,10 @@ export class QumlPlayerComponent implements OnInit {
 
   getTelemetryEvents(event) {
     console.log('event is for telemetry', JSON.stringify(event));
+  }
+
+  reviewQuestion(){
+    this.toolbarEmitter.emit({});
   }
 
 }

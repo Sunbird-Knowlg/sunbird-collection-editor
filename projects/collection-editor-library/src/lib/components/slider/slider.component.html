@@ -1,0 +1,17 @@
+<div class="slider-align">
+    <label class="fs-0-92 font-weight-bold">{{configService.labelConfig?.lbl?.sliderValue}}<span class="sb-required">*</span><i class="icon info circle ml-8" suiPopup popupDelay="500" popupPlacement="top" popupText={{configService.labelConfig?.lbl?.slidervalue}}></i></label>
+    <div class="form-container flex-container">
+        <div>
+            <label><strong>{{configService.labelConfig?.lbl?.left}}</strong><i class="icon info circle ml-8" suiPopup popupDelay="500" popupPlacement="top" popupText={{configService.labelConfig?.lbl?.minSizeInfo}}></i></label>
+            <input class="textbox" placeholder="Add minimum value" type="number" [(ngModel)]="leftAnchor"  (change)="onValueChange($event,'leftAnchor')" required [disabled]="(editorService.editorMode !== 'edit') ? true : false">
+        </div>
+        <div>
+            <label><strong>{{configService.labelConfig?.lbl?.stepSize}}</strong><i class="icon info circle ml-8" suiPopup popupDelay="500" popupPlacement="top" popupText={{configService.labelConfig?.lbl?.stepSizeInfo}}></i></label>
+            <input class="textbox" placeholder="Add step size" type="number" [(ngModel)]="step"  (change)="onValueChange($event,'step')" required [disabled]="(editorService.editorMode !== 'edit') ? true : false">
+        </div>
+        <div>
+            <label><strong>{{configService.labelConfig?.lbl?.right}}</strong><i class="icon info circle ml-8" suiPopup popupDelay="500" popupPlacement="top" popupText={{configService.labelConfig?.lbl?.maxSizeInfo}}></i></label>
+            <input class="textbox" placeholder="Add maximum size" type="number" [(ngModel)]="rightAnchor"  (change)="onValueChange($event,'rightAnchor')" required [disabled]="(editorService.editorMode !== 'edit') ? true : false">
+        </div>
+    </div>
+</div>

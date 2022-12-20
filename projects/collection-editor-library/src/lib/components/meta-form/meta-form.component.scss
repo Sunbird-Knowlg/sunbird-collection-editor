@@ -43,7 +43,6 @@
   }
 }
 .multi-select-section-app {
-  margin: 0.7rem 0 !important;
   label {
     margin-bottom: 0.3rem !important;
     z-index: inherit;
@@ -112,6 +111,12 @@ label {
   color: #121213e0;
   font-weight: 500;
 }
+
+.multi-select-container .caret-down.disabled + .list-border {
+  cursor: not-allowed;
+  background-color: #fafafa !important;
+}
+
 ​ .multi-select-container {
   .list-border {
     ul {
@@ -141,10 +146,12 @@ label {
     padding: 0 !important;
   }
 }
+/*
 .sb-checkbox {
   padding: 1.5rem 0;
   margin-top: 2rem;
 }
+*/
 sb-icon-dropdown {
   top: 10px !important;
   right: 6px !important;
@@ -167,10 +174,24 @@ sb-icon-dropdown {
       }
     }
   }
+  sb-dynamic-checkbox{
+    label{
+      padding-left: 1.5rem !important;
+      &:after
+      {
+        color:#fff !important;
+        width:1rem!important;
+        height:1rem !important;
+      }
+    }
+  }
 }
-.sb-textbox[disabled="true"]{
-  opacity: 0.3 !important;
+.sb-textbox[disabled="true"], .sb-textarea[disabled="true"], .sb-dropdown-select[disabled],
+.treepicker-parent div[disabled="true"]{
+  opacity: 1 !important;
   font-weight: 500 !important;
+  cursor: not-allowed;
+  background-color: #fafafa !important;
 }
 
 lib-meta-form{
@@ -197,3 +218,22 @@ lib-meta-form{
 .fs-28 { font-size: 1.75rem;  }
 .fs-30 { font-size: 1.875rem;  }
 .fs-36 { font-size: 2.25rem;  }
+
+[data-title]:hover::before {
+  content: attr(data-title);
+  position: absolute;
+  left: 0;
+  top: 20px !important;
+  bottom: initial !important;
+  display: inline-block;
+  padding: 3px 6px;
+  border-radius: 2px;
+  background: #fff;
+  color: #000;
+  font-size: 12px;
+  font-family: sans-serif;
+  white-space: normal !important;
+  border: solid 1px #ccc !important;
+  height: auto !important;
+  font-weight: 600 !important;
+}

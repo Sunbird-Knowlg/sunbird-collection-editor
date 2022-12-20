@@ -1,5 +1,6 @@
+@use "sass:math";
 // TOC or Collection Tree
-$sb-collectionTree-border-radius: ($base-block-space / 2);
+$sb-collectionTree-border-radius: math.div($base-block-space, 2);
 $sb-collectionTree-border: 1px solid $primary-200;
 $sb-collectionTree-padding: ($base-block-space * 2);
 $sb-collectionTree-margin: $base-block-space 0 0 0;
@@ -40,7 +41,7 @@ $sb-fancyTree-inprogress-list-item-icon-color: $primary-color;
 $sb-fancyTree-disabled-list-item-icon-color: $gray-100;
 $sb-fancyTree-list-item-title-padding: 0 ($base-block-space);
 $sb-fancyTree-list-item-title-font-size: $h6-font-size;
-$sb-fancyTree-list-item-title-commingSoonMessage-spacing: 0 ($base-block-space / 2);
+$sb-fancyTree-list-item-title-commingSoonMessage-spacing: 0 math.div($base-block-space, 2);
 
 .sb-collectionTree {
   width: 100%;

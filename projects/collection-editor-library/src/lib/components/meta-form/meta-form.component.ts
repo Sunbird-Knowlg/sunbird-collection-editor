@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
-import { merge, of, Subject } from 'rxjs';
+import { merge, of, Subject, Subscription } from 'rxjs';
 import * as _ from 'lodash-es';
 import { takeUntil, filter, switchMap, map } from 'rxjs/operators';
 import { TreeService } from '../../services/tree/tree.service';
@@ -8,6 +8,7 @@ import { FrameworkService } from '../../services/framework/framework.service';
 import { HelperService } from '../../services/helper/helper.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ConfigService } from '../../services/config/config.service';
+import { ToasterService } from '../../services/toaster/toaster.service';
 import * as moment from 'moment';
 let framworkServiceTemp;
 
@@ -17,7 +18,7 @@ let framworkServiceTemp;
   styleUrls: ['./meta-form.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
+export class MetaFormComponent implements OnChanges, OnDestroy {
   @Input() rootFormConfig: any;
   @Input() unitFormConfig: any;
   @Input() nodeMetadata: any;
@@ -28,23 +29,28 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
   public showAppIcon = false;
   public appIconConfig: any;
   public appIcon: any;
+  public previousShuffleValue: boolean;
+  public subscription: Subscription;
   constructor(private editorService: EditorService, public treeService: TreeService,
               public frameworkService: FrameworkService, private helperService: HelperService,
-              private configService: ConfigService) {
+              private configService: ConfigService, private toasterService: ToasterService) {
                 framworkServiceTemp = frameworkService;
                }
 
   ngOnChanges() {
     this.fetchFrameWorkDetails();
     this.setAppIconData();
-  }
-
-  ngOnInit() {
+    if (_.has(this.nodeMetadata, 'data.metadata.shuffle')) {
+      this.setShuffleValue(this.nodeMetadata.data.metadata.shuffle);
+    }
   }
 
   setAppIconData() {
     const isRootNode = _.get(this.nodeMetadata, 'data.root');
     this.appIconConfig = _.find(_.flatten(_.map(this.rootFormConfig, 'fields')), {code: 'appIcon'});
+    if(_.isUndefined(this.appIconConfig)) {
+      this.appIconConfig = _.find(this.rootFormConfig, {code: 'appIcon'});
+    }
     if (!_.isUndefined(this.appIconConfig) && isRootNode === true) {
       this.showAppIcon = true;
     } else {
@@ -57,6 +63,20 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
       this.appIconConfig = {...this.appIconConfig , ... {isAppIconEditable: true}};
     }
     const ifEditable = this.ifFieldIsEditable('appIcon');
+  }
+
+  setShuffleValue(value) {
+    if (_.isBoolean(value)) {
+      this.helperService.setShuffleValue(value);
+    }
+  }
+
+  showShuffleMessage(event) {
+    this.subscription = this.helperService.shuffleValue.subscribe(shuffle => this.previousShuffleValue = shuffle);
+    if (_.isBoolean(event.shuffle) && event.shuffle === true && _.isBoolean(this.previousShuffleValue) &&  this.previousShuffleValue === false) {
+      this.toasterService.simpleInfo(_.get(this.configService, 'labelConfig.lbl.shuffleOnMessage'));
+    }
+    this.setShuffleValue(event.shuffle);
   }
 
   fetchFrameWorkDetails() {
@@ -84,11 +104,6 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
           filter(data => _.get(data, `frameworkdata.${_.first(this.frameworkService.targetFrameworkIds)}`))
         ).subscribe((frameworkDetails: any) => {
           if (frameworkDetails && !frameworkDetails.err) {
-            // const frameworkData = frameworkDetails.frameworkdata[this.frameworkService.targetFrameworkIds].categories;
-            // this.frameworkDetails.frameworkData = frameworkData;
-            // this.frameworkDetails.topicList = _.get(_.find(frameworkData, {
-            //   code: 'topic'
-            // }), 'terms');
             this.frameworkDetails.targetFrameworks = _.filter(frameworkDetails.frameworkdata, (value, key) => {
               return _.includes(this.frameworkService.targetFrameworkIds, key);
             });
@@ -101,13 +116,12 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
 
   attachDefaultValues() {
     const metaDataFields = _.get(this.nodeMetadata, 'data.metadata');
-    // if (_.isEmpty(metaDataFields)) { return; }
-    const isRoot = _.get(metaDataFields, 'data.root');
+    const isRootNode = _.get(this.nodeMetadata, 'data.root');
     const categoryMasterList = this.frameworkDetails.frameworkData ||
-    !isRoot && this.frameworkService.selectedOrganisationFramework &&
+    !isRootNode && this.frameworkService.selectedOrganisationFramework &&
      _.get(this.frameworkService.selectedOrganisationFramework, 'framework.categories');
     // tslint:disable-next-line:max-line-length
-    let formConfig: any = (_.get(metaDataFields, 'visibility') === 'Default') ? _.cloneDeep(this.rootFormConfig) : _.cloneDeep(this.unitFormConfig);
+    let formConfig: any = (_.get(metaDataFields, 'visibility') === 'Default') || isRootNode ? _.cloneDeep(this.rootFormConfig) : _.cloneDeep(this.unitFormConfig);
     formConfig = formConfig && _.has(_.first(formConfig), 'fields') ? formConfig : [{name: '', fields: formConfig}];
     if (!_.isEmpty(this.frameworkDetails.targetFrameworks)) {
       _.forEach(this.frameworkDetails.targetFrameworks, (framework) => {
@@ -136,14 +150,7 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
             moment.utc(moment.duration(value, 'seconds').asMilliseconds()).format(this.helperService.getTimerFormat(field)) : '';
           }
         }
-
-        // const frameworkCategory = _.find(categoryMasterList, category => {
-        //   return (category.code === field.sourceCategory || category.code === field.code) && !_.includes(field.code, 'target');
-        // // });
-        // if (!_.isEmpty(frameworkCategory)) {
-        //   field.terms = frameworkCategory.terms;
-        // }
-
+        
         if (field.code === 'framework') {
           field.range = this.frameworkService.frameworkValues;
           field.options = this.getFramework;
@@ -202,6 +209,13 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
         if (field.code === 'instructions') {
           field.default = _.get(metaDataFields, 'instructions.default') || '' ;
         }
+        if(field.code === 'setPeriod'){
+          field.default = !_.isEmpty(metaDataFields, 'endDate') ? 'Yes' : 'No' ;
+        }
+
+        if(field.code === 'instances'){
+          field.default =  !_.isEmpty(metaDataFields, 'instances') ? _.get(metaDataFields,'instances.label') : '' ;
+        }
 
         if ((_.isEmpty(field.range) || _.isEmpty(field.terms)) &&
           !field.editable && !_.isEmpty(field.default)) {
@@ -231,21 +245,21 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
           });
         }
 
-        const ifEditable = this.ifFieldIsEditable(field.code); 
+        const ifEditable = this.ifFieldIsEditable(field.code, field.editable);
         _.set(field, 'editable', ifEditable);
 
       });
     });
 
     this.formFieldProperties = _.cloneDeep(formConfig);
-    console.log(this.formFieldProperties);
   }
   isReviewMode() {
     return  _.includes([ 'review', 'read', 'sourcingreview', 'orgreview' ], this.editorService.editorMode);
   }
-  ifFieldIsEditable(fieldCode) {
+  ifFieldIsEditable(fieldCode, primaryCategoryEditableConfig?) {
     const ediorMode = this.editorService.editorMode;
     if (!this.isReviewMode()) {
+      if(primaryCategoryEditableConfig === false) return false;
       return true;
     }
     const editableFields = _.get(this.editorService.editorConfig.config, 'editableFields');
@@ -258,15 +272,6 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
 
   onStatusChanges(event) {
     this.toolbarEmitter.emit({ button: 'onFormStatusChange', event });
-  }
-
-  valueChanges(event: any) {
-    console.log(event);
-    if (!_.isEmpty(this.appIcon) && this.showAppIcon) {
-      event.appIcon = this.appIcon;
-    }
-    this.toolbarEmitter.emit({ button: 'onFormValueChange', event });
-    this.treeService.updateNode(event);
   }
 
   appIconDataHandler(event) {
@@ -313,8 +318,41 @@ export class MetaFormComponent implements OnInit, OnChanges, OnDestroy {
     return response;
   }
 
+  valueChanges(event: any) {
+    if (_.has(event, 'shuffle')) {
+      this.showShuffleMessage(event);
+    }
+    const data = _.omit(event, ['allowECM', 'levels', 'setPeriod']);
+    if (!_.isEmpty(event?.levels)) {
+      data.outcomeDeclaration = {
+        levels: this.createLeavels(event.levels)
+      };
+    }
+    // tslint:disable-next-line:no-unused-expression
+    event?.instance ? data.instances = { label : event?.instances } : '';
+    if (!_.isEmpty(this.appIcon) && this.showAppIcon) {
+      data.appIcon = this.appIcon;
+    }
+    this.toolbarEmitter.emit({ button: 'onFormValueChange', data });
+    this.treeService.updateNode(data);
+  }
+
+  createLeavels(levels) {
+    const obj = {};
+    _.forEach(levels, (el, index) => {
+      obj[`L${index + 1}`] = {
+         label : el
+       };
+    });
+    return obj;
+  }
+
+
   ngOnDestroy() {
     this.onComponentDestroy$.next();
     this.onComponentDestroy$.complete();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 }

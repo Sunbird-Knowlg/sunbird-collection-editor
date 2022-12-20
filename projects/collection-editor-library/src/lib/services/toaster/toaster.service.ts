@@ -96,4 +96,17 @@ export class ToasterService {
        ...this.options
     });
   }
+
+  /**
+   * Simple info message
+   * @memberOf Services.toasterService
+   * @param string  message - Simple info message
+   */
+     simpleInfo(title: string, position?, message?: string) {
+      this.iziToast.info({
+        title,
+        message: message ? message : '',
+        position: position ? position : 'topCenter'
+      });
+    }
 }

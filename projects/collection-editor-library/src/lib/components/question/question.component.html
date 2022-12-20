@@ -1,5 +1,8 @@
+<div *ngIf='showLoader' class="ui container">
+  <app-loader></app-loader>
+</div>
 <div class="sb-editor-container mb-0" *ngIf="!showLoader">
-  <lib-header [labelConfigData]="toolbarConfig" [buttonLoaders]="buttonLoaders" [pageId]="pageId" (toolbarEmitter)="toolbarEventListener($event)">
+  <lib-header [labelConfigData]="toolbarConfig" [buttonLoaders]="buttonLoaders" [pageId]="pageId" [requestChange] = "requestChangesPopupAction" (toolbarEmitter)="toolbarEventListener($event)">
   </lib-header>
 
   <div class="sb-bg-white py-20">
@@ -7,105 +10,173 @@
       <div class="ui twelve column wide h-100">
         <div class="px-16">
           <div *ngIf="showPreview" class="br-2 b-1-100">
-            <lib-quml-player [questionSetHierarchy]="questionSetHierarchy" [isSingleQuestionPreview]="true" ></lib-quml-player>
+            <lib-quml-player [questionSetHierarchy]="questionSetHierarchy" [isSingleQuestionPreview]="true"></lib-quml-player>
           </div>
-          <div class="py-20 px-32 sb-bg-color-primary-0 br-4 b-1-100" *ngIf="!showPreview">
+          <div style="display: flex;align-items: flex-end;justify-content: flex-end;"
+            *ngIf="showOptions || isChildQuestion ">
+            <div class="options">
+              <sui-select [(ngModel)]="condition" valueField="value" class="selection multiselect"
+              labelField="label" [placeholder]="'Select Condition'" #select [isDisabled]="isReadOnlyMode">
+                <sui-select-option [value]="{label:'Equal to',value:'eq'}"></sui-select-option>
+                <sui-select-option [value]="{label:'Not equal',value:'ne'}"></sui-select-option>
+              </sui-select>
+
+              <sui-multi-select class="selection multiselect" [(ngModel)]="selectedOptions" valueField="value"
+                labelField="label" [isSearchable]="false" #multiSelect [placeholder]="'Select options'" [isDisabled]="isReadOnlyMode" >
+                <sui-select-option *ngFor="let option of options" [value]="option">
+                </sui-select-option>
+              </sui-multi-select>
+            </div>
+          </div>
+          <div class="py-20 px-32 br-4 b-1-100" *ngIf="!showPreview" [ngClass]="{'sb-bg-color-primary-0': !isReadOnlyMode}">
             <div class="sb-field-group">
-              <label class="fs-0-92 font-weight-bold">{{configService.labelConfig?.lbl?.question}}<span class="sb-required">*</span></label>
+              <label *ngIf="!isReadOnlyMode" class="fs-0-92 font-weight-bold">{{configService.labelConfig?.lbl?.question}}<span class="sb-required">*</span></label>
               <div class="sb-field">
-                <div class="ckeditor-tool__question mb-5">
+                <div [ngClass]="{'ckeditor-tool__question': !isReadOnlyMode, 'ckeditor-tool__question-readonly': isReadOnlyMode, 'mb-5': true}">
                   <lib-ckeditor-tool
+                    *ngIf="!isReadOnlyMode"
                     (editorDataOutput)="editorDataHandler($event, 'question')"
                     [editorDataInput]="editorState.question"
                     (videoDataOutput)="videoDataOutput($event)" [videoShow]="videoShow"></lib-ckeditor-tool>
+                  <ng-container *ngIf="isReadOnlyMode">
+                    <label class="px-16 py-8 fs-0-92 mb-0 ckeditor-tool__label width-100">{{configService.labelConfig?.lbl?.question}}</label>
+                    <div class="ckeditor-tool__solution__body">
+                      <p class="fs-0-785 p-16" [innerHTML]="editorState.question | sanitizeHtml"></p>
+                    </div>
+                  </ng-container>
                 </div>
                 <label *ngIf="
                     showFormError &&
                     [undefined, ''].includes(editorState.question)
                   " class="sb-color-error fs-0-785">{{configService.labelConfig?.lbl?.questionRequired}}</label>
               </div>
+              <lib-question-option-sub-menu *ngIf="subMenus?.length" [subMenus]="subMenus"
+                (onChange)="subMenuChange($event)"></lib-question-option-sub-menu>
 
               <lib-answer *ngIf="questionInteractionType === 'default'"
                 [editorState]="editorState" [showFormError]="showFormError"
-                (editorDataOutput)="editorDataHandler($event)"></lib-answer>
+                (editorDataOutput)="editorDataHandler($event)" [isReadOnlyMode]="isReadOnlyMode"></lib-answer>
 
               <lib-options *ngIf="questionInteractionType === 'choice'"
+                [questionPrimaryCategory]="questionPrimaryCategory"
                 [editorState]="editorState" [showFormError]="showFormError"
-                (editorDataOutput)="editorDataHandler($event)"></lib-options>
+                (editorDataOutput)="editorDataHandler($event)"
+                [sourcingSettings]="sourcingSettings" [mapping]="scoreMapping"
+                [isReadOnlyMode]="isReadOnlyMode"></lib-options>
 
-              <div class="d-flex flex-ai-center ckeditor-tool__solution py-10 px-16 mt-15 sb-bg-color-white">
-                <label class="fs-0-92 mb-0 ckeditor-tool__label pb-4">
-                  <span class="sb-color-primary fs-0-785 mr-4">{{configService.labelConfig?.lbl?.solution}}</span>
-                  <span class="sb-color-gray-200 fxsmall font-weight-normal">{{configService.labelConfig?.lbl?.optional}}</span>
-                </label>
-                <div
-                  class="ui dropdown sb-btn sb-btn-outline-primary sb-btn-normal sb-right-icon-btn sb-btn-radius ml-auto"
-                  suiDropdown autoClose="itemClick" *ngIf="showSolutionDropDown" libTelemetryInteract
-                  [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('choose_type','click','single_select', telemetryService.telemetryPageId)">
-                  <div class="text gray-200">{{configService.labelConfig?.lbl?.chooseType}}</div>
-                  <i class="dropdown icon mx-8"></i>
-                  <div class="menu" suiDropdownMenu>
-                    <div class="item" (click)="selectSolutionType('Text+Image')" libTelemetryInteract
-                      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('solution_type','select','single_select', telemetryService.telemetryPageId, {solution_type:'Text+Image'})">
-                      {{configService.labelConfig?.lbl?.textImage}}
-                    </div>
-                    <div class="item" (click)="selectSolutionType('video')" libTelemetryInteract
-                      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('solution_type','select','single_select', telemetryService.telemetryPageId, {solution_type:'video'})">
-                      {{configService.labelConfig?.lbl?.video}}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="solution_html" *ngIf="selectedSolutionType == 'html'">
-                <div class="ckeditor-tool-container">
-                  <div class="sb-ckeditor relative mb-8">
-                    <button (click)="deleteSolution()" class="sb-btn sb-ckeditor-close absolute" libTelemetryInteract
-                      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('delete_solution','click','cancel', telemetryService.telemetryPageId, {solution_type:'Text+Image'})">
-                      <i class="icon close"></i>
-                    </button>
-                    <lib-ckeditor-tool (editorDataOutput)="
-                        editorDataHandler($event, 'solution')
-                      "[editorDataInput]="editorState.solutions"
-                      class="ckeditor-tool__option"></lib-ckeditor-tool>
-                  </div>
-                </div>
-              </div>
-              <div class="solution_video" *ngIf="selectedSolutionType == 'video' && showSolution">
-                <div class="ckeditor-tool__solution sb-bg-color-white sb-ckeditor relative">
-                  <div class="solution-media p-16 d-flex flex-ai-center ckeditor-tool__option p-16">
-                    <div class="mcq-checkbox-answer">
-                      <button class="sb-btn sb-ckeditor-close absolute" (click)="deleteSolution()"
-                        libTelemetryInteract
-                        [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('delete_solution','click','cancel', this.telemetryService.telemetryPageId, {solution_type:'video'})">
-                        <i class="icon close"></i>
-                      </button>
-                    </div>
-                    <div class="solution-media__video relative position">
-                      <div class="overlay-image" [ngStyle]="
-                          videoThumbnail
-                            ? { background: 'url(' + videoThumbnail + ')' }
-                            : { background: 'rgba(0,0,0,0.3)' }
-                        ">
-                        <i class="play circle icon"></i>
+              <lib-slider *ngIf="questionInteractionType === 'slider'" [editorDataInput]="sliderOptions"
+                (onChange)="sliderData($event)"></lib-slider>
+
+              <ng-container *ngIf="!isReadOnlyMode; else readOnlySolutionsContainer">
+                <div *ngIf="sourcingSettings?.showSolution !== false" class="d-flex flex-ai-center ckeditor-tool__solution py-10 px-16 mt-15 sb-bg-color-white">
+                  <label class="fs-0-92 mb-0 ckeditor-tool__label pb-4">
+                    <span class="sb-color-primary fs-0-785 mr-4">{{configService.labelConfig?.lbl?.solution}}</span>
+                    <span class="sb-color-gray-200 fxsmall font-weight-normal">{{configService.labelConfig?.lbl?.optional}}</span>
+                  </label>
+                  <div
+                    class="ui dropdown sb-btn sb-btn-outline-primary sb-btn-normal sb-right-icon-btn sb-btn-radius ml-auto"
+                    suiDropdown autoClose="itemClick" *ngIf="showSolutionDropDown" libTelemetryInteract
+                    [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('choose_type','click','single_select', telemetryService.telemetryPageId)">
+                    <div class="text gray-200">{{configService.labelConfig?.lbl?.chooseType}}</div>
+                    <i class="dropdown icon mx-8"></i>
+                    <div class="menu" suiDropdownMenu>
+                      <div class="item" (click)="selectSolutionType('Text+Image')" (keydown.enter)="selectSolutionType('Text+Image')" tabindex="0" libTelemetryInteract
+                        [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('solution_type','select','single_select', telemetryService.telemetryPageId, {solution_type:'Text+Image'})">
+                        {{configService.labelConfig?.lbl?.textImage}}
+                      </div>
+                      <div class="item" (click)="selectSolutionType('video')" (keydown.enter)="selectSolutionType('video')" tabindex="0" libTelemetryInteract
+                        [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('solution_type','select','single_select', telemetryService.telemetryPageId, {solution_type:'video'})">
+                        {{configService.labelConfig?.lbl?.video}}
                       </div>
                     </div>
-                    <div class="solution-media__desc ml-16 sb-color-primary">
-                      {{ videoSolutionName
-                      }}
-                      <!-- <i class="icon ellipsis vertical sb-color-black"></i> -->
+                  </div>
+                </div>
+                <div class="solution_html" *ngIf="selectedSolutionType == 'html'">
+                  <div class="ckeditor-tool-container">
+                    <div class="sb-ckeditor relative mb-8">
+                      <button (click)="deleteSolution()" class="sb-btn sb-ckeditor-close absolute" libTelemetryInteract
+                        [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('delete_solution','click','cancel', telemetryService.telemetryPageId, {solution_type:'Text+Image'})">
+                        <i class="icon close"></i>
+                      </button>
+                      <lib-ckeditor-tool (editorDataOutput)="
+                          editorDataHandler($event, 'solution')
+                        "[editorDataInput]="editorState.solutions"
+                        class="ckeditor-tool__option"></lib-ckeditor-tool>
                     </div>
                   </div>
                 </div>
+                <div class="solution_video" *ngIf="selectedSolutionType == 'video' && showSolution">
+                  <div class="ckeditor-tool__solution sb-bg-color-white sb-ckeditor relative">
+                    <div class="solution-media p-16 d-flex flex-ai-center ckeditor-tool__option p-16">
+                      <div class="mcq-checkbox-answer">
+                        <button class="sb-btn sb-ckeditor-close absolute" (click)="deleteSolution()"
+                          libTelemetryInteract
+                          [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('delete_solution','click','cancel', this.telemetryService.telemetryPageId, {solution_type:'video'})">
+                          <i class="icon close"></i>
+                        </button>
+                      </div>
+                      <div class="solution-media__video relative position">
+                        <div class="overlay-image" [ngStyle]="
+                            videoThumbnail
+                              ? { background: 'url(' + videoThumbnail + ')' }
+                              : { background: 'rgba(0,0,0,0.3)' }
+                          ">
+                          <i class="play circle icon"></i>
+                        </div>
+                      </div>
+                      <div class="solution-media__desc ml-16 sb-color-primary">
+                        {{ videoSolutionName
+                        }}
+                        <!-- <i class="icon ellipsis vertical sb-color-black"></i> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-template #readOnlySolutionsContainer>
+                <div class="row" *ngIf="editorState.solutions">
+                  <div class="twelve wide column p-0">
+                      <div class="ckeditor-tool width-100">
+                          <div class="ckeditor-tool__question-readonly mb-24">
+                              <label class="px-16 py-8 fs-0-92 mb-0 ckeditor-tool__label width-100">Solution</label>
+                              <div class="ckeditor-tool__solution__body" *ngIf="selectedSolutionType == 'html'">
+                                  <p class="fs-0-785 p-16" [innerHTML]="editorState.solutions | sanitizeHtml"></p>
+                              </div>
+                              <div class="ckeditor-tool__solution__body" *ngIf="selectedSolutionType == 'video' && showSolution">
+                                  <div class="solution-media p-16 d-flex flex-ai-center">
+                                      <div class="solution-media__video relative position">
+                                      <div class="overlay-image" [ngStyle]="videoThumbnail ?  {'background' : 'url(' + videoThumbnail + ')' }  : {'background': 'rgba(0,0,0,0.3)'}"><i class="play circle icon"></i></div>
+                                      </div>
+                                      <div class="solution-media__desc ml-16">
+                                      {{videoSolutionName}}
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
               </div>
+              </ng-template>
             </div>
           </div>
+          <!-- <lib-translations *ngIf="showTranslation"></lib-translations> -->
+          <!-- child question section -->
+          <div class="b-1-100 br-4 my-15 px-32 py-10 sb-bg-color-primary-0"
+            *ngFor="let question of dependentQuestions;let childindex=index">
+            {{ questionSetHierarchy.children ? 'Q'+ (questionSetHierarchy.children.length+1):''}} {{'. '+
+            (childindex+1)}}
+            <button
+              class="sb-btn sb-btn-outline-primary sb-btn-xs sb-left-icon-btn text-inherit b-0 bg-none no-hover pl-0">
+              <span class="sb-line-height-24">edit question</span>
+            </button>
+          </div>
           <hr>
-          <div *ngIf="leafFormConfig">
+          <div *ngIf="questionFormConfig">
             <div class="pl-5 py-10 font-weight-bold fs-0-92">
               {{configService.labelConfig?.lbl?.Questiondetails}}
             </div>
-            <div class="form-container   px-30">
-              <sb-dynamic-form [config]="leafFormConfig" (initialize)="output($event)"
+            <div class="form-container px-30">
+              <sb-dynamic-form [config]="questionFormConfig" (initialize)="output($event)"
                 (statusChanges)="onStatusChanges($event)" (valueChanges)="valueChanges($event)"></sb-dynamic-form>
             </div>
           </div>
@@ -130,3 +201,32 @@
     </button>
   </div>
 </sui-modal>
+
+<lib-term-and-condition
+        [showEditingConsent]="editorService.isReviewerEditEnable"
+        [showSubmitConfirmPopup]="showSubmitConfirmPopup" (sendForReviewOutput)="onConsentSubmit($event)">
+</lib-term-and-condition>
+
+<sui-modal *ngIf="showReviewModal" [mustScroll]="true" [isClosable]="false" [transitionDuration]="0"
+  [size]="'normal'" class="sb-modal bx-none overflow-modal" appBodyScroll #modal (dismissed)="showReviewModal = false;">
+  <div class="sb-modal-header">
+    {{configService.labelConfig?.lbl?.reviewComments}}
+  </div>
+  <div class="sb-modal-content">
+      <div class="sb-field">
+          <label>{{configService.labelConfig?.lbl?.comments}}</label>
+            <textarea disabled="disabled" type="text" class="wmd-input width-100 sb-form-control p-10 sb-disabled-textarea" id="wmd-input" [(ngModel)]="contentComment" name="rejectedComment"></textarea>
+      </div>
+  </div>
+  <div class="sb-modal-actions">
+    <button class="sb-btn sb-btn-normal sb-btn-outline-primary" (click)="modal.deny('denied')"
+    libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('close','click','cancel', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'review_comments'})">{{configService.labelConfig?.button_labels?.close_btn_label}}</button>
+  </div>
+</sui-modal>
+
+<lib-quality-params-modal
+  [labelConfigData]="toolbarConfig"
+  [showQualityParameterPopup]="showQualityParameterPopup"
+  [qualityFormConfig]="qualityFormConfig"
+  (qualityParamChanged)="onQualityFormSubmit($event)">
+</lib-quality-params-modal>
