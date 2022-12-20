@@ -307,7 +307,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.unitFormConfig = _.get(formsConfigObj, 'unitMetadata.properties');
     this.rootFormConfig = _.get(formsConfigObj, 'create.properties');
     let formData;
-    if (this.rootFormConfig.length) {
+    if (this.rootFormConfig?.length) {
       formData = this.rootFormConfig[0].fields || [];
     }
     formData.forEach((field) => {
@@ -517,7 +517,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         break;
       case 'pagination':
         this.pageId = 'pagination';
-        break;      
+        break;
+      case 'progressStatus':
+        this.pageId = 'progressStatus';
+        break;
       // case 'showCorrectioncomments':
         // this.contentComment = _.get(this.editorConfig, 'context.correctionComments')
         // this.showReviewModal = !this.showReviewModal;

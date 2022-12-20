@@ -16,6 +16,7 @@ import { HelperService } from '../../services/helper/helper.service';
 import { BranchingLogic } from '../question/question.component.spec.data';
 import * as _ from 'lodash-es';
 import { of } from 'rxjs';
+import { mockTreeData } from '../assign-page-number/assign-page-number.component.spec.data';
 
 describe('FancyTreeComponent', () => {
   let component: FancyTreeComponent;
@@ -150,6 +151,7 @@ describe('FancyTreeComponent', () => {
     component.nodeParentDependentMap = undefined;
     // tslint:disable-next-line:no-shadowed-variable
     const editorService: EditorService = TestBed.inject(EditorService);
+    editorService.treeData = mockTreeData;
     spyOn(editorService, 'getParentDependentMap').and.returnValue({});
     editorConfig.config.renderTaxonomy = true;
     editorConfig.config.primaryCategory = 'Observation';

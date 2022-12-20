@@ -40,6 +40,8 @@ export class EditorService {
   selectedPrimaryCategory: any;
   leafParentIdentifier: any;
   questionIds = [];
+  outcomeDeclaration: any;
+  treeData: any;
   private _qualityFormConfig: any;
   private _isReviewerQualityCheckEnabled: boolean;
   constructor(public treeService: TreeService, private toasterService: ToasterService,
@@ -383,8 +385,7 @@ export class EditorService {
   calculateMaxScore(questions: Array<any>) {
    return _.reduce(questions, (sum, question) => {
       const nodeData = this.treeService.getNodeById(question.identifier);
-      if (_.has(nodeData.parent.data.metadata, 'shuffle') && nodeData.parent.data.metadata.shuffle === true &&
-      nodeData.data.metadata.qType === 'MCQ') {
+      if (_.has(nodeData.parent.data.metadata, 'shuffle') && nodeData.parent.data.metadata.shuffle === true) {
         return sum + 1;
       } else {
         return sum + (question?.responseDeclaration?.response1?.maxScore ? _.get(question, 'responseDeclaration.response1.maxScore') : 0);

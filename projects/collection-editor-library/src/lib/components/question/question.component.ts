@@ -187,7 +187,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.editorService.fetchCollectionHierarchy(this.questionSetId).subscribe((response) => {
       this.questionSetHierarchy = _.get(response, 'result.questionSet');
       const parentId = this.editorService.parentIdentifier ? this.editorService.parentIdentifier : this.questionId;
-      //only for observation,survey,observation with rubrics 
+      //only for observation,survey,observation with rubrics
       if (!_.isUndefined(parentId) && !_.isUndefined(this.editorService.editorConfig.config.renderTaxonomy)) {
         this.getParentQuestionOptions(parentId);
         const sectionData = this.treeService.getNodeById(parentId);
@@ -582,7 +582,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
         _.isEmpty(this.editorState?.responseDeclaration?.response1?.mapping) &&
         !_.isUndefined(this.editorService?.editorConfig?.config?.renderTaxonomy) &&
         _.get(data,'allowScoring') === 'Yes') {
-        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.005'));  
+        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.005'));
         this.showFormError = true;
         return;
       } else {
@@ -1084,7 +1084,15 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.validateQuestionData();
     if (this.showFormError === false && this.questionMetadataFormStatus === true) {
       this.previewFormData(false);
-      const questionId = _.isUndefined(this.questionId) ? this.tempQuestionId : this.questionId;
+      const activeNode = this.treeService.getActiveNode();
+      let questionId = '';
+      if (_.isUndefined(this.questionId)) {
+        questionId = this.tempQuestionId;
+        this.setParentConfig(activeNode?.data?.metadata);
+      } else {
+        questionId = this.questionId;
+        this.setParentConfig(activeNode?.parent?.data?.metadata);
+      }
       this.questionSetHierarchy.childNodes = [questionId];
       this.setQumlPlayerData(questionId);
       this.showPreview = true;
@@ -1094,12 +1102,29 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  setParentConfig(parentConfig) {
+    this.questionSetHierarchy.showSolutions = !_.isUndefined(parentConfig?.showSolutions) ?
+    parentConfig.showSolutions : 'No';
+    this.questionSetHierarchy.shuffle = !_.isUndefined(parentConfig?.shuffle) ?
+    parentConfig.shuffle : true;
+    this.questionSetHierarchy.showFeedback = !_.isUndefined(parentConfig?.showFeedback) ?
+    parentConfig.showFeedback : 'No';
+  }
+
   setQumlPlayerData(questionId: string) {
     const questionMetadata: any = _.cloneDeep(this.getQuestionMetadata());
     questionMetadata.identifier = questionId;
     this.questionSetHierarchy.children = [questionMetadata];
-    if (questionMetadata.maxScore) {
-      this.questionSetHierarchy.maxScore = questionMetadata.maxScore;
+    if (this.questionSetHierarchy.shuffle === true) {
+      // tslint:disable-next-line:no-string-literal
+      this.questionSetHierarchy['maxScore'] = 1;
+    } else {
+      if (questionMetadata.qType === 'SA') {
+        this.questionSetHierarchy = _.omit(this.questionSetHierarchy, 'maxScore');
+      } else if (questionMetadata.maxScore) {
+        // tslint:disable-next-line:no-string-literal
+        this.questionSetHierarchy['maxScore'] = this.maxScore;
+      }
     }
     this.editorCursor.setQuestionMap(questionId, questionMetadata);
   }

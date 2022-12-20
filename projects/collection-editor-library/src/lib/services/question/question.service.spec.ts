@@ -118,7 +118,7 @@ describe('QuestionService', () => {
     it('#getQuestionList() it should update question on API success', () => {
         const questionId = 'do_123';
         spyOn(publicDataService, 'post').and.returnValue(of(mockRes.serverResponse));
-        questionService.getQuestionList(['do_123', 'do_1234']).subscribe(data => {
+        questionService.getQuestionList(['do_123', 'do_1234'], 'editorState').subscribe(data => {
             expect(data.responseCode).toEqual('OK');
         });
     });
