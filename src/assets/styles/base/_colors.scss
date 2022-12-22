@@ -27,6 +27,7 @@ $colours: "gray-hs" var(--gray-hs), "gray" var(--gray), "gray-0" var(--gray-0),
 // bg colors
 .sb-bg-white {
     background: $white;
+    --white: #fff;
 }
 .sb-bg-none {
   background: none !important;
