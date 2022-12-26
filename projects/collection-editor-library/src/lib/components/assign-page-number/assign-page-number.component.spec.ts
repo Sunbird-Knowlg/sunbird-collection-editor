@@ -6,7 +6,7 @@ import { mockTreeService } from '../fancy-tree/fancy-tree.component.spec.data';
 import { EditorService } from '../../services/editor/editor.service';
 import { of, throwError } from 'rxjs';
 import { QuestionService } from '../../services/question/question.service';
-import { mockQuestionData, mockTreeData } from './assign-page-number.component.spec.data';
+import { mockCreateArray, mockPageNumberArray, mockQuestionData, mockRenderingSequence, mockTreeData } from './assign-page-number.component.spec.data';
 
 const mockEditorService = {
   getToolbarConfig: () => { },
@@ -51,8 +51,8 @@ describe('AssignPageNumberComponent', () => {
     });
     editorService.treeData = mockTreeData;
     spyOn(component, 'ngOnInit').and.callThrough();
-    spyOn(component, 'createSequence').and.callFake(() => {});
-    spyOn(component, 'treeEventListener').and.callFake(() => {});
+    spyOn(component, 'createSequence').and.callFake(() => { });
+    spyOn(component, 'treeEventListener').and.callFake(() => { });
     component.ngOnInit();
     expect(component.toolbarConfig).toBeDefined();
     expect(component.toolbarConfig.title).toEqual('Observation Form');
@@ -82,7 +82,7 @@ describe('AssignPageNumberComponent', () => {
     spyOn(editorService, 'getHierarchyObj').and.callFake(() => {
       return {
         '1234': {
-          children : []
+          children: []
         }
       };
     });
@@ -122,7 +122,7 @@ describe('AssignPageNumberComponent', () => {
     spyOn(editorService, 'getHierarchyObj').and.callFake(() => {
       return {
         '1234': {
-          children : []
+          children: []
         }
       };
     });
@@ -139,9 +139,13 @@ describe('AssignPageNumberComponent', () => {
   it('#onValueChange should call to assign the page numbers', () => {
     spyOn(component, 'onValueChange').and.callThrough();
     component.questions = mockQuestionData;
+    component.createArray = mockCreateArray;
+    component.pageNumArray = mockPageNumberArray;
+    component.criteriaId = 'do_1134460323602841601200';
+    component.rendering_sequence = mockRenderingSequence;
     const question = mockQuestionData[0];
-    component.onValueChange(1, question);
-    expect(component.onValueChange).toHaveBeenCalledWith(1, question);
+    component.onValueChange(1, question, 0);
+    expect(component.onValueChange).toHaveBeenCalledWith(1, question, 0);
     expect(question.page_no).toBe(1);
   });
 
