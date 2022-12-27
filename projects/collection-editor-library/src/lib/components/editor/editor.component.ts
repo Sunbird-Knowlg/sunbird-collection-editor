@@ -183,6 +183,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.treeService.treeStatus$.pipe(takeUntil(this.unsubscribe$)).subscribe((status) => {
       if (status === 'loaded') {
         this.getFrameworkDetails(this.primaryCategoryDef);
+        this.dialcodeService.readExistingQrCode();
       }
     });
   }
@@ -874,6 +875,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           }));
         }
         break;
+      case 'showLibraryPage':
+          this.showLibraryComponentPage();
+          break;
       default:
         break;
     }
@@ -938,7 +942,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.editorService.getCategoryDefinition(selectedQuestionType, null, 'Question')
     .subscribe((res) => {
       const selectedtemplateDetails = res.result.objectCategoryDefinition;
-      this.editorService.selectedChildren['label']=selectedtemplateDetails.label;
+      this.editorService.selectedChildren.label = selectedtemplateDetails.label;
       const selectedTemplateFormFields = _.get(selectedtemplateDetails, 'forms.create.properties');
       if (!_.isEmpty(selectedTemplateFormFields)) {
         const questionCategoryConfig = selectedTemplateFormFields;
@@ -954,7 +958,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
       const catMetaData = _.get(selectedtemplateDetails, 'objectMetadata');
       this.sourcingSettings = _.get(catMetaData, 'config.sourcingSettings') || {};
-      !_.isUndefined(this.editorConfig.config.renderTaxonomy) ? (this.questionComponentInput.config ={maximumOptions:_.get(catMetaData, 'config.maximumOptions')}) : '' ;
+      !_.isUndefined(this.editorConfig.config.renderTaxonomy) ? (this.questionComponentInput.config = {maximumOptions: _.get(catMetaData, 'config.maximumOptions')}) : '' ;
       if (!_.has(this.sourcingSettings, 'enforceCorrectAnswer')) {
         this.sourcingSettings.enforceCorrectAnswer = true;
       }
@@ -975,11 +979,11 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         };
         this.redirectToQuestionTab(undefined, interactionTypes[0]);
       }
-    },(error) => {
+    }, (error) => {
       const errInfo = {
         errorMsg: _.get(this.configService, 'labelConfig.messages.error.006'),
       };
-      return throwError(this.editorService.apiErrorHandling(error, errInfo))
+      return throwError(this.editorService.apiErrorHandling(error, errInfo));
     });
   }
 
@@ -991,7 +995,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       interactionType = _.get(this.editorConfig, 'config.interactionType');
       questionCategory = _.get(this.editorConfig, 'config.questionCategory');
       this.creationContext =  {
-        mode: mode,
+        mode,
         objectType: this.objectType,
         collectionObjectType: _.get(this.editorConfig, 'context.collectionObjectType'),
         isReadOnlyMode: _.get(this.editorConfig, 'config.isReadOnlyMode'),
@@ -1004,32 +1008,32 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.questionComponentInput = {
       ...this.questionComponentInput,
       questionSetId: this.collectionId,
-      questionId: questionId,
+      questionId,
       type: interactionType,
-      setChildQueston:mode === 'edit' ? false : this.setChildQuestion,
+      setChildQueston: mode === 'edit' ? false : this.setChildQuestion,
       category: questionCategory,
       creationContext: this.creationContext, // Pass the creation context to the question-component
       creationMode: mode
     };
 
-    if(!_.isUndefined(mode) && !_.isUndefined(this.editorConfig.config.renderTaxonomy)){
+    if (!_.isUndefined(mode) && !_.isUndefined(this.editorConfig.config.renderTaxonomy)){
       this.editorService.selectedChildren = {
         primaryCategory: _.get(this.selectedNodeData, 'data.metadata.primaryCategory'),
         interactionType: _.get(this.selectedNodeData, 'data.metadata.interactionTypes[0]')
       };
-        this.questionComponentInput = {
+      this.questionComponentInput = {
           ...this.questionComponentInput,
-          creationContext:{
+          creationContext: {
             isReadOnlyMode: mode !== 'edit' ? true : false,
-            correctionComments:this.contentComment
+            correctionComments: this.contentComment
         }
-      }
+      };
       this.editorService.getCategoryDefinition(this.selectedNodeData.data.metadata.primaryCategory, null, 'Question')
       .subscribe((res) => {
         const selectedtemplateDetails = res.result.objectCategoryDefinition;
-        this.editorService.selectedChildren['label']=selectedtemplateDetails.label;
+        this.editorService.selectedChildren.label = selectedtemplateDetails.label;
         const selectedTemplateFormFields = _.get(selectedtemplateDetails, 'forms.create.properties');
-        this.questionComponentInput.config ={maximumOptions:_.get(selectedtemplateDetails, 'objectMetadata.config.maximumOptions')}
+        this.questionComponentInput.config = {maximumOptions: _.get(selectedtemplateDetails, 'objectMetadata.config.maximumOptions')};
         if (!_.isEmpty(selectedTemplateFormFields)) {
           const questionCategoryConfig = selectedTemplateFormFields;
           questionCategoryConfig.forEach(field => {
@@ -1047,11 +1051,11 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           this.sourcingSettings.enforceCorrectAnswer = true;
         }
         this.pageId = 'question';
-      },(error) => {
+      }, (error) => {
         const errInfo = {
           errorMsg: _.get(this.configService, 'labelConfig.messages.error.006'),
         };
-        return throwError(this.editorService.apiErrorHandling(error, errInfo))
+        return throwError(this.editorService.apiErrorHandling(error, errInfo));
       });
     }
     else{
@@ -1061,7 +1065,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   questionEventListener(event: any) {
     if (event.type === 'createNewContent') {
-      this.treeEventListener(event)
+      this.treeEventListener(event);
     }
     this.selectedNodeData = undefined;
     if (this.objectType === 'question') {

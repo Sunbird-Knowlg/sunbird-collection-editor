@@ -3,7 +3,6 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     proxy = require('express-http-proxy'),
     urlHelper = require('url');
-const latexService = require('./latexService.js')
 
 // ENV Variables
 const BASE_URL = 'dock.sunbirded.org';
@@ -12,11 +11,10 @@ const PORTAL_COOKIES= ""
 const USER_TOKEN = "";
 
 
+
 var app = express();
 app.set('port', 3000);
 app.use(express.json())
-app.get("/latex/convert", latexService.convert)
-app.post("/latex/convert", bodyParser.json({ limit: '1mb' }), latexService.convert);
 app.all(['/api/framework/v1/read/*',
      '/learner/framework/v1/read/*', 
      '/api/channel/v1/read/*'], proxy(BASE_URL, {

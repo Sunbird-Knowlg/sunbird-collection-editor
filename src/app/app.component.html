@@ -2,11 +2,38 @@
     <lib-editor [editorConfig]="editorConfig" (editorEmitter)="editorEventListener($event)"></lib-editor>
 </ng-container>
 <div *ngIf="!editor" class="ui container d-flex flex-jc-center flex-ai-center p-20">
-    <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10 font-weight-bold fs-1" (click)="setType('question')" >Question Editor</button>
-    <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10 font-weight-bold fs-1" (click)="setType('questionSet')" >Question Set Editor</button>
-    <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10 font-weight-bold fs-1" (click)="setType('course')">Course Editor</button>
-    <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10 font-weight-bold fs-1" (click)="setType('collection')">Collection Editor</button>
-    <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10 font-weight-bold fs-1" (click)="setType('survey')" >Survey</button>
-    <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10 font-weight-bold fs-1" (click)="setType('observation')" >Observation Editor</button>
-    <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10 font-weight-bold fs-1" (click)="setType('rubrics')">Observation With Rubrics Editor</button>
+    <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10 font-weight-bold fs-1"
+        (click)="setType('question')">
+        Question Editor
+    </button>
+    <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10 font-weight-bold fs-1"
+        (click)="setType('questionSet')">
+        Question Set Editor
+    </button>
+    <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10 font-weight-bold fs-1" (click)="setType('course')">
+        Course Editor
+    </button>
+    <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10 font-weight-bold fs-1"
+        (click)="setType('collection')">
+        Collection Editor
+    </button>
+    <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10 font-weight-bold fs-1" (click)="setType('survey')">
+        Survey
+    </button>
+    <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10 font-weight-bold fs-1"
+        (click)="setType('observation')">
+        Observation Editor
+    </button>
+    <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10 font-weight-bold fs-1"
+        (click)="setType('rubrics')">
+        Observation With Rubrics Editor
+    </button>
 </div>
+<!-- <div style="width: 100%;display: flex;">
+    <app-fancytree-wrapper
+    [nodes]="collectionTreeNodes" [editorConfig]="editorConfig" [options]="{ showConnectors: true }" [buttonLoaders]="buttonLoaders"
+    (treeEventEmitter)="treeEventListener($event)" class="sb-collectionTree-fancyTree sb-collectionTree-fancyTreelist sb-questionset-scroll"></app-fancytree-wrapper>
+    <div>
+        {{selectedNode?.name}}
+    </div>
+</div> -->
