@@ -38,7 +38,6 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   public rootNode: any;
   public showLibraryButton = false;
   public unsubscribe$ = new Subject<void>();
-  public bulkUploadProcessingStatus = false;
   public treeData: any = [];
   public branchingObject = {};
   public rootMenuTemplate = `<span class="ui dropdown sb-dotted-dropdown" autoclose="itemClick" suidropdown="" tabindex="0">

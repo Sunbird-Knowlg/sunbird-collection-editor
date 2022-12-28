@@ -1,34 +1,30 @@
-import { EditorService } from './../../services/editor/editor.service';
-import { ComponentFixture, TestBed, inject, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FancyTreeComponent } from './fancy-tree.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA, ChangeDetectorRef } from '@angular/core';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
-import { config, treeData, tree, editorConfig, TargetNodeMockData,
-  CurrentNodeMockData, mockTreeService, mockData, observationWithRubricsMockData, RubricstreeData } from './fancy-tree.component.spec.data';
+import { config, treeData, tree, editorConfig, mockTreeService, mockData,
+  observationWithRubricsMockData } from './fancy-tree.component.spec.data';
 import { Router } from '@angular/router';
 import { TreeService } from '../../services/tree/tree.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
 import { ConfigService } from '../../services/config/config.service';
 import { SuiModule } from 'ng2-semantic-ui-v9';
 import { HelperService } from '../../services/helper/helper.service';
-import { BranchingLogic } from '../question/question.component.spec.data';
 import * as _ from 'lodash-es';
-import { of } from 'rxjs';
-import { mockTreeData } from '../assign-page-number/assign-page-number.component.spec.data';
 
 describe('FancyTreeComponent', () => {
   let component: FancyTreeComponent;
   let fixture: ComponentFixture<FancyTreeComponent>;
-  let editorService, helperService;
+  let helperService;
   class RouterStub {
     navigate = jasmine.createSpy('navigate');
   }
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [EditorTelemetryService, EditorService, HelperService,
+      providers: [EditorTelemetryService, HelperService,
           { provide: Router, useClass: RouterStub }, ToasterService,
           { provide: ConfigService, useValue: config },
           { provide: TreeService, useValue: mockTreeService },
@@ -43,7 +39,6 @@ describe('FancyTreeComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(FancyTreeComponent);
-    editorService = TestBed.inject(EditorService);
     helperService = TestBed.inject(HelperService);
     component = fixture.componentInstance;
     // fixture.detectChanges();
@@ -53,182 +48,25 @@ describe('FancyTreeComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('#ngOnInit() should set bulkUploadProcessingStatus to true', () => {
-    component.config = { mode: undefined };
-    // tslint:disable-next-line:no-shadowed-variable
-    const editorService: any = TestBed.inject(EditorService);
-    component.bulkUploadProcessingStatus = false;
-    spyOnProperty(editorService, 'editorConfig', 'get').and.returnValue(editorConfig);
-    // tslint:disable-next-line:no-string-literal
-    editorService['bulkUploadStatus$'] = of('processing');
-    spyOn(component, 'initialize').and.callFake(() => {});
-    spyOn(component, 'ngOnInit').and.callThrough();
-    component.ngOnInit();
-    expect(component.config.mode).toEqual(editorConfig.config.mode);
-    expect(component.bulkUploadProcessingStatus).toBeTruthy();
-    expect(component.initialize).toHaveBeenCalled();
-  });
-
-  it('#ngOnInit() should set bulkUploadProcessingStatus to false', () => {
-    component.config = { mode: undefined, maxDepth: 0 };
-    // tslint:disable-next-line:no-shadowed-variable
-    const editorService: any = TestBed.inject(EditorService);
-    component.bulkUploadProcessingStatus = true;
-    const mockEditorConfig = _.omit(editorConfig, 'config.maxDepth');
-    spyOnProperty(editorService, 'editorConfig', 'get').and.returnValue(mockEditorConfig);
-    // tslint:disable-next-line:no-string-literal
-    editorService['bulkUploadStatus$'] = of('completed');
-    spyOn(component, 'initialize').and.callFake(() => {});
-    spyOn(component, 'ngOnInit').and.callThrough();
-    component.ngOnInit();
-    expect(component.config.mode).toEqual(editorConfig.config.mode);
-    expect(component.config.maxDepth).toEqual(4);
-    expect(component.bulkUploadProcessingStatus).toBeFalsy();
-    expect(component.initialize).toHaveBeenCalled();
-  });
 
   it('#ngOnInit() should call #initialize() when primaryCategory os obs with rubrics', () => {
     // tslint:disable-next-line:no-shadowed-variable
-    const editorService = TestBed.inject(EditorService);
+    const treeService = TestBed.inject(TreeService);
     component.nodes = {
       data: observationWithRubricsMockData.data
     };
     editorConfig.config.renderTaxonomy = true ;
-    spyOnProperty(editorService, 'editorConfig', 'get').and.returnValue(editorConfig);
     spyOn(component, 'ngOnInit').and.callThrough();
     spyOn(component, 'initialize').and.callThrough();
     component.ngOnInit();
     expect(component.initialize).toHaveBeenCalled();
   });
 
-  it('#initialize() should call #buildTreeFromFramework() when primarycategory is obs with rubrics', () => {
-    component.nodes = { data: {
-      children: [],
-      name: 'untitled',
-      identifier: '12345',
-      contentType: 'content',
-      primaryCategory: 'Practise Questionset',
-      objectType: 'Questionset'
-    }
-    };
-    component.rootNode = undefined;
-    component.nodeParentDependentMap = undefined;
-    // tslint:disable-next-line:no-shadowed-variable
-    const editorService: EditorService = TestBed.inject(EditorService);
-    spyOn(editorService, 'getParentDependentMap').and.returnValue({});
-    editorConfig.config.renderTaxonomy = true;
-    editorConfig.config.primaryCategory = 'Observation';
-    editorConfig.config.objectType = 'QuestionSet';
-    // tslint:disable-next-line:no-shadowed-variable
-    const helperService = TestBed.inject(HelperService);
-    spyOn(helperService, 'addDepthToHierarchy').and.callFake(() => {});
-    spyOnProperty(editorService, 'editorConfig', 'get').and.returnValue(editorConfig);
-    spyOn(component, 'removeIntermediateLevelsFromFramework').and.returnValue({});
-    spyOn(component, 'buildTreeFromFramework').and.returnValue({});
-    spyOn(component, 'buildTree').and.callFake(() => {});
-    spyOn(component, 'initialize').and.callThrough();
-    component.initialize();
-    expect(editorService.getParentDependentMap).toHaveBeenCalled();
-    expect(component.nodeParentDependentMap).toBeDefined();
-    expect(helperService.addDepthToHierarchy).toHaveBeenCalledWith([]);
-    expect(component.removeIntermediateLevelsFromFramework).toHaveBeenCalled();
-    expect(component.buildTreeFromFramework).toHaveBeenCalled();
-    expect(component.buildTree).not.toHaveBeenCalled();
-    expect(component.rootNode).toBeDefined();
-  });
 
-  it('#initialize() should not call  #buildTreeFromFramework() when primarycategory is obs with rubrics', () => {
-    component.nodes = { data: {
-      children: {name: 'test'},
-      name: 'untitled',
-      identifier: undefined,
-      contentType: 'content',
-      primaryCategory: 'Practise Questionset',
-      objectType: 'Questionset'
-    }
-    };
-    component.rootNode = undefined;
-    component.nodeParentDependentMap = undefined;
-    // tslint:disable-next-line:no-shadowed-variable
-    const editorService: EditorService = TestBed.inject(EditorService);
-    editorService.treeData = mockTreeData;
-    spyOn(editorService, 'getParentDependentMap').and.returnValue({});
-    editorConfig.config.renderTaxonomy = true;
-    editorConfig.config.primaryCategory = 'Observation';
-    editorConfig.config.objectType = 'QuestionSet';
-    // tslint:disable-next-line:no-shadowed-variable
-    const helperService = TestBed.inject(HelperService);
-    spyOn(helperService, 'addDepthToHierarchy').and.callFake(() => {});
-    spyOnProperty(editorService, 'editorConfig', 'get').and.returnValue(editorConfig);
-    spyOn(component, 'removeIntermediateLevelsFromFramework').and.returnValue({});
-    spyOn(component, 'buildTreeFromFramework').and.returnValue({});
-    spyOn(component, 'buildTree').and.returnValue({});
-    spyOn(component, 'initialize').and.callThrough();
-    component.initialize();
-    expect(editorService.getParentDependentMap).toHaveBeenCalled();
-    expect(component.nodeParentDependentMap).toBeDefined();
-    expect(helperService.addDepthToHierarchy).not.toHaveBeenCalled();
-    expect(component.removeIntermediateLevelsFromFramework).not.toHaveBeenCalled();
-    expect(component.buildTreeFromFramework).not.toHaveBeenCalled();
-    expect(component.buildTree).toHaveBeenCalled();
-    expect(component.rootNode).toBeDefined();
-  });
-
-  it('#initialize() should call #buildTreeFromFramework()', () => {
-    const nodeData = {
-      children: [
-        {
-          name: 'test',
-          objectType: 'QuestionSet',
-          primaryCategory: 'Observation With Rubrics',
-          index : 0,
-          children: [
-            {
-              name: 'test1',
-              objectType: 'QuestionSet',
-              primaryCategory: 'Observation With Rubrics',
-              index : 1,
-              children : []
-            }
-          ]
-        }
-      ]
-    };
-    spyOn(component, 'buildTreeFromFramework').and.callThrough();
-    let returnObject;
-    returnObject = component.buildTreeFromFramework(nodeData);
-    expect(returnObject).toBeDefined();
-  });
-
-  it('#initialize() should call  #buildTreeFromFramework() when primarycategory is obs with rubrics', () => {
-    component.nodes = {
-      data: {}
-    };
-    // tslint:disable-next-line:no-shadowed-variable
-    const editorService: EditorService = TestBed.inject(EditorService);
-    editorConfig.config.renderTaxonomy = true;
-    editorConfig.config.primaryCategory = 'Observation';
-    editorConfig.config.objectType = 'QuestionSet';
-    // spyOn(helperService, 'addDepthToHierarchy').and.callFake(() => {});
-    spyOnProperty(editorService, 'editorConfig', 'get').and.returnValue(editorConfig);
-    spyOn(component, 'buildTreeFromFramework');
-    spyOn(component, 'removeIntermediateLevelsFromFramework');
-    component.initialize();
-    expect(component.removeIntermediateLevelsFromFramework).toHaveBeenCalled();
-  });
-
-  it('#removeIntermediateLevelsFromFramework should call when primaryCategory obs with rubrics', () => {
-    spyOn(component, 'removeIntermediateLevelsFromFramework').and.callThrough();
-    const retunedObject = component.removeIntermediateLevelsFromFramework(RubricstreeData);
-    expect(component.removeIntermediateLevelsFromFramework).toHaveBeenCalledWith(RubricstreeData);
-    expect(retunedObject).toBeDefined();
-  });
-  
   it('#addFromLibrary() should call #emitshowLibraryPageEvent()', () => {
-    const editorService: EditorService = TestBed.inject(EditorService);
-    spyOn(editorService, 'emitshowLibraryPageEvent').and.callFake(() => {});
+    spyOn(component.treeEventEmitter, 'emit').and.callThrough();
     component.addFromLibrary();
-    expect(editorService.emitshowLibraryPageEvent).toHaveBeenCalledWith('showLibraryPage');
+    expect(component.treeEventEmitter.emit).toHaveBeenCalledWith({ type: 'showLibraryPage' });
   });
 
   it('#ngAfterViewInit() should call #getTreeConfig() and #renderTree()', () => {
@@ -238,21 +76,20 @@ describe('FancyTreeComponent', () => {
     component.ngAfterViewInit();
     expect(component.getTreeConfig).toHaveBeenCalled();
     expect(component.renderTree).toHaveBeenCalled();
-  }); 
+  });
 
   it('call #eachNodeActionButton() to verify #visibility for root node', () => {
-    spyOn(component,'eachNodeActionButton').and.callThrough();
+    spyOn(component, 'eachNodeActionButton').and.callThrough();
     component.config = mockData.config;
     const rootNode = {
       getLevel: () => 1,
       folder: true,
       data: { root: true },
     };
-    spyOnProperty(editorService, 'editorConfig', 'get').and.returnValue(editorConfig);
     component.eachNodeActionButton(rootNode);
     expect(component.visibility.addFromLibrary).toBeFalsy();
     expect(component.visibility.createNew).toBeFalsy();
-    expect(component.visibility.addChild).toBeFalsy();
+    expect(component.visibility.addChild).toBeTruthy();
     expect(component.visibility.addSibling).toBeFalsy();
     expect(component.eachNodeActionButton).toHaveBeenCalled();
   });
@@ -285,31 +122,6 @@ describe('FancyTreeComponent', () => {
     expect(component.visibility.createNew).toBeFalsy();
   });
 
-  it('call #eachNodeActionButton() to verify #visibility when #bulkUploadProcessingStatus is true', () => {
-    component.config = mockData.config;
-    component.bulkUploadProcessingStatus = true;
-    const node = {
-      getLevel: () => 2,
-      folder: true,
-      data: { root: false },
-    };
-    component.eachNodeActionButton(node);
-    expect(component.visibility).toEqual({
-      addChild: false,
-      addSibling: false,
-      addFromLibrary: false,
-      addQuestionFromLibrary: false,
-      createNew: false
-    });
-  });
-
-  it('#addFromLibrary() should call #emitshowLibraryPageEvent()', () => {
-    const editorService: EditorService = TestBed.inject(EditorService);
-    spyOn(editorService, 'emitshowLibraryPageEvent');
-    component.addFromLibrary();
-    expect(editorService.emitshowLibraryPageEvent).toHaveBeenCalled();
-  });
-
   it('#handleActionButtons() should call #removeNode() if action is delete', () => {
     const el = {id: 'delete'};
     spyOn(component, 'removeNode');
@@ -331,11 +143,6 @@ describe('FancyTreeComponent', () => {
     expect(component.addChild).toHaveBeenCalled();
   });
 
-  it('#createNewContent() should emit event', () => {
-    spyOn(component.treeEventEmitter, 'emit');
-    component.createNewContent();
-    expect(component.treeEventEmitter.emit).toHaveBeenCalled();
-  });
 
   it('#isFolder() should return false if config.objectType = QuestionSet and child.objectType = Question', () => {
     component.config = {
@@ -453,9 +260,6 @@ describe('FancyTreeComponent', () => {
     spyOn(component, 'dropNode').and.callFake(() => {
       return true;
     });
-    spyOn(editorService,'getDependentNodes').and.callFake(()=>{
-      return {};
-    })
     const node = {};
     component.dragDrop(node, data);
     expect(component.dropNode).toHaveBeenCalled();
@@ -525,67 +329,11 @@ describe('FancyTreeComponent', () => {
       return true;
     });
     const targetNode = { folder: false, getLevel: () => 2 };
-    const contentNode: any = { hitMode: 'after', otherNode: { data:{id:"do_11330103476396851218"},getLevel: () => 1, moveTo: () => true }, node: { data: { root: false } }};
+    // tslint:disable-next-line:max-line-length
+    const contentNode: any = { hitMode: 'after', otherNode: { data: {id: 'do_11330103476396851218'}, getLevel: () => 1, moveTo: () => true }, node: { data: { root: false } }};
     component.dropNode(targetNode, contentNode);
     const result = component.dragDrop(targetNode, contentNode);
-
-    spyOn(editorService, 'getDependentNodes').and.returnValue({
-      "source": [],
-      "target": [
-          "do_1134347722012835841130",
-          "do_1134355563320688641163"
-      ]
-  });
     expect(result).toBeTruthy();
-  });
-
-  it("#rearrangeBranchingLogic on the node drag and drop on tree structure",()=>{
-    const currentSectionId='do_1134355577791283201172';
-    const nodeId ='do_1134347235008512001125';
-    const targetSectionId='do_1134347209749299201119';
-    const dependentNodeIDs ={
-      "source": [],
-      "target": [
-          "do_1134347722012835841130",
-          "do_1134355563320688641163"
-      ]
-  };
-    const movingNodeIds= ['do_1134347722012835841130', 'do_1134355563320688641163', 'do_1134347235008512001125'];
-    spyOn(component,"rearrangeBranchingLogic").and.callThrough();
-    component.rearrangeBranchingLogic(nodeId, currentSectionId, targetSectionId, dependentNodeIDs, movingNodeIds);
-    expect(component.rearrangeBranchingLogic).toHaveBeenCalled();
-
-  })
-
-  it("#moveDependentNodes on the node drag and drop on tree structure",()=>{
-    spyOn(component,'moveDependentNodes').and.callThrough();
-    component.moveDependentNodes(TargetNodeMockData,CurrentNodeMockData);
-    expect(component.moveDependentNodes).toHaveBeenCalled();
-  });
-
-  it('#rearrangeBranchingLogic() should call when drag and drop with branchingLogic is there ', () => {
-    const nodeId = "do_113449672558780416163";
-    const currentSectionId = "do_1134460323602841601200";
-    const targetSectionId = "do_1134460323604971521236";
-    const movingNodeIds=[
-     "do_113449672558780416163",
-     "do_113449775832088576181",
-     "do_113449787008081920183",
-     "do_113449808985628672185",
-     "do_11345671149997260811"
-    ];
-    const dependentNodeIDs = {
-      source: [],
-      target: [
-        "do_113449775832088576181",
-        "do_113449787008081920183",
-        "do_113449808985628672185",
-        "do_11345671149997260811"
-      ]
-    }
-    spyOn(component,'rearrangeBranchingLogic').and.callThrough();
-    component.rearrangeBranchingLogic(nodeId,currentSectionId,targetSectionId,dependentNodeIDs,movingNodeIds);
-    expect(component.rearrangeBranchingLogic).toHaveBeenCalled();
   });
 
 });
