@@ -110,12 +110,15 @@ describe('EditorComponent', () => {
     const telemetryService = TestBed.inject(EditorTelemetryService);
     spyOn(telemetryService, 'initializeTelemetry').and.callFake(() => { });
     spyOn(telemetryService, 'start').and.callFake(() => { });
+    const dialcodeService = TestBed.inject(DialcodeService);
+    spyOn(dialcodeService, 'readExistingQrCode').and.callFake(() => {});
     const libraryPage: EventEmitter<any> = new EventEmitter();
     spyOn(editorService, 'getshowLibraryPageEmitter').and.callFake(() => {return libraryPage})
     spyOn(component, 'showLibraryComponentPage').and.callFake(() => {});
     const questionLibraryPage: EventEmitter<any> = new EventEmitter();
     spyOn(editorService, 'getshowQuestionLibraryPageEmitter').and.callFake(() => {return questionLibraryPage});
     spyOn(component, 'showQuestionLibraryComponentPage').and.callFake(() => {});
+    treeService.nextTreeStatus('loaded');
     component.ngOnInit();
     expect(editorService.initialize).toHaveBeenCalledWith(editorConfig);
     expect(editorService.editorMode).toEqual('edit');
@@ -136,6 +139,7 @@ describe('EditorComponent', () => {
     expect(telemetryService.initializeTelemetry).toHaveBeenCalled();
     expect(telemetryService.telemetryPageId).toEqual('collection_editor');
     expect(telemetryService.start).toHaveBeenCalled();
+    expect(dialcodeService.readExistingQrCode).toHaveBeenCalled();
     // expect(editorService.getshowLibraryPageEmitter).toHaveBeenCalled();
     // expect(component.showLibraryComponentPage).toHaveBeenCalled();
     // expect(editorService.getshowQuestionLibraryPageEmitter).toHaveBeenCalled();
@@ -1062,6 +1066,15 @@ describe('EditorComponent', () => {
     spyOn(component, 'updateTreeNodeData').and.callFake(() => { });
     component.treeEventListener(event);
     expect(component.updateTreeNodeData).toHaveBeenCalled();
+  });
+
+  it('#treeEventListener() should call #showLibraryComponentPage()', () => {
+    component.editorConfig = editorConfig;
+    const event = { type: 'showLibraryPage' };
+    spyOn(component, 'updateTreeNodeData').and.callFake(() => { });
+    spyOn(component, 'showLibraryComponentPage').and.callFake(() => { });
+    component.treeEventListener(event);
+    expect(component.showLibraryComponentPage).toHaveBeenCalled();
   });
 
   it('#treeEventListener() should call #updateSubmitBtnVisibility() if event type is nodeSelect', () => {
