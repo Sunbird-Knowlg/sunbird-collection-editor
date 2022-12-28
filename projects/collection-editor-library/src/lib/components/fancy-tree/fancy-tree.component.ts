@@ -5,12 +5,9 @@ import {
 import 'jquery.fancytree';
 import * as _ from 'lodash-es';
 import { TreeService } from '../../services/tree/tree.service';
-// import { EditorService } from '../../services/editor/editor.service';
-// import { HelperService } from '../../services/helper/helper.service';
 // import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
 import { ConfigService } from '../../services/config/config.service';
-// import {  DialcodeService } from '../../services/dialcode/dialcode.service';
 
 
 import { Subject } from 'rxjs';
