@@ -11,7 +11,7 @@ jobs:
   test-cases:
     working_directory: ~/sunbird-collection-editor
     machine:
-      image: ubuntu-2004:202010-01
+      image: ubuntu-2004:202104-01
     steps:
       - checkout:
           path: ~/sunbird-collection-editor
