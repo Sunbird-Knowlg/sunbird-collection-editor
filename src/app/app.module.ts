@@ -6,10 +6,12 @@ import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
 import { QuestionCursor } from '@project-sunbird/sunbird-quml-player';
 import { EditorCursorImplementationService } from './editor-cursor-implementation.service';
+import { FancytreeWrapperComponent } from './fancytree-wrapper/fancytree-wrapper.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    FancytreeWrapperComponent
   ],
   imports: [
     BrowserModule,

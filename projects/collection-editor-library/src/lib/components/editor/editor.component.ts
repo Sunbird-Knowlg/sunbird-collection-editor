@@ -183,6 +183,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.treeService.treeStatus$.pipe(takeUntil(this.unsubscribe$)).subscribe((status) => {
       if (status === 'loaded') {
         this.getFrameworkDetails(this.primaryCategoryDef);
+        this.dialcodeService.readExistingQrCode();
       }
     });
   }
@@ -874,6 +875,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           }));
         }
         break;
+      case 'showLibraryPage':
+          this.showLibraryComponentPage();
+          break;
       default:
         break;
     }
@@ -1017,13 +1021,13 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         primaryCategory: _.get(this.selectedNodeData, 'data.metadata.primaryCategory'),
         interactionType: _.get(this.selectedNodeData, 'data.metadata.interactionTypes[0]')
       };
-        this.questionComponentInput = {
+      this.questionComponentInput = {
           ...this.questionComponentInput,
           creationContext:{
             isReadOnlyMode: mode !== 'edit' ? true : false,
             correctionComments:this.contentComment
         }
-      }
+      };
       this.editorService.getCategoryDefinition(this.selectedNodeData.data.metadata.primaryCategory, null, 'Question')
       .subscribe((res) => {
         const selectedtemplateDetails = res.result.objectCategoryDefinition;

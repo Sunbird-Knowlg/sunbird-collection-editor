@@ -80,6 +80,6 @@ import { A11yModule } from '@angular/cdk/a11y';
     { provide: CacheStorageAbstract, useClass: CacheSessionStorage },
     { provide: DialcodeCursor, useExisting: DialcodeService },
   ],
-  exports: [EditorComponent],
+  exports: [EditorComponent, FancyTreeComponent],
 })
 export class CollectionEditorLibraryModule {}
