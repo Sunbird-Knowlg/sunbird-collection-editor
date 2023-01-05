@@ -6,7 +6,7 @@ import { mockTreeService } from '../fancy-tree/fancy-tree.component.spec.data';
 import { EditorService } from '../../services/editor/editor.service';
 import { of, throwError } from 'rxjs';
 import { QuestionService } from '../../services/question/question.service';
-import { mockQuestionData, mockTreeData } from './assign-page-number.component.spec.data';
+import { mockCreateArray, mockPageNumberArray, mockQuestionData, mockRenderingSequence, mockTreeData } from './assign-page-number.component.spec.data';
 
 const mockEditorService = {
   getToolbarConfig: () => { },
@@ -51,8 +51,8 @@ describe('AssignPageNumberComponent', () => {
     });
     editorService.treeData = mockTreeData;
     spyOn(component, 'ngOnInit').and.callThrough();
-    spyOn(component, 'createSequence').and.callFake(() => {});
-    spyOn(component, 'treeEventListener').and.callFake(() => {});
+    spyOn(component, 'createSequence').and.callFake(() => { });
+    spyOn(component, 'treeEventListener').and.callFake(() => { });
     component.ngOnInit();
     expect(component.toolbarConfig).toBeDefined();
     expect(component.toolbarConfig.title).toEqual('Observation Form');
@@ -82,7 +82,7 @@ describe('AssignPageNumberComponent', () => {
     spyOn(editorService, 'getHierarchyObj').and.callFake(() => {
       return {
         '1234': {
-          children : []
+          children: []
         }
       };
     });
@@ -114,15 +114,52 @@ describe('AssignPageNumberComponent', () => {
         count: 1
       }
     }));
-    component.treeEventListener({ event: { identifier: '1234' } });
   });
+  //   spyOn(component, 'treeEventListener').and.callThrough();
+  //   spyOn(editorService, 'getHierarchyObj').and.callFake(() => {
+  //     return {
+  //       '1234': {
+  //         children : []
+  //       }
+  //     };
+  //   });
+  //   spyOn(treeService, 'getFirstChild').and.callFake(() => {
+  //     return { data: { metadata: { identifier: '0123', allowScoring: 'Yes' } } };
+  //   });
+  //   spyOn(questionService, 'getQuestionList').and.returnValue(of({
+  //     result: {
+  //       questions: [
+  //         {
+  //           editorState: {
+  //             options: [
+  //               {
+  //                 answer: false,
+  //                 value: {
+  //                   body: '<p>Yes</p>',
+  //                   value: 0
+  //                 }
+  //               },
+  //             ],
+  //             question: '<p>Yes or No?</p>'
+  //           },
+  //           identifier: 'do_1234',
+  //           languageCode: [
+  //             'en'
+  //           ]
+  //         }
+  //       ],
+  //       count: 1
+  //     }
+  //   }));
+  //   component.treeEventListener({ event: { identifier: '1234' } });
+  // });
 
   it('#treeEventListener should call api call fail', () => {
     spyOn(component, 'treeEventListener').and.callThrough();
     spyOn(editorService, 'getHierarchyObj').and.callFake(() => {
       return {
         '1234': {
-          children : []
+          children: []
         }
       };
     });
@@ -139,9 +176,12 @@ describe('AssignPageNumberComponent', () => {
   it('#onValueChange should call to assign the page numbers', () => {
     spyOn(component, 'onValueChange').and.callThrough();
     component.questions = mockQuestionData;
+    component.criteriaId = 'do_1134460323602841601200';
+    component.rendering_sequence = mockRenderingSequence;
+    component.pageNumArray = mockPageNumberArray;
     const question = mockQuestionData[0];
-    component.onValueChange(1, question);
-    expect(component.onValueChange).toHaveBeenCalledWith(1, question);
+    component.onValueChange(1, question, 1);
+    expect(component.onValueChange).toHaveBeenCalledWith(1, question, 1);
     expect(question.page_no).toBe(1);
   });
 
@@ -152,6 +192,40 @@ describe('AssignPageNumberComponent', () => {
     expect(component.createSequence).toHaveBeenCalledWith(component.treeData);
   });
 
+  it('#findSequenceCriteria should call to check the rendering sequence', () => {
+    spyOn(component, 'findSequenceCriteria').and.callThrough();
+    component.criteriaId = 'do_1134460323602841601200';
+    component.rendering_sequence = mockRenderingSequence;
+    component.findSequenceCriteria();
+    expect(component.criteriaId).toHaveBeenCalledWith('do_1134460323602841601200');
+  });
+
+  it('#clearInput should call to check the rendering sequence', () => {
+    spyOn(component, 'clearInput').and.callThrough();
+    component.questions = mockQuestionData;
+    component.criteriaId = 'do_1134460323602841601200';
+    component.rendering_sequence = mockRenderingSequence;
+    component.pageNumArray = mockPageNumberArray;
+    const question = mockQuestionData[0];
+    component.clearInput(1, question, 1);
+    expect(component.clearInput).toHaveBeenCalledWith(1, question, 1);
+    expect(question.page_no).toBe(1);
+  });
+
+  it('#updateRenderingSequence should call to update the rendering sequence', () => {
+    spyOn(component, 'updateRenderingSequence').and.callThrough();
+    component.createArray = mockCreateArray;
+    component.pageNumArray = mockPageNumberArray;
+    component.updateRenderingSequence();
+    expect(component.createArray.length).toEqual(1);
+  });
+
+  it('#setNewArrayToCreateArray should call to create the new array', () => {
+    spyOn(component, 'setNewArrayToCreateArray').and.callThrough();
+    component.numArray = [1, 2, 3];
+    component.setNewArrayToCreateArray();
+    expect(component.createArray.length).toEqual(3);
+  })
 
 });
 

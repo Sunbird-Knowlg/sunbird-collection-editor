@@ -48,11 +48,7 @@ export const mockTreeData = [
             "requiresSubmit": "No",
             "visibility": "Parent",
             "showTimer": "No",
-            "groups": {
-                "Student interview": [
-                    "do_113449672558780416163"
-                ]
-            },
+          
             "index": 1,
             "setType": "materialised",
             "languageCode": [
@@ -233,22 +229,7 @@ export const mockTreeData = [
                     "requiresSubmit": "No",
                     "visibility": "Parent",
                     "showTimer": "No",
-                    "groups": {
-                        "Student interview": [
-                            "do_113449672558780416163",
-                            "do_11364358223115059211484"
-                        ],
-                        "Teacher interview": [
-                            "do_11358056771369369615004",
-                            "do_1136011660822200321804"
-                        ],
-                        "Official interview": [
-                            "do_1136011666813255681808"
-                        ],
-                        "Parent interview": [
-                            "do_11364297206960128011480"
-                        ]
-                    },
+                 
                     "index": 1,
                     "setType": "materialised",
                     "languageCode": [
@@ -1067,11 +1048,7 @@ export const mockTreeData = [
                     "requiresSubmit": "No",
                     "visibility": "Parent",
                     "showTimer": "No",
-                    "groups": {
-                        "Teacher interview": [
-                            "do_11357919243396710414900"
-                        ]
-                    },
+                   
                     "index": 2,
                     "setType": "materialised",
                     "languageCode": [
@@ -1320,11 +1297,6 @@ export const mockTreeData = [
                     "requiresSubmit": "No",
                     "visibility": "Parent",
                     "showTimer": "No",
-                    "groups": {
-                        "Parent interview": [
-                            "do_113583348668153856123"
-                        ]
-                    },
                     "index": 3,
                     "setType": "materialised",
                     "languageCode": [
@@ -1569,4 +1541,42 @@ export const mockQuestionData = [
         "identifier": "do_11357638131503104013481",
         "page_no": null
     }
+];
+
+export const mockRenderingSequence = {
+  name: "Ecm",
+  sequence: [
+    {
+      value: "do_1134460323602841601200",
+      name: "Chemistry",
+      pages: [
+        [
+            "do_11357626234228736013446"
+        ],
+        [
+            "do_11357638131503104013481"
+        ]
+    ],
+      index: 0,
+    },
+    {
+      value: "do_1134460323604971521236",
+      name: "Biology",
+      pages: [],
+      index: 1,
+    },
+  ],
+};
+
+export const mockCreateArray = [
+    [],
+    [
+        "do_11357638131503104013481"
+    ]
+];
+
+export const mockPageNumberArray= [
+    [
+        "do_11357626234228736013446"
+    ]
 ]

@@ -873,7 +873,13 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     metaData.interactions.validation = { required: this.childFormData.markAsNotMandatory === 'Yes' ? 'No' : 'Yes'};
     if (this.childFormData.allowMultiSelect === 'Yes') {
       metaData.responseDeclaration.response1.cardinality = 'multiple';
+    } else{
+      metaData.responseDeclaration.response1.cardinality = 'single';
     }
+
+    if (!_.isUndefined(this.editorService?.editorConfig?.config?.renderTaxonomy)){
+      this.calculateMinMaxScore(metaData);
+     }
 
     _.forEach(this.subMenus, (el: any) => {
       if (el.id === 'addHint') {
@@ -1521,4 +1527,18 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   openRequestChangesPopup() {
     this.requestChangesPopupAction = 'rejectQuestion';
   }
+
+  calculateMinMaxScore(metaData){
+    const scores = [];
+    metaData.responseDeclaration.response1.mapping.forEach(item => scores.push(item.outcomes.score));
+    metaData.responseDeclaration.response1.minScore = Math.min(...scores);
+    if (_.get(metaData, 'responseDeclaration.response1.cardinality') === 'multiple'){
+      let sum = 0;
+      metaData.responseDeclaration.response1.mapping.forEach(item => sum += +(item.outcomes.score));
+      metaData.responseDeclaration.response1.maxScore = sum;
+    }else{
+     metaData.responseDeclaration.response1.maxScore = Math.max(...scores);
+    }
+  }
+
 }
