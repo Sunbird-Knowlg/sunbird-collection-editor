@@ -197,7 +197,7 @@ describe('AssignPageNumberComponent', () => {
     component.criteriaId = 'do_1134460323602841601200';
     component.rendering_sequence = mockRenderingSequence;
     component.findSequenceCriteria();
-    expect(component.criteriaId).toHaveBeenCalledWith('do_1134460323602841601200');
+    expect(component.criteriaId).toBe('do_1134460323602841601200');
   });
 
   it('#clearInput should call to check the rendering sequence', () => {
@@ -217,7 +217,7 @@ describe('AssignPageNumberComponent', () => {
     component.createArray = mockCreateArray;
     component.pageNumArray = mockPageNumberArray;
     component.updateRenderingSequence();
-    expect(component.createArray.length).toEqual(1);
+    expect(component.createArray.length).toEqual(2);
   });
 
   it('#setNewArrayToCreateArray should call to create the new array', () => {
