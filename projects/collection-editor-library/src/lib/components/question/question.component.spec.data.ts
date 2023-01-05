@@ -194,7 +194,20 @@ export const mockData = {
                 SCORE: 1,
               },
             },
-            mapping: [],
+            mapping: [
+              {
+                  response: 0,
+                  outcomes: {
+                      score: '10'
+                  }
+              },
+              {
+                  response: 1,
+                  outcomes: {
+                      score: '5'
+                  }
+              }
+          ],
           },
         },
         remarks: {

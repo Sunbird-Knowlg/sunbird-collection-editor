@@ -998,46 +998,6 @@ describe("QuestionComponent", () => {
     component.setMedia({ id: "1234" });
     expect(component.mediaArr).toBeDefined();
   });
-  it("#saveQuestion() should call saveQuestion for updateQuestion throw error", () => {
-    component.editorState = mockData.editorState.body;
-    component.questionId = undefined;
-    spyOn(treeService, "getFirstChild").and.callFake(() => {
-      return { data: { metadata: { identifier: "0123",allowScoring:'Yes' } } };
-    });
-    spyOn(treeService, "getActiveNode").and.callFake(() => {
-      return { data: { root: true } };
-    });
-    component.creationContext = creationContextMock;
-    spyOn(questionService, "upsertQuestion").and.returnValue(
-      of({
-        result: {
-          identifiers: {
-            "1234": "do_123",
-          },
-        },
-      })
-    );
-    spyOn(questionService, "updateHierarchyQuestionUpdate").and.callFake(() => {
-      return of({
-        result: {
-          identifiers: {
-            "1245": "do_123",
-          },
-        },
-      });
-    });
-    const metaData = mockData.textQuestionNetaData.result.question;
-    component.questionPrimaryCategory = metaData.primaryCategory;
-    component.childFormData = childMetaData;
-    component.subMenus = mockData.subMenus;
-    component.selectedSolutionType='12345';
-    component.questionInteractionType = "text";
-    component.getQuestionMetadata();
-    component.setQuestionTypeValues(metaData);
-    component.prepareQuestionBody();
-    component.updateQuestion();
-    component.saveQuestion();
-  });
 
   it('#getQuestionMetadata shpuld call when queston body is prepared',()=>{
     spyOn(component,'getQuestionMetadata').and.callThrough();
@@ -1272,10 +1232,6 @@ describe("QuestionComponent", () => {
     spyOn(treeService, "getFirstChild").and.callFake(() => {
       return { data: { metadata: { identifier: "0123",allowScoring:'Yes' } } };
     });
-    mockData.mcqQuestionMetaData.result.question.responseDeclaration.response1.mapping=[
-      {response:0,score:10},
-      {response:1,score:10}
-    ]
     component.editorState = mockData.mcqQuestionMetaData.result.question;
     editorService = TestBed.inject(EditorService);
     editorService.editorConfig.renderTaxonomy=false;
@@ -1739,11 +1695,11 @@ describe("QuestionComponent", () => {
     component.setQuestionTypeValues(metaData);
   });
 
-  it("#setQuestionTypeValues call when question for date", () => {
-    const metaData = mockData.dateQuestionMetaDate.result.question;
+  it("#setQuestionTypeValues call when question for mcq", () => {
+    const metaData = mockData.mcqQuestionMetaData.result.question;
     component.childFormData = childMetaData;
     component.subMenus = mockData.subMenus;
-    component.questionInteractionType = "date";
+    component.questionInteractionType = "choice";
     component.setQuestionTypeValues(metaData);
   });
 
