@@ -3,7 +3,6 @@ import { EditorService } from "../../services/editor/editor.service";
 import { QuestionService } from "../../services/question/question.service";
 import { TreeService } from "../../services/tree/tree.service";
 import * as _ from "lodash-es";
-import { ConfigService } from "../../services/config/config.service";
 
 @Component({
   selector: "lib-assign-page-number",
@@ -131,7 +130,14 @@ export class AssignPageNumberComponent implements OnInit {
     }
     _.forEach(this.rendering_sequence?.sequence, (data) => {
       if (data.value === this.criteriaId) {
-        const getIdentifier = this.createArray.filter((arr, index1) =>
+        // const getIdentifier = this.createArray.filter((arr, index1) =>
+        //   arr.some((e, index2) => {
+        //     if (e === question.identifier) {
+        //       this.createArray[index1].splice(index2, 1);
+        //     }
+        //   })
+        // );
+        this.createArray.filter((arr, index1) =>
           arr.some((e, index2) => {
             if (e === question.identifier) {
               this.createArray[index1].splice(index2, 1);
