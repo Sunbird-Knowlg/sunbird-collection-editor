@@ -130,13 +130,6 @@ export class AssignPageNumberComponent implements OnInit {
     }
     _.forEach(this.rendering_sequence?.sequence, (data) => {
       if (data.value === this.criteriaId) {
-        // const getIdentifier = this.createArray.filter((arr, index1) =>
-        //   arr.some((e, index2) => {
-        //     if (e === question.identifier) {
-        //       this.createArray[index1].splice(index2, 1);
-        //     }
-        //   })
-        // );
         this.createArray.filter((arr, index1) =>
           arr.some((e, index2) => {
             if (e === question.identifier) {

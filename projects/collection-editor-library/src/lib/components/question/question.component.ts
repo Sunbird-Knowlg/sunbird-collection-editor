@@ -855,13 +855,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.showConfirmPopup = false;
     this.treeService.clearTreeCache();
     setTimeout(() => {
-      // this.showAddSecondaryQuestionCat
-      //   ? this.questionEmitter.emit({
-      //       type: "createNewContent",
-      //       isChildQuestion: true,
-      //     })
-      //   : (this.editorService.parentIdentifier = undefined);
-
       if (this.showAddSecondaryQuestionCat) {
         this.questionEmitter.emit({
           type: "createNewContent",
@@ -1054,9 +1047,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     metadata.editorState.question = metadata.question;
     metadata.body = metadata.question;
     const treeNodeData = _.get(this.treeNodeData, "data.metadata");
-    // _.get(treeNodeData, "allowScoring") === "Yes"
-    //   ? ""
-    //   : _.set(metadata, "responseDeclaration.response1.mapping", []);
 
     if (!(_.get(treeNodeData, "allowScoring") === "Yes")) {
       _.set(metadata, "responseDeclaration.response1.mapping", []);
@@ -1725,9 +1715,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
               availableAlias[formFieldCategory.code]
             );
             if (formFieldCategory.code === "markAsNotMandatory") {
-              // defaultValue === "Yes"
-              //   ? (defaultValue = "No")
-              //   : (defaultValue = "Yes");
               defaultValue = defaultValue === "Yes" ? "No" : "Yes";
             }
             formFieldCategory.default = defaultValue;
