@@ -6,7 +6,6 @@ import {
   Output,
   AfterViewInit,
   ViewEncapsulation,
-  OnChanges,
   OnDestroy,
 } from "@angular/core";
 import * as _ from "lodash-es";
@@ -154,7 +153,6 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       questionId,
       type,
       category,
-      config,
       creationContext,
       creationMode,
     } = this.questionInput;
@@ -857,12 +855,15 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.showConfirmPopup = false;
     this.treeService.clearTreeCache();
     setTimeout(() => {
-      this.showAddSecondaryQuestionCat
-        ? this.questionEmitter.emit({
-            type: "createNewContent",
-            isChildQuestion: true,
-          })
-        : (this.editorService.parentIdentifier = undefined);
+      if (this.showAddSecondaryQuestionCat) {
+        this.questionEmitter.emit({
+          type: "createNewContent",
+          isChildQuestion: true,
+        });
+      } else {
+        this.editorService.parentIdentifier = undefined;
+      }
+
       this.showAddSecondaryQuestionCat = false;
       this.questionEmitter.emit({ status: false });
     }, 100);
@@ -1046,9 +1047,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     metadata.editorState.question = metadata.question;
     metadata.body = metadata.question;
     const treeNodeData = _.get(this.treeNodeData, "data.metadata");
-    _.get(treeNodeData, "allowScoring") === "Yes"
-      ? ""
-      : _.set(metadata, "responseDeclaration.response1.mapping", []);
+
+    if (!(_.get(treeNodeData, "allowScoring") === "Yes")) {
+      _.set(metadata, "responseDeclaration.response1.mapping", []);
+    }
 
     if (this.questionInteractionType === "choice") {
       metadata.body = this.getMcqQuestionHtmlBody(
@@ -1713,9 +1715,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
               availableAlias[formFieldCategory.code]
             );
             if (formFieldCategory.code === "markAsNotMandatory") {
-              defaultValue === "Yes"
-                ? (defaultValue = "No")
-                : (defaultValue = "Yes");
+              defaultValue = defaultValue === "Yes" ? "No" : "Yes";
             }
             formFieldCategory.default = defaultValue;
             this.childFormData[formFieldCategory.code] = defaultValue;
