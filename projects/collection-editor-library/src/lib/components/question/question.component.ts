@@ -1270,7 +1270,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
           if (this.questionMetaData && _.has(availableAlias, formFieldCategory.code)) {
             let defaultValue = _.get(this.questionMetaData, availableAlias[formFieldCategory.code]);
             if (formFieldCategory.code === 'markAsNotMandatory') {
-              defaultValue = defaultValue === "Yes" ? "No" : "Yes";
+              defaultValue = defaultValue === 'Yes' ? 'No' : 'Yes';
             }
             formFieldCategory.default = defaultValue;
             this.childFormData[formFieldCategory.code] = defaultValue;
