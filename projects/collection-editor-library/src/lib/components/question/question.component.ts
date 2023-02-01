@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, AfterViewInit, ViewEncapsulation, OnChanges, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, AfterViewInit, ViewEncapsulation, OnDestroy } from '@angular/core';
 import * as _ from 'lodash-es';
 import { UUID } from 'angular2-uuid';
 import { McqForm } from '../../interfaces/McqForm';
@@ -87,7 +87,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   public questionMetadataFormStatus = true;
   public buttonLoaders = {
     saveButtonLoader: false,
-    'review': false
+    review: false
   };
   public showTranslation = false;
   subMenus: SubMenu[];
@@ -130,7 +130,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
-    const { questionSetId, questionId, type, category, config, creationContext, creationMode } = this.questionInput;
+    const { questionSetId, questionId, type, category, creationContext, creationMode } = this.questionInput;
     this.questionInteractionType = type;
     this.questionCategory = category;
     this.questionId = questionId;
@@ -616,9 +616,14 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.showConfirmPopup = false;
     this.treeService.clearTreeCache();
     setTimeout(() => {
-      this.showAddSecondaryQuestionCat ?
-      this.questionEmitter.emit({ type: 'createNewContent', isChildQuestion: true }) :
-      this.editorService.parentIdentifier = undefined;
+      if (this.showAddSecondaryQuestionCat) {
+        this.questionEmitter.emit({
+          type: "createNewContent",
+          isChildQuestion: true,
+        });
+      } else {
+        this.editorService.parentIdentifier = undefined;
+      }
       this.showAddSecondaryQuestionCat = false;
       this.questionEmitter.emit({ status: false });
     }, 100);
@@ -778,7 +783,10 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     metadata.editorState.question = metadata.question;
     metadata.body = metadata.question;
     const treeNodeData = _.get(this.treeNodeData, 'data.metadata');
-    _.get(treeNodeData,'allowScoring') === 'Yes' ? '' : _.set(metadata,'responseDeclaration.response1.mapping',[]);
+
+    if (!(_.get(treeNodeData, "allowScoring") === "Yes")) {
+      _.set(metadata, "responseDeclaration.response1.mapping", []);
+    }
 
     if (this.questionInteractionType === 'choice') {
       metadata.body = this.getMcqQuestionHtmlBody(this.editorState.question, this.editorState.templateId);
@@ -873,7 +881,13 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     metaData.interactions.validation = { required: this.childFormData.markAsNotMandatory === 'Yes' ? 'No' : 'Yes'};
     if (this.childFormData.allowMultiSelect === 'Yes') {
       metaData.responseDeclaration.response1.cardinality = 'multiple';
+    } else{
+      metaData.responseDeclaration.response1.cardinality = 'single';
     }
+
+    if (!_.isUndefined(this.editorService?.editorConfig?.config?.renderTaxonomy)){
+      this.calculateMinMaxScore(metaData);
+     }
 
     _.forEach(this.subMenus, (el: any) => {
       if (el.id === 'addHint') {
@@ -1256,7 +1270,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
           if (this.questionMetaData && _.has(availableAlias, formFieldCategory.code)) {
             let defaultValue = _.get(this.questionMetaData, availableAlias[formFieldCategory.code]);
             if (formFieldCategory.code === 'markAsNotMandatory') {
-              defaultValue === 'Yes' ? (defaultValue = 'No') : (defaultValue = 'Yes');
+              defaultValue = defaultValue === 'Yes' ? 'No' : 'Yes';
             }
             formFieldCategory.default = defaultValue;
             this.childFormData[formFieldCategory.code] = defaultValue;
@@ -1520,5 +1534,20 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   openRequestChangesPopup() {
     this.requestChangesPopupAction = 'rejectQuestion';
+  }
+
+  calculateMinMaxScore(metaData){
+    const scores = [];
+    if (!_.isEmpty(metaData.responseDeclaration.response1.mapping)) {
+      metaData.responseDeclaration.response1.mapping.forEach(item => scores.push(item.outcomes.score));
+      metaData.responseDeclaration.response1.minScore = Math.min(...scores);
+      if (_.get(metaData, 'responseDeclaration.response1.cardinality') === 'multiple'){
+        let sum = 0;
+        metaData.responseDeclaration.response1.mapping.forEach(item => sum += +(item.outcomes.score));
+        metaData.responseDeclaration.response1.maxScore = sum;
+      }else{
+      metaData.responseDeclaration.response1.maxScore = Math.max(...scores);
+      }
+    }
   }
 }

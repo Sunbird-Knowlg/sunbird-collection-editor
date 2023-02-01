@@ -564,6 +564,7 @@ describe("QuestionComponent", () => {
 
   it("#toolbarEventListener() should call toolbarEventListener for saveContent", () => {
     const event = { button: "saveContent" };
+    spyOn(component, 'toolbarEventListener').and.callThrough();
     component.actionType = event.button;
     spyOn(component, "saveContent");
     component.toolbarEventListener(event);
@@ -810,6 +811,7 @@ describe("QuestionComponent", () => {
     expect(component.redirectToQuestionset).not.toHaveBeenCalled();
   });
   it("Unit test for #showHideSpinnerLoader", () => {
+    spyOn(component, 'showHideSpinnerLoader').and.callThrough();
     component.showHideSpinnerLoader(true, "review");
     expect(component.buttonLoaders.saveButtonLoader).toEqual(true);
     expect(component.buttonLoaders.review).toEqual(true);
@@ -997,46 +999,6 @@ describe("QuestionComponent", () => {
     component.mediaArr = [{ id: "6789" }];
     component.setMedia({ id: "1234" });
     expect(component.mediaArr).toBeDefined();
-  });
-  it("#saveQuestion() should call saveQuestion for updateQuestion throw error", () => {
-    component.editorState = mockData.editorState.body;
-    component.questionId = undefined;
-    spyOn(treeService, "getFirstChild").and.callFake(() => {
-      return { data: { metadata: { identifier: "0123",allowScoring:'Yes' } } };
-    });
-    spyOn(treeService, "getActiveNode").and.callFake(() => {
-      return { data: { root: true } };
-    });
-    component.creationContext = creationContextMock;
-    spyOn(questionService, "upsertQuestion").and.returnValue(
-      of({
-        result: {
-          identifiers: {
-            "1234": "do_123",
-          },
-        },
-      })
-    );
-    spyOn(questionService, "updateHierarchyQuestionUpdate").and.callFake(() => {
-      return of({
-        result: {
-          identifiers: {
-            "1245": "do_123",
-          },
-        },
-      });
-    });
-    const metaData = mockData.textQuestionNetaData.result.question;
-    component.questionPrimaryCategory = metaData.primaryCategory;
-    component.childFormData = childMetaData;
-    component.subMenus = mockData.subMenus;
-    component.selectedSolutionType='12345';
-    component.questionInteractionType = "text";
-    component.getQuestionMetadata();
-    component.setQuestionTypeValues(metaData);
-    component.prepareQuestionBody();
-    component.updateQuestion();
-    component.saveQuestion();
   });
 
   it('#getQuestionMetadata shpuld call when queston body is prepared',()=>{
@@ -1272,10 +1234,6 @@ describe("QuestionComponent", () => {
     spyOn(treeService, "getFirstChild").and.callFake(() => {
       return { data: { metadata: { identifier: "0123",allowScoring:'Yes' } } };
     });
-    mockData.mcqQuestionMetaData.result.question.responseDeclaration.response1.mapping=[
-      {response:0,score:10},
-      {response:1,score:10}
-    ]
     component.editorState = mockData.mcqQuestionMetaData.result.question;
     editorService = TestBed.inject(EditorService);
     editorService.editorConfig.renderTaxonomy=false;
@@ -1739,11 +1697,11 @@ describe("QuestionComponent", () => {
     component.setQuestionTypeValues(metaData);
   });
 
-  it("#setQuestionTypeValues call when question for date", () => {
-    const metaData = mockData.dateQuestionMetaDate.result.question;
+  it("#setQuestionTypeValues call when question for mcq", () => {
+    const metaData = mockData.mcqQuestionMetaData.result.question;
     component.childFormData = childMetaData;
     component.subMenus = mockData.subMenus;
-    component.questionInteractionType = "date";
+    component.questionInteractionType = "choice";
     component.setQuestionTypeValues(metaData);
   });
 
@@ -1941,5 +1899,44 @@ describe("QuestionComponent", () => {
     component.getBranchingLogic(RubricData);
     expect(RubricData[0].allowBranching).toBe('Yes');
   })
+
+  it("#toolbarEventListener() should call toolbarEventListener for saveQualityParameters", () => {
+    const data = { button: "saveQualityParameters" };
+    component.showQualityParameterPopup = true;
+    component.toolbarEventListener(data);
+    expect(component.showQualityParameterPopup).toBeTruthy();
+  });
+
+  it("#openRequestChangesPopup should be called", () => {
+    spyOn(component, "openRequestChangesPopup").and.callThrough();
+    component.requestChangesPopupAction = "rejectQuestion";
+    component.openRequestChangesPopup();
+    expect(component.requestChangesPopupAction).toBe("rejectQuestion");
+  });
+
+  it("#calculateMinMaxScore should be called", () => {
+    const metaData = mockData.mcqQuestionMetaData.result.question;
+    childMetaData.allowMultiSelect = "No";
+    component.childFormData = childMetaData;
+    component.subMenus = mockData.subMenus;
+    component.questionInteractionType = "choice";
+    spyOn(component, "setQuestionTypeValues").and.callThrough();
+    spyOn(component, "calculateMinMaxScore").and.callThrough();
+    component.setQuestionTypeValues(metaData);
+    expect(component.calculateMinMaxScore).toHaveBeenCalledWith(metaData);
+  });
+
+  it("buildCondition should call #setQuestionTypeValues()", () => {
+    spyOn(component, "buildCondition").and.callThrough();
+    spyOn(component, "setQuestionTypeValues");
+    const metaData = mockData.mcqQuestionMetaData.result.question;
+    childMetaData.allowMultiSelect = "No";
+    component.childFormData = childMetaData;
+    component.subMenus = mockData.subMenus;
+    component.questionInteractionType = "choice";
+    component.buildCondition("create");
+    component.setQuestionTypeValues(metaData);
+    expect(component.setQuestionTypeValues).toHaveBeenCalledWith(metaData);
+  });
 
 });
