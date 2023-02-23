@@ -4,7 +4,7 @@ import { DataService } from '../../services/data/data.service';
 import { PublicDataService } from '../../services/public-data/public-data.service';
 import { ServerResponse } from '../../interfaces/serverResponse';
 import * as _ from 'lodash-es';
-import { UUID } from 'angular2-uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { HttpClient } from '@angular/common/http';
 import { ConfigService } from '../config/config.service';
 import { EditorService } from '../editor/editor.service';
@@ -109,7 +109,7 @@ export class QuestionService {
           asset: {
             primaryCategory: 'asset',
             language: ['English'],
-            code: UUID.UUID(),
+            code: uuidv4(),
           }
         }
       }

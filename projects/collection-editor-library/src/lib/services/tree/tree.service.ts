@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import 'jquery.fancytree';
-import { UUID } from 'angular2-uuid';
+import { v4 as uuidv4 } from 'uuid';
 declare var $: any;
 import * as _ from 'lodash-es';
 import { IEditorConfig } from '../../interfaces/editor';
@@ -109,7 +109,7 @@ export class TreeService {
     const selectedNode = this.getActiveNode();
     // tslint:disable-next-line:max-line-length
     const nodeConfig = (createType === 'sibling') ? this.config.hierarchy[`level${selectedNode.getLevel() - 1}`] : this.config.hierarchy[`level${selectedNode.getLevel()}`];
-    const uniqueId = UUID.UUID();
+    const uniqueId = uuidv4();
     const nodeTitle = _.get(nodeConfig, 'name');
     const node: any = {
       id: uniqueId,

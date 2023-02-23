@@ -3,7 +3,7 @@ import { of as observableOf, throwError as observableThrowError, Observable } fr
 import { mergeMap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { UUID } from 'angular2-uuid';
+import { v4 as uuidv4 } from 'uuid';
 // import * as moment from 'moment';
 import * as _ from 'lodash-es';
 import { ServerResponse } from '../../interfaces/serverResponse';
@@ -187,7 +187,7 @@ export class DataService {
       // 'X-Consumer-ID': 'X-Consumer-ID',
       'X-Source': 'web',
       ts: '2020-12-31T16:23:27+05:30', // moment().format(), //TODO::
-      'X-msgid': UUID.UUID(),
+      'X-msgid': uuidv4(),
       // tslint:disable-next-line:max-line-length
       Authorization: ''
     };

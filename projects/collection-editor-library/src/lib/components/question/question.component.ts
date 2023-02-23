@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, AfterViewInit, ViewEncapsulation, OnDestroy } from '@angular/core';
 import * as _ from 'lodash-es';
-import { UUID } from 'angular2-uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { McqForm } from '../../interfaces/McqForm';
 import { ServerResponse } from '../../interfaces/serverResponse';
 import { QuestionService } from '../../services/question/question.service';
@@ -144,7 +144,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     this.toolbarConfig.add_translation = true;
     this.treeNodeData = this.treeService.getFirstChild();
     if (_.get(this.creationContext, 'objectType') === 'question') { this.toolbarConfig.questionContribution = true; }
-    this.solutionUUID = UUID.UUID();
+    this.solutionUUID = uuidv4();
     this.telemetryService.telemetryPageId = this.pageId;
     this.initialLeafFormConfig = _.cloneDeep(this.leafFormConfig);
     this.initialize();
@@ -296,7 +296,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
           });
       }
       if (_.isUndefined(this.questionId)) {
-        this.tempQuestionId = UUID.UUID();
+        this.tempQuestionId = uuidv4();
         this.populateFormData();
         this.setQuestionTitle();
         let editorState = {}
@@ -947,7 +947,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   prepareRequestBody() {
-    const questionId = this.questionId ? this.questionId : UUID.UUID();
+    const questionId = this.questionId ? this.questionId : uuidv4();
     this.newQuestionID = questionId;
     const data = this.treeNodeData;
     const activeNode = this.treeService.getActiveNode();
@@ -976,7 +976,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
     } :
     {
       question: {
-        code: UUID.UUID(),
+        code: uuidv4(),
         ...this.getQuestionMetadata()
       }
     };
@@ -1387,7 +1387,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
       this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.038'));
       return;
     }
-    const questionId = this.questionId ? this.questionId : UUID.UUID();
+    const questionId = this.questionId ? this.questionId : uuidv4();
     const data = this.treeNodeData;
     const hierarchyData = this.editorService.getHierarchyObj(data, '', this.selectedSectionId);
     const sectionData = _.get(hierarchyData, `${this.selectedSectionId}`);
