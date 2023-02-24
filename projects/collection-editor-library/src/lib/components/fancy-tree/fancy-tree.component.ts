@@ -14,7 +14,8 @@ import {  DialcodeService } from '../../services/dialcode/dialcode.service';
 
 
 import { Subject } from 'rxjs';
-import { UUID } from 'angular2-uuid';
+import { v4 as uuidv4 } from 'uuid';
+
 declare var $: any;
 
 @Component({
@@ -96,7 +97,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     this.editorService.treeData = treeData;
     this.rootNode = [{
-      id: data.identifier || UUID.UUID(),
+      id: data.identifier || uuidv4(),
       title: data.name,
       tooltip: data.name,
       ...(data.contentType && {contentType: data.contentType}),
@@ -116,7 +117,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     _.forEach(data.children, (child) => {
       const childTree = [];
       tree.push({
-        id: UUID.UUID(),
+        id: uuidv4(),
         title: child.name,
         tooltip: child.name,
         primaryCategory: child.primaryCategory,
@@ -164,7 +165,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     _.forEach(data.children, (child) => {
       const childTree = [];
       tree.push({
-        id: child.identifier || UUID.UUID(),
+        id: child.identifier || uuidv4(),
         title: child.name,
         tooltip: child.name,
         ...(child.contentType && {contentType: child.contentType}),

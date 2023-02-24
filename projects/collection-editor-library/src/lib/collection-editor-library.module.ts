@@ -35,9 +35,6 @@ import { TelemetryInteractDirective } from './directives/telemetry-interact/tele
 import { DateFormatPipe } from './directives/date-format/date-format.pipe';
 import { AssetBrowserComponent } from './components/asset-browser/asset-browser.component';
 import { CollectionIconComponent } from './components/collection-icon/collection-icon.component';
-import { CacheService } from 'ng2-cache-service';
-import { CacheStorageAbstract } from 'ng2-cache-service/dist/src/services/storage/cache-storage-abstract.service';
-import { CacheSessionStorage } from 'ng2-cache-service/dist/src/services/storage/session-storage/cache-session-storage.service';
 import { QumlPlayerComponent } from './components/quml-player/quml-player.component';
 import { DialcodeComponent } from './components/dialcode/dialcode.component';
 import { DialcodeService } from './services/dialcode/dialcode.service';
@@ -105,9 +102,7 @@ import { QualityParamsModalComponent } from './components/quality-params-modal/q
   CommonFormElementsModule, InfiniteScrollModule, HttpClientModule, SunbirdPdfPlayerModule, SunbirdVideoPlayerModule,
   QumlLibraryModule, CarouselModule, SunbirdEpubPlayerModule, ResourceLibraryModule, A11yModule],
   providers: [
-    CacheService,
-    { provide: CacheStorageAbstract, useClass: CacheSessionStorage },
-    { provide: DialcodeCursor, useExisting: DialcodeService },
+    { provide: DialcodeCursor, useExisting: DialcodeService }
   ],
   exports: [EditorComponent],
 })
