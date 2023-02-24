@@ -47,8 +47,8 @@ npm i videojs-contrib-quality-levels --save
 npm i videojs-http-source-selector --save
 npm i jquery --save
 npm i express-http-proxy --save
-npm i mathjax-full --save
 npm i svg2img --save
+npm i mathjax-full --save
 npm i font-awesome --save
 npm i @project-sunbird/sb-styles
 ```
