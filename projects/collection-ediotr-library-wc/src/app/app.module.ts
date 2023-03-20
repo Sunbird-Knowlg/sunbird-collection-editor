@@ -115,7 +115,7 @@ export class AppModule implements DoBootstrap {
   constructor(private injector: Injector) { }
   ngDoBootstrap() {
     const customElement = createCustomElement(EditorComponent, { injector: this.injector });
-    customElements.define('sunbird-quml-player', customElement);
+    customElements.define('sunbird-collection-editor', customElement);
   } 
 
 }

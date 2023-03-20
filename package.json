@@ -38,6 +38,7 @@
     "@types/jquery": "^3.5.5",
     "alphanum-sort": "^1.0.2",
     "common-form-elements-web-v9": "4.7.2",
+    "concat": "^1.0.3",
     "core-js": "^2.5.4",
     "epubjs": "0.3.90",
     "export-to-csv": "^0.2.1",
