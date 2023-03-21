@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { APP_BASE_HREF, CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { createCustomElement } from '@angular/elements';
 import { RouterModule } from '@angular/router';
@@ -27,11 +27,11 @@ import { OptionsComponent } from '../../../collection-editor-library/src/lib/com
 import { AnswerComponent } from '../../../collection-editor-library/src/lib/components/answer/answer.component';
 import { CkeditorToolComponent } from '../../../collection-editor-library/src/lib/components/ckeditor-tool/ckeditor-tool.component';
 import { QuestionComponent } from '../../../collection-editor-library/src/lib/components/question/question.component';
-import {SunbirdPdfPlayerModule} from '@project-sunbird/sunbird-pdf-player-v9';
+import { SunbirdPdfPlayerModule } from '@project-sunbird/sunbird-pdf-player-v9';
 import { SunbirdEpubPlayerModule } from '@project-sunbird/sunbird-epub-player-v9';
 import { SunbirdVideoPlayerModule } from '@project-sunbird/sunbird-video-player-v9';
 import { QumlLibraryModule } from '@project-sunbird/sunbird-quml-player';
-import {CarouselModule} from 'ngx-bootstrap/carousel';
+import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { TelemetryInteractDirective } from '../../../collection-editor-library/src/lib/directives/telemetry-interact/telemetry-interact.directive';
 import { DateFormatPipe } from '../../../collection-editor-library/src/lib/directives/date-format/date-format.pipe';
 import { AssetBrowserComponent } from '../../../collection-editor-library/src/lib/components/asset-browser/asset-browser.component';
@@ -45,7 +45,7 @@ import { ManageCollaboratorComponent } from '../../../collection-editor-library/
 import { SliderComponent } from '../../../collection-editor-library/src/lib/components/slider/slider.component';
 import { TranslationsComponent } from '../../../collection-editor-library/src/lib/components/translations/translations.component';
 import { PublishChecklistComponent } from '../../../collection-editor-library/src/lib/components/publish-checklist/publish-checklist.component';
-import { BulkUploadComponent  } from '../../../collection-editor-library/src/lib/components/bulk-upload/bulk-upload.component';
+import { BulkUploadComponent } from '../../../collection-editor-library/src/lib/components/bulk-upload/bulk-upload.component';
 import { RelationalMetadataComponent } from '../../../collection-editor-library/src/lib/components/relational-metadata/relational-metadata.component';
 import { ResourceLibraryModule } from '@project-sunbird/sunbird-resource-library';
 import { AppLoaderComponent } from '../../../collection-editor-library/src/lib/components/app-loader/app-loader.component';
@@ -53,9 +53,10 @@ import { AssignPageNumberComponent } from '../../../collection-editor-library/sr
 import { PlainTreeComponent } from '../../../collection-editor-library/src/lib/components/plain-tree/plain-tree.component';
 import { A11yModule } from '@angular/cdk/a11y';
 import { ProgressStatusComponent } from '../../../collection-editor-library/src/lib/components/progress-status/progress-status.component';
-import {TermAndConditionComponent} from '../../../collection-editor-library/src/lib/components/term-and-condition/term-and-condition.component';
+import { TermAndConditionComponent } from '../../../collection-editor-library/src/lib/components/term-and-condition/term-and-condition.component';
 
 import { QualityParamsModalComponent } from '../../../collection-editor-library/src/lib/components/quality-params-modal/quality-params-modal.component';
+import { BrowserModule } from '@angular/platform-browser';
 
 
 @NgModule({
@@ -102,12 +103,13 @@ import { QualityParamsModalComponent } from '../../../collection-editor-library/
     QualityParamsModalComponent
   ],
   imports: [
-    CommonModule, FormsModule, ReactiveFormsModule, RouterModule.forChild([]), SuiModule,
-  CommonFormElementsModule, InfiniteScrollModule, HttpClientModule, SunbirdPdfPlayerModule, SunbirdVideoPlayerModule,
-  QumlLibraryModule, CarouselModule, SunbirdEpubPlayerModule, ResourceLibraryModule, A11yModule
+    CommonModule, BrowserModule, FormsModule, ReactiveFormsModule, RouterModule.forRoot([]), SuiModule,
+    CommonFormElementsModule, InfiniteScrollModule, HttpClientModule, SunbirdPdfPlayerModule, SunbirdVideoPlayerModule,
+    QumlLibraryModule, CarouselModule, SunbirdEpubPlayerModule, ResourceLibraryModule, A11yModule
   ],
   providers: [
-    { provide: DialcodeCursor, useExisting: DialcodeService }
+    { provide: DialcodeCursor, useExisting: DialcodeService },
+    { provide: APP_BASE_HREF, useValue: '/' }
   ],
   entryComponents: [EditorComponent]
 })
@@ -116,6 +118,6 @@ export class AppModule implements DoBootstrap {
   ngDoBootstrap() {
     const customElement = createCustomElement(EditorComponent, { injector: this.injector });
     customElements.define('sunbird-collection-editor', customElement);
-  } 
+  }
 
 }
