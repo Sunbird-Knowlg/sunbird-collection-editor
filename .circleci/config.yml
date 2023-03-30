@@ -52,6 +52,16 @@ jobs:
           name: Run sonar scanner
           command: 'cd ~/sunbird-collection-editor && sonar-scanner'
       - run:
+          name: Publish web component to NPM
+          command: |
+            if [ -n $CIRCLE_PR_NUMBER ]; then
+              npm run build-web-component && npm pack ./web-component
+              echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+              npm publish project-sunbird-sunbird-collection-editor-web-component-*
+            else
+              npm run build-web-component && npm pack ./web-component
+            fi    
+      - run:
           name: Publish to NPM
           command: |
             if [ -n $CIRCLE_PR_NUMBER ]; then
