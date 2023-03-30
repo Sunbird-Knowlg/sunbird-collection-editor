@@ -11,7 +11,7 @@
     "build-lib": "ng build collection-editor-library && node assets-copy.js",
     "build-lib:prod": "ng build collection-editor-library --configuration production && node assets-copy.js",
     "test-coverage": "ng test collection-editor-library --code-coverage=true --watch=false --sourceMap=false --browsers=ChromeHeadless",
-    "build-web-component": "npm run build-lib:prod && ng build collection-ediotr-library-wc --output-hashing none && node ./build-wc.js"
+    "build-web-component": "npm run build-lib:prod && ng build collection-editor-library-wc --output-hashing none && node ./build-wc.js"
   },
   "private": true,
   "dependencies": {
