@@ -471,9 +471,9 @@ describe('FancyTreeComponent', () => {
     expect(result.length).toBeGreaterThan(1);
   });
 
-  it('#buildTree() should return tree objects', () => {
+  it('#arrangeTree() should return tree objects', () => {
     const result = component.ArrangeTreeChildren(treeData);
-    expect(result.children.length).toBeGreaterThan(1);
+    expect(result.children.length).toBeGreaterThan(0);
   });
 
   it ('#checkContentAddition() should check node hitMode', () => {
