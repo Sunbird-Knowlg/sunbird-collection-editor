@@ -471,6 +471,11 @@ describe('FancyTreeComponent', () => {
     expect(result.length).toBeGreaterThan(1);
   });
 
+  it('#buildTree() should return tree objects', () => {
+    const result = component.ArrangeTreeChildren(treeData);
+    expect(result.children.length).toBeGreaterThan(1);
+  });
+
   it ('#checkContentAddition() should check node hitMode', () => {
     component.config = editorConfig;
     const targetNode = { folder: false, getLevel: () => 2 };
