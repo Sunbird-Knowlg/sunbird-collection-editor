@@ -163,12 +163,16 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     // This section will change the children array order to match with branching logic parent children order.
     if(data.branchingLogic && Object.keys(data?.branchingLogic).length > 0) {
       for(const key in data.branchingLogic) {
-        let childrenIndex,parentIndex,item;
-        data.children.forEach((element:any,index:number) => {if(element.identifier == key && data.branchingLogic[key].source.length > 0) { childrenIndex = index,parentIndex = data.branchingLogic[key].source[0] }})
+        let childrenIndex,parentId,parentIndex,item;
+        data.children.forEach((element:any,index:number) => {
+          if(element.identifier == key && data.branchingLogic[key].source.length > 0) { 
+            childrenIndex = index;
+            parentId = data.branchingLogic[key].source[0];
+          }})
         if(childrenIndex >= 0) {
           item = data.children[childrenIndex]
           data.children.splice(childrenIndex,1)
-          parentIndex = data.children.findIndex((element) => element.identifier == parentIndex)
+          parentIndex = data.children.findIndex((element) => element.identifier == parentId)
           data.children.splice(parentIndex+1,0,item)
         }
       }
