@@ -71,6 +71,80 @@ export const treeData = {
   primaryCategory: "Course Unit",
   children: [
     {
+      branchingLogic :{
+        "do_21376253446857523212056.img": {
+            "target": [
+                "do_21376253455625420812064.img",
+                "do_21376253456687104012065.img",
+                "do_21376253457749606412066.img"
+            ],
+            "preCondition": {},
+            "source": []
+        },
+        "do_21376253455625420812064.img": {
+            "target": [],
+            "preCondition": {
+                "and": [
+                    {
+                        "eq": [
+                            {
+                                "var": "do_21376253446857523212056.response1.value",
+                                "type": "interactions"
+                            },
+                            [
+                                0
+                            ]
+                        ]
+                    }
+                ]
+            },
+            "source": [
+                "do_21376253446857523212056.img"
+            ]
+        },
+        "do_21376253456687104012065.img": {
+            "target": [],
+            "preCondition": {
+                "and": [
+                    {
+                        "eq": [
+                            {
+                                "var": "do_21376253446857523212056.response1.value",
+                                "type": "interactions"
+                            },
+                            [
+                                1
+                            ]
+                        ]
+                    }
+                ]
+            },
+            "source": [
+                "do_21376253446857523212056.img"
+            ]
+        },
+        "do_21376253457749606412066.img": {
+            "target": [],
+            "preCondition": {
+                "and": [
+                    {
+                        "eq": [
+                            {
+                                "var": "do_21376253446857523212056.response1.value",
+                                "type": "interactions"
+                            },
+                            [
+                                2
+                            ]
+                        ]
+                    }
+                ]
+            },
+            "source": [
+                "do_21376253446857523212056.img"
+            ]
+        }
+      },
       children: [
         {
           id: "testid123",

@@ -162,7 +162,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     if (data.children) { data.children = _.sortBy(data.children, ['index']); }
     // This section will change the children array order to match with branching logic parent children order.
     if(data.branchingLogic && Object.keys(data?.branchingLogic).length > 0) {
-      this.ArrangeTreeChildren(data);
+      this.arrangeTreeChildren(data);
     }
     // section to add children in the tree.
     data.level = level ? (level + 1) : 1;
@@ -189,7 +189,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     return tree;
   }
 
-  ArrangeTreeChildren(data) {
+  arrangeTreeChildren(data?) {
     for(const key in data.branchingLogic) {
       let childrenIndex,parentId,parentIndex,item;
       data.children.forEach((element:any,index:number) => {

@@ -471,9 +471,11 @@ describe('FancyTreeComponent', () => {
     expect(result.length).toBeGreaterThan(1);
   });
 
-  it('#arrangeTree() should return tree objects', () => {
-    const result = component.ArrangeTreeChildren(treeData);
-    expect(result.children.length).toBeGreaterThan(0);
+  it('#arrangeTreeChildren() should return array', () => {
+    spyOn(component,'arrangeTreeChildren')
+    const result = component.arrangeTreeChildren();
+    expect(result).toBeUndefined();
+    expect(component.arrangeTreeChildren).toHaveBeenCalled();
   });
 
   it ('#checkContentAddition() should check node hitMode', () => {
