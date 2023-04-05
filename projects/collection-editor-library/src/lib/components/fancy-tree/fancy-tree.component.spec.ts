@@ -473,7 +473,7 @@ describe('FancyTreeComponent', () => {
 
   it('#arrangeTreeChildren() should return array', () => {
     spyOn(component,'arrangeTreeChildren')
-    const result = component.arrangeTreeChildren();
+    const result = component.arrangeTreeChildren(treeData.children[0]);
     expect(result).toBeUndefined();
     expect(component.arrangeTreeChildren).toHaveBeenCalled();
   });
