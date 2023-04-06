@@ -54,6 +54,17 @@ export const config = {
     },
   },
 };
+export const questionChildren = [
+  { identifier: 'parent_id_1' },
+  { identifier: 'child_id_1' },
+  { identifier: 'parent_id_2' },
+  { identifier: 'child_id_2' }
+]
+
+export const questionBranchLogic = {
+  'identifier_1': { source: ['parent_id_1'] },
+  'identifier_2': { source: ['parent_id_2'] }
+}
 
 export const treeData = {
   ownershipType: ["createdBy"],

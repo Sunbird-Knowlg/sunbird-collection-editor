@@ -6,7 +6,7 @@ import { NO_ERRORS_SCHEMA, ChangeDetectorRef } from '@angular/core';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { config, treeData, tree, editorConfig, TargetNodeMockData,
-  CurrentNodeMockData, mockTreeService, mockData, observationWithRubricsMockData, RubricstreeData } from './fancy-tree.component.spec.data';
+  CurrentNodeMockData, mockTreeService, mockData, observationWithRubricsMockData, RubricstreeData, questionChildren, questionBranchLogic } from './fancy-tree.component.spec.data';
 import { Router } from '@angular/router';
 import { TreeService } from '../../services/tree/tree.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
@@ -471,67 +471,28 @@ describe('FancyTreeComponent', () => {
     expect(result.length).toBeGreaterThan(1);
   });
 
-  // it('#arrangeTreeChildren() should return array', () => {
-  //   spyOn(component,'arrangeTreeChildren')
-  //   const result = component.arrangeTreeChildren(treeData.children[0]);
-  //   expect(result).toBeUndefined();
-  //   expect(component.arrangeTreeChildren).toHaveBeenCalled();
-  // });
-  
   it('should arrange children correctly when branchingLogic is present', () => {
     const data = {
-      branchingLogic: {
-        'identifier_1': { source: ['parent_id_1'] },
-        'identifier_2': { source: ['parent_id_2'] }
-      },
-      children: [
-        { identifier: 'parent_id_1' },
-        { identifier: 'child_id_1' },
-        { identifier: 'parent_id_2' },
-        { identifier: 'child_id_2' }
-      ]
+      branchingLogic: questionBranchLogic,
+      children: questionChildren
     };
-
     const expectedData = {
-      branchingLogic: {
-        'identifier_1': { source: ['parent_id_1'] },
-        'identifier_2': { source: ['parent_id_2'] }
-      },
-      children: [
-        { identifier: 'parent_id_1' },
-        { identifier: 'child_id_1' },
-        { identifier: 'parent_id_2' },
-        { identifier: 'child_id_2' }
-      ]
+      branchingLogic: questionBranchLogic,
+      children: questionChildren
     };
     // Expected data has the same children array as data, but with parents in correct order
-
     const result = component.arrangeTreeChildren(data);
-
     expect(result).toEqual(expectedData);
   });
 
   it('should return data unmodified when branchingLogic is not present', () => {
     const data = {
-      children: [
-        { identifier: 'parent_id_1' },
-        { identifier: 'child_id_1' },
-        { identifier: 'parent_id_2' },
-        { identifier: 'child_id_2' }
-      ]
+      children: questionChildren
     };
-
     const expectedData = {
-      children: [
-        { identifier: 'parent_id_1' },
-        { identifier: 'child_id_1' },
-        { identifier: 'parent_id_2' },
-        { identifier: 'child_id_2' }
-      ]
+      children: questionChildren
     };
-
     const result = component.arrangeTreeChildren(data);
-
     expect(result).toEqual(expectedData);
   });
 
