@@ -189,7 +189,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     return tree;
   }
 
-  arrangeTreeChildren(data?) {
+  arrangeTreeChildren(data) {
     for(const key in data.branchingLogic) {
       let childrenIndex,parentId,parentIndex,item;
       data.children.forEach((element:any,index:number) => {

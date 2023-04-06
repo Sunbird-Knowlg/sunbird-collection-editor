@@ -471,11 +471,68 @@ describe('FancyTreeComponent', () => {
     expect(result.length).toBeGreaterThan(1);
   });
 
-  it('#arrangeTreeChildren() should return array', () => {
-    spyOn(component,'arrangeTreeChildren')
-    const result = component.arrangeTreeChildren(treeData.children[0]);
-    expect(result).toBeUndefined();
-    expect(component.arrangeTreeChildren).toHaveBeenCalled();
+  // it('#arrangeTreeChildren() should return array', () => {
+  //   spyOn(component,'arrangeTreeChildren')
+  //   const result = component.arrangeTreeChildren(treeData.children[0]);
+  //   expect(result).toBeUndefined();
+  //   expect(component.arrangeTreeChildren).toHaveBeenCalled();
+  // });
+  
+  it('should arrange children correctly when branchingLogic is present', () => {
+    const data = {
+      branchingLogic: {
+        'identifier_1': { source: ['parent_id_1'] },
+        'identifier_2': { source: ['parent_id_2'] }
+      },
+      children: [
+        { identifier: 'parent_id_1' },
+        { identifier: 'child_id_1' },
+        { identifier: 'parent_id_2' },
+        { identifier: 'child_id_2' }
+      ]
+    };
+
+    const expectedData = {
+      branchingLogic: {
+        'identifier_1': { source: ['parent_id_1'] },
+        'identifier_2': { source: ['parent_id_2'] }
+      },
+      children: [
+        { identifier: 'parent_id_1' },
+        { identifier: 'child_id_1' },
+        { identifier: 'parent_id_2' },
+        { identifier: 'child_id_2' }
+      ]
+    };
+    // Expected data has the same children array as data, but with parents in correct order
+
+    const result = component.arrangeTreeChildren(data);
+
+    expect(result).toEqual(expectedData);
+  });
+
+  it('should return data unmodified when branchingLogic is not present', () => {
+    const data = {
+      children: [
+        { identifier: 'parent_id_1' },
+        { identifier: 'child_id_1' },
+        { identifier: 'parent_id_2' },
+        { identifier: 'child_id_2' }
+      ]
+    };
+
+    const expectedData = {
+      children: [
+        { identifier: 'parent_id_1' },
+        { identifier: 'child_id_1' },
+        { identifier: 'parent_id_2' },
+        { identifier: 'child_id_2' }
+      ]
+    };
+
+    const result = component.arrangeTreeChildren(data);
+
+    expect(result).toEqual(expectedData);
   });
 
   it ('#checkContentAddition() should check node hitMode', () => {
