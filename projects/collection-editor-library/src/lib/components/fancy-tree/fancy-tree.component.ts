@@ -110,6 +110,24 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     }];
   }
 
+  arrangeTreeChildren(data) {
+    for(const key in data.branchingLogic) {
+      let childrenIndex,parentId,parentIndex,item;
+      data.children.forEach((element:any,index:number) => {
+        if(element.identifier == key && data.branchingLogic[key].source.length > 0) { 
+          childrenIndex = index;
+          parentId = data.branchingLogic[key].source[0];
+        }})
+      if(childrenIndex >= 0) {
+        item = data.children[childrenIndex]
+        data.children.splice(childrenIndex,1)
+        parentIndex = data.children.findIndex((element) => element.identifier == parentId)
+        data.children.splice(parentIndex+1,0,item)
+      }
+    }
+    return data;
+  }
+
   buildTreeFromFramework(data, tree?, level?) {
     tree = tree || [];
     if (data.children) { data.children = _.sortBy(data.children, ['index']); }
@@ -187,24 +205,6 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
     return tree;
-  }
-
-  arrangeTreeChildren(data) {
-    for(const key in data.branchingLogic) {
-      let childrenIndex,parentId,parentIndex,item;
-      data.children.forEach((element:any,index:number) => {
-        if(element.identifier == key && data.branchingLogic[key].source.length > 0) { 
-          childrenIndex = index;
-          parentId = data.branchingLogic[key].source[0];
-        }})
-      if(childrenIndex >= 0) {
-        item = data.children[childrenIndex]
-        data.children.splice(childrenIndex,1)
-        parentIndex = data.children.findIndex((element) => element.identifier == parentId)
-        data.children.splice(parentIndex+1,0,item)
-      }
-    }
-    return data;
   }
 
   isFolder(child: any) {
