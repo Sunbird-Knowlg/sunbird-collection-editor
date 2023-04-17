@@ -109,7 +109,6 @@ import { BrowserModule } from '@angular/platform-browser';
   ],
   providers: [
     { provide: DialcodeCursor, useExisting: DialcodeService },
-    { provide: APP_BASE_HREF, useValue: '/' }
   ],
   entryComponents: [EditorComponent]
 })
