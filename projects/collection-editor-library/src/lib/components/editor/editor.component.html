@@ -10,9 +10,9 @@
             <div class="p-50 sb-folder-menu" *ngIf="isObjectTypeCollection">
             <div>  {{configService.labelConfig?.lbl?.folders}} </div>
               <a class="profile-avtar computer only p-0 pr-10" tabindex="0">
-              <div suiDropdown class="ui dropdown right top pointing z-index-9"  id="dropdown-menu-list-header">
+              <div suiDropdown class="ui dropdown right top pointing z-index-9"  id="dropdown-menu-list-header" *ngIf="!isStatusReviewMode">
                   <i class="icon ellipsis vertical h-1" aria-hidden="true"  [ngClass]="{'sb-disable-icon': isStatusReviewMode}" (click)="onClickFolder()"></i>
-                  <div class="menu" suiDropdownMenu *ngIf="!isStatusReviewMode">
+                  <div class="menu" suiDropdownMenu >
                     <button type="button" class="item fs-0-785 bg-none"
                     libTelemetryInteract
                     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('open_popup','click',configService.labelConfig?.lbl?.createHierarchyCsv,

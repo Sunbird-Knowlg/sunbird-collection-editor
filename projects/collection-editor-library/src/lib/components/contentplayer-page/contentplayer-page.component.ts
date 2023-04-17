@@ -40,7 +40,16 @@ export class ContentplayerPageComponent implements OnInit, OnChanges {
       };
       this.playerConfig = this.playerService.getPlayerConfig(this.contentDetails);
       this.setPlayerType();
-      this.playerType === 'default-player' ? this.loadDefaultPlayer() : this.playerConfig.config = {};
+      this.playerType === 'default-player' ? this.loadDefaultPlayer() : this.playerConfig.config = {
+        'traceId': 'afhjgh',
+        'sideMenu': {
+          'showDownload': true,
+          'showExit': true,
+          'showPrint': true,
+          'showReplay': true,
+          'showShare': true
+        }
+      };
     });
   }
 
