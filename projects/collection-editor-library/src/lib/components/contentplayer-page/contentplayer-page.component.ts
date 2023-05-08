@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild, OnChanges, ViewEncapsulation} from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild, OnChanges, ViewEncapsulation, AfterViewInit} from '@angular/core';
 import * as _ from 'lodash-es';
 import { EditorService} from '../../services/editor/editor.service';
 import { PlayerService } from '../../services/player/player.service';
@@ -11,14 +11,16 @@ declare var $: any;
   styleUrls: ['./contentplayer-page.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ContentplayerPageComponent implements OnInit, OnChanges {
+export class ContentplayerPageComponent implements OnInit, OnChanges, AfterViewInit {
   @ViewChild('contentIframe') contentIframe: ElementRef;
+  @ViewChild("pdfPlayer") pdfPlayer: ElementRef;
   @Input() contentMetadata: any;
   public contentDetails: any;
   public playerConfig: any;
   public content: any;
   public playerType: string;
   public contentId: string;
+  public triggerPlayerInit = false;
   constructor(private editorService: EditorService, private playerService: PlayerService,
               public configService: ConfigService) { }
 
@@ -31,6 +33,12 @@ export class ContentplayerPageComponent implements OnInit, OnChanges {
       this.getContentDetails();
     }
   }
+
+  ngAfterViewInit() {
+    this.triggerPlayerInit = true;
+  }
+
+
   getContentDetails() {
     this.playerType = 'default-player';
     this.editorService.fetchContentDetails(this.contentId).subscribe(res => {
@@ -40,16 +48,22 @@ export class ContentplayerPageComponent implements OnInit, OnChanges {
       };
       this.playerConfig = this.playerService.getPlayerConfig(this.contentDetails);
       this.setPlayerType();
-      this.playerType === 'default-player' ? this.loadDefaultPlayer() : this.playerConfig.config = {
-        'traceId': 'afhjgh',
-        'sideMenu': {
-          'showDownload': true,
-          'showExit': true,
-          'showPrint': true,
-          'showReplay': true,
-          'showShare': true
-        }
-      };
+      if(this.playerType === 'default-player'){
+        this.loadDefaultPlayer()
+      }  else {
+        this.playerConfig.config = {
+          'traceId': 'afhjgh',
+          'sideMenu': {
+            'showDownload': true,
+            'showExit': true,
+            'showPrint': true,
+            'showReplay': true,
+            'showShare': true
+          }
+        };
+        this.loadPlayer()
+      }
+
     });
   }
 
@@ -101,5 +115,19 @@ export class ContentplayerPageComponent implements OnInit, OnChanges {
 
   eventHandler(e) {}
 
-  generateContentReadEvent(e, boo) {}
+  generateContentReadEvent(e) {}
+
+  loadPlayer() {
+    if(this.triggerPlayerInit === true) {
+      const pdfElement = document.createElement('sunbird-pdf-player');
+      pdfElement.setAttribute('player-config', JSON.stringify(this.playerConfig));
+
+      pdfElement.addEventListener('playerEvent', this.eventHandler);
+
+      pdfElement.addEventListener('telemetryEvent', this.generateContentReadEvent);
+      this.pdfPlayer.nativeElement.append(pdfElement);
+    } else {
+      setTimeout(this.loadPlayer, 500)
+    }
+  }
 }

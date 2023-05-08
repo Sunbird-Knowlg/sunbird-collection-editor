@@ -27,8 +27,8 @@
               "src/assets/images",
               "src/favicon.ico",
               {
-                "glob": "**/*",
-                "input": "node_modules/@project-sunbird/sunbird-pdf-player-v9/lib/assets/",
+                "glob": "**/*.*",
+                "input": "./node_modules/@project-sunbird/sunbird-pdf-player-web-component/assets",
                 "output": "/assets/"
               },
               {
@@ -50,6 +50,7 @@
             "styles": [
               "src/assets/quml-styles/quml-carousel.css",
               "node_modules/@project-sunbird/sb-styles/assets/_styles.scss",
+              "node_modules/@project-sunbird/sunbird-pdf-player-web-component/styles.css",
               "src/styles.scss",
               "src/assets/lib/semantic/semantic.min.css",
               "src/assets/styles/styles.scss",
@@ -60,6 +61,8 @@
               "node_modules/videojs-http-source-selector/dist/videojs-http-source-selector.css"
             ],
             "scripts": [
+              "node_modules/reflect-metadata/Reflect.js",
+              "node_modules/@project-sunbird/sunbird-pdf-player-web-component/sunbird-pdf-player.js",
               "node_modules/epubjs/dist/epub.js",
               "src/assets/libs/iziToast/iziToast.min.js",
               "node_modules/jquery/dist/jquery.min.js",
@@ -267,8 +270,8 @@
               "projects/collection-editor-library-wc/src/favicon.ico",
               "projects/collection-editor-library-wc/src/assets",
               {
-                "glob": "**/*",
-                "input": "node_modules/@project-sunbird/sunbird-pdf-player-v9/lib/assets/",
+                "glob": "**/*.*",
+                "input": "./node_modules/@project-sunbird/sunbird-pdf-player-web-component/assets",
                 "output": "/assets/"
               },
               {
@@ -289,6 +292,7 @@
             ],
             "styles": [
               "projects/collection-editor-library-wc/src/styles.scss",
+              "node_modules/@project-sunbird/sunbird-pdf-player-web-component/styles.css",
               "src/assets/quml-styles/quml-carousel.css",
               "node_modules/@project-sunbird/sb-styles/assets/_styles.scss",
               "src/assets/lib/semantic/semantic.min.css",
@@ -300,6 +304,8 @@
               "node_modules/videojs-http-source-selector/dist/videojs-http-source-selector.css"
             ],
             "scripts": [
+              "node_modules/reflect-metadata/Reflect.js",
+              "node_modules/@project-sunbird/sunbird-pdf-player-web-component/sunbird-pdf-player.js",
               "node_modules/epubjs/dist/epub.js",
               "src/assets/libs/iziToast/iziToast.min.js",
               "node_modules/jquery/dist/jquery.min.js",

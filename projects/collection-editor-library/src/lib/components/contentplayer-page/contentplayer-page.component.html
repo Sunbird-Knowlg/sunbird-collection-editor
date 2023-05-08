@@ -7,9 +7,10 @@
         (playerEvent)="eventHandler($event)"
         (telemetryEvent)="generateContentReadEvent($event, true)"></sunbird-epub-player>
 
-    <sunbird-pdf-player *ngIf="playerType === 'pdf-player'" [playerConfig]="playerConfig"
-        (playerEvent)="eventHandler($event)"
-        (telemetryEvent)="generateContentReadEvent($event, true)"></sunbird-pdf-player>
+    <ng-container  *ngIf="playerType === 'pdf-player'">
+        <div #pdfPlayer></div>
+    </ng-container>    
+
 
     <sunbird-video-player *ngIf="playerType === 'video-player'" [playerConfig]="playerConfig"
         (playerEvent)="eventHandler($event)"
