@@ -10,7 +10,7 @@
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "es2015",
+    "target": "ES2022",
     "resolveJsonModule": true,
     "typeRoots": [
       "node_modules/@types"
@@ -26,6 +26,7 @@
       "collection-editor-library/*": [
         "dist/collection-editor-library/*"
       ]
-    }
+    },
+    "useDefineForClassFields": false
   }
 }
