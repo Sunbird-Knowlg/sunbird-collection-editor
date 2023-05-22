@@ -1,20 +1,15 @@
 <div class="aspectratio" data-ratio="16:9" #aspectRatio>
-
     <iframe #contentIframe id="contentPlayer" *ngIf="playerType === 'default-player'" class="contentViewerIframeShadow"
         name="contentPlayer"></iframe>
-
-    <sunbird-epub-player *ngIf="playerType === 'epub-player'" [playerConfig]="playerConfig"
-        (playerEvent)="eventHandler($event)"
-        (telemetryEvent)="generateContentReadEvent($event, true)"></sunbird-epub-player>
-
-    <ng-container  *ngIf="playerType === 'pdf-player'">
+    <ng-container *ngIf="playerType === 'epub-player'">
+        <div #epubPlayer></div>
+    </ng-container>
+    <ng-container *ngIf="playerType === 'pdf-player'">
         <div #pdfPlayer></div>
-    </ng-container>    
-
-
-    <sunbird-video-player *ngIf="playerType === 'video-player'" [playerConfig]="playerConfig"
-        (playerEvent)="eventHandler($event)"
-        (telemetryEvent)="generateContentReadEvent($event, true)"></sunbird-video-player>
+    </ng-container>
+    <ng-container *ngIf="playerType === 'video-player'">
+        <div #videoPlayer></div>
+    </ng-container>
 </div>
 <div class="ui grid text-font pt-15 bg-white mx-0 mb-10">
     <div class="six wide column">

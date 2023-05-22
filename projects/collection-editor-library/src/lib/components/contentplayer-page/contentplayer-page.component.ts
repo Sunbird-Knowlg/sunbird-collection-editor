@@ -1,6 +1,6 @@
-import { Component, ElementRef, Input, OnInit, ViewChild, OnChanges, ViewEncapsulation, AfterViewInit} from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild, OnChanges, ViewEncapsulation, AfterViewInit } from '@angular/core';
 import * as _ from 'lodash-es';
-import { EditorService} from '../../services/editor/editor.service';
+import { EditorService } from '../../services/editor/editor.service';
 import { PlayerService } from '../../services/player/player.service';
 import { ConfigService } from '../../services/config/config.service';
 declare var $: any;
@@ -11,20 +11,21 @@ declare var $: any;
   styleUrls: ['./contentplayer-page.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ContentplayerPageComponent implements OnInit, OnChanges, AfterViewInit {
+export class ContentplayerPageComponent implements OnInit, OnChanges {
   @ViewChild('contentIframe') contentIframe: ElementRef;
   @ViewChild("pdfPlayer") pdfPlayer: ElementRef;
+  @ViewChild("epubPlayer") epubPlayer: ElementRef;
+  @ViewChild("videoPlayer") videoPlayer: ElementRef;
   @Input() contentMetadata: any;
   public contentDetails: any;
   public playerConfig: any;
   public content: any;
   public playerType: string;
   public contentId: string;
-  public triggerPlayerInit = false;
   constructor(private editorService: EditorService, private playerService: PlayerService,
-              public configService: ConfigService) { }
+    public configService: ConfigService) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   ngOnChanges() {
     this.contentMetadata = _.get(this.contentMetadata, 'data.metadata') || this.contentMetadata;
@@ -34,23 +35,18 @@ export class ContentplayerPageComponent implements OnInit, OnChanges, AfterViewI
     }
   }
 
-  ngAfterViewInit() {
-    this.triggerPlayerInit = true;
-  }
-
-
   getContentDetails() {
     this.playerType = 'default-player';
     this.editorService.fetchContentDetails(this.contentId).subscribe(res => {
       this.contentDetails = {
-        contentId : this.contentId,
+        contentId: this.contentId,
         contentData: _.get(res, 'result.content')
       };
       this.playerConfig = this.playerService.getPlayerConfig(this.contentDetails);
       this.setPlayerType();
-      if(this.playerType === 'default-player'){
+      if (this.playerType === 'default-player') {
         this.loadDefaultPlayer()
-      }  else {
+      } else {
         this.playerConfig.config = {
           'traceId': 'afhjgh',
           'sideMenu': {
@@ -113,21 +109,31 @@ export class ContentplayerPageComponent implements OnInit, OnChanges, AfterViewI
     }
   }
 
-  eventHandler(e) {}
+  eventHandler(e) { }
 
-  generateContentReadEvent(e) {}
+  generateContentReadEvent(e, state?) { }
+
+  setPlayerProperties(playerElement: any) {
+    playerElement.setAttribute('player-config', JSON.stringify(this.playerConfig));
+    playerElement.addEventListener('playerEvent', this.eventHandler);
+    playerElement.addEventListener('telemetryEvent', this.generateContentReadEvent);
+  }
 
   loadPlayer() {
-    if(this.triggerPlayerInit === true) {
-      const pdfElement = document.createElement('sunbird-pdf-player');
-      pdfElement.setAttribute('player-config', JSON.stringify(this.playerConfig));
-
-      pdfElement.addEventListener('playerEvent', this.eventHandler);
-
-      pdfElement.addEventListener('telemetryEvent', this.generateContentReadEvent);
-      this.pdfPlayer.nativeElement.append(pdfElement);
-    } else {
-      setTimeout(this.loadPlayer, 500)
-    }
+    setTimeout(() => {
+      if (this.playerType === "pdf-player") {
+        const pdfElement = document.createElement('sunbird-pdf-player');
+        this.setPlayerProperties(pdfElement)
+        this.pdfPlayer.nativeElement.append(pdfElement);
+      } else if (this.playerType === "epub-player") {
+        const epubElement = document.createElement('sunbird-epub-player');
+        this.setPlayerProperties(epubElement)
+        this.epubPlayer.nativeElement.append(epubElement);
+      }else if (this.playerType === "video-player") {
+        const videoElement = document.createElement('sunbird-video-player');
+        this.setPlayerProperties(videoElement)
+        this.videoPlayer.nativeElement.append(videoElement);
+      }
+    }, 500)
   }
 }

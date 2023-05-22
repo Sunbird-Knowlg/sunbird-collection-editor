@@ -33,7 +33,12 @@
               },
               {
                 "glob": "**/*",
-                "input": "node_modules/@project-sunbird/sunbird-video-player-v9/lib/assets/",
+                "input": "./node_modules/@project-sunbird/sunbird-video-player-web-component/assets",
+                "output": "/assets/"
+              },
+              {
+                "glob": "**/*",
+                "input": "./node_modules/@project-sunbird/sunbird-epub-player-web-component/assets",
                 "output": "/assets/"
               },
               {
@@ -55,15 +60,11 @@
               "src/assets/lib/semantic/semantic.min.css",
               "src/assets/styles/styles.scss",
               "node_modules/font-awesome/css/font-awesome.css",
-              "node_modules/katex/dist/katex.min.css",
-              "node_modules/video.js/dist/video-js.min.css",
-              "node_modules/@project-sunbird/sunbird-video-player-v9/lib/assets/videojs.markers.min.css",
-              "node_modules/videojs-http-source-selector/dist/videojs-http-source-selector.css"
+              "node_modules/katex/dist/katex.min.css"
             ],
             "scripts": [
               "node_modules/reflect-metadata/Reflect.js",
               "node_modules/@project-sunbird/sunbird-pdf-player-web-component/sunbird-pdf-player.js",
-              "node_modules/epubjs/dist/epub.js",
               "src/assets/libs/iziToast/iziToast.min.js",
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/jquery.fancytree/dist/jquery.fancytree-all-deps.min.js",
@@ -73,11 +74,7 @@
               "src/assets/lib/modal.min.js",
               "src/assets/lib/semantic-ui-tree-picker.js",
               "node_modules/@project-sunbird/telemetry-sdk/index.js",
-              "node_modules/@project-sunbird/client-services/index.js",
-              "node_modules/video.js/dist/video.js",
-              "node_modules/@project-sunbird/sunbird-video-player-v9/lib/assets/videojs-markers.js",
-              "node_modules/videojs-contrib-quality-levels/dist/videojs-contrib-quality-levels.min.js",
-              "node_modules/videojs-http-source-selector/dist/videojs-http-source-selector.min.js"
+              "node_modules/@project-sunbird/client-services/index.js"
             ],
             "vendorChunk": true,
             "extractLicenses": false,
@@ -227,6 +224,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "preserveSymlinks": true,
             "outputPath": "dist/collection-editor-library-wc",
             "index": "projects/collection-editor-library-wc/src/index.html",
             "main": "projects/collection-editor-library-wc/src/main.ts",
@@ -236,16 +234,6 @@
             "assets": [
               "projects/collection-editor-library-wc/src/favicon.ico",
               "projects/collection-editor-library-wc/src/assets",
-              {
-                "glob": "**/*.*",
-                "input": "./node_modules/@project-sunbird/sunbird-pdf-player-web-component/assets",
-                "output": "/assets/"
-              },
-              {
-                "glob": "**/*",
-                "input": "node_modules/@project-sunbird/sunbird-video-player-v9/lib/assets/",
-                "output": "/assets/"
-              },
               {
                 "glob": "**/*",
                 "input": "projects/collection-editor-library/src/lib/assets",
@@ -259,21 +247,15 @@
             ],
             "styles": [
               "projects/collection-editor-library-wc/src/styles.scss",
-              "node_modules/@project-sunbird/sunbird-pdf-player-web-component/styles.css",
               "src/assets/quml-styles/quml-carousel.css",
               "node_modules/@project-sunbird/sb-styles/assets/_styles.scss",
               "src/assets/lib/semantic/semantic.min.css",
               "src/assets/styles/styles.scss",
               "node_modules/font-awesome/css/font-awesome.css",
-              "node_modules/katex/dist/katex.min.css",
-              "node_modules/video.js/dist/video-js.min.css",
-              "node_modules/@project-sunbird/sunbird-video-player-v9/lib/assets/videojs.markers.min.css",
-              "node_modules/videojs-http-source-selector/dist/videojs-http-source-selector.css"
+              "node_modules/katex/dist/katex.min.css"
             ],
             "scripts": [
               "node_modules/reflect-metadata/Reflect.js",
-              "node_modules/@project-sunbird/sunbird-pdf-player-web-component/sunbird-pdf-player.js",
-              "node_modules/epubjs/dist/epub.js",
               "src/assets/libs/iziToast/iziToast.min.js",
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/jquery.fancytree/dist/jquery.fancytree-all-deps.min.js",
@@ -283,11 +265,7 @@
               "src/assets/lib/modal.min.js",
               "src/assets/lib/semantic-ui-tree-picker.js",
               "node_modules/@project-sunbird/telemetry-sdk/index.js",
-              "node_modules/@project-sunbird/client-services/index.js",
-              "node_modules/video.js/dist/video.js",
-              "node_modules/@project-sunbird/sunbird-video-player-v9/lib/assets/videojs-markers.js",
-              "node_modules/videojs-contrib-quality-levels/dist/videojs-contrib-quality-levels.min.js",
-              "node_modules/videojs-http-source-selector/dist/videojs-http-source-selector.min.js"
+              "node_modules/@project-sunbird/client-services/index.js"
             ]
           },
           "configurations": {
@@ -362,7 +340,6 @@
       }
     }
   },
-  "defaultProject": "sunbird-collection-editor",
   "cli": {
     "analytics": false
   }
