@@ -16,8 +16,12 @@ jobs:
       - checkout:
           path: ~/sunbird-collection-editor
       - run:
-          name: Node version
-          command: 'node --version'
+          name: Install  Node.js v14.20.0 with build in nvm tool
+          command: |
+            export NVM_DIR="/opt/circleci/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+            nvm install v14 && nvm use 14 && nvm alias default 14
+            node -v
       - run:
           name: Installing angular cli
           command: 'npm install -g @angular/cli@12.2.18 --no-progress'
@@ -35,13 +39,6 @@ jobs:
       - run:
           name: Executing test cases
           command: 'npm run test-coverage | tee /tmp/logs/test_cases.log'
-      - run:
-          name: Install  Node.js v14.20.0 with build in nvm tool
-          command: |
-            export NVM_DIR="/opt/circleci/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-            nvm install v14 && nvm use 14 && nvm alias default 14
-            node -v
       - run:
           name: Alter Node version
           command: 'node --version'
