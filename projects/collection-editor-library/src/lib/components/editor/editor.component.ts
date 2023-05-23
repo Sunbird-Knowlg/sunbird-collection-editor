@@ -930,11 +930,11 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   generateTelemetryEndEvent() {
     const telemetryEnd = {
       type: 'editor',
-      pageid: this.telemetryService.telemetryPageId,
+      pageid: this.telemetryService?.telemetryPageId,
       mode: this.editorMode,
       duration: _.toString((Date.now() - this.pageStartTime) / 1000)
     };
-    this.telemetryService.end(telemetryEnd);
+    this.telemetryService?.end(telemetryEnd);
   }
 
   handleTemplateSelection($event) {
@@ -1187,7 +1187,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
-    if (this.telemetryService) {
+    if (this.telemetryService && this.telemetryService?.end) {
       this.generateTelemetryEndEvent();
     }
     if (this.treeService) {
@@ -1202,8 +1202,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.unSubscribeshowQuestionLibraryPageEmitter) {
       this.unSubscribeshowQuestionLibraryPageEmitter.unsubscribe();
     }
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+    this.unsubscribe$ && this.unsubscribe$.next();
+    this.unsubscribe$ && this.unsubscribe$.complete();
   }
 
 
