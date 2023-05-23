@@ -27,9 +27,6 @@ import { OptionsComponent } from '../../../collection-editor-library/src/lib/com
 import { AnswerComponent } from '../../../collection-editor-library/src/lib/components/answer/answer.component';
 import { CkeditorToolComponent } from '../../../collection-editor-library/src/lib/components/ckeditor-tool/ckeditor-tool.component';
 import { QuestionComponent } from '../../../collection-editor-library/src/lib/components/question/question.component';
-import { SunbirdPdfPlayerModule } from '@project-sunbird/sunbird-pdf-player-v9';
-import { SunbirdEpubPlayerModule } from '@project-sunbird/sunbird-epub-player-v9';
-import { SunbirdVideoPlayerModule } from '@project-sunbird/sunbird-video-player-v9';
 import { QumlLibraryModule } from '@project-sunbird/sunbird-quml-player';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { TelemetryInteractDirective } from '../../../collection-editor-library/src/lib/directives/telemetry-interact/telemetry-interact.directive';
@@ -104,8 +101,8 @@ import { BrowserModule } from '@angular/platform-browser';
   ],
   imports: [
     CommonModule, BrowserModule, FormsModule, ReactiveFormsModule, RouterModule.forRoot([]), SuiModule,
-    CommonFormElementsModule, InfiniteScrollModule, HttpClientModule, SunbirdPdfPlayerModule, SunbirdVideoPlayerModule,
-    QumlLibraryModule, CarouselModule, SunbirdEpubPlayerModule, ResourceLibraryModule, A11yModule
+    CommonFormElementsModule, InfiniteScrollModule, HttpClientModule,
+    QumlLibraryModule, CarouselModule, ResourceLibraryModule, A11yModule
   ],
   providers: [
     { provide: DialcodeCursor, useExisting: DialcodeService },

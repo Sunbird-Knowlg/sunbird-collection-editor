@@ -21,16 +21,16 @@ export class EditorTelemetryService {
   // tslint:disable-next-line:variable-name
   private _telemetryPageId: any;
 
-  constructor( public helperService: HelperService, public configService: ConfigService ) {}
+  constructor(public helperService: HelperService, public configService: ConfigService) { }
 
   initializeTelemetry(config: IEditorConfig) {
     this.duration = new Date().getTime();
     this.context = config.context;
     this.channel = config.context.channel;
     this.pdata = this.context.pdata;
-    this.sid =  this.context.sid;
-    this.uid =  this.context.uid;
-    this.env =  this.context.env;
+    this.sid = this.context.sid;
+    this.uid = this.context.uid;
+    this.env = this.context.env;
     this.pdata.pid = `${this.context.pdata.pid}.${this.env}`;
     this.rollup = this.context.contextRollup;
     if (!CsTelemetryModule.instance.isInitialised) {
@@ -92,10 +92,12 @@ export class EditorTelemetryService {
     );
   }
   public end(edata) {
-    CsTelemetryModule.instance.telemetryService.raiseEndTelemetry({
-      edata,
-      options: this.getEventOptions()
-    });
+    if (CsTelemetryModule.instance.isInitialised) {
+      CsTelemetryModule?.instance?.telemetryService?.raiseEndTelemetry({
+        edata,
+        options: this.getEventOptions()
+      });
+    }
   }
 
   public interact(eventData) {
