@@ -27,12 +27,8 @@
     const collectionEditorElement = document.createElement('lib-editor');
     collectionEditorElement.setAttribute('editor-config', JSON.stringify(editorConfig));
 
-    collectionEditorElement.addEventListener('playerEvent', (event) => {
-      console.log("On playerEvent", event);
-    });
-
-    collectionEditorElement.addEventListener('telemetryEvent', (event) => {
-      console.log("On telemetryEvent", event);
+    collectionEditorElement.addEventListener('editorEmitter', (event) => {
+      console.log("On editorEmitter", event);
     });
 
     const myPlayer = document.getElementById("my-editor");
