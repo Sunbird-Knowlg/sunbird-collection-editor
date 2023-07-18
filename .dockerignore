@@ -1,0 +1,7 @@
+dist
+node_modules
+web-component
+.circleci
+docs
+web-component-demo
+.angular
