@@ -124,7 +124,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.objectType = this.configService.categoryConfig[this.editorConfig.config.objectType];
     this.collectionId = _.get(this.editorConfig, 'context.identifier');
     this.toolbarConfig = this.editorService.getToolbarConfig();
-    this.isObjectTypeCollection = this.objectType === 'questionSet' ? false : true;
+    this.isObjectTypeCollection = false;
     this.isStatusReviewMode = this.isReviewMode();
 
     if (this.objectType === 'question') {

@@ -22,7 +22,7 @@ app.use(express.static(__dirname + '/dist/sunbird-collection-editor/'));
 var publicRequestHeaders = {
     authorization: `Bearer ${API_AUTH_TOKEN}`,
     "x-authenticated-user-token": USER_TOKEN,
-    "x-channel-id": '01329314824202649627',
+    "x-channel-id": '01374279726315929680',
     "user-id": 'collection-editor'
 };
 

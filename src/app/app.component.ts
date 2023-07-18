@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { collectionEditorConfig} from './data';
+import { courseEditorConfig} from './data';
 
 const configMapper = {
-  collection : collectionEditorConfig,
+  course: courseEditorConfig
 };
 
 @Component({
@@ -12,7 +12,7 @@ const configMapper = {
 })
 export class AppComponent {
   title = 'Sunbird Collection Editor';
-  editor: any = localStorage.getItem('editorType') || 'collection';
+  editor: any = localStorage.getItem('editorType') || 'course';
   public editorConfig: any = configMapper[this.editor];
 
   editorEventListener(event) {
