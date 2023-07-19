@@ -1,6 +1,6 @@
 export const courseEditorConfig = {
   "context": {
-    "identifier": "do_2138418885537628161102", // Change here
+    "identifier": "", // Change here : do_2138418885537628161102
     "channel": "01374279726315929680",
     "authToken": "",
     "sid": "Vqf78G5k7MaLTR3_qbPgkRDrq12YHTHl",

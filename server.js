@@ -11,6 +11,7 @@ const latexService = require('./latexService.js')
 const BASE_URL = process.env.BASE_URL;
 const API_AUTH_TOKEN = process.env.AUTH_API_TOKEN;
 const USER_TOKEN = process.env.USER_API_TOKEN;
+const CHANNEL_ID = process.env.CHANNEL_ID;
 
 var app = express();
 app.set('port', 3000);
@@ -22,7 +23,7 @@ app.use(express.static(__dirname + '/dist/sunbird-collection-editor/'));
 var publicRequestHeaders = {
     authorization: `Bearer ${API_AUTH_TOKEN}`,
     "x-authenticated-user-token": USER_TOKEN,
-    "x-channel-id": '01374279726315929680',
+    "x-channel-id": CHANNEL_ID,
     "user-id": 'collection-editor'
 };
 
@@ -43,6 +44,17 @@ const customDecorateReqHeaders = function () {
         return proxyReqOpts;
     }
 }
+
+app.use([
+    '/api/content/v2/create'
+], proxy(BASE_URL, {
+    https: true,
+    proxyReqPathResolver: function (req) {
+        return urlHelper.parse(req.originalUrl).path;
+    },
+    proxyReqOptDecorator: decoratePublicRequestHeaders()
+})
+);
 
 app.post(['/action/content/v3/upload/url/*'], proxy(BASE_URL, {
     https: true,

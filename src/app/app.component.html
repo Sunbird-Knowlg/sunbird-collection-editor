@@ -1,6 +1,12 @@
-<ng-container *ngIf="editor">
+<ng-container *ngIf="editorConfig">
     <lib-editor [editorConfig]="editorConfig" (editorEmitter)="editorEventListener($event)"></lib-editor>
 </ng-container>
-<div *ngIf="!editor" class="ui container d-flex flex-jc-center flex-ai-center p-20">
+<div *ngIf="!editorConfig" class="ui container d-flex flex-jc-center flex-ai-center p-20">
+    <button [disabled]="true" class="sb-custom sb-btn sb-btn-normal sb-btn-outline-primary sb-btn-outline-disabled mr-10 font-weight-bold fs-1" (click)="setType('question')" >Question Editor</button>
+    <button [disabled]="true" class=" sb-custom sb-btn sb-btn-normal sb-btn-outline-primary sb-btn-outline-disabled mr-10 font-weight-bold fs-1" (click)="setType('questionSet')" >Question Set Editor</button>
     <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10 font-weight-bold fs-1" (click)="setType('course')">Course Editor</button>
+    <button [disabled]="true" class="sb-custom sb-btn sb-btn-normal sb-btn-outline-primary sb-btn-outline-disabled mr-10 font-weight-bold fs-1" (click)="setType('collection')">Collection Editor</button>
+    <button [disabled]="true" class="sb-custom sb-btn sb-btn-normal sb-btn-outline-primary sb-btn-outline-disabled mr-10 font-weight-bold fs-1" (click)="setType('survey')" >Survey</button>
+    <button [disabled]="true" class="sb-custom sb-btn sb-btn-normal sb-btn-outline-primary sb-btn-outline-disabled mr-10 font-weight-bold fs-1" (click)="setType('observation')" >Observation Editor</button>
+    <button [disabled]="true" class="sb-custom sb-btn sb-btn-normal sb-btn-outline-primary sb-btn-outline-disabled mr-10 font-weight-bold fs-1" (click)="setType('rubrics')">Observation With Rubrics Editor</button>
 </div>
