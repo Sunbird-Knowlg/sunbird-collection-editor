@@ -9,6 +9,7 @@ import { ConfigService } from '../../services/config/config.service';
 import { BulkJobService } from '../../services/bulk-job/bulk-job.service';
 import { TreeService } from '../../services/tree/tree.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
+declare const SunbirdFileUploadLib: any;
 
 @Component({
   selector: 'lib-bulk-upload',
@@ -302,17 +303,17 @@ export class BulkUploadComponent implements OnInit {
   }
 
   uploadToBlob(signedURL, file) {
-    let config: any = {
-      processData: false,
-      contentType: 'text/csv'
-    };
-    config = this.editorService.appendCloudStorageHeaders(config);
-    return this.editorService.httpClient.put(signedURL, file, config).pipe(catchError(err => {
+    const csp = _.get(this.editorService.editorConfig, 'context.cloudStorage.provider', 'azure');
+    const uploaderLib = new SunbirdFileUploadLib.FileUploader();
+    return uploaderLib.upload({ url: signedURL, file, csp })
+    .on("error", (error) => {
       const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.036')};
       this.uploader.reset();
       this.updateBulkUploadState('decrement');
-      return throwError(this.editorService.apiErrorHandling(err, errInfo));
-    }), map(data => signedURL.split('?')[0]));
+      return throwError(this.editorService.apiErrorHandling(error, errInfo));
+    }).on("completed", (completed) => {
+      return  signedURL.split('?')[0]
+    })
   }
 
   createImportRequest(fileUrl) {
