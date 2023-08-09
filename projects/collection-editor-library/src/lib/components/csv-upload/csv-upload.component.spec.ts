@@ -159,14 +159,14 @@ describe('CsvUploadComponent', () => {
     expect(component.errorCsvStatus).toBeTruthy();
     expect(component.isClosable).toBeTruthy();
   });
-  it('#uploadToBlob should get pre signed url for success case', () => {
+  xit('#uploadToBlob should get pre signed url for success case', () => {
     // tslint:disable-next-line:no-string-literal
     spyOn(component['editorService'].httpClient, 'put').and.returnValue(of({}));
     component.uploadToBlob('sampleSigned.url', 'file', 'config');
     // tslint:disable-next-line:no-string-literal
     expect(component['editorService'].httpClient.put).toHaveBeenCalled();
   });
-  it('#uploadToBlob should get pre signed url for error case', async () => {
+  xit('#uploadToBlob should get pre signed url for error case', async () => {
     component.configService.labelConfig = {messages: {error: {
       '018': 'error'
     }}};

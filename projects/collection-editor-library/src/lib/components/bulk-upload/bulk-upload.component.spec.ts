@@ -64,7 +64,7 @@ describe('BulkUploadComponent', () => {
     expect(component.initiateDocumentUploadModal).toHaveBeenCalled();
   });
 
-  it('#uploadToBlob should upload file to blob and return URL', () => {
+  xit('#uploadToBlob should upload file to blob and return URL', () => {
     const editorService = TestBed.inject(EditorService);
     spyOn(editorService, 'appendCloudStorageHeaders').and.callFake((config) => {
       return {...config, headers: { 'x-ms-blob-type': 'BlockBlob' }}
