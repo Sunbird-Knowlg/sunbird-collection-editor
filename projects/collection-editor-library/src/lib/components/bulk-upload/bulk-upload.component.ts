@@ -305,7 +305,7 @@ export class BulkUploadComponent implements OnInit {
   uploadToBlob(signedURL, file) {
     const csp = _.get(this.editorService.editorConfig, 'context.cloudStorage.provider', 'azure');
     const uploaderLib = new SunbirdFileUploadLib.FileUploader();
-    uploaderLib.upload({ url: signedURL, file, csp })
+    return uploaderLib.upload({ url: signedURL, file, csp })
     .on("error", (error) => {
       const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.036')};
       this.uploader.reset();
