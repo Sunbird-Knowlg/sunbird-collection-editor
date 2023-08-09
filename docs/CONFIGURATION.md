@@ -117,7 +117,7 @@ Let's understand the description of the following properties:
 | `additionalCategories` |  It is `array` and Array of objects of additional categories. For example: `[ { value: 'Classroom Teaching Video', label: 'Classroom Teaching Video' }, { value: 'Concept Map', label: 'Concept Map' }]` | false | `[]` |
 | `labels` |  It is `object` and Additional labels to be used in editor| false | `{}` |
 | `targetFWIds` |  It is `array` and Array of target framework ids | false | `[]` |
-| `cloudStorage` |  It is `object` and which defines cloud storage configuration which contains presigned_headers for diff service provider for example: Azure, AWS | false | **For example:** ``` cloudStorage: { presigned_headers: { 'x-ms-blob-type': 'BlockBlob' // This header is specific to azure storage provider. } } ```
+| `cloudStorage` |  It is `object` and which defines cloud storage configuration which contains provider & presigned_headers for diff service provider for example: Azure, AWS | false | **For example:** ``` provider: azure,  cloudStorage: { presigned_headers: { 'x-ms-blob-type': 'BlockBlob' // This header is specific to azure storage provider. } } ```
 
 
 ## Config - `Required`
