@@ -12,6 +12,7 @@ import { EditorTelemetryService } from '../../services/telemetry/telemetry.servi
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
 import { EditorService } from './../../services/editor/editor.service';
 import {csvImport, preSignedUrl} from './csv-upload.component.spec.data';
+declare const SunbirdFileUploadLib: any;
 describe('CsvUploadComponent', () => {
   let component: CsvUploadComponent;
   let fixture: ComponentFixture<CsvUploadComponent>;
