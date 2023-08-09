@@ -800,6 +800,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
         const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.018') };
         this.isClosable = true;
         this.loading = false;
+        this.imageFormValid = true;
         observer.error(this.editorService.apiErrorHandling(error, errInfo));
       }).on("completed", (completed) => {
         observer.next(completed);

@@ -112,15 +112,6 @@ export class CsvUploadComponent implements OnInit {
     /*this.editorService.downloadBlobUrlFile(downloadConfig);*/
   }
   uploadToBlob(signedURL, file, config): Observable<any> {
-    // return this.editorService.httpClient.put(signedURL, file, config).pipe(catchError(err => {
-    //   const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.018')};
-    //   this.isClosable = true;
-    //   this.errorCsvStatus = true;
-    //   this.showCsvValidationStatus = false;
-    //   this.errorCsvMessage = _.get(err, 'error.params.errmsg') || errInfo.errorMsg;
-    //   return throwError(this.editorService.apiErrorHandling(err, errInfo));
-    // }), map(data => data));
-
     const csp = _.get(this.editorService.editorConfig, 'context.cloudStorage.provider', 'azure');
     return new Observable((observer) => {
       const uploaderLib = new SunbirdFileUploadLib.FileUploader();
