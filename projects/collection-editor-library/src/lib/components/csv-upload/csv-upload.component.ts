@@ -6,6 +6,8 @@ import { EditorService } from '../../services/editor/editor.service';
 import { catchError, map } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import * as _ from 'lodash-es';
+declare const SunbirdFileUploadLib: any;
+
 @Component({
   selector: 'lib-csv-upload',
   templateUrl: './csv-upload.component.html',
@@ -111,14 +113,22 @@ export class CsvUploadComponent implements OnInit {
     /*this.editorService.downloadBlobUrlFile(downloadConfig);*/
   }
   uploadToBlob(signedURL, file, config): Observable<any> {
-    return this.editorService.httpClient.put(signedURL, file, config).pipe(catchError(err => {
-      const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.018')};
-      this.isClosable = true;
-      this.errorCsvStatus = true;
-      this.showCsvValidationStatus = false;
-      this.errorCsvMessage = _.get(err, 'error.params.errmsg') || errInfo.errorMsg;
-      return throwError(this.editorService.apiErrorHandling(err, errInfo));
-    }), map(data => data));
+    const csp = _.get(this.editorService.editorConfig, 'context.cloudStorage.provider', 'azure');
+    return new Observable((observer) => {
+      const uploaderLib = new SunbirdFileUploadLib.FileUploader();
+      uploaderLib.upload({ url: signedURL, file, csp })
+      .on("error", (error) => {
+        const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.018')};
+        this.isClosable = true;
+        this.errorCsvStatus = true;
+        this.showCsvValidationStatus = false;
+        this.errorCsvMessage = _.get(error, 'error.params.errmsg') || errInfo.errorMsg;
+        observer.error(this.editorService.apiErrorHandling(error, errInfo));
+      }).on("completed", (completed) => {
+        observer.next(completed);
+        observer.complete();
+      })
+    });
   }
   validateCSVFile() {
     this.showCsvValidationStatus = true;
