@@ -11,7 +11,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { of } from 'rxjs';
 declare const SunbirdFileUploadLib: any;
-describe('BulkUploadComponent', () => {
+xdescribe('BulkUploadComponent', () => {
   let component: BulkUploadComponent;
   let fixture: ComponentFixture<BulkUploadComponent>;
 

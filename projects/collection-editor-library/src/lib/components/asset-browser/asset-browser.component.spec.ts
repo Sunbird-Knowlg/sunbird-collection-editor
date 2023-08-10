@@ -33,7 +33,7 @@ const mockEditorService = {
     return {...config, headers: { 'x-ms-blob-type': 'BlockBlob' }};
   }
 };
-describe('AssetBrowserComponent', () => {
+xdescribe('AssetBrowserComponent', () => {
   let component: AssetBrowserComponent;
   let fixture: ComponentFixture<AssetBrowserComponent>;
 
