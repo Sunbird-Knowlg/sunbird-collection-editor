@@ -204,7 +204,10 @@
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "projects/collection-editor-library/tsconfig.lib.json",
-            "project": "projects/collection-editor-library/ng-package.json"
+            "project": "projects/collection-editor-library/ng-package.json",
+            "scripts": [
+              "node_modules/@project-sunbird/sunbird-file-upload-library/sunbird-file-upload-library.js"
+            ]
           },
           "configurations": {
             "production": {
