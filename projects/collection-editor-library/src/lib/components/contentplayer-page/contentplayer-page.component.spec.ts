@@ -123,4 +123,9 @@ describe('ContentplayerPageComponent', () => {
     // component.loadDefaultPlayer();
   });
 
+  it('#should load PDF player', () => {
+    component.playerType = 'pdf-player';
+    fixture.detectChanges()
+  })
+
 });

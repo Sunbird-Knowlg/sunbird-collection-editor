@@ -1,0 +1,17 @@
+{
+  "name": "@project-sunbird/sunbird-collection-editor-web-component",
+  "version": "1.1.0",
+  "description": "The web component package for the sunbird collection editor",
+  "main": "sunbird-collection-editor.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "sunbird",
+    "collection",
+    "editor",
+    "web-component"
+  ],
+  "author": "sunbird",
+  "license": "MIT"
+}
