@@ -111,6 +111,24 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     }];
   }
 
+  arrangeTreeChildren(data) {
+    for(const key in data.branchingLogic) {
+      let childrenIndex,parentId,parentIndex,item;
+      data.children.forEach((element:any,index:number) => {
+        if(element.identifier == key && data.branchingLogic[key].source.length > 0) { 
+          childrenIndex = index;
+          parentId = data.branchingLogic[key].source[0];
+        }})
+      if(childrenIndex >= 0) {
+        item = data.children[childrenIndex]
+        data.children.splice(childrenIndex,1)
+        parentIndex = data.children.findIndex((element) => element.identifier == parentId)
+        data.children.splice(parentIndex+1,0,item)
+      }
+    }
+    return data;
+  }
+
   buildTreeFromFramework(data, tree?, level?) {
     tree = tree || [];
     if (data.children) { data.children = _.sortBy(data.children, ['index']); }
@@ -161,6 +179,11 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   buildTree(data, tree?, level?) {
     tree = tree || [];
     if (data.children) { data.children = _.sortBy(data.children, ['index']); }
+    // This section will change the children array order to match with branching logic parent children order.
+    if(data.branchingLogic && Object.keys(data?.branchingLogic).length > 0) {
+      this.arrangeTreeChildren(data);
+    }
+    // section to add children in the tree.
     data.level = level ? (level + 1) : 1;
     _.forEach(data.children, (child) => {
       const childTree = [];
@@ -539,7 +562,6 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   handleActionButtons(el) {
-    console.log('action buttons -------->', el.id);
     switch (el.id) {
       case 'edit':
         break;

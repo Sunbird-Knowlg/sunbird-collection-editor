@@ -6,7 +6,7 @@ import { NO_ERRORS_SCHEMA, ChangeDetectorRef } from '@angular/core';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { config, treeData, tree, editorConfig, TargetNodeMockData,
-  CurrentNodeMockData, mockTreeService, mockData, observationWithRubricsMockData, RubricstreeData } from './fancy-tree.component.spec.data';
+  CurrentNodeMockData, mockTreeService, mockData, observationWithRubricsMockData, RubricstreeData, questionChildren, questionBranchLogic } from './fancy-tree.component.spec.data';
 import { Router } from '@angular/router';
 import { TreeService } from '../../services/tree/tree.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
@@ -469,6 +469,31 @@ describe('FancyTreeComponent', () => {
   it('#buildTree() should return tree objects', () => {
     const result = component.buildTree(treeData, tree, 2);
     expect(result.length).toBeGreaterThan(1);
+  });
+
+  it('should arrange children correctly when branchingLogic is present', () => {
+    const data = {
+      branchingLogic: questionBranchLogic,
+      children: questionChildren
+    };
+    const expectedData = {
+      branchingLogic: questionBranchLogic,
+      children: questionChildren
+    };
+    // Expected data has the same children array as data, but with parents in correct order
+    const result = component.arrangeTreeChildren(data);
+    expect(result).toEqual(expectedData);
+  });
+
+  it('should return data unmodified when branchingLogic is not present', () => {
+    const data = {
+      children: questionChildren
+    };
+    const expectedData = {
+      children: questionChildren
+    };
+    const result = component.arrangeTreeChildren(data);
+    expect(result).toEqual(expectedData);
   });
 
   it ('#checkContentAddition() should check node hitMode', () => {
