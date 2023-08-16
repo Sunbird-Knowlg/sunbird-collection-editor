@@ -15,7 +15,8 @@ import {
   SelectedNodeMockData, outcomeDeclarationData, observationAndRubericsField,
   questionsetRead, questionsetHierarchyRead, nodesModifiedData, treeNodeData,
   questionSetEditorConfig, mockOutcomeDeclaration,
-  frameworkData, serverResponse} from './editor.component.spec.data';
+  frameworkData, serverResponse
+} from './editor.component.spec.data';
 import { ConfigService } from '../../services/config/config.service';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { DialcodeService } from '../../services/dialcode/dialcode.service';
@@ -105,17 +106,17 @@ describe('EditorComponent', () => {
     spyOn(editorService, 'getToolbarConfig').and.returnValue({ title: 'abcd', showDialcode: 'No' });
     spyOn(component, 'isReviewMode').and.returnValue(true);
     spyOn(component, 'mergeCollectionExternalProperties').and.returnValue(of(hierarchyResponse));
-    spyOn(component, 'initializeFrameworkAndChannel').and.callFake(() => {});
+    spyOn(component, 'initializeFrameworkAndChannel').and.callFake(() => { });
     spyOn(editorService, 'getCategoryDefinition').and.returnValue(of(getCategoryDefinitionResponse));
     const telemetryService = TestBed.inject(EditorTelemetryService);
     spyOn(telemetryService, 'initializeTelemetry').and.callFake(() => { });
     spyOn(telemetryService, 'start').and.callFake(() => { });
     const libraryPage: EventEmitter<any> = new EventEmitter();
-    spyOn(editorService, 'getshowLibraryPageEmitter').and.callFake(() => {return libraryPage})
-    spyOn(component, 'showLibraryComponentPage').and.callFake(() => {});
+    spyOn(editorService, 'getshowLibraryPageEmitter').and.callFake(() => { return libraryPage })
+    spyOn(component, 'showLibraryComponentPage').and.callFake(() => { });
     const questionLibraryPage: EventEmitter<any> = new EventEmitter();
-    spyOn(editorService, 'getshowQuestionLibraryPageEmitter').and.callFake(() => {return questionLibraryPage});
-    spyOn(component, 'showQuestionLibraryComponentPage').and.callFake(() => {});
+    spyOn(editorService, 'getshowQuestionLibraryPageEmitter').and.callFake(() => { return questionLibraryPage });
+    spyOn(component, 'showQuestionLibraryComponentPage').and.callFake(() => { });
     component.ngOnInit();
     expect(editorService.initialize).toHaveBeenCalledWith(editorConfig);
     expect(editorService.editorMode).toEqual('edit');
@@ -147,7 +148,7 @@ describe('EditorComponent', () => {
     const editorService = TestBed.inject(EditorService);
     spyOn(editorService, 'initialize').and.callThrough();
     const treeService = TestBed.inject(TreeService);
-    spyOn(treeService, 'initialize').and.callFake(() => {});
+    spyOn(treeService, 'initialize').and.callFake(() => { });
     spyOn(component, 'isReviewMode').and.returnValue(true);
     spyOn(editorService, 'getToolbarConfig').and.returnValue(toolbarConfig_question);
     spyOn(editorService, 'getCategoryDefinition').and.returnValue(of(getCategoryDefinitionResponse));
@@ -157,9 +158,9 @@ describe('EditorComponent', () => {
     const libraryPageEmitter: EventEmitter<any> = new EventEmitter();
     const questionLibraryPageEmitter: EventEmitter<number> = new EventEmitter();
     spyOn(editorService, 'getshowLibraryPageEmitter').and.returnValue(libraryPageEmitter);
-    spyOn(component, 'showLibraryComponentPage').and.callFake(() => {});
+    spyOn(component, 'showLibraryComponentPage').and.callFake(() => { });
     spyOn(editorService, 'getshowQuestionLibraryPageEmitter').and.returnValue(questionLibraryPageEmitter);
-    spyOn(component, 'showQuestionLibraryComponentPage').and.callFake(() => {});
+    spyOn(component, 'showQuestionLibraryComponentPage').and.callFake(() => { });
     component.ngOnInit();
     expect(editorService.editorMode).toEqual('edit');
     expect(component.editorMode).toEqual('edit');
@@ -184,9 +185,9 @@ describe('EditorComponent', () => {
     const helperService = TestBed.inject(HelperService);
     const frameworkService = TestBed.inject(FrameworkService);
     component.editorConfig = editorConfig_question;
-    spyOn(frameworkService, 'getTargetFrameworkCategories').and.callFake(() => {});
-    spyOn(frameworkService, 'initialize').and.callFake(() => {});
-    spyOn(helperService, 'initialize').and.callFake(() => {});
+    spyOn(frameworkService, 'getTargetFrameworkCategories').and.callFake(() => { });
+    spyOn(frameworkService, 'initialize').and.callFake(() => { });
+    spyOn(helperService, 'initialize').and.callFake(() => { });
     component.initializeFrameworkAndChannel();
     expect(component.organisationFramework).toEqual(editorConfig_question.context.framework);
     expect(component.targetFramework).toEqual(editorConfig_question.context.targetFWIds);
@@ -202,9 +203,9 @@ describe('EditorComponent', () => {
     const helperService = TestBed.inject(HelperService);
     const frameworkService = TestBed.inject(FrameworkService);
     component.editorConfig = questionEditorConfig;
-    spyOn(frameworkService, 'getTargetFrameworkCategories').and.callFake(() => {});
-    spyOn(frameworkService, 'initialize').and.callFake(() => {});
-    spyOn(helperService, 'initialize').and.callFake(() => {});
+    spyOn(frameworkService, 'getTargetFrameworkCategories').and.callFake(() => { });
+    spyOn(frameworkService, 'initialize').and.callFake(() => { });
+    spyOn(helperService, 'initialize').and.callFake(() => { });
     component.initializeFrameworkAndChannel();
     expect(component.organisationFramework).toBeUndefined();
     expect(component.targetFramework).toBeUndefined();
@@ -361,7 +362,7 @@ describe('EditorComponent', () => {
   it('#sethierarchyConfig() should set #ishierarchyConfigSet', () => {
     component.editorConfig = editorConfig;
     spyOn(component, 'sethierarchyConfig').and.callThrough();
-    spyOn(component, 'getHierarchyChildrenConfig').and.callFake(() => {});
+    spyOn(component, 'getHierarchyChildrenConfig').and.callFake(() => { });
     component.sethierarchyConfig(categoryDefinitionData);
     expect(component.getHierarchyChildrenConfig).toHaveBeenCalled();
   });
@@ -381,14 +382,14 @@ describe('EditorComponent', () => {
   });
 
   it('#toolbarEventListener() should call #saveContent() if event is saveContent', () => {
-  spyOn(component, 'saveContent').and.callFake(() => {
-    return Promise.resolve();
-  });
-  const event = {
-    button: 'saveContent'
-  };
-  component.toolbarEventListener(event);
-  expect(component.saveContent).toHaveBeenCalled();
+    spyOn(component, 'saveContent').and.callFake(() => {
+      return Promise.resolve();
+    });
+    const event = {
+      button: 'saveContent'
+    };
+    component.toolbarEventListener(event);
+    expect(component.saveContent).toHaveBeenCalled();
   });
 
   it('#toolbarEventListener() should call #previewContent() if event is previewContent', () => {
@@ -535,7 +536,7 @@ describe('EditorComponent', () => {
       button: 'sourcingReject',
       comment: 'test',
     };
-    spyOn(component, 'sourcingRejectContent').and.callFake(() => {return false});
+    spyOn(component, 'sourcingRejectContent').and.callFake(() => { return false });
     component.editorConfig = editorConfig;
     component.toolbarEventListener(event);
     expect(component.sourcingRejectContent).toHaveBeenCalledWith({ comment: 'test' });
@@ -614,7 +615,7 @@ describe('EditorComponent', () => {
 
   it('#toolbarEventListener() should call redirectToQuestionTab for the case reviewContent', () => {
     spyOn(component, 'toolbarEventListener').and.callThrough();
-    spyOn(component, 'redirectToQuestionTab').and.callFake(() => {});
+    spyOn(component, 'redirectToQuestionTab').and.callFake(() => { });
     const event = {
       button: 'reviewContent'
     };
@@ -695,29 +696,29 @@ describe('EditorComponent', () => {
   });
 
   it('#showQuestionLibraryComponentPage() should set #addQuestionFromLibraryButtonLoader to false and call #saveContent()',
-  fakeAsync(() => {
-    const editorService = TestBed.inject(EditorService);
-    const treeService = TestBed.inject(TreeService);
-    editorService.templateList = ['Subjective Question'];
-    component.collectionId = 'do_12345';
-    component.organisationFramework = 'nit_k12';
-    component.editorConfig = editorConfig_question;
-    component.libraryComponentInput.searchFormConfig = categoryDefinition.result.objectCategoryDefinition.forms.searchConfig;
-    spyOn(treeService, 'getActiveNode').and.returnValue({data: {metadata: {}}});
-    spyOn(editorService, 'getContentChildrens').and.returnValue([{}, {}]);
-    spyOn(editorService, 'checkIfContentsCanbeAdded').and.returnValue(true);
-    spyOn(component, 'saveContent').and.callFake(() => {
-      return Promise.resolve('success');
-    });
-    spyOn(component, 'showQuestionLibraryComponentPage').and.callThrough();
-    component.showQuestionLibraryComponentPage();
-    component.saveContent().then(response => {
-      expect(treeService.getActiveNode).toHaveBeenCalled();
-      expect(component.buttonLoaders.addQuestionFromLibraryButtonLoader).toBeFalsy();
-      expect(component.questionlibraryInput).toBeDefined();
-      expect(component.pageId).toEqual('question_library');
-    });
-  }));
+    fakeAsync(() => {
+      const editorService = TestBed.inject(EditorService);
+      const treeService = TestBed.inject(TreeService);
+      editorService.templateList = ['Subjective Question'];
+      component.collectionId = 'do_12345';
+      component.organisationFramework = 'nit_k12';
+      component.editorConfig = editorConfig_question;
+      component.libraryComponentInput.searchFormConfig = categoryDefinition.result.objectCategoryDefinition.forms.searchConfig;
+      spyOn(treeService, 'getActiveNode').and.returnValue({ data: { metadata: {} } });
+      spyOn(editorService, 'getContentChildrens').and.returnValue([{}, {}]);
+      spyOn(editorService, 'checkIfContentsCanbeAdded').and.returnValue(true);
+      spyOn(component, 'saveContent').and.callFake(() => {
+        return Promise.resolve('success');
+      });
+      spyOn(component, 'showQuestionLibraryComponentPage').and.callThrough();
+      component.showQuestionLibraryComponentPage();
+      component.saveContent().then(response => {
+        expect(treeService.getActiveNode).toHaveBeenCalled();
+        expect(component.buttonLoaders.addQuestionFromLibraryButtonLoader).toBeFalsy();
+        expect(component.questionlibraryInput).toBeDefined();
+        expect(component.pageId).toEqual('question_library');
+      });
+    }));
 
   it('#showQuestionLibraryComponentPage should not call saveContent', () => {
     const editorService = TestBed.inject(EditorService);
@@ -740,29 +741,30 @@ describe('EditorComponent', () => {
   });
 
   it('#onQuestionLibraryChange() should call #addResourceToQuestionset()', () => {
-    spyOn(component, 'addResourceToQuestionset').and.callFake(() => {});
+    spyOn(component, 'addResourceToQuestionset').and.callFake(() => { });
     spyOn(component, 'onQuestionLibraryChange').and.callThrough();
     component.onQuestionLibraryChange(
-      {action: 'addBulk',
-      collectionIds: 'do_12345',
-      resourceType: 'Question'
-    });
+      {
+        action: 'addBulk',
+        collectionIds: 'do_12345',
+        resourceType: 'Question'
+      });
     expect(component.addResourceToQuestionset).toHaveBeenCalled();
   });
 
   it('#onQuestionLibraryChange() should call #libraryEventListener()', () => {
-    spyOn(component, 'libraryEventListener').and.callFake(() => {});
+    spyOn(component, 'libraryEventListener').and.callFake(() => { });
     spyOn(component, 'onQuestionLibraryChange').and.callThrough();
-    component.onQuestionLibraryChange({action: 'back'});
+    component.onQuestionLibraryChange({ action: 'back' });
     expect(component.libraryEventListener).toHaveBeenCalled();
   });
 
   it('#addResourceToQuestionset() should call #libraryEventListener()', () => {
     const treeService = TestBed.inject(TreeService);
     const editorService = TestBed.inject(EditorService);
-    spyOn(treeService, 'getActiveNode').and.returnValue({data: {id: 'do_123456'}});
+    spyOn(treeService, 'getActiveNode').and.returnValue({ data: { id: 'do_123456' } });
     spyOn(editorService, 'addResourceToQuestionset').and.returnValue(of(serverResponse));
-    spyOn(component, 'libraryEventListener').and.callFake(() => {});
+    spyOn(component, 'libraryEventListener').and.callFake(() => { });
     spyOn(component, 'addResourceToQuestionset').and.callThrough();
     component.addResourceToQuestionset('do_12345', 'Question');
     expect(component.libraryEventListener).toHaveBeenCalled();
@@ -771,8 +773,8 @@ describe('EditorComponent', () => {
   it('#addResourceToQuestionset() should call editorService.apiErrorHandling()', () => {
     const treeService = TestBed.inject(TreeService);
     const editorService = TestBed.inject(EditorService);
-    spyOn(treeService, 'getActiveNode').and.returnValue({data: {id: 'do_123456'}});
-    spyOn(editorService, 'apiErrorHandling').and.callFake(() => {});
+    spyOn(treeService, 'getActiveNode').and.returnValue({ data: { id: 'do_123456' } });
+    spyOn(editorService, 'apiErrorHandling').and.callFake(() => { });
     spyOn(editorService, 'addResourceToQuestionset').and.returnValue(throwError('error'));
     spyOn(component, 'addResourceToQuestionset').and.callThrough();
     component.addResourceToQuestionset('do_12345', 'Question');
@@ -783,9 +785,9 @@ describe('EditorComponent', () => {
     component.objectType = 'questionset';
     const editorService = TestBed.inject(EditorService);
     const treeService = TestBed.inject(TreeService);
-    spyOn(editorService, 'getCollectionHierarchy').and.returnValue({nodesModified: nodesModifiedData, hierarchy: {}});
-    spyOn(editorService, 'getMaxScore').and.callFake(() => { return Promise.resolve(5)});
-    spyOn(treeService, 'updateMetaDataProperty').and.callFake(() => {});
+    spyOn(editorService, 'getCollectionHierarchy').and.returnValue({ nodesModified: nodesModifiedData, hierarchy: {} });
+    spyOn(editorService, 'getMaxScore').and.callFake(() => { return Promise.resolve(5) });
+    spyOn(treeService, 'updateMetaDataProperty').and.callFake(() => { });
     spyOn(component, 'validateFormStatus').and.callFake(() => { return true });
     spyOn(editorService, 'updateHierarchy').and.returnValue(of(serverResponse));
     spyOn(component, 'saveContent').and.callThrough();
@@ -886,7 +888,7 @@ describe('EditorComponent', () => {
   it('#publishContent should call #publishContent() and #redirectToChapterListTab()', () => {
     const editorService = TestBed.inject(EditorService);
     spyOn(editorService, 'publishContent').and.returnValue(of(serverResponse));
-    spyOn(component, 'redirectToChapterListTab').and.callFake(() => {});
+    spyOn(component, 'redirectToChapterListTab').and.callFake(() => { });
     component.editorConfig = editorConfig;
     component.publishchecklist = [];
     component.publishContent({});
@@ -907,7 +909,7 @@ describe('EditorComponent', () => {
 
   it('#sourcingApproveContent() should call #redirectToChapterListTab() if event is sourcingApprove', () => {
     const editorService = TestBed.inject(EditorService);
-    spyOn(component, 'redirectToChapterListTab').and.callFake(() => {});
+    spyOn(component, 'redirectToChapterListTab').and.callFake(() => { });
     spyOn(component, 'validateFormStatus').and.returnValue(true);
     spyOn(editorService, 'updateCollection').and.returnValue(of(serverResponse));
     spyOn(component, 'sourcingApproveContent').and.callThrough();
@@ -919,10 +921,10 @@ describe('EditorComponent', () => {
   it('#sourcingApproveContent() should not call #redirectToChapterListTab() and call toasterService.error case1', () => {
     component.editorMode = 'sourcingreview';
     component.editorConfig = editorConfig;
-    component.publishchecklist = {data: {}};
+    component.publishchecklist = { data: {} };
     const editorService = TestBed.inject(EditorService);
-    spyOn(toasterService, 'error').and.callFake(() => {});
-    spyOn(component, 'redirectToChapterListTab').and.callFake(() => {});
+    spyOn(toasterService, 'error').and.callFake(() => { });
+    spyOn(component, 'redirectToChapterListTab').and.callFake(() => { });
     spyOn(component, 'validateFormStatus').and.returnValue(true);
     spyOn(editorService, 'updateCollection').and.returnValue(throwError('error'));
     spyOn(component, 'sourcingApproveContent').and.callThrough();
@@ -934,9 +936,9 @@ describe('EditorComponent', () => {
   it('#sourcingApproveContent() should not call #redirectToChapterListTab() and call toasterService.error case2', () => {
     component.editorMode = 'sourcingreview';
     component.editorConfig = editorConfig;
-    component.publishchecklist = {data: {}};
+    component.publishchecklist = { data: {} };
     const editorService = TestBed.inject(EditorService);
-    spyOn(toasterService, 'error').and.callFake(() => {});
+    spyOn(toasterService, 'error').and.callFake(() => { });
     spyOn(component, 'validateFormStatus').and.returnValue(false);
     spyOn(component, 'sourcingApproveContent').and.callThrough();
     component.sourcingApproveContent([]);
@@ -946,10 +948,10 @@ describe('EditorComponent', () => {
   it('#sourcingApproveContent() should call #redirectToChapterListTab() and not call toasterService.error', () => {
     component.editorMode = 'review';
     component.editorConfig = editorConfig;
-    component.publishchecklist = {data: {}};
+    component.publishchecklist = { data: {} };
     const editorService = TestBed.inject(EditorService);
-    spyOn(toasterService, 'error').and.callFake(() => {});
-    spyOn(component, 'redirectToChapterListTab').and.callFake(() => {});
+    spyOn(toasterService, 'error').and.callFake(() => { });
+    spyOn(component, 'redirectToChapterListTab').and.callFake(() => { });
     component.sourcingApproveContent([]);
     expect(toasterService.error).not.toHaveBeenCalled();
     expect(component.redirectToChapterListTab).toHaveBeenCalled();
@@ -958,7 +960,7 @@ describe('EditorComponent', () => {
 
   it('#sourcingRejectContent() should call #redirectToChapterListTab() if event is sourcingApprove', () => {
     const editorService = TestBed.inject(EditorService);
-    spyOn(component, 'redirectToChapterListTab').and.callFake(() => {});
+    spyOn(component, 'redirectToChapterListTab').and.callFake(() => { });
     spyOn(component, 'validateFormStatus').and.returnValue(true);
     spyOn(editorService, 'updateCollection').and.returnValue(of(serverResponse));
     spyOn(component, 'sourcingRejectContent').and.callThrough();
@@ -973,10 +975,10 @@ describe('EditorComponent', () => {
     component.editorConfig.config.editableFields = {
       sourcingreview: ['instructions']
     };
-    component.publishchecklist = {data: {}};
+    component.publishchecklist = { data: {} };
     const editorService = TestBed.inject(EditorService);
-    spyOn(toasterService, 'error').and.callFake(() => {});
-    spyOn(component, 'redirectToChapterListTab').and.callFake(() => {});
+    spyOn(toasterService, 'error').and.callFake(() => { });
+    spyOn(component, 'redirectToChapterListTab').and.callFake(() => { });
     spyOn(component, 'validateFormStatus').and.returnValue(true);
     spyOn(editorService, 'updateCollection').and.returnValue(throwError('error'));
     spyOn(component, 'sourcingRejectContent').and.callThrough();
@@ -988,9 +990,9 @@ describe('EditorComponent', () => {
   it('#sourcingRejectContent() should not call #redirectToChapterListTab() and call toasterService.error case2', () => {
     component.editorMode = 'sourcingreview';
     component.editorConfig = editorConfig;
-    component.publishchecklist = {data: {}};
+    component.publishchecklist = { data: {} };
     const editorService = TestBed.inject(EditorService);
-    spyOn(toasterService, 'error').and.callFake(() => {});
+    spyOn(toasterService, 'error').and.callFake(() => { });
     spyOn(component, 'validateFormStatus').and.returnValue(false);
     spyOn(component, 'sourcingRejectContent').and.callThrough();
     component.sourcingRejectContent([]);
@@ -1000,10 +1002,10 @@ describe('EditorComponent', () => {
   it('#sourcingRejectContent() should call #redirectToChapterListTab() and not call toasterService.error', () => {
     component.editorMode = 'review';
     component.editorConfig = editorConfig;
-    component.publishchecklist = {data: {}};
+    component.publishchecklist = { data: {} };
     const editorService = TestBed.inject(EditorService);
-    spyOn(toasterService, 'error').and.callFake(() => {});
-    spyOn(component, 'redirectToChapterListTab').and.callFake(() => {});
+    spyOn(toasterService, 'error').and.callFake(() => { });
+    spyOn(component, 'redirectToChapterListTab').and.callFake(() => { });
     component.sourcingRejectContent([]);
     expect(toasterService.error).not.toHaveBeenCalled();
     expect(component.redirectToChapterListTab).toHaveBeenCalled();
@@ -1016,7 +1018,7 @@ describe('EditorComponent', () => {
     spyOn(editorService, 'fetchCollectionHierarchy').and.returnValue(of(questionsetHierarchyRead));
     component.collectionTreeNodes = undefined;
     spyOn(component, 'setUpdatedTreeNodeData').and.callThrough();
-    spyOn(component, 'updateTreeNodeData').and.callFake(() => {});
+    spyOn(component, 'updateTreeNodeData').and.callFake(() => { });
     component.setUpdatedTreeNodeData();
     expect(editorService.fetchCollectionHierarchy).toHaveBeenCalled();
     expect(component.updateTreeNodeData).toHaveBeenCalled();
@@ -1027,10 +1029,10 @@ describe('EditorComponent', () => {
   it('#setUpdatedTreeNodeData() should not call updateTreeNodeData() when error', () => {
     component.buttonLoaders.previewButtonLoader = true;
     const editorService = TestBed.inject(EditorService);
-    spyOn(toasterService, 'error').and.callFake(() => {});
+    spyOn(toasterService, 'error').and.callFake(() => { });
     spyOn(editorService, 'fetchCollectionHierarchy').and.returnValue(throwError('error'));
     spyOn(component, 'setUpdatedTreeNodeData').and.callThrough();
-    spyOn(component, 'updateTreeNodeData').and.callFake(() => {});
+    spyOn(component, 'updateTreeNodeData').and.callFake(() => { });
     component.setUpdatedTreeNodeData();
     expect(editorService.fetchCollectionHierarchy).toHaveBeenCalled();
     expect(component.updateTreeNodeData).not.toHaveBeenCalled();
@@ -1039,7 +1041,7 @@ describe('EditorComponent', () => {
   });
 
   it('#updateTreeNodeData() should call treeService.getFirstChild()', () => {
-    component.collectionTreeNodes = {data: undefined};
+    component.collectionTreeNodes = { data: undefined };
     const helperService = TestBed.inject(HelperService);
     spyOn(helperService, 'hmsToSeconds').and.returnValue('300');
     const treeNodeMockData = treeNodeData;
@@ -1138,7 +1140,7 @@ describe('EditorComponent', () => {
     // tslint:disable-next-line:no-string-literal
     component['editorService']['_editorConfig'] = questionSetEditorConfig;
     component.selectedNodeData = {
-      getLevel() {return 2; }
+      getLevel() { return 2; }
     };
     component.templateList = undefined;
     component.editorConfig = questionSetEditorConfig;
@@ -1171,7 +1173,7 @@ describe('EditorComponent', () => {
     spyOn(treeService, 'getFirstChild').and.callFake(() => {
       return { data: { metadata: treeData } };
     });
-    spyOn(component, 'updateSubmitBtnVisibility').and.callFake(() => {});
+    spyOn(component, 'updateSubmitBtnVisibility').and.callFake(() => { });
     component.deleteNode();
     expect(treeService.removeNode).toHaveBeenCalled();
     expect(component.updateSubmitBtnVisibility).toHaveBeenCalled();
@@ -1181,11 +1183,11 @@ describe('EditorComponent', () => {
   it('#updateSubmitBtnVisibility() should set toolbarConfig.hasChildren to true', () => {
     component.toolbarConfig = { hasChildren: false };
     const treeService = TestBed.inject(TreeService);
-    spyOn(treeService, 'getFirstChild').and.returnValue({children: ['Subjective']});
+    spyOn(treeService, 'getFirstChild').and.returnValue({ children: ['Subjective'] });
     spyOn(component, 'updateSubmitBtnVisibility').and.callThrough();
     component.updateSubmitBtnVisibility();
     expect(treeService.getFirstChild).toHaveBeenCalled();
-    expect( component.toolbarConfig.hasChildren).toBeTruthy();
+    expect(component.toolbarConfig.hasChildren).toBeTruthy();
   });
 
   it('#updateSubmitBtnVisibility() should set toolbarConfig.hasChildren to false', () => {
@@ -1195,7 +1197,7 @@ describe('EditorComponent', () => {
     spyOn(component, 'updateSubmitBtnVisibility').and.callThrough();
     component.updateSubmitBtnVisibility();
     expect(treeService.getFirstChild).toHaveBeenCalled();
-    expect( component.toolbarConfig.hasChildren).toBeFalsy();
+    expect(component.toolbarConfig.hasChildren).toBeFalsy();
   });
 
   it('generateTelemetryEndEvent() ', () => {
@@ -1203,7 +1205,7 @@ describe('EditorComponent', () => {
     component.pageStartTime = '1654413557409';
     const telemetryService = TestBed.inject(EditorTelemetryService);
     telemetryService.telemetryPageId = 'questionset_editor';
-    spyOn(telemetryService, 'end').and.callFake(() => {});
+    spyOn(telemetryService, 'end').and.callFake(() => { });
     spyOn(component, 'generateTelemetryEndEvent').and.callThrough();
     component.generateTelemetryEndEvent();
     expect(telemetryService.end).toHaveBeenCalled();
@@ -1225,7 +1227,7 @@ describe('EditorComponent', () => {
     const event = 'Multiple Choice Question';
     const editorService = TestBed.inject(EditorService);
     component.editorConfig = editorConfig;
-    spyOn(editorService, 'apiErrorHandling').and.callFake(() => {});
+    spyOn(editorService, 'apiErrorHandling').and.callFake(() => { });
     spyOn(editorService, 'getCategoryDefinition').and.returnValue(throwError('error'));
     spyOn(component, 'handleTemplateSelection').and.callThrough();
     component.handleTemplateSelection(event);
@@ -1237,7 +1239,7 @@ describe('EditorComponent', () => {
     const editorService = TestBed.inject(EditorService);
     component.editorConfig = editorConfig;
     component.editorConfig.config.showSourcingStatus = false;
-    spyOn(component, 'redirectToQuestionTab').and.callFake(() => {});
+    spyOn(component, 'redirectToQuestionTab').and.callFake(() => { });
     spyOn(editorService, 'getCategoryDefinition').and.returnValue(of(getCategoryDefinitionResponse));
     component.handleTemplateSelection(event);
     expect(component.redirectToQuestionTab).toHaveBeenCalled();
@@ -1292,8 +1294,8 @@ describe('EditorComponent', () => {
     component.telemetryService.telemetryPageId = '';
     component.objectType = 'questionSet';
     spyOn(component, 'mergeCollectionExternalProperties').and.returnValue(of({}));
-    spyOn(component, 'treeEventListener').and.callFake(() => {});
-    component.questionEventListener({type: 'createNewContent'});
+    spyOn(component, 'treeEventListener').and.callFake(() => { });
+    component.questionEventListener({ type: 'createNewContent' });
     expect(component.pageId).toEqual('collection_editor');
     expect(component.telemetryService.telemetryPageId).toEqual('collection_editor');
     expect(component.isEnableCsvAction).toBeTruthy();
@@ -1302,15 +1304,16 @@ describe('EditorComponent', () => {
   it('#questionEventListener() should emit event for objectType question', () => {
     const event = { actionType: 'test', identifier: 'test' };
     component.objectType = 'question';
-    const expectedParams = {close: true, library: 'collection_editor', action: event.actionType, identifier: event.identifier};
-    spyOn(component.editorEmitter, 'emit').and.callFake(() => {});
+    const expectedParams = { close: true, library: 'collection_editor', action: event.actionType, identifier: event.identifier };
+    spyOn(component.editorEmitter, 'emit').and.callFake(() => { });
     component.questionEventListener(event);
     expect(component.editorEmitter.emit).toHaveBeenCalledWith(expectedParams);
   });
 
   it('#showCommentAddedAgainstContent should return false', () => {
     component.editorConfig = editorConfig_question;
-    component.collectionTreeNodes = { data:
+    component.collectionTreeNodes = {
+      data:
       {
         status: 'Live',
         rejectComment: 'test'
@@ -1337,7 +1340,7 @@ describe('EditorComponent', () => {
   });
 
   it('#handleCsvDropdownOptionsOnCollection should set dropdown status initially', () => {
-    spyOn(component, 'setCsvDropDownOptionsDisable').and.callFake(() => {});
+    spyOn(component, 'setCsvDropDownOptionsDisable').and.callFake(() => { });
     component.isTreeInitialized = true;
     component.handleCsvDropdownOptionsOnCollection();
     expect(component.isEnableCsvAction).toBeTruthy();
@@ -1348,7 +1351,7 @@ describe('EditorComponent', () => {
   it('#handleCsvDropdownOptionsOnCollection should set isEnableCsvAction status false', () => {
     component.isEnableCsvAction = true;
     component.isTreeInitialized = false;
-    spyOn(component, 'setCsvDropDownOptionsDisable').and.callFake(() => {});
+    spyOn(component, 'setCsvDropDownOptionsDisable').and.callFake(() => { });
     component.handleCsvDropdownOptionsOnCollection();
     expect(component.isEnableCsvAction).toBeFalsy();
     expect(component.isTreeInitialized).toBeFalsy();
@@ -1357,7 +1360,7 @@ describe('EditorComponent', () => {
 
   it('#onClickFolder() should call setCsvDropDownOptionsDisable when isComponenetInitialized is true', () => {
     component.isComponenetInitialized = true;
-    spyOn(component, 'setCsvDropDownOptionsDisable').and.callFake(() => {});
+    spyOn(component, 'setCsvDropDownOptionsDisable').and.callFake(() => { });
     spyOn(component, 'onClickFolder').and.callThrough();
     component.onClickFolder();
     expect(component.setCsvDropDownOptionsDisable).toHaveBeenCalledWith();
@@ -1367,7 +1370,7 @@ describe('EditorComponent', () => {
   it('#onClickFolder() should call setCsvDropDownOptionsDisable when isEnableCsvAction is true', () => {
     component.isEnableCsvAction = true;
     component.isComponenetInitialized = false;
-    spyOn(component, 'setCsvDropDownOptionsDisable').and.callFake(() => {});
+    spyOn(component, 'setCsvDropDownOptionsDisable').and.callFake(() => { });
     component.onClickFolder();
     expect(component.setCsvDropDownOptionsDisable).toHaveBeenCalledWith();
   });
@@ -1375,7 +1378,7 @@ describe('EditorComponent', () => {
   it('#onClickFolder() should not call setCsvDropDownOptionsDisable', () => {
     component.isEnableCsvAction = false;
     component.isComponenetInitialized = false;
-    spyOn(component, 'setCsvDropDownOptionsDisable').and.callFake(() => {});
+    spyOn(component, 'setCsvDropDownOptionsDisable').and.callFake(() => { });
     component.onClickFolder();
     expect(component.setCsvDropDownOptionsDisable).not.toHaveBeenCalledWith();
   });
@@ -1418,7 +1421,7 @@ describe('EditorComponent', () => {
 
   it('#downloadHierarchyCsv() should call downloadHierarchyCsv and error case', () => {
     component.collectionId = 'do_11331581945782272012';
-    spyOn(toasterService, 'error').and.callFake(() => {});
+    spyOn(toasterService, 'error').and.callFake(() => { });
     // tslint:disable-next-line:no-string-literal
     spyOn(component['editorService'], 'downloadHierarchyCsv').and.returnValue(throwError(csvExport.errorExport));
     spyOn(component, 'downloadCSVFile').and.callThrough();
@@ -1473,15 +1476,15 @@ describe('EditorComponent', () => {
   });
 
   it('#hanndleCsvEmitter should check for downloadCsv conditions', () => {
-    spyOn(component, 'downloadHierarchyCsv').and.callFake(() => {});
+    spyOn(component, 'downloadHierarchyCsv').and.callFake(() => { });
     const event = { type: 'downloadCsv' };
     component.hanndleCsvEmitter(event);
     expect(component.downloadHierarchyCsv).toHaveBeenCalled();
   });
 
   it('#onFormStatusChange() should store form status when form state changed', () => {
-    const formStatus = {isValid: true};
-    const expectedResult = { do_12345 : true };
+    const formStatus = { isValid: true };
+    const expectedResult = { do_12345: true };
     const treeService = TestBed.inject(TreeService);
     spyOn(treeService, 'getActiveNode').and.callFake(() => {
       return { data: { id: 'do_12345' } };
@@ -1507,7 +1510,7 @@ describe('EditorComponent', () => {
     component['modal'] = {
       deny: jasmine.createSpy('deny')
     };
-    spyOn(treeService, 'clearTreeCache').and.callFake(() => {});
+    spyOn(treeService, 'clearTreeCache').and.callFake(() => { });
     spyOn(component, 'generateTelemetryEndEvent');
     component.ngOnDestroy();
     expect(component.generateTelemetryEndEvent).not.toHaveBeenCalled();
@@ -1526,15 +1529,15 @@ describe('EditorComponent', () => {
 
   it('fetchFrameWorkDetails should set collectionTreeNodes', () => {
     component.collectionTreeNodes = {
-        data: {
-            children: undefined
-        }
+      data: {
+        children: undefined
+      }
     };
     component.editorConfig = editorConfig;
     const frameworkService: any = TestBed.inject(FrameworkService);
     frameworkService.organisationFramework = 'tpd';
     // tslint:disable-next-line:max-line-length
-    frameworkService.frameworkData$ = of({frameworkdata: {tpd: of({'frameworkdata' : frameworkData})}});
+    frameworkService.frameworkData$ = of({ frameworkdata: { tpd: of({ 'frameworkdata': frameworkData }) } });
     spyOn(component, 'fetchFrameWorkDetails').and.callThrough();
     component.fetchFrameWorkDetails();
   });
