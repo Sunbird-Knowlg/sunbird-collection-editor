@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, NgZone } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ConfigService } from '../../services/config/config.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
@@ -29,7 +29,7 @@ export class CsvUploadComponent implements OnInit {
   public fileName: any;
   public file: any;
   constructor(public telemetryService: EditorTelemetryService, public configService: ConfigService,
-              private toasterService: ToasterService, private editorService: EditorService, private ngZone: NgZone) { }
+              private toasterService: ToasterService, private editorService: EditorService, ) { }
 
   ngOnInit(): void {
     this.handleInputCondition();
@@ -68,19 +68,15 @@ export class CsvUploadComponent implements OnInit {
       param: config
     };
     this.editorService.validateCSVFile(option, contentId).subscribe(res => {
-      this.ngZone.run(() => {
-        this.isClosable = true;
-        this.showSuccessCsv = true;
-        this.showCsvValidationStatus = false;
-        this.csvUploadEmitter.emit({ status: true, type: 'updateHierarchy' });
-      });
+      this.isClosable = true;
+      this.showSuccessCsv = true;
+      this.showCsvValidationStatus = false;
+      this.csvUploadEmitter.emit({ status: true, type: 'updateHierarchy' });
     }, error => {
-      this.ngZone.run(() => {
-        this.showCsvValidationStatus = false;
-        this.errorCsvStatus = true;
-        this.errorCsvMessage = _.get(error, 'error.params.errmsg').split('\n');
-        this.isClosable = true;
-      });
+      this.showCsvValidationStatus = false;
+      this.errorCsvStatus = true;
+      this.errorCsvMessage = _.get(error, 'error.params.errmsg').split('\n');
+      this.isClosable = true;
     });
   }
   closeHierarchyModal(modal) {
@@ -121,17 +117,17 @@ export class CsvUploadComponent implements OnInit {
     return new Observable((observer) => {
       const uploaderLib = new SunbirdFileUploadLib.FileUploader();
       uploaderLib.upload({ url: signedURL, file, csp })
-      .on('error', (error) => {
+      .on("error", (error) => {
         const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.018')};
         this.isClosable = true;
         this.errorCsvStatus = true;
         this.showCsvValidationStatus = false;
         this.errorCsvMessage = _.get(error, 'error.params.errmsg') || errInfo.errorMsg;
         observer.error(this.editorService.apiErrorHandling(error, errInfo));
-      }).on('completed', (completed) => {
+      }).on("completed", (completed) => {
         observer.next(completed);
         observer.complete();
-      });
+      })
     });
   }
   validateCSVFile() {
