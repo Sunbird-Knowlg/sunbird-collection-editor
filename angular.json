@@ -63,6 +63,8 @@
               "node_modules/katex/dist/katex.min.css"
             ],
             "scripts": [
+              "node_modules/epubjs/dist/epub.js",
+              "node_modules/@project-sunbird/sunbird-file-upload-library/sunbird-file-upload-library.js",
               "node_modules/reflect-metadata/Reflect.js",
               "node_modules/@project-sunbird/sunbird-pdf-player-web-component/sunbird-pdf-player.js",
               "src/assets/libs/iziToast/iziToast.min.js",
@@ -142,7 +144,8 @@
               "src/styles.scss"
             ],
             "scripts": [
-              "node_modules/epubjs/dist/epub.js"
+              "node_modules/epubjs/dist/epub.js",
+              "node_modules/@project-sunbird/sunbird-file-upload-library/sunbird-file-upload-library.js"
             ],
             "assets": [
               "src/favicon.ico",
@@ -198,7 +201,8 @@
             "karmaConfig": "projects/collection-editor-library/karma.conf.js",
             "scripts": [
               "src/assets/libs/iziToast/iziToast.min.js",
-              "node_modules/jquery/dist/jquery.min.js"
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/@project-sunbird/sunbird-file-upload-library/sunbird-file-upload-library.js"
             ],
             "codeCoverageExclude": [
               "projects/collection-editor-library/src/lib/interfaces/*/*.ts"
@@ -255,6 +259,7 @@
               "node_modules/katex/dist/katex.min.css"
             ],
             "scripts": [
+              "node_modules/@project-sunbird/sunbird-file-upload-library/sunbird-file-upload-library.js",
               "node_modules/reflect-metadata/Reflect.js",
               "src/assets/libs/iziToast/iziToast.min.js",
               "node_modules/jquery/dist/jquery.min.js",
