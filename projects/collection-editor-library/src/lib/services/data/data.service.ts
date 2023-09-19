@@ -2,13 +2,14 @@
 import { of as observableOf, throwError as observableThrowError, Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { v4 as uuidv4 } from 'uuid';
 // import * as moment from 'moment';
 import * as _ from 'lodash-es';
 import { ServerResponse } from '../../interfaces/serverResponse';
 import { RequestParam } from '../../interfaces/requestParam';
 import { HttpOptions } from '../../interfaces/httpOptions';
+import { DOCUMENT } from '@angular/common';
 
 /**
  * Service to provide base CRUD methods to make api request.
@@ -42,12 +43,17 @@ export class DataService {
    * angular HttpClient
    */
   http: HttpClient;
+
+  _document: Document
   /**
    * Constructor
    * @param HttpClient http HttpClient reference
    */
   constructor(http: HttpClient) {
     this.http = http;
+    this._document = document as Document
+    const url = (this._document.defaultView as any).questionEditorBaseUrl;
+    this.baseUrl = url ? `${url}/api/`: this.baseUrl
   }
 
   /**

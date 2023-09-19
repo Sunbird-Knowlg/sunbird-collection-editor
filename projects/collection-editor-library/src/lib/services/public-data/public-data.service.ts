@@ -11,10 +11,13 @@ export class PublicDataService extends DataService {
    * base Url for public api
    */
   baseUrl: string;
+  _document: Document;
 
   public http: HttpClient;
   constructor(http: HttpClient) {
     super(http);
-    this.baseUrl = 'action/';
+    this._document = document as Document
+    const url = (this._document.defaultView as any).questionEditorBaseUrl;
+    this.baseUrl = url? url + '/action/': 'action/';
   }
 }

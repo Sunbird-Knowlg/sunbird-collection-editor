@@ -16,8 +16,12 @@ jobs:
       - checkout:
           path: ~/sunbird-collection-editor
       - run:
-          name: Node version
-          command: 'node --version'
+          name: Install  Node.js v14.20.0 with build in nvm tool
+          command: |
+            export NVM_DIR="/opt/circleci/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+            nvm install v14 && nvm use 14 && nvm alias default 14
+            node -v
       - run:
           name: Installing angular cli
           command: 'npm install -g @angular/cli@12.2.18 --no-progress'
@@ -36,25 +40,25 @@ jobs:
           name: Executing test cases
           command: 'npm run test-coverage | tee /tmp/logs/test_cases.log'
       - run:
-          name: Install  Node.js v14.20.0 with build in nvm tool
-          command: |
-            export NVM_DIR="/opt/circleci/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-            nvm install v14 && nvm use 14 && nvm alias default 14
-            node -v
-      - run:
-          name: Alter Node version
-          command: 'node --version'
-      - run:
           name: Install sonar scanner
           command: npm install -g sonarqube-scanner
       - run:
           name: Run sonar scanner
           command: 'cd ~/sunbird-collection-editor && sonar-scanner'
       - run:
+          name: Publish web component to NPM
+          command: |
+            if [ -z $CIRCLE_PR_NUMBER ]; then
+              npm run build-web-component && npm pack ./web-component
+              echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+              npm publish project-sunbird-sunbird-collection-editor-web-component-* --access=public
+            else
+              npm run build-web-component && npm pack ./web-component
+            fi    
+      - run:
           name: Publish to NPM
           command: |
-            if [ -n $CIRCLE_PR_NUMBER ]; then
+            if [ -z $CIRCLE_PR_NUMBER ]; then
               npm run build-lib && npm pack ./dist/collection-editor-library
               echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
               npm publish project-sunbird-sunbird-collection-editor-*
