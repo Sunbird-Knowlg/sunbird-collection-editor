@@ -29,7 +29,7 @@
     "@project-sunbird/sunbird-quml-player-v9": "4.4.16",
     "@project-sunbird/sunbird-video-player-v9": "4.4.2",
     "@project-sunbird/telemetry-sdk": "0.0.26",
-    "@types/jquery": "^3.5.5",
+    "@types/jquery": "^3.5.25",
     "alphanum-sort": "^1.0.2",
     "angular2-uuid": "^1.1.1",
     "common-form-elements-web-v9": "4.4.6",
