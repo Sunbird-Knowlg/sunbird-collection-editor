@@ -28,7 +28,7 @@
     "@project-sunbird/sunbird-pdf-player-v9": "4.1.1",
     "@project-sunbird/sunbird-quml-player-v9": "4.4.16",
     "@project-sunbird/sunbird-video-player-v9": "4.4.2",
-    "@project-sunbird/telemetry-sdk": "0.0.26",
+    "@project-sunbird/telemetry-sdk": "1.1.0",
     "@types/jquery": "^3.5.5",
     "alphanum-sort": "^1.0.2",
     "angular2-uuid": "^1.1.1",
@@ -54,9 +54,9 @@
     "ngx-chips": "^2.0.2",
     "ngx-infinite-scroll": "^6.0.0",
     "rxjs": "~6.6.3",
-    "svg2img": "^0.6.1",
+    "svg2img": "^0.7.0",
     "tslib": "^1.10.0",
-    "video.js": "^7.10.2",
+    "video.js": "^7.15.3",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
