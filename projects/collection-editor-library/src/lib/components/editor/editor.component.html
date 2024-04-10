@@ -138,9 +138,6 @@
             </div>
           </div>
       </sui-modal>
-      <lib-template *ngIf='showQuestionTemplatePopup' [templateList]="templateList"
-      (templateSelection)="handleTemplateSelection($event)">
-      </lib-template>
     </div>
   </ng-container>
   <ng-container *ngSwitchCase="'question_library'">
@@ -149,16 +146,6 @@
   <ng-container *ngSwitchCase="'library'">
     <lib-content-library [libraryInput]="libraryComponentInput" (libraryEmitter)="libraryEventListener($event)">
     </lib-content-library>
-  </ng-container>
-  <ng-container *ngSwitchCase="'question'">
-    <lib-question *ngIf="leafFormConfig" [questionInput]="questionComponentInput" [leafFormConfig]="leafFormConfig" [sourcingSettings]="sourcingSettings"  (questionEmitter)="questionEventListener($event)" >
-    </lib-question>
-  </ng-container>
-  <ng-container *ngSwitchCase="'pagination'">
-    <lib-assign-page-number (assignPageEmitter)="assignPageEmitterListener($event)"></lib-assign-page-number>
-  </ng-container>
-  <ng-container *ngSwitchCase="'progressStatus'">
-    <lib-progress-status (assignPageEmitter)="assignPageEmitterListener($event)"></lib-progress-status>
   </ng-container>
 </ng-container>
 <ng-container *ngIf="addCollaborator">
