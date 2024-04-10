@@ -37,7 +37,6 @@ import { PublishChecklistComponent } from '../../../collection-editor-library/sr
 import { RelationalMetadataComponent } from '../../../collection-editor-library/src/lib/components/relational-metadata/relational-metadata.component';
 import { ResourceLibraryModule } from '@project-sunbird/sunbird-resource-library';
 import { AppLoaderComponent } from '../../../collection-editor-library/src/lib/components/app-loader/app-loader.component';
-import { AssignPageNumberComponent } from '../../../collection-editor-library/src/lib/components/assign-page-number/assign-page-number.component';
 import { A11yModule } from '@angular/cdk/a11y';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -69,8 +68,7 @@ import { BrowserModule } from '@angular/platform-browser';
     ManageCollaboratorComponent,
     PublishChecklistComponent
     AppLoaderComponent,
-    RelationalMetadataComponent,
-    AssignPageNumberComponent
+    RelationalMetadataComponent
   ],
   imports: [
     CommonModule, BrowserModule, FormsModule, ReactiveFormsModule, RouterModule.forRoot([]), SuiModule,

@@ -36,7 +36,6 @@ import { PublishChecklistComponent } from './components/publish-checklist/publis
 import { RelationalMetadataComponent } from './components/relational-metadata/relational-metadata.component';
 import { ResourceLibraryModule } from '@project-sunbird/sunbird-resource-library';
 import { AppLoaderComponent } from './components/app-loader/app-loader.component';
-import { AssignPageNumberComponent } from './components/assign-page-number/assign-page-number.component';
 import { A11yModule } from '@angular/cdk/a11y';
 
 @NgModule({
@@ -66,8 +65,7 @@ import { A11yModule } from '@angular/cdk/a11y';
     ManageCollaboratorComponent,
     PublishChecklistComponent,
     AppLoaderComponent,
-    RelationalMetadataComponent,
-    AssignPageNumberComponent
+    RelationalMetadataComponent
   ],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule.forChild([]), SuiModule,
   CommonFormElementsModule, InfiniteScrollModule, HttpClientModule,
