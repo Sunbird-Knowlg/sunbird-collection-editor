@@ -9,7 +9,7 @@ import { EditorService } from "../../services/editor/editor.service";
 import { ToasterService } from "../../services/toaster/toaster.service";
 import { EditorCursor } from "../../collection-editor-cursor.service";
 import { TreeService } from "../../services/tree/tree.service";
-import { SuiModule } from "ng2-semantic-ui-v9";
+import { SuiModule } from "@project-sunbird/ng2-semantic-ui";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { TelemetryInteractDirective } from "../../directives/telemetry-interact/telemetry-interact.directive";
 import {
