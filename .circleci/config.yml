@@ -1,30 +1,23 @@
 version: 2.1
+orbs:
+  browser-tools: circleci/browser-tools@1.4.8
 jobs:
   build:
-    machine:
-      image: circleci/classic:latest
-    steps:
-      - checkout
-      - run:
-          name: run build file
-          command: /bin/bash -x build.sh ${CIRCLE_SHA1} test
-  test-cases:
     working_directory: ~/sunbird-collection-editor
-    machine:
-      image: ubuntu-2004:202010-01
+    docker:
+    - image: cimg/node:18.19.1-browsers
     steps:
+      - browser-tools/install-chrome
+      - run:
+          command: google-chrome --version
       - checkout:
           path: ~/sunbird-collection-editor
       - run:
-          name: Install  Node.js v14.20.0 with build in nvm tool
-          command: |
-            export NVM_DIR="/opt/circleci/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-            nvm install v14 && nvm use 14 && nvm alias default 14
-            node -v
+          name: Node version
+          command: 'node --version'
       - run:
           name: Installing angular cli
-          command: 'npm install -g @angular/cli@12.2.18 --no-progress'
+          command: 'npm install -g @angular/cli@16 --no-progress'
       #~ - restore_cache:
           #~ key: dependency-cache-{{ checksum "package.json" }}
       - run:
@@ -45,16 +38,16 @@ jobs:
       - run:
           name: Run sonar scanner
           command: 'cd ~/sunbird-collection-editor && sonar-scanner'
-      - run:
-          name: Publish web component to NPM
-          command: |
-            if [ -z $CIRCLE_PR_NUMBER ]; then
-              npm run build-web-component && npm pack ./web-component
-              echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
-              npm publish project-sunbird-sunbird-collection-editor-web-component-* --access=public
-            else
-              npm run build-web-component && npm pack ./web-component
-            fi    
+      # - run:
+      #     name: Publish web component to NPM
+      #     command: |
+      #       if [ -z $CIRCLE_PR_NUMBER ]; then
+      #         npm run build-web-component && npm pack ./web-component
+      #         echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+      #         npm publish project-sunbird-sunbird-collection-editor-web-component-* --access=public
+      #       else
+      #         npm run build-web-component && npm pack ./web-component
+      #       fi
       - run:
           name: Publish to NPM
           command: |
@@ -65,7 +58,7 @@ jobs:
               npm run build-lib && npm pack ./dist/collection-editor-library
             fi
 workflows:
-  version: 2
+  version: 2.1
   build_and_test:
     jobs:
-      - test-cases
+      - build

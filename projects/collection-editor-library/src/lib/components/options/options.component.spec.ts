@@ -6,7 +6,7 @@ import { OptionsComponent } from './options.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { mockOptionData, nativeElement, sourcingSettingsMock } from './options.component.spec.data';
 import { ConfigService } from '../../services/config/config.service';
-import { SuiModule } from 'ng2-semantic-ui-v9';
+import { SuiModule } from '@project-sunbird/ng2-semantic-ui';
 import { TreeService } from '../../services/tree/tree.service';
 import { treeData } from './../fancy-tree/fancy-tree.component.spec.data';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';

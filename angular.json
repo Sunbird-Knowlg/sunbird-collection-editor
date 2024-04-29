@@ -54,7 +54,7 @@
             ],
             "styles": [
               "src/assets/quml-styles/quml-carousel.css",
-              "node_modules/@project-sunbird/sb-styles/assets/_styles.scss",
+              "node_modules/@project-sunbird/sb-styles/assets/styles.scss",
               "node_modules/@project-sunbird/sunbird-pdf-player-web-component/styles.css",
               "src/styles.scss",
               "src/assets/lib/semantic/semantic.min.css",
@@ -252,7 +252,7 @@
             "styles": [
               "projects/collection-editor-library-wc/src/styles.scss",
               "src/assets/quml-styles/quml-carousel.css",
-              "node_modules/@project-sunbird/sb-styles/assets/_styles.scss",
+              "node_modules/@project-sunbird/sb-styles/assets/styles.scss",
               "src/assets/lib/semantic/semantic.min.css",
               "src/assets/styles/styles.scss",
               "node_modules/font-awesome/css/font-awesome.css",
