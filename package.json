@@ -34,7 +34,7 @@
     "angular2-uuid": "^1.1.1",
     "common-form-elements-web-v9": "4.4.6",
     "core-js": "^2.5.4",
-    "express": "^4.17.1",
+    "express": "^4.20.0",
     "express-http-proxy": "^1.6.2",
     "fine-uploader": "^5.15.7",
     "font-awesome": "^4.7.0",
