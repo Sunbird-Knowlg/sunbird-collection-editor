@@ -165,6 +165,7 @@ sb-icon-dropdown {
   .dynamic-form {
     .sb-search-input::-webkit-input-placeholder {
       padding-left: 1.4rem !important;
+      font-family: 'Times New Roman', Times, serif !important;
     }
     .required {
       label {
@@ -244,7 +245,7 @@ lib-meta-form{
   background: #fff;
   color: #000;
   font-size: 12px;
-  font-family: sans-serif;
+  font-family: "Times New Roman" !important;
   white-space: normal !important;
   border: solid 1px #ccc !important;
   height: auto !important;
