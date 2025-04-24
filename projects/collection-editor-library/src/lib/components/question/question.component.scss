@@ -145,6 +145,7 @@ sui-select {
 }
 .dynamic-form{
   .sb-search-input::-webkit-input-placeholder {
+    font-family: 'Times New Roman', Times, serif !important;
     padding-left: 1.4rem !important;
   }
   .required{
@@ -180,6 +181,7 @@ sui-select {
 
     .dynamic-form {
       .sb-dropdown-select{
+        font-family: 'Times New Roman', Times, serif !important;
         padding: 11px 8px !important;
       }
       label {

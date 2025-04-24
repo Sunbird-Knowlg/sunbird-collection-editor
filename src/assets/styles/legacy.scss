@@ -45,6 +45,7 @@ span.icon.play.circle:before {
 
 /* placeholder if content is not there */
 .placeholder {
+  font-family: "Times New Roman",arial, sans-serif !important;
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -52,10 +53,12 @@ span.icon.play.circle:before {
 }
 /* TODO: need to remove font family once we add fonts in index.html file */
 .placeholder-heading {
+  font-family: "Times New Roman",arial, sans-serif !important;
   align-self: center;
   font-weight: bold;
 }
 .placeholder-content {
+  font-family: "Times New Roman",arial, sans-serif !important;
   align-self: center;
   font-size: 1.1em;
   font-weight: 600;
@@ -2397,6 +2400,7 @@ angular2-multiselect .list-area {
 }
 /* placeholder if content is not there */
 .placeholder {
+  font-family: "Times New Roman",arial, sans-serif !important;
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -2405,10 +2409,12 @@ angular2-multiselect .list-area {
 /* TODO: need to remove font family once we add fonts in index.html file */
 .placeholder-heading {
   align-self: center;
+  font-family: "Times New Roman",arial, sans-serif !important;
   font-weight: bold;
 }
 .placeholder-content {
   align-self: center;
+  font-family: "Times New Roman",arial, sans-serif !important;
   font-size: 1.1em;
   font-weight: 600;
   opacity: 0.6;
@@ -2417,6 +2423,7 @@ angular2-multiselect .list-area {
   height: 0 !important;
 }
 .selected-list .countplaceholder {
+  font-family: "Times New Roman",arial, sans-serif !important;
   visibility: hidden;
 }
 .selected-list .c-list .c-token {
@@ -2426,6 +2433,7 @@ angular2-multiselect .list-area {
   position: relative;
 }
 .count .countplaceholder {
+  font-family: "Times New Roman",arial, sans-serif !important;
   position: absolute;
   left: 13px;
   top: 50%;

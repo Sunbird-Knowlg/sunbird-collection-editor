@@ -11,7 +11,7 @@ body {
 body {
   background: $body-background-color !important;
   position: relative;
-  font-family: $font-stack-en;
+  font-family: "Times New Roman",arial, sans-serif !important;
   letter-spacing: 0.2px;
   height: auto;
   color: $default-text-color;
@@ -58,8 +58,10 @@ body {
 }
 .ck-rounded-corners .ck.ck-editor__main>.ck-editor__editable, .ck.ck-editor__main>.ck-editor__editable.ck-rounded-corners{
   word-break: break-all !important;
+  font-family: "Times New Roman",arial, sans-serif !important;
 }
 
 lib-editor .add-to-library .dynamic-form .sb-dropdown label,lib-editor .add-to-library .input-label{
   z-index: 2 !important;
+  font-family: "Times New Roman",arial, sans-serif !important;
 }
