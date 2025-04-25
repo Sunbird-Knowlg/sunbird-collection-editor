@@ -1,6 +1,6 @@
 import {
   Component, HostListener, Input, OnDestroy, OnInit, ChangeDetectorRef,
-  EventEmitter, Output, ViewEncapsulation, AfterViewInit, ViewChild
+  EventEmitter, Output, ViewEncapsulation, AfterViewInit, ViewChild, ElementRef, Renderer2
 } from '@angular/core';
 import { EditorService } from '../../services/editor/editor.service';
 import { TreeService } from '../../services/tree/tree.service';
@@ -98,7 +98,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
               private toasterService: ToasterService, private dialcodeService: DialcodeService,
-              public configService: ConfigService, private changeDetectionRef: ChangeDetectorRef) {
+              public configService: ConfigService, private changeDetectionRef: ChangeDetectorRef,
+              private renderer: Renderer2, private elRef: ElementRef) {
   }
 
   @HostListener('window:unload', ['$event'])
@@ -337,6 +338,12 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       duration: (Date.now() - this.pageStartTime) / 1000
     });
     this.isComponenetInitialized = true;
+
+    // Apply Times New Roman font to all input tags in this component and children
+    const inputElements = this.elRef.nativeElement.querySelectorAll('input');
+    inputElements.forEach((input: HTMLElement) => {
+      this.renderer.setStyle(input, 'font-family', 'Times New Roman, Times, serif');
+    });
   }
 
   mergeCollectionExternalProperties(): Observable<any> {
