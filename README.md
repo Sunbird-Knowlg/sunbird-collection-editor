@@ -452,3 +452,22 @@ To see your application in the browser, go to [http://localhost:4200](http://loc
 [Contribution guidelines for this project](docs/CONTRIBUTING.md)
 
 [Configuration guidelines for this project](docs/CONFIGURATION.md)
+
+
+## Code Quality
+
+The project maintains code quality through automated checks that run on every pull request:
+
+1. **Linting**
+   - ESLint for code style and quality
+   - Command: `npm run lint`
+
+2. **Dependencies**
+   - Uses `npm ` for deterministic installations
+   - GitHub Actions cache for faster builds
+
+3. **Testing**
+   - Unit tests using Karma
+   - Command: `npm run test-coverage`
+
+These checks ensure consistent code style, secure dependency management, and reliable testing.
