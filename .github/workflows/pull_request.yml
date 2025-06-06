@@ -4,7 +4,7 @@ on:
   push:
     tags:
       - '*'
-      
+
 jobs:
   code-quality:
     name: Run Code Quality Checks
@@ -19,6 +19,9 @@ jobs:
         with:
           node-version: '18.19.1'
 
+      - name: Installing Angular CLI
+        run: npm install -g @angular/cli@16 --no-progress
+        
       - name: Restore node_modules cache
         id: cache
         uses: actions/cache@v4
@@ -38,5 +41,9 @@ jobs:
           path: node_modules
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
 
-      - name: Run test
-        run: npm run test
+      - name: ng lint and building
+        run: mkdir -p /tmp/logs && npm run build-lib:prod | tee /tmp/logs/build.log
+
+      - name: Executing test cases
+        run: npm run test-coverage | tee /tmp/logs/test_cases.log
+      
