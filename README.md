@@ -460,9 +460,9 @@ To see your application in the browser, go to [http://localhost:4200](http://loc
  1. **Angular Module**
     - Builds package with `npm run build-lib`
     - Creates NPM package
-    - Publishes to NPM registry as @project-sunbird/sunbird-video-player-v9, using NPM authentication token (must be provided as GitHub secret `NPM_TOKEN`)
+    - Publishes to NPM registry as @project-sunbird/sunbird-collection-editor, using NPM authentication token (must be provided as GitHub secret `NPM_TOKEN`)
 
  2. **Web Component**
     - Builds package with `npm run build-web-component`
     - Creates NPM package
-    - Publishes to NPM registry as @project-sunbird/sunbird-video-player-web-component, using NPM authentication token (must be provided as GitHub secret `NPM_TOKEN`)
+    - Publishes to NPM registry as @project-sunbird/sunbird-collection-editor-web-component, using NPM authentication token (must be provided as GitHub secret `NPM_TOKEN`)
