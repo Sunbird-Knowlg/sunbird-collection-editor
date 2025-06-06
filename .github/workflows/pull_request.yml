@@ -19,8 +19,8 @@ jobs:
         with:
           node-version: '18.19.1'
 
-      - name: Installing Angular CLI
-        run: npm install -g @angular/cli@16 --no-progress
+      - name: Using Angular CLI via npx
+        run: npx @angular/cli@16 version
         
       - name: Restore node_modules cache
         id: cache
