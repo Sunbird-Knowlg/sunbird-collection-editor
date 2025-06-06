@@ -1,9 +1,9 @@
 name: Code Quality Checks
 
 on:
-  pull_request:
-    branches:
-      - '**'
+  push:
+    tags:
+      - '*'
 
 jobs:
   code-quality:
@@ -41,7 +41,10 @@ jobs:
           path: node_modules
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
 
-      - name: ng lint and building
+      - name: Run linting
+        run: npm run lint
+
+      - name: Building
         run: mkdir -p /tmp/logs && npm run build-lib:prod | tee /tmp/logs/build.log
 
       - name: Executing test cases
