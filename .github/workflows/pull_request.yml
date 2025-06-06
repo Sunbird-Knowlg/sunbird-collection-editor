@@ -1,9 +1,9 @@
 name: Code Quality Checks
 
 on:
-  push:
-    tags:
-      - '*'
+  pull_request:
+    branches:
+      - '**'
 
 jobs:
   code-quality:
