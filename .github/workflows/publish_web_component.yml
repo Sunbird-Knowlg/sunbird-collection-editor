@@ -1,4 +1,4 @@
-name: Publish Video Player Package
+name: Publish Video Player Web Component Package
 
 on:
   push:
@@ -28,7 +28,7 @@ jobs:
             ${{ runner.os }}-node-modules-
   
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+        run: npm ci
   
       - name: Save node_modules cache
         if: steps.cache.outputs.cache-hit != 'true'

@@ -28,7 +28,7 @@ jobs:
             ${{ runner.os }}-node-modules-
   
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+        run: npm ci
   
       - name: Save node_modules cache
         if: steps.cache.outputs.cache-hit != 'true'
