@@ -471,3 +471,17 @@ The project maintains code quality through automated checks that run on every pu
    - Command: `npm run test-coverage`
 
 These checks ensure consistent code style, secure dependency management, and reliable testing.
+
+### Package Publishing
+
+ The project has two automated publishing workflows which build and publishes NPM packages whenever a new tag is pushed to the repository.
+
+ 1. **Angular Module**
+    - Builds package with `npm run build-lib`
+    - Creates NPM package
+    - Publishes to NPM registry as @project-sunbird/sunbird-collection-editor, using NPM authentication token (must be provided as GitHub secret `NPM_TOKEN`)
+
+ 2. **Web Component**
+    - Builds package with `npm run build-web-component`
+    - Creates NPM package
+    - Publishes to NPM registry as @project-sunbird/sunbird-collection-editor-web-component, using NPM authentication token (must be provided as GitHub secret `NPM_TOKEN`)
