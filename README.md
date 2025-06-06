@@ -452,3 +452,17 @@ To see your application in the browser, go to [http://localhost:4200](http://loc
 [Contribution guidelines for this project](docs/CONTRIBUTING.md)
 
 [Configuration guidelines for this project](docs/CONFIGURATION.md)
+
+### Package Publishing
+
+ The project has two automated publishing workflows which build and publishes NPM packages whenever a new tag is pushed to the repository.
+
+ 1. **Angular Module**
+    - Builds package with `npm run build-lib`
+    - Creates NPM package
+    - Publishes to NPM registry as @project-sunbird/sunbird-collection-editor, using NPM authentication token (must be provided as GitHub secret `NPM_TOKEN`)
+
+ 2. **Web Component**
+    - Builds package with `npm run build-web-component`
+    - Creates NPM package
+    - Publishes to NPM registry as @project-sunbird/sunbird-collection-editor-web-component, using NPM authentication token (must be provided as GitHub secret `NPM_TOKEN`)
