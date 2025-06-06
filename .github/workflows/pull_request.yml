@@ -1,9 +1,9 @@
 name: Code Quality Checks
 
 on:
-  push:
-    tags:
-      - '*'
+  pull_request:
+    branches:
+      - '**'
 
 jobs:
   code-quality:
@@ -46,7 +46,7 @@ jobs:
 
       - name: Building
         run: mkdir -p /tmp/logs && npm run build-lib:prod | tee /tmp/logs/build.log
-
+        
       - name: Executing test cases
         run: npm run test-coverage | tee /tmp/logs/test_cases.log
       
