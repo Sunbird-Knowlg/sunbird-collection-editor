@@ -112,7 +112,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.editorService.initialize(this.editorConfig);
     this.editorMode = this.editorService.editorMode;
     this.treeService.initialize(this.editorConfig);
-    this.labelConfig = this.editorConfig.context.resourceBundles
+    this.labelConfig = this.editorConfig.context?.resourceBundles || this.configService.labelConfig?.lbl
     this.objectType = this.configService.categoryConfig[this.editorConfig.config.objectType];
     this.collectionId = _.get(this.editorConfig, 'context.identifier');
     this.toolbarConfig = this.editorService.getToolbarConfig();
