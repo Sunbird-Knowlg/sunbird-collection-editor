@@ -8,7 +8,7 @@
       <div class="textbookBtnLink"  *ngIf="contentListDetails?.isAdded">
         <button type="button" class="sb-btn-link sb-btn-hover-none py-0
         sb-color-success sb-left-icon-btn fs-0-785"><i aria-hidden="true" class="circle check icon green-color"></i>
-         {{configService.labelConfig?.lbl?.addedToCollection}}</button>
+         {{labelConfig?.addedToCollection}}</button>
       </div>
     </div>
   </div>
@@ -16,7 +16,7 @@
     <button type="button" class="sb-btn sb-btn-normal sb-btn-dark-green font-weight-bold"
     libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('select_content','click','launch', telemetryService?.telemetryPageId)"
-      ><i class="plus square icon"></i>{{configService.labelConfig?.lbl?.selectContent}}</button>
+      ><i class="plus square icon"></i>{{labelConfig?.selectContent}}</button>
   </div>
 </div>
-<lib-contentplayer-page [contentMetadata]="contentListDetails"></lib-contentplayer-page>
+<lib-contentplayer-page  [contentMetadata]="contentListDetails" [labelConfig]="labelConfig"></lib-contentplayer-page>

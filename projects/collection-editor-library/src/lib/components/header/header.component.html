@@ -5,7 +5,7 @@
       <button class="sb-btn sb-btn-primary sb-btn-xs back-btn px-0 hover-none fs-0-92 font-weight-bold"
       (click)="buttonEmitter({type: 'backContent'})" libTelemetryInteract
       [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('back','click','launch', telemetryService.telemetryPageId)" aria-label="back">
-        <i class="arrow left icon" aria-hidden="true"></i> {{configService.labelConfig?.button_labels?.back_btn_label}}
+        <i class="arrow left icon" aria-hidden="true"></i> {{labelConfig?.back}}
       </button>
     </div>
   </div>
@@ -24,12 +24,12 @@
         <i class="icon comment flex-as-baseline mr-05" aria-hidden="true"></i>{{configService.labelConfig?.lbl?.viewComments}}
       </span-->
       <span class="fs-0-92" data-title="View review comments" (click)="buttonEmitter({type: 'showReviewcomments'})" *ngIf="buttonLoaders?.showReviewComment || visibility.showCorrectionComments" libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('view_comments','click','launch', telemetryService.telemetryPageId)">
-        <i class="icon comment alternate outline sb-color-primary flex-as-baseline mr-05" aria-hidden="true"></i>{{configService.labelConfig?.lbl?.viewComments}}
+        <i class="icon comment alternate outline sb-color-primary flex-as-baseline mr-05" aria-hidden="true"></i>{{labelConfig?.viewComments}}
       </span>
       <a *ngIf="visibility.showOriginPreviewUrl && originPreviewUrl" class="sb-color-primary mr-8 pl-10 fs-0-785 font-weight-bold"
-      href="{{originPreviewUrl}}" target="_blank">{{configService.labelConfig?.lbl?.viewOnOrigin}}</a>
+      href="{{originPreviewUrl}}" target="_blank">{{labelConfig?.viewContentOnConsumption}}</a>
       <label *ngIf="visibility.showOriginPreviewUrl && !originPreviewUrl" class="sb-color-error mr-8 pl-10 fs-0-785 font-weight-bold">
-        {{configService.labelConfig?.err?.contentNotFoundonOrigin}}
+        {{labelConfig?.contentNotFoundInConsumption}}
       </label>
     </div>
   </div>
@@ -45,14 +45,14 @@
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('submit','click','submit', telemetryService.telemetryPageId)"
     >
       <em class="{{labelConfigData.submit_collection_btn_icon}}"></em>
-      {{labelConfigData.add_page_numbers_to_questions_btn_label}}
+      {{labelConfig?.add_page_numbers_to_questions_btn_label}}
     </button>
     <button *ngIf="visibility && visibility?.submitContent && !bulkUploadStatus && labelConfigData?.hasChildren && !visibility.hideSubmitForReviewBtn && visibility.showPaginationBtn"
     class="sb-btn sb-btn-normal sb-btn-primary mr-10" (click)="buttonEmitter({type:'progressStatus'})" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('submit','click','submit', telemetryService.telemetryPageId)"
     >
       <em class="{{labelConfigData.submit_collection_btn_icon}}"></em>
-      Progress
+      {{labelConfig?.progress}}
     </button>
     <lib-bulk-upload *ngIf="visibility && visibility?.bulkUpload && labelConfigData?.showBulkUploadBtn" class="d-flex flex-ai-center mr-10" (bulkUploadEmitter)="bulkUploadListener($event)" ></lib-bulk-upload>
     <button *ngIf="visibility && visibility?.previewContent  && labelConfigData?.hasChildren && !bulkUploadStatus" class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10"
@@ -61,7 +61,7 @@
       [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('preview','click','launch', telemetryService.telemetryPageId)">
       <div class="sb-loading-spinner" *ngIf="buttonLoaders?.previewButtonLoader" role="status" aria-hidden="true"></div>
       <i *ngIf="labelConfigData.preview_collection_btn_icon && !buttonLoaders?.previewButtonLoader" class="{{labelConfigData.preview_collection_btn_icon}}"></i>
-      {{ labelConfigData.preview_collection_btn_label}}
+      {{ labelConfig?.preview}}
     </button>
 
     <button *ngIf="visibility && visibility?.saveContent && !bulkUploadStatus" class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10"
@@ -71,44 +71,44 @@
     >
       <i class="{{labelConfigData.save_collection_btn_icon}}" *ngIf="!buttonLoaders?.saveAsDraftButtonLoader"></i>
       <div class="sb-loading-spinner" *ngIf="buttonLoaders?.saveAsDraftButtonLoader" role="status" aria-hidden="true"></div>
-      {{labelConfigData.save_collection_btn_label}}
+      {{labelConfig?.saveAsDraft}}
     </button>
 
     <button *ngIf="visibility && visibility?.submitContent && !bulkUploadStatus && labelConfigData?.hasChildren && !visibility.hideSubmitForReviewBtn" class="sb-btn sb-btn-normal sb-btn-primary mr-10" (click)="buttonEmitter({type:'submitContent'})" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('send_for_review','click','launch', telemetryService.telemetryPageId)"
     >
       <i class="{{labelConfigData.submit_collection_btn_icon}}"></i>
-      {{labelConfigData.submit_collection_btn_label}}
+      {{labelConfig?.sendForReview}}
     </button>
 
     <button *ngIf="visibility && visibility?.rejectContent" class="sb-btn sb-btn-outline-error sb-btn-normal ripple mr-10" (click)="openRequestChangePopup('rejectContent')" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('reject','click','submit', telemetryService.telemetryPageId)">
       <i class="{{labelConfigData.reject_collection_btn_icon}}"></i>
-      {{labelConfigData.reject_collection_btn_label}}
+      {{labelConfig?.reject}}
     </button>
 
     <button *ngIf="visibility && visibility?.publishContent" class="sb-btn sb-btn-secondary sb-btn-normal ripple" (click)="openPublishCheckListPopup('publishContent')" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('publish','click','submit', telemetryService.telemetryPageId)">
       <i class="{{labelConfigData.publish_collection_btn_icon}}"></i>
-      {{labelConfigData.publish_collection_btn_label}}
+      {{labelConfig?.publish}}
     </button>
 
     <button *ngIf="visibility && visibility?.sendForCorrectionsContent" class="sb-btn sb-btn-outline-primary sb-btn-normal ripple mr-10" (click)="openRequestChangePopup('sendForCorrections')" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('send_back_for_correction','click','submit', telemetryService.telemetryPageId)">
       <i class="{{labelConfigData.send_back_for_correction_collection_btn_icon}}"></i>
-      {{labelConfigData.send_back_for_correction_collection_btn_label}}
+      {{labelConfig?.sendBackForCorrections}}
     </button>
 
     <button *ngIf="visibility && visibility?.sourcingApproveContent" class="sb-btn sb-btn-secondary sb-btn-normal ripple mr-10" (click)="openPublishCheckListPopup('sourcingApprove')" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('approve','click','submit', telemetryService.telemetryPageId)">
       <i class="{{labelConfigData.sourcing_approve_collection_btn_icon}}"></i>
-      {{labelConfigData.sourcing_approve_collection_btn_label}}
+      {{labelConfig?.approve}}
     </button>
 
     <button *ngIf="visibility && visibility?.sourcingRejectContent" class="sb-btn sb-btn-error sb-btn-normal ripple" (click)="openRequestChangePopup('sourcingReject')" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('reject','click','submit', telemetryService.telemetryPageId)">
       <i class="{{labelConfigData.sourcing_reject_collection_btn_icon}}"></i>
-      {{labelConfigData.sourcing_reject_collection_btn_label}}
+      {{labelConfig?.reject}}
     </button>
 
   </div>
@@ -118,7 +118,7 @@
               (click)="buttonEmitter({type: 'editContent'})" libTelemetryInteract
               [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('edit','click','launch', telemetryService.telemetryPageId)">
         <i *ngIf="labelConfigData.edit_question_btn_icon" class="{{labelConfigData.edit_question_btn_icon}}"></i>
-        {{ labelConfigData.edit_question_btn_label}}
+        {{ labelConfig?.ce_edit}}
       </button>
     </ng-container>
     <ng-template #editMode>
@@ -128,13 +128,13 @@
               [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('preview','click','launch', telemetryService.telemetryPageId)">
         <div class="sb-loading-spinner" *ngIf="buttonLoaders?.previewButtonLoader" role="status" aria-hidden="true"></div>
         <i *ngIf="labelConfigData.preview_question_btn_icon && !buttonLoaders?.previewButtonLoader" class="{{labelConfigData.preview_question_btn_icon}}"></i>
-        {{ labelConfigData.preview_question_btn_label}}
+        {{ labelConfig?.preview}}
       </button>
       <button class="sb-btn sb-btn-normal sb-btn-outline-primary mr-10"
               (click)="buttonEmitter({type: 'cancelContent'})" libTelemetryInteract *ngIf="visibility?.saveContent"
               [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('cancel','click','launch', telemetryService.telemetryPageId)">
         <i *ngIf="labelConfigData.cancel_question_btn_icon" class="{{labelConfigData.cancel_question_btn_icon}}"></i>
-        {{ labelConfigData.cancel_question_btn_label}}
+        {{ labelConfig?.cancel}}
       </button>
       <button class="sb-btn sb-btn-normal sb-btn-primary mr-10" (click)="buttonEmitter({type: 'saveContent'})" *ngIf="visibility?.saveContent"
               [ngClass]="!buttonLoaders?.saveButtonLoader ? '': 'sb-btn-loading-spinner sb-btn-outline-disabled'"
@@ -142,7 +142,7 @@
               [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('save','click','submit', telemetryService.telemetryPageId)">
         <div class="sb-loading-spinner" *ngIf="buttonLoaders?.saveButtonLoader" role="status" aria-hidden="true"></div>
         <i *ngIf="labelConfigData.save_question_btn_icon && !buttonLoaders?.saveButtonLoader" class="{{labelConfigData.save_question_btn_icon}}"></i>
-        {{ labelConfigData.save_question_btn_label}}
+        {{ labelConfig?.save}}
       </button>
     </ng-template>
 
@@ -155,36 +155,36 @@
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('submit','click','submit', telemetryService.telemetryPageId)"
     >
       <i class="{{labelConfigData.submit_collection_btn_icon}}"></i>
-      {{labelConfigData.submit_collection_btn_label}}
+      {{labelConfig?.sendForReview}}
     </button>
     <button *ngIf="visibility && visibility?.rejectContent && labelConfigData?.questionContribution" class="sb-btn sb-btn-outline-error sb-btn-normal ripple mr-10" (click)="openRequestChangePopup('rejectQuestion')" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('reject','click','submit', telemetryService.telemetryPageId)">
       <i class="{{labelConfigData.reject_collection_btn_icon}}"></i>
-      {{labelConfigData.reject_collection_btn_label}}
+      {{labelConfig?.reject}}
     </button>
 
     <button *ngIf="visibility && visibility?.publishContent && labelConfigData?.questionContribution" class="sb-btn sb-btn-secondary sb-btn-normal ripple" (click)="firstLevelPublish()" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('publish','click','submit', telemetryService.telemetryPageId)">
       <i class="{{labelConfigData.publish_collection_btn_icon}}"></i>
-      {{labelConfigData.publish_collection_btn_label}}
+      {{labelConfig?.publish}}
     </button>
 
     <button *ngIf="visibility && visibility?.sendForCorrectionsContent" class="sb-btn sb-btn-outline-primary sb-btn-normal ripple mr-10" (click)="openRequestChangePopup('sendForCorrectionsQuestion')" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('send_back_for_correction_question','click','submit', telemetryService.telemetryPageId)">
       <i class="{{labelConfigData.send_back_for_correction_collection_btn_icon}}"></i>
-      {{labelConfigData.send_back_for_correction_collection_btn_label}}
+      {{labelConfig?.sendBackForCorrections}}
     </button>
 
     <button *ngIf="visibility && visibility?.sourcingApproveContent" class="sb-btn sb-btn-secondary sb-btn-normal ripple mr-10" (click)="openPublishCheckListPopup('sourcingApproveQuestion')" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('approve','click','submit', telemetryService.telemetryPageId)">
       <i class="{{labelConfigData.sourcing_approve_collection_btn_icon}}"></i>
-      {{labelConfigData.sourcing_approve_collection_btn_label}}
+      {{labelConfig?.approve}}
     </button>
 
     <button *ngIf="visibility && visibility?.sourcingRejectContent" class="sb-btn sb-btn-error sb-btn-normal ripple" (click)="openRequestChangePopup('sourcingRejectQuestion')" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('reject','click','submit', telemetryService.telemetryPageId)">
       <i class="{{labelConfigData.sourcing_reject_collection_btn_icon}}"></i>
-      {{labelConfigData.sourcing_reject_collection_btn_label}}
+      {{labelConfig?.reject}}
     </button>
   </div>
 </div>
@@ -193,17 +193,17 @@
 <sui-modal *ngIf="showRequestChangesPopup" [mustScroll]="true" [isClosable]="false" [transitionDuration]="0"
   [size]="'normal'" class="sb-modal bx-none overflow-modal" appBodyScroll #modal (dismissed)="showRequestChangesPopup = false;">
   <div class="sb-modal-header">
-      {{configService.labelConfig?.lbl?.addReviewComments}}
+      {{labelConfig?.addReviewComments}}
   </div>
   <form #FormControl="ngForm" class="ui form">
   <div class="sb-modal-content">
       <div class="sb-field-group">
-          <label>{{configService.labelConfig?.lbl?.enterYourComments}}</label>
+          <label>{{labelConfig?.enterYourComments}}</label>
           <div class="sb-field relative">
 
               <textarea type="text" class="wmd-input width-100 sb-form-control" id="wmd-input" [(ngModel)]="rejectComment" placeholder="Add comment" name="rejectComment" required maxlength="{{configService?.editorConfig?.rejectCommentsMaxLength}}"></textarea>
               <label class="ui basic red error label pt-1 mt-5 width-100"
-                  *ngIf="FormControl.form.controls.rejectComment?.touched && !FormControl.form.valid">{{configService.labelConfig?.lbl?.fillComments}} </label>
+                  *ngIf="FormControl.form.controls.rejectComment?.touched && !FormControl.form.valid">{{labelConfig?.fillComments}} </label>
               <!-- <textarea rows="4" name="moretext" class="sb-form-control" placeholder="Type here..."></textarea>
               <span class="characters-left">1000 Characters left</span> -->
           </div>
@@ -213,9 +213,9 @@
     <button id="submitReview" type="submit" class="sb-btn sb-btn-normal" [ngClass]="{'sb-btn-primary': FormControl.form.valid, 'sb-btn-disabled': !FormControl.form.valid}" (click)="buttonEmitter({type: actionType, comment: rejectComment}); showRequestChangesPopup = false;"
     [disabled]="!FormControl.form.valid" libTelemetryInteract
     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('submit_review','click','submit', telemetryService.telemetryPageId, {key: 'dialog_id', value: 'add_review_comments'})"
-    > {{configService.labelConfig?.button_labels?.submit_review_btn_label}} </button>
+    > {{labelConfig?.submitReview}} </button>
     <button class="sb-btn sb-btn-normal sb-btn-outline-primary" (click)="modal.deny('denied')"
-    libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('cancel','click','cancel', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'add_review_comments'})">{{configService.labelConfig?.button_labels?.cancel_btn_label}}</button>
+    libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('cancel','click','cancel', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'add_review_comments'})">{{labelConfig?.cancel}}</button>
   </div>
 </form>
 </sui-modal>
@@ -223,7 +223,7 @@
 
 
 <lib-publish-checklist *ngIf="showPublishCollectionPopup" [actionType]="actionType" [objectType]="objectType" [publishchecklist]="publishchecklist"
- (publishEmitter)="publishEmitter($event)">
+ (publishEmitter)="publishEmitter($event)" [labelConfig]="labelConfig">
 </lib-publish-checklist>
 
 

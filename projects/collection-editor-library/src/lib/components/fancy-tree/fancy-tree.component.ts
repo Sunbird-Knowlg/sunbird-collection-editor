@@ -29,6 +29,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() public nodes: any;
   @Input() public options: any;
   @Input( ) buttonLoaders: any;
+  @Input() labelConfig;
   @Output() public treeEventEmitter: EventEmitter<any> = new EventEmitter();
   public config: any;
   public showTree: boolean;
@@ -42,20 +43,8 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   public nodeParentDependentMap = {};
   public treeData: any = [];
   public branchingObject = {};
-  public rootMenuTemplate = `<span class="ui dropdown sb-dotted-dropdown" autoclose="itemClick" suidropdown="" tabindex="0">
-  <span id="contextMenu" class="p-0 w-auto"><i class="icon ellipsis vertical sb-color-black"></i></span>
-  <span id= "contextMenuDropDown" class="menu transition hidden" suidropdownmenu="" style="">
-    <div id="addchild" class="item">Add Child</div>
-  </span>
-  </span>`;
-  public folderMenuTemplate = `<span id= "removeNodeIcon"> <i class="fa fa-trash-o" type="button"></i> </span><span class="ui dropdown sb-dotted-dropdown" autoclose="itemClick" suidropdown="" tabindex="0">
-  <span id="contextMenu" class="p-0 w-auto"><i class="icon ellipsis vertical sb-color-black"></i></span>
-  <span id= "contextMenuDropDown" class="menu transition hidden" suidropdownmenu="" style="">
-    <div id="addsibling" class="item">Add Sibling</div>
-    <div id="addchild" class="item">Add Child</div>
-    <div id="delete" class="item">Delete</div>
-  </span>
-  </span>`;
+  public rootMenuTemplate: string;
+  public folderMenuTemplate: string;
   // tslint:disable-next-line:max-line-length
   public contentMenuTemplate = `<span id="contextMenu"><span id= "removeNodeIcon" type="content" > <i class="fa fa-trash-o" type="button"></i> </span></span>`;
   constructor(public treeService: TreeService, private editorService: EditorService,
@@ -63,6 +52,24 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
               private toasterService: ToasterService, private cdr: ChangeDetectorRef,
               public configService: ConfigService, private dialcodeService: DialcodeService) { }
   private onComponentDestroy$ = new Subject<any>();
+
+  generateMenuTemplates() {
+    this.rootMenuTemplate = `<span class="ui dropdown sb-dotted-dropdown" autoclose="itemClick" suidropdown="" tabindex="0">
+  <span id="contextMenu" class="p-0 w-auto"><i class="icon ellipsis vertical sb-color-black"></i></span>
+  <span id= "contextMenuDropDown" class="menu transition hidden" suidropdownmenu="" style="">
+    <div id="addchild" class="item">${this.labelConfig?.addChild}</div>
+  </span>
+  </span>`;
+    
+    this.folderMenuTemplate = `<span id= "removeNodeIcon"> <i class="fa fa-trash-o" type="button"></i> </span><span class="ui dropdown sb-dotted-dropdown" autoclose="itemClick" suidropdown="" tabindex="0">
+  <span id="contextMenu" class="p-0 w-auto"><i class="icon ellipsis vertical sb-color-black"></i></span>
+  <span id= "contextMenuDropDown" class="menu transition hidden" suidropdownmenu="" style="">
+    <div id="addsibling" class="item">${this.labelConfig?.addSibling}</div>
+    <div id="addchild" class="item">${this.labelConfig?.addChild}</div>
+    <div id="delete" class="item">${this.labelConfig?.ce_delete}</div>
+  </span>
+  </span>`;
+  }
 
   ngOnInit() {
     this.config = _.cloneDeep(this.editorService.editorConfig.config);
@@ -77,6 +84,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.bulkUploadProcessingStatus = false;
       }
     });
+    this.generateMenuTemplates();
     this.initialize();
   }
 
@@ -375,7 +383,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     const nodeConfig = this.config.hierarchy[tree.getActiveNode().getLevel()];
     const childrenTypes = _.get(nodeConfig, 'children.Content');
     if ((((tree.getActiveNode().getLevel() - 1) >= this.config.maxDepth))) {
-      return this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.007'));
+      return this.toasterService.error(_.get(this.labelConfig, 'sorryNotAllowedMsg'));
     }
     this.treeService.addNode('child');
   }
@@ -388,7 +396,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!node.data.root) {
       this.treeService.addNode('sibling');
     } else {
-      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.007'));
+      return this.toasterService.error(_.get(this.labelConfig, 'sorryNotAllowedMsg'));
     }
   }
 
@@ -480,8 +488,8 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
       return true;
 
     } else {
-        this.toasterService.warning(`${currentNode.otherNode.title} cannot be added to ${currentNode.node.title}`);
-        return false;
+      this.toasterService.warning(`${currentNode.otherNode.title} ${this.labelConfig?.cannotBeAdded} ${currentNode.node.title}`);        
+      return false;
     }
 
   }
@@ -496,7 +504,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   dropNotAllowed() {
-    this.toasterService.warning(_.get(this.configService, 'labelConfig.messages.error.007'));
+    return this.toasterService.warning(_.get(this.labelConfig, 'sorryNotAllowedMsg'));
     return false;
   }
 

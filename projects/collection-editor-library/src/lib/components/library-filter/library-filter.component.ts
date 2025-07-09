@@ -21,6 +21,7 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
   @Input() filterOpenStatus: boolean;
   @Input() searchFormConfig: any;
   @Input() frameworkId: any;
+  @Input() labelConfig;
   @Output() filterChangeEvent: EventEmitter<any> = new EventEmitter();
   public filterConfig: any;
   public isFilterShow = false;

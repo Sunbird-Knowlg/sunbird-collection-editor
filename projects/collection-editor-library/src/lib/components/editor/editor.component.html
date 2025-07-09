@@ -2,15 +2,15 @@
   <ng-container *ngSwitchCase="'collection_editor'">
     <div class="add-to-library mb-10">
       <lib-header [pageId]="pageId" [publishchecklist]="publishchecklist"
-      [labelConfigData]="toolbarConfig" [buttonLoaders]="buttonLoaders" (toolbarEmitter)="toolbarEventListener($event)" (bulkUploadEmitter)= "hanndleCsvEmitter($event)"> </lib-header>
+      [labelConfig]="labelConfig" [buttonLoaders]="buttonLoaders" (toolbarEmitter)="toolbarEventListener($event)" (bulkUploadEmitter)= "hanndleCsvEmitter($event)"> </lib-header>
       <div class="h-100vh sb-bg-white">
         <div class="ui">
           <div class="ui twelve column grid m-0 ">
             <!-- Left Sidebar for cards -->
             <div class="p-50 sb-folder-menu" *ngIf="isObjectTypeCollection">
-            <div>  {{configService.labelConfig?.lbl?.folders}} </div>
+            <div>  {{labelConfig?.folders}} </div>
               <a class="profile-avtar computer only p-0 pr-10" tabindex="0">
-              <div suiDropdown class="ui dropdown right top pointing z-index-9"  id="dropdown-menu-list-header">
+              <div suiDropdown class="ui dropdown right top pointing z-index-9 profile-dropdown"  id="dropdown-menu-list-header">
                   <i class="icon ellipsis vertical h-1" aria-hidden="true"  [ngClass]="{'sb-disable-icon': isStatusReviewMode}" (click)="onClickFolder()"></i>
                   <div class="menu" suiDropdownMenu *ngIf="!isStatusReviewMode">
                     <button type="button" class="item fs-0-785 bg-none"
@@ -19,7 +19,7 @@
                      this.telemetryService.telemetryPageId,{key: 'dialog_id', value: configService.labelConfig?.lbl?.createHierarchyCsv})"
                     (click)="hanndleCsvEmitter({type: 'createCsv'})" [disabled]="csvDropDownOptions.isDisableCreateCsv">
                        <i class="icon folder outline sb-color-primary" [ngClass]="{'sb-disable-icon': csvDropDownOptions.isDisableCreateCsv}"  aria-hidden="true"></i>
-                      <span class="text" [ngClass]="{'label-disable': csvDropDownOptions.isDisableCreateCsv}">{{configService.labelConfig?.lbl?.createHierarchyCsv}}</span>
+                      <span class="text" [ngClass]="{'label-disable': csvDropDownOptions.isDisableCreateCsv}">{{labelConfig?.createFoldersUsingCsvFile}}</span>
                   </button>
                   <div class="ui divider"></div>
                   <button  libTelemetryInteract
@@ -28,7 +28,7 @@
                   type="button" class="item fs-0-785 bg-none" (click)="hanndleCsvEmitter({type: 'downloadCsv'})" [disabled]="csvDropDownOptions.isDisableDownloadCsv">
                       <i class="icon download sb-color-primary" [ngClass]="{'sb-disable-icon': csvDropDownOptions.isDisableDownloadCsv}" aria-hidden="true"></i>
                     <span class="text" [ngClass]="{'label-disable': csvDropDownOptions.isDisableDownloadCsv}" >
-                       {{configService.labelConfig?.lbl?.downloadFoldersInCSV}}</span>
+                       {{labelConfig?.downloadFoldersAsCsvFile}}</span>
                   </button>
                   <div class="ui divider">
                   </div>
@@ -39,7 +39,7 @@
                   type="button" class="item fs-0-785 bg-none" (click)="hanndleCsvEmitter({type: 'updateCsv'})" [disabled]="csvDropDownOptions.isDisableUpdateCsv">
                       <i class="icon upload sb-color-primary" aria-hidden="true" [ngClass]="{'label-disable': csvDropDownOptions.isDisableUpdateCsv}"></i>
                     <span class="text" [ngClass]="{'label-disable': csvDropDownOptions.isDisableUpdateCsv}" >
-                      {{configService.labelConfig?.lbl?.uploadUpdateCSV}}
+                      {{labelConfig?.updateFolderMetadataUsingCsvFile}}
                       </span>
                   </button>
                   </div>
@@ -49,17 +49,17 @@
             <div class="three wide column p-0 overflow-y  mb-40 h-100vh" [ngClass]="{'mt-50': isObjectTypeCollection}">
               <lib-fancy-tree  *ngIf="collectionTreeNodes && collectionTreeNodes.data && ishierarchyConfigSet"
               [nodes]="collectionTreeNodes" [options]="{ showConnectors: true }" [buttonLoaders]="buttonLoaders"
-              (treeEventEmitter)="treeEventListener($event)" class="sb-collectionTree-fancyTree sb-collectionTree-fancyTreelist sb-questionset-scroll">
+              (treeEventEmitter)="treeEventListener($event)" class="sb-collectionTree-fancyTree sb-collectionTree-fancyTreelist sb-questionset-scroll" [labelConfig]="labelConfig">
               </lib-fancy-tree>
             </div>
             <!-- Right Player Sections -->
             <div class="eight wide column bg-white pl-40 mb-10 w-73">
               <ng-container *ngIf="(isCurrentNodeFolder === true || isCurrentNodeRoot === true) && unitFormConfig && selectedNodeData && rootFormConfig">
                 <lib-meta-form [rootFormConfig]="rootFormConfig" [nodeMetadata]="selectedNodeData" [unitFormConfig]="unitFormConfig"
-                (toolbarEmitter)="toolbarEventListener($event)"></lib-meta-form>
+                (toolbarEmitter)="toolbarEventListener($event)" [labelConfig]="labelConfig"></lib-meta-form>
               </ng-container>
               <ng-container *ngIf="isCurrentNodeFolder === false && isCurrentNodeRoot !== true">
-                  <lib-contentplayer-page *ngIf="!isQumlPlayer"  [contentMetadata]="selectedNodeData" ></lib-contentplayer-page>
+                  <lib-contentplayer-page *ngIf="!isQumlPlayer"  [contentMetadata]="selectedNodeData" [labelConfig]="labelConfig"></lib-contentplayer-page>
                   <lib-qumlplayer-page *ngIf="isQumlPlayer" [questionMetaData]="selectedNodeData" [questionSetHierarchy]="collectionTreeNodes?.data"
                       (toolbarEmitter)="toolbarEventListener($event)">
                     </lib-qumlplayer-page>
@@ -77,7 +77,7 @@
         [size]="'normal'" class="sb-modal bx-none overflow-modal" appBodyScroll
         (dismissed)="showDeleteConfirmationPopUp = !showDeleteConfirmationPopUp" #modal>
         <div class="sb-modal-header">
-          {{configService.labelConfig?.lbl?.confirmDeleteContent}}
+          {{labelConfig?.ce_confirmDeleteContent}}
         </div>
         <div class="sb-modal-content">
             <!-- <div class="sb-publish-content">
@@ -89,32 +89,39 @@
         <div class="sb-modal-actions">
           <button type="button" class="sb-btn sb-btn-normal sb-btn-primary mr-8" (click)="showDeleteConfirmationPopUp = !showDeleteConfirmationPopUp"
           libTelemetryInteract
-          [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('no','click','cancel', this.telemetryService.telemetryPageId,{key: 'dialog_id', value: 'confirm_delete_content','identifier' : selectedNodeData?.data?.id})"> {{configService.labelConfig?.button_labels?.no_btn_label}} </button>
+          [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('no','click','cancel', this.telemetryService.telemetryPageId,{key: 'dialog_id', value: 'confirm_delete_content','identifier' : selectedNodeData?.data?.id})"> {{labelConfig?.ce_no}} </button>
           <button type="button" class="sb-btn sb-btn-secondary sb-btn-normal " (click)="deleteNode();"
           libTelemetryInteract
-          [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('yes','click','submit', this.telemetryService.telemetryPageId,{key: 'dialog_id', value: 'confirm_delete_content','identifier' : selectedNodeData?.data?.id})"> {{configService.labelConfig?.button_labels?.yes_btn_label}} </button>
+          [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('yes','click','submit', this.telemetryService.telemetryPageId,{key: 'dialog_id', value: 'confirm_delete_content','identifier' : selectedNodeData?.data?.id})"> {{labelConfig?.ce_yes}} </button>
         </div>
       </sui-modal>
       <sui-modal *ngIf='showConfirmPopup' [mustScroll]="false" [isClosable]="true" [transitionDuration]="0" [size]="'normal'"
           class="sb-modal overflow-modal" appBodyScroll (dismissed)="showConfirmPopup = !showConfirmPopup; terms = false;" #modal>
           <div class="sb-modal-header">
-            {{configService.labelConfig?.lbl?.acceptTerms}}
+            {{labelConfig?.ce_acceptingTermsAndConditions}}
           </div>
           <div class="sb-modal-content">
             <div class="ui grid">
               <div class="twelve wide column sb-checkbox-tnc mt-10">
-                <div class="sb-checkbox sb-checkbox-primary font-italic p-0 m-0"><input [(ngModel)]="terms" id="termAndConditions"
-                    name="example" type="checkbox">
+                <div class="sb-checkbox sb-checkbox-primary font-italic p-0 m-0">
+                  <input [(ngModel)]="terms" id="termAndConditions" name="example" type="checkbox">
                   <label for="termAndConditions" class="fsmall pl-32">
-                    <div class="d-flex flex-ai-center">
-                      <span class="sb-required">*</span><span
-                        class="font-weight-bold mb-4 d-block">"{{configService.labelConfig?.lbl?.iAgreeSubmit}}</span>
-                    </div>
-                    <div class="sb-color-gray-300">{{configService.labelConfig?.lbl?.iconfirmContent}}<a
-                        class="sb-color-primary font-weight-bold cursor-pointer" href="https://creativecommons.org/licenses" target="_blank" > {{configService.labelConfig?.lbl?.createCommonFramework}}</a>
-                        {{configService.labelConfig?.lbl?.accordance}}
-                     <a class="sb-color-primary font-weight-bold cursor-pointer" href="{{contentPolicyUrl}}" target="_blank" >{{configService.labelConfig?.lbl?.contentPolicy}}</a> {{configService.labelConfig?.lbl?.privacyRights}}"</div>
+                    <span class="sb-required">*</span>
+                    <span class="font-weight-bold mb-4 d-block">
+                      {{labelConfig?.ce_iAgreeThatBySubmittingPublishingThisContent}}
+                    </span>
                   </label>
+                  <div class="sb-color-gray-300 pl-32">
+                    {{labelConfig?.ce_iHaveMadeSureThatIDoNotViolate}}
+                    <a class="sb-color-primary font-weight-bold cursor-pointer" href="https://creativecommons.org/licenses" target="_blank">
+                      {{labelConfig?.ce_creativeCommonsFrameworkIn}}
+                    </a>
+                    {{labelConfig?.ce_accordanceWithThe}}
+                    <a class="sb-color-primary font-weight-bold cursor-pointer" href="{{contentPolicyUrl}}" target="_blank">
+                      {{labelConfig?.ce_contentPolicy}}
+                    </a>
+                    {{labelConfig?.ce_iHaveMadeSureThatIDoNotViolate}}
+                  </div>
                 </div>
               </div>
             </div>
@@ -123,14 +130,14 @@
             <button type="button" class="sb-btn sb-btn-normal" [ngClass]="!terms ? 'sb-btn-disabled' : 'sb-btn-primary'" [disabled]="!terms"
               (click)="sendForReview()" libTelemetryInteract
               [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('submit','click','submit', this.telemetryService.telemetryPageId,{key: 'dialog_id', value: 'accepting_terms_conditions','termAndConditions' : terms})">
-              {{configService.labelConfig?.button_labels?.submit_btn_label}}
+              {{labelConfig?.ce_submit}}
             </button>
           </div>
       </sui-modal>
       <sui-modal *ngIf='showPreview' [mustScroll]="false" [isClosable]="true" [transitionDuration]="0" [size]="'large'"
           class="sb-modal overflow-modal preview-modal" appBodyScroll (dismissed)="showPreview = !showPreview;" #modal>
           <div class="sb-modal-header">
-            {{configService.labelConfig?.lbl?.questionSetPreview}}
+            {{labelConfig?.ce_questionSetPreview}}
           </div>
           <div class="sb-modal-content">
             <div class="br-2 b-1-100" id="previewPlayerContainer" tabindex="0" cdkTrapFocus>
@@ -147,7 +154,7 @@
     <lib-library [libraryInput]="questionlibraryInput" (libraryEmitter)="onQuestionLibraryChange($event)"></lib-library>
   </ng-container>
   <ng-container *ngSwitchCase="'library'">
-    <lib-content-library [libraryInput]="libraryComponentInput" (libraryEmitter)="libraryEventListener($event)">
+    <lib-content-library [libraryInput]="libraryComponentInput" (libraryEmitter)="libraryEventListener($event)" [labelConfig]="labelConfig">
     </lib-content-library>
   </ng-container>
   <ng-container *ngSwitchCase="'question'">
@@ -167,20 +174,20 @@
 <sui-modal *ngIf="showReviewModal" [mustScroll]="true" [isClosable]="false" [transitionDuration]="0"
   [size]="'normal'" class="sb-modal bx-none overflow-modal" appBodyScroll #modal (dismissed)="showReviewModal = false;">
   <div class="sb-modal-header">
-    {{configService.labelConfig?.lbl?.reviewComments}}
+    {{labelConfig?.ce_reviewComments}}
   </div>
   <div class="sb-modal-content">
       <div class="sb-field">
-          <label>{{configService.labelConfig?.lbl?.comments}}</label>
+          <label>{{labelConfig?.ce_comments}}</label>
             <textarea disabled="disabled" type="text" class="wmd-input width-100 sb-form-control p-10 sb-disabled-textarea" id="wmd-input" [(ngModel)]="contentComment" name="rejectedComment"></textarea>
       </div>
   </div>
   <div class="sb-modal-actions">
     <button class="sb-btn sb-btn-normal sb-btn-outline-primary" (click)="modal.deny('denied')"
-    libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('close','click','cancel', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'review_comments'})">{{configService.labelConfig?.button_labels?.close_btn_label}}</button>
+    libTelemetryInteract [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('close','click','cancel', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'review_comments'})">{{labelConfig?.ce_close}}</button>
   </div>
 </sui-modal>
 
-  <lib-csv-upload *ngIf="showCsvUploadPopup" [isCreateCsv]= "isCreateCsv"  (csvUploadEmitter)= "hanndleCsvEmitter($event)" [collectionId]="collectionId">
+  <lib-csv-upload *ngIf="showCsvUploadPopup" [isCreateCsv]= "isCreateCsv" [labelConfig]="labelConfig" (csvUploadEmitter)= "hanndleCsvEmitter($event)" [collectionId]="collectionId">
   </lib-csv-upload>
 

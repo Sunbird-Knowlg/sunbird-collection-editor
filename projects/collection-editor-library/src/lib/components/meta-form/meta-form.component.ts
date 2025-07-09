@@ -22,6 +22,7 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
   @Input() rootFormConfig: any;
   @Input() unitFormConfig: any;
   @Input() nodeMetadata: any;
+  @Input() labelConfig;
   @Output() toolbarEmitter = new EventEmitter<any>();
   private onComponentDestroy$ = new Subject<any>();
   public frameworkDetails: any = {};
@@ -74,7 +75,7 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
   showShuffleMessage(event) {
     this.subscription = this.helperService.shuffleValue.subscribe(shuffle => this.previousShuffleValue = shuffle);
     if (_.isBoolean(event.shuffle) && event.shuffle === true && _.isBoolean(this.previousShuffleValue) &&  this.previousShuffleValue === false) {
-      this.toasterService.simpleInfo(_.get(this.configService, 'labelConfig.lbl.shuffleOnMessage'));
+      this.toasterService.simpleInfo(_.get(this.labelConfig, 'shuffleMessage'));
     }
     this.setShuffleValue(event.shuffle);
   }
@@ -357,5 +358,9 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+  }
+
+  ngOnInit() {
+    // Additional initialization logic if needed
   }
 }

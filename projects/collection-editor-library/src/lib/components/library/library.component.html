@@ -7,7 +7,7 @@
         [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('back','click','launch', telemetryService?.telemetryPageId)"(click)="back();"><i class="arrow left icon fs-1"></i></button>
         <div class="ml-8 sb-color-white">
           <div class="d-flex flex-ai-center fsmall">
-            <div class="font-weight-bold fs-1-16">{{configService.labelConfig?.lbl?.addFromLibrary}}</div>
+            <div class="font-weight-bold fs-1-16">{{labelConfig?.addFromLibrary}}</div>
             <!-- <div class="sb-border-vertical mx-15"></div>
             <div class="flex flex-wrap">
               <h5>Chapter 1</h5>
@@ -20,17 +20,17 @@
     </div>
   </div>
 <!-- Filter -->
-  <lib-library-filter *ngIf="!showLoader" [filterValues]="defaultFilters" [searchFormConfig]="searchFormConfig" [filterOpenStatus]="isFilterOpen" [frameworkId]="frameworkId" (filterChangeEvent)="onFilterChange($event);"></lib-library-filter>
+  <lib-library-filter *ngIf="!showLoader" [filterValues]="defaultFilters" [searchFormConfig]="searchFormConfig" [filterOpenStatus]="isFilterOpen" [frameworkId]="frameworkId" (filterChangeEvent)="onFilterChange($event);" [labelConfig]="labelConfig"></lib-library-filter>
   <div class="ui container sb-container min-h-500" *ngIf="!showLoader && contentList?.length">
     <!-- Player Section -->
     <div class="sb-g add-to-library__toc-player">
       <!-- Left Sidebar for cards -->
       <section class="sb-g-col-xs-12 sb-g-col-md-4 sb-g-col-lg-4">
-          <lib-library-list (contentChangeEvent)= "onContentChangeEvent($event)" [selectedContent] = "selectedContent"[contentList]="contentList" [showAddedContent]="showAddedContent" (moveEvent)="showResourceTemplate($event)"></lib-library-list>
+          <lib-library-list (contentChangeEvent)= "onContentChangeEvent($event)" [selectedContent] = "selectedContent"[contentList]="contentList" [showAddedContent]="showAddedContent" (moveEvent)="showResourceTemplate($event)" [labelConfig]="labelConfig"></lib-library-list>
       </section>
       <!-- Right Player Sections -->
       <section class="sb-g-col-xs-12 sb-g-col-md-8 sb-g-col-lg-8 relative position ml-24">
-          <lib-library-player [contentListDetails]="selectedContent" (moveEvent)="showResourceTemplate($event)"></lib-library-player>
+          <lib-library-player [contentListDetails]="selectedContent" (moveEvent)="showResourceTemplate($event)" [labelConfig]="labelConfig"></lib-library-player>
       </section>
     </div>
   </div>
@@ -55,18 +55,18 @@
   </div>
 </div>
 <div *ngIf="showSelectResourceModal">
-  <lib-resource-reorder [prevUnitSelect]= "selectedUnit" [collectionhierarcyData]="collectionhierarcyData" [collectionUnits]="collectionHierarchy" [selectedContentDetails]="selectedContent" [collectionId]="collectionId" (moveEvent)="showResourceTemplate($event)"></lib-resource-reorder>
+  <lib-resource-reorder [prevUnitSelect]= "selectedUnit" [collectionhierarcyData]="collectionhierarcyData" [collectionUnits]="collectionHierarchy" [selectedContentDetails]="selectedContent" [collectionId]="collectionId" (moveEvent)="showResourceTemplate($event)" [labelConfig]="labelConfig"></lib-resource-reorder>
 </div>
 
 <!--empty result -->
 <div class="result-no-found">
   <div class="ui container sb-container" *ngIf="!showLoader && !contentList?.length">
     <div class="add-to-library__no-result">
-      <h5 class="font-weight-bold">{{configService.labelConfig?.lbl?.noMatchingContent}}</h5>
+      <h5 class="font-weight-bold">{{labelConfig?.noMatchingContent}}</h5>
       <img alt="No Content available" class="mt-16" src="assets/images/emptyResult.svg">
-      <h6 class="sb-color-gray-300 font-weight-normal mt-8">{{configService.labelConfig?.lbl?.changeFilterMessage}}</h6>
+      <h6 class="sb-color-gray-300 font-weight-normal mt-8">{{labelConfig?.changeFilterMessage}}</h6>
       <button class="sb-btn sb-btn-secondary sb-btn-normal mt-16" libTelemetryInteract
-      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('change_filter','click','launch', telemetryService?.telemetryPageId)" (click)="openFilter();">{{configService.labelConfig?.lbl?.changeFilter}}</button>
+      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('change_filter','click','launch', telemetryService?.telemetryPageId)" (click)="openFilter();">{{labelConfig?.changeFilter}}</button>
     </div>
   </div>
 </div>

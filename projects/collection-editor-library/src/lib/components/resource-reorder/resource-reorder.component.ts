@@ -19,6 +19,7 @@ export class ResourceReorderComponent implements OnInit {
   @Input() collectionUnits;
   @Input() programContext;
   @Input() prevUnitSelect;
+  @Input() labelConfig;
   @Input() collectionhierarcyData;
   showMoveButton = false;
   isContentAdded = false;
@@ -41,9 +42,9 @@ export class ResourceReorderComponent implements OnInit {
         action: 'contentAdded',
         data: this.selectedContentDetails
       });
-      this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.005'));
+      this.toasterService.success(_.get(this.labelConfig, 'contentIsAddedToTheFolder'));
     }, err => {
-      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.001'));
+      this.toasterService.error(_.get(this.labelConfig, 'somethingWentWrong'));
     });
   }
 

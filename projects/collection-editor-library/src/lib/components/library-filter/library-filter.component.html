@@ -4,16 +4,16 @@
       <div class="sb-search-box small no-btn">
         <div class="input-div relative">
           <i class="search icon"></i>
-          <input id="searchInputField" class="sb-search-input" [(ngModel)]="searchQuery" type="text" (keyup.enter)="onQueryEnter($event);" placeholder={{configService.labelConfig?.lbl?.searchLibrary}}
+          <input id="searchInputField" class="sb-search-input" [(ngModel)]="searchQuery" type="text" (keyup.enter)="onQueryEnter($event);" placeholder={{labelConfig?.searchLibrary}}
           libTelemetryInteract
           [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('search_library','click',undefined, this.telemetryService?.telemetryPageId)"/>
         </div>
-        <button class="sb-btn sb-btn-normal">{{configService.labelConfig?.lbl?.search}}</button>
+        <button class="sb-btn sb-btn-normal">{{labelConfig?.search}}</button>
       </div>
       <div class="fs-0-785 cursor-pointer" (click)="showfilter()"
         libTelemetryInteract
         [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('filter_accordion','click',undefined, this.telemetryService?.telemetryPageId)">
-        {{configService.labelConfig?.lbl?.filterText}}
+        {{labelConfig?.changeFilters}}
         <i *ngIf="isFilterShow" class="caret up icon"></i>
         <i *ngIf="!isFilterShow" class="caret down icon"></i>
       </div>
@@ -29,11 +29,11 @@
         <button type="button" class="sb-btn sb-btn-normal sb-btn-outline-primary ml-5" (click)="resetFilter();"
         libTelemetryInteract
         [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('reset','click','submit', this.telemetryService?.telemetryPageId)"
-        >{{configService.labelConfig?.button_labels?.reset_btn_label}}</button>
+        >{{labelConfig?.reset}}</button>
         <button type="button" class="sb-btn sb-btn-normal sb-btn-primary ml-15" (click)="applyFilter();"
         libTelemetryInteract
         [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('apply','click','submit', this.telemetryService?.telemetryPageId, {filters: filterValues})"
-        >{{configService.labelConfig?.button_labels?.apply_btn_label}}</button>
+        >{{labelConfig?.apply}}</button>
       </div>
     </div>
   </div>

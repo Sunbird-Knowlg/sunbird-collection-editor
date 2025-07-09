@@ -16,6 +16,7 @@ declare const SunbirdFileUploadLib: any;
 export class CsvUploadComponent implements OnInit {
   @Input() collectionId;
   @Input() isCreateCsv;
+  @Input() labelConfig;
   @Output() csvUploadEmitter = new EventEmitter<any>();
   public showSuccessCsv = false;
   public showCsvValidationStatus = false;

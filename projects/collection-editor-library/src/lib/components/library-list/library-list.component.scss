@@ -156,3 +156,30 @@
   .textbookBtnLink{
     right: 0;
   }
+
+  .library-list-title{
+    html[dir="rtl"] & {
+      display: flex;
+    }
+  }
+
+  .library-toggle{
+    html[dir="rtl"] & {
+      display: flex;
+    }
+  }
+
+  .filter-labels{
+    html[dir="rtl"] & {
+      display: flex !important;
+    }
+  }
+
+  .library-list{
+    html[dir="ltr"] & {
+      margin-left: 1rem;
+    }
+    html[dir="rtl"] & {
+      margin-right: 1rem;
+    }
+  }

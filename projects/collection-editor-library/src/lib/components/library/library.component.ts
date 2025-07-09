@@ -17,6 +17,7 @@ import { HelperService } from '../../services/helper/helper.service';
 export class LibraryComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() libraryInput: any;
   @Output() libraryEmitter = new EventEmitter<any>();
+  @Input() labelConfig;
   public searchFormConfig: any;
   public pageId = 'add_from_library';
   public contentList: any;
@@ -62,7 +63,7 @@ export class LibraryComponent implements OnInit, AfterViewInit, OnDestroy {
       this.telemetryService.telemetryPageId = this.pageId;
       this.childNodes = _.get(this.collectionhierarcyData, 'childNodes');
     }, err => {
-      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.001'));
+      this.toasterService.error(_.get(this.labelConfig, 'somethingWentWrong'));
     });
   }
 
@@ -209,7 +210,7 @@ export class LibraryComponent implements OnInit, AfterViewInit, OnDestroy {
     this.editorService.fetchCollectionHierarchy(this.collectionId).subscribe((response: any) => {
       this.collectionhierarcyData = response.result.content;
     }, err => {
-      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.001'));
+      this.toasterService.error(_.get(this.labelConfig, 'somethingWentWrong'));
     });
   }
 sortContentList(status) {

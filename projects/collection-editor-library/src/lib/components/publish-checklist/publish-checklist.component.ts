@@ -12,6 +12,7 @@ export class PublishChecklistComponent implements OnInit {
   @Input() publishchecklist: any;
   @Input() actionType: any;
   @Input() objectType: string;
+  @Input() labelConfig;
   @Output() publishEmitter = new EventEmitter<any>();
   public isButtonEnable = false;
   public fieldsAvailable: any;

@@ -30,6 +30,11 @@ lib-editor {
   body {
     background: #fff !important;
   }
+  .profile-dropdown{
+    html[dir="rtl"] & {
+      right: 0 !important;
+    }
+  }
   .add-to-library {
     position: relative;
     z-index: 998 !important;
@@ -524,6 +529,11 @@ lib-editor {
     justify-content: space-between;
     width: 24%;
     margin-top: 5px;
+    html[dir="rtl"] & {
+      width: 0%;
+      left: auto !important;
+      right: 0 !important;
+    }
   }
   .sb-disable-icon{color:#ccc !important;}
   .sb-w-240px{width:240px}

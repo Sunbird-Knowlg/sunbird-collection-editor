@@ -76,6 +76,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public showComment: boolean;
   public showReviewModal: boolean;
   public csvDropDownOptions: any = {};
+  public labelConfig: any;
   public showCsvUploadPopup = false;
   public objectType: string;
   public isObjectTypeCollection: any;
@@ -111,6 +112,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.editorService.initialize(this.editorConfig);
     this.editorMode = this.editorService.editorMode;
     this.treeService.initialize(this.editorConfig);
+    this.labelConfig = this.editorConfig.context.resourceBundles
     this.objectType = this.configService.categoryConfig[this.editorConfig.config.objectType];
     this.collectionId = _.get(this.editorConfig, 'context.identifier');
     this.toolbarConfig = this.editorService.getToolbarConfig();
@@ -480,7 +482,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.submitHandler();
         break;
       case 'removeContent':
-        this.deleteConfirmMessage = this.configService.labelConfig?.lbl?.confirmDeleteNode;
+        this.deleteConfirmMessage = this.labelConfig?.ce_confirmDeleteContent;
         this.showDeleteConfirmationPopUp = true;
         break;
       case 'editContent':
@@ -549,7 +551,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!_.isEmpty(data?.data?.name) && selectedNode?.data?.root) {
       this.toolbarConfig.title = data.data.name;
     } else if (_.isEmpty(data?.data?.name) && selectedNode?.data?.root) {
-      this.toolbarConfig.title = 'Untitled';
+      this.toolbarConfig.title = this.labelConfig.untitled;
     }
   }
 
@@ -568,7 +570,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   showQuestionLibraryComponentPage() {
     if (_.isUndefined(this.libraryComponentInput.searchFormConfig) || _.isEmpty(this.libraryComponentInput.searchFormConfig)) {
-      this.toasterService.error(_.get(this.configService, 'labelConfig.err.searchConfigNotFound'));
+      this.toasterService.error(this.labelConfig?.searchConfigNotFound);
       return;
     }
     if (this.editorService.checkIfContentsCanbeAdded('add')) {
@@ -637,7 +639,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           }
         }, err => {
           const errInfo = {
-            errorMsg: _.get(this.configService, 'labelConfig.messages.error.043')
+            errorMsg: this.labelConfig?.addContentFailed
           };
           return throwError(this.editorService.apiErrorHandling(err, errInfo));
         });
@@ -648,7 +650,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   saveContent() {
     return new Promise(async (resolve, reject) => {
       if (!this.validateFormStatus()) {
-        return reject(_.get(this.configService, 'labelConfig.messages.error.029'));
+        return reject(this.labelConfig?.pleaseFillTheRequiredMetadata);
       }
       const nodesModified = _.get(this.editorService.getCollectionHierarchy(), 'nodesModified');
       if (this.objectType.toLowerCase() === 'questionset') {
@@ -666,22 +668,22 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
           this.treeService.clearTreeCache();
           this.treeService.nextTreeStatus('saved');
-          resolve(_.get(this.configService, 'labelConfig.messages.success.001'));
+          resolve(this.labelConfig?.contentIsSaved);
         }, err => {
-          reject(_.get(this.configService, 'labelConfig.messages.error.001'));
+          reject(this.labelConfig?.somethingWentWrong);
         });
     });
   }
 
   submitHandler() {
     if (!this.validateFormStatus()) {
-      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.005'));
+      this.toasterService.error(this.labelConfig?.pleaseFillTheRequiredMetadata);
       return;
     } else if (this.toolbarConfig.showDialcode === 'yes') {
       if (this.dialcodeService.validateUnitsDialcodes()) {
         this.showConfirmPopup = true;
       } else {
-        this.toasterService.warning(_.get(this.configService, 'labelConfig.messages.warning.001'));
+        this.toasterService.warning(this.labelConfig?.sorryNotAllowedMsg);
       }
     } else {
       this.showConfirmPopup = true;
@@ -717,10 +719,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   sendForReview() {
     this.saveContent().then(messg => {
       this.editorService.reviewContent(this.collectionId).subscribe(data => {
-        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.002'));
+        this.toasterService.success(this.labelConfig?.contentIsSentForReview);
         this.redirectToChapterListTab();
       }, err => {
-        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.002'));
+        this.toasterService.error(this.labelConfig?.sendForReviewFailed);
       });
     }).catch(err => this.toasterService.error(err));
   }
@@ -728,25 +730,25 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     const editableFields = _.get(this.editorConfig.config, 'editableFields');
     if (this.editorMode === 'orgreview' && editableFields && !_.isEmpty(editableFields[this.editorMode])) {
       if (!this.validateFormStatus()) {
-        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
+        this.toasterService.error(this.labelConfig?.pleaseFillTheRequiredMetadata);
         return false;
       }
       this.editorService.updateCollection(this.collectionId).subscribe(res => {
         this.editorService.submitRequestChanges(this.collectionId, comment).subscribe(res => {
-          this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.003'));
+          this.toasterService.success(this.labelConfig?.contentIsSentBackForCorrections);
           this.redirectToChapterListTab();
         }, err => {
-          this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.003'));
+          this.toasterService.error(this.labelConfig?.rejectingFailed);
         });
       }, err => {
         this.toasterService.error(err);
       });
     } else {
       this.editorService.submitRequestChanges(this.collectionId, comment).subscribe(res => {
-        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.003'));
+        this.toasterService.success(this.labelConfig?.contentIsSentBackForCorrections);
         this.redirectToChapterListTab();
       }, err => {
-        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.003'));
+        this.toasterService.error(this.labelConfig?.rejectingFailed);
       });
     }
   }
@@ -755,25 +757,25 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     const editableFields = _.get(this.editorConfig, 'config.editableFields');
     if (this.editorMode === 'orgreview' && editableFields && !_.isEmpty(editableFields[this.editorMode])) {
       if (!this.validateFormStatus()) {
-        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
+        this.toasterService.error(this.labelConfig?.pleaseFillTheRequiredMetadata);
         return false;
       }
       this.editorService.updateCollection(this.collectionId).subscribe(res => {
         this.editorService.publishContent(this.collectionId, event).subscribe(response => {
-          this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.004'));
+          this.toasterService.success(this.labelConfig?.contentIsPublished);
           this.redirectToChapterListTab();
         }, err => {
-          this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.004'));
+          this.toasterService.error(this.labelConfig?.publishingFailed);
         });
       }, err => {
         this.toasterService.error(err);
       });
     } else {
       this.editorService.publishContent(this.collectionId, event).subscribe(res => {
-        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.004'));
+        this.toasterService.success(this.labelConfig?.contentIsPublished);
         this.redirectToChapterListTab();
       }, err => {
-        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.004'));
+        this.toasterService.error(this.labelConfig?.publishingFailed);
       });
     }
   }
@@ -782,7 +784,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     // tslint:disable-next-line:max-line-length
     if (this.editorMode === 'sourcingreview' && ((editableFields && !_.isEmpty(editableFields[this.editorMode])) || !_.isEmpty(this.publishchecklist))) {
       if (!this.validateFormStatus()) {
-        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
+        this.toasterService.error(this.labelConfig?.pleaseFillTheRequiredMetadata);
         return false;
       }
       this.editorService.updateCollection(this.collectionId, event).subscribe(res => {
@@ -798,7 +800,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     const editableFields = _.get(this.editorConfig.config, 'editableFields');
     if (this.editorMode === 'sourcingreview' && editableFields && !_.isEmpty(editableFields[this.editorMode])) {
       if (!this.validateFormStatus()) {
-        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.029'));
+        this.toasterService.error(this.labelConfig?.pleaseFillTheRequiredMetadata);
         return false;
       }
       this.editorService.updateCollection(this.collectionId).subscribe(res => {
@@ -860,7 +862,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.changeDetectionRef.detectChanges();
         break;
       case 'deleteNode':
-        this.deleteConfirmMessage = this.configService.labelConfig?.lbl?.confirmDeleteNode;
+        this.deleteConfirmMessage = this.labelConfig?.ce_confirmDeleteContent;
         if (!event.isContent && _.has(this.editorConfig.config, 'hierarchy.level1')) {
           // tslint:disable-next-line:max-line-length
           this.deleteConfirmMessage = _.replace(this.deleteConfirmMessage, 'Node', _.get(this.editorConfig.config, 'hierarchy.level1.name'));
@@ -984,7 +986,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     },(error) => {
       const errInfo = {
-        errorMsg: _.get(this.configService, 'labelConfig.messages.error.006'),
+        errorMsg: this.labelConfig?.fetchQuestionSetTemplateFailed
       };
       return throwError(this.editorService.apiErrorHandling(error, errInfo))
     });
@@ -1056,7 +1058,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.pageId = 'question';
       },(error) => {
         const errInfo = {
-          errorMsg: _.get(this.configService, 'labelConfig.messages.error.006'),
+          errorMsg: this.labelConfig?.fetchQuestionSetTemplateFailed
         };
         return throwError(this.editorService.apiErrorHandling(error, errInfo))
       });

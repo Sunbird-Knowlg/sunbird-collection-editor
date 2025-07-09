@@ -78,6 +78,11 @@ lib-contentplayer-page{
       font-size: 0.8rem !important;
     }
   }
+  .content-details{
+    html[dir="rtl"] & {
+      display: flex !important;
+    }
+  }
   .content-video {
     &__player {
       &__details {

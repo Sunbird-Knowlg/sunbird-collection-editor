@@ -1,20 +1,20 @@
-<div class="sbtoc-container pr-8 mt-20">
-  <div class="title sb-color-primary font-weight-bold fs-1">
-    Showing ({{contentList?.length}}) most relevant content
+<div class="sbtoc-container pr-8 mt-20 library-list">
+  <div class="title sb-color-primary font-weight-bold fs-1 library-list-title">
+    {{labelConfig?.showing}} ({{contentList?.length}}) {{labelConfig?.mostRelevantContent}}
   </div>
   <div class="d-flex flex-w-wrap flex-jc-space-between flex-ai-baseline mb-15">
     <div>
-      <small class="sb-color-gray-200 d-block pb-10">{{configService.labelConfig?.lbl?.selectContentToAdd}}</small>
-      <sui-checkbox class="toggle" libTelemetryInteract
+      <small class="sb-color-gray-200 d-block pb-10 filter-labels">{{labelConfig?.useSearchAndFiltersAbove}}</small>
+      <sui-checkbox class="toggle library-toggle" libTelemetryInteract
       [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('show_content_added_to_collection','click','launch', telemetryService?.telemetryPageId, {showAddedContent: !showAddedContent})"
        [(ngModel)]="showAddedContent" (checkChange)="onShowAddedContentChange();"></sui-checkbox>
-        <small class="d-block mt-5 fs-0785"> {{configService.labelConfig?.lbl?.showContentAddedToCollection}}</small>
+        <small class="d-block mt-5 fs-0785"> {{labelConfig?.showContentAddedToCollection}}</small>
     </div>
     <div class="sb-w-75">
-      <label class="d-block font-weight-normal fs-0785">{{configService.labelConfig?.lbl?.sortBy}}</label>
+      <label class="d-block font-weight-normal fs-0785">{{labelConfig?.sortBy}}</label>
       <div (click)="sortContentList();" libTelemetryInteract
       [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('sort_by','click','launch', telemetryService?.telemetryPageId, {sortContent: !sortContent})"
-       [ngClass]="{'sb-btn-outline-primary': sortContent}" class="sb-btn sb-btn-outline-gray sb-btn-normal ripple">{{configService.labelConfig?.lbl?.sortlabel}}</div>
+       [ngClass]="{'sb-btn-outline-primary': sortContent}" class="sb-btn sb-btn-outline-gray sb-btn-normal ripple">{{labelConfig?.sortLabel}}</div>
 </div>
   </div>
   <!-- Class separator -->
@@ -28,7 +28,7 @@
         <div class="d-flex w-100">
           <div class="w-60">
             <h4 class="pl-8">
-              <div class="sbcard__title mb-0 font-weight-bold ellipsis w-75" popupDelay="1000" suiPopup
+              <div class="sbcard__title mb-0 font-weight-bold ellipsis w-75 filter-labels" popupDelay="1000" suiPopup
               popupText="{{content.name}}">{{content.name}}</div>
               <div class="sbchapter__item__title text-left sb__ellipsis sb__ellipsis--two mr-8 sb-color-black">
               <span *ngIf="content.board"> By {{content.board}} </span>
@@ -39,12 +39,12 @@
             <div class="text-right" [hidden]="!content.isAdded">
               <button type="button" class="text-right py-0 sb-btn sb-btn-normal sb-btn-link sb-btn-hover-none
               sb-color-success sb-left-icon-btn fs-0-785"><i class="circle check icon"></i>
-              {{configService.labelConfig?.lbl?.addedToCollection}}</button>
+              {{labelConfig?.addedToCollection}}</button>
             </div>
             <div libTelemetryInteract
             [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('select_content','click','launch', telemetryService?.telemetryPageId)" class="text-right pr-5" *ngIf="content.identifier === selectedContent.identifier">
               <button class="sb-btn sb-btn-xs sb-btn-dark-green sb-left-icon-btn font-weight-bold text-inherit" (click)="addToLibrary()">
-                <i class="plus square icon mr-4" ></i>{{configService.labelConfig?.lbl?.selectContent}}
+                <i class="plus square icon mr-4" ></i>{{labelConfig?.selectContent}}
               </button>
             </div>
           </div>
@@ -52,7 +52,7 @@
       </div>
     </div>
   </div>
-  <h6 class="sb-color-gray-400 font-weight-normal mt-20">{{configService.labelConfig?.lbl?.changingFilters}} </h6>
-  <a class="sb-color-primary cursor-pointer font-weight-bold fs-0-785 text-inherit" (click)="changeFilter()" libTelemetryInteract
-  [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('change_filter','click','launch', telemetryService?.telemetryPageId)">{{configService.labelConfig?.lbl?.ChangeFilters}}</a>
+  <h6 class="sb-color-gray-400 font-weight-normal mt-20 filter-labels">{{labelConfig?.changingFilters}} </h6>
+  <a class="sb-color-primary cursor-pointer font-weight-bold fs-0-785 text-inherit filter-labels" (click)="changeFilter()" libTelemetryInteract
+  [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('change_filter','click','launch', telemetryService?.telemetryPageId)">{{labelConfig?.changeFilters}}</a>
 </div>

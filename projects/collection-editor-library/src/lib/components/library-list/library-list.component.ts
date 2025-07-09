@@ -11,6 +11,7 @@ import { EditorTelemetryService } from '../../services/telemetry/telemetry.servi
 })
 export class LibraryListComponent implements OnInit {
 @Input() contentList;
+@Input() labelConfig;
 @Input() showAddedContent: any;
 @Output() contentChangeEvent = new EventEmitter<any>();
 @Output() moveEvent = new EventEmitter<any>();

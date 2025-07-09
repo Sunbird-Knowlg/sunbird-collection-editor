@@ -1,4 +1,7 @@
 .sb-dock-ordered-list {
+  html[dir="rtl"] & {
+    direction: ltr;
+  }
     li {
       margin-bottom: 0.4rem;
       font-size: 0.8rem;
@@ -110,4 +113,8 @@
         opacity: 0;
         height: 100%;
     }
+}
+
+.modal-content{
+  overflow-x: hidden;
 }
