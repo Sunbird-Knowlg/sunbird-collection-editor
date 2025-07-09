@@ -504,7 +504,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   dropNotAllowed() {
-    return this.toasterService.warning(_.get(this.labelConfig, 'sorryNotAllowedMsg'));
+    this.toasterService.warning(_.get(this.labelConfig, 'sorryNotAllowedMsg'));
     return false;
   }
 
