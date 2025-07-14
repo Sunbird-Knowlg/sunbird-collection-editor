@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import * as _ from 'lodash-es';
 import { HttpClient } from '@angular/common/http';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
@@ -26,7 +26,7 @@ export class DialcodeComponent implements OnInit {
   public isGeneratingQRCodes = false;
   public showQRCodePopup = false;
   public qrCodeProcessId: string;
-  public dialcodeControl: FormControl;
+  public dialcodeControl: UntypedFormControl;
   public contentId: string;
   constructor(public telemetryService: EditorTelemetryService, private treeService: TreeService,
               private dialcodeService: DialcodeService, private toasterService: ToasterService,
@@ -45,7 +45,7 @@ export class DialcodeComponent implements OnInit {
     if (_.has(this.treeService.config, 'dialcodeMaxLength')) {
       this.maxQRCode = _.get(this.treeService.config, 'dialcodeMaxLength');
     }
-    this.dialcodeControl = new FormControl('', [Validators.required, Validators.max(this.maxQRCode), this.customDialcodeValidator()]);
+    this.dialcodeControl = new UntypedFormControl('', [Validators.required, Validators.max(this.maxQRCode), this.customDialcodeValidator()]);
   }
 
   treeStatusListener() {

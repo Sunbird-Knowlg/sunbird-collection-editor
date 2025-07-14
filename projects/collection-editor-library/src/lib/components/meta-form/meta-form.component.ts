@@ -6,7 +6,7 @@ import { TreeService } from '../../services/tree/tree.service';
 import { EditorService } from '../../services/editor/editor.service';
 import { FrameworkService } from '../../services/framework/framework.service';
 import { HelperService } from '../../services/helper/helper.service';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ConfigService } from '../../services/config/config.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
 import * as moment from 'moment';
@@ -282,7 +282,7 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
     this.treeService.updateAppIcon(event.url);
   }
 
-  showTimer(control, depends: FormControl[], formGroup: FormGroup, loading, loaded) {
+  showTimer(control, depends: UntypedFormControl[], formGroup: UntypedFormGroup, loading, loaded) {
     const oldValue = {};
     const response = merge(..._.map(depends, depend => depend.valueChanges)).pipe(
       switchMap((value: any) => {
@@ -304,7 +304,7 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
     return response;
   }
 
-  getFramework(control, depends: FormControl[], formGroup: FormGroup, loading, loaded) {
+  getFramework(control, depends: UntypedFormControl[], formGroup: UntypedFormGroup, loading, loaded) {
     const response =  control.valueChanges.pipe(
       switchMap((value: any) => {
         if (!_.isEmpty(value)) {
