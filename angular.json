@@ -33,11 +33,6 @@
               },
               {
                 "glob": "**/*",
-                "input": "node_modules/@project-sunbird/sunbird-video-player-v9/lib/assets/",
-                "output": "/assets/"
-              },
-              {
-                "glob": "**/*",
                 "input": "projects/collection-editor-library/src/lib/assets",
                 "output": "/assets/"
               },
@@ -56,7 +51,6 @@
               "node_modules/font-awesome/css/font-awesome.css",
               "node_modules/katex/dist/katex.min.css",
               "node_modules/video.js/dist/video-js.min.css",
-              "node_modules/@project-sunbird/sunbird-video-player-v9/lib/assets/videojs.markers.min.css",
               "node_modules/videojs-http-source-selector/dist/videojs-http-source-selector.css"
             ],
             "scripts": [
@@ -73,7 +67,6 @@
               "node_modules/@project-sunbird/telemetry-sdk/index.js",
               "node_modules/@project-sunbird/client-services/index.js",
               "node_modules/video.js/dist/video.js",
-              "node_modules/@project-sunbird/sunbird-video-player-v9/lib/assets/videojs-markers.js",
               "node_modules/videojs-contrib-quality-levels/dist/videojs-contrib-quality-levels.min.js",
               "node_modules/videojs-http-source-selector/dist/videojs-http-source-selector.min.js"
             ],
