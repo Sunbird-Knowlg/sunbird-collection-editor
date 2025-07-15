@@ -43,7 +43,8 @@ export interface Context {
     collectionPrimaryCategory?: string;
     targetFWIds?: string[];
     cloudStorage?: any;
-    resourceBundles?: Record<string,any>;
+    resourceBundles?: Record<string, any>;
+    language: string;
 }
 export interface User {
     id: string;

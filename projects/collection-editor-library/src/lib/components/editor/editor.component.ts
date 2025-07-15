@@ -73,6 +73,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     showReviewComment: false
   };
   public contentComment: string;
+  public platformLanguage: string;
   public showComment: boolean;
   public showReviewModal: boolean;
   public csvDropDownOptions: any = {};
@@ -118,6 +119,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.toolbarConfig = this.editorService.getToolbarConfig();
     this.isObjectTypeCollection = this.objectType === 'questionSet' ? false : true;
     this.isStatusReviewMode = this.isReviewMode();
+    this.platformLanguage = this.editorConfig.context?.language || "en"
 
     if (this.objectType === 'question') {
       this.collectionId = _.get(this.editorConfig, 'context.collectionIdentifier');
@@ -221,7 +223,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       });
     }
     // tslint:disable-next-line:max-line-length
-    this.publishchecklist = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.publishchecklist.properties') || _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.review.properties') || [];
+    this.publishchecklist = this.helperService.localizeFormFieldsCreate(_.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.publishchecklist.properties'), this.platformLanguage) || _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.review.properties') || [];
     if (_.isEmpty(this.targetFramework || _.get(this.editorConfig, 'context.targetFWIds'))) {
       // tslint:disable-next-line:max-line-length
       targetFWIdentifiers = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.targetFWIds.default');
@@ -307,8 +309,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   setEditorForms(categoryDefinitionData) {
     const formsConfigObj = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms');
-    this.unitFormConfig = _.get(formsConfigObj, 'unitMetadata.properties');
-    this.rootFormConfig = _.get(formsConfigObj, 'create.properties');
+    const createProperties = this.helperService.localizeFormFieldsCreate(_.get(formsConfigObj, 'create.properties'), this.platformLanguage);
+    const unitProperties = this.helperService.localizeFormFields(_.get(formsConfigObj, 'unitMetadata.properties'), this.platformLanguage);
+    this.unitFormConfig = unitProperties || _.get(formsConfigObj, 'unitMetadata.properties');
+    this.rootFormConfig = createProperties || _.get(formsConfigObj, 'create.properties');
     let formData;
     if (this.rootFormConfig?.length) {
       formData = this.rootFormConfig[0].fields || [];
@@ -326,12 +330,12 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     });
     if ( this.objectType === 'questionset' && _.has(formsConfigObj, 'searchConfig')) {
-        this.libraryComponentInput.searchFormConfig = _.get(formsConfigObj, 'searchConfig.properties');
+        this.libraryComponentInput.searchFormConfig = this.helperService.localizeFormFields(_.get(formsConfigObj, 'searchConfig.properties'), this.platformLanguage);
     } else {
-      this.libraryComponentInput.searchFormConfig = _.get(formsConfigObj, 'search.properties');
+      this.libraryComponentInput.searchFormConfig = this.helperService.localizeFormFields(_.get(formsConfigObj, 'search.properties'), this.platformLanguage);
     }
-    this.leafFormConfig = _.get(formsConfigObj, 'childMetadata.properties');
-    this.relationFormConfig = _.get(formsConfigObj, 'relationalMetadata.properties');
+    this.leafFormConfig =  this.helperService.localizeFormFields(_.get(formsConfigObj, 'childMetadata.properties'), this.platformLanguage);
+    this.relationFormConfig = this.helperService.localizeFormFields(_.get(formsConfigObj, 'relationalMetadata.properties'), this.platformLanguage);
   }
 
   ngAfterViewInit() {
@@ -948,7 +952,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     .subscribe((res) => {
       const selectedtemplateDetails = res.result.objectCategoryDefinition;
       this.editorService.selectedChildren['label']=selectedtemplateDetails.label;
-      const selectedTemplateFormFields = _.get(selectedtemplateDetails, 'forms.create.properties');
+      const selectedTemplateFormFields = this.helperService.localizeFormFieldsCreate(_.get(selectedtemplateDetails, 'forms.create.properties'), this.platformLanguage);
       if (!_.isEmpty(selectedTemplateFormFields)) {
         const questionCategoryConfig = selectedTemplateFormFields;
         questionCategoryConfig.forEach(field => {
@@ -1037,7 +1041,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe((res) => {
         const selectedtemplateDetails = res.result.objectCategoryDefinition;
         this.editorService.selectedChildren['label']=selectedtemplateDetails.label;
-        const selectedTemplateFormFields = _.get(selectedtemplateDetails, 'forms.create.properties');
+        const selectedTemplateFormFields = this.helperService.localizeFormFieldsCreate(_.get(selectedtemplateDetails, 'forms.create.properties'), this.platformLanguage);
         this.questionComponentInput.config ={maximumOptions:_.get(selectedtemplateDetails, 'objectMetadata.config.maximumOptions')}
         if (!_.isEmpty(selectedTemplateFormFields)) {
           const questionCategoryConfig = selectedTemplateFormFields;

@@ -172,4 +172,63 @@ export class HelperService {
     return;
   }
 
+  /**
+   * Mutates the input sections array in-place, updating i18n fields (placeholder, label, description, tooltip, and message in validations) from their i18n variant (e.g., descriptioni18n) to string based on the provided language.
+   * Only updates if both the base field and its i18n variant exist.
+   * @param sections The array of section objects (e.g., _.get(formsConfigObj, 'create.properties'))
+   * @param platformLanguage The language code to localize to (e.g., 'en', 'fr', 'ar')
+   */
+  localizeFormFieldsCreate(sections: any[], platformLanguage: string): any {
+    const keys = ['placeholder', 'label', 'description', 'tooltip'];
+    sections.forEach(section => {
+      if (typeof section.name === 'string' && section.namei18n) {
+        section.name = section.namei18n[platformLanguage] || section.namei18n['en'];
+      }
+      if (Array.isArray(section.fields)) {
+        section.fields.forEach(field => {
+          keys.forEach(key => {
+            const i18nKey = key + 'i18n';
+            if (typeof field[key] === 'string' && field[i18nKey]) {
+              field[key] = field[i18nKey][platformLanguage] || field[i18nKey]['en'];
+            }
+          });
+          if (Array.isArray(field.validations)) {
+            field.validations.forEach(validation => {
+              if (typeof validation.message === 'string' && validation.messagei18n) {
+                validation.message = validation.messagei18n[platformLanguage] || validation.messagei18n['en'];
+              }
+            });
+          }
+        });
+      }
+    });
+    return sections;
+  }
+
+  /**
+   * Mutates the input fields array in-place, updating i18n fields (placeholder, label, description, tooltip, and message in validations) from their i18n variant (e.g., descriptioni18n) to string based on the provided language.
+   * Only updates if both the base field and its i18n variant exist.
+   * @param fields The array of field objects (e.g., _.get(formsConfigObj, 'unitMetadata.properties'))
+   * @param platformLanguage The language code to localize to (e.g., 'en', 'fr', 'ar')
+   */
+  localizeFormFields(fields: any[], platformLanguage: string): any {
+    const keys = ['placeholder', 'label', 'description', 'tooltip'];
+    fields.forEach(field => {
+      keys.forEach(key => {
+        const i18nKey = key + 'i18n';
+        if (typeof field[key] === 'string' && field[i18nKey]) {
+          field[key] = field[i18nKey][platformLanguage] || field[i18nKey]['en'];
+        }
+      });
+      if (Array.isArray(field.validations)) {
+        field.validations.forEach(validation => {
+          if (typeof validation.message === 'string' && validation.messagei18n) {
+            validation.message = validation.messagei18n[platformLanguage] || validation.messagei18n['en'];
+          }
+        });
+      }
+    });
+    return fields;
+  }
+
 }
