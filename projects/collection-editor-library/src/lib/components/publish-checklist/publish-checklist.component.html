@@ -15,12 +15,12 @@
       [ngClass]="{'sb-btn-primary': isButtonEnable, 'sb-btn-disabled': !isButtonEnable}" [disabled]="!isButtonEnable"
       (click)="handlePopUpEvents('submit', modal)" libTelemetryInteract
       [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('yes','click','submit', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'publish_collection'})">
-      {{labelConfig?.ce_yes}}
+      {{labelConfig?.yes_btn_label}}
     </button>
     <button class="sb-btn sb-btn-normal sb-btn-outline-primary" (click)="handlePopUpEvents('closeModal', modal)"
       libTelemetryInteract
       [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('no','click','cancel', telemetryService.telemetryPageId,  {key: 'dialog_id', value: 'add_review_comments'})">
-      {{labelConfig?.ce_no}}
+      {{labelConfig?.no_btn_label}}
     </button>
   </div>
 </sui-modal>

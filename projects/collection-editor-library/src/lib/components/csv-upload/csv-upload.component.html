@@ -1,8 +1,8 @@
 <sui-modal  [mustScroll]="true" [isClosable]="isClosable" [transitionDuration]="0" [size]="'normal'"
     class="sb-modal bx-none overflow-modal" appBodyScroll (dismissed)="closeHierarchyModal(modal)" #modal>
     <div class="sb-modal-header">
-     <span *ngIf="isCreateCsv"> {{labelConfig?.createFoldersUsingCsvFile}} </span>
-     <span *ngIf="!isCreateCsv"> {{labelConfig?.updateFolderMetadataUsingCsvFile}}</span>  
+     <span *ngIf="isCreateCsv"> {{labelConfig?.createHierarchyCsv}} </span>
+     <span *ngIf="!isCreateCsv"> {{labelConfig?.uploadUpdateCSV}}</span>  
 
     </div>
     <div class="sb-modal-content modal-content">
@@ -119,19 +119,19 @@
     <div class="sb-modal-actions">
       <button class="sb-btn sb-btn-normal " 
       libTelemetryInteract
-      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('close_popup','click',labelConfig?.ce_close,
+      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('close_popup','click',labelConfig?.close_btn_label,
        this.telemetryService.telemetryPageId, {key: 'identifier', value: collectionId})"
       (click)="closeHierarchyModal(modal)"[disabled]="!isClosable" 
       [ngClass]="{'sb-btn-primary': isClosable, 'sb-btn-disabled': !isClosable}" >
-         {{labelConfig?.ce_close}}
+         {{labelConfig?.close_btn_label}}
       </button>
       <button class="sb-btn sb-btn-normal "
       libTelemetryInteract
-      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('csv_upload','click',labelConfig?.next,
+      [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('csv_upload','click',labelConfig?.next_btn_label,
        this.telemetryService.telemetryPageId, {key: 'identifier', value: collectionId})"
       (click)="validateCSVFile()"[disabled]="!isUploadCsvEnable" 
       [ngClass]="{'sb-btn-primary': isUploadCsvEnable, 'sb-btn-disabled': !isUploadCsvEnable}" >
-         {{labelConfig?.next}}
+         {{labelConfig?.next_btn_label}}
       </button>
     </div>
 </sui-modal>
