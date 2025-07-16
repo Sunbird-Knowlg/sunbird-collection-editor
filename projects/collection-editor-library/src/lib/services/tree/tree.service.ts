@@ -14,6 +14,8 @@ import { ConfigService } from '../config/config.service';
 })
 export class TreeService {
   public config: any;
+  public language: string;
+  public labelConfig: any;
   treeCache = {
     nodesModified: {},
     nodes: []
@@ -28,8 +30,10 @@ export class TreeService {
 
   constructor(private toasterService: ToasterService, private helperService: HelperService, public configService: ConfigService) { }
 
-  public initialize(editorConfig: IEditorConfig) {
+  public initialize(editorConfig: IEditorConfig, language?: string, labelConfig?: any) {
     this.config = editorConfig.config;
+    this.language = language || "ar"
+    this.labelConfig = labelConfig
     this.omitFalseyProps = _.get(this.configService.editorConfig, 'omitFalseyProperties');
   }
 
@@ -108,7 +112,8 @@ export class TreeService {
     let newNode;
     const selectedNode = this.getActiveNode();
     // tslint:disable-next-line:max-line-length
-    const nodeConfig = (createType === 'sibling') ? this.config.hierarchy[`level${selectedNode.getLevel() - 1}`] : this.config.hierarchy[`level${selectedNode.getLevel()}`];
+    const nodeConfigRaw = (createType === 'sibling') ? this.config.hierarchy[`level${selectedNode.getLevel() - 1}`] : this.config.hierarchy[`level${selectedNode.getLevel()}`];
+    const nodeConfig = this.helperService.localizeNodeConfigName(nodeConfigRaw, this.language) || nodeConfigRaw
     const uniqueId = uuidv4();
     const nodeTitle = _.get(nodeConfig, 'name');
     const node: any = {
@@ -270,7 +275,7 @@ export class TreeService {
 
   setNodeTitle(title) {
     if (!title) {
-      title = 'Untitled';
+      title = this.labelConfig?.untitled || 'Untitled';
     }
     title = this.removeSpecialChars(title);
     this.getActiveNode().applyPatch({ title }).done((a, b) => { });

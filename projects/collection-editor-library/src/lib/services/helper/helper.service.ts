@@ -199,6 +199,16 @@ export class HelperService {
               }
             });
           }
+          // Add rangeObj localization for object-based rangei18n
+          if (Array.isArray(field.range) && field.rangei18n && typeof field.rangei18n === 'object' && !Array.isArray(field.rangei18n)) {
+            field.rangeObj = field.range.map((value) => {
+              const labelObj = field.rangei18n[value] || {};
+              return {
+                label: labelObj[platformLanguage] || value,
+                value: value
+              };
+            });
+          }
         });
       }
     });
@@ -227,8 +237,34 @@ export class HelperService {
           }
         });
       }
+      if (Array.isArray(field.range) && field.rangei18n && typeof field.rangei18n === 'object' && !Array.isArray(field.rangei18n)) {
+        field.rangeObj = field.range.map((value) => {
+          const labelObj = field.rangei18n[value] || {};
+          return {
+            label: labelObj[platformLanguage] || value,
+            value: value
+          };
+        });
+      }
     });
     return fields;
+  }
+
+  /**
+   * Localizes the 'name' property of a nodeConfig object (and its children) based on the provided language.
+   * If 'namei18n' exists, replaces 'name' with the value for the given language (or leaves unchanged if not found).
+   * Recursively processes any nested children (if present).
+   * @param nodeConfig The node config object (may have 'namei18n' and 'children').
+   * @param language The language code to localize to (e.g., 'en', 'ar').
+   * @returns A new object with localized 'name' fields.
+   */
+  localizeNodeConfigName(nodeConfig: any, language: string): any {
+    if (!nodeConfig || typeof nodeConfig !== 'object') return nodeConfig;
+    const localized = { ...nodeConfig };
+    if (localized.namei18n && typeof localized.namei18n === 'object') {
+      localized.name = localized.namei18n[language] || localized.name;
+    }
+    return localized;
   }
 
 }

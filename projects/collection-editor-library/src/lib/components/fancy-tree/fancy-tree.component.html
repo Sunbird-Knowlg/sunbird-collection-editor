@@ -20,7 +20,7 @@
     <i class="icon plus" aria-hidden="true" *ngIf="!buttonLoaders?.addFromLibraryButtonLoader"></i>
     <div class="sb-loading-spinner" *ngIf="buttonLoaders?.addFromLibraryButtonLoader" role="status" aria-hidden="true">
     </div>
-    {{labelConfig?.ce_addFromLibrary}}
+    {{labelConfig?.addFromLibrary}}
   </button>
   <div class="d-flex mt-10 mr-30" *ngIf="config.objectType === 'QuestionSet'">
     <button [disabled]="!visibility?.addQuestionFromLibrary" (click)="addQuestionFromLibrary();"
@@ -30,7 +30,7 @@
     <i class="icon plus" aria-hidden="true" *ngIf="!buttonLoaders?.addQuestionFromLibraryButtonLoader"></i>
     <div class="sb-loading-spinner" *ngIf="buttonLoaders?.addQuestionFromLibraryButtonLoader" role="status" aria-hidden="true">
     </div>
-    {{labelConfig?.ce_addFromLibrary}}
+    {{labelConfig?.addFromLibrary}}
   </button>
   <button class="sb-btn sb-btn-normal sb-btn-primary" [disabled]="!visibility?.createNew"
     [ngClass]="[!visibility?.createNew ? 'sb-btn-outline-disabled' : '', (visibility?.createNew && buttonLoaders?.addFromLibraryButtonLoader) ? 'sb-btn-loading-spinner sb-btn-outline-disabled': '']"
@@ -40,7 +40,7 @@
     <i class="icon plus" *ngIf="!buttonLoaders?.addFromLibraryButtonLoader"></i>
     <div class="sb-loading-spinner" *ngIf="buttonLoaders?.addFromLibraryButtonLoader" role="status" aria-hidden="true">
     </div>
-    {{labelConfig?.ce_createNew}}
+    {{labelConfig?.createNew}}
   </button>
   </div>
 </div>

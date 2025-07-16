@@ -8,7 +8,7 @@
       <sui-checkbox class="toggle library-toggle" libTelemetryInteract
       [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('show_content_added_to_collection','click','launch', telemetryService?.telemetryPageId, {showAddedContent: !showAddedContent})"
        [(ngModel)]="showAddedContent" (checkChange)="onShowAddedContentChange();"></sui-checkbox>
-        <small class="d-block mt-5 fs-0785"> {{labelConfig?.showContentAddedToCollection}}</small>
+        <small class="mt-5 fs-0785 library-list-title"> {{labelConfig?.showContentAddedToCollection}}</small>
     </div>
     <div class="sb-w-75">
       <label class="d-block font-weight-normal fs-0785">{{labelConfig?.sortBy}}</label>

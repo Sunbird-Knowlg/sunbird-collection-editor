@@ -12,10 +12,10 @@
 (playerEvent)="eventHandler($event)" (telemetryEvent)="generateContentReadEvent($event, true)"></sunbird-video-player>
 </div>
 <div class="ui grid text-font pt-15 bg-white mx-0 mb-10">
-    <div class="four wide column content-details">
+    <div class="four wide column">
         <div class="sb-field-group">
-            <label class="sb-color-gray-100">{{labelConfig?.name}}</label>
-            <div class="fs-0-92">{{contentDetails?.contentData?.name}}</div>
+            <label class="sb-color-gray-100 content-details">{{labelConfig?.name}}</label>
+            <div class="fs-0-92 content-details">{{contentDetails?.contentData?.name}}</div>
         </div>
     </div>
     <!-- <div class="two wide column">
@@ -24,16 +24,16 @@
             <div class="fs-0-92">{{contentDetails?.contentData?.author}}</div>
         </div>
     </div> -->
-    <div class="four wide column content-details">
+    <div class="four wide column">
         <div class="sb-field-group">
-            <label class="sb-color-gray-100">{{labelConfig?.license}}</label>
-            <div class="fs-0-92">{{contentDetails?.contentData?.license}}</div>
+            <label class="sb-color-gray-100 content-details">{{labelConfig?.license}}</label>
+            <div class="fs-0-92 content-details">{{contentDetails?.contentData?.license}}</div>
         </div>
     </div>
-    <div class="four wide column content-details">
+    <div class="four wide column">
         <div class="sb-field-group">
-            <label class="sb-color-gray-100">{{labelConfig?.copyrightAndYear}}</label>
-            <div class="fs-0-92">{{contentDetails?.contentData?.copyright}}</div>
+            <label class="sb-color-gray-100 content-details">{{labelConfig?.copyrightAndYear}}</label>
+            <div class="fs-0-92 content-details">{{contentDetails?.contentData?.copyright}}</div>
         </div>
     </div>
 </div>

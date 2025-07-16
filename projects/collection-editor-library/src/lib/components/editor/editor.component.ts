@@ -112,7 +112,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit() {
     this.editorService.initialize(this.editorConfig);
     this.editorMode = this.editorService.editorMode;
-    this.treeService.initialize(this.editorConfig);
+    this.treeService.initialize(this.editorConfig, this.platformLanguage, this.labelConfig);
     this.labelConfig = this.editorConfig.context?.resourceBundles || this.configService.labelConfig?.lbl
     this.objectType = this.configService.categoryConfig[this.editorConfig.config.objectType];
     this.collectionId = _.get(this.editorConfig, 'context.identifier');
@@ -310,7 +310,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   setEditorForms(categoryDefinitionData) {
     const formsConfigObj = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms');
     const createProperties = this.helperService.localizeFormFieldsCreate(_.get(formsConfigObj, 'create.properties'), this.platformLanguage);
-    const unitProperties = this.helperService.localizeFormFields(_.get(formsConfigObj, 'unitMetadata.properties'), this.platformLanguage);
+    const unitProperties = this.helperService.localizeFormFieldsCreate(_.get(formsConfigObj, 'unitMetadata.properties'), this.platformLanguage);
     this.unitFormConfig = unitProperties || _.get(formsConfigObj, 'unitMetadata.properties');
     this.rootFormConfig = createProperties || _.get(formsConfigObj, 'create.properties');
     let formData;
@@ -486,7 +486,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.submitHandler();
         break;
       case 'removeContent':
-        this.deleteConfirmMessage = this.labelConfig?.ce_confirmDeleteContent;
+        this.deleteConfirmMessage = this.labelConfig?.confirmDeleteContent;
         this.showDeleteConfirmationPopUp = true;
         break;
       case 'editContent':
@@ -866,7 +866,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.changeDetectionRef.detectChanges();
         break;
       case 'deleteNode':
-        this.deleteConfirmMessage = this.labelConfig?.ce_confirmDeleteContent;
+        this.deleteConfirmMessage = this.labelConfig?.confirmDeleteContent;
         if (!event.isContent && _.has(this.editorConfig.config, 'hierarchy.level1')) {
           // tslint:disable-next-line:max-line-length
           this.deleteConfirmMessage = _.replace(this.deleteConfirmMessage, 'Node', _.get(this.editorConfig.config, 'hierarchy.level1.name'));

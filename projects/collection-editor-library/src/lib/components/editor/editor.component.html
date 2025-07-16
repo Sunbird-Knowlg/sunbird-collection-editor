@@ -77,7 +77,7 @@
         [size]="'normal'" class="sb-modal bx-none overflow-modal" appBodyScroll
         (dismissed)="showDeleteConfirmationPopUp = !showDeleteConfirmationPopUp" #modal>
         <div class="sb-modal-header">
-          {{labelConfig?.ce_confirmDeleteContent}}
+          {{labelConfig?.confirmDeleteContent}}
         </div>
         <div class="sb-modal-content">
             <!-- <div class="sb-publish-content">
@@ -98,7 +98,7 @@
       <sui-modal *ngIf='showConfirmPopup' [mustScroll]="false" [isClosable]="true" [transitionDuration]="0" [size]="'normal'"
           class="sb-modal overflow-modal" appBodyScroll (dismissed)="showConfirmPopup = !showConfirmPopup; terms = false;" #modal>
           <div class="sb-modal-header">
-            {{labelConfig?.ce_acceptingTermsAndConditions}}
+            {{labelConfig?.acceptingTermsAndConditions}}
           </div>
           <div class="sb-modal-content">
             <div class="ui grid">
@@ -108,19 +108,19 @@
                   <label for="termAndConditions" class="fsmall pl-32">
                     <span class="sb-required">*</span>
                     <span class="font-weight-bold mb-4 d-block">
-                      {{labelConfig?.ce_iAgreeThatBySubmittingPublishingThisContent}}
+                      {{labelConfig?.iAgreeThatBySubmittingPublishingThisContent}}
                     </span>
                   </label>
                   <div class="sb-color-gray-300 pl-32">
-                    {{labelConfig?.ce_iHaveMadeSureThatIDoNotViolate}}
+                    {{labelConfig?.iHaveMadeSureThatIDoNotViolate}}
                     <a class="sb-color-primary font-weight-bold cursor-pointer" href="https://creativecommons.org/licenses" target="_blank">
-                      {{labelConfig?.ce_creativeCommonsFrameworkIn}}
+                      {{labelConfig?.creativeCommonsFrameworkIn}}
                     </a>
-                    {{labelConfig?.ce_accordanceWithThe}}
+                    {{labelConfig?.accordanceWithThe}}
                     <a class="sb-color-primary font-weight-bold cursor-pointer" href="{{contentPolicyUrl}}" target="_blank">
-                      {{labelConfig?.ce_contentPolicy}}
+                      {{labelConfig?.contentPolicy}}
                     </a>
-                    {{labelConfig?.ce_iHaveMadeSureThatIDoNotViolate}}
+                    {{labelConfig?.iHaveMadeSureThatIDoNotViolate}}
                   </div>
                 </div>
               </div>
@@ -137,7 +137,7 @@
       <sui-modal *ngIf='showPreview' [mustScroll]="false" [isClosable]="true" [transitionDuration]="0" [size]="'large'"
           class="sb-modal overflow-modal preview-modal" appBodyScroll (dismissed)="showPreview = !showPreview;" #modal>
           <div class="sb-modal-header">
-            {{labelConfig?.ce_questionSetPreview}}
+            {{labelConfig?.questionSetPreview}}
           </div>
           <div class="sb-modal-content">
             <div class="br-2 b-1-100" id="previewPlayerContainer" tabindex="0" cdkTrapFocus>
@@ -174,11 +174,11 @@
 <sui-modal *ngIf="showReviewModal" [mustScroll]="true" [isClosable]="false" [transitionDuration]="0"
   [size]="'normal'" class="sb-modal bx-none overflow-modal" appBodyScroll #modal (dismissed)="showReviewModal = false;">
   <div class="sb-modal-header">
-    {{labelConfig?.ce_reviewComments}}
+    {{labelConfig?.reviewComments}}
   </div>
   <div class="sb-modal-content">
       <div class="sb-field">
-          <label>{{labelConfig?.ce_comments}}</label>
+          <label>{{labelConfig?.comments}}</label>
             <textarea disabled="disabled" type="text" class="wmd-input width-100 sb-form-control p-10 sb-disabled-textarea" id="wmd-input" [(ngModel)]="contentComment" name="rejectedComment"></textarea>
       </div>
   </div>
