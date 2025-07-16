@@ -36,7 +36,7 @@
     "@project-sunbird/telemetry-sdk": "0.0.29",
     "@types/jquery": "^3.5.5",
     "alphanum-sort": "^1.0.2",
-    "@project-fmps/common-form-elements": "1.0.0",
+    "@project-fmps/common-form-elements": "1.0.1",
     "core-js": "^2.5.4",
     "common-form-elements-web-v9": "4.7.2",
     "epubjs": "0.3.90",
