@@ -112,14 +112,14 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit() {
     this.editorService.initialize(this.editorConfig);
     this.editorMode = this.editorService.editorMode;
-    this.treeService.initialize(this.editorConfig, this.platformLanguage, this.labelConfig);
     this.labelConfig = this.editorConfig.context?.resourceBundles || this.configService.labelConfig?.lbl
+    this.platformLanguage = this.editorConfig.context?.language || "en"
+    this.treeService.initialize(this.editorConfig, this.platformLanguage, this.labelConfig);
     this.objectType = this.configService.categoryConfig[this.editorConfig.config.objectType];
     this.collectionId = _.get(this.editorConfig, 'context.identifier');
     this.toolbarConfig = this.editorService.getToolbarConfig();
     this.isObjectTypeCollection = this.objectType === 'questionSet' ? false : true;
     this.isStatusReviewMode = this.isReviewMode();
-    this.platformLanguage = this.editorConfig.context?.language || "en"
 
     if (this.objectType === 'question') {
       this.collectionId = _.get(this.editorConfig, 'context.collectionIdentifier');

@@ -396,7 +396,7 @@ export class FancyTreeComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!node.data.root) {
       this.treeService.addNode('sibling');
     } else {
-      return this.toasterService.error(_.get(this.labelConfig, 'sorryNotAllowedMsg'));
+      this.toasterService.error(_.get(this.labelConfig, 'sorryNotAllowedMsg'));
     }
   }
 

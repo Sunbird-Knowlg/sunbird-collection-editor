@@ -32,7 +32,7 @@ export class TreeService {
 
   public initialize(editorConfig: IEditorConfig, language?: string, labelConfig?: any) {
     this.config = editorConfig.config;
-    this.language = language || "ar"
+    this.language = language || "en"
     this.labelConfig = labelConfig
     this.omitFalseyProps = _.get(this.configService.editorConfig, 'omitFalseyProperties');
   }
