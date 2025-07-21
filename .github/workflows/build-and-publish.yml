@@ -9,7 +9,7 @@ on:
 
 
 jobs:
-  build-and-publish:
+  build-test-publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -18,14 +18,11 @@ jobs:
       - name: Use Node.js 14.x
         uses: actions/setup-node@v3
         with:
-          node-version: '14.x'
+          node-version: 14.x
           registry-url: 'https://registry.npmjs.org/'
 
-      - name: Cache node_modules
-        uses: actions/cache@v3
-        with:
-          path: node_modules
-          key: node-modules-${{ hashFiles('package-lock.json') }}
+      - name: Show Node version
+        run: node --version
 
       - name: Install Angular CLI
         run: npm install -g @angular/cli@12.2.18 --no-progress
@@ -33,16 +30,16 @@ jobs:
       - name: Install dependencies
         run: npm i -f
 
-      - name: Build Library
+      - name: Build and Pack Library
         run: |
           npm run build-lib
-          cd dist/collection-editor-library
-          npm run prepublishOnly || true
-          rm -f node_modules package-lock.json
+          npm pack ./dist/collection-editor-library
 
       - name: Publish to NPM
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          cd dist/collection-editor-library
-          npm publish --access=public
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
+          npm run build-lib
+          PACKAGE_TGZ=$(npm pack ./dist/collection-editor-library)
+          npm publish "$PACKAGE_TGZ" --access=public
