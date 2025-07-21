@@ -4,9 +4,12 @@ on:
   push:
     tags:
       - '*'  # Triggers on any tag
+    branches:
+      - '*'  # Triggers on any commit to any branch
+
 
 jobs:
-  build-test-publish:
+  build-and-publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -15,11 +18,14 @@ jobs:
       - name: Use Node.js 14.x
         uses: actions/setup-node@v3
         with:
-          node-version: 14.x
+          node-version: '14.x'
           registry-url: 'https://registry.npmjs.org/'
 
-      - name: Show Node version
-        run: node --version
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Install Angular CLI
         run: npm install -g @angular/cli@12.2.18 --no-progress
@@ -27,14 +33,10 @@ jobs:
       - name: Install dependencies
         run: npm i -f
 
-      - name: Build and Pack Library
-        run: |
-          npm run build-lib
-          npm pack ./dist/collection-editor-library
+      - name: Build Library
+        run: npm run build-lib
 
       - name: Publish to NPM
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
-          npm publish project-sunbird-sunbird-collection-editor-* --access=public
+        run: npm publish ./dist/collection-editor-library --access=public
