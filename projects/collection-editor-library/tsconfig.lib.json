@@ -5,6 +5,7 @@
     "declarationMap": true,
     "target": "es2015",
     "module": "es2015",
+    "enableIvy": false,
     "moduleResolution": "node",
     "declaration": true,
     "sourceMap": true,

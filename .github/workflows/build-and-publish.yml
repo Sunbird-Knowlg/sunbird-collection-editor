@@ -34,9 +34,15 @@ jobs:
         run: npm i -f
 
       - name: Build Library
-        run: npm run build-lib
+        run: |
+          npm run build-lib
+          cd dist/collection-editor-library
+          npm run prepublishOnly || true
+          rm -f node_modules package-lock.json
 
       - name: Publish to NPM
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish ./dist/collection-editor-library --access=public
+        run: |
+          cd dist/collection-editor-library
+          npm publish --access=public
