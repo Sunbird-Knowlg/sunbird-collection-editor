@@ -1,7 +1,9 @@
-name: Build, Test, and Publish
+name: Build and Publish
 
 on:
   push:
+    branches:
+      - '*'  # Triggers on any commit to any branch
     tags:
       - '*'  # Triggers on any tag
 
@@ -37,4 +39,4 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
-          npm publish project-sunbird-sunbird-collection-editor-* --access=public 
+          npm publish project-sunbird-sunbird-collection-editor-* --access=public
