@@ -92,7 +92,7 @@
             <div *ngIf="!collaborators?.length" class="p-10 font-weight-bold sb-bg-color-white">
                 {{labelConfig?.noCollaborators || configService.labelConfig?.err?.collaboratorsNotFound}}
             </div>
-            <div *ngIf="collaborators?.length" class="w-100 pt-10 font-weight-bold">{{collaborators.length}} {{labelConfig?.collaboratorsExist || 'collaborators exist'}}</div>
+            <div *ngIf="collaborators?.length" class="w-100 pt-10 font-weight-bold">{{collaborators.length}} {{ collaborators.length === 1 ? (labelConfig?.collaboratorExist || 'collaborator exists') : (labelConfig?.collaboratorsExist || 'collaborators exist') }}</div>
             <div class="masonry-grid mt-20" *ngIf="collaborators?.length">
                 <div *ngFor="let collaborator of collaborators" class="sb-card">
                     <div class="sb-card-body">
