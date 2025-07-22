@@ -16,6 +16,7 @@ export class ManageCollaboratorComponent implements OnInit {
   @ViewChild('modal') private modal;
   @Input() addCollaborator;
   @Input() collectionId;
+  @Input() labelConfig: Record<string, any>;
   public showCollaborationPopup: boolean;
   public contentCollaborators: any;
   public contentOwner;
@@ -100,7 +101,7 @@ export class ManageCollaboratorComponent implements OnInit {
       }
     },
     (error) => {
-      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.001'));
+      this.toasterService.error(this.labelConfig?.somethingWentWrong || _.get(this.configService, 'labelConfig.messages.error.001'));
       console.log(error);
     });
   }
@@ -151,13 +152,13 @@ export class ManageCollaboratorComponent implements OnInit {
     this.updatedCollaborators = _.difference(this.updatedCollaborators, this.selectedcollaborators);
     this.helperService.updateCollaborator(this.collectionId, this.updatedCollaborators).subscribe((response: any) => {
       if (response.params.status === 'successful') {
-        this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.012'));
+        this.toasterService.success(this.labelConfig?.collaboratorsUpdatedSuccessfully || _.get(this.configService, 'labelConfig.messages.success.012'));
       } else {
-        this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.001'));
+        this.toasterService.error(this.labelConfig?.somethingWentWrong || _.get(this.configService, 'labelConfig.messages.error.001'));
       }
     },
     (error) => {
-      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.001'));
+      this.toasterService.error(this.labelConfig?.somethingWentWrong || _.get(this.configService, 'labelConfig.messages.error.001'));
       console.log(error);
     });
     modal.deny();
@@ -184,7 +185,7 @@ export class ManageCollaboratorComponent implements OnInit {
         },
         (error) => {
           this.collaborators = [];
-          this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.001'));
+          this.toasterService.error(this.labelConfig?.somethingWentWrong || _.get(this.configService, 'labelConfig.messages.error.001'));
           console.log(error);
         });
       }
@@ -224,11 +225,11 @@ export class ManageCollaboratorComponent implements OnInit {
         }
     },
     (error) => {
-      this.toasterService.error(_.get(this.configService, 'labelConfig.messages.error.001'));
+      this.toasterService.error(this.labelConfig?.somethingWentWrong || _.get(this.configService, 'labelConfig.messages.error.001'));
       console.log(error);
       this.searchRes.content = [];
       this.searchRes.isEmptyResponse = true;
-      this.searchRes.errorMessage = _.get(this.configService, 'labelConfig.messages.error.001');
+      this.searchRes.errorMessage = this.labelConfig?.somethingWentWrong || _.get(this.configService, 'labelConfig.messages.error.001');
     });
   }
 
