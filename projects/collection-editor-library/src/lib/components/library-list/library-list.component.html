@@ -11,7 +11,7 @@
         <small class="mt-5 fs-0785 library-list-title"> {{labelConfig?.showContentAddedToCollection}}</small>
     </div>
     <div class="sb-w-75">
-      <label class="d-block font-weight-normal fs-0785">{{labelConfig?.sortBy}}</label>
+      <label class="d-block font-weight-normal fs-0785 label-display">{{labelConfig?.sortBy}}</label>
       <div (click)="sortContentList();" libTelemetryInteract
       [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('sort_by','click','launch', telemetryService?.telemetryPageId, {sortContent: !sortContent})"
        [ngClass]="{'sb-btn-outline-primary': sortContent}" class="sb-btn sb-btn-outline-gray sb-btn-normal ripple">{{labelConfig?.sortLabel}}</div>

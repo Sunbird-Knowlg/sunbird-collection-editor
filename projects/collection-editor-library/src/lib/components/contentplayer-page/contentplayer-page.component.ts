@@ -32,6 +32,11 @@ export class ContentplayerPageComponent implements OnInit, OnChanges {
       this.getContentDetails();
     }
   }
+
+  getDocumentDir() {
+    return typeof document !== 'undefined' ? document.dir || 'rtl' : 'rtl';
+  }
+
   getContentDetails() {
     this.playerType = 'default-player';
     this.editorService.fetchContentDetails(this.contentId).subscribe(res => {
@@ -41,6 +46,18 @@ export class ContentplayerPageComponent implements OnInit, OnChanges {
       };
       this.playerConfig = this.playerService.getPlayerConfig(this.contentDetails);
       this.setPlayerType();
+      // Set playerConfig.context for all players
+      if (this.playerConfig) {
+        this.playerConfig.context = {
+          ...this.playerConfig.context,
+          resourceBundles: {},
+          dir: ''
+        };
+      }
+      if (this.labelConfig) {
+        this.playerConfig.context.resourceBundles = this.labelConfig;
+        this.playerConfig.context.dir = this.getDocumentDir();
+      }
       this.playerType === 'default-player' ? this.loadDefaultPlayer() : this.playerConfig.config = {};
     });
   }

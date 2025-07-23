@@ -179,6 +179,9 @@ export class HelperService {
    * @param platformLanguage The language code to localize to (e.g., 'en', 'fr', 'ar')
    */
   localizeFormFieldsCreate(sections: any[], platformLanguage: string): any {
+    if (!sections || !platformLanguage) {
+      return;
+    }
     const keys = ['placeholder', 'label', 'description', 'tooltip'];
     sections.forEach(section => {
       if (typeof section.name === 'string' && section.namei18n) {
@@ -222,6 +225,9 @@ export class HelperService {
    * @param platformLanguage The language code to localize to (e.g., 'en', 'fr', 'ar')
    */
   localizeFormFields(fields: any[], platformLanguage: string): any {
+    if (!fields || !platformLanguage) {
+      return;
+    }
     const keys = ['placeholder', 'label', 'description', 'tooltip'];
     fields.forEach(field => {
       keys.forEach(key => {
