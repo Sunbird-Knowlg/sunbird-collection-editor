@@ -4,8 +4,6 @@ on:
   push:
     tags:
       - '*'  # Triggers on any tag
-    branches:
-      - '*'  # Triggers on any commit to any branch
 
 jobs:
   build-test-publish:

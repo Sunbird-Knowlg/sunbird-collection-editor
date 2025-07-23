@@ -1,5 +1,5 @@
 {
-  "name": "@jeraldjf/sunbird-collection-editor",
+  "name": "@project-fmps/sunbird-collection-editor",
   "version": "1.0.2",
   "dependencies": {
     "tslib": "^2.0.0"
