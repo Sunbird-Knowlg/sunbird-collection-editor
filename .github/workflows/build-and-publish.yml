@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - '*'  # Triggers on any tag
+    branches:
+      - '*'  # Triggers on any commit to any branch
 
 jobs:
   build-test-publish:
@@ -25,7 +27,7 @@ jobs:
         run: npm install -g @angular/cli@12.2.18 --no-progress
 
       - name: Install dependencies
-        run: npm install --no-progress
+        run: npm install --legacy-peer-deps
 
       - name:  Build and Publish to NPM
         env:
