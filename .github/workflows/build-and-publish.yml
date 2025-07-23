@@ -23,11 +23,14 @@ jobs:
       - name: Show Node version
         run: node --version
 
+      - name: Upgrade npm to v8
+        run: npm install -g npm@8
+
       - name: Install Angular CLI
         run: npm install -g @angular/cli@12.2.18 --no-progress
 
       - name: Install dependencies
-        run: npm install --no-progress
+        run: npm install --legacy-peer-deps
 
       - name:  Build and Publish to NPM
         env:
