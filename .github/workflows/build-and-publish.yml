@@ -27,7 +27,7 @@ jobs:
         run: npm install -g @angular/cli@12.2.18 --no-progress
 
       - name: Install dependencies
-        run: npm install --legacy-peer-deps
+        run: npm install --no-progress
 
       - name:  Build and Publish to NPM
         env:
