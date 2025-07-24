@@ -13,9 +13,6 @@
     "test-coverage": "ng test collection-editor-library --code-coverage=true --watch=false --sourceMap=false --browsers=ChromeHeadless"
   },
   "private": true,
-  "overrides": {
-    "stylus": "0.0.1-security"
-  },
   "dependencies": {
     "@angular/animations": "~12.2.16",
     "@angular/cdk": "12.2.13",
