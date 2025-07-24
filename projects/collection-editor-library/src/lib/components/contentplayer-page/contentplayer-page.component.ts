@@ -51,12 +51,11 @@ export class ContentplayerPageComponent implements OnInit, OnChanges {
         this.playerConfig.context = {
           ...this.playerConfig.context,
           resourceBundles: {},
-          dir: ''
+          dir: this.getDocumentDir()
         };
       }
       if (this.labelConfig) {
         this.playerConfig.context.resourceBundles = this.labelConfig;
-        this.playerConfig.context.dir = this.getDocumentDir();
       }
       this.playerType === 'default-player' ? this.loadDefaultPlayer() : this.playerConfig.config = {};
     });
