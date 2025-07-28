@@ -201,7 +201,7 @@
           <label>{{labelConfig?.enterYourComments}}</label>
           <div class="sb-field relative">
 
-              <textarea type="text" class="wmd-input width-100 sb-form-control" id="wmd-input" [(ngModel)]="rejectComment" placeholder="Add comment" name="rejectComment" required maxlength="{{configService?.editorConfig?.rejectCommentsMaxLength}}"></textarea>
+              <textarea type="text" class="wmd-input width-100 sb-form-control" id="wmd-input" [(ngModel)]="rejectComment" placeholder="{{labelConfig?.addComment || 'Add Comment'}}" name="rejectComment" required maxlength="{{configService?.editorConfig?.rejectCommentsMaxLength}}"></textarea>
               <label class="ui basic red error label pt-1 mt-5 width-100"
                   *ngIf="FormControl.form.controls.rejectComment?.touched && !FormControl.form.valid">{{labelConfig?.fillComments}} </label>
               <!-- <textarea rows="4" name="moretext" class="sb-form-control" placeholder="Type here..."></textarea>
