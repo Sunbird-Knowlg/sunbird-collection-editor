@@ -51,10 +51,6 @@ export interface Context {
     };
     env: string;
     defaultLicense?: any;
-    board?: any;
-    medium?: any;
-    gradeLevel?: any;
-    subject?: any;
     topic?: any;
     framework: string;
     cloudStorageUrls?: string[];

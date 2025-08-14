@@ -3,6 +3,7 @@ import * as _ from 'lodash-es';
 import { EditorService } from '../../services/editor/editor.service';
 import { PlayerService } from '../../services/player/player.service';
 import { ConfigService } from '../../services/config/config.service';
+import { FrameworkService } from '../../services/framework/framework.service';
 declare var $: any;
 
 @Component({
@@ -17,13 +18,16 @@ export class ContentplayerPageComponent implements OnInit, OnChanges {
   @ViewChild("epubPlayer") epubPlayer: ElementRef;
   @ViewChild("videoPlayer") videoPlayer: ElementRef;
   @Input() contentMetadata: any;
+  @Input() framework: string;
   public contentDetails: any;
   public playerConfig: any;
   public content: any;
+  public contentInfo: any;
+  public contentInfoArray: any[] = [];
   public playerType: string;
   public contentId: string;
   constructor(private editorService: EditorService, private playerService: PlayerService,
-    public configService: ConfigService) { }
+    public configService: ConfigService, private frameworkService: FrameworkService) { }
 
   ngOnInit() { }
 
@@ -42,25 +46,91 @@ export class ContentplayerPageComponent implements OnInit, OnChanges {
         contentId: this.contentId,
         contentData: _.get(res, 'result.content')
       };
-      this.playerConfig = this.playerService.getPlayerConfig(this.contentDetails);
-      this.setPlayerType();
-      if (this.playerType === 'default-player') {
-        this.loadDefaultPlayer()
-      } else {
-        this.playerConfig.config = {
-          'traceId': 'afhjgh',
-          'sideMenu': {
-            'showDownload': true,
-            'showExit': true,
-            'showPrint': true,
-            'showReplay': true,
-            'showShare': true
-          }
-        };
-        this.loadPlayer()
-      }
 
+      const baseContentInfo = {
+        name: _.get(this.contentDetails, 'contentData.name'),
+        author: _.get(this.contentDetails, 'contentData.author'),
+        license: _.get(this.contentDetails, 'contentData.license'),
+        copyright: _.get(this.contentDetails, 'contentData.copyright')
+      };
+
+      const frameworkId = this.framework || this.frameworkService.organisationFramework;
+      this.frameworkService.getFrameworkCategories(frameworkId).subscribe(frameworkRes => {
+        const frameworkCategories = _.get(frameworkRes, 'result.framework.categories', []);
+        const frameworkCodes = frameworkCategories.map(category => category.code);
+
+        const matchedFields = frameworkCodes.reduce((acc, code) => {
+          if (_.has(this.contentDetails.contentData, code)) {
+            acc[code] = _.get(this.contentDetails.contentData, code);
+          }
+          return acc;
+        }, {});
+
+        this.contentInfo = { ...baseContentInfo, ...matchedFields };
+        this.prepareContentInfoArray();
+        this.initializeAndLoadPlayer();
+      }, err => {
+        console.error('Failed to fetch framework categories:', err);
+        this.contentInfo = baseContentInfo;
+        this.prepareContentInfoArray();
+        this.initializeAndLoadPlayer();
+      });
+
+    }, err => {
+      console.error('Failed to fetch content details:', err);
     });
+  }
+
+  initializeAndLoadPlayer() {
+    this.playerConfig = this.playerService.getPlayerConfig(this.contentDetails);
+    this.setPlayerType();
+    if (this.playerType === 'default-player') {
+      this.loadDefaultPlayer();
+    } else {
+      this.playerConfig.config = {
+        'traceId': 'afhjgh',
+        'sideMenu': {
+          'showDownload': true,
+          'showExit': true,
+          'showPrint': true,
+          'showReplay': true,
+          'showShare': true
+        }
+      };
+      this.loadPlayer();
+    }
+  }
+
+  prepareContentInfoArray() {
+    this.contentInfoArray = [];
+    let validIndex = 0;
+
+    Object.keys(this.contentInfo).forEach((key) => {
+      if (this.contentInfo[key] !== undefined && this.contentInfo[key] !== null && this.contentInfo[key] !== '') {
+        let displayValue = this.contentInfo[key];
+        if (Array.isArray(displayValue)) {
+          displayValue = displayValue.join(', ');
+        }
+
+        this.contentInfoArray.push({
+          key,
+          label: this.capitalizeFirstLetter(key),
+          value: displayValue,
+          columnClass: this.getColumnClass(validIndex)
+        });
+        validIndex++;
+      }
+    });
+  }
+
+  capitalizeFirstLetter(str: string): string {
+    if (!str) return str;
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  getColumnClass(index: number): string {
+    const columnClasses = ['six wide column', 'four wide column', 'two wide column'];
+    return columnClasses[index % columnClasses.length];
   }
 
   setPlayerType() {
@@ -129,7 +199,7 @@ export class ContentplayerPageComponent implements OnInit, OnChanges {
         const epubElement = document.createElement('sunbird-epub-player');
         this.setPlayerProperties(epubElement)
         this.epubPlayer.nativeElement.append(epubElement);
-      }else if (this.playerType === "video-player") {
+      } else if (this.playerType === "video-player") {
         const videoElement = document.createElement('sunbird-video-player');
         this.setPlayerProperties(videoElement)
         this.videoPlayer.nativeElement.append(videoElement);

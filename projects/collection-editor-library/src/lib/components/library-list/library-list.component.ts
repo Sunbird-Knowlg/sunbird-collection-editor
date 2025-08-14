@@ -2,6 +2,8 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewEncapsulation } fro
 import { ConfigService } from '../../services/config/config.service';
 import { EditorService } from '../../services/editor/editor.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
+import { FrameworkService } from '../../services/framework/framework.service';
+import * as _ from 'lodash-es';
 
 @Component({
   selector: 'lib-library-list',
@@ -12,14 +14,31 @@ import { EditorTelemetryService } from '../../services/telemetry/telemetry.servi
 export class LibraryListComponent implements OnInit {
 @Input() contentList;
 @Input() showAddedContent: any;
+@Input() framework: string;
 @Output() contentChangeEvent = new EventEmitter<any>();
 @Output() moveEvent = new EventEmitter<any>();
 @Input() selectedContent: any;
 public sortContent = false;
+public categoryCode: string;
   constructor(public editorService: EditorService, public telemetryService: EditorTelemetryService,
-              public configService: ConfigService ) { }
+              public configService: ConfigService, private frameworkService: FrameworkService ) { }
 
   ngOnInit() {
+    this.getFrameworkCategories();
+  }
+
+  getFrameworkCategories() {
+    const frameworkId = this.framework || this.frameworkService.organisationFramework;
+    if (frameworkId) {
+      this.frameworkService.getFrameworkCategories(frameworkId).subscribe(frameworkRes => {
+        const frameworkCategories = _.get(frameworkRes, 'result.framework.categories', []);
+        if (frameworkCategories.length > 0) {
+          this.categoryCode = frameworkCategories[0].code;
+        }
+      }, err => {
+        console.error('Failed to fetch framework categories:', err);
+      });
+    }
   }
 
   onContentChange(selectedContent: any) {

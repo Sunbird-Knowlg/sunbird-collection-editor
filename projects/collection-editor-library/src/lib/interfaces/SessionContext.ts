@@ -1,8 +1,4 @@
 export interface SessionContext {
-    board?: string;
-    medium?: any;
-    gradeLevel?: any;
-    subject?: any;
     topic?: any;
     author?: string;
     channel?: string;
