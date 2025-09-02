@@ -5,6 +5,142 @@ Contains Collection Editor library components powered by angular. These componen
 ![image](https://user-images.githubusercontent.com/36467967/153172086-5552cfe4-ad39-4b70-b015-e7553610a6fa.png)
 
 # :bookmark_tabs: Getting Started
+
+# Use as web components	
+Any web based application can use this library as a web component. It accepts couple of inputs and triggers editorEmitter events back to the application.
+
+Follow below-mentioned steps to use it in plain javascript project:
+
+- Insert [library](https://github.com/Sunbird-Knowlg/sunbird-collection-editor/blob/release-5.6.0/web-component/sunbird-collection-editor.js) as below:
+	```javascript
+	<script type="text/javascript" src="sunbird-collection-editor.js"></script>
+	```
+- Update below script in index.html file 
+	```javascript
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/reflect-metadata/0.1.13/Reflect.min.js"
+      integrity="sha512-jvbPH2TH5BSZumEfOJZn9IV+5bSwwN+qG4dvthYe3KCGC3/9HmxZ4phADbt9Pfcp+XSyyfc2vGZ/RMsSUZ9tbQ=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	```
+
+- Get sample editorConfig from here: [editorConfig](https://github.com/Sunbird-Knowlg/sunbird-collection-editor/blob/release-5.6.0/web-component-demo/index.html)
+
+- Create a custom html element: `lib-editor`
+	```javascript
+    const  editorElement = document.createElement('lib-editor');
+   ```
+
+- Pass data using `editor-config`
+	```javascript
+	editorElement.setAttribute('editor-config', JSON.stringify(editorConfig));
+	```
+
+	**Note:** Attribute name should be in kebab-case regardless of the actual Attribute name used in the Angular app. The value of the attribute should be in **string** type, as web-component does not accept any objects or arrays.
+
+- Listen for the output events: **editorEmitter**
+
+	```javascript
+	editorElement.addEventListener('editorEmitter', (event) => {
+		console.log("On editorEmitter", event);
+	});
+	```
+- Append this element to existing element
+	```javascript
+	const  collectionEditor = document.getElementById("my-editor");
+	collectionEditor.appendChild(editorElement);
+	```
+- Refer demo [example](https://github.com/Sunbird-Knowlg/sunbird-collection-editor/blob/release-5.6.0/web-component-demo/index.html)
+
+- To run the demo project, use the following commands:
+	```bash
+  cd web-component-demo
+	npx http-server --cors .
+	```
+	open [http://127.0.0.1:8080/](http://127.0.0.1:8080/)
+	**Note:** Due to cors errors when you open the index.html from demo folder as file, it is recomanded to run a static server in it like [http-server](https://www.npmjs.com/package/http-server).
+
+
+# Use as Web component  in the Angular app
+
+- Run command 
+  ```bash
+    npm i @project-sunbird/sunbird-collection-editor-web-component
+    npm i reflect-metadata
+  ```
+
+- Add these entries in angular json file inside assets, scripts and styles like below
+
+  ```bash
+            "assets": [
+              "src/favicon.ico",
+              "src/assets",
+              {
+                "glob": "**/*.*",
+                "input": "./node_modules/@project-sunbird/sunbird-collection-editor-web-component/assets",
+                "output": "/assets/"
+              }
+            ],
+            "styles": [
+              "src/styles.scss",
+              "node_modules/@project-sunbird/sunbird-collection-editor-web-component/styles.css"
+            ],
+            "scripts": [
+              "node_modules/reflect-metadata/Reflect.js",
+              "node_modules/@project-sunbird/sunbird-collection-editor-web-component/sunbird-collection-editor.js"
+            ]
+
+  ```
+
+- Import  CUSTOM_ELEMENTS_SCHEMA in app module and add it to the NgModule as part of schemas like below
+
+	```javascript
+  ...
+  import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+  ...
+
+  @NgModule({
+    ...
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    ...
+  })
+
+	```
+
+- Integrating sunbird-collection-editor web component in angular component
+    
+  Create a viewChild in html template of the angular component like
+
+  ```bash
+
+      <div #editor></div>
+
+  ```
+
+  Refer the viewChild in ts file of the component and create the pdf player using document.createElement, then attach the player config and listen to the player and telemetry events like below and since we are rendering using viewChild these steps should be under ngAfterViewInit hook of the angular component.
+
+```bash
+
+....
+
+@ViewChild('editor') editor: ElementRef;
+
+  ....
+ ngAfterViewInit() {
+    const editorConfig = <Config need be added>;
+      const editorElement = document.createElement('lib-editor');
+      editorElement.setAttribute('editor-config', JSON.stringify(editorConfig));
+
+      editorElement.addEventListener('editorEmitter', (event) => {
+        console.log("On editorEmitter event", event);
+      });
+
+      this.editor.nativeElement.append(editorElement);
+  }
+  ....
+
+```
+
+
+# Use as Angular library in angular app
 This guide explains how to set up your Angular project to begin using the collection editor library. It includes information on prerequisites, installing editor library, and optionally displaying a sample editor library component in your application to verify your setup.
 
 If you are new to Angular or getting started with a new Angular application, see [Angular's full Getting Started Guide](https://angular.io/start) and [Setting up your environment](https://angular.io/guide/setup-local).
@@ -35,16 +171,13 @@ npm i @project-sunbird/client-services --save
 npm i export-to-csv --save
 npm i moment --save
 npm i @project-sunbird/ckeditor-build-classic --save
-npm i @project-sunbird/sunbird-pdf-player-v9 --save
-npm i @project-sunbird/sunbird-epub-player-v9 --save
-npm i @project-sunbird/sunbird-video-player-v9 --save
+npm i @project-sunbird/sunbird-pdf-player-web-component
+npm i @project-sunbird/sunbird-epub-player-web-component
+npm i @project-sunbird/sunbird-video-player-web-component
 npm i @project-sunbird/sunbird-quml-player --save
 npm i ngx-bootstrap@6.0.0 --save
 npm i fine-uploader --save
 npm i ngx-chips@2.2.0 --save
-npm i epubjs --save
-npm i videojs-contrib-quality-levels --save
-npm i videojs-http-source-selector --save
 npm i jquery --save
 npm i express-http-proxy --save
 npm i mathjax-full --save
@@ -90,12 +223,17 @@ Now open the `angular.json` file and add the following under `architect.build.as
         ...
 +        {
 +          "glob": "**/*",
-+          "input": "node_modules/@project-sunbird/sunbird-pdf-player-v9/lib/assets/",
++          "input": "node_modules/@project-sunbird/sunbird-pdf-player-web-component/lib/assets/",
 +         "output": "/assets/"
 +        },
 +        {
 +          "glob": "**/*",
-+          "input": "node_modules/@project-sunbird/sunbird-video-player-v9/lib/assets/",
++          "input": "node_modules/@project-sunbird/sunbird-video-player-web-component/lib/assets/",
++          "output": "/assets/"
++        },
+{
++          "glob": "**/*",
++          "input": "node_modules/@project-sunbird/sunbird-epub-player-web-component/lib/assets/",
 +          "output": "/assets/"
 +        },
 +        {
@@ -116,13 +254,14 @@ Now open the `angular.json` file and add the following under `architect.build.as
 +        "src/assets/lib/semantic/semantic.min.css",
 +        "src/assets/styles/styles.scss",
 +        "node_modules/font-awesome/css/font-awesome.css",
-+        "node_modules/video.js/dist/video-js.min.css",
-+        "node_modules/@project-sunbird/sunbird-video-player-v9/lib/assets/videojs.markers.min.css",
-+        "node_modules/videojs-http-source-selector/dist/videojs-http-source-selector.css"
++        "node_modules/@project-sunbird/sunbird-pdf-player-web-component/styles.css",
++        "node_modules/@project-sunbird/sunbird-video-player-web-component/styles.css",
++        "node_modules/@project-sunbird/sunbird-epub-player-web-component/styles.css",
+
       ],
       "scripts": [
         ...
-+        "node_modules/epubjs/dist/epub.js",
+
 +        "src/assets/libs/iziToast/iziToast.min.js",
 +        "node_modules/jquery/dist/jquery.min.js",
 +        "node_modules/jquery.fancytree/dist/jquery.fancytree-all-deps.min.js",
@@ -131,10 +270,10 @@ Now open the `angular.json` file and add the following under `architect.build.as
 +        "src/assets/lib/modal.min.js",
 +        "src/assets/lib/semantic-ui-tree-picker.js",
 +        "node_modules/@project-sunbird/client-services/index.js",
-+        "node_modules/video.js/dist/video.js",
-+        "node_modules/@project-sunbird/sunbird-video-player-v9/lib/assets/videojs-markers.js",
-+        "node_modules/videojs-contrib-quality-levels/dist/videojs-contrib-quality-levels.min.js",
-+        "node_modules/videojs-http-source-selector/dist/videojs-http-source-selector.min.js"
++        "node_modules/@project-sunbird/sunbird-pdf-player-web-component/sunbird-pdf-player.js",
++        "node_modules/@project-sunbird/sunbird-video-player-web-component/sunbird-video-player.js",
++        "node_modules/@project-sunbird/sunbird-epub-player-web-component/sunbird-epub-player.js",
+
       ]
     }
   }
@@ -313,3 +452,36 @@ To see your application in the browser, go to [http://localhost:4200](http://loc
 [Contribution guidelines for this project](docs/CONTRIBUTING.md)
 
 [Configuration guidelines for this project](docs/CONFIGURATION.md)
+
+
+## Code Quality
+
+The project maintains code quality through automated checks that run on every pull request:
+
+1. **Linting**
+   - ESLint for code style and quality
+   - Command: `npm run lint`
+
+2. **Dependencies**
+   - Uses `npm ` for deterministic installations
+   - GitHub Actions cache for faster builds
+
+3. **Testing**
+   - Unit tests using Karma
+   - Command: `npm run test-coverage`
+
+These checks ensure consistent code style, secure dependency management, and reliable testing.
+
+### Package Publishing
+
+ The project has two automated publishing workflows which build and publishes NPM packages whenever a new tag is pushed to the repository.
+
+ 1. **Angular Module**
+    - Builds package with `npm run build-lib`
+    - Creates NPM package
+    - Publishes to NPM registry as @project-sunbird/sunbird-collection-editor, using NPM authentication token (must be provided as GitHub secret `NPM_TOKEN`)
+
+ 2. **Web Component**
+    - Builds package with `npm run build-web-component`
+    - Creates NPM package
+    - Publishes to NPM registry as @project-sunbird/sunbird-collection-editor-web-component, using NPM authentication token (must be provided as GitHub secret `NPM_TOKEN`)

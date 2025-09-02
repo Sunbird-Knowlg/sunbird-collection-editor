@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 import { TreeService } from '../../services/tree/tree.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
 import { ConfigService } from '../../services/config/config.service';
-import { SuiModule } from 'ng2-semantic-ui-v9';
+import { SuiModule } from '@project-sunbird/ng2-semantic-ui';
 import { HelperService } from '../../services/helper/helper.service';
 import { BranchingLogic } from '../question/question.component.spec.data';
 import * as _ from 'lodash-es';

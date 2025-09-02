@@ -107,6 +107,17 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
+
+    if (this.editorConfig) {
+      if (typeof this.editorConfig === 'string') {
+        try {
+          this.editorConfig = JSON.parse(this.editorConfig);
+        } catch (error) {
+          console.error('Invalid editorConfig: ', error);
+        }
+      }
+    }
+    
     this.editorService.initialize(this.editorConfig);
     this.editorMode = this.editorService.editorMode;
     this.treeService.initialize(this.editorConfig);
@@ -919,11 +930,11 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   generateTelemetryEndEvent() {
     const telemetryEnd = {
       type: 'editor',
-      pageid: this.telemetryService.telemetryPageId,
+      pageid: this.telemetryService?.telemetryPageId,
       mode: this.editorMode,
       duration: _.toString((Date.now() - this.pageStartTime) / 1000)
     };
-    this.telemetryService.end(telemetryEnd);
+    this.telemetryService?.end(telemetryEnd);
   }
 
   handleTemplateSelection($event) {
@@ -1176,7 +1187,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
-    if (this.telemetryService) {
+    if (this.telemetryService && this.telemetryService?.end) {
       this.generateTelemetryEndEvent();
     }
     if (this.treeService) {
@@ -1191,8 +1202,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.unSubscribeshowQuestionLibraryPageEmitter) {
       this.unSubscribeshowQuestionLibraryPageEmitter.unsubscribe();
     }
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+    this.unsubscribe$ && this.unsubscribe$.next();
+    this.unsubscribe$ && this.unsubscribe$.complete();
   }
 
 
