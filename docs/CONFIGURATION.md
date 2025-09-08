@@ -26,7 +26,7 @@ export interface IEditorConfig {
 This required property from the `collectionEditorConfig` provides the context to the editor mostly in terms of the telemetry and it used these properties when the editor launch.
 
 ```javascript
-export interface Context {
+export interface ContextBase {
     programId?: string;
     contributionOrgId?: string;
     user: User;
@@ -51,10 +51,6 @@ export interface Context {
     };
     env: string;
     defaultLicense?: any;
-    board?: any;
-    medium?: any;
-    gradeLevel?: any;
-    subject?: any;
     topic?: any;
     framework: string;
     cloudStorageUrls?: string[];
@@ -71,6 +67,10 @@ export interface Context {
     collectionPrimaryCategory?: string;
     targetFWIds?: string[];
     cloudStorage?: any;
+}
+
+export interface Context extends ContextBase{
+    [key: string]: any;
 }
 ```
 

@@ -51,11 +51,7 @@ export class LibraryFilterComponent implements OnInit, OnChanges {
     }
 
     this.currentFilters = {
-      primaryCategory: contentTypes,
-      board: [],
-      medium: [],
-      gradeLevel: [],
-      subject: [],
+      primaryCategory: contentTypes
     };
     this.setFilterDefaultValues();
     this.fetchFrameWorkDetails();

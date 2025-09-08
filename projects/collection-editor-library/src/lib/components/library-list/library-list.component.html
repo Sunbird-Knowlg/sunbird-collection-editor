@@ -31,7 +31,7 @@
               <div class="sbcard__title mb-0 font-weight-bold ellipsis w-75" popupDelay="1000" suiPopup
               popupText="{{content.name}}">{{content.name}}</div>
               <div class="sbchapter__item__title text-left sb__ellipsis sb__ellipsis--two mr-8 sb-color-black">
-              <span *ngIf="content.board"> By {{content.board}} </span>
+              <span *ngIf="categoryCode && content[categoryCode]"> By {{content[categoryCode]}} </span>
               </div>
             </h4>
           </div>
