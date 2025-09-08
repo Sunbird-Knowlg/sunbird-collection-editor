@@ -26,11 +26,11 @@
     <div class="sb-g add-to-library__toc-player">
       <!-- Left Sidebar for cards -->
       <section class="sb-g-col-xs-12 sb-g-col-md-4 sb-g-col-lg-4">
-          <lib-library-list (contentChangeEvent)= "onContentChangeEvent($event)" [selectedContent] = "selectedContent"[contentList]="contentList" [showAddedContent]="showAddedContent" (moveEvent)="showResourceTemplate($event)" [framework]="framework"></lib-library-list>
+          <lib-library-list (contentChangeEvent)= "onContentChangeEvent($event)" [selectedContent] = "selectedContent"[contentList]="contentList" [showAddedContent]="showAddedContent" (moveEvent)="showResourceTemplate($event)"></lib-library-list>
       </section>
       <!-- Right Player Sections -->
       <section class="sb-g-col-xs-12 sb-g-col-md-8 sb-g-col-lg-8 relative position ml-24">
-          <lib-library-player [contentListDetails]="selectedContent" (moveEvent)="showResourceTemplate($event)" [framework]="framework"></lib-library-player>
+          <lib-library-player [contentListDetails]="selectedContent" (moveEvent)="showResourceTemplate($event)"></lib-library-player>
       </section>
     </div>
   </div>

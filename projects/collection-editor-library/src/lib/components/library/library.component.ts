@@ -16,7 +16,6 @@ import { HelperService } from '../../services/helper/helper.service';
 })
 export class LibraryComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() libraryInput: any;
-  @Input() framework: string;
   @Output() libraryEmitter = new EventEmitter<any>();
   public searchFormConfig: any;
   public pageId = 'add_from_library';

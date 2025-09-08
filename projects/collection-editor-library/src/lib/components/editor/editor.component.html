@@ -59,7 +59,7 @@
                 (toolbarEmitter)="toolbarEventListener($event)"></lib-meta-form>
               </ng-container>
               <ng-container *ngIf="isCurrentNodeFolder === false && isCurrentNodeRoot !== true">
-                  <lib-contentplayer-page *ngIf="!isQumlPlayer"  [contentMetadata]="selectedNodeData" [framework]="organisationFramework"></lib-contentplayer-page>
+                  <lib-contentplayer-page *ngIf="!isQumlPlayer"  [contentMetadata]="selectedNodeData"></lib-contentplayer-page>
                   <lib-qumlplayer-page *ngIf="isQumlPlayer" [questionMetaData]="selectedNodeData" [questionSetHierarchy]="collectionTreeNodes?.data"
                       (toolbarEmitter)="toolbarEventListener($event)">
                     </lib-qumlplayer-page>
@@ -147,7 +147,7 @@
     <lib-library [libraryInput]="questionlibraryInput" (libraryEmitter)="onQuestionLibraryChange($event)"></lib-library>
   </ng-container>
   <ng-container *ngSwitchCase="'library'">
-    <lib-content-library [libraryInput]="libraryComponentInput" (libraryEmitter)="libraryEventListener($event)" [framework]="organisationFramework">
+    <lib-content-library [libraryInput]="libraryComponentInput" (libraryEmitter)="libraryEventListener($event)">
     </lib-content-library>
   </ng-container>
   <ng-container *ngSwitchCase="'question'">

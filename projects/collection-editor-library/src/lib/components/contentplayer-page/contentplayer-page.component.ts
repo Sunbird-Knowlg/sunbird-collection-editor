@@ -18,7 +18,6 @@ export class ContentplayerPageComponent implements OnInit, OnChanges {
   @ViewChild("epubPlayer") epubPlayer: ElementRef;
   @ViewChild("videoPlayer") videoPlayer: ElementRef;
   @Input() contentMetadata: any;
-  @Input() framework: string;
   public contentDetails: any;
   public playerConfig: any;
   public content: any;
@@ -54,23 +53,32 @@ export class ContentplayerPageComponent implements OnInit, OnChanges {
         copyright: _.get(this.contentDetails, 'contentData.copyright')
       };
 
-      const frameworkId = this.framework || this.frameworkService.organisationFramework;
-      this.frameworkService.getFrameworkCategories(frameworkId).subscribe(frameworkRes => {
-        const frameworkCategories = _.get(frameworkRes, 'result.framework.categories', []);
-        const frameworkCodes = frameworkCategories.map(category => category.code);
+      const frameworkId = this.frameworkService.organisationFramework;
+      this.frameworkService.getTargetFrameworkCategories([frameworkId]);
+      this.frameworkService.frameworkData$.subscribe(frameworkData => {
+        if (frameworkData?.frameworkdata[frameworkId]) {
+          const categories = frameworkData.frameworkdata[frameworkId].categories || [];
+          const frameworkCodes = categories?.map(category => category.code);
+          
+          const matchedFields = frameworkCodes.reduce((acc, code) => {
+            if (_.has(this.contentDetails.contentData, code)) {
+              acc[code] = _.get(this.contentDetails.contentData, code);
+            }
+            return acc;
+          }, {});
 
-        const matchedFields = frameworkCodes.reduce((acc, code) => {
-          if (_.has(this.contentDetails.contentData, code)) {
-            acc[code] = _.get(this.contentDetails.contentData, code);
-          }
-          return acc;
-        }, {});
-
-        this.contentInfo = { ...baseContentInfo, ...matchedFields };
-        this.prepareContentInfoArray();
-        this.initializeAndLoadPlayer();
+          this.contentInfo = { ...baseContentInfo, ...matchedFields };
+          this.prepareContentInfoArray();
+          this.initializeAndLoadPlayer();
+        } else {
+          // Fallback to base content info if framework data is not available
+          console.warn('Framework data not available for:', frameworkId);
+          this.contentInfo = baseContentInfo;
+          this.prepareContentInfoArray();
+          this.initializeAndLoadPlayer();
+        }
       }, err => {
-        console.error('Failed to fetch framework categories:', err);
+        console.error('Failed to get framework data:', err);
         this.contentInfo = baseContentInfo;
         this.prepareContentInfoArray();
         this.initializeAndLoadPlayer();

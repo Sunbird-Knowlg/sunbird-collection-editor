@@ -14,7 +14,6 @@ import * as _ from 'lodash-es';
 export class LibraryListComponent implements OnInit {
 @Input() contentList;
 @Input() showAddedContent: any;
-@Input() framework: string;
 @Output() contentChangeEvent = new EventEmitter<any>();
 @Output() moveEvent = new EventEmitter<any>();
 @Input() selectedContent: any;
@@ -28,15 +27,18 @@ public categoryCode: string;
   }
 
   getFrameworkCategories() {
-    const frameworkId = this.framework || this.frameworkService.organisationFramework;
+    const frameworkId = this.frameworkService.organisationFramework;
     if (frameworkId) {
-      this.frameworkService.getFrameworkCategories(frameworkId).subscribe(frameworkRes => {
-        const frameworkCategories = _.get(frameworkRes, 'result.framework.categories', []);
-        if (frameworkCategories.length > 0) {
-          this.categoryCode = frameworkCategories[0].code;
+      this.frameworkService.getTargetFrameworkCategories([frameworkId]);
+      this.frameworkService.frameworkData$.subscribe(frameworkData => {
+        if (frameworkData?.frameworkdata[frameworkId]) {
+          const categories = frameworkData.frameworkdata[frameworkId].categories || [];
+          if (categories.length) {
+            this.categoryCode = categories[0].code;
+          }
         }
       }, err => {
-        console.error('Failed to fetch framework categories:', err);
+        console.error('Failed to get framework data:', err);
       });
     }
   }
