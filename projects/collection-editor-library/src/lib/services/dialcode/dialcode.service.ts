@@ -185,10 +185,11 @@ export class DialcodeService implements DialcodeCursor {
         } else if (node.data.metadata.dialcodeRequired === 'Yes' && _.isEmpty(dialcodes)) {
           dialCodeMisssing = true;
           this.treeService.highlightNode(node.data.id, 'add');
-        } else if (node.data.metadata.dialcodeRequired === 'No' && !_.isEmpty(dialcodes)) {
-          dialCodeMisssing = true;
-          this.treeService.highlightNode(node.data.id, 'add');
-        }
+        } 
+        // else if (node.data.metadata.dialcodeRequired === 'No' && !_.isEmpty(dialcodes)) {
+        //   dialCodeMisssing = true;
+        //   this.treeService.highlightNode(node.data.id, 'add');
+        // }
       }
     });
     if (dialCodeMisssing) {
