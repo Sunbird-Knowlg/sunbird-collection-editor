@@ -1,4 +1,6 @@
-import { Component, ElementRef, Input, OnInit, ViewChild, OnChanges, ViewEncapsulation, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild, OnChanges, ViewEncapsulation, AfterViewInit, OnDestroy } from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import * as _ from 'lodash-es';
 import { EditorService } from '../../services/editor/editor.service';
 import { PlayerService } from '../../services/player/player.service';
@@ -12,7 +14,7 @@ declare var $: any;
   styleUrls: ['./contentplayer-page.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ContentplayerPageComponent implements OnInit, OnChanges {
+export class ContentplayerPageComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('contentIframe') contentIframe: ElementRef;
   @ViewChild("pdfPlayer") pdfPlayer: ElementRef;
   @ViewChild("epubPlayer") epubPlayer: ElementRef;
@@ -25,10 +27,16 @@ export class ContentplayerPageComponent implements OnInit, OnChanges {
   public contentInfoArray: any[] = [];
   public playerType: string;
   public contentId: string;
+  private destroy$ = new Subject<void>();
   constructor(private editorService: EditorService, private playerService: PlayerService,
     public configService: ConfigService, private frameworkService: FrameworkService) { }
 
   ngOnInit() { }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   ngOnChanges() {
     this.contentMetadata = _.get(this.contentMetadata, 'data.metadata') || this.contentMetadata;
@@ -55,7 +63,9 @@ export class ContentplayerPageComponent implements OnInit, OnChanges {
 
       const frameworkId = this.frameworkService.organisationFramework;
       this.frameworkService.getTargetFrameworkCategories([frameworkId]);
-      this.frameworkService.frameworkData$.subscribe(frameworkData => {
+      this.frameworkService.frameworkData$.pipe(
+        takeUntil(this.destroy$)
+      ).subscribe(frameworkData => {
         if (frameworkData?.frameworkdata[frameworkId]) {
           const categories = frameworkData.frameworkdata[frameworkId].categories || [];
           const frameworkCodes = categories?.map(category => category.code);
@@ -68,15 +78,13 @@ export class ContentplayerPageComponent implements OnInit, OnChanges {
           }, {});
 
           this.contentInfo = { ...baseContentInfo, ...matchedFields };
-          this.prepareContentInfoArray();
-          this.initializeAndLoadPlayer();
         } else {
           // Fallback to base content info if framework data is not available
           console.warn('Framework data not available for:', frameworkId);
           this.contentInfo = baseContentInfo;
-          this.prepareContentInfoArray();
-          this.initializeAndLoadPlayer();
         }
+        this.prepareContentInfoArray();
+        this.initializeAndLoadPlayer();
       }, err => {
         console.error('Failed to get framework data:', err);
         this.contentInfo = baseContentInfo;

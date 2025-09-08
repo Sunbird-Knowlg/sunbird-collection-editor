@@ -1,4 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewEncapsulation, OnDestroy } from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { ConfigService } from '../../services/config/config.service';
 import { EditorService } from '../../services/editor/editor.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
@@ -11,7 +13,7 @@ import * as _ from 'lodash-es';
   styleUrls: ['./library-list.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class LibraryListComponent implements OnInit {
+export class LibraryListComponent implements OnInit, OnDestroy {
 @Input() contentList;
 @Input() showAddedContent: any;
 @Output() contentChangeEvent = new EventEmitter<any>();
@@ -19,6 +21,7 @@ export class LibraryListComponent implements OnInit {
 @Input() selectedContent: any;
 public sortContent = false;
 public categoryCode: string;
+private destroy$ = new Subject<void>();
   constructor(public editorService: EditorService, public telemetryService: EditorTelemetryService,
               public configService: ConfigService, private frameworkService: FrameworkService ) { }
 
@@ -26,11 +29,18 @@ public categoryCode: string;
     this.getFrameworkCategories();
   }
 
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   getFrameworkCategories() {
     const frameworkId = this.frameworkService.organisationFramework;
     if (frameworkId) {
       this.frameworkService.getTargetFrameworkCategories([frameworkId]);
-      this.frameworkService.frameworkData$.subscribe(frameworkData => {
+      this.frameworkService.frameworkData$.pipe(
+        takeUntil(this.destroy$)
+      ).subscribe(frameworkData => {
         if (frameworkData?.frameworkdata[frameworkId]) {
           const categories = frameworkData.frameworkdata[frameworkId].categories || [];
           if (categories.length) {
