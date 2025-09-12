@@ -206,20 +206,63 @@ export class ContentplayerPageComponent implements OnInit, OnChanges, OnDestroy 
   }
 
   loadPlayer() {
-    setTimeout(() => {
-      if (this.playerType === "pdf-player") {
-        const pdfElement = document.createElement('sunbird-pdf-player');
-        this.setPlayerProperties(pdfElement)
-        this.pdfPlayer.nativeElement.append(pdfElement);
-      } else if (this.playerType === "epub-player") {
-        const epubElement = document.createElement('sunbird-epub-player');
-        this.setPlayerProperties(epubElement)
-        this.epubPlayer.nativeElement.append(epubElement);
-      } else if (this.playerType === "video-player") {
-        const videoElement = document.createElement('sunbird-video-player');
-        this.setPlayerProperties(videoElement)
-        this.videoPlayer.nativeElement.append(videoElement);
-      }
-    }, 500)
+    const checkCustomElement = (tagName: string) => {
+      return customElements.get(tagName) !== undefined;
+    };
+
+    const waitForCustomElement = (tagName: string): Promise<void> => {
+      return new Promise((resolve) => {
+        if (checkCustomElement(tagName)) {
+          resolve();
+        } else {
+          console.log(`Falling back to default player for ${tagName} content`);
+          this.playerType = 'default-player';
+          this.loadDefaultPlayer();
+          resolve();
+        }
+      });
+    };
+
+    const initializePlayer = (element: any) => {
+      setTimeout(() => {
+        if (element.playerConfig !== this.playerConfig) {
+          element.playerConfig = this.playerConfig;
+        }
+        
+        element.dispatchEvent(new CustomEvent('playerConfigUpdated', {
+          detail: this.playerConfig
+        }));
+        
+        if (typeof element.ngOnInit === 'function') {
+          element.ngOnInit();
+        }
+      }, 200);
+    };
+
+    if (this.playerType === "pdf-player") {
+      waitForCustomElement('sunbird-pdf-player').then(() => {
+        const pdfElement = document.createElement('sunbird-pdf-player') as any;
+        this.setPlayerProperties(pdfElement);
+        this.pdfPlayer.nativeElement.innerHTML = ''; // Clear any existing content
+        this.pdfPlayer.nativeElement.appendChild(pdfElement);
+        initializePlayer(pdfElement);
+      });
+    } else if (this.playerType === "epub-player") {
+      waitForCustomElement('sunbird-epub-player').then(() => {
+        const epubElement = document.createElement('sunbird-epub-player') as any;
+        this.setPlayerProperties(epubElement);
+        this.epubPlayer.nativeElement.innerHTML = ''; // Clear any existing content
+        this.epubPlayer.nativeElement.appendChild(epubElement);
+        initializePlayer(epubElement);
+      });
+    } else if (this.playerType === "video-player") {
+      waitForCustomElement('sunbird-video-player').then(() => {
+        const videoElement = document.createElement('sunbird-video-player') as any;
+        this.setPlayerProperties(videoElement);
+        this.videoPlayer.nativeElement.innerHTML = ''; // Clear any existing content
+        this.videoPlayer.nativeElement.appendChild(videoElement);
+        initializePlayer(videoElement);
+      });
+    }
   }
 }
