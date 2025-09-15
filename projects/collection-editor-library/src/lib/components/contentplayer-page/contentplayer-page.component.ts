@@ -103,7 +103,16 @@ export class ContentplayerPageComponent implements OnInit, OnChanges, AfterViewI
     if (this.playerType === 'default-player') {
       this.loadDefaultPlayer();
     } else {
-      this.playerConfig.config = {};
+      this.playerConfig.config = {
+        'traceId': 'afhjgh',
+        'sideMenu': {
+          'showDownload': true,
+          'showExit': true,
+          'showPrint': true,
+          'showReplay': true,
+          'showShare': true
+        }
+      };
       this.loadPlayer();
     }
   }
