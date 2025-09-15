@@ -13,6 +13,9 @@ declare var $: any;
   encapsulation: ViewEncapsulation.None,
 })
 export class ContentplayerPageComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
+  private static readonly PLAYER_INITIALIZATION_TIMEOUT = 200;
+  private static readonly CUSTOM_ELEMENT_CHECK_INTERVAL = 100;
+  private static readonly CUSTOM_ELEMENT_MAX_ATTEMPTS = 100;
   @ViewChild('contentIframe') contentIframe: ElementRef;
   @ViewChild("pdfPlayer", { static: false }) pdfPlayer: ElementRef;
   @ViewChild("epubPlayer", { static: false }) epubPlayer: ElementRef;
@@ -280,7 +283,7 @@ export class ContentplayerPageComponent implements OnInit, OnChanges, AfterViewI
           resolve();
         } else {
           let attempts = 0;
-          const maxAttempts = 100; // 10 seconds with 100ms intervals
+          const maxAttempts = ContentplayerPageComponent.CUSTOM_ELEMENT_MAX_ATTEMPTS;
           
           const interval = setInterval(() => {
             attempts++;
@@ -291,7 +294,7 @@ export class ContentplayerPageComponent implements OnInit, OnChanges, AfterViewI
               clearInterval(interval);
               resolve();
             }
-          }, 100);
+          }, ContentplayerPageComponent.CUSTOM_ELEMENT_CHECK_INTERVAL);
         }
       });
     };
@@ -313,7 +316,7 @@ export class ContentplayerPageComponent implements OnInit, OnChanges, AfterViewI
         } catch (error) {
           console.error('Error initializing player:', error);
         }
-      }, 200);
+      }, ContentplayerPageComponent.PLAYER_INITIALIZATION_TIMEOUT);
     };
 
     if (this.playerType === "pdf-player") {
