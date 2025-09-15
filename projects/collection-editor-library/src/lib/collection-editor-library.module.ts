@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { CommonFormElementsModule, DialcodeCursor } from '@project-sunbird/common-form-elements-full';
 import { SuiModule } from '@project-sunbird/ng2-semantic-ui';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
@@ -101,7 +101,7 @@ import { QualityParamsModalComponent } from './components/quality-params-modal/q
   providers: [
     { provide: DialcodeCursor, useExisting: DialcodeService }
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
   exports: [EditorComponent],
 })
 export class CollectionEditorLibraryModule {}

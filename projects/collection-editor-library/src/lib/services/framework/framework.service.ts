@@ -94,6 +94,10 @@ export class FrameworkService {
     this._selectedOrganisationFramework = framework;
   }
 
+  public get frameworkData(): FrameworkData {
+    return this._frameworkData;
+  }
+
 
   getFrameworkData(channel?, type?, identifier?, systemDefault?) {
     const option = {
