@@ -80,7 +80,6 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
   }
 
   fetchFrameWorkDetails() {
-    console.log('frameworkService.organisationFramework in ce', this.frameworkService.organisationFramework);
     if (this.frameworkService.organisationFramework) {
       this.frameworkService.frameworkData$.pipe(
         takeUntil(this.onComponentDestroy$),
