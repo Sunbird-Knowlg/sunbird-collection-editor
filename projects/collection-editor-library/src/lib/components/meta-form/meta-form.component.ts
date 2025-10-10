@@ -124,17 +124,43 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
     let formConfig: any = (_.get(metaDataFields, 'visibility') === 'Default') || isRootNode ? _.cloneDeep(this.rootFormConfig) : _.cloneDeep(this.unitFormConfig);
     formConfig = formConfig && _.has(_.first(formConfig), 'fields') ? formConfig : [{name: '', fields: formConfig}];
     if (!_.isEmpty(this.frameworkDetails.targetFrameworks)) {
+      const fieldTermsMap = new Map();
       _.forEach(this.frameworkDetails.targetFrameworks, (framework) => {
         _.forEach(formConfig, (section) => {
           _.forEach(section.fields, field => {
             const frameworkCategory = _.find(framework.categories, category => {
               return category.code === field.sourceCategory && _.includes(field.code, 'target');
             });
-            if (!_.isEmpty(frameworkCategory)) { // field.code
-              field.terms = frameworkCategory.terms;
+            if (!_.isEmpty(frameworkCategory)) {
+              field.terms = _.cloneDeep(frameworkCategory.terms);
+              fieldTermsMap.set(field.code, field.terms);
             }
           });
         });
+      });
+
+      _.forEach(formConfig, (section) => {
+        const fields = section.fields || [];
+        for (let i = 0; i < fields.length - 1; i++) {
+          const currentField = fields[i];
+          const nextField = fields[i + 1];
+          const nextFieldDependsOnCurrent = nextField.depends && Array.isArray(nextField.depends) && nextField.depends.includes(currentField.code);
+          if (currentField.terms && fieldTermsMap.has(nextField.code) && nextFieldDependsOnCurrent) {
+            const nextFieldTerms = fieldTermsMap.get(nextField.code);
+            currentField.terms.forEach(term => {
+              if (term && (!term.associations || _.isEmpty(term.associations))) {  
+                term.associations = nextFieldTerms.map(nextTerm => ({
+                  identifier: nextTerm.identifier,
+                  code: nextTerm.code,
+                  name: nextTerm.name,
+                  description: nextTerm.description,
+                  category: nextTerm.category,
+                  status: nextTerm.status
+                }));
+              }
+            });
+          }
+        }
       });
     }
 
