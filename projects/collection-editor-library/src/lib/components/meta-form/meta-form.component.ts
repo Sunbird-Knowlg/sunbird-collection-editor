@@ -144,11 +144,11 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
         for (let i = 0; i < fields.length - 1; i++) {
           const currentField = fields[i];
           const nextField = fields[i + 1];
-          
-          if (currentField.terms && fieldTermsMap.has(nextField.code)) {
+          const nextFieldDependsOnCurrent = nextField.depends && Array.isArray(nextField.depends) && nextField.depends.includes(currentField.code);
+          if (currentField.terms && fieldTermsMap.has(nextField.code) && nextFieldDependsOnCurrent) {
             const nextFieldTerms = fieldTermsMap.get(nextField.code);
             currentField.terms.forEach(term => {
-              if (term && !term.associations) {  
+              if (term && (!term.associations || _.isEmpty(term.associations))) {  
                 term.associations = nextFieldTerms.map(nextTerm => ({
                   identifier: nextTerm.identifier,
                   code: nextTerm.code,
