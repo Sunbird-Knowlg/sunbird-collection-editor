@@ -362,6 +362,14 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
     if (!_.isEmpty(this.appIcon) && this.showAppIcon) {
       data.appIcon = this.appIcon;
     }
+    
+    if (this.isReviewMode() && !data.name) {
+      const nodeTitle = this.nodeMetadata?.data?.metadata?.name;
+      if (nodeTitle) {
+        data.name = nodeTitle;
+      }
+    }
+      
     this.toolbarEmitter.emit({ button: 'onFormValueChange', data });
     this.treeService.updateNode(data);
   }
