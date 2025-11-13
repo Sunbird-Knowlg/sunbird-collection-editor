@@ -363,7 +363,6 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
       data.appIcon = this.appIcon;
     }
     
-    // TARGETED FIX: Inject API-based name in review mode if missing from form
     if (this.isReviewMode() && !data.name) {
       const nodeTitle = this.nodeMetadata?.data?.metadata?.name;
       if (nodeTitle) {
