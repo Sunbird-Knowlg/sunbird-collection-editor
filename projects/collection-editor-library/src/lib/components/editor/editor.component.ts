@@ -1193,6 +1193,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.treeService) {
       this.treeService.clearTreeCache();
     }
+     if (this.dialcodeService) {
+      this.dialcodeService.clearDialCodeMaps();
+    }
     if (this.modal && this.modal.deny) {
       this.modal.deny();
     }
