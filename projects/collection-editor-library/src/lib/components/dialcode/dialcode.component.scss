@@ -10,3 +10,12 @@
       }
     }
   }
+
+  .sb-btn-request{
+  background-color: var(--white);
+  border: calculateRem(1px) solid var(--gray-100);
+  color: var(--gray-200) !important;
+  border: 1px solid #cccccc;
+  cursor: default;
+  font-weight: normal;
+  }
