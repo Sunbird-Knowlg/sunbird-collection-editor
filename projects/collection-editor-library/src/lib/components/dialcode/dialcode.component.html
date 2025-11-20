@@ -52,7 +52,7 @@
                 </div>
             </div>
     
-            <button class="sb-btn sb-btn-normal sb-btn-primary" [ngClass]="dialcodeControl.valid ? '': 'sb-btn-request'" 
+            <button class="sb-btn sb-btn-normal sb-btn-primary" [ngClass]="dialcodeControl.valid ? '': 'sb-btn-request-disabled'" 
             [disabled]="!dialcodeControl.valid" (click)="submitDialcodeForm();" >{{configService.labelConfig?.button_labels?.request_btn_label}}</button>
         </div>
     </div>
