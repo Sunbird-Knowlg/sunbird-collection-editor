@@ -24,7 +24,8 @@ jobs:
         run: npx @angular/cli@16 version
 
       - name: Install dependencies
-        run: npm install --no-progress
+        run: |
+          npm install --no-progress
 
       - name: Building
         run: mkdir -p /tmp/logs && npm run build-lib:prod | tee /tmp/logs/build.log
