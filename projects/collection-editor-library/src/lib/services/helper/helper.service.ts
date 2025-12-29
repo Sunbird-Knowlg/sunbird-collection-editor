@@ -19,8 +19,12 @@ export class HelperService {
   // tslint:disable-next-line:variable-name
   private _channelData$ = new BehaviorSubject<any>(undefined);
 
+  public treeDepth = 0;
+
   public readonly channelData$: Observable<any> = this._channelData$
   .asObservable().pipe(skipWhile(data => data === undefined || data === null));
+  private shuffle = new BehaviorSubject<any>(undefined);
+  shuffleValue = this.shuffle.asObservable();
 
   constructor(private publicDataService: PublicDataService, private configService: ConfigService, private dataService: DataService) { }
 
@@ -31,6 +35,10 @@ export class HelperService {
       this._channelPrimaryCategories =  _.get(this._channelData, 'primaryCategories') || [];
       this._channelData$.next({ err: null, channelData: this._channelData });
     });
+  }
+
+  setShuffleValue(value) {
+    this.shuffle.next(value);
   }
 
   public get channelInfo(): any {
@@ -148,4 +156,20 @@ export class HelperService {
     };
     return this.publicDataService.patch(req);
   }
+
+  addDepthToHierarchy(arr, depth = 0, index = 0) {
+    if (arr && index < arr.length) {
+      _.forEach(arr, child => {
+        child.depth = depth;
+        if (depth > this.treeDepth) { this.treeDepth = depth; }
+        if (_.get(child, 'children.length')) {
+          return this.addDepthToHierarchy(child.children, depth + 1, 0);
+        }
+        return this.addDepthToHierarchy(child, depth, index + 1);
+
+      });
+    }
+    return;
+  }
+
 }

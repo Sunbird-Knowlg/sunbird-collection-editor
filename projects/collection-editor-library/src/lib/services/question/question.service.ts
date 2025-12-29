@@ -4,7 +4,7 @@ import { DataService } from '../../services/data/data.service';
 import { PublicDataService } from '../../services/public-data/public-data.service';
 import { ServerResponse } from '../../interfaces/serverResponse';
 import * as _ from 'lodash-es';
-import { UUID } from 'angular2-uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { ConfigService } from '../config/config.service';
@@ -87,7 +87,7 @@ export class QuestionService {
           content: {
             contentType: 'Asset',
             language: ['English'],
-            code: UUID.UUID(),
+            code: uuidv4(),
           }
         }
       }
@@ -120,6 +120,23 @@ export class QuestionService {
       url: `${this.configService.urlConFig.URLS.CONTENT.READ}${videoId}`
     };
     return this.publicDataService.get(reqParam);
+  }
+
+  getQuestionList(req, field?: any) {
+    const reqParam: any = {
+      url: this.configService.urlConFig.URLS.QuestionSet.QUESTION_LIST,
+      data: {
+        request: {
+          search: {
+            identifier: req
+          }
+        }
+      }
+    };
+    if (field){
+      reqParam.param = { fields: field };
+    }
+    return this.publicDataService.post(reqParam);
   }
 
 }

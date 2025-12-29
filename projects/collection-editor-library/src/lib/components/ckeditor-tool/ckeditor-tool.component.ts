@@ -8,6 +8,7 @@ import { EditorService } from '../../services/editor/editor.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
 import { ConfigService } from '../../services/config/config.service';
 import { config } from '../asset-browser/asset-browser.data';
+declare const SunbirdFileUploadLib: any;
 @Component({
   selector: 'lib-ckeditor-tool',
   templateUrl: './ckeditor-tool.component.html',
@@ -20,13 +21,14 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
   @Output() hasError = new EventEmitter<any>();
   @Output() videoDataOutput = new EventEmitter<any>();
   @Input() videoShow;
-  @Input() setCharacterLimit: any;
+  @Input() setCharacterLimit: number;
   @Input() setImageLimit: any;
   public editorConfig: any;
   public imageUploadLoader = false;
   public editorInstance: any;
   public isEditorFocused: boolean;
   public limitExceeded: boolean;
+  public charactersLeft: number;
   public isAssetBrowserReadOnly = false;
   public characterCount;
   public mediaobj;
@@ -287,6 +289,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
         this.attachEvent(this.editorInstance);
         // this.pasteTracker(this.editorInstance);
         this.characterCount = this.countCharacters(this.editorInstance.model.document);
+        this.charactersLeft = this.getCharactersLeft();
       })
       .catch(error => {
         console.error(error.stack);
@@ -329,6 +332,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
   }
   checkCharacterLimit() {
     this.characterCount = this.countCharacters(this.editorInstance.model.document);
+    this.charactersLeft = this.getCharactersLeft();
     this.limitExceeded = (this.characterCount <= this.setCharacterLimit) ? false : true;
     this.hasError.emit(this.limitExceeded);
   }
@@ -385,6 +389,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
       this.editorInstance.model.insertContent(imageElement, this.editorInstance.model.document.selection);
     });
     this.showImagePicker = false;
+    this.showImageUploadModal = false;
   }
 
   addVideoInEditor(videoModal?) {
@@ -592,8 +597,37 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
         const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.019') };
         return throwError(this.editorService.apiErrorHandling(err, errInfo));
       })).subscribe((response) => {
-        this.addImageInEditor(response.result.content_url, response.result.node_id);
-        this.dismissPops(modal);
+        const signedURL = response.result.pre_signed_url;
+        let blobConfig = {
+          processData: false,
+          contentType: 'Asset'
+        };
+        blobConfig = this.editorService.appendCloudStorageHeaders(blobConfig);
+        this.uploadToBlob(signedURL, this.imageFile, blobConfig).subscribe(() => {
+          const fileURL = signedURL.split('?')[0];
+          const data = new FormData();
+          data.append('fileUrl', fileURL);
+          data.append('mimeType', this.imageFile.type);
+          const config1 = {
+            enctype: 'multipart/form-data',
+            processData: false,
+            contentType: false,
+            cache: false
+          };
+          const uploadMediaConfig = {
+            data,
+            param: config1
+          };
+          this.questionService.uploadMedia(uploadMediaConfig, imgId).pipe(catchError(err => {
+            const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.019') };
+            this.isClosable = true;
+            this.loading = false;
+            this.imageFormValid = true;
+            return throwError(this.editorService.apiErrorHandling(err, errInfo));
+          })).subscribe((response1) => {
+            this.addImageInEditor(response1.result.content_url, response1.result.node_id, this.assestData['name']);
+          });
+        });
       });
     });
   }
@@ -711,14 +745,12 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
           return throwError(this.editorService.apiErrorHandling(err, errInfo));
         })).subscribe((response) => {
           const signedURL = response.result.pre_signed_url;
-          const config = {
+          let blobConfig = {
             processData: false,
-            contentType: 'Asset',
-            headers: {
-              'x-ms-blob-type': 'BlockBlob'
-            }
+            contentType: 'Asset'
           };
-          this.uploadToBlob(signedURL, this.videoFile, config).subscribe(() => {
+          blobConfig = this.editorService.appendCloudStorageHeaders(blobConfig);
+          this.uploadToBlob(signedURL, this.videoFile, blobConfig).subscribe(() => {
             const fileURL = signedURL.split('?')[0];
             this.updateContentWithURL(fileURL, this.videoFile.type, contentId, videoModal);
           });
@@ -739,13 +771,21 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   uploadToBlob(signedURL, file, config): Observable<any> {
-    return this.questionService.http.put(signedURL, file, config).pipe(catchError(err => {
-      const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.018') };
-      this.isClosable = true;
-      this.loading = false;
-      this.imageFormValid = true;
-      return throwError(this.editorService.apiErrorHandling(err, errInfo));
-    }), map(data => data));
+    const csp = _.get(this.editorService.editorConfig, 'context.cloudStorage.provider', 'azure');
+    return new Observable((observer) => {
+      const uploaderLib = new SunbirdFileUploadLib.FileUploader();
+      uploaderLib.upload({ url: signedURL, file, csp })
+      .on("error", (error) => {
+        const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.018') };
+        this.isClosable = true;
+        this.loading = false;
+        this.imageFormValid = true;
+        observer.error(this.editorService.apiErrorHandling(error, errInfo));
+      }).on("completed", (completed) => {
+        observer.next(completed);
+        observer.complete();
+      })
+    });
   }
 
   updateContentWithURL(fileURL, mimeType, contentId, videoModal?) {
@@ -852,7 +892,7 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
 
   getMediaOriginURL(src) {
     const replaceText = this.assetProxyUrl;
-    const cloudStorageUrls = _.get(this.editorService.editorConfig, 'context.cloudStorageUrls') || [];
+    const cloudStorageUrls = _.compact(_.get(this.editorService.editorConfig, 'context.cloudStorageUrls') || []);
     _.forEach(cloudStorageUrls, url => {
       if (src.indexOf(url) !== -1) {
         src = src.replace(url, replaceText);
@@ -870,5 +910,13 @@ export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
         });
       }
     });
+  }
+
+  getCharactersLeft() {
+    if (this.setCharacterLimit) {
+      let charRemaining = this.setCharacterLimit - this.characterCount;
+      return charRemaining > 0 ? charRemaining : 0;
+    }
+    return null;
   }
 }

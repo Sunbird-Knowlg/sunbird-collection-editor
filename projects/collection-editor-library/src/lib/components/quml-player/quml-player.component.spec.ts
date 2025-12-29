@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { QumlPlayerComponent } from './quml-player.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -10,7 +10,7 @@ describe('QumlPlayerComponent', () => {
   let component: QumlPlayerComponent;
   let fixture: ComponentFixture<QumlPlayerComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       declarations: [QumlPlayerComponent],
@@ -44,8 +44,8 @@ describe('QumlPlayerComponent', () => {
     expect(component.showPreview).toBeTruthy();
   });
   it('#setQumlPlayerData() should call setQumlPlayerData and isSingleQuestionPreview is false', () => {
-    const playerService = TestBed.get(PlayerService);
-    const editorService = TestBed.get(EditorService);
+    const playerService = TestBed.inject(PlayerService);
+    const editorService = TestBed.inject(EditorService);
     component.qumlPlayerConfig = mockData.qumlPlayerConfig;
     component.questionSetHierarchy = mockData.qumlPlayerConfig.metadata;
     component.qumlPlayerConfig.metadata = mockData.qumlPlayerConfig.metadata;
@@ -59,8 +59,8 @@ describe('QumlPlayerComponent', () => {
     expect(component.qumlPlayerConfig.metadata.maxScore).toEqual(mockData.qumlPlayerConfig.metadata.maxScore);
   });
   it('#setQumlPlayerData() should call setQumlPlayerData and isSingleQuestionPreview is true', () => {
-    const playerService = TestBed.get(PlayerService);
-    const editorService = TestBed.get(EditorService);
+    const playerService = TestBed.inject(PlayerService);
+    const editorService = TestBed.inject(EditorService);
     spyOn(playerService, 'getQumlPlayerConfig').and.returnValue(mockData.qumlPlayerConfig);
     spyOn(editorService, 'getContentChildrens').and.returnValue(['do_12345', 'do_123456']);
     component.qumlPlayerConfig = mockData.qumlPlayerConfig;
@@ -72,12 +72,12 @@ describe('QumlPlayerComponent', () => {
     expect(component.qumlPlayerConfig).toBeDefined();
   });
   it('#getPlayerEvents() should call getPlayerEvents', () => {
-    spyOn(component, 'getPlayerEvents').and.returnValue(mockData.playerEvent);
+    spyOn(component, 'getPlayerEvents').and.callFake(() => {});
     component.getPlayerEvents(mockData.playerEvent);
     expect(component.getPlayerEvents).toHaveBeenCalled();
   });
   it('#getTelemetryEvents() should call getTelemetryEvents', () => {
-    spyOn(component, 'getTelemetryEvents').and.returnValue(mockData.telemetryEvent);
+    spyOn(component, 'getTelemetryEvents').and.callFake(() => {});
     component.getTelemetryEvents(mockData.telemetryEvent);
     expect(component.getTelemetryEvents).toHaveBeenCalled();
   });

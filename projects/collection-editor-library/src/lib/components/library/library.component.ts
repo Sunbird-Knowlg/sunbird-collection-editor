@@ -111,12 +111,13 @@ export class LibraryComponent implements OnInit, AfterViewInit, OnDestroy {
 
   fetchContentList(filters?, query?) {
     filters = filters || this.defaultFilters;
+    const channel = _.get(this.editorService.editorConfig, 'context.channel')
     const option = {
       url: 'composite/v3/search',
       data: {
         request: {
           query: query || '',
-          filters: _.pickBy({ ...filters, ...{ status: ['Live'] }}),
+          filters: _.pickBy({ ...filters, ...{ status: ['Live'], channel }}),
           sort_by: {
             lastUpdatedOn: 'desc'
           }

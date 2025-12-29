@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ContentplayerPageComponent } from './contentplayer-page.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -34,7 +34,7 @@ describe('ContentplayerPageComponent', () => {
     }
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule ],
       declarations: [ ContentplayerPageComponent ],
@@ -73,10 +73,25 @@ describe('ContentplayerPageComponent', () => {
   });
 
   it('#getContentDetails should fetch content details when API success', () => {
-    const editorService = TestBed.get(EditorService);
-    spyOn(editorService, 'fetchContentDetails').and.returnValue(of({result: { content: { name: 'test' }}}));
-    const playerService = TestBed.get(PlayerService);
-    spyOn(playerService, 'getPlayerConfig').and.returnValue({});
+    const response = {
+      id: '',
+        params: {
+          resmsgid: '',
+          msgid: '',
+          err: '',
+          status: '',
+          errmsg: ''
+        },
+        responseCode: '200',
+        result: { content: { name: 'test' }},
+        ts: '',
+        ver: '',
+        headers: {}
+    }
+    const editorService = TestBed.inject(EditorService);
+    spyOn(editorService, 'fetchContentDetails').and.returnValue(of(response));
+    const playerService = TestBed.inject(PlayerService);
+    spyOn(playerService, 'getPlayerConfig').and.returnValue({config: {}, context: {}, data: {}, metadata: {}});
     spyOn(component, 'setPlayerType').and.callThrough();
     spyOn(component, 'loadDefaultPlayer').and.callFake(() => {});
     component.contentId = 'do_1234';
@@ -107,5 +122,10 @@ describe('ContentplayerPageComponent', () => {
     fixture.detectChanges();
     // component.loadDefaultPlayer();
   });
+
+  it('#should load PDF player', () => {
+    component.playerType = 'pdf-player';
+    fixture.detectChanges()
+  })
 
 });

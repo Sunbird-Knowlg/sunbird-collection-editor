@@ -1,17 +1,42 @@
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 import { OptionsComponent } from './options.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { mockOptionData } from './options.component.spec.data';
 import { ConfigService } from '../../services/config/config.service';
-import { SuiModule } from 'ng2-semantic-ui-v9';
+import { SuiModule } from '@project-sunbird/ng2-semantic-ui';
+import { TreeService } from '../../services/tree/tree.service';
+import { treeData } from './../fancy-tree/fancy-tree.component.spec.data';
+import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
+import { EditorService } from "../../services/editor/editor.service";
+
+const mockEditorService = {
+  editorConfig: {
+    config: {
+      renderTaxonomy:true,
+      hierarchy: {
+        level1: {
+          name: "Module",
+          type: "Unit",
+          mimeType: "application/vnd.ekstep.content-collection",
+          contentType: "Course Unit",
+          iconClass: "fa fa-folder-o",
+          children: {},
+        },
+      },
+    },
+  },
+  parentIdentifier: ""
+};
+
 
 describe('OptionsComponent', () => {
   let component: OptionsComponent;
   let fixture: ComponentFixture<OptionsComponent>;
-  beforeEach(async(() => {
+  let treeService,telemetryService;
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule, FormsModule, SuiModule ],
       declarations: [ OptionsComponent, TelemetryInteractDirective ],
@@ -23,7 +48,18 @@ describe('OptionsComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(OptionsComponent);
+    treeService = TestBed.inject(TreeService);
+    telemetryService = TestBed.inject(EditorTelemetryService);
     component = fixture.componentInstance;
+    component.sourcingSettings = sourcingSettingsMock;
+    spyOn(treeService, 'setTreeElement').and.callFake((el) => {
+      treeService.nativeElement = nativeElement;
+    });
+    spyOn(treeService, 'getFirstChild').and.callFake(() => {
+      return { data: { metadata: treeData } };
+    });
+    component.editorState = mockOptionData.editorOptionData;
+
     // fixture.detectChanges();
   });
 

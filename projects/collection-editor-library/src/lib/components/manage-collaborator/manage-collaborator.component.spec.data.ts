@@ -45,7 +45,8 @@ export const mockData = {
                         ],
                         phone: '',
                         roles: [],
-                        email: 'n1*@yopmail.com'
+                        email: 'n1*@yopmail.com',
+                        isSelected: false
                     }
                 ]
             }

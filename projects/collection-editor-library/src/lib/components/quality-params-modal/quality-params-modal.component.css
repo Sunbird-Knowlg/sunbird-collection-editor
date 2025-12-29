@@ -1,0 +1,14 @@
+::ng-deep .dynamic-form label, .add-to-library .dynamic-form .multi-select-container .list-border ul {
+        font-size: 1rem !important;
+        line-height: 1.4;
+        font-weight: 400;
+}
+.sb-modal-content{
+    padding: 1.3rem;
+}
+
+.sb-modal-content label{
+    font-weight: bolder;
+}
+
+

@@ -10,10 +10,10 @@
             <div class="p-50 sb-folder-menu" *ngIf="isObjectTypeCollection">
             <div>  {{configService.labelConfig?.lbl?.folders}} </div>
               <a class="profile-avtar computer only p-0 pr-10" tabindex="0">
-              <div suiDropdown class="ui dropdown right top pointing z-index-9"  id="dropdown-menu-list-header">
+              <div suiDropdown class="ui dropdown right top pointing z-index-9"  id="dropdown-menu-list-header" *ngIf="!isStatusReviewMode">
                   <i class="icon ellipsis vertical h-1" aria-hidden="true"  [ngClass]="{'sb-disable-icon': isStatusReviewMode}" (click)="onClickFolder()"></i>
-                  <div class="menu" suiDropdownMenu *ngIf="!isStatusReviewMode">
-                    <button type="button" class="item fs-0-785 bg-none"  
+                  <div class="menu" suiDropdownMenu >
+                    <button type="button" class="item fs-0-785 bg-none"
                     libTelemetryInteract
                     [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('open_popup','click',configService.labelConfig?.lbl?.createHierarchyCsv,
                      this.telemetryService.telemetryPageId,{key: 'dialog_id', value: configService.labelConfig?.lbl?.createHierarchyCsv})"
@@ -54,7 +54,7 @@
             </div>
             <!-- Right Player Sections -->
             <div class="eight wide column bg-white pl-40 mb-10 w-73">
-              <ng-container *ngIf="(isCurrentNodeFolder === true || isCurrentNodeRoot === true) && unitFormConfig">
+              <ng-container *ngIf="(isCurrentNodeFolder === true || isCurrentNodeRoot === true) && unitFormConfig && selectedNodeData && rootFormConfig">
                 <lib-meta-form [rootFormConfig]="rootFormConfig" [nodeMetadata]="selectedNodeData" [unitFormConfig]="unitFormConfig"
                 (toolbarEmitter)="toolbarEventListener($event)"></lib-meta-form>
               </ng-container>
@@ -101,8 +101,11 @@
               <div class="twelve wide column sb-checkbox-tnc mt-10">
                 <div class="sb-checkbox sb-checkbox-primary font-italic p-0 m-0"><input [(ngModel)]="terms" id="termAndConditions"
                     name="example" type="checkbox">
-                  <label for="termAndConditions" class="fsmall pl-32"><span class="sb-required">*</span><span
-                      class="font-weight-bold mb-4 d-block">"{{configService.labelConfig?.lbl?.iAgreeSubmit}}</span>
+                  <label for="termAndConditions" class="fsmall pl-32">
+                    <div class="d-flex flex-ai-center">
+                      <span class="sb-required">*</span><span
+                        class="font-weight-bold mb-4 d-block">"{{configService.labelConfig?.lbl?.iAgreeSubmit}}</span>
+                    </div>
                     <div class="sb-color-gray-300">{{configService.labelConfig?.lbl?.iconfirmContent}}<a
                         class="sb-color-primary font-weight-bold cursor-pointer" href="https://creativecommons.org/licenses" target="_blank" > {{configService.labelConfig?.lbl?.createCommonFramework}}</a>
                         {{configService.labelConfig?.lbl?.accordance}} 
@@ -126,7 +129,7 @@
             {{configService.labelConfig?.lbl?.questionSetPreview}}
           </div>
           <div class="sb-modal-content">
-            <div class="br-2 b-1-100">
+            <div class="br-2 b-1-100" id="previewPlayerContainer" tabindex="0" cdkTrapFocus>
               <lib-quml-player [questionSetHierarchy]="collectionTreeNodes?.data"></lib-quml-player>
             </div>
           </div>
@@ -143,6 +146,12 @@
   <ng-container *ngSwitchCase="'question'">
     <lib-question [questionInput]="questionComponentInput" [leafFormConfig]="leafFormConfig"   (questionEmitter)="questionEventListener($event)">
     </lib-question>
+  </ng-container>
+  <ng-container *ngSwitchCase="'pagination'">
+    <lib-assign-page-number (assignPageEmitter)="assignPageEmitterListener($event)"></lib-assign-page-number>
+  </ng-container>
+  <ng-container *ngSwitchCase="'progressStatus'">
+    <lib-progress-status (assignPageEmitter)="assignPageEmitterListener($event)"></lib-progress-status>
   </ng-container>
 </ng-container>
 <ng-container *ngIf="addCollaborator">

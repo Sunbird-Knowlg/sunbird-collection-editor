@@ -50,7 +50,7 @@ export class FrameworkService {
     return this.dataService.get(frameworkOptions);
   }
 
-  public getTargetFrameworkCategories(frameworkIds: string) {
+  public getTargetFrameworkCategories(frameworkIds: Array<string>) {
     _.forEach(frameworkIds, framework => {
       if (framework && _.get(this._frameworkData, framework)) {
         this.targetFrameworkIds = framework;
@@ -92,6 +92,10 @@ export class FrameworkService {
 
   public set selectedOrganisationFramework(framework: string) {
     this._selectedOrganisationFramework = framework;
+  }
+
+  public get frameworkData(): FrameworkData {
+    return this._frameworkData;
   }
 
 

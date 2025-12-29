@@ -52,3 +52,17 @@
         width: inherit !important;
     }
 }
+
+.btn-align{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    margin-top: 10px;
+}
+
+.mt-25{
+    margin-top: 25%;
+    text-align: center;
+}

@@ -24,8 +24,25 @@ export class EditorService {
   public questionStream$ = new Subject<any>();
   private _editorConfig: IEditorConfig;
   private _editorMode = 'edit';
-  public showLibraryPage: EventEmitter<number> = new EventEmitter();
+  private _isReviewerEditEnable = false;
+  private _isReviewModificationAllowed = false;
+  public showLibraryPage: EventEmitter<any> = new EventEmitter();
+  public showQuestionLibraryPage: EventEmitter<any> = new EventEmitter();
+  private _bulkUploadStatus$ = new BehaviorSubject<any>(undefined);
+  public readonly bulkUploadStatus$: Observable<any> = this._bulkUploadStatus$;
   public contentsCount = 0;
+  templateList = [];
+  parentIdentifier: any;
+  branchingLogic = {};
+  selectedSection: any;
+  optionsLength: any;
+  selectedPrimaryCategory: any;
+  leafParentIdentifier: any;
+  questionIds = [];
+  outcomeDeclaration: any;
+  treeData: any;
+  private _qualityFormConfig: any;
+  private _isReviewerQualityCheckEnabled: boolean;
   constructor(public treeService: TreeService, private toasterService: ToasterService,
               public configService: ConfigService, private telemetryService: EditorTelemetryService,
               private publicDataService: PublicDataService, private dataService: DataService, public httpClient: HttpClient) {
@@ -37,6 +54,9 @@ export class EditorService {
       this._editorConfig.config = _.assign(this.configService.editorConfig.default, this._editorConfig.config);
     }
     this._editorMode = _.get(this._editorConfig, 'config.mode').toLowerCase();
+    this.setIsReviewerEditEnable(_.get(this._editorConfig, 'context.enableReviewEdit', false));
+    this.setQualityFormConfig(_.get(this._editorConfig, 'config.qualityFormConfig', null));
+    this.setIsReviewerQualityCheckEnabled(_.get(this._editorConfig, 'config.isReviewerQualityCheckEnabled', false));
   }
 
   set selectedChildren(value: SelectedChildren) {
@@ -61,6 +81,22 @@ export class EditorService {
 
   get editorMode() {
     return this._editorMode;
+  }
+
+  get isReviewerEditEnable() {
+    return this._isReviewerEditEnable;
+  }
+
+  private setIsReviewerEditEnable(value: boolean) {
+    return this._isReviewerEditEnable = value;
+  }
+
+  get isReviewModificationAllowed() {
+    return this._isReviewModificationAllowed;
+  }
+
+  setIsReviewModificationAllowed(value: boolean) {
+    return this._isReviewModificationAllowed = value;
   }
 
   get contentPolicyUrl() {
@@ -247,6 +283,26 @@ export class EditorService {
     return this.publicDataService.patch(req);
   }
 
+  addResourceToQuestionset(collection, unitIdentifier, contentId) {
+    const children: any[] = _.isArray(contentId) ? contentId : [contentId];
+    let req = {
+      url: _.get(this.configService.urlConFig, 'URLS.QuestionSet.ADD'),
+      data: {
+        request: {
+          questionset: {
+            rootId: collection,
+            collectionId: unitIdentifier,
+            children
+          }
+        }
+      }
+    };
+    if (collection === unitIdentifier) {
+      req = _.omit(req, 'data.request.questionset.collectionId');
+    }
+    return this.publicDataService.patch(req);
+  }
+
   public getQuestionStream$() {
     return this.questionStream$;
   }
@@ -255,26 +311,60 @@ export class EditorService {
     this.questionStream$.next(value);
   }
 
-  async getMaxScore() {
-    const rootNode = this.treeService.getFirstChild();
-    const metadata = _.get(rootNode, 'data.metadata');
-    const questionIds = this.getContentChildrens();
-    if (metadata.shuffle) {
-      if (metadata.maxQuestions && !_.isEmpty(questionIds) ) {
-        const { questions } =  await this.getQuestionList(_.take(questionIds, metadata.maxQuestions)).toPromise();
-        const maxScore = this.calculateMaxScore(questions);
-        return maxScore;
-      } else {
-        return questionIds.length;
+  setQuestionIds(childrens) {
+    const self = this;
+    for (const children of childrens) {
+      if (children.data.objectType === 'QuestionSet') {
+        let questionCount = 0;
+        if (children?.data?.metadata?.maxQuestions && (children?.data?.metadata?.maxQuestions < children?.children?.length)) {
+          questionCount = children.data.metadata.maxQuestions;
+        } else {
+          questionCount = children?.children ?
+          children?.children?.length : 0;
+        }
+        if (questionCount > 0) {
+          for (let i = 0; i < questionCount; i++) {
+            if (!_.isEmpty(children, 'children')) {
+              if (children.children[i].data.objectType === 'QuestionSet') {
+                self.setQuestionIds([children.children[i]]);
+              } else {
+                if (!_.includes(this.questionIds, children.children[i].data.id)) {
+                  this.questionIds.push(children.children[i].data.id);
+                }
+              }
+            }
+          }
+        }
       }
-    } else {
-      return metadata.maxQuestions ? metadata.maxQuestions : questionIds.length;
     }
+  }
+
+  async getMaxScore() {
+    let maxScore = 0;
+    let rootNode = [];
+    this.questionIds = [];
+    const rootNodeData = this.treeService.getFirstChild();
+    if (rootNodeData.children) {
+      rootNode = [rootNodeData];
+    }
+    if (!_.isEmpty(rootNode)) {
+      this.setQuestionIds(rootNode);
+    }
+    if (!_.isEmpty(this.questionIds)) {
+      const { questions } =  await this.getQuestionList(this.questionIds).toPromise();
+      maxScore = this.calculateMaxScore(questions);
+    }
+    return maxScore;
   }
 
   calculateMaxScore(questions: Array<any>) {
    return _.reduce(questions, (sum, question) => {
-      return sum + (question.responseDeclaration ? _.get(question, 'responseDeclaration.response1.maxScore') : 1);
+      const nodeData = this.treeService.getNodeById(question.identifier);
+      if (_.has(nodeData.parent.data.metadata, 'shuffle') && nodeData.parent.data.metadata.shuffle === true) {
+        return sum + 1;
+      } else {
+        return sum + (question?.responseDeclaration?.response1?.maxScore ? _.get(question, 'responseDeclaration.response1.maxScore') : 0);
+      }
     }, 0);
   }
 
@@ -309,6 +399,37 @@ export class EditorService {
       });
     }
     return instance.data;
+  }
+
+
+ _toFlatObjFromHierarchy(data) {
+    const instance = this;
+    if (data && data.children) {
+      instance.data[data.identifier] = {
+        name: data.name,
+        children: _.map(data.children, (child) => {
+          return child.identifier;
+        }),
+        branchingLogic: data.branchingLogic
+      };
+      _.forEach(data.children, (collection) => {
+        instance._toFlatObjFromHierarchy(collection);
+      });
+    }
+    return instance.data;
+  }
+
+  getRelationalMetadataObj(data) {
+    let relationalMetadata = {};
+    _.forEach(data, (child) => {
+      if (_.get(child, 'data.metadata.relationalMetadata')) {
+        relationalMetadata = {
+          ...relationalMetadata,
+          [child.data.id]: _.get(child, 'data.metadata.relationalMetadata')
+        };
+      }
+    });
+    return relationalMetadata;
   }
 
   getCategoryDefinition(categoryName, channel, objectType?: any) {
@@ -464,6 +585,143 @@ export class EditorService {
       });
     } catch (error) {
       console.error( _.replace(_.get(this.configService, 'labelConfig.messages.error.033'), '{FILE_TYPE}', config.fileType ) + error);
+    }
+  }
+
+  generateCSV(config) {
+    const tableData = config.tableData;
+    delete config.tableData;
+    let options = {
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalSeparator: '.',
+      showLabels: true,
+      useTextFile: false,
+      useBom: true,
+      showTitle: true,
+      title: '',
+      filename: '',
+      headers: []
+    };
+    options = _.merge(options, config);
+    const csvExporter = new ExportToCsv(options);
+    csvExporter.generateCsv(tableData);
+  }
+
+  getBranchingLogicByFolder(identifier) {
+    const nodeData = this.treeService.getNodeById(identifier);
+    const branchingLogic = _.get(nodeData, 'data.metadata.branchingLogic');
+    return branchingLogic || {};
+  }
+
+/**
+ *
+ * @public
+ * @param identifier identifier of the node
+ * @returns { source: [], target: [], sourceTarget?: [] }
+ * @memberof EditorService
+ */
+getDependentNodes(identifier) {
+    const sectionBranchingLogic = this.getBranchingLogicByNodeId(identifier);
+
+    if (!_.isEmpty(sectionBranchingLogic)) {
+     const branchingEntry = this.getBranchingLogicEntry(sectionBranchingLogic, identifier);
+     const source = _.get(branchingEntry, 'source');
+     if (!_.isEmpty(source)) { // if the node is a dependent node
+
+       const sourceBranchingEntry = this.getBranchingLogicEntry(sectionBranchingLogic, _.first(branchingEntry.source));
+
+       return !_.isEmpty(sourceBranchingEntry) ? { source: branchingEntry.source, target: branchingEntry.target,
+        sourceTarget: sourceBranchingEntry.target } : {};
+
+     } else { // if the node is a parent node
+       return !_.isEmpty(branchingEntry) ? { source: branchingEntry.source, target: branchingEntry.target } : {};
+     }
+    }
+  }
+
+/**
+ *
+ * @public
+ * @param identifier identifier of the node
+ * @returns {"do_id": { "target": [ "do_id123", "do_id456" ], "preCondition": {}, "source": [] }}
+ * @memberof EditorService
+ */
+  getBranchingLogicByNodeId(identifier) {
+    const leafNode = this.treeService.getNodeById(identifier);
+    const parentIdentifier = _.get(leafNode, 'parent.data.id');
+    return this.getBranchingLogicByFolder(parentIdentifier);
+  }
+
+  getBranchingLogicEntry(parentBranchingLogic, identifier) {
+    return _.find(parentBranchingLogic, (logic, key) => {
+      return key === identifier;
+    });
+  }
+
+  getFlattenedBranchingLogic(data) {
+    const flatHierarchy = this._toFlatObjFromHierarchy(data);
+    const branchingLogics = _.compact(_.map(flatHierarchy, 'branchingLogic'));
+    return _.reduce(branchingLogics, (acc, val) => {
+      return  _.assign(acc, val);
+    }, {});
+  }
+
+  getParentDependentMap(data) {
+    const branchingLogic = this.getFlattenedBranchingLogic(data);
+    const obj = {};
+    _.forEach(_.keys(branchingLogic), item => {
+      obj[item] = !_.isEmpty(branchingLogic[item].source) ? 'dependent' : !_.isEmpty(branchingLogic[item].target) ? 'parent' : '';
+    });
+    return obj;
+  }
+
+  getPrimaryCategoryName(sectionId) {
+    const nodeData = this.treeService.getNodeById(sectionId);
+    return _.get(nodeData, 'data.primaryCategory');
+  }
+
+  /**
+   * fetch Outcome Declaration levels using the questionsetId
+   * only for Observation with Rubrics
+   * @param identifier questionset identifier
+   */
+   fetchOutComeDeclaration(questionSetId, option: any = { params: {} }): Observable<any> {
+    const url = this.configService.urlConFig.URLS[this.editorConfig.config.objectType];
+    const param = {
+      fields: 'outcomeDeclaration'
+    };
+    const hierarchyUrl = `${url.READ}/${questionSetId}`;
+    const req = {
+      url: hierarchyUrl,
+      param: { ...param, ...option.params }
+    };
+    return this.publicDataService.get(req);
+  }
+
+  get qualityFormConfig(){
+    return this._qualityFormConfig;
+  }
+
+  private setQualityFormConfig(value: any){
+    return this._qualityFormConfig = value;
+  }
+
+  get isReviewerQualityCheckEnabled(){
+    return this._isReviewerQualityCheckEnabled;
+    }
+  
+    private setIsReviewerQualityCheckEnabled(value: boolean){
+      return this._isReviewerQualityCheckEnabled = value;
+    }
+
+  appendCloudStorageHeaders(config) {
+    const headers =  _.get(this.editorConfig, 'context.cloudStorage.presigned_headers', {});
+    if (!_.isEmpty(headers)) {
+      config.headers = {...config.headers, ...headers};
+      return config;
+    } else {
+      return config;
     }
   }
 }

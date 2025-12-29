@@ -17,13 +17,19 @@ export class HeaderComponent implements OnDestroy, OnInit {
   @Input() buttonLoaders: any;
   @Input() showComment: any;
   @Input() publishchecklist: any;
+  @Input() set requestChange(action: string) {
+    if (action) {
+      this.openRequestChangePopup(action);
+    }
+  }
   @Output() toolbarEmitter = new EventEmitter<any>();
   @ViewChild('FormControl') FormControl: NgForm;
   @ViewChild('modal') public modal;
+  @Output() qualityParamEmitter = new EventEmitter<any>();
   public visibility: any;
   public showReviewModal: boolean;
-  public showRequestChangesPopup: boolean;
   public showPublishCollectionPopup: boolean;
+  public showRequestChangesPopup: boolean;
   public rejectComment: string;
   public actionType: string;
   public sourcingStatusText: string;
@@ -42,11 +48,15 @@ export class HeaderComponent implements OnDestroy, OnInit {
 
   async handleActionButtons() {
     this.visibility = {};
-    this.visibility.saveContent = this.editorService.editorMode === 'edit';
+    // Edit button visibility
+    // 1. if the editor in edit mode
+    // 2. if ReviewModificationAllowed is allowed and review/org-reviewer is viewing and the question is not added from library the question
+    this.visibility.editContent = this.editorService.editorMode === 'edit' || ((this.editorService.editorMode === 'orgreview' || this.editorService.editorMode === 'sourcingreview') && this.editorService.isReviewModificationAllowed && !_.get(this.editorService, 'editorConfig.context.isAddedFromLibrary', false));
+    this.visibility.saveContent = this.editorService.editorMode === 'edit' || ((this.editorService.editorMode === 'orgreview' || this.editorService.editorMode === 'sourcingreview') && this.editorService.isReviewModificationAllowed);
     this.visibility.submitContent = this.editorService.editorMode === 'edit';
     this.visibility.rejectContent = this.editorService.editorMode === 'review' || this.editorService.editorMode === 'orgreview';
     this.visibility.publishContent = this.editorService.editorMode === 'review' || this.editorService.editorMode === 'orgreview';
-    this.visibility.sendForCorrectionsContent = this.editorService.editorMode === 'sourcingreview';
+    this.visibility.sendForCorrectionsContent = this.editorService.editorMode === 'sourcingreview' && !_.get(this.editorService, 'editorConfig.context.isAddedFromLibrary', false);
     this.visibility.sourcingApproveContent = this.editorService.editorMode === 'sourcingreview';
     this.visibility.sourcingRejectContent = this.editorService.editorMode === 'sourcingreview';
     this.visibility.previewContent = _.get(this.editorService, 'editorConfig.config.objectType') === 'QuestionSet';
@@ -56,6 +66,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
     //this.visibility.showCorrectionComments = _.get(this.editorService, 'editorConfig.config.showCorrectionComments');
     this.visibility.hideSubmitForReviewBtn = _.get(this.editorService, 'editorConfig.config.hideSubmitForReviewBtn') || false;
     this.visibility.addCollaborator = _.get(this.editorService, 'editorConfig.config.showAddCollaborator');
+    this.visibility.showPaginationBtn = _.get(this.editorService, 'editorConfig.config.enablePagination');
   }
 
   getSourcingData() {
@@ -73,14 +84,24 @@ export class HeaderComponent implements OnDestroy, OnInit {
   buttonEmitter(action) {
     this.toolbarEmitter.emit({ button: action.type, ...(action.comment && { comment: this.rejectComment }) });
   }
+
   openPublishCheckListPopup(action) {
     this.actionType = action;
     this.showPublishCollectionPopup = true;
   }
+
+  firstLevelPublish() {
+    if (this.editorService.isReviewerQualityCheckEnabled) {
+      this.toolbarEmitter.emit({button: 'saveQualityParameters'});
+    } else {
+      this.buttonEmitter({type: 'publishQuestion'});
+    }
+  }
+
   publishEmitter(event) {
     this.showPublishCollectionPopup = false;
-    if (event.button === 'publishContent' || event.button === 'sourcingApprove') {
-      this.toolbarEmitter.emit(event)
+    if (event.button === 'publishContent' || event.button === 'publishQuestion' || event.button === 'sourcingApprove' || event.button === 'sourcingApproveQuestion') {
+      this.toolbarEmitter.emit(event);
     }
   }
   ngOnDestroy() {

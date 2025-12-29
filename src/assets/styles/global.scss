@@ -56,3 +56,10 @@ body {
         width: 95% !important;
     }  
 }
+.ck-rounded-corners .ck.ck-editor__main>.ck-editor__editable, .ck.ck-editor__main>.ck-editor__editable.ck-rounded-corners{
+  word-break: break-all !important;
+}
+
+lib-editor .add-to-library .dynamic-form .sb-dropdown label,lib-editor .add-to-library .input-label{
+  z-index: 2 !important;
+}

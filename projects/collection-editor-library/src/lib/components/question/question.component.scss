@@ -278,3 +278,25 @@ sui-select {
     opacity: 0.8 !important;
     font-weight: 500 !important;
   }
+
+  .multiselect{
+    position: relative;
+    top: -7px;
+    height: 48px;
+    left:7px;
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+.treepicker-parent .list-border {
+  height: 38px!important;
+  padding: 1rem!important;
+  margin-top: 15px !important;
+}
+
+.options{
+  justify-content: flex-end;
+  margin-right:10px;
+  display: flex;
+  gap: 10px;
+}

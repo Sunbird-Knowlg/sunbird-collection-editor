@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { TemplateComponent } from './template.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
@@ -8,7 +8,7 @@ describe('TemplateComponent', () => {
   let component: TemplateComponent;
   let fixture: ComponentFixture<TemplateComponent>;
   const templateList = [{ type: 'Multile Choice Question' }, { type: 'Subjective Question'}];
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule ],
       declarations: [ TemplateComponent, TelemetryInteractDirective ],

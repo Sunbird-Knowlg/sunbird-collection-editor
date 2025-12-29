@@ -8,7 +8,18 @@
       "CONTENT_REJECT" : "questionset/v1/reject/",
       "CONTENT_PUBLISH" : "questionset/v1/publish/",
       "DEFAULT_PARAMS_FIELDS": "instructions",
-      "SYSYTEM_UPDATE": "questionset/v4/system/update/"
+      "SYSYTEM_UPDATE": "questionset/v4/system/update/",
+      "DELETENODE" : "questionset/v1/remove",
+      "QUESTION_LIST" : "question/v1/list"
+    },
+    "Question": {
+      "HIERARCHY_READ": "questionset/v1/hierarchy",
+      "CREATE": "question/v1/create",
+      "UPDATE": "question/v1/update/",
+      "CONTENT_REVIEW" : "question/v1/review/",
+      "CONTENT_REJECT": "question/v1/reject/",
+      "CONTENT_PUBLISH": "question/v1/publish/",
+      "SYSYTEM_UPDATE": "question/v4/system/update/"
     },
     "Collection": {
       "HIERARCHY_READ": "content/v3/hierarchy",

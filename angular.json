@@ -17,7 +17,6 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "aot": true,
             "outputPath": "dist/sunbird-collection-editor",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -28,13 +27,18 @@
               "src/assets/images",
               "src/favicon.ico",
               {
-                "glob": "**/*",
-                "input": "node_modules/@project-sunbird/sunbird-pdf-player-v9/lib/assets/",
+                "glob": "**/*.*",
+                "input": "./node_modules/@project-sunbird/sunbird-pdf-player-web-component/assets",
                 "output": "/assets/"
               },
               {
                 "glob": "**/*",
-                "input": "node_modules/@project-sunbird/sunbird-video-player-v9/lib/assets/",
+                "input": "./node_modules/@project-sunbird/sunbird-video-player-web-component/assets",
+                "output": "/assets/"
+              },
+              {
+                "glob": "**/*",
+                "input": "./node_modules/@project-sunbird/sunbird-epub-player-web-component/assets",
                 "output": "/assets/"
               },
               {
@@ -44,21 +48,26 @@
               },
               {
                 "glob": "**/*",
-                "input": "node_modules/@project-sunbird/sunbird-quml-player-v9/lib/assets/",
+                "input": "node_modules/@project-sunbird/sunbird-quml-player/lib/assets/",
                 "output": "/assets/"
               }
             ],
             "styles": [
               "src/assets/quml-styles/quml-carousel.css",
-              "node_modules/@project-sunbird/sb-styles/assets/_styles.scss",
+              "node_modules/@project-sunbird/sb-styles/assets/styles.scss",
+              "node_modules/@project-sunbird/sunbird-pdf-player-web-component/styles.css",
+              "node_modules/@project-sunbird/sunbird-video-player-web-component/styles.css",
+              "node_modules/@project-sunbird/sunbird-epub-player-web-component/styles.css",
               "src/styles.scss",
               "src/assets/lib/semantic/semantic.min.css",
               "src/assets/styles/styles.scss",
               "node_modules/font-awesome/css/font-awesome.css",
-              "node_modules/katex/dist/katex.min.css",
-              "node_modules/video.js/dist/video-js.min.css"
+              "node_modules/katex/dist/katex.min.css"
             ],
             "scripts": [
+              "node_modules/epubjs/dist/epub.js",
+              "node_modules/@project-sunbird/sunbird-file-upload-library/sunbird-file-upload-library.js",
+              "node_modules/reflect-metadata/Reflect.js",
               "src/assets/libs/iziToast/iziToast.min.js",
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/jquery.fancytree/dist/jquery.fancytree-all-deps.min.js",
@@ -68,8 +77,17 @@
               "src/assets/lib/modal.min.js",
               "src/assets/lib/semantic-ui-tree-picker.js",
               "node_modules/@project-sunbird/telemetry-sdk/index.js",
-              "node_modules/@project-sunbird/client-services/index.js"
-            ]
+              "node_modules/@project-sunbird/client-services/index.js",
+              "node_modules/@project-sunbird/sunbird-pdf-player-web-component/sunbird-pdf-player.js",
+              "node_modules/@project-sunbird/sunbird-video-player-web-component/sunbird-video-player.js",
+              "node_modules/@project-sunbird/sunbird-epub-player-web-component/sunbird-epub-player.js"
+            ],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -82,9 +100,7 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -100,7 +116,8 @@
                 }
               ]
             }
-          }
+          },
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -130,22 +147,13 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": [],
+            "scripts": [
+              "node_modules/epubjs/dist/epub.js",
+              "node_modules/@project-sunbird/sunbird-file-upload-library/sunbird-file-upload-library.js"
+            ],
             "assets": [
               "src/favicon.ico",
               "src/assets"
-            ]
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "src/tsconfig.app.json",
-              "src/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
             ]
           }
         }
@@ -167,15 +175,6 @@
               "devServerTarget": "sunbird-collection-editor:serve:production"
             }
           }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": "e2e/tsconfig.e2e.json",
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
         }
       }
     },
@@ -186,7 +185,7 @@
       "prefix": "lib",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "projects/collection-editor-library/tsconfig.lib.json",
             "project": "projects/collection-editor-library/ng-package.json"
@@ -206,29 +205,156 @@
             "karmaConfig": "projects/collection-editor-library/karma.conf.js",
             "scripts": [
               "src/assets/libs/iziToast/iziToast.min.js",
-              "node_modules/jquery/dist/jquery.min.js"
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/@project-sunbird/sunbird-file-upload-library/sunbird-file-upload-library.js"
             ],
             "codeCoverageExclude": [
               "projects/collection-editor-library/src/lib/interfaces/*/*.ts"
             ]
           }
+        }
+      }
+    },
+    "collection-editor-library-wc": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
         },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+        "@schematics/angular:application": {
+          "strict": true
+        }
+      },
+      "root": "projects/collection-editor-library-wc",
+      "sourceRoot": "projects/collection-editor-library-wc/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "tsConfig": [
-              "projects/collection-editor-library/tsconfig.lib.json",
-              "projects/collection-editor-library/tsconfig.spec.json"
+            "preserveSymlinks": true,
+            "outputPath": "dist/collection-editor-library-wc",
+            "index": "projects/collection-editor-library-wc/src/index.html",
+            "main": "projects/collection-editor-library-wc/src/main.ts",
+            "polyfills": "projects/collection-editor-library-wc/src/polyfills.ts",
+            "tsConfig": "projects/collection-editor-library-wc/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "projects/collection-editor-library-wc/src/favicon.ico",
+              "projects/collection-editor-library-wc/src/assets",
+              {
+                "glob": "**/*",
+                "input": "projects/collection-editor-library/src/lib/assets",
+                "output": "/assets/"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@project-sunbird/sunbird-quml-player/lib/assets/",
+                "output": "/assets/"
+              }
             ],
-            "exclude": [
-              "**/node_modules/**"
+            "styles": [
+              "projects/collection-editor-library-wc/src/styles.scss",
+              "src/assets/quml-styles/quml-carousel.css",
+              "node_modules/@project-sunbird/sb-styles/assets/styles.scss",
+              "src/assets/lib/semantic/semantic.min.css",
+              "src/assets/styles/styles.scss",
+              "node_modules/font-awesome/css/font-awesome.css",
+              "node_modules/katex/dist/katex.min.css",
+              "node_modules/@project-sunbird/sunbird-pdf-player-web-component/styles.css",
+              "node_modules/@project-sunbird/sunbird-video-player-web-component/styles.css",
+              "node_modules/@project-sunbird/sunbird-epub-player-web-component/styles.css"
+            ],
+            "scripts": [
+              "node_modules/@project-sunbird/sunbird-file-upload-library/sunbird-file-upload-library.js",
+              "node_modules/reflect-metadata/Reflect.js",
+              "src/assets/libs/iziToast/iziToast.min.js",
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/jquery.fancytree/dist/jquery.fancytree-all-deps.min.js",
+              "node_modules/katex/dist/katex.min.js",
+              "src/assets/lib/dimmer.min.js",
+              "src/assets/lib/transition.min.js",
+              "src/assets/lib/modal.min.js",
+              "src/assets/lib/semantic-ui-tree-picker.js",
+              "node_modules/@project-sunbird/telemetry-sdk/index.js",
+              "node_modules/@project-sunbird/client-services/index.js",
+              "node_modules/@project-sunbird/sunbird-pdf-player-web-component/sunbird-pdf-player.js",
+              "node_modules/@project-sunbird/sunbird-video-player-web-component/sunbird-video-player.js",
+              "node_modules/@project-sunbird/sunbird-epub-player-web-component/sunbird-epub-player.js"
             ]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "5mb",
+                  "maximumError": "10mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "10kb",
+                  "maximumError": "50kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "projects/collection-editor-library-wc/src/environments/environment.ts",
+                  "with": "projects/collection-editor-library-wc/src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "collection-editor-library-wc:build:production"
+            },
+            "development": {
+              "browserTarget": "collection-editor-library-wc:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "collection-editor-library-wc:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/collection-editor-library-wc/src/test.ts",
+            "polyfills": "projects/collection-editor-library-wc/src/polyfills.ts",
+            "tsConfig": "projects/collection-editor-library-wc/tsconfig.spec.json",
+            "karmaConfig": "projects/collection-editor-library-wc/karma.conf.js",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "projects/collection-editor-library-wc/src/favicon.ico",
+              "projects/collection-editor-library-wc/src/assets"
+            ],
+            "styles": [
+              "projects/collection-editor-library-wc/src/styles.scss"
+            ],
+            "scripts": []
           }
         }
       }
     }
   },
-  "defaultProject": "sunbird-collection-editor",
   "cli": {
     "analytics": false
   }

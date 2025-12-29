@@ -6,7 +6,6 @@ import { ConfigService } from '../../services/config/config.service';
   selector: 'lib-options',
   templateUrl: './options.component.html',
   styleUrls: ['./options.component.scss'],
-  encapsulation: ViewEncapsulation.None,
 })
 export class OptionsComponent implements OnInit {
   @Input() editorState: any;
@@ -91,5 +90,37 @@ export class OptionsComponent implements OnInit {
     this.editorDataHandler();
   }
 
+  subMenuChange({ index, value }, optionIndex) {
+    _.set(this.editorState, `interactions.response1.options[${optionIndex}].hints.en`, value)
+  }
+
+  subMenuConfig(options) {
+    this.subMenus = []
+    options.map((opt, index) => {
+      const value  = _.get(this.editorState, `interactions.response1.options[${index}].hints.en`)
+      this.subMenus[index] = [
+        {
+          id: 'addHint',
+          name: 'Add Hint',
+          value,
+          label: 'Hint',
+          enabled: value ? true : false,
+          type: 'input',
+          show: _.get(this.sourcingSettings, 'showAddHints'),
+        },
+      ];
+    });
+  }
+
+  setScore(value, scoreIndex) {
+    const obj = {
+      response: scoreIndex,
+      outcomes: {
+        score: value,
+      },
+    };
+    this.mapping[scoreIndex] = obj;
+    this.editorDataHandler();
+  }
 }
 

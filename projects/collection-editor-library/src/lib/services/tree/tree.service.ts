@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import 'jquery.fancytree';
-import { UUID } from 'angular2-uuid';
+import { v4 as uuidv4 } from 'uuid';
 declare var $: any;
 import * as _ from 'lodash-es';
 import { IEditorConfig } from '../../interfaces/editor';
@@ -59,9 +59,9 @@ export class TreeService {
     this.setTreeCache(nodeId, _.merge({}, {[key] : value}, _.pick(node.data.metadata, ['objectType'])));
   }
 
-  updateTreeNodeMetadata(newData: any) {
-    const activeNode = this.getActiveNode();
-    const nodeId = activeNode.data.id;
+  updateTreeNodeMetadata(newData: any, nodeToBeUpdated?: any, primaryCategory?: any, objectType?: any) {
+    const activeNode = !_.isUndefined(nodeToBeUpdated) ? this.getNodeById(nodeToBeUpdated) : this.getActiveNode();
+    const nodeId = nodeToBeUpdated  || activeNode.data.id;
     if (newData.instructions) {
       newData.instructions = { default: newData.instructions };
      }
@@ -79,6 +79,9 @@ export class TreeService {
 
     if (copyrightYear) {
       newData.copyrightYear = _.toNumber(copyrightYear);
+    }
+    if (objectType) {
+      newData.objectType = objectType;
     }
     const timeLimits: any = {};
     if (maxTime) {
@@ -100,7 +103,7 @@ export class TreeService {
     const selectedNode = this.getActiveNode();
     // tslint:disable-next-line:max-line-length
     const nodeConfig = (createType === 'sibling') ? this.config.hierarchy[`level${selectedNode.getLevel() - 1}`] : this.config.hierarchy[`level${selectedNode.getLevel()}`];
-    const uniqueId = UUID.UUID();
+    const uniqueId = uuidv4();
     const nodeTitle = _.get(nodeConfig, 'name');
     const node: any = {
       id: uniqueId,
@@ -147,7 +150,13 @@ export class TreeService {
   }
 
   getActiveNode() {
-    return this.getTreeObject().getActiveNode();
+    let activeNode;
+    try {
+      activeNode = this.getTreeObject().getActiveNode();
+    } catch {
+      activeNode = {};
+    }
+    return activeNode;
   }
 
   setActiveNode(node?) {
@@ -160,7 +169,13 @@ export class TreeService {
   }
 
   getFirstChild() {
-    return $(this.treeNativeElement).fancytree('getRootNode').getFirstChild();
+    let treeData;
+    try {
+      treeData = $(this.treeNativeElement).fancytree('getRootNode').getFirstChild();
+    } catch {
+      treeData = {};
+    }
+    return treeData;
   }
 
   findNode(nodeId) {

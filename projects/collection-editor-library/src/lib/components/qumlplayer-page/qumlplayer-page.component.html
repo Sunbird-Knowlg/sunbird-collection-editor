@@ -1,7 +1,7 @@
 <div>
     <div [ngClass]="{'potrait-mode': showPotrait}">
         <div class="b-1-100 br-2 mt-5" *ngIf="showPlayerPreview">
-            <lib-quml-player [questionSetHierarchy]="hierarchy" [isSingleQuestionPreview]="true" ></lib-quml-player>
+            <lib-quml-player [questionSetHierarchy]="hierarchy" [isSingleQuestionPreview]="true" (toolbarEmitter)="reviewQuestion()"></lib-quml-player>
         </div>
     </div>
 <div class="ui mt-20" *ngIf="(editorService.editorMode === 'edit')">
@@ -85,10 +85,16 @@
             <div class="fs-0-92 text-capitalize">{{questionMetaData?.copyright}}</div>
         </div>
     </div>
-    <div class="six wide column">
+    <div class="five wide column">
         <div class="sb-field-group">
             <label class="sb-color-gray-100">{{configService.labelConfig?.lbl?.licensedBy}}</label>
             <div class="fs-0-92 text-capitalize">{{questionMetaData?.license}}</div>
+        </div>
+    </div>
+    <div class="four wide column" *ngIf="questionMetaData?.qType === 'MCQ'">
+        <div class="sb-field-group">
+            <label class="sb-color-gray-100">{{configService.labelConfig?.lbl?.marks}}</label>
+            <div class="fs-0-92 text-capitalize">{{questionMetaData.maxScore? questionMetaData.maxScore : 1}}</div>
         </div>
     </div>
 </div>

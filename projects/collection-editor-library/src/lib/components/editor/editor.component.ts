@@ -10,8 +10,8 @@ import { ToasterService } from '../../services/toaster/toaster.service';
 import { HelperService } from '../../services/helper/helper.service';
 import { IEditorConfig } from '../../interfaces/editor';
 import { Router } from '@angular/router';
-import { catchError, map, takeUntil, tap } from 'rxjs/operators';
-import { Observable, throwError, forkJoin, Subscription, Subject } from 'rxjs';
+import { filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { Observable, throwError, forkJoin, Subscription, Subject, merge, of } from 'rxjs';
 import * as _ from 'lodash-es';
 import { ConfigService } from '../../services/config/config.service';
 import { DialcodeService } from '../../services/dialcode/dialcode.service';
@@ -75,7 +75,13 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public publishchecklist: any;
   public isComponenetInitialized = false;
   public unSubscribeShowLibraryPageEmitter: Subscription;
+  public unSubscribeshowQuestionLibraryPageEmitter: Subscription;
+  public sourcingSettings: any;
+  public setChildQuestion: any;
   public unsubscribe$ = new Subject<void>();
+  public onComponentDestroy$ = new Subject<any>();
+  public outcomeDeclaration: any;
+  public levelsArray: any;
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
               private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
               private toasterService: ToasterService, private dialcodeService: DialcodeService,
@@ -88,6 +94,17 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
+
+    if (this.editorConfig) {
+      if (typeof this.editorConfig === 'string') {
+        try {
+          this.editorConfig = JSON.parse(this.editorConfig);
+        } catch (error) {
+          console.error('Invalid editorConfig: ', error);
+        }
+      }
+    }
+    
     this.editorService.initialize(this.editorConfig);
     this.editorMode = this.editorService.editorMode;
     this.treeService.initialize(this.editorConfig);
@@ -119,6 +136,11 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           // tslint:disable-next-line:max-line-length
           const dialcode = _.get(response, 'result.objectCategoryDefinition.objectMetadata.schema.properties.generateDIALCodes.default');
           this.toolbarConfig.showDialcode = dialcode ? dialcode.toLowerCase() : 'no';
+          // tslint:disable-next-line:max-line-length
+          const enableBulkUpload = _.get(response, 'result.objectCategoryDefinition.objectMetadata.config.sourcingSettings.collection.enableBulkUpload');
+          this.toolbarConfig.showBulkUploadBtn = enableBulkUpload ? enableBulkUpload : false;
+
+          this.sourcingSettings = _.get(response, 'result.objectCategoryDefinition.objectMetadata.config.sourcingSettings', {});
           this.helperService.channelData$.subscribe(
             (channelResponse) => {
               this.sethierarchyConfig(response);
@@ -150,6 +172,16 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     let targetFWType: any;
     orgFWIdentifiers = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.framework.enum') ||
       _.get(categoryDefinitionData, 'result.objectCategoryDefinition.objectMetadata.schema.properties.framework.default');
+    if (_.get(this.editorConfig, 'config.renderTaxonomy') === true) {
+      const orgId = _.get(this.editorConfig, 'context.identifier');
+      this.editorService.fetchOutComeDeclaration(orgId).toPromise()
+      .then(data => {
+        if (data?.result) {
+          this.outcomeDeclaration = _.get(data?.result, 'questionset.outcomeDeclaration');
+          this.levelsArray = Object.keys(this.outcomeDeclaration);
+        }
+      });
+    }
     // tslint:disable-next-line:max-line-length
     this.publishchecklist = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.publishchecklist.properties') || _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.review.properties') || [];
     if (_.isEmpty(this.targetFramework || _.get(this.editorConfig, 'context.targetFWIds'))) {
@@ -236,12 +268,32 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   setEditorForms(categoryDefinitionData) {
-    this.unitFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.unitMetadata.properties');
-    // tslint:disable-next-line:max-line-length
-    this.rootFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.create.properties');
-    // tslint:disable-next-line:max-line-length
-    this.libraryComponentInput.searchFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.search.properties');
-    this.leafFormConfig = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.childMetadata.properties');
+    const formsConfigObj = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms');
+    this.unitFormConfig = _.get(formsConfigObj, 'unitMetadata.properties');
+    this.rootFormConfig = _.get(formsConfigObj, 'create.properties');
+    let formData;
+    if (this.rootFormConfig?.length) {
+      formData = this.rootFormConfig[0].fields || [];
+    }
+    formData.forEach((field) => {
+      if (field.code === 'evidenceMimeType') {
+        evidenceMimeType = field.range;
+        field.options = this.setEvidence;
+        field.range = null;
+      } else if (field.code === 'allowECM') {
+        field.options = this.setAllowEcm;
+      } else if (field.code === 'ecm') {
+        ecm = field.options;
+        field.options = this.setEcm;
+      }
+    });
+    if ( this.objectType === 'questionset' && _.has(formsConfigObj, 'searchConfig')) {
+        this.libraryComponentInput.searchFormConfig = _.get(formsConfigObj, 'searchConfig.properties');
+    } else {
+      this.libraryComponentInput.searchFormConfig = _.get(formsConfigObj, 'search.properties');
+    }
+    this.leafFormConfig = _.get(formsConfigObj, 'childMetadata.properties');
+    this.relationFormConfig = _.get(formsConfigObj, 'relationalMetadata.properties');
   }
 
   ngAfterViewInit() {
@@ -296,8 +348,27 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         });
       }
     }
-    this.ishierarchyConfigSet = true;
     this.editorConfig.config = _.assign(this.editorConfig.config, hierarchyConfig);
+    if (_.get(this.editorConfig, 'config.renderTaxonomy') === true && _.isEmpty(_.get(this.collectionTreeNodes, 'data.children'))) {
+      this.fetchFrameWorkDetails();
+    } else {
+      this.ishierarchyConfigSet = true;
+    }
+  }
+
+  fetchFrameWorkDetails() {
+    this.frameworkService.frameworkData$.pipe(
+      takeUntil(this.onComponentDestroy$),
+      filter(data => _.get(data, `frameworkdata.${this.frameworkService.organisationFramework}`)),
+      take(1)
+    ).subscribe((frameworkDetails: any) => {
+      if (frameworkDetails && !frameworkDetails.err) {
+        const orgFrameworkData = _.get(frameworkDetails, `frameworkdata.${this.frameworkService.organisationFramework}.categories`);
+        const categoryInstanceData = _.find(orgFrameworkData, {code: _.get(this.editorConfig, 'config.categoryInstance')});
+        this.collectionTreeNodes.data.children = _.get(categoryInstanceData, 'terms');
+        this.ishierarchyConfigSet = true;
+      }
+    });
   }
 
   getHierarchyChildrenConfig(childrenData) {
@@ -399,10 +470,19 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       case 'showReviewcomments':
         this.showReviewModal = !this.showReviewModal;
         break;
-      //case 'showCorrectioncomments':
-        //this.contentComment = _.get(this.editorConfig, 'context.correctionComments')
-        //this.showReviewModal = !this.showReviewModal;
-        //break;
+      case 'reviewContent':
+        this.redirectToQuestionTab('review');
+        break;
+      case 'pagination':
+        this.pageId = 'pagination';
+        break;
+      case 'progressStatus':
+        this.pageId = 'progressStatus';
+        break;
+      // case 'showCorrectioncomments':
+        // this.contentComment = _.get(this.editorConfig, 'context.correctionComments')
+        // this.showReviewModal = !this.showReviewModal;
+        // break;
       default:
         break;
     }
@@ -417,9 +497,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   updateToolbarTitle(data: any) {
     const selectedNode = this.treeService.getActiveNode();
-    if (!_.isEmpty(data.event.name) && selectedNode.data.root) {
-      this.toolbarConfig.title = data.event.name;
-    } else if (_.isEmpty(data.event.name) && selectedNode.data.root) {
+    if (!_.isEmpty(data?.data?.name) && selectedNode?.data?.root) {
+      this.toolbarConfig.title = data.data.name;
+    } else if (_.isEmpty(data?.data?.name) && selectedNode?.data?.root) {
       this.toolbarConfig.title = 'Untitled';
     }
   }
@@ -435,6 +515,44 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.toasterService.error(err);
         this.buttonLoaders.addFromLibraryButtonLoader = false;
       });
+    }
+  }
+  showQuestionLibraryComponentPage() {
+    if (_.isUndefined(this.libraryComponentInput.searchFormConfig) || _.isEmpty(this.libraryComponentInput.searchFormConfig)) {
+      this.toasterService.error(_.get(this.configService, 'labelConfig.err.searchConfigNotFound'));
+      return;
+    }
+    if (this.editorService.checkIfContentsCanbeAdded('add')) {
+      const questionCategory = [];
+      this.buttonLoaders.addQuestionFromLibraryButtonLoader = true;
+      if (!_.isUndefined(this.editorService.templateList) &&
+        _.isArray(this.editorService.templateList)) {
+          _.forEach(this.editorService.templateList, (template) => {
+            questionCategory.push({name: template, targetObjectType: 'Question'});
+          });
+        }
+      this.saveContent().then((message: string) => {
+        const activeNode = this.treeService.getActiveNode();
+        this.buttonLoaders.addQuestionFromLibraryButtonLoader = false;
+        this.questionlibraryInput = {
+          libraryLabels: {
+            itemType: _.get(this.configService, 'labelConfig.lbl.questionsetAddFromLibraryItemLabel'),
+            collectionType: _.get(this.configService, 'labelConfig.lbl.questionsetAddFromLibraryCollectionLabel')
+          },
+          targetPrimaryCategories: questionCategory,
+          collectionId: this.collectionId,
+          existingcontentCounts: this.editorService.getContentChildrens().length,
+          collection: activeNode?.data?.metadata,
+          framework: this.organisationFramework,
+          editorConfig: this.editorConfig,
+          searchFormConfig:  this.libraryComponentInput.searchFormConfig
+        };
+        this.pageId = 'question_library';
+        console.log(this.questionlibraryInput);
+      }).catch(((error: string) => {
+        this.toasterService.error(error);
+        this.buttonLoaders.addQuestionFromLibraryButtonLoader = false;
+      }));
     }
   }
 
@@ -621,6 +739,12 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       this.updateTreeNodeData();
       this.buttonLoaders.previewButtonLoader = false;
       this.showPreview = true;
+      setTimeout(() => {
+        const element: any = document.querySelector('#previewPlayerContainer');
+        if (element) {
+          element.focus();
+        }
+      }, 500);
     }, error => {
       this.buttonLoaders.previewButtonLoader = false;
       this.toasterService.error(_.get(error, 'error.params.errmsg'));
@@ -720,11 +844,11 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   generateTelemetryEndEvent() {
     const telemetryEnd = {
       type: 'editor',
-      pageid: this.telemetryService.telemetryPageId,
+      pageid: this.telemetryService?.telemetryPageId,
       mode: this.editorMode,
       duration: _.toString((Date.now() - this.pageStartTime) / 1000)
     };
-    this.telemetryService.end(telemetryEnd);
+    this.telemetryService?.end(telemetryEnd);
   }
 
   handleTemplateSelection($event) {
@@ -741,7 +865,26 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       return throwError(this.editorService.apiErrorHandling(error, errInfo));
     })).subscribe((res) => {
       const selectedtemplateDetails = res.result.objectCategoryDefinition;
-      const catMetaData = selectedtemplateDetails.objectMetadata;
+      this.editorService.selectedChildren['label']=selectedtemplateDetails.label;
+      const selectedTemplateFormFields = _.get(selectedtemplateDetails, 'forms.create.properties');
+      if (!_.isEmpty(selectedTemplateFormFields)) {
+        const questionCategoryConfig = selectedTemplateFormFields;
+        questionCategoryConfig.forEach(field => {
+          if (field.code === 'evidenceMimeType') {
+            evidenceMimeType = field.range;
+            field.options = this.setEvidence;
+            field.range = null;
+          }
+        });
+        this.leafFormConfig = questionCategoryConfig;
+      }
+
+      const catMetaData = _.get(selectedtemplateDetails, 'objectMetadata');
+      this.sourcingSettings = _.get(catMetaData, 'config.sourcingSettings') || {};
+      !_.isUndefined(this.editorConfig.config.renderTaxonomy) ? (this.questionComponentInput.config ={maximumOptions:_.get(catMetaData, 'config.maximumOptions')}) : '' ;
+      if (!_.has(this.sourcingSettings, 'enforceCorrectAnswer')) {
+        this.sourcingSettings.enforceCorrectAnswer = true;
+      }
       if (_.isEmpty(_.get(catMetaData, 'schema.properties.interactionTypes.items.enum'))) {
         // this.toasterService.error(this.resourceService.messages.emsg.m0026);
         this.editorService.selectedChildren = {
@@ -763,11 +906,72 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   redirectToQuestionTab(mode, interactionType?) {
+    let questionId = !_.isUndefined(mode) ? this.selectedNodeData?.data?.metadata?.identifier : undefined;
+    let questionCategory = '';
+    if (this.objectType === 'question') {
+      questionId = _.get(this.editorConfig, 'context.identifier');
+      interactionType = _.get(this.editorConfig, 'config.interactionType');
+      questionCategory = _.get(this.editorConfig, 'config.questionCategory');
+      this.creationContext =  {
+        mode: mode,
+        objectType: this.objectType,
+        collectionObjectType: _.get(this.editorConfig, 'context.collectionObjectType'),
+        isReadOnlyMode: _.get(this.editorConfig, 'config.isReadOnlyMode'),
+        unitIdentifier: _.get(this.editorConfig, 'context.unitIdentifier'),
+        correctionComments: _.get(this.editorConfig, 'context.correctionComments'),
+        editableFields: _.get(this.editorConfig, 'config.editableFields')
+      };
+    }
+
     this.questionComponentInput = {
       questionSetId: this.collectionId,
       questionId: mode === 'edit' ? this.selectedNodeData.data.metadata.identifier : undefined,
       type: interactionType
     };
+
+    if(!_.isUndefined(mode) && !_.isUndefined(this.editorConfig.config.renderTaxonomy)){
+      this.editorService.selectedChildren = {
+        primaryCategory: _.get(this.selectedNodeData, 'data.metadata.primaryCategory'),
+        interactionType: _.get(this.selectedNodeData, 'data.metadata.interactionTypes[0]')
+      };
+        this.questionComponentInput = {
+          ...this.questionComponentInput,
+          creationContext:{
+            isReadOnlyMode: mode !== 'edit' ? true : false,
+            correctionComments:this.contentComment
+        }
+      }
+      this.editorService.getCategoryDefinition(this.selectedNodeData.data.metadata.primaryCategory, null, 'Question')
+      .subscribe((res) => {
+        const selectedtemplateDetails = res.result.objectCategoryDefinition;
+        this.editorService.selectedChildren['label']=selectedtemplateDetails.label;
+        const selectedTemplateFormFields = _.get(selectedtemplateDetails, 'forms.create.properties');
+        this.questionComponentInput.config ={maximumOptions:_.get(selectedtemplateDetails, 'objectMetadata.config.maximumOptions')}
+        if (!_.isEmpty(selectedTemplateFormFields)) {
+          const questionCategoryConfig = selectedTemplateFormFields;
+          questionCategoryConfig.forEach(field => {
+            if (field.code === 'evidenceMimeType') {
+              evidenceMimeType = field.range;
+              field.options = this.setEvidence;
+              field.range = null;
+            }
+          });
+          this.leafFormConfig = questionCategoryConfig;
+        }
+        const catMetaData = selectedtemplateDetails.objectMetadata;
+        this.sourcingSettings = catMetaData?.config?.sourcingSettings || {};
+        if (!_.has(this.sourcingSettings, 'enforceCorrectAnswer')) {
+          this.sourcingSettings.enforceCorrectAnswer = true;
+        }
+        this.pageId = 'question';
+      },(error) => {
+        const errInfo = {
+          errorMsg: _.get(this.configService, 'labelConfig.messages.error.006'),
+        };
+        return throwError(this.editorService.apiErrorHandling(error, errInfo))
+      });
+    }
+    else{
     this.pageId = 'question';
   }
 
@@ -866,12 +1070,27 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         break;
     }
   }
+
+  onFormStatusChange(form) {
+    const selectedNode = this.treeService.getActiveNode();
+    if (selectedNode && selectedNode.data.id) {
+      this.formStatusMapper[selectedNode.data.id] = form.isValid;
+    }
+  }
+
+  assignPageEmitterListener(event: any) {
+    this.pageId = 'collection_editor';
+  }
+
   ngOnDestroy() {
-    if (this.telemetryService) {
+    if (this.telemetryService && this.telemetryService?.end) {
       this.generateTelemetryEndEvent();
     }
     if (this.treeService) {
       this.treeService.clearTreeCache();
+    }
+     if (this.dialcodeService) {
+      this.dialcodeService.clearDialCodeMaps();
     }
     if (this.modal && this.modal.deny) {
       this.modal.deny();
@@ -879,7 +1098,60 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.unSubscribeShowLibraryPageEmitter) {
       this.unSubscribeShowLibraryPageEmitter.unsubscribe();
     }
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+    if (this.unSubscribeshowQuestionLibraryPageEmitter) {
+      this.unSubscribeshowQuestionLibraryPageEmitter.unsubscribe();
+    }
+    this.unsubscribe$ && this.unsubscribe$.next();
+    this.unsubscribe$ && this.unsubscribe$.complete();
   }
+
+
+  setEvidence(control, depends: FormControl[], formGroup: FormGroup, loading, loaded) {
+    control.isVisible = 'no';
+    control.range = evidenceMimeType;
+    return merge(..._.map(depends, depend => depend.valueChanges)).pipe(
+        switchMap((value: any) => {
+            if (!_.isEmpty(value) && _.toLower(value) === 'yes') {
+                control.isVisible = 'yes';
+                return of({range: evidenceMimeType});
+            } else {
+                control.isVisible = 'no';
+                return of(null);
+            }
+        })
+    );
+  }
+
+  setEcm(control, depends: FormControl[], formGroup: FormGroup, loading, loaded) {
+    control.isVisible = 'no';
+    control.options = ecm;
+    return merge(..._.map(depends, depend => depend.valueChanges)).pipe(
+        switchMap((value: any) => {
+            if (!_.isEmpty(value) && _.toLower(value) === 'yes') {
+                control.isVisible = 'yes';
+                return of({options: ecm});
+            } else {
+                control.isVisible = 'no';
+                return of(null);
+            }
+        })
+    );
+  }
+
+  setAllowEcm(control, depends: FormControl[]) {
+    control.isVisible = 'no';
+    const response = merge(..._.map(depends, depend => depend.valueChanges)).pipe(
+        switchMap((value: any) => {
+             if (!_.isEmpty(value) && _.toLower(value) === 'self' ) {
+                control.isVisible = 'no';
+                return of(null);
+             } else {
+                control.isVisible = 'yes';
+                return of(null);
+             }
+        })
+    );
+    return response;
+  }
+
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import * as _ from 'lodash-es';
-import { DialcodeCursor } from 'common-form-elements-web-v9';
+import { DialcodeCursor } from '@project-sunbird/common-form-elements-full';
 import { ConfigService } from '../config/config.service';
 import { PublicDataService } from '../public-data/public-data.service';
 import { TreeService } from '../../services/tree/tree.service';
@@ -185,10 +185,11 @@ export class DialcodeService implements DialcodeCursor {
         } else if (node.data.metadata.dialcodeRequired === 'Yes' && _.isEmpty(dialcodes)) {
           dialCodeMisssing = true;
           this.treeService.highlightNode(node.data.id, 'add');
-        } else if (node.data.metadata.dialcodeRequired === 'No' && !_.isEmpty(dialcodes)) {
-          dialCodeMisssing = true;
-          this.treeService.highlightNode(node.data.id, 'add');
-        }
+        } 
+        // else if (node.data.metadata.dialcodeRequired === 'No' && !_.isEmpty(dialcodes)) {
+        //   dialCodeMisssing = true;
+        //   this.treeService.highlightNode(node.data.id, 'add');
+        // }
       }
     });
     if (dialCodeMisssing) {
@@ -257,6 +258,7 @@ export class DialcodeService implements DialcodeCursor {
         } else {
           this.toasterService.success(_.get(this.configService, 'labelConfig.messages.success.009'));
         }
+        this.clearDialCodeMaps();
         }, (err) => {
           if (err && err.error && err.error.params && err.error.params.err === 'ERR_DIALCODE_LINK') {
             this.toasterService.error(err.error.params.errmsg);
@@ -267,6 +269,11 @@ export class DialcodeService implements DialcodeCursor {
     } else if (!_.isEmpty(this.invaliddialCodeMap)) {
       this.toasterService.warning(_.get(this.configService, 'labelConfig.messages.warning.002'));
     }
+  }
+
+  clearDialCodeMaps() {
+    this.dialCodeMap = {};
+    this.invaliddialCodeMap = {};
   }
 
   readExistingQrCode() {

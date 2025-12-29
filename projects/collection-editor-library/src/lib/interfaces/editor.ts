@@ -1,4 +1,6 @@
-export interface Context {
+export interface ContextBase {
+    programId?: string;
+    contributionOrgId?: string;
     user: User;
     identifier: string;
     mode: string;
@@ -21,15 +23,25 @@ export interface Context {
     };
     env: string;
     defaultLicense?: any;
-    board?: any;
-    medium?: any;
-    gradeLevel?: any;
-    subject?: any;
     topic?: any;
     framework: string;
     cloudStorageUrls: string[];
     additionalCategories: any[];
     labels?: any;
+    actor?: any;
+    channelData?: any;
+    correctionComments?: any;
+    sourcingResourceStatus?: string;
+    sourcingResourceStatusClass?: string;
+    collectionIdentifier?: string;
+    unitIdentifier?: string;
+    collectionObjectType?: string;
+    collectionPrimaryCategory?: string;
+    targetFWIds?: string[];
+    cloudStorage?: any;
+}
+export interface Context extends ContextBase {
+    [key: string]: any;
 }
 export interface User {
     id: string;

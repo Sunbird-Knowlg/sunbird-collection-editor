@@ -6,6 +6,8 @@ import { EditorService } from '../../services/editor/editor.service';
 import { QuestionService } from '../../services/question/question.service';
 import {config} from './asset-browser.data';
 import { ConfigService } from '../../services/config/config.service';
+declare const SunbirdFileUploadLib: any;
+
 @Component({
   selector: 'lib-asset-browser',
   templateUrl: './asset-browser.component.html',
@@ -211,9 +213,39 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
         const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.019') };
         return throwError(this.editorService.apiErrorHandling(err, errInfo));
       })).subscribe((response) => {
-        this.addImageInEditor(response.result.content_url, response.result.node_id);
-        this.showImageUploadModal = false;
-        this.dismissPops(modal);
+        const signedURL = response.result.pre_signed_url;
+        let blobConfig = {
+          processData: false,
+          contentType: 'Asset'
+        };
+        blobConfig = this.editorService.appendCloudStorageHeaders(blobConfig);
+        this.uploadToBlob(signedURL, this.imageFile, blobConfig).subscribe(() => {
+          const fileURL = signedURL.split('?')[0];
+          const data = new FormData();
+          data.append('fileUrl', fileURL);
+          data.append('mimeType', _.get(this.imageFile, 'type'));
+          const config1 = {
+            enctype: 'multipart/form-data',
+            processData: false,
+            contentType: false,
+            cache: false
+          };
+          const uploadMediaConfig = {
+            data,
+            param: config1
+          };
+          this.questionService.uploadMedia(uploadMediaConfig, imgId).pipe(catchError(err => {
+            const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.019') };
+            this.isClosable = true;
+            this.loading = false;
+            this.imageFormValid = true;
+            return throwError(this.editorService.apiErrorHandling(err, errInfo));
+          })).subscribe((response1) => {
+            this.addImageInEditor(response1.result.content_url, response1.result.node_id);
+            this.showImageUploadModal = false;
+            this.dismissPops(modal);
+          });
+        });
       });
     });
   }
@@ -229,12 +261,20 @@ export class AssetBrowserComponent implements OnInit, OnDestroy {
   }
 
   uploadToBlob(signedURL, file, config): Observable<any> {
-    return this.questionService.http.put(signedURL, file, config).pipe(catchError(err => {
-      const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.018') };
-      this.isClosable = true;
-      this.loading = false;
-      return throwError(this.editorService.apiErrorHandling(err, errInfo));
-    }), map(data => data));
+    const csp = _.get(this.editorService.editorConfig, 'context.cloudStorage.provider', 'azure');
+    return new Observable((observer) => {
+      const uploaderLib = new SunbirdFileUploadLib.FileUploader();
+      uploaderLib.upload({ url: signedURL, file, csp })
+      .on("error", (error) => {
+        const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.018') };
+        this.isClosable = true;
+        this.loading = false;
+        observer.error(this.editorService.apiErrorHandling(error, errInfo));
+      }).on("completed", (completed) => {
+        observer.next(completed);
+        observer.complete();
+      })
+    });
   }
 
 

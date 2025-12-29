@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { LibraryComponent } from './library.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -16,7 +16,7 @@ describe('LibraryComponent', () => {
   class RouterStub {
     navigate = jasmine.createSpy('navigate');
   }
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       providers: [EditorTelemetryService,TreeService, EditorService, { provide: Router, useClass: RouterStub }, ConfigService],
       imports: [HttpClientTestingModule],
@@ -37,8 +37,8 @@ describe('LibraryComponent', () => {
   });
 
   xit('#fetchCollectionHierarchy should call after ngOnInit', fakeAsync(() => {
-    const treeService = TestBed.get(TreeService);
-    const editorService = TestBed.get(EditorService);
+    const treeService = TestBed.inject(TreeService);
+    const editorService = TestBed.inject(EditorService);
     spyOn(treeService, 'getActiveNode').and.callFake(() => {
       return { getLevel: () => 2 };
     });

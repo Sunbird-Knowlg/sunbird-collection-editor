@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, NgZone } from '@angular/core';
 import { ConfigService } from '../../services/config/config.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
@@ -6,6 +6,8 @@ import { EditorService } from '../../services/editor/editor.service';
 import { catchError, map } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import * as _ from 'lodash-es';
+declare const SunbirdFileUploadLib: any;
+
 @Component({
   selector: 'lib-csv-upload',
   templateUrl: './csv-upload.component.html',
@@ -27,7 +29,7 @@ export class CsvUploadComponent implements OnInit {
   public fileName: any;
   public file: any;
   constructor(public telemetryService: EditorTelemetryService, public configService: ConfigService,
-              private toasterService: ToasterService, private editorService: EditorService, ) { }
+              private toasterService: ToasterService, private editorService: EditorService, private ngZone: NgZone) { }
 
   ngOnInit(): void {
     this.handleInputCondition();
@@ -66,15 +68,19 @@ export class CsvUploadComponent implements OnInit {
       param: config
     };
     this.editorService.validateCSVFile(option, contentId).subscribe(res => {
-      this.isClosable = true;
-      this.showSuccessCsv = true;
-      this.showCsvValidationStatus = false;
-      this.csvUploadEmitter.emit({ status: true, type: 'updateHierarchy' });
+      this.ngZone.run(() => {
+        this.isClosable = true;
+        this.showSuccessCsv = true;
+        this.showCsvValidationStatus = false;
+        this.csvUploadEmitter.emit({ status: true, type: 'updateHierarchy' });
+      });
     }, error => {
-      this.showCsvValidationStatus = false;
-      this.errorCsvStatus = true;
-      this.errorCsvMessage = _.get(error, 'error.params.errmsg').split('\n');
-      this.isClosable = true;
+      this.ngZone.run(() => {
+        this.showCsvValidationStatus = false;
+        this.errorCsvStatus = true;
+        this.errorCsvMessage = _.get(error, 'error.params.errmsg').split('\n');
+        this.isClosable = true;
+      });
     });
   }
   closeHierarchyModal(modal) {
@@ -111,14 +117,22 @@ export class CsvUploadComponent implements OnInit {
     /*this.editorService.downloadBlobUrlFile(downloadConfig);*/
   }
   uploadToBlob(signedURL, file, config): Observable<any> {
-    return this.editorService.httpClient.put(signedURL, file, config).pipe(catchError(err => {
-      const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.018')};
-      this.isClosable = true;
-      this.errorCsvStatus = true;
-      this.showCsvValidationStatus = false;
-      this.errorCsvMessage = _.get(err, 'error.params.errmsg') || errInfo.errorMsg;
-      return throwError(this.editorService.apiErrorHandling(err, errInfo));
-    }), map(data => data));
+    const csp = _.get(this.editorService.editorConfig, 'context.cloudStorage.provider', 'azure');
+    return new Observable((observer) => {
+      const uploaderLib = new SunbirdFileUploadLib.FileUploader();
+      uploaderLib.upload({ url: signedURL, file, csp })
+      .on('error', (error) => {
+        const errInfo = { errorMsg: _.get(this.configService.labelConfig, 'messages.error.018')};
+        this.isClosable = true;
+        this.errorCsvStatus = true;
+        this.showCsvValidationStatus = false;
+        this.errorCsvMessage = _.get(error, 'error.params.errmsg') || errInfo.errorMsg;
+        observer.error(this.editorService.apiErrorHandling(error, errInfo));
+      }).on('completed', (completed) => {
+        observer.next(completed);
+        observer.complete();
+      });
+    });
   }
   validateCSVFile() {
     this.showCsvValidationStatus = true;
@@ -140,14 +154,12 @@ export class CsvUploadComponent implements OnInit {
       return throwError(this.editorService.apiErrorHandling(err, errInfo));
     })).subscribe((response) => {
       const signedURL = _.get(response.result, 'pre_signed_url');
-      const config = {
+      let blobConfig = {
         processData: false,
-        contentType: 'text/csv',
-        headers: {
-          'x-ms-blob-type': 'BlockBlob'
-        }
+        contentType: 'text/csv'
       };
-      this.uploadToBlob(signedURL, this.file, config).subscribe(() => {
+      blobConfig = this.editorService.appendCloudStorageHeaders(blobConfig);
+      this.uploadToBlob(signedURL, this.file, blobConfig).subscribe(() => {
         const fileURL = signedURL.split('?')[0];
         this.updateContentWithURL(fileURL, this.file.type, this.collectionId);
       });
