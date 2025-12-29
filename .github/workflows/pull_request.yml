@@ -1,9 +1,9 @@
 name: Code Quality Checks
 
 on:
-  pull_request:
-    branches:
-      - '**'
+  push:
+    tags:
+      - '*'
 
 jobs:
   code-quality:
@@ -32,7 +32,7 @@ jobs:
             ${{ runner.os }}-node-modules-
 
       - name: Install dependencies
-        run: npm install --no-progress
+        run: npm ci --no-progress
     
       - name: Save node_modules cache
         if: steps.cache.outputs.cache-hit != 'true'
