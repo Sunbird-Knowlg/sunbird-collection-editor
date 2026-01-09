@@ -15,37 +15,37 @@ This implementation plan breaks down the Angular upgrade into discrete, testable
   - _Requirements: 15.1, 15.2_
 
 - [-] 2. Upgrade to Angular 17
-  - [-] 2.1 Execute Angular 17 migration
+  - [x] 2.1 Execute Angular 17 migration
     - Run `ng update @angular/core@17 @angular/cli@17`
     - Review and accept migration prompts
     - Document any warnings or errors
     - _Requirements: 1.1, 4.1_
 
-  - [ ] 2.2 Update TypeScript and Node.js requirements
+  - [x] 2.2 Update TypeScript and Node.js requirements
     - Update TypeScript to 5.2.x or higher
     - Verify Node.js version >= 18.13.0
     - Update tsconfig.json if needed
     - _Requirements: 1.5, 5.1_
 
-  - [ ] 2.3 Update third-party dependencies for Angular 17
+  - [x] 2.3 Update third-party dependencies for Angular 17
     - Update ngx-bootstrap to Angular 17 compatible version
     - Update ngx-infinite-scroll to Angular 17 compatible version
     - Update @angular/cdk and @angular/material to 17.x
     - _Requirements: 1.2, 9.1, 9.3_
 
-  - [ ] 2.4 Resolve peer dependency conflicts
+  - [x] 2.4 Resolve peer dependency conflicts
     - Check for peer dependency warnings
     - Add npm overrides to package.json if needed for @project-sunbird packages
     - Document any packages requiring --legacy-peer-deps
     - _Requirements: 3.2, 3.4, 10.3_
 
-  - [ ] 2.5 Update build configurations
+  - [x] 2.5 Update build configurations
     - Review angular.json for any deprecated options
     - Update tsconfig.json target and lib settings
     - Verify useDefineForClassFields setting
     - _Requirements: 5.1, 5.2, 5.3_
 
-  - [ ] 2.6 Test library build
+  - [-] 2.6 Test library build
     - Run `npm run build-lib`
     - Verify dist/collection-editor-library output
     - Check for compilation errors
