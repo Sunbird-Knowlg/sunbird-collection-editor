@@ -45,13 +45,13 @@ This implementation plan breaks down the Angular upgrade into discrete, testable
     - Verify useDefineForClassFields setting
     - _Requirements: 5.1, 5.2, 5.3_
 
-  - [-] 2.6 Test library build
+  - [x] 2.6 Test library build
     - Run `npm run build-lib`
     - Verify dist/collection-editor-library output
     - Check for compilation errors
     - _Requirements: 2.1, 6.1_
 
-  - [ ] 2.7 Test web component build
+  - [-] 2.7 Test web component build
     - Run `npm run build-web-component`
     - Verify build-wc.js completes successfully
     - Check web-component/ directory for output files
