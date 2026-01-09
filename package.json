@@ -63,7 +63,6 @@
     "ngx-infinite-scroll": "^16.0.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "~6.6.3",
-    "svg2img": "^0.6.1",
     "tslib": "^2.0.0",
     "uuid": "^9.0.0",
     "video.js": "^7.18.1",
