@@ -1,5 +1,5 @@
 {
-  "name": "@project-sunbird/sunbird-collection-editor",
+  "name": "@jeraldj/sunbird-collection-editor",
   "version": "9.0.0",
   "dependencies": {
     "tslib": "^2.0.0"
