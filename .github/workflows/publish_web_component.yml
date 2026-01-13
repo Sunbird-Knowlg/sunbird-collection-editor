@@ -20,7 +20,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies (legacy peer deps to unblock CI)
-        run: npm ci --legacy-peer-deps
+        run: npm i --legacy-peer-deps
 
       - name: Set package version from tag
         working-directory: web-component
