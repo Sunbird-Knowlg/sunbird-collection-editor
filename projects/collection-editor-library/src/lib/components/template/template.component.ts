@@ -4,9 +4,10 @@ import { EditorTelemetryService } from '../../services/telemetry/telemetry.servi
 import { ConfigService } from '../../services/config/config.service';
 
 @Component({
-  selector: 'lib-template',
-  templateUrl: './template.component.html',
-  styleUrls: ['./template.component.scss']
+    selector: 'lib-template',
+    templateUrl: './template.component.html',
+    styleUrls: ['./template.component.scss'],
+    standalone: false
 })
 export class TemplateComponent implements OnInit, OnDestroy {
 

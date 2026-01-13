@@ -1,7 +1,7 @@
 import { EditorService } from './../../services/editor/editor.service';
 import { ComponentFixture, TestBed, inject, waitForAsync } from '@angular/core/testing';
 import { FancyTreeComponent } from './fancy-tree.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA, ChangeDetectorRef } from '@angular/core';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
@@ -17,6 +17,7 @@ import { BranchingLogic } from '../question/question.component.spec.data';
 import * as _ from 'lodash-es';
 import { of } from 'rxjs';
 import { mockTreeData } from '../assign-page-number/assign-page-number.component.spec.data';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('FancyTreeComponent', () => {
   let component: FancyTreeComponent;
@@ -28,16 +29,15 @@ describe('FancyTreeComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [EditorTelemetryService, EditorService, HelperService,
-          { provide: Router, useClass: RouterStub }, ToasterService,
-          { provide: ConfigService, useValue: config },
-          { provide: TreeService, useValue: mockTreeService },
-          { provide: ChangeDetectorRef, useValue: { detectChanges: () => {} } }
-        ],
-      imports: [HttpClientTestingModule, SuiModule],
-      declarations: [ FancyTreeComponent, TelemetryInteractDirective ],
-      schemas: [NO_ERRORS_SCHEMA]
-    })
+    declarations: [FancyTreeComponent, TelemetryInteractDirective],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [SuiModule],
+    providers: [EditorTelemetryService, EditorService, HelperService,
+        { provide: Router, useClass: RouterStub }, ToasterService,
+        { provide: ConfigService, useValue: config },
+        { provide: TreeService, useValue: mockTreeService },
+        { provide: ChangeDetectorRef, useValue: { detectChanges: () => { } } }, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+})
     .compileComponents();
   }));
 

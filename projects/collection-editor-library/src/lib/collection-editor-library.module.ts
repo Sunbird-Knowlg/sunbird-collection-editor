@@ -5,7 +5,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/cor
 import { CommonFormElementsModule, DialcodeCursor } from '@project-sunbird/common-form-elements-full';
 import { SuiModule } from '@project-sunbird/ng2-semantic-ui';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { SanitizeHtmlPipe } from './pipes/sanitize-html.pipe';
 import { InterpolatePipe } from './pipes/interpolate.pipe';
 import { CollectionEditorLibraryComponent } from './collection-editor-library.component';
@@ -27,7 +27,7 @@ import { AnswerComponent } from './components/answer/answer.component';
 import { CkeditorToolComponent } from './components/ckeditor-tool/ckeditor-tool.component';
 import { QuestionComponent } from './components/question/question.component';
 import { QumlLibraryModule } from '@project-sunbird/sunbird-quml-player';
-import {CarouselModule} from 'ngx-bootstrap/carousel';
+import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { TelemetryInteractDirective } from './directives/telemetry-interact/telemetry-interact.directive';
 import { DateFormatPipe } from './directives/date-format/date-format.pipe';
 import { AssetBrowserComponent } from './components/asset-browser/asset-browser.component';
@@ -41,7 +41,7 @@ import { ManageCollaboratorComponent } from './components/manage-collaborator/ma
 import { SliderComponent } from './components/slider/slider.component';
 import { TranslationsComponent } from './components/translations/translations.component';
 import { PublishChecklistComponent } from './components/publish-checklist/publish-checklist.component';
-import { BulkUploadComponent  } from './components/bulk-upload/bulk-upload.component';
+import { BulkUploadComponent } from './components/bulk-upload/bulk-upload.component';
 import { RelationalMetadataComponent } from './components/relational-metadata/relational-metadata.component';
 import { ResourceLibraryModule } from '@project-sunbird/sunbird-resource-library';
 import { AppLoaderComponent } from './components/app-loader/app-loader.component';
@@ -49,59 +49,60 @@ import { AssignPageNumberComponent } from './components/assign-page-number/assig
 import { PlainTreeComponent } from './components/plain-tree/plain-tree.component';
 import { A11yModule } from '@angular/cdk/a11y';
 import { ProgressStatusComponent } from './components/progress-status/progress-status.component';
-import {TermAndConditionComponent} from './components/term-and-condition/term-and-condition.component';
+import { TermAndConditionComponent } from './components/term-and-condition/term-and-condition.component';
 
 import { QualityParamsModalComponent } from './components/quality-params-modal/quality-params-modal.component';
 @NgModule({
-  declarations: [
-    CollectionEditorLibraryComponent,
-    InterpolatePipe,
-    SanitizeHtmlPipe,
-    ContentplayerPageComponent,
-    EditorComponent,
-    QumlplayerPageComponent,
-    HeaderComponent,
-    FancyTreeComponent,
-    MetaFormComponent,
-    LibraryComponent,
-    LibraryFilterComponent,
-    LibraryListComponent,
-    QuestionComponent,
-    OptionsComponent,
-    AnswerComponent,
-    CkeditorToolComponent,
-    LibraryPlayerComponent,
-    ResourceReorderComponent,
-    SkeletonLoaderComponent,
-    TemplateComponent,
-    DateFormatPipe,
-    TelemetryInteractDirective,
-    AssetBrowserComponent,
-    CollectionIconComponent,
-    QumlPlayerComponent,
-    DialcodeComponent,
-    BulkUploadComponent,
-    CsvUploadComponent,
-    ManageCollaboratorComponent,
-    PublishChecklistComponent,
-    QuestionOptionSubMenuComponent,
-    SliderComponent,
-    TranslationsComponent,
-    AppLoaderComponent,
-    RelationalMetadataComponent,
-    AssignPageNumberComponent,
-    PlainTreeComponent,
-    ProgressStatusComponent,
-    TermAndConditionComponent,
-    QualityParamsModalComponent
-  ],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule.forChild([]), SuiModule,
-  CommonFormElementsModule, InfiniteScrollModule, HttpClientModule,
-  QumlLibraryModule, CarouselModule, ResourceLibraryModule, A11yModule],
-  providers: [
-    { provide: DialcodeCursor, useExisting: DialcodeService }
-  ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
-  exports: [EditorComponent],
+    declarations: [
+        CollectionEditorLibraryComponent,
+        InterpolatePipe,
+        SanitizeHtmlPipe,
+        ContentplayerPageComponent,
+        EditorComponent,
+        QumlplayerPageComponent,
+        HeaderComponent,
+        FancyTreeComponent,
+        MetaFormComponent,
+        LibraryComponent,
+        LibraryFilterComponent,
+        LibraryListComponent,
+        QuestionComponent,
+        OptionsComponent,
+        AnswerComponent,
+        CkeditorToolComponent,
+        LibraryPlayerComponent,
+        ResourceReorderComponent,
+        SkeletonLoaderComponent,
+        TemplateComponent,
+        DateFormatPipe,
+        TelemetryInteractDirective,
+        AssetBrowserComponent,
+        CollectionIconComponent,
+        QumlPlayerComponent,
+        DialcodeComponent,
+        BulkUploadComponent,
+        CsvUploadComponent,
+        ManageCollaboratorComponent,
+        PublishChecklistComponent,
+        QuestionOptionSubMenuComponent,
+        SliderComponent,
+        TranslationsComponent,
+        AppLoaderComponent,
+        RelationalMetadataComponent,
+        AssignPageNumberComponent,
+        PlainTreeComponent,
+        ProgressStatusComponent,
+        TermAndConditionComponent,
+        QualityParamsModalComponent
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+    exports: [EditorComponent],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule.forChild([]), SuiModule,
+        CommonFormElementsModule, InfiniteScrollModule,
+        QumlLibraryModule, CarouselModule, ResourceLibraryModule, A11yModule],
+    providers: [
+        { provide: DialcodeCursor, useExisting: DialcodeService },
+        provideHttpClient(withInterceptorsFromDi())
+    ]
 })
-export class CollectionEditorLibraryModule {}
+export class CollectionEditorLibraryModule { }

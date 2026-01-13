@@ -2,9 +2,10 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { HeaderComponent } from './header.component';
 import { CUSTOM_ELEMENTS_SCHEMA, EventEmitter } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
 import { EditorService } from '../../services/editor/editor.service';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -12,11 +13,11 @@ describe('HeaderComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
-      providers: [EditorService],
-      declarations: [HeaderComponent, TelemetryInteractDirective],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
-    })
+    declarations: [HeaderComponent, TelemetryInteractDirective],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [FormsModule, ReactiveFormsModule],
+    providers: [EditorService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+})
       .compileComponents();
   }));
 

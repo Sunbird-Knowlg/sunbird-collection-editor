@@ -3,11 +3,12 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { PublishChecklistComponent } from './publish-checklist.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
 import { EditorService } from '../../services/editor/editor.service';
 import {mockData} from './publish-checklist.component.spec.data';
 import {InterpolatePipe} from '../../pipes/interpolate.pipe';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('PublishChecklistComponent', () => {
   let component: PublishChecklistComponent;
@@ -15,11 +16,11 @@ describe('PublishChecklistComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule],
-      providers: [EditorService],
-      declarations: [PublishChecklistComponent, TelemetryInteractDirective, InterpolatePipe],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
-    })
+    declarations: [PublishChecklistComponent, TelemetryInteractDirective, InterpolatePipe],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [FormsModule, ReactiveFormsModule],
+    providers: [EditorService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+})
     .compileComponents();
   }));
 

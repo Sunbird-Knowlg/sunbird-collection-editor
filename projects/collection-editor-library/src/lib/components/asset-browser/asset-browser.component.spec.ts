@@ -1,6 +1,6 @@
 import { QuestionService } from './../../services/question/question.service';
 import { ComponentFixture, TestBed, inject, waitForAsync } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { AssetBrowserComponent } from './asset-browser.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { EditorService } from '../../services/editor/editor.service';
 import { of, throwError } from 'rxjs';
 import * as _ from 'lodash-es';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 declare const SunbirdFileUploadLib: any;
 const mockEditorService = {
   editorConfig: {
@@ -39,11 +40,11 @@ xdescribe('AssetBrowserComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [InfiniteScrollModule, HttpClientTestingModule, FormsModule],
-      declarations: [AssetBrowserComponent],
-      providers: [{ provide: EditorService, useValue: mockEditorService }, QuestionService],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
-    })
+    declarations: [AssetBrowserComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [InfiniteScrollModule, FormsModule],
+    providers: [{ provide: EditorService, useValue: mockEditorService }, QuestionService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+})
       .compileComponents();
   }));
 

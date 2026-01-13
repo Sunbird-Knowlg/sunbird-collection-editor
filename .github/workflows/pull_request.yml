@@ -17,10 +17,10 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18.19.1'
+          node-version: '22.21.1'
 
       - name: Using Angular CLI via npx
-        run: npx @angular/cli@16 version
+        run: npx @angular/cli@19 version
         
       - name: Restore node_modules cache
         id: cache
@@ -32,7 +32,7 @@ jobs:
             ${{ runner.os }}-node-modules-
 
       - name: Install dependencies
-        run: npm install --no-progress
+        run: npm ci --no-progress
     
       - name: Save node_modules cache
         if: steps.cache.outputs.cache-hit != 'true'

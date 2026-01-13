@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MetaFormComponent } from './meta-form.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { mockData } from './meta-form.component.spec.data';
 import { TreeService } from '../../services/tree/tree.service';
@@ -11,21 +11,24 @@ import { ConfigService } from '../../services/config/config.service';
 import { EditorService } from '../../services/editor/editor.service';
 import { FrameworkService } from '../../services/framework/framework.service';
 import { of, throwError } from 'rxjs';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 describe('MetaFormComponent', () => {
   let component: MetaFormComponent;
   let fixture: ComponentFixture<MetaFormComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      declarations: [MetaFormComponent],
-      providers:[
+    declarations: [MetaFormComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [],
+    providers: [
         { provide: TreeService, useValue: mockTreeService },
         ConfigService,
-        ToasterService
-      ],
-      schemas: [NO_ERRORS_SCHEMA]
-    })
+        ToasterService,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+})
       .compileComponents();
   }));
 

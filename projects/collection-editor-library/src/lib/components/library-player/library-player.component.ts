@@ -7,9 +7,10 @@ import { EditorService } from '../../services/editor/editor.service';
 import { FrameworkService } from '../../services/framework/framework.service';
 import * as _ from 'lodash-es';
 @Component({
-  selector: 'lib-library-player',
-  templateUrl: './library-player.component.html',
-  styleUrls: ['./library-player.component.scss']
+    selector: 'lib-library-player',
+    templateUrl: './library-player.component.html',
+    styleUrls: ['./library-player.component.scss'],
+    standalone: false
 })
 export class LibraryPlayerComponent implements OnInit, OnDestroy {
 @Input() contentListDetails;

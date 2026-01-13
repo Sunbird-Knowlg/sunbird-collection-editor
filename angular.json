@@ -15,12 +15,15 @@
       },
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/sunbird-collection-editor",
+            "outputPath": {
+              "base": "dist/sunbird-collection-editor"
+            },
             "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [
+              "src/polyfills.ts"
+            ],
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
               "src/assets",
@@ -82,12 +85,11 @@
               "node_modules/@project-sunbird/sunbird-video-player-web-component/sunbird-video-player.js",
               "node_modules/@project-sunbird/sunbird-epub-player-web-component/sunbird-epub-player.js"
             ],
-            "vendorChunk": true,
             "extractLicenses": false,
-            "buildOptimizer": false,
             "sourceMap": true,
             "optimization": false,
-            "namedChunks": true
+            "namedChunks": true,
+            "browser": "src/main.ts"
           },
           "configurations": {
             "production": {
@@ -102,8 +104,6 @@
               "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
@@ -122,19 +122,19 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "sunbird-collection-editor:build",
-            "proxyConfig": "proxy.conf.json"
+            "proxyConfig": "proxy.conf.json",
+            "buildTarget": "sunbird-collection-editor:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "sunbird-collection-editor:build:production"
+              "buildTarget": "sunbird-collection-editor:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "sunbird-collection-editor:build"
+            "buildTarget": "sunbird-collection-editor:build"
           }
         },
         "test": {
@@ -159,25 +159,7 @@
         }
       }
     },
-    "sunbird-collection-editor-e2e": {
-      "root": "e2e/",
-      "projectType": "application",
-      "prefix": "",
-      "architect": {
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "sunbird-collection-editor:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "sunbird-collection-editor:serve:production"
-            }
-          }
-        }
-      }
-    },
+    
     "collection-editor-library": {
       "root": "projects/collection-editor-library",
       "sourceRoot": "projects/collection-editor-library/src",
@@ -235,10 +217,9 @@
             "preserveSymlinks": true,
             "outputPath": "dist/collection-editor-library-wc",
             "index": "projects/collection-editor-library-wc/src/index.html",
-            "main": "projects/collection-editor-library-wc/src/main.ts",
-            "polyfills": "projects/collection-editor-library-wc/src/polyfills.ts",
             "tsConfig": "projects/collection-editor-library-wc/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
+            "outputHashing": "none",
             "assets": [
               "projects/collection-editor-library-wc/src/favicon.ico",
               "projects/collection-editor-library-wc/src/assets",
@@ -250,7 +231,7 @@
               {
                 "glob": "**/*",
                 "input": "node_modules/@project-sunbird/sunbird-quml-player/lib/assets/",
-                "output": "/assets/"
+                "output": "/assets/quml/"
               }
             ],
             "styles": [
@@ -277,11 +258,12 @@
               "src/assets/lib/modal.min.js",
               "src/assets/lib/semantic-ui-tree-picker.js",
               "node_modules/@project-sunbird/telemetry-sdk/index.js",
-              "node_modules/@project-sunbird/client-services/index.js",
               "node_modules/@project-sunbird/sunbird-pdf-player-web-component/sunbird-pdf-player.js",
               "node_modules/@project-sunbird/sunbird-video-player-web-component/sunbird-video-player.js",
               "node_modules/@project-sunbird/sunbird-epub-player-web-component/sunbird-epub-player.js"
-            ]
+            ],
+            "polyfills": "projects/collection-editor-library-wc/src/polyfills.ts",
+            "main": "projects/collection-editor-library-wc/src/main.ts"
           },
           "configurations": {
             "production": {
@@ -289,7 +271,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "5mb",
-                  "maximumError": "10mb"
+                  "maximumError": "15mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -306,9 +288,7 @@
               "outputHashing": "all"
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
@@ -320,10 +300,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "collection-editor-library-wc:build:production"
+              "buildTarget": "collection-editor-library-wc:build:production"
             },
             "development": {
-              "browserTarget": "collection-editor-library-wc:build:development"
+              "buildTarget": "collection-editor-library-wc:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -331,7 +311,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "collection-editor-library-wc:build"
+            "buildTarget": "collection-editor-library-wc:build"
           }
         },
         "test": {

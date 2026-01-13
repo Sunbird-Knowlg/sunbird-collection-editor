@@ -7,10 +7,11 @@ import { ToasterService } from '../../services/toaster/toaster.service';
 
 
 @Component({
-  selector: 'lib-resource-reorder',
-  templateUrl: './resource-reorder.component.html',
-  styleUrls: ['./resource-reorder.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+    selector: 'lib-resource-reorder',
+    templateUrl: './resource-reorder.component.html',
+    styleUrls: ['./resource-reorder.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class ResourceReorderComponent implements OnInit {
   unitSelected: string;

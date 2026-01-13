@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HelperService } from './helper.service';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { ConfigService } from '../config/config.service';
 import * as urlConfig from '../../services/config/url.config.json';
 import * as labelConfig from '../../services/config/label.config.json';
@@ -38,13 +38,12 @@ describe('HelperService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientModule],
-      providers: [HttpClient,
+    imports: [],
+    providers: [HttpClient,
         DataService,
         PublicDataService,
-        { provide: ConfigService, useValue: configStub }
-      ]
-    });
+        { provide: ConfigService, useValue: configStub }, provideHttpClient(withInterceptorsFromDi())]
+});
     service = TestBed.inject(HelperService);
   });
 

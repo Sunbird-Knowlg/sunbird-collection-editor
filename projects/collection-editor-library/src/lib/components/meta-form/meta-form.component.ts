@@ -13,10 +13,11 @@ import * as moment from 'moment';
 let framworkServiceTemp;
 
 @Component({
-  selector: 'lib-meta-form',
-  templateUrl: './meta-form.component.html',
-  styleUrls: ['./meta-form.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+    selector: 'lib-meta-form',
+    templateUrl: './meta-form.component.html',
+    styleUrls: ['./meta-form.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class MetaFormComponent implements OnChanges, OnDestroy {
   @Input() rootFormConfig: any;
@@ -386,7 +387,7 @@ export class MetaFormComponent implements OnChanges, OnDestroy {
 
 
   ngOnDestroy() {
-    this.onComponentDestroy$.next();
+    this.onComponentDestroy$.next(undefined);
     this.onComponentDestroy$.complete();
     if (this.subscription) {
       this.subscription.unsubscribe();

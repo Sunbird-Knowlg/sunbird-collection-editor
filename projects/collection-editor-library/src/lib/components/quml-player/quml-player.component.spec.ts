@@ -1,22 +1,23 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { QumlPlayerComponent } from './quml-player.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ConfigService } from '../../services/config/config.service';
 import { PlayerService } from '../../services/player/player.service';
 import { EditorService } from '../../services/editor/editor.service';
 import { mockData } from './quml-player.component.spec.data';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 describe('QumlPlayerComponent', () => {
   let component: QumlPlayerComponent;
   let fixture: ComponentFixture<QumlPlayerComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      declarations: [QumlPlayerComponent],
-      providers: [ConfigService, PlayerService, EditorService],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
-    })
+    declarations: [QumlPlayerComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [],
+    providers: [ConfigService, PlayerService, EditorService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+})
       .compileComponents();
   }));
 

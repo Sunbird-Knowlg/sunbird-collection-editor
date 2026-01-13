@@ -1,6 +1,6 @@
 import { QuestionService } from "./../../services/question/question.service";
 import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { QuestionComponent } from "./question.component";
 import { Router } from "@angular/router";
 import { PlayerService } from "../../services/player/player.service";
@@ -34,6 +34,7 @@ import * as categoryConfig from "../../services/config/category.config.json";
 import { ConfigService } from "../../services/config/config.service";
 import { treeNodeData } from "../editor/editor.component.spec.data";
 import * as _ from 'lodash-es';
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 const mockEditorService = {
   editorConfig: {
     config: {
@@ -96,9 +97,10 @@ describe("QuestionComponent", () => {
   }
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [QuestionComponent, TelemetryInteractDirective],
-      imports: [HttpClientTestingModule, SuiModule],
-      providers: [
+    declarations: [QuestionComponent, TelemetryInteractDirective],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [SuiModule],
+    providers: [
         EditorTelemetryService,
         QuestionService,
         ToasterService,
@@ -109,9 +111,10 @@ describe("QuestionComponent", () => {
         EditorCursor,
         { provide: TreeService, useValue: mockTreeService },
         { provide: EditorCursor, useValue: mockEditorCursor },
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
   }));
 
   beforeEach(() => {

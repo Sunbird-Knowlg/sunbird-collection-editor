@@ -10,9 +10,10 @@ export class SilderEvent {
 }
 
 @Component({
-  selector: 'lib-slider',
-  templateUrl: './slider.component.html',
-  styleUrls: ['./slider.component.scss']
+    selector: 'lib-slider',
+    templateUrl: './slider.component.html',
+    styleUrls: ['./slider.component.scss'],
+    standalone: false
 })
 export class SliderComponent implements OnInit {
   sliderValue:any = {};

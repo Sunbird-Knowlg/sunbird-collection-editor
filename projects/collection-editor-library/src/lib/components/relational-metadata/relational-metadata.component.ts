@@ -5,9 +5,10 @@ import { ConfigService } from '../../services/config/config.service';
 import { TreeService } from '../../services/tree/tree.service';
 
 @Component({
-  selector: 'lib-relational-metadata',
-  templateUrl: './relational-metadata.component.html',
-  styleUrls: ['./relational-metadata.component.css']
+    selector: 'lib-relational-metadata',
+    templateUrl: './relational-metadata.component.html',
+    styleUrls: ['./relational-metadata.component.css'],
+    standalone: false
 })
 export class RelationalMetadataComponent implements OnInit, OnChanges {
 

@@ -22,10 +22,11 @@ const evidenceMimeType='';
 const evidenceSizeLimit='20480';
 
 @Component({
-  selector: 'lib-question',
-  templateUrl: './question.component.html',
-  styleUrls: ['./question.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+    selector: 'lib-question',
+    templateUrl: './question.component.html',
+    styleUrls: ['./question.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   QumlPlayerConfig: any = {};
@@ -1349,7 +1350,7 @@ export class QuestionComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   }
   ngOnDestroy() {
-    this.onComponentDestroy$.next();
+    this.onComponentDestroy$.next(undefined);
     this.onComponentDestroy$.complete();
     this.editorCursor.clearQuestionMap();
   }

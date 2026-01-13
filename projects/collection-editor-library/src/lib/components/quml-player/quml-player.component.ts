@@ -4,10 +4,11 @@ import { ConfigService } from '../../services/config/config.service';
 import { PlayerService } from '../../services/player/player.service';
 import { EditorService } from '../../services/editor/editor.service';
 @Component({
-  selector: 'lib-quml-player',
-  templateUrl: './quml-player.component.html',
-  styleUrls: ['./quml-player.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+    selector: 'lib-quml-player',
+    templateUrl: './quml-player.component.html',
+    styleUrls: ['./quml-player.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class QumlPlayerComponent implements OnInit {
   qumlPlayerConfig: any;

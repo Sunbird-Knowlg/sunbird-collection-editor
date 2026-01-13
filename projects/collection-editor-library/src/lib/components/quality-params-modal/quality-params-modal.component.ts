@@ -4,7 +4,8 @@ import {ConfigService} from '../../services/config/config.service';
 @Component({
     selector: 'lib-quality-params-modal',
     templateUrl: './quality-params-modal.component.html',
-    styleUrls: ['./quality-params-modal.component.css']
+    styleUrls: ['./quality-params-modal.component.css'],
+    standalone: false
 })
 export class QualityParamsModalComponent implements OnInit {
     @Input() qualityFormConfig: any;

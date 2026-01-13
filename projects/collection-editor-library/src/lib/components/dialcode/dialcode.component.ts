@@ -10,9 +10,10 @@ import { ConfigService } from '../../services/config/config.service';
 import { EditorService } from '../../services/editor/editor.service';
 
 @Component({
-  selector: 'lib-dialcode',
-  templateUrl: './dialcode.component.html',
-  styleUrls: ['./dialcode.component.scss']
+    selector: 'lib-dialcode',
+    templateUrl: './dialcode.component.html',
+    styleUrls: ['./dialcode.component.scss'],
+    standalone: false
 })
 export class DialcodeComponent implements OnInit {
   public minQRCode = 2;

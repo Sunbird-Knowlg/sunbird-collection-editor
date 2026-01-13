@@ -5,10 +5,11 @@ import { EditorService } from '../../services/editor/editor.service';
 import { ConfigService } from '../../services/config/config.service';
 import { TreeService } from '../../services/tree/tree.service';
 @Component({
-  selector: 'lib-qumlplayer-page',
-  templateUrl: './qumlplayer-page.component.html',
-  styleUrls: ['./qumlplayer-page.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'lib-qumlplayer-page',
+    templateUrl: './qumlplayer-page.component.html',
+    styleUrls: ['./qumlplayer-page.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class QumlplayerPageComponent implements OnChanges {
   qumlPlayerConfig: any;

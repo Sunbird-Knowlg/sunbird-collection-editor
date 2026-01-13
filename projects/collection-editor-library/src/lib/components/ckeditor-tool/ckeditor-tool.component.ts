@@ -10,9 +10,10 @@ import { ConfigService } from '../../services/config/config.service';
 import { config } from '../asset-browser/asset-browser.data';
 declare const SunbirdFileUploadLib: any;
 @Component({
-  selector: 'lib-ckeditor-tool',
-  templateUrl: './ckeditor-tool.component.html',
-  styleUrls: ['./ckeditor-tool.component.scss']
+    selector: 'lib-ckeditor-tool',
+    templateUrl: './ckeditor-tool.component.html',
+    styleUrls: ['./ckeditor-tool.component.scss'],
+    standalone: false
 })
 export class CkeditorToolComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('editor') public editorRef: ElementRef;

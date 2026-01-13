@@ -6,7 +6,7 @@ import { DoBootstrap, Injector, NgModule } from '@angular/core';
 import { CommonFormElementsModule, DialcodeCursor } from '@project-sunbird/common-form-elements-full';
 import { SuiModule } from '@project-sunbird/ng2-semantic-ui';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { SanitizeHtmlPipe } from '../../../collection-editor-library/src/lib/pipes/sanitize-html.pipe';
 import { InterpolatePipe } from '../../../collection-editor-library/src/lib/pipes/interpolate.pipe';
 import { CollectionEditorLibraryComponent } from '../../../collection-editor-library/src/lib/collection-editor-library.component';
@@ -56,58 +56,53 @@ import { QualityParamsModalComponent } from '../../../collection-editor-library/
 import { BrowserModule } from '@angular/platform-browser';
 
 
-@NgModule({
-  declarations: [
-    CollectionEditorLibraryComponent,
-    InterpolatePipe,
-    SanitizeHtmlPipe,
-    ContentplayerPageComponent,
-    EditorComponent,
-    QumlplayerPageComponent,
-    HeaderComponent,
-    FancyTreeComponent,
-    MetaFormComponent,
-    LibraryComponent,
-    LibraryFilterComponent,
-    LibraryListComponent,
-    QuestionComponent,
-    OptionsComponent,
-    AnswerComponent,
-    CkeditorToolComponent,
-    LibraryPlayerComponent,
-    ResourceReorderComponent,
-    SkeletonLoaderComponent,
-    TemplateComponent,
-    DateFormatPipe,
-    TelemetryInteractDirective,
-    AssetBrowserComponent,
-    CollectionIconComponent,
-    QumlPlayerComponent,
-    DialcodeComponent,
-    BulkUploadComponent,
-    CsvUploadComponent,
-    ManageCollaboratorComponent,
-    PublishChecklistComponent,
-    QuestionOptionSubMenuComponent,
-    SliderComponent,
-    TranslationsComponent,
-    AppLoaderComponent,
-    RelationalMetadataComponent,
-    AssignPageNumberComponent,
-    PlainTreeComponent,
-    ProgressStatusComponent,
-    TermAndConditionComponent,
-    QualityParamsModalComponent
-  ],
-  imports: [
-    CommonModule, BrowserModule, FormsModule, ReactiveFormsModule, RouterModule.forRoot([]), SuiModule,
-    CommonFormElementsModule, InfiniteScrollModule, HttpClientModule,
-    QumlLibraryModule, CarouselModule, ResourceLibraryModule, A11yModule
-  ],
-  providers: [
-    { provide: DialcodeCursor, useExisting: DialcodeService },
-  ],
-})
+@NgModule({ declarations: [
+        CollectionEditorLibraryComponent,
+        InterpolatePipe,
+        SanitizeHtmlPipe,
+        ContentplayerPageComponent,
+        EditorComponent,
+        QumlplayerPageComponent,
+        HeaderComponent,
+        FancyTreeComponent,
+        MetaFormComponent,
+        LibraryComponent,
+        LibraryFilterComponent,
+        LibraryListComponent,
+        QuestionComponent,
+        OptionsComponent,
+        AnswerComponent,
+        CkeditorToolComponent,
+        LibraryPlayerComponent,
+        ResourceReorderComponent,
+        SkeletonLoaderComponent,
+        TemplateComponent,
+        DateFormatPipe,
+        TelemetryInteractDirective,
+        AssetBrowserComponent,
+        CollectionIconComponent,
+        QumlPlayerComponent,
+        DialcodeComponent,
+        BulkUploadComponent,
+        CsvUploadComponent,
+        ManageCollaboratorComponent,
+        PublishChecklistComponent,
+        QuestionOptionSubMenuComponent,
+        SliderComponent,
+        TranslationsComponent,
+        AppLoaderComponent,
+        RelationalMetadataComponent,
+        AssignPageNumberComponent,
+        PlainTreeComponent,
+        ProgressStatusComponent,
+        TermAndConditionComponent,
+        QualityParamsModalComponent
+    ], imports: [BrowserModule, CommonModule, FormsModule, ReactiveFormsModule, RouterModule.forRoot([]), SuiModule,
+        CommonFormElementsModule, InfiniteScrollModule,
+        QumlLibraryModule, CarouselModule, ResourceLibraryModule, A11yModule], providers: [
+        { provide: DialcodeCursor, useExisting: DialcodeService },
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule implements DoBootstrap {
   constructor(private injector: Injector) { }
   ngDoBootstrap() {
