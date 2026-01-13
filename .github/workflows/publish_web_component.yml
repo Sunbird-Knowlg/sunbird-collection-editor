@@ -22,20 +22,12 @@ jobs:
       - name: Install dependencies (legacy peer deps to unblock CI)
         run: npm i --legacy-peer-deps
 
-      - name: Set package version from tag
-        working-directory: web-component
-        run: |
-          TAG="${GITHUB_REF#refs/tags/}"
-          VERSION="${TAG#v}"
-          npm version "$VERSION" --no-git-tag-version
-
-      - name: Build web component
-        run: npm run build-web-component
-
       - name: Publish package
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
+          npm run build-web-component
           TARBALL="$(npm pack ./web-component | tail -n1)"
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
           npm publish "$TARBALL" --access public
       
