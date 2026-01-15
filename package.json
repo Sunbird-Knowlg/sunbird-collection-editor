@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "postinstall": "node -e \"const fs=require('fs'),p='node_modules/@angular-devkit/build-angular/node_modules';!fs.existsSync(p)&&fs.mkdirSync(p,{recursive:true});!fs.existsSync(p+'/@babel')&&fs.symlinkSync('../../../@babel',p+'/@babel',process.platform==='win32'?'junction':'dir')\"",
     "start": "ng serve --proxy-config proxy.conf.json",
     "build": "ng build",
     "test": "ng test",
@@ -76,6 +75,7 @@
     "zone.js": "~0.15.1"
   },
   "devDependencies": {
+    "@angular-devkit/core": "^19.2.18",
     "@angular-devkit/build-angular": "^19.2.18",
     "@angular/cli": "^19.2.18",
     "@angular/compiler-cli": "^19.2.18",
