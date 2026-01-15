@@ -1,6 +1,6 @@
 {
   "name": "@project-sunbird/sunbird-collection-editor-web-component",
-  "version": "2.0.0",
+  "version": "1.6.2",
   "description": "The web component package for the sunbird collection editor",
   "main": "sunbird-collection-editor.js",
   "scripts": {
@@ -13,10 +13,5 @@
     "web-component"
   ],
   "author": "sunbird",
-  "license": "MIT",
-  "peerDependencies": {
-    "jquery": ">=3.7.1",
-    "jquery.fancytree": ">=2.38.3",
-    "reflect-metadata": "^0.1.13"
-  }
+  "license": "MIT"
 }
