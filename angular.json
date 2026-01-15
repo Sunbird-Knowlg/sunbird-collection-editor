@@ -46,12 +46,12 @@
               },
               {
                 "glob": "**/*",
-                "input": "./node_modules/@project-sunbird/sunbird-quml-player-web-component/assets",
+                "input": "projects/collection-editor-library/src/lib/assets",
                 "output": "/assets/"
               },
               {
                 "glob": "**/*",
-                "input": "projects/collection-editor-library/src/lib/assets",
+                "input": "./node_modules/@project-sunbird/sunbird-quml-player-web-component/assets",
                 "output": "/assets/"
               }
             ],

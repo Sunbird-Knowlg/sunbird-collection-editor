@@ -84,7 +84,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public isStatusReviewMode = false;
   public isEnableCsvAction: any;
   public isTreeInitialized: any;
-  public ishierarchyConfigSet = false;
+  public ishierarchyConfigSet =  false;
   public addCollaborator: boolean;
   public publishchecklist: any;
   public isComponenetInitialized = false;
@@ -97,9 +97,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
   public outcomeDeclaration: any;
   public levelsArray: any;
   constructor(private editorService: EditorService, public treeService: TreeService, private frameworkService: FrameworkService,
-    private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
-    private toasterService: ToasterService, private dialcodeService: DialcodeService,
-    public configService: ConfigService, private changeDetectionRef: ChangeDetectorRef) {
+              private helperService: HelperService, public telemetryService: EditorTelemetryService, private router: Router,
+              private toasterService: ToasterService, private dialcodeService: DialcodeService,
+              public configService: ConfigService, private changeDetectionRef: ChangeDetectorRef) {
   }
 
   @HostListener('window:unload', ['$event'])
@@ -118,7 +118,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       }
     }
-
+    
     this.editorService.initialize(this.editorConfig);
     this.editorMode = this.editorService.editorMode;
     this.treeService.initialize(this.editorConfig);
@@ -132,23 +132,23 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       this.collectionId = _.get(this.editorConfig, 'context.collectionIdentifier');
       this.initializeFrameworkAndChannel();
       this.editorService.getCategoryDefinition(_.get(this.editorConfig, 'context.collectionPrimaryCategory'),
-        this.editorConfig.context.channel, _.get(this.editorConfig, 'context.collectionObjectType'))
-        .subscribe(
-          (response) => {
-            this.collectionPrimaryCategoryDef = response;
-            this.getFrameworkDetails(this.collectionPrimaryCategoryDef);
-            this.editorService.selectedChildren = {
-              primaryCategory: _.get(this.editorConfig, 'config.primaryCategory'),
-              mimeType: _.get(this.editorConfig, 'config.mimeType'),
-              interactionType: _.get(this.editorConfig, 'config.interactionType')
-            };
-            const objectMetadata = _.get(response, 'result.objectCategoryDefinition.objectMetadata');
-            if (objectMetadata.childrenConfig) {
-              this.questionComponentInput.config = objectMetadata.childrenConfig[_.get(this.editorConfig, 'config.interactionType')] || {};
-            }
-            this.redirectToQuestionTab(_.get(this.editorConfig, 'config.mode'));
+      this.editorConfig.context.channel, _.get(this.editorConfig, 'context.collectionObjectType'))
+      .subscribe(
+        (response) => {
+          this.collectionPrimaryCategoryDef = response;
+          this.getFrameworkDetails(this.collectionPrimaryCategoryDef);
+          this.editorService.selectedChildren = {
+            primaryCategory: _.get(this.editorConfig, 'config.primaryCategory'),
+            mimeType: _.get(this.editorConfig, 'config.mimeType'),
+            interactionType: _.get(this.editorConfig, 'config.interactionType')
+          };
+          const objectMetadata = _.get(response, 'result.objectCategoryDefinition.objectMetadata');
+          if (objectMetadata.childrenConfig) {
+            this.questionComponentInput.config = objectMetadata.childrenConfig[_.get(this.editorConfig, 'config.interactionType')] || {};
           }
-        );
+          this.redirectToQuestionTab(_.get(this.editorConfig, 'config.mode'));
+        }
+      );
     } else {
       this.pageId = 'collection_editor';
       this.mergeCollectionExternalProperties().subscribe(
@@ -191,7 +191,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.unSubscribeShowLibraryPageEmitter = this.editorService.getshowLibraryPageEmitter()
       .subscribe(item => this.showLibraryComponentPage());
     this.unSubscribeshowQuestionLibraryPageEmitter = this.editorService.getshowQuestionLibraryPageEmitter()
-      .subscribe(item => this.showQuestionLibraryComponentPage());
+    .subscribe(item => this.showQuestionLibraryComponentPage());
     this.treeService.treeStatus$.pipe(takeUntil(this.unsubscribe$)).subscribe((status) => {
       if (status === 'loaded') {
         this.getFrameworkDetails(this.primaryCategoryDef);
@@ -222,12 +222,12 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     if (_.get(this.editorConfig, 'config.renderTaxonomy') === true) {
       const orgId = _.get(this.editorConfig, 'context.identifier');
       this.editorService.fetchOutComeDeclaration(orgId).toPromise()
-        .then(data => {
-          if (data?.result) {
-            this.outcomeDeclaration = _.get(data?.result, 'questionset.outcomeDeclaration');
-            this.levelsArray = Object.keys(this.outcomeDeclaration);
-          }
-        });
+      .then(data => {
+        if (data?.result) {
+          this.outcomeDeclaration = _.get(data?.result, 'questionset.outcomeDeclaration');
+          this.levelsArray = Object.keys(this.outcomeDeclaration);
+        }
+      });
     }
     // tslint:disable-next-line:max-line-length
     this.publishchecklist = _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.publishchecklist.properties') || _.get(categoryDefinitionData, 'result.objectCategoryDefinition.forms.review.properties') || [];
@@ -337,8 +337,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         field.options = this.setEcm;
       }
     });
-    if (this.objectType === 'questionset' && _.has(formsConfigObj, 'searchConfig')) {
-      this.libraryComponentInput.searchFormConfig = _.get(formsConfigObj, 'searchConfig.properties');
+    if ( this.objectType === 'questionset' && _.has(formsConfigObj, 'searchConfig')) {
+        this.libraryComponentInput.searchFormConfig = _.get(formsConfigObj, 'searchConfig.properties');
     } else {
       this.libraryComponentInput.searchFormConfig = _.get(formsConfigObj, 'search.properties');
     }
@@ -413,7 +413,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     ).subscribe((frameworkDetails: any) => {
       if (frameworkDetails && !frameworkDetails.err) {
         const orgFrameworkData = _.get(frameworkDetails, `frameworkdata.${this.frameworkService.organisationFramework}.categories`);
-        const categoryInstanceData = _.find(orgFrameworkData, { code: _.get(this.editorConfig, 'config.categoryInstance') });
+        const categoryInstanceData = _.find(orgFrameworkData, {code: _.get(this.editorConfig, 'config.categoryInstance')});
         this.collectionTreeNodes.data.children = _.get(categoryInstanceData, 'terms');
         this.ishierarchyConfigSet = true;
       }
@@ -537,9 +537,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.pageId = 'progressStatus';
         break;
       // case 'showCorrectioncomments':
-      // this.contentComment = _.get(this.editorConfig, 'context.correctionComments')
-      // this.showReviewModal = !this.showReviewModal;
-      // break;
+        // this.contentComment = _.get(this.editorConfig, 'context.correctionComments')
+        // this.showReviewModal = !this.showReviewModal;
+        // break;
       default:
         break;
     }
@@ -584,10 +584,10 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       this.buttonLoaders.addQuestionFromLibraryButtonLoader = true;
       if (!_.isUndefined(this.editorService.templateList) &&
         _.isArray(this.editorService.templateList)) {
-        _.forEach(this.editorService.templateList, (template) => {
-          questionCategory.push({ name: template, targetObjectType: 'Question' });
-        });
-      }
+          _.forEach(this.editorService.templateList, (template) => {
+            questionCategory.push({name: template, targetObjectType: 'Question'});
+          });
+        }
       this.saveContent().then((message: string) => {
         const activeNode = this.treeService.getActiveNode();
         this.buttonLoaders.addQuestionFromLibraryButtonLoader = false;
@@ -602,7 +602,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           collection: activeNode?.data?.metadata,
           framework: this.organisationFramework,
           editorConfig: this.editorConfig,
-          searchFormConfig: this.libraryComponentInput.searchFormConfig
+          searchFormConfig:  this.libraryComponentInput.searchFormConfig
         };
         this.pageId = 'question_library';
         console.log(this.questionlibraryInput);
@@ -640,15 +640,15 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       if (activeNode && activeNode.data.id) {
         this.editorService.addResourceToQuestionset(this.collectionId, activeNode.data.id,
           children).subscribe(res => {
-            if (_.get(res, 'responseCode') === 'OK') {
-              this.libraryEventListener({});
-            }
-          }, err => {
-            const errInfo = {
-              errorMsg: _.get(this.configService, 'labelConfig.messages.error.043')
-            };
-            return throwError(this.editorService.apiErrorHandling(err, errInfo));
-          });
+          if (_.get(res, 'responseCode') === 'OK') {
+            this.libraryEventListener({});
+          }
+        }, err => {
+          const errInfo = {
+            errorMsg: _.get(this.configService, 'labelConfig.messages.error.043')
+          };
+          return throwError(this.editorService.apiErrorHandling(err, errInfo));
+        });
       }
     }
   }
@@ -794,12 +794,12 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         return false;
       }
       this.editorService.updateCollection(this.collectionId, event).subscribe(res => {
-        this.redirectToChapterListTab();
+          this.redirectToChapterListTab();
       }, err => {
         this.toasterService.error(err);
       });
     } else {
-      this.redirectToChapterListTab();
+        this.redirectToChapterListTab();
     }
   }
   sourcingRejectContent(obj) {
@@ -810,12 +810,12 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
         return false;
       }
       this.editorService.updateCollection(this.collectionId).subscribe(res => {
-        this.redirectToChapterListTab(obj);
+          this.redirectToChapterListTab(obj);
       }, err => {
         this.toasterService.error(err);
       });
     } else {
-      this.redirectToChapterListTab(obj);
+        this.redirectToChapterListTab(obj);
     }
   }
   setUpdatedTreeNodeData() {
@@ -951,51 +951,51 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     this.editorConfig.config.showSourcingStatus = false;
     // tslint:disable-next-line:max-line-length
     this.editorService.getCategoryDefinition(selectedQuestionType, null, 'Question')
-      .subscribe((res) => {
-        const selectedtemplateDetails = res.result.objectCategoryDefinition;
-        this.editorService.selectedChildren['label'] = selectedtemplateDetails.label;
-        const selectedTemplateFormFields = _.get(selectedtemplateDetails, 'forms.create.properties');
-        if (!_.isEmpty(selectedTemplateFormFields)) {
-          const questionCategoryConfig = selectedTemplateFormFields;
-          questionCategoryConfig.forEach(field => {
-            if (field.code === 'evidenceMimeType') {
-              evidenceMimeType = field.range;
-              field.options = this.setEvidence;
-              field.range = null;
-            }
-          });
-          this.leafFormConfig = questionCategoryConfig;
-        }
+    .subscribe((res) => {
+      const selectedtemplateDetails = res.result.objectCategoryDefinition;
+      this.editorService.selectedChildren['label']=selectedtemplateDetails.label;
+      const selectedTemplateFormFields = _.get(selectedtemplateDetails, 'forms.create.properties');
+      if (!_.isEmpty(selectedTemplateFormFields)) {
+        const questionCategoryConfig = selectedTemplateFormFields;
+        questionCategoryConfig.forEach(field => {
+          if (field.code === 'evidenceMimeType') {
+            evidenceMimeType = field.range;
+            field.options = this.setEvidence;
+            field.range = null;
+          }
+        });
+        this.leafFormConfig = questionCategoryConfig;
+      }
 
-        const catMetaData = _.get(selectedtemplateDetails, 'objectMetadata');
-        this.sourcingSettings = _.get(catMetaData, 'config.sourcingSettings') || {};
-        !_.isUndefined(this.editorConfig.config.renderTaxonomy) ? (this.questionComponentInput.config = { maximumOptions: _.get(catMetaData, 'config.maximumOptions') }) : '';
-        if (!_.has(this.sourcingSettings, 'enforceCorrectAnswer')) {
-          this.sourcingSettings.enforceCorrectAnswer = true;
-        }
-        if (_.isEmpty(_.get(catMetaData, 'schema.properties.interactionTypes.items.enum'))) {
-          // this.toasterService.error(this.resourceService.messages.emsg.m0026);
-          this.editorService.selectedChildren = {
-            primaryCategory: selectedQuestionType,
-            mimeType: catMetaData.schema.properties.mimeType.enum[0],
-            interactionType: null
-          };
-          this.redirectToQuestionTab(undefined, 'default');
-        } else {
-          const interactionTypes = catMetaData.schema.properties.interactionTypes.items.enum;
-          this.editorService.selectedChildren = {
-            primaryCategory: selectedQuestionType,
-            mimeType: catMetaData.schema.properties.mimeType.enum[0],
-            interactionType: interactionTypes[0]
-          };
-          this.redirectToQuestionTab(undefined, interactionTypes[0]);
-        }
-      }, (error) => {
-        const errInfo = {
-          errorMsg: _.get(this.configService, 'labelConfig.messages.error.006'),
+      const catMetaData = _.get(selectedtemplateDetails, 'objectMetadata');
+      this.sourcingSettings = _.get(catMetaData, 'config.sourcingSettings') || {};
+      !_.isUndefined(this.editorConfig.config.renderTaxonomy) ? (this.questionComponentInput.config ={maximumOptions:_.get(catMetaData, 'config.maximumOptions')}) : '' ;
+      if (!_.has(this.sourcingSettings, 'enforceCorrectAnswer')) {
+        this.sourcingSettings.enforceCorrectAnswer = true;
+      }
+      if (_.isEmpty(_.get(catMetaData, 'schema.properties.interactionTypes.items.enum'))) {
+        // this.toasterService.error(this.resourceService.messages.emsg.m0026);
+        this.editorService.selectedChildren = {
+          primaryCategory: selectedQuestionType,
+          mimeType: catMetaData.schema.properties.mimeType.enum[0],
+          interactionType: null
         };
-        return throwError(this.editorService.apiErrorHandling(error, errInfo))
-      });
+        this.redirectToQuestionTab(undefined, 'default');
+      } else {
+        const interactionTypes = catMetaData.schema.properties.interactionTypes.items.enum;
+        this.editorService.selectedChildren = {
+          primaryCategory: selectedQuestionType,
+          mimeType: catMetaData.schema.properties.mimeType.enum[0],
+          interactionType: interactionTypes[0]
+        };
+        this.redirectToQuestionTab(undefined, interactionTypes[0]);
+      }
+    },(error) => {
+      const errInfo = {
+        errorMsg: _.get(this.configService, 'labelConfig.messages.error.006'),
+      };
+      return throwError(this.editorService.apiErrorHandling(error, errInfo))
+    });
   }
 
   redirectToQuestionTab(mode, interactionType?) {
@@ -1005,7 +1005,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       questionId = _.get(this.editorConfig, 'context.identifier');
       interactionType = _.get(this.editorConfig, 'config.interactionType');
       questionCategory = _.get(this.editorConfig, 'config.questionCategory');
-      this.creationContext = {
+      this.creationContext =  {
         mode: mode,
         objectType: this.objectType,
         collectionObjectType: _.get(this.editorConfig, 'context.collectionObjectType'),
@@ -1021,56 +1021,56 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       questionSetId: this.collectionId,
       questionId: questionId,
       type: interactionType,
-      setChildQueston: mode === 'edit' ? false : this.setChildQuestion,
+      setChildQueston:mode === 'edit' ? false : this.setChildQuestion,
       category: questionCategory,
       creationContext: this.creationContext, // Pass the creation context to the question-component
       creationMode: mode
     };
 
-    if (!_.isUndefined(mode) && !_.isUndefined(this.editorConfig.config.renderTaxonomy)) {
+    if(!_.isUndefined(mode) && !_.isUndefined(this.editorConfig.config.renderTaxonomy)){
       this.editorService.selectedChildren = {
         primaryCategory: _.get(this.selectedNodeData, 'data.metadata.primaryCategory'),
         interactionType: _.get(this.selectedNodeData, 'data.metadata.interactionTypes[0]')
       };
-      this.questionComponentInput = {
-        ...this.questionComponentInput,
-        creationContext: {
-          isReadOnlyMode: mode !== 'edit' ? true : false,
-          correctionComments: this.contentComment
+        this.questionComponentInput = {
+          ...this.questionComponentInput,
+          creationContext:{
+            isReadOnlyMode: mode !== 'edit' ? true : false,
+            correctionComments:this.contentComment
         }
       }
       this.editorService.getCategoryDefinition(this.selectedNodeData.data.metadata.primaryCategory, null, 'Question')
-        .subscribe((res) => {
-          const selectedtemplateDetails = res.result.objectCategoryDefinition;
-          this.editorService.selectedChildren['label'] = selectedtemplateDetails.label;
-          const selectedTemplateFormFields = _.get(selectedtemplateDetails, 'forms.create.properties');
-          this.questionComponentInput.config = { maximumOptions: _.get(selectedtemplateDetails, 'objectMetadata.config.maximumOptions') }
-          if (!_.isEmpty(selectedTemplateFormFields)) {
-            const questionCategoryConfig = selectedTemplateFormFields;
-            questionCategoryConfig.forEach(field => {
-              if (field.code === 'evidenceMimeType') {
-                evidenceMimeType = field.range;
-                field.options = this.setEvidence;
-                field.range = null;
-              }
-            });
-            this.leafFormConfig = questionCategoryConfig;
-          }
-          const catMetaData = selectedtemplateDetails.objectMetadata;
-          this.sourcingSettings = catMetaData?.config?.sourcingSettings || {};
-          if (!_.has(this.sourcingSettings, 'enforceCorrectAnswer')) {
-            this.sourcingSettings.enforceCorrectAnswer = true;
-          }
-          this.pageId = 'question';
-        }, (error) => {
-          const errInfo = {
-            errorMsg: _.get(this.configService, 'labelConfig.messages.error.006'),
-          };
-          return throwError(this.editorService.apiErrorHandling(error, errInfo))
-        });
+      .subscribe((res) => {
+        const selectedtemplateDetails = res.result.objectCategoryDefinition;
+        this.editorService.selectedChildren['label']=selectedtemplateDetails.label;
+        const selectedTemplateFormFields = _.get(selectedtemplateDetails, 'forms.create.properties');
+        this.questionComponentInput.config ={maximumOptions:_.get(selectedtemplateDetails, 'objectMetadata.config.maximumOptions')}
+        if (!_.isEmpty(selectedTemplateFormFields)) {
+          const questionCategoryConfig = selectedTemplateFormFields;
+          questionCategoryConfig.forEach(field => {
+            if (field.code === 'evidenceMimeType') {
+              evidenceMimeType = field.range;
+              field.options = this.setEvidence;
+              field.range = null;
+            }
+          });
+          this.leafFormConfig = questionCategoryConfig;
+        }
+        const catMetaData = selectedtemplateDetails.objectMetadata;
+        this.sourcingSettings = catMetaData?.config?.sourcingSettings || {};
+        if (!_.has(this.sourcingSettings, 'enforceCorrectAnswer')) {
+          this.sourcingSettings.enforceCorrectAnswer = true;
+        }
+        this.pageId = 'question';
+      },(error) => {
+        const errInfo = {
+          errorMsg: _.get(this.configService, 'labelConfig.messages.error.006'),
+        };
+        return throwError(this.editorService.apiErrorHandling(error, errInfo))
+      });
     }
-    else {
-      this.pageId = 'question';
+    else{
+    this.pageId = 'question';
     }
   }
 
@@ -1098,7 +1098,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   showCommentAddedAgainstContent() {
     // tslint:disable-next-line:max-line-length
-    if (this.collectionTreeNodes.data.status === 'Draft' && this.collectionTreeNodes.data.prevStatus === 'Review' && _.has(this.collectionTreeNodes.data, 'rejectComment')) {
+    if (this.collectionTreeNodes.data.status === 'Draft' && this.collectionTreeNodes.data.prevStatus  === 'Review' && _.has(this.collectionTreeNodes.data, 'rejectComment')) {
       this.contentComment = _.get(this.collectionTreeNodes.data, 'rejectComment');
       return true;
     } else if (_.get(this.editorService, 'editorConfig.config.showCorrectionComments')) {
@@ -1121,8 +1121,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
       this.isComponenetInitialized = false;
       this.setCsvDropDownOptionsDisable();
     } else if (this.isEnableCsvAction) {
-      this.setCsvDropDownOptionsDisable();
-    }
+     this.setCsvDropDownOptionsDisable();
+  }
   }
   setCsvDropDownOptionsDisable(disable?) {
     const status = this.editorService.getHierarchyFolder().length ? true : false;
@@ -1139,8 +1139,8 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
   isReviewMode() {
-    return _.includes(['review', 'read', 'sourcingreview', 'orgreview'], this.editorService.editorMode);
-  }
+    return  _.includes([ 'review', 'read', 'sourcingreview', 'orgreview' ], this.editorService.editorMode);
+   }
   downloadCSVFile(tocUrl) {
     const downloadConfig = {
       blobUrl: tocUrl,
@@ -1197,7 +1197,7 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.treeService) {
       this.treeService.clearTreeCache();
     }
-    if (this.dialcodeService) {
+     if (this.dialcodeService) {
       this.dialcodeService.clearDialCodeMaps();
     }
     if (this.modal && this.modal.deny) {
@@ -1218,15 +1218,15 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     control.isVisible = 'no';
     control.range = evidenceMimeType;
     return merge(..._.map(depends, depend => depend.valueChanges)).pipe(
-      switchMap((value: any) => {
-        if (!_.isEmpty(value) && _.toLower(value) === 'yes') {
-          control.isVisible = 'yes';
-          return of({ range: evidenceMimeType });
-        } else {
-          control.isVisible = 'no';
-          return of(null);
-        }
-      })
+        switchMap((value: any) => {
+            if (!_.isEmpty(value) && _.toLower(value) === 'yes') {
+                control.isVisible = 'yes';
+                return of({range: evidenceMimeType});
+            } else {
+                control.isVisible = 'no';
+                return of(null);
+            }
+        })
     );
   }
 
@@ -1234,30 +1234,30 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
     control.isVisible = 'no';
     control.options = ecm;
     return merge(..._.map(depends, depend => depend.valueChanges)).pipe(
-      switchMap((value: any) => {
-        if (!_.isEmpty(value) && _.toLower(value) === 'yes') {
-          control.isVisible = 'yes';
-          return of({ options: ecm });
-        } else {
-          control.isVisible = 'no';
-          return of(null);
-        }
-      })
+        switchMap((value: any) => {
+            if (!_.isEmpty(value) && _.toLower(value) === 'yes') {
+                control.isVisible = 'yes';
+                return of({options: ecm});
+            } else {
+                control.isVisible = 'no';
+                return of(null);
+            }
+        })
     );
   }
 
   setAllowEcm(control, depends: FormControl[]) {
     control.isVisible = 'no';
     const response = merge(..._.map(depends, depend => depend.valueChanges)).pipe(
-      switchMap((value: any) => {
-        if (!_.isEmpty(value) && _.toLower(value) === 'self') {
-          control.isVisible = 'no';
-          return of(null);
-        } else {
-          control.isVisible = 'yes';
-          return of(null);
-        }
-      })
+        switchMap((value: any) => {
+             if (!_.isEmpty(value) && _.toLower(value) === 'self' ) {
+                control.isVisible = 'no';
+                return of(null);
+             } else {
+                control.isVisible = 'yes';
+                return of(null);
+             }
+        })
     );
     return response;
   }
