@@ -1,6 +1,6 @@
 {
-  "name": "@jeraldj/sunbird-collection-editor-web-component",
-  "version": "9.0.0",
+  "name": "@project-sunbird/sunbird-collection-editor-web-component",
+  "version": "8.2.0",
   "description": "The web component package for the sunbird collection editor",
   "main": "sunbird-collection-editor.js",
   "scripts": {

@@ -27,7 +27,6 @@ import { OptionsComponent } from '../../../collection-editor-library/src/lib/com
 import { AnswerComponent } from '../../../collection-editor-library/src/lib/components/answer/answer.component';
 import { CkeditorToolComponent } from '../../../collection-editor-library/src/lib/components/ckeditor-tool/ckeditor-tool.component';
 import { QuestionComponent } from '../../../collection-editor-library/src/lib/components/question/question.component';
-import { QumlLibraryModule } from '@project-sunbird/sunbird-quml-player';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { TelemetryInteractDirective } from '../../../collection-editor-library/src/lib/directives/telemetry-interact/telemetry-interact.directive';
 import { DateFormatPipe } from '../../../collection-editor-library/src/lib/directives/date-format/date-format.pipe';
@@ -99,7 +98,7 @@ import { BrowserModule } from '@angular/platform-browser';
         QualityParamsModalComponent
     ], imports: [BrowserModule, CommonModule, FormsModule, ReactiveFormsModule, RouterModule.forRoot([]), SuiModule,
         CommonFormElementsModule, InfiniteScrollModule,
-        QumlLibraryModule, CarouselModule, ResourceLibraryModule, A11yModule], providers: [
+        CarouselModule, ResourceLibraryModule, A11yModule], providers: [
         { provide: DialcodeCursor, useExisting: DialcodeService },
         provideHttpClient(withInterceptorsFromDi()),
     ] })

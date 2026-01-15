@@ -1,29 +1,10 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import * as _ from 'lodash-es';
-// import { CsTelemetryModule } from '@project-sunbird/client-services/telemetry';
+import { CsTelemetryModule } from '@project-sunbird/client-services/telemetry';
 import { IEditorConfig, Context } from '../../interfaces/editor';
 import { HelperService } from '../helper/helper.service';
 import { ConfigService } from '../config/config.service';
 
-// Mock telemetry module for browser compatibility
-const CsTelemetryModule = {
-  instance: {
-    isInitialised: false,
-    init: (config: any) => {
-      console.warn('Telemetry: init mocked', config);
-      CsTelemetryModule.instance.isInitialised = true;
-    },
-    telemetryService: {
-      initTelemetry: (config: any) => console.warn('Telemetry: initTelemetry mocked', config),
-      raiseInteractTelemetry: (data: any) => console.warn('Telemetry: raiseInteractTelemetry mocked', data),
-      raiseImpressionTelemetry: (data: any) => console.warn('Telemetry: raiseImpressionTelemetry mocked', data),
-      raiseLogTelemetry: (data: any) => console.warn('Telemetry: raiseLogTelemetry mocked', data),
-      raiseStartTelemetry: (data: any) => console.warn('Telemetry: raiseStartTelemetry mocked', data),
-      raiseEndTelemetry: (data: any) => console.warn('Telemetry: raiseEndTelemetry mocked', data),
-      raiseErrorTelemetry: (data: any) => console.warn('Telemetry: raiseErrorTelemetry mocked', data),
-    }
-  }
-};
 @Injectable({
   providedIn: 'root'
 })

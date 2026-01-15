@@ -26,7 +26,6 @@ import { OptionsComponent } from './components/options/options.component';
 import { AnswerComponent } from './components/answer/answer.component';
 import { CkeditorToolComponent } from './components/ckeditor-tool/ckeditor-tool.component';
 import { QuestionComponent } from './components/question/question.component';
-import { QumlLibraryModule } from '@project-sunbird/sunbird-quml-player';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { TelemetryInteractDirective } from './directives/telemetry-interact/telemetry-interact.directive';
 import { DateFormatPipe } from './directives/date-format/date-format.pipe';
@@ -99,7 +98,7 @@ import { QualityParamsModalComponent } from './components/quality-params-modal/q
     exports: [EditorComponent],
     imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule.forChild([]), SuiModule,
         CommonFormElementsModule, InfiniteScrollModule,
-        QumlLibraryModule, CarouselModule, ResourceLibraryModule, A11yModule],
+        CarouselModule, ResourceLibraryModule, A11yModule],
     providers: [
         { provide: DialcodeCursor, useExisting: DialcodeService },
         provideHttpClient(withInterceptorsFromDi())

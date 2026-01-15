@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "postinstall": "node -e \"const fs=require('fs'),p='node_modules/@angular-devkit/build-angular/node_modules';!fs.existsSync(p)&&fs.mkdirSync(p,{recursive:true});!fs.existsSync(p+'/@babel')&&fs.symlinkSync('../../../@babel',p+'/@babel',process.platform==='win32'?'junction':'dir')\"",
     "start": "ng serve --proxy-config proxy.conf.json",
     "build": "ng build",
     "test": "ng test",
@@ -19,28 +20,28 @@
     "npm": ">=10"
   },
   "dependencies": {
-    "@angular/animations": "^19.0.8",
-    "@angular/cdk": "^19.0.8",
-    "@angular/common": "^19.0.8",
-    "@angular/compiler": "^19.0.8",
-    "@angular/core": "^19.0.8",
-    "@angular/elements": "^19.0.8",
-    "@angular/forms": "^19.0.8",
-    "@angular/material": "^19.0.8",
-    "@angular/platform-browser": "^19.0.8",
-    "@angular/platform-browser-dynamic": "^19.0.8",
-    "@angular/router": "^19.0.8",
+    "@angular/animations": "^19.2.18",
+    "@angular/cdk": "^19.2.18",
+    "@angular/common": "^19.2.18",
+    "@angular/compiler": "^19.2.18",
+    "@angular/core": "^19.2.18",
+    "@angular/elements": "^19.2.18",
+    "@angular/forms": "^19.2.18",
+    "@angular/material": "^19.2.18",
+    "@angular/platform-browser": "^19.2.18",
+    "@angular/platform-browser-dynamic": "^19.2.18",
+    "@angular/router": "^19.2.18",
     "@project-sunbird/ckeditor-build-classic": "^4.1.3",
     "@project-sunbird/client-services": "^8.1.4",
     "@project-sunbird/common-form-elements-full": "^8.0.6",
     "@project-sunbird/ng2-semantic-ui": "^8.0.2",
     "@project-sunbird/sb-styles": "0.0.16",
-    "@project-sunbird/sunbird-epub-player-web-component": "^1.0.1",
+    "@project-sunbird/sunbird-epub-player-web-component": "^1.3.0",
     "@project-sunbird/sunbird-file-upload-library": "1.0.2",
-    "@project-sunbird/sunbird-pdf-player-web-component": "^1.0.1",
-    "@project-sunbird/sunbird-quml-player": "8.0.0",
+    "@project-sunbird/sunbird-pdf-player-web-component": "^1.5.0",
+    "@project-sunbird/sunbird-quml-player-web-component": "^5.0.0",
     "@project-sunbird/sunbird-resource-library": "8.0.0",
-    "@project-sunbird/sunbird-video-player-web-component": "^1.0.1",
+    "@project-sunbird/sunbird-video-player-web-component": "^1.3.0",
     "@project-sunbird/telemetry-sdk": "^1.3.0",
     "@types/jquery": "^3.5.29",
     "ally.js": "^1.4.1",
@@ -75,10 +76,10 @@
     "zone.js": "~0.15.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^19.0.8",
-    "@angular/cli": "^19.0.8",
-    "@angular/compiler-cli": "^19.0.8",
-    "@angular/language-service": "^19.0.8",
+    "@angular-devkit/build-angular": "^19.2.18",
+    "@angular/cli": "^19.2.18",
+    "@angular/compiler-cli": "^19.2.18",
+    "@angular/language-service": "^19.2.18",
     "@types/jasmine": "~3.6.0",
     "@types/node": "^22.0.0",
     "async": "^3.2.5",
@@ -96,34 +97,26 @@
   "overrides": {
     "ajv": "^8.12.0",
     "ajv-keywords": "^5.1.0",
-    "@project-sunbird/sunbird-quml-player": {
-      "@angular/common": "^19.0.8",
-      "@angular/core": "^19.0.8",
-      "@angular/forms": "^19.0.8",
-      "@angular/platform-browser": "^19.0.8",
-      "ngx-bootstrap": "^19.0.2",
-      "lodash": "^4.17.21"
-    },
     "@project-sunbird/sunbird-player-sdk-v9": {
-      "@angular/common": "^19.0.8",
-      "@angular/core": "^19.0.8"
+      "@angular/common": "^19.2.18",
+      "@angular/core": "^19.2.18"
     },
     "@project-sunbird/sunbird-resource-library": {
-      "@angular/common": "^19.0.8",
-      "@angular/core": "^19.0.8",
-      "@angular/cdk": "^19.0.8",
-      "@angular/material": "^19.0.8",
+      "@angular/common": "^19.2.18",
+      "@angular/core": "^19.2.18",
+      "@angular/cdk": "^19.2.18",
+      "@angular/material": "^19.2.18",
       "lodash": "^4.17.21"
     },
     "@project-sunbird/common-form-elements-full": {
-      "@angular/common": "^19.0.8",
-      "@angular/core": "^19.0.8",
+      "@angular/common": "^19.2.18",
+      "@angular/core": "^19.2.18",
       "lodash": "^4.17.21"
     },
     "ngx-chips": {
-      "@angular/common": "^19.0.8",
-      "@angular/core": "^19.0.8",
-      "@angular/forms": "^19.0.8"
+      "@angular/common": "^19.2.18",
+      "@angular/core": "^19.2.18",
+      "@angular/forms": "^19.2.18"
     },
     "lodash": "^4.17.21",
     "minimist": "^1.2.8",
