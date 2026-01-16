@@ -2,9 +2,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ConfigService } from '../../services/config/config.service';
 
 @Component({
-  selector: 'lib-collection-icon',
-  templateUrl: './collection-icon.component.html',
-  styleUrls: ['./collection-icon.component.scss']
+    selector: 'lib-collection-icon',
+    templateUrl: './collection-icon.component.html',
+    styleUrls: ['./collection-icon.component.scss'],
+    standalone: false
 })
 export class CollectionIconComponent implements OnInit {
   @Input() appIcon;

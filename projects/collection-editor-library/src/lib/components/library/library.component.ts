@@ -9,10 +9,11 @@ import { Router } from '@angular/router';
 import { HelperService } from '../../services/helper/helper.service';
 
 @Component({
-  selector: 'lib-content-library',
-  templateUrl: './library.component.html',
-  styleUrls: ['./library.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+    selector: 'lib-content-library',
+    templateUrl: './library.component.html',
+    styleUrls: ['./library.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class LibraryComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() libraryInput: any;

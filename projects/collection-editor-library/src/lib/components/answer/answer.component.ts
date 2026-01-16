@@ -1,9 +1,10 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { ConfigService } from '../../services/config/config.service';
 @Component({
-  selector: 'lib-answer',
-  templateUrl: './answer.component.html',
-  styleUrls: ['./answer.component.scss']
+    selector: 'lib-answer',
+    templateUrl: './answer.component.html',
+    styleUrls: ['./answer.component.scss'],
+    standalone: false
 })
 export class AnswerComponent implements OnInit {
   @Input() editorState;

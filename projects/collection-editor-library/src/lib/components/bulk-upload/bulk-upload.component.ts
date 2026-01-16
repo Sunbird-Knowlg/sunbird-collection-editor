@@ -12,9 +12,10 @@ import { EditorTelemetryService } from '../../services/telemetry/telemetry.servi
 declare const SunbirdFileUploadLib: any;
 
 @Component({
-  selector: 'lib-bulk-upload',
-  templateUrl: './bulk-upload.component.html',
-  styleUrls: ['./bulk-upload.component.scss']
+    selector: 'lib-bulk-upload',
+    templateUrl: './bulk-upload.component.html',
+    styleUrls: ['./bulk-upload.component.scss'],
+    standalone: false
 })
 export class BulkUploadComponent implements OnInit {
   public collectionId: string;

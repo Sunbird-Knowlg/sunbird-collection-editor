@@ -26,6 +26,7 @@ let ecm;
   templateUrl: './editor.component.html',
   styleUrls: ['./editor.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false
 })
 export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -297,6 +298,9 @@ export class EditorComponent implements OnInit, OnDestroy, AfterViewInit {
           }
         );
       } else if (this.organisationFramework) {
+        this.setEditorForms(categoryDefinitionData);
+      } else {
+        this.frameworkService.frameworkValues = orgFrameworkList;
         this.setEditorForms(categoryDefinitionData);
       }
     } else {

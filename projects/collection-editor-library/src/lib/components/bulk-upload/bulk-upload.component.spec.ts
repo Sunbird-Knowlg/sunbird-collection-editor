@@ -7,9 +7,10 @@ import { ConfigService } from '../../services/config/config.service';
 import { BulkJobService } from '../../services/bulk-job/bulk-job.service';
 import { TreeService } from '../../services/tree/tree.service';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { of } from 'rxjs';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 declare const SunbirdFileUploadLib: any;
 xdescribe('BulkUploadComponent', () => {
   let component: BulkUploadComponent;
@@ -17,12 +18,12 @@ xdescribe('BulkUploadComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ BulkUploadComponent ],
-      imports: [HttpClientTestingModule],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      providers: [ToasterService, EditorService, ConfigService,
-         BulkJobService,  TreeService,  EditorTelemetryService]
-    })
+    declarations: [BulkUploadComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [],
+    providers: [ToasterService, EditorService, ConfigService,
+        BulkJobService, TreeService, EditorTelemetryService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+})
     .compileComponents();
   }));
 

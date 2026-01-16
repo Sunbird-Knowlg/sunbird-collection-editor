@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ManageCollaboratorComponent } from './manage-collaborator.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { EditorService } from '../../services/editor/editor.service';
 import { HelperService } from '../../services/helper/helper.service';
@@ -8,6 +8,7 @@ import { ToasterService } from '../../services/toaster/toaster.service';
 import { mockData } from './manage-collaborator.component.spec.data';
 import { of, throwError } from 'rxjs';
 import * as _ from 'lodash-es';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 const mockEditorService = {
   editorConfig: {
@@ -41,11 +42,11 @@ describe('ManageCollaboratorComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ ManageCollaboratorComponent ],
-      providers: [EditorService, ToasterService, { provide: EditorService, useValue: mockEditorService }],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
-    })
+    declarations: [ManageCollaboratorComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [],
+    providers: [EditorService, ToasterService, { provide: EditorService, useValue: mockEditorService }, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+})
     .compileComponents();
   }));
 

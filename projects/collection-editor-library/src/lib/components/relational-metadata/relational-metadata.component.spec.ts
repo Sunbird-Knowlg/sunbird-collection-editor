@@ -1,10 +1,11 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import * as _ from 'lodash-es';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { RelationalMetadataComponent } from './relational-metadata.component';
 import { mockData } from './relational-metadata.component.spec.data';
 import { EditorService } from '../../services/editor/editor.service';
 import { TreeService } from '../../services/tree/tree.service';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('RelationalMetadataComponent', () => {
   let component: RelationalMetadataComponent;
@@ -12,10 +13,10 @@ describe('RelationalMetadataComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      declarations: [ RelationalMetadataComponent ],
-      providers: [EditorService, TreeService]
-    })
+    declarations: [RelationalMetadataComponent],
+    imports: [],
+    providers: [EditorService, TreeService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+})
     .compileComponents();
   }));
 

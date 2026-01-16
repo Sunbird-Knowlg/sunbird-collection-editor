@@ -1,9 +1,10 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { LibraryPlayerComponent } from './library-player.component';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('LibraryPlayerComponent', () => {
   let component: LibraryPlayerComponent;
@@ -11,11 +12,11 @@ describe('LibraryPlayerComponent', () => {
   const mockData = {action: 'openHierarchyPopup'};
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [EditorTelemetryService],
-      imports: [HttpClientTestingModule],
-      declarations: [ LibraryPlayerComponent, TelemetryInteractDirective ],
-      schemas: [NO_ERRORS_SCHEMA]
-    })
+    declarations: [LibraryPlayerComponent, TelemetryInteractDirective],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [],
+    providers: [EditorTelemetryService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+})
     .compileComponents();
   }));
 

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { DialcodeService } from './dialcode.service';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { ConfigService } from '../config/config.service';
 import * as urlConfig from '../config/url.config.json';
 import * as labelConfig from '../config/label.config.json';
@@ -33,9 +33,9 @@ describe('DialcodeService', () => {
   }
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientModule],
-      providers: [HttpClient, PublicDataService, TreeService, ToasterService, { provide: ConfigService, useValue: configStub }]
-    });
+    imports: [],
+    providers: [HttpClient, PublicDataService, TreeService, ToasterService, { provide: ConfigService, useValue: configStub }, provideHttpClient(withInterceptorsFromDi())]
+});
   });
 
   it('should be created', () => {

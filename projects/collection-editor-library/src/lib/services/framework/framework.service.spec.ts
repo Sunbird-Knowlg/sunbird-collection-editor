@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { FrameworkService } from './framework.service';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { of } from 'rxjs';
 import { ConfigService } from '../config/config.service';
 import * as urlConfig from '../../services/config/url.config.json';
@@ -57,11 +57,11 @@ describe('FrameworkService', () => {
   const framework = 'ekstep_ncert_k-12';
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientModule],
-      providers: [HttpClient, {
-        provide: ConfigService, useValue: configStub
-      }, DataService, PublicDataService]
-    });
+    imports: [],
+    providers: [HttpClient, {
+            provide: ConfigService, useValue: configStub
+        }, DataService, PublicDataService, provideHttpClient(withInterceptorsFromDi())]
+});
     frameworkService = TestBed.inject(FrameworkService);
     const frameworkResponse = serverResponse;
     frameworkResponse.result = frameworkMockData.result;

@@ -2,7 +2,7 @@ import { EditorService } from './../../services/editor/editor.service';
 import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { EditorComponent } from './editor.component';
 import { CUSTOM_ELEMENTS_SCHEMA, EventEmitter } from '@angular/core';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -27,6 +27,7 @@ import * as categoryConfig from '../../services/config/category.config.json';
 import { FrameworkService } from '../../services/framework/framework.service';
 import { HelperService } from '../../services/helper/helper.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('EditorComponent', () => {
   const configStub = {
@@ -40,13 +41,12 @@ describe('EditorComponent', () => {
   let toasterService;
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, FormsModule, ReactiveFormsModule, RouterTestingModule],
-      declarations: [EditorComponent, TelemetryInteractDirective],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      providers: [EditorTelemetryService, EditorService, DialcodeService, ToasterService,
-        { provide: ConfigService, useValue: configStub }
-      ]
-    })
+    declarations: [EditorComponent, TelemetryInteractDirective],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [FormsModule, ReactiveFormsModule, RouterTestingModule],
+    providers: [EditorTelemetryService, EditorService, DialcodeService, ToasterService,
+        { provide: ConfigService, useValue: configStub }, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+})
       .compileComponents();
   }));
 

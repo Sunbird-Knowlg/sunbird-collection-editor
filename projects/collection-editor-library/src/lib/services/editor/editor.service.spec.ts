@@ -2,7 +2,7 @@ import { DataService } from './../data/data.service';
 import { editorConfig, BranchingLogicData, treeNodeData, rootNodeData, hierarchyRootNodeData } from './../../components/editor/editor.component.spec.data';
 import { TestBed } from '@angular/core/testing';
 import { EditorService } from './editor.service';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { EventEmitter } from '@angular/core';
 import { ConfigService } from '../config/config.service';
 import * as urlConfig from '../../services/config/url.config.json';
@@ -45,13 +45,13 @@ describe('EditorService', () => {
   };
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientModule],
-      providers: [HttpClient,
+    imports: [],
+    providers: [HttpClient,
         DataService,
         TreeService,
         PublicDataService,
-        { provide: ConfigService, useValue: configStub }]
-    });
+        { provide: ConfigService, useValue: configStub }, provideHttpClient(withInterceptorsFromDi())]
+});
     editorService = TestBed.inject(EditorService);
     treeService = TestBed.inject(TreeService);
     editorService.initialize(editorConfig);

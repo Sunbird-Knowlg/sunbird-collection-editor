@@ -15,9 +15,10 @@ export interface SubMenu {
   show: boolean;
 }
 @Component({
-  selector: 'lib-question-option-sub-menu',
-  templateUrl: './question-option-sub-menu.component.html',
-  styleUrls: ['./question-option-sub-menu.component.css'],
+    selector: 'lib-question-option-sub-menu',
+    templateUrl: './question-option-sub-menu.component.html',
+    styleUrls: ['./question-option-sub-menu.component.css'],
+    standalone: false
 })
 export class QuestionOptionSubMenuComponent {
   @Input() subMenus: SubMenu[];

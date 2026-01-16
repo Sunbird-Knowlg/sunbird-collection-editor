@@ -2,7 +2,8 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { TemplateComponent } from './template.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('TemplateComponent', () => {
   let component: TemplateComponent;
@@ -10,10 +11,11 @@ describe('TemplateComponent', () => {
   const templateList = [{ type: 'Multile Choice Question' }, { type: 'Subjective Question'}];
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ TemplateComponent, TelemetryInteractDirective ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
-    })
+    declarations: [TemplateComponent, TelemetryInteractDirective],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [],
+    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+})
     .compileComponents();
   }));
 

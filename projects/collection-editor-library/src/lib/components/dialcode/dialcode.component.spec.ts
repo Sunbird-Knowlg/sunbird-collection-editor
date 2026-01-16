@@ -1,6 +1,6 @@
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { AbstractControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DialcodeComponent } from './dialcode.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -10,7 +10,7 @@ import { of, throwError } from 'rxjs';
 import { mockData } from './dialcode.component.spec.data';
 import { ConfigService } from '../../services/config/config.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
-import { HttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { EditorService } from '../../services/editor/editor.service';
 
 describe('DialcodeComponent', () => {
@@ -34,11 +34,11 @@ describe('DialcodeComponent', () => {
   };
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, HttpClientTestingModule ],
-      declarations: [ DialcodeComponent, TelemetryInteractDirective ],
-      providers: [TreeService, DialcodeService, EditorService, { provide: ConfigService, useValue: configServiceData}, ToasterService],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
-    })
+    declarations: [DialcodeComponent, TelemetryInteractDirective],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [FormsModule, ReactiveFormsModule],
+    providers: [TreeService, DialcodeService, EditorService, { provide: ConfigService, useValue: configServiceData }, ToasterService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+})
     .compileComponents();
   }));
 

@@ -1,5 +1,5 @@
 import { TestBed } from "@angular/core/testing"
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { QuestionService } from './question.service';
 import { ConfigService } from '../config/config.service';
 import * as urlConfig from '../../services/config/url.config.json';
@@ -29,12 +29,11 @@ describe('QuestionService', () => {
     const editorConfigStub = { 'editorConfig': editorConfig };
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientModule],
-            providers: [QuestionService, HttpClient,
-                { provide: ConfigService, useValue: configStub },
-                { provide: EditorService, useValue: editorConfigStub }
-            ]
-        });
+    imports: [],
+    providers: [QuestionService, HttpClient,
+        { provide: ConfigService, useValue: configStub },
+        { provide: EditorService, useValue: editorConfigStub }, provideHttpClient(withInterceptorsFromDi())]
+});
         questionService = TestBed.inject(QuestionService);
         publicDataService = TestBed.inject(PublicDataService);
     });

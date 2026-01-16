@@ -10,10 +10,11 @@ import { ConfigService } from '../../services/config/config.service';
 import { HelperService } from '../../services/helper/helper.service';
 
 @Component({
-  selector: 'lib-library-filter',
-  templateUrl: './library-filter.component.html',
-  styleUrls: ['./library-filter.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+    selector: 'lib-library-filter',
+    templateUrl: './library-filter.component.html',
+    styleUrls: ['./library-filter.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class LibraryFilterComponent implements OnInit, OnChanges {
   @Input() sessionContext: any;

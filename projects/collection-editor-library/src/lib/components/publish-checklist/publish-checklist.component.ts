@@ -3,10 +3,11 @@ import { EditorTelemetryService } from '../../services/telemetry/telemetry.servi
 import { ConfigService } from '../../services/config/config.service';
 import * as _ from 'lodash-es';
 @Component({
-  selector: 'lib-publish-checklist',
-  templateUrl: './publish-checklist.component.html',
-  styleUrls: ['./publish-checklist.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+    selector: 'lib-publish-checklist',
+    templateUrl: './publish-checklist.component.html',
+    styleUrls: ['./publish-checklist.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class PublishChecklistComponent implements OnInit {
   @Input() publishchecklist: any;

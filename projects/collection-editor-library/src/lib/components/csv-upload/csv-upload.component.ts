@@ -9,9 +9,10 @@ import * as _ from 'lodash-es';
 declare const SunbirdFileUploadLib: any;
 
 @Component({
-  selector: 'lib-csv-upload',
-  templateUrl: './csv-upload.component.html',
-  styleUrls: ['./csv-upload.component.scss']
+    selector: 'lib-csv-upload',
+    templateUrl: './csv-upload.component.html',
+    styleUrls: ['./csv-upload.component.scss'],
+    standalone: false
 })
 export class CsvUploadComponent implements OnInit {
   @Input() collectionId;
