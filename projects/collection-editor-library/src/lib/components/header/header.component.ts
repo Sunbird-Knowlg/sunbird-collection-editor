@@ -42,6 +42,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
   public correctionComments: string;
   public unsubscribe$ = new Subject<void>();
   public bulkUploadStatus = false;
+  public uploadContentStatus = false;
 
   constructor(private editorService: EditorService,
     public telemetryService: EditorTelemetryService,
@@ -55,9 +56,17 @@ export class HeaderComponent implements OnDestroy, OnInit {
         this.bulkUploadStatus = false;
       }
     });
+    this.editorService.treeService.treeStatus$.pipe(takeUntil(this.unsubscribe$)).subscribe((status) => {
+      this.updateContentStatus();
+    });
     this.objectType = _.get(this.editorService, 'editorConfig.config.objectType');
     await this.handleActionButtons();
     this.getSourcingData();
+  }
+
+  updateContentStatus() {
+    const contentChildren = this.editorService.getContentChildrens();
+    this.uploadContentStatus = contentChildren.length > 0;
   }
 
   async handleActionButtons() {
@@ -108,9 +117,9 @@ export class HeaderComponent implements OnDestroy, OnInit {
 
   firstLevelPublish() {
     if (this.editorService.isReviewerQualityCheckEnabled) {
-      this.toolbarEmitter.emit({button: 'saveQualityParameters'});
+      this.toolbarEmitter.emit({ button: 'saveQualityParameters' });
     } else {
-      this.buttonEmitter({type: 'publishQuestion'});
+      this.buttonEmitter({ type: 'publishQuestion' });
     }
   }
 
