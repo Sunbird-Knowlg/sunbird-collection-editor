@@ -49,9 +49,7 @@ export class HeaderComponent implements OnDestroy, OnInit {
     public configService: ConfigService) { }
 
   async ngOnInit() {
-    console.log('HeaderComponent: ngOnInit triggered');
     this.editorService.bulkUploadStatus$.pipe(takeUntil(this.unsubscribe$)).subscribe((status) => {
-      console.log('Bulk upload status changed:', status);
       if (status === 'processing') {
         this.bulkUploadStatus = true;
       } else {
@@ -73,7 +71,6 @@ export class HeaderComponent implements OnDestroy, OnInit {
     const contentChildren = this.editorService.getContentChildrens();
     this.uploadContentStatus = contentChildren.length > 0;
   }
-
 
   async handleActionButtons() {
     this.visibility = {};
