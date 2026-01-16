@@ -1,15 +1,15 @@
 const fs = require("fs-extra");
 const concat = require("concat");
 const path = require("path");
+const glob = require("glob")
 
 const DIST_DIR = path.resolve(__dirname, "dist/collection-editor-library-wc");
-
 function findFirstMatchingFile(dir, patterns) {
-  const entries = fs.readdirSync(dir);
   for (const pat of patterns) {
-    const regex = new RegExp("^" + pat.replace(/\./g, "\\.").replace(/\*/g, ".*") + "$");
-    const match = entries.find((f) => regex.test(f));
-    if (match) return path.join(dir, match);
+    const matches = glob.sync(pat, { cwd: dir });
+    if (matches && matches.length > 0) {
+      return path.join(dir, matches[0]);
+    }
   }
   return null;
 }

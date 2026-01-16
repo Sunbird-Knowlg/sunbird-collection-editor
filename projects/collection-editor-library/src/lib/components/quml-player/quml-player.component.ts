@@ -149,7 +149,7 @@ export class QumlPlayerComponent implements OnInit, AfterViewInit, OnChanges, Af
               resolve();
             } else if (attempts >= maxAttempts) {
               clearInterval(interval);
-              reject();
+              reject(new Error('Quml player failed to load after max attempts'));
             }
           }, QumlPlayerComponent.CUSTOM_ELEMENT_CHECK_INTERVAL);
         }
@@ -182,8 +182,8 @@ export class QumlPlayerComponent implements OnInit, AfterViewInit, OnChanges, Af
       if (checkCustomElement('sunbird-quml-player') && this.inQuiryQuMLPlayer?.nativeElement) {
         const qumlElement = document.createElement('sunbird-quml-player') as any;
         qumlElement.setAttribute('player-config', JSON.stringify(this.qumlPlayerConfig));
-        qumlElement.addEventListener('playerEvent', this.getPlayerEvents);
-        qumlElement.addEventListener('telemetryEvent', this.getTelemetryEvents);
+        qumlElement.addEventListener('playerEvent', this.getPlayerEvents.bind(this));
+        qumlElement.addEventListener('telemetryEvent', this.getTelemetryEvents.bind(this));
         this.inQuiryQuMLPlayer.nativeElement.innerHTML = '';
         this.inQuiryQuMLPlayer.nativeElement.appendChild(qumlElement);
         initializePlayer(qumlElement);

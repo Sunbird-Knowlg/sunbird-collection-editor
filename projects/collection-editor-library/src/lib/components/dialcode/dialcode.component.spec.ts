@@ -10,7 +10,7 @@ import { of, throwError } from 'rxjs';
 import { mockData } from './dialcode.component.spec.data';
 import { ConfigService } from '../../services/config/config.service';
 import { ToasterService } from '../../services/toaster/toaster.service';
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { EditorService } from '../../services/editor/editor.service';
 
 describe('DialcodeComponent', () => {
