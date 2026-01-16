@@ -57,14 +57,11 @@ export class HeaderComponent implements OnDestroy, OnInit {
       }
     });
     this.editorService.treeService.treeStatus$.pipe(takeUntil(this.unsubscribe$)).subscribe((status) => {
-      if (status === 'added' || status === 'removed' || status === 'loaded') {
-        this.updateContentStatus();
-      }
+      this.updateContentStatus();
     });
     this.objectType = _.get(this.editorService, 'editorConfig.config.objectType');
     await this.handleActionButtons();
     this.getSourcingData();
-    this.updateContentStatus();
   }
 
   updateContentStatus() {

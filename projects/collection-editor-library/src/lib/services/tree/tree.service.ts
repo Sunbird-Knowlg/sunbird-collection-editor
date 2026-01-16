@@ -119,7 +119,7 @@ export class TreeService {
       primaryCategory: _.get(nodeConfig, 'primaryCategory'),
       objectType: _.get(this.config, 'objectType'),
       root: false,
-      folder: _.get(nodeConfig, 'folder') === false ? false : true,
+      folder: _.get(nodeConfig, 'folder'),
       icon: _.get(nodeConfig, 'iconClass'),
       metadata: {
         mimeType: _.get(nodeConfig, 'mimeType'),
