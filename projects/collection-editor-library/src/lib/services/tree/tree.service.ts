@@ -23,7 +23,7 @@ export class TreeService {
   // tslint:disable-next-line:variable-name
   private _treeStatus$ = new BehaviorSubject<any>(undefined);
   public readonly treeStatus$: Observable<any> = this._treeStatus$
-  .asObservable().pipe(skipWhile(status => status === undefined || status === null));
+    .asObservable().pipe(skipWhile(status => status === undefined || status === null));
   previousNode: any;
 
   constructor(private toasterService: ToasterService, private helperService: HelperService, public configService: ConfigService) { }
@@ -49,26 +49,26 @@ export class TreeService {
   updateAppIcon(appIconUrl) {
     const activeNode = this.getActiveNode();
     const nodeId = activeNode.data.id;
-    activeNode.data.metadata = {...activeNode.data.metadata, appIcon : appIconUrl};
-    this.setTreeCache(nodeId, {appIcon : appIconUrl}, activeNode.data);
+    activeNode.data.metadata = { ...activeNode.data.metadata, appIcon: appIconUrl };
+    this.setTreeCache(nodeId, { appIcon: appIconUrl }, activeNode.data);
   }
 
   updateMetaDataProperty(key, value) {
     const node = this.getFirstChild();
     const nodeId = node.data.id;
-    node.data.metadata = {...node.data.metadata, [key] : value};
-    this.setTreeCache(nodeId, _.merge({}, {[key] : value}, _.pick(node.data.metadata, ['objectType'])));
+    node.data.metadata = { ...node.data.metadata, [key]: value };
+    this.setTreeCache(nodeId, _.merge({}, { [key]: value }, _.pick(node.data.metadata, ['objectType'])));
   }
 
   updateTreeNodeMetadata(newData: any, nodeToBeUpdated?: any, primaryCategory?: any, objectType?: any) {
     const activeNode = !_.isUndefined(nodeToBeUpdated) ? this.getNodeById(nodeToBeUpdated) : this.getActiveNode();
-    const nodeId = nodeToBeUpdated  || activeNode.data.id;
+    const nodeId = nodeToBeUpdated || activeNode.data.id;
     if (newData.instructions) {
       newData.instructions = { default: newData.instructions };
-     }
+    }
     activeNode.data.metadata = { ...activeNode.data.metadata, ...newData };
     activeNode.title = newData.name;
-    newData = _.omitBy(newData, (v, key ) => _.isUndefined(v) || _.isNull(v) || (v === '' && _.includes(this.omitFalseyProps, key)));
+    newData = _.omitBy(newData, (v, key) => _.isUndefined(v) || _.isNull(v) || (v === '' && _.includes(this.omitFalseyProps, key)));
     newData = _.merge({}, newData, _.pick(activeNode.data.metadata, ['objectType', 'contentType', 'primaryCategory']));
     const attributions = newData.attributions;
     if (attributions && _.isString(attributions)) {
@@ -119,7 +119,7 @@ export class TreeService {
       primaryCategory: _.get(nodeConfig, 'primaryCategory'),
       objectType: _.get(this.config, 'objectType'),
       root: false,
-      folder: true,
+      folder: _.get(nodeConfig, 'folder') === false ? false : true,
       icon: _.get(nodeConfig, 'iconClass'),
       metadata: {
         mimeType: _.get(nodeConfig, 'mimeType'),
@@ -240,7 +240,7 @@ export class TreeService {
     } else if (action === 'remove') {
       nodeElem.span.childNodes[1].classList.remove('highlightNode');
       nodeElem.span.childNodes[2].classList.remove('highlightNode');
-    } else {}
+    } else { }
   }
 
   setTreeCache(nodeId, metadata, activeNode?) {

@@ -58,6 +58,11 @@ export class HeaderComponent implements OnDestroy, OnInit {
         this.bulkUploadStatus = false;
       }
     });
+    this.editorService.treeService.treeStatus$.pipe(takeUntil(this.unsubscribe$)).subscribe((status) => {
+      if (status === 'added' || status === 'removed' || status === 'loaded') {
+        this.updateContentStatus();
+      }
+    });
     this.objectType = _.get(this.editorService, 'editorConfig.config.objectType');
     await this.handleActionButtons();
     this.getSourcingData();
@@ -67,10 +72,6 @@ export class HeaderComponent implements OnDestroy, OnInit {
   updateContentStatus() {
     const contentChildren = this.editorService.getContentChildrens();
     this.uploadContentStatus = contentChildren.length > 0;
-    console.log('Tree Update - Content Children Count:', contentChildren.length);
-    console.log('Has Content:', this.uploadContentStatus);
-    console.log('Tree Update - Content Children IDs:', contentChildren);
-    // console.log('Tree Update - All Tree Nodes:', this.editorService.getTreeNodes());
   }
 
 
@@ -122,9 +123,9 @@ export class HeaderComponent implements OnDestroy, OnInit {
 
   firstLevelPublish() {
     if (this.editorService.isReviewerQualityCheckEnabled) {
-      this.toolbarEmitter.emit({button: 'saveQualityParameters'});
+      this.toolbarEmitter.emit({ button: 'saveQualityParameters' });
     } else {
-      this.buttonEmitter({type: 'publishQuestion'});
+      this.buttonEmitter({ type: 'publishQuestion' });
     }
   }
 
