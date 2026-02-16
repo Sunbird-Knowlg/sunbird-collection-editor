@@ -223,17 +223,17 @@ Now open the `angular.json` file and add the following under `architect.build.as
         ...
 +        {
 +          "glob": "**/*",
-+          "input": "node_modules/@project-sunbird/sunbird-pdf-player-web-component/lib/assets/",
++          "input": "node_modules/@project-sunbird/sunbird-pdf-player-web-component/assets/lib/assets/",
 +         "output": "/assets/"
 +        },
 +        {
 +          "glob": "**/*",
-+          "input": "node_modules/@project-sunbird/sunbird-video-player-web-component/lib/assets/",
++          "input": "node_modules/@project-sunbird/sunbird-video-player-web-component/assets/lib/assets/",
 +          "output": "/assets/"
 +        },
 {
 +          "glob": "**/*",
-+          "input": "node_modules/@project-sunbird/sunbird-epub-player-web-component/lib/assets/",
++          "input": "node_modules/@project-sunbird/sunbird-epub-player-web-component/assets/lib/assets/",
 +          "output": "/assets/"
 +        },
 +        {
@@ -254,9 +254,9 @@ Now open the `angular.json` file and add the following under `architect.build.as
 +        "src/assets/lib/semantic/semantic.min.css",
 +        "src/assets/styles/styles.scss",
 +        "node_modules/font-awesome/css/font-awesome.css",
-+        "node_modules/@project-sunbird/sunbird-pdf-player-web-component/styles.css",
-+        "node_modules/@project-sunbird/sunbird-video-player-web-component/styles.css",
-+        "node_modules/@project-sunbird/sunbird-epub-player-web-component/styles.css",
++        "node_modules/@project-sunbird/sunbird-pdf-player-web-component/assets/styles.css",
++        "node_modules/@project-sunbird/sunbird-video-player-web-component/assets/styles.css",
++        "node_modules/@project-sunbird/sunbird-epub-player-web-component/assets/styles.css",
 
       ],
       "scripts": [
@@ -270,9 +270,9 @@ Now open the `angular.json` file and add the following under `architect.build.as
 +        "src/assets/lib/modal.min.js",
 +        "src/assets/lib/semantic-ui-tree-picker.js",
 +        "node_modules/@project-sunbird/client-services/index.js",
-+        "node_modules/@project-sunbird/sunbird-pdf-player-web-component/sunbird-pdf-player.js",
-+        "node_modules/@project-sunbird/sunbird-video-player-web-component/sunbird-video-player.js",
-+        "node_modules/@project-sunbird/sunbird-epub-player-web-component/sunbird-epub-player.js",
++        "node_modules/@project-sunbird/sunbird-pdf-player-web-component/assets/sunbird-pdf-player.js",
++        "node_modules/@project-sunbird/sunbird-video-player-web-component/assets/sunbird-video-player.js",
++        "node_modules/@project-sunbird/sunbird-epub-player-web-component/assets/sunbird-epub-player.js",
 
       ]
     }
