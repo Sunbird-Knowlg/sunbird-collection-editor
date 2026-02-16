@@ -41,15 +41,31 @@ async function build() {
 
   const filter = (file) => !filesToExclude.has(file);
 
+  const subDir = "assets/collection-editor";
+
+  async function cleanDir(dir, preserve = []) {
+    if (!fs.existsSync(dir)) return;
+    const files = await fs.readdir(dir);
+    for (const file of files) {
+      if (!preserve.includes(file)) {
+        await fs.remove(path.join(dir, file));
+      }
+    }
+  }
+
   // Build outputs for web-component
-  await fs.ensureDir(path.resolve(__dirname, "web-component"));
-  await concat(files, path.resolve(__dirname, "web-component/sunbird-collection-editor.js"));
-  await fs.copy(DIST_DIR + "/", path.resolve(__dirname, "web-component/"), { filter });
+  const wcDir = path.resolve(__dirname, "web-component");
+  await cleanDir(wcDir, ["package.json"]);
+  await fs.ensureDir(path.join(wcDir, subDir));
+  await concat(files, path.join(wcDir, subDir, "sunbird-collection-editor.js"));
+  await fs.copy(DIST_DIR + "/", path.join(wcDir, subDir), { filter });
 
   // Build outputs for web-component-demo
-  await fs.ensureDir(path.resolve(__dirname, "web-component-demo"));
-  await concat(files, path.resolve(__dirname, "web-component-demo/sunbird-collection-editor.js"));
-  await fs.copy(DIST_DIR + "/", path.resolve(__dirname, "web-component-demo/"), { filter });
+  const wcDemoDir = path.resolve(__dirname, "web-component-demo");
+  await cleanDir(wcDemoDir, ["index.html"]);
+  await fs.ensureDir(path.join(wcDemoDir, subDir));
+  await concat(files, path.join(wcDemoDir, subDir, "sunbird-collection-editor.js"));
+  await fs.copy(DIST_DIR + "/", path.join(wcDemoDir, subDir), { filter });
 
   console.log("Web component bundles prepared successfully.");
 }

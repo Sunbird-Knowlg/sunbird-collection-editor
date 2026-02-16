@@ -31,17 +31,17 @@
               "src/favicon.ico",
               {
                 "glob": "**/*.*",
-                "input": "./node_modules/@project-sunbird/sunbird-pdf-player-web-component/assets",
+                "input": "./node_modules/@project-sunbird/sunbird-pdf-player-web-component/assets/pdf-player",
                 "output": "/assets/"
               },
               {
                 "glob": "**/*",
-                "input": "./node_modules/@project-sunbird/sunbird-video-player-web-component/assets",
+                "input": "./node_modules/@project-sunbird/sunbird-video-player-web-component/assets/video-player",
                 "output": "/assets/"
               },
               {
                 "glob": "**/*",
-                "input": "./node_modules/@project-sunbird/sunbird-epub-player-web-component/assets",
+                "input": "./node_modules/@project-sunbird/sunbird-epub-player-web-component/assets/epub-player",
                 "output": "/assets/"
               },
               {
@@ -51,17 +51,17 @@
               },
               {
                 "glob": "**/*",
-                "input": "./node_modules/@project-sunbird/sunbird-quml-player-web-component/assets",
+                "input": "./node_modules/@project-sunbird/sunbird-quml-player-web-component/assets/quml-player",
                 "output": "/assets/"
               }
             ],
             "styles": [
               "src/assets/quml-styles/quml-carousel.css",
               "node_modules/@project-sunbird/sb-styles/assets/styles.scss",
-              "node_modules/@project-sunbird/sunbird-pdf-player-web-component/styles.css",
-              "node_modules/@project-sunbird/sunbird-video-player-web-component/styles.css",
-              "node_modules/@project-sunbird/sunbird-epub-player-web-component/styles.css",
-              "node_modules/@project-sunbird/sunbird-quml-player-web-component/styles.css",
+              "node_modules/@project-sunbird/sunbird-pdf-player-web-component/assets/pdf-player/styles.css",
+              "node_modules/@project-sunbird/sunbird-video-player-web-component/assets/video-player/styles.css",
+              "node_modules/@project-sunbird/sunbird-epub-player-web-component/assets/epub-player/styles.css",
+              "node_modules/@project-sunbird/sunbird-quml-player-web-component/assets/quml-player/styles.css",
               "src/styles.scss",
               "src/assets/lib/semantic/semantic.min.css",
               "src/assets/styles/styles.scss",
@@ -82,10 +82,10 @@
               "src/assets/lib/semantic-ui-tree-picker.js",
               "node_modules/@project-sunbird/telemetry-sdk/index.js",
               "node_modules/@project-sunbird/client-services/index.js",
-              "node_modules/@project-sunbird/sunbird-pdf-player-web-component/sunbird-pdf-player.js",
-              "node_modules/@project-sunbird/sunbird-video-player-web-component/sunbird-video-player.js",
-              "node_modules/@project-sunbird/sunbird-epub-player-web-component/sunbird-epub-player.js",
-              "node_modules/@project-sunbird/sunbird-quml-player-web-component/sunbird-quml-player.js"
+              "node_modules/@project-sunbird/sunbird-pdf-player-web-component/assets/pdf-player/sunbird-pdf-player.js",
+              "node_modules/@project-sunbird/sunbird-video-player-web-component/assets/video-player/sunbird-video-player.js",
+              "node_modules/@project-sunbird/sunbird-epub-player-web-component/assets/epub-player/sunbird-epub-player.js",
+              "node_modules/@project-sunbird/sunbird-quml-player-web-component/assets/quml-player/sunbird-quml-player.js"
             ],
             "extractLicenses": false,
             "sourceMap": true,
@@ -229,6 +229,26 @@
                 "glob": "**/*",
                 "input": "projects/collection-editor-library/src/lib/assets",
                 "output": "/assets/"
+              },
+              {
+                "glob": "**/*",
+                "input": "./node_modules/@project-sunbird/sunbird-pdf-player-web-component/assets/pdf-player",
+                "output": "/assets/"
+              },
+              {
+                "glob": "**/*",
+                "input": "./node_modules/@project-sunbird/sunbird-video-player-web-component/assets/video-player",
+                "output": "/assets/"
+              },
+              {
+                "glob": "**/*",
+                "input": "./node_modules/@project-sunbird/sunbird-epub-player-web-component/assets/epub-player",
+                "output": "/assets/"
+              },
+              {
+                "glob": "**/*",
+                "input": "./node_modules/@project-sunbird/sunbird-quml-player-web-component/assets/quml-player",
+                "output": "/assets/"
               }
             ],
             "styles": [
@@ -239,10 +259,10 @@
               "src/assets/styles/styles.scss",
               "node_modules/font-awesome/css/font-awesome.css",
               "node_modules/katex/dist/katex.min.css",
-              "node_modules/@project-sunbird/sunbird-pdf-player-web-component/styles.css",
-              "node_modules/@project-sunbird/sunbird-video-player-web-component/styles.css",
-              "node_modules/@project-sunbird/sunbird-epub-player-web-component/styles.css",
-              "node_modules/@project-sunbird/sunbird-quml-player-web-component/styles.css"
+              "node_modules/@project-sunbird/sunbird-pdf-player-web-component/assets/pdf-player/styles.css",
+              "node_modules/@project-sunbird/sunbird-video-player-web-component/assets/video-player/styles.css",
+              "node_modules/@project-sunbird/sunbird-epub-player-web-component/assets/epub-player/styles.css",
+              "node_modules/@project-sunbird/sunbird-quml-player-web-component/assets/quml-player/styles.css"
             ],
             "scripts": [
               "node_modules/@project-sunbird/sunbird-file-upload-library/sunbird-file-upload-library.js",
@@ -256,10 +276,10 @@
               "src/assets/lib/modal.min.js",
               "src/assets/lib/semantic-ui-tree-picker.js",
               "node_modules/@project-sunbird/telemetry-sdk/index.js",
-              "node_modules/@project-sunbird/sunbird-pdf-player-web-component/sunbird-pdf-player.js",
-              "node_modules/@project-sunbird/sunbird-video-player-web-component/sunbird-video-player.js",
-              "node_modules/@project-sunbird/sunbird-epub-player-web-component/sunbird-epub-player.js",
-              "node_modules/@project-sunbird/sunbird-quml-player-web-component/sunbird-quml-player.js"
+              "node_modules/@project-sunbird/sunbird-pdf-player-web-component/assets/pdf-player/sunbird-pdf-player.js",
+              "node_modules/@project-sunbird/sunbird-video-player-web-component/assets/video-player/sunbird-video-player.js",
+              "node_modules/@project-sunbird/sunbird-epub-player-web-component/assets/epub-player/sunbird-epub-player.js",
+              "node_modules/@project-sunbird/sunbird-quml-player-web-component/assets/quml-player/sunbird-quml-player.js"
             ],
             "polyfills": "projects/collection-editor-library-wc/src/polyfills.ts",
             "main": "projects/collection-editor-library-wc/src/main.ts"
@@ -284,7 +304,7 @@
                   "with": "projects/collection-editor-library-wc/src/environments/environment.prod.ts"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "none"
             },
             "development": {
               "optimization": false,
