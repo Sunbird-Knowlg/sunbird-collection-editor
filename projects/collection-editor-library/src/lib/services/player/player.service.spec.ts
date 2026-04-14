@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { PlayerService } from './player.service';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { EditorService } from './../../services/editor/editor.service';
 import { ConfigService } from '../../services/config/config.service';
 import * as urlConfig from '../../services/config/url.config.json';
@@ -67,11 +67,11 @@ const mockEditorService = {
 describe('PlayerService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientModule],
-      providers: [HttpClient,
+    imports: [],
+    providers: [HttpClient,
         { provide: EditorService, useValue: mockEditorService },
-        { provide: ConfigService, useValue: configStub }]
-    });
+        { provide: ConfigService, useValue: configStub }, provideHttpClient(withInterceptorsFromDi())]
+});
   });
 
   it('should be created', () => {

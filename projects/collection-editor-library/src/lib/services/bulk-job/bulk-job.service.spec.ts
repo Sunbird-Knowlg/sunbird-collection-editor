@@ -3,7 +3,7 @@ import { BulkJobService } from './bulk-job.service';
 import { ConfigService } from '../config/config.service';
 import * as urlConfig from '../config/url.config.json';
 import * as labelConfig from '../config/label.config.json';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { PublicDataService } from '../public-data/public-data.service';
 import { of, throwError } from 'rxjs';
 import * as _ from 'lodash-es';
@@ -30,9 +30,9 @@ xdescribe('BulkJobService', () => {
   }
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientModule],
-      providers: [HttpClient, PublicDataService, { provide: ConfigService, useValue: configStub }]
-    });
+    imports: [],
+    providers: [HttpClient, PublicDataService, { provide: ConfigService, useValue: configStub }, provideHttpClient(withInterceptorsFromDi())]
+});
   });
 
   it('should be created', () => {

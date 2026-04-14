@@ -8,16 +8,16 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import 'jquery.fancytree';
 import * as _ from 'lodash-es';
 import { EditorService } from '../../services/editor/editor.service';
 
 declare var $: any;
 
 @Component({
-  selector: 'lib-plain-tree',
-  templateUrl: './plain-tree.component.html',
-  styleUrls: ['./plain-tree.component.scss'],
+    selector: 'lib-plain-tree',
+    templateUrl: './plain-tree.component.html',
+    styleUrls: ['./plain-tree.component.scss'],
+    standalone: false
 })
 export class PlainTreeComponent implements OnInit, AfterViewInit {
   @ViewChild('plainTree') public tree: ElementRef;

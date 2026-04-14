@@ -8,8 +8,9 @@ import * as _ from 'lodash-es';
  * loader component
  */
 @Component({
-  selector: 'app-loader',
-  templateUrl: './app-loader.component.html'
+    selector: 'app-loader',
+    templateUrl: './app-loader.component.html',
+    standalone: false
 })
 export class AppLoaderComponent implements OnInit {
   @Input() data: ILoaderMessage;

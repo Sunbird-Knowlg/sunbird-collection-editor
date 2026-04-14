@@ -3,7 +3,8 @@ import { mockConfigService, mockData } from "./slider.component.spec.data";
 import { SliderComponent } from "./slider.component";
 import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 import { ConfigService } from '../../services/config/config.service';
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe("SliderComponent", () => {
   let component: SliderComponent;
@@ -11,13 +12,15 @@ describe("SliderComponent", () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports:[HttpClientTestingModule],
-      declarations: [SliderComponent],
-      providers:[
-        { provide: ConfigService, useValue: mockConfigService }
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
-    }).compileComponents();
+    declarations: [SliderComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [],
+    providers: [
+        { provide: ConfigService, useValue: mockConfigService },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+}).compileComponents();
   }));
 
   beforeEach(() => {

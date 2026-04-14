@@ -1,9 +1,10 @@
 import { ComponentFixture, TestBed, inject, waitForAsync } from '@angular/core/testing';
 import { ResourceReorderComponent } from './resource-reorder.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { EditorService } from '../../services/editor/editor.service';
 import * as mockData from './resource-reorder.component.spec.data';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 const testData = mockData.mockRes;
 
 describe('ResourceReorderComponent', () => {
@@ -12,11 +13,11 @@ describe('ResourceReorderComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      providers: [ EditorService ],
-      declarations: [ ResourceReorderComponent ],
-      schemas: [NO_ERRORS_SCHEMA]
-    })
+    declarations: [ResourceReorderComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [],
+    providers: [EditorService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+})
     .compileComponents();
   }));
 

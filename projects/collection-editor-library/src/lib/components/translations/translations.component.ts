@@ -3,9 +3,10 @@ import { ConfigService } from "../../services/config/config.service";
 import * as _ from 'lodash-es';
 
 @Component({
-  selector: "lib-translations",
-  templateUrl: "./translations.component.html",
-  styleUrls: ["./translations.component.scss"],
+    selector: "lib-translations",
+    templateUrl: "./translations.component.html",
+    styleUrls: ["./translations.component.scss"],
+    standalone: false
 })
 export class TranslationsComponent {
   public editorState: any = {};

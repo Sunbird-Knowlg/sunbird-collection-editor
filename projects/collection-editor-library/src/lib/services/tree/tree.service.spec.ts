@@ -1,16 +1,16 @@
 import { editorConfig, nativeElement } from './../../components/editor/editor.component.spec.data';
 import { TestBed, inject } from '@angular/core/testing';
 import { TreeService } from './tree.service';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { treeNode } from './tree.service.spec.data';
 
 describe('TreeService', () => {
   let treeService: TreeService;
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientModule],
-      providers: [HttpClient]
-    });
+    imports: [],
+    providers: [HttpClient, provideHttpClient(withInterceptorsFromDi())]
+});
 
     treeService = TestBed.inject(TreeService);
     treeService.initialize(editorConfig);

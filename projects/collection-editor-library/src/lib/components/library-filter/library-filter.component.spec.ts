@@ -6,12 +6,13 @@ import { TelemetryInteractDirective } from '../../directives/telemetry-interact/
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { Router } from '@angular/router';
 import { CommonFormElementsModule } from '@project-sunbird/common-form-elements-full';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { SuiModule } from '@project-sunbird/ng2-semantic-ui';
 import * as $ from 'jquery';
 import 'jquery.fancytree';
 import { EditorService } from '../../services/editor/editor.service';
 import { By } from '@angular/platform-browser';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 const mockEditorService = {
   editorConfig: {
@@ -39,11 +40,11 @@ describe('LibraryFilterComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [EditorTelemetryService, { provide: Router, useClass: RouterStub }, TreeService,
-         { provide: EditorService, useValue: mockEditorService }],
-      declarations: [LibraryFilterComponent, TelemetryInteractDirective],
-      imports: [FormsModule, CommonFormElementsModule, HttpClientTestingModule, SuiModule]
-    }).compileComponents();
+    declarations: [LibraryFilterComponent, TelemetryInteractDirective],
+    imports: [FormsModule, CommonFormElementsModule, SuiModule],
+    providers: [EditorTelemetryService, { provide: Router, useClass: RouterStub }, TreeService,
+        { provide: EditorService, useValue: mockEditorService }, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+}).compileComponents();
   }));
 
   beforeEach(() => {

@@ -7,11 +7,12 @@ import { of, throwError } from 'rxjs';
 import * as urlConfig from '../../services/config/url.config.json';
 import * as labelConfig from '../../services/config/label.config.json';
 import * as categoryConfig from '../../services/config/category.config.json';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
 import { EditorService } from './../../services/editor/editor.service';
 import {csvImport, preSignedUrl} from './csv-upload.component.spec.data';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 declare const SunbirdFileUploadLib: any;
 xdescribe('CsvUploadComponent', () => {
   let component: CsvUploadComponent;
@@ -23,11 +24,11 @@ xdescribe('CsvUploadComponent', () => {
   };
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [CsvUploadComponent, TelemetryInteractDirective],
-      imports: [HttpClientTestingModule],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      providers: [EditorTelemetryService, EditorService, { provide: ConfigService, useValue: configStub }]
-    })
+    declarations: [CsvUploadComponent, TelemetryInteractDirective],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [],
+    providers: [EditorTelemetryService, EditorService, { provide: ConfigService, useValue: configStub }, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+})
       .compileComponents();
   }));
 

@@ -2,22 +2,23 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { QumlplayerPageComponent } from './qumlplayer-page.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { EditorService } from '../../services/editor/editor.service';
 import { mockData } from './qumlplayer-page.component.spec.data';
 import { TreeService } from '../../services/tree/tree.service';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 describe('QumlplayerPageComponent', () => {
   let component: QumlplayerPageComponent;
   let fixture: ComponentFixture<QumlplayerPageComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ QumlplayerPageComponent, TelemetryInteractDirective ],
-      providers: [EditorTelemetryService, EditorService],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
-    })
+    declarations: [QumlplayerPageComponent, TelemetryInteractDirective],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [],
+    providers: [EditorTelemetryService, EditorService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+})
     .compileComponents();
   }));
 

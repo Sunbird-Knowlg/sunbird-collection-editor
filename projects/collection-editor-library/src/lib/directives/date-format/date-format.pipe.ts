@@ -7,7 +7,8 @@ const momentConstructor: (value?: any) => moment.Moment = (<any>moment).default 
  *
  */
 @Pipe({
-  name: 'dateFormat'
+    name: 'dateFormat',
+    standalone: false
 })
 export class DateFormatPipe implements PipeTransform {
   /**

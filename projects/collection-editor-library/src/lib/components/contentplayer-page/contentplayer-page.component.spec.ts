@@ -1,12 +1,13 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ContentplayerPageComponent } from './contentplayer-page.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { EditorService } from '../../services/editor/editor.service';
 import { PlayerService } from '../../services/player/player.service';
 import { ConfigService } from '../../services/config/config.service';
 import { of } from 'rxjs';
 import * as _ from 'lodash-es';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('ContentplayerPageComponent', () => {
   let component: ContentplayerPageComponent;
@@ -36,11 +37,11 @@ describe('ContentplayerPageComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      declarations: [ ContentplayerPageComponent ],
-      providers: [EditorService, PlayerService, { provide: ConfigService, useValue: configMockData}],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
-    })
+    declarations: [ContentplayerPageComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [],
+    providers: [EditorService, PlayerService, { provide: ConfigService, useValue: configMockData }, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+})
     .compileComponents();
   }));
 

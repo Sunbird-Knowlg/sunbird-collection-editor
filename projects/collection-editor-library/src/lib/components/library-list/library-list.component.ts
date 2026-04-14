@@ -8,10 +8,11 @@ import { FrameworkService } from '../../services/framework/framework.service';
 import * as _ from 'lodash-es';
 
 @Component({
-  selector: 'lib-library-list',
-  templateUrl: './library-list.component.html',
-  styleUrls: ['./library-list.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+    selector: 'lib-library-list',
+    templateUrl: './library-list.component.html',
+    styleUrls: ['./library-list.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class LibraryListComponent implements OnInit, OnDestroy {
 @Input() contentList;

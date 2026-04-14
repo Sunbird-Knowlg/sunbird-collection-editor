@@ -9,9 +9,10 @@ import { ConfigService } from '../../services/config/config.service';
 declare const SunbirdFileUploadLib: any;
 
 @Component({
-  selector: 'lib-asset-browser',
-  templateUrl: './asset-browser.component.html',
-  styleUrls: ['./asset-browser.component.scss']
+    selector: 'lib-asset-browser',
+    templateUrl: './asset-browser.component.html',
+    styleUrls: ['./asset-browser.component.scss'],
+    standalone: false
 })
 export class AssetBrowserComponent implements OnInit, OnDestroy {
   @Input() showImagePicker;

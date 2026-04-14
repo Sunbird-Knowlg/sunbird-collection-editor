@@ -7,9 +7,10 @@ import { ConfigService } from '../../services/config/config.service';
 
 import * as _ from 'lodash-es';
 @Component({
-  selector: 'lib-manage-collaborator',
-  templateUrl: './manage-collaborator.component.html',
-  styleUrls: ['./manage-collaborator.component.scss']
+    selector: 'lib-manage-collaborator',
+    templateUrl: './manage-collaborator.component.html',
+    styleUrls: ['./manage-collaborator.component.scss'],
+    standalone: false
 })
 export class ManageCollaboratorComponent implements OnInit {
   @Output() modalDismissEmitter = new EventEmitter<any>();

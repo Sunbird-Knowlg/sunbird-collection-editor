@@ -1,9 +1,8 @@
- <div class="aspectratio" data-ratio="16:9">
+ <div class="aspectratio handle-zoom" data-ratio="16:9">
      <div class="content-player">
         <div class="w-100 h-100">
                 <div class="contentViewerIframeShadow" *ngIf="!showViewButton">
-                    <quml-main-player *ngIf="showPreview" [playerConfig]="qumlPlayerConfig" (playerEvent)="getPlayerEvents($event)"
-                        (telemetryEvent)="getTelemetryEvents($event)"></quml-main-player>
+                    <span id="inQuiryQuMLPlayer" #inQuiryQuMLPlayer></span>
                 </div>
                 <div class="mt-25" *ngIf="(editorService?.editorMode !== 'edit' && showViewButton)">
                     <h5>Click on View details to view the question details.</h5>

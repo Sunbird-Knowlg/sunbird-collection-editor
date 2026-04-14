@@ -7,10 +7,11 @@ import { FrameworkService } from '../../services/framework/framework.service';
 declare var $: any;
 
 @Component({
-  selector: 'lib-contentplayer-page',
-  templateUrl: './contentplayer-page.component.html',
-  styleUrls: ['./contentplayer-page.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+    selector: 'lib-contentplayer-page',
+    templateUrl: './contentplayer-page.component.html',
+    styleUrls: ['./contentplayer-page.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class ContentplayerPageComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
   private static readonly PLAYER_INITIALIZATION_TIMEOUT = 200;

@@ -1,6 +1,6 @@
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 import { OptionsComponent } from './options.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -11,6 +11,7 @@ import { TreeService } from '../../services/tree/tree.service';
 import { treeData } from './../fancy-tree/fancy-tree.component.spec.data';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { EditorService } from "../../services/editor/editor.service";
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 const mockEditorService = {
   editorConfig: {
@@ -38,12 +39,12 @@ describe('OptionsComponent', () => {
   let treeService,telemetryService;
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, FormsModule, SuiModule ],
-      declarations: [ OptionsComponent, TelemetryInteractDirective ],
-      providers: [ConfigService,TreeService,EditorTelemetryService,
-        { provide: EditorService, useValue: mockEditorService },],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
-    })
+    declarations: [OptionsComponent, TelemetryInteractDirective],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [FormsModule, SuiModule],
+    providers: [ConfigService, TreeService, EditorTelemetryService,
+        { provide: EditorService, useValue: mockEditorService }, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(),]
+})
     .compileComponents();
   }));
 

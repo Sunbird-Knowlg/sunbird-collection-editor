@@ -1,21 +1,22 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { LibraryListComponent } from './library-list.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
 import { mockData } from './library-list.component.spec.data';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 describe('LibraryListComponent', () => {
   let component: LibraryListComponent;
   let fixture: ComponentFixture<LibraryListComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [EditorTelemetryService],
-      imports: [HttpClientTestingModule],
-      declarations: [LibraryListComponent, TelemetryInteractDirective],
-      schemas: [NO_ERRORS_SCHEMA]
-    })
+    declarations: [LibraryListComponent, TelemetryInteractDirective],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [],
+    providers: [EditorTelemetryService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+})
       .compileComponents();
   }));
 

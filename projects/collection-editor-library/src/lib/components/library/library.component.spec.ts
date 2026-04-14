@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { LibraryComponent } from './library.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TelemetryInteractDirective } from '../../directives/telemetry-interact/telemetry-interact.directive';
 import { EditorTelemetryService } from '../../services/telemetry/telemetry.service';
@@ -10,6 +10,7 @@ import { TreeService } from '../../services/tree/tree.service';
 import { EditorService } from '../../services/editor/editor.service';
 import { of, throwError } from 'rxjs';
 import { ConfigService } from '../../services/config/config.service';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 describe('LibraryComponent', () => {
   let component: LibraryComponent;
   let fixture: ComponentFixture<LibraryComponent>;
@@ -18,11 +19,11 @@ describe('LibraryComponent', () => {
   }
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      providers: [EditorTelemetryService,TreeService, EditorService, { provide: Router, useClass: RouterStub }, ConfigService],
-      imports: [HttpClientTestingModule],
-      declarations: [ LibraryComponent, TelemetryInteractDirective ],
-      schemas: [NO_ERRORS_SCHEMA]
-    })
+    declarations: [LibraryComponent, TelemetryInteractDirective],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [],
+    providers: [EditorTelemetryService, TreeService, EditorService, { provide: Router, useClass: RouterStub }, ConfigService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+})
     .compileComponents();
   }));
 

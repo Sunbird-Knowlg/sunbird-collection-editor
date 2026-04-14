@@ -1,20 +1,21 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { PlainTreeComponent } from './plain-tree.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { mockTreedata } from './plain-tree.component.spec.data';
 import { of, throwError } from 'rxjs';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('PlainTreeComponent', () => {
   let component: PlainTreeComponent;
   let fixture: ComponentFixture<PlainTreeComponent>;
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      declarations: [ PlainTreeComponent ],
-      providers: [],
-      schemas: [NO_ERRORS_SCHEMA]
-    })
+    declarations: [PlainTreeComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [],
+    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+})
     .compileComponents();
   }));
 

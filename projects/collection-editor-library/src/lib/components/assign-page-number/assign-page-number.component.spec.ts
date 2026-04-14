@@ -1,12 +1,13 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { AssignPageNumberComponent } from './assign-page-number.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TreeService } from '../../services/tree/tree.service';
 import { mockTreeService } from '../fancy-tree/fancy-tree.component.spec.data';
 import { EditorService } from '../../services/editor/editor.service';
 import { of, throwError } from 'rxjs';
 import { QuestionService } from '../../services/question/question.service';
 import { mockCreateArray, mockPageNumberArray, mockQuestionData, mockRenderingSequence, mockTreeData } from './assign-page-number.component.spec.data';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 const mockEditorService = {
   getToolbarConfig: () => { },
@@ -21,14 +22,16 @@ describe('AssignPageNumberComponent', () => {
   let treeService, editorService, questionService;
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      declarations: [AssignPageNumberComponent],
-      providers: [
+    declarations: [AssignPageNumberComponent],
+    imports: [],
+    providers: [
         QuestionService,
         { provide: TreeService, useValue: mockTreeService },
         { provide: EditorService, useValue: mockEditorService },
-      ]
-    })
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+})
       .compileComponents();
   });
 

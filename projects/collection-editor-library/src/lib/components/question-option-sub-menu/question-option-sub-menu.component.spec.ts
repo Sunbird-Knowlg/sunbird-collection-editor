@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { QuestionOptionSubMenuComponent } from './question-option-sub-menu.component';
 import { mockData } from './question-option-sub-menu.spec.data';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('QuestionOptionSubMenuComponent', () => {
   let component: QuestionOptionSubMenuComponent;
@@ -9,9 +10,10 @@ describe('QuestionOptionSubMenuComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports:[HttpClientTestingModule],
-      declarations: [QuestionOptionSubMenuComponent],
-    }).compileComponents();
+    declarations: [QuestionOptionSubMenuComponent],
+    imports: [],
+    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+}).compileComponents();
   }));
 
   beforeEach(() => {
