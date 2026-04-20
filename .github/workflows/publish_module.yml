@@ -28,5 +28,5 @@ jobs:
           npm run build-lib
           npm pack ./dist/collection-editor-library
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
-          npm publish jeraldj-sunbird-collection-editor-* --access=public
+          npm publish project-sunbird-sunbird-collection-editor-* --access=public
       
