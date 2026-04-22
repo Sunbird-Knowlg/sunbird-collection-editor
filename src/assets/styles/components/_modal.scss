@@ -11,12 +11,12 @@
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.18), 0 2px 8px 0 rgba(168, 82, 54, 0.1);
 
   .sb-modal-header {
-    background-color: var(--primary-400); // now orange via variable
-    color: var(--white);
+    background-color: var(--spark-brick); // now orange via variable
+    color: var(--spark-surface);
     font-weight: 700;
     font-size: 1rem;
     padding: .75rem 1.25rem;
-    border-bottom: 0 solid var(--gray-100);
+    border-bottom: 0 solid var(--spark-border-card);
     min-height: 2.5rem;
     line-height: 1.5rem;
     border-radius: 0.75rem 0.75rem 0 0; // rounded top corners
@@ -27,7 +27,7 @@
     min-height: 100px;
     padding: 1.25rem;
     overflow-y: auto;
-    background: var(--white);
+    background: var(--spark-surface);
   }
 }
 
@@ -35,12 +35,12 @@
   min-height: 100px;
   padding: 1rem;
   overflow-y: auto;
-  background: var(--white);
+  background: var(--spark-surface);
 }
 
 .sb-modal .ui.modal {
   >.close {
-    color: var(--white);
+    color: var(--spark-surface);
     font-size: .875rem;
     padding: 0 !important;
     margin: 0 !important;
@@ -58,8 +58,8 @@
 
   .sb-modal-actions {
     padding: .75rem 1.25rem;
-    background: var(--white);
-    border-top: 0.0625rem solid var(--gray-100);
+    background: var(--spark-surface);
+    border-top: 0.0625rem solid var(--spark-border-card);
     min-height: 3.5rem;
     display: flex;
     flex-direction: row-reverse;
@@ -72,7 +72,7 @@
   }
 
   .small {
-    color: var(--gray-400);
+    color: var(--spark-gray-75);
   }
 
   &.small {
@@ -255,7 +255,7 @@
 .sb-modal-white .ui.modal>.close {
   top: 0;
   right: 0;
-  color: var(--primary-400);
+  color: var(--spark-brick);
 }
 
 .sb-workspace-modal {

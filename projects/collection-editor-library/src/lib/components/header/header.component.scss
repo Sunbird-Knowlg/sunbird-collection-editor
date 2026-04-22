@@ -1,6 +1,6 @@
 .sb-disabled{
-    background: var(--gray-0);
-    border: .0625rem solid var(--gray-0);
+    background: var(--spark-card-alt);
+    border: .0625rem solid var(--spark-card-alt);
     opacity: .45;
     pointer-events: none;
 }
@@ -30,7 +30,7 @@
   }
   
   .bb-1 {
-    border-bottom: 1px solid var(--gray-100);
+    border-bottom: 1px solid var(--spark-border-card);
   }
 
   .flex-as-baseline {

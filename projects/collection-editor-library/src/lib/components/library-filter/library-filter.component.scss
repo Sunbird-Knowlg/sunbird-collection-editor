@@ -31,15 +31,15 @@
       position: relative;
       top: unset;
       box-shadow: none;
-      background-color: var(--white) !important;
+      background-color: var(--spark-surface) !important;
       &:nth-child(6){
         padding-right: 0;
       }
       .sb-search-box{
         width: 36%;
-        border: 1px solid var(--gray-100);
+        border: 1px solid var(--spark-border-card);
         border-radius: 0.5rem;
-        background-color: var(--white);
+        background-color: var(--spark-surface);
         transition: border-color 0.2s ease, box-shadow 0.2s ease;
         &:focus-within {
           border-color: var(--primary-300);
@@ -47,7 +47,7 @@
         }
         .search.icon{
           &:before{
-            color: var(--gray-300);
+            color: var(--spark-gray-82);
           }
         }
         .sb-search-input{
@@ -67,7 +67,7 @@
         }
 
         .ui.selection.dropdown {
-          border-color: var(--gray-100);
+          border-color: var(--spark-border-card);
           border-radius: 0.5rem;
         }
   

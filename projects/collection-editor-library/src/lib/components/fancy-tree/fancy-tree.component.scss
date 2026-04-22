@@ -52,7 +52,7 @@
           &-expanded {
             padding: 15px 33px;
             border: 1px solid transparent;
-            background-color: var(--white);
+            background-color: var(--spark-surface);
             border-radius: 0.375rem;
           }
           &-active {
@@ -60,7 +60,7 @@
             background-color: var(--primary-0);
             padding: 15px 33px;
             border-top: none;
-            border-left: 3px solid var(--primary-400);
+            border-left: 3px solid var(--spark-brick);
             border-right: none;
             border-bottom: none;
             border-radius: 0 0.375rem 0.375rem 0;
@@ -117,7 +117,7 @@
                 border-right: 0;
                 border-bottom: 0;
                 border-top: 0;
-                border-left: 3px solid var(--primary-400);
+                border-left: 3px solid var(--spark-brick);
               }
 
               &.dependent {
@@ -132,7 +132,7 @@
         }
 
         .sb-fancyTree-icon {
-          color: var(--gray-300) !important;
+          color: var(--spark-gray-82) !important;
         }
 
         .fancytree-custom-icon {
@@ -170,23 +170,23 @@
   .sb-fixed-with-whitebg {
     position: fixed;
     width: 100%;
-    border-top: 1px solid var(--gray-100);
+    border-top: 1px solid var(--spark-border-card);
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: var(--white);
+    background-color: var(--spark-surface);
     box-shadow: 0 -2px 8px 0 rgba(0, 0, 0, 0.06);
     z-index: 99999;
     padding: 0 !important;
     .sb-btn-cover{
       padding: 0.5rem;
-      border-right: solid 1px var(--gray-100);
+      border-right: solid 1px var(--spark-border-card);
       width: 50%;
       text-align: center;
       .sb-btn{
         &:hover{
           background: none !important;
-          color:var(--primary-400);
+          color:var(--spark-brick);
         }
       }
     }
@@ -204,7 +204,7 @@
     }
   }
   .eight.bg-white{
-    border-left: solid 1px var(--gray-100);
+    border-left: solid 1px var(--spark-border-card);
     padding-bottom: 4.5rem !important;
   }
   .b-none{

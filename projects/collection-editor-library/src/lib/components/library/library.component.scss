@@ -14,8 +14,8 @@
     }
 }
 .sb-dock-skeleton-bx{
-  border-top: .0625rem solid var(--gray-100);
-  background: var(--gray-0);
+  border-top: .0625rem solid var(--spark-border-card);
+  background: var(--spark-card-alt);
   min-height: 2rem;
   overflow: hidden;
   overflow-y: auto;
@@ -28,13 +28,13 @@
   width: auto;
 }
 .sbchapter {
-  border-bottom: calculateRem(1px) solid var(--gray-100);
+  border-bottom: calculateRem(1px) solid var(--spark-border-card);
   padding: calculateRem(16px) calculateRem(16px) calculateRem(8px) calculateRem(16px);
 
   h4 {
     font-size: 10px;
     line-height: normal;
-    color: var(--gray-800);
+    color: var(--spark-charcoal);
     margin-bottom: calculateRem(8px);
   }
 
@@ -43,8 +43,8 @@
   }
 
   &__item {
-    background: var(--white);
-    border: calculateRem(1px) solid var(--gray-100);
+    background: var(--spark-surface);
+    border: calculateRem(1px) solid var(--spark-border-card);
     border-radius: 0.5rem;
     box-shadow: 0 1px 4px 0 rgba(var(--rc-rgba-primary), 0.08);
     transition: box-shadow 0.2s ease, border-color 0.2s ease;
@@ -60,10 +60,10 @@
 
     &.active{
       background: var(--secondary-300);
-      border: 0.0625rem solid var(--gray-100);
+      border: 0.0625rem solid var(--spark-border-card);
       border-bottom: 0;
       &.active:last-child{
-        border-bottom: 0.0625rem solid var(--gray-100);
+        border-bottom: 0.0625rem solid var(--spark-border-card);
       }
       .textbookBtnLink {
         visibility: visible;
@@ -76,10 +76,10 @@
     }
     &.selected{
       background: var(--secondary-300);
-      border: solid 1px var(--primary-600);
+      border: solid 1px var(--spark-brick-dark);
     }
     &.active.selected{
-      border: solid 1px var(--primary-600) !important;
+      border: solid 1px var(--spark-brick-dark) !important;
     }
 
     .btn-addtoLibrary {
@@ -96,7 +96,7 @@
     h4 {
       font-size: 12px;
       line-height: calculateRem(20px);
-      color: var(--primary-400);
+      color: var(--spark-brick);
       margin: 0px;
       padding: 0px;
     }
@@ -135,9 +135,9 @@
   }
 }
 .sb-btn-dark-green{
-  background-color: var(--white);
-  border: 1.5px solid var(--primary-400) !important;
-  color: var(--primary-400);
+  background-color: var(--spark-surface);
+  border: 1.5px solid var(--spark-brick) !important;
+  color: var(--spark-brick);
 }
 .b-none{
   border: none !important;
