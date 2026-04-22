@@ -47,3 +47,4 @@
 .sb-modal-fullscreen .modals.dimmer .ui.scrolling.modal{
   margin: 0 auto !important;
 }
+/* .modals.dimmer .ui.scrolling.modal { position: static !important; } — removed: Semantic UI built-in, breaks modal placement */
