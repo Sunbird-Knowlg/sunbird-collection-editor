@@ -74,8 +74,8 @@
   --color-brand:           var(--spark-brick);       /* primary action, active borders */
   --color-brand-outline:   var(--primary-300);       /* outline buttons, focus rings */
   --color-brand-divider:   var(--primary-200);       /* brand-tinted dividers / dashed borders */
-  --color-brand-tint:      var(--primary-0);         /* lightest brand bg (upload zones, hovers) */
-  --color-brand-subtle:    var(--primary-100);       /* light brand bg (selected rows) */
+  --color-brand-tint:      var(--primary-100);       /* warm brand bg — hover zones, active rows (#fde8e0) */
+  --color-brand-subtle:    var(--primary-0);         /* faintest brand tint — upload zones, page accents (#fff5f2) */
   --color-brand-action:    var(--primary-400);       /* filled action buttons bg */
   --color-brand-deep:      var(--primary-800);       /* hover state on filled action buttons */
 
@@ -83,18 +83,18 @@
   --color-success:         var(--secondary-200);     /* green success, completed status */
   --color-success-bg:      var(--secondary-0);       /* light green bg, live badge */
   --color-success-tint:    var(--secondary-100);     /* subtle green tint */
-  --color-selected-bg:     var(--secondary-300);     /* selected item row background */
+  --color-selected-bg:     var(--primary-100);       /* selected item row — warm brick tint (#fde8e0) */
   --color-selected-deep:   var(--secondary-400);     /* deep secondary for text on light bg */
 
   /* Surfaces */
   --color-surface:         var(--spark-surface);     /* white canvas */
-  --color-surface-alt:     var(--spark-card-alt);    /* off-white / parchment card */
-  --color-page-bg:         var(--spark-bg);          /* warm page background */
+  --color-surface-alt:     var(--spark-card-alt);    /* off-white / parchment card (#F3F3E5) */
+  --color-page-bg:         var(--spark-bg);          /* warm page background (#E9E8D9) */
 
   /* Borders */
-  --color-border:          var(--spark-border-card); /* default card/input border */
+  --color-border:          var(--spark-border);      /* default border — sharper (#D0D5DD) */
   --color-border-mid:      var(--spark-border);      /* stronger border (D0D5DD) */
-  --color-border-light:    var(--spark-border-light);/* subtlest border */
+  --color-border-light:    var(--spark-border-card); /* subtle card border (#F1F1F1) */
 
   /* Text */
   --color-text:            var(--spark-charcoal);    /* primary body text */
