@@ -67,6 +67,7 @@
     "ngx-infinite-scroll": "^19.0.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
+    "svg2img": "^1.0.0-beta.2",
     "tslib": "^2.6.2",
     "uuid": "^9.0.0",
     "video.js": "^7.18.1",
@@ -75,8 +76,8 @@
     "zone.js": "~0.15.1"
   },
   "devDependencies": {
-    "@angular-devkit/core": "^19.2.18",
     "@angular-devkit/build-angular": "^19.2.18",
+    "@angular-devkit/core": "^19.2.18",
     "@angular/cli": "^19.2.18",
     "@angular/compiler-cli": "^19.2.18",
     "@angular/language-service": "^19.2.18",

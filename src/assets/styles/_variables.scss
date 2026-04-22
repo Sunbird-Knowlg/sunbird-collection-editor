@@ -44,20 +44,20 @@
     --gray-400: hsl(var(--gray-hs), 40%); // sub heading #666666
     --gray-800: var(--gray); // text color #333333
 
-    // basetheme
-    --primary-color: #024f9d;
+    // basetheme — Sunbird Portal orange/white theme
+    --primary-color: #a85236;  // sunbird-brick (terracotta orange)
     --secondary-color: #008840;
     --tertiary-color: #e55a28;
 
-    // primary colors
-    --primary-0: #f3f7fa; // bg
-    --primary-100: #edf4f9; // default button bg
-    --primary-200: #80a7ce; // divider
-    --primary-250: #d3e7f4; //pagination bg color
-    --primary-300: #7ab4ee; // outline, focus fields
+    // primary colors — orange scale matching portal sunbird-brick
+    --primary-0: #fff5f2; // light orange tint bg
+    --primary-100: #fde8e0; // default button bg
+    --primary-200: #e8a48a; // divider
+    --primary-250: #f5cfc4; // pagination bg color
+    --primary-300: #c9714f; // outline, focus fields
     --primary-400: var(--primary-color); // button bg, heading, table titles, links, toggles
-    --primary-600: #005391; // on press
-    --primary-800: #002e50; // hover
+    --primary-600: #8c3d24; // on press
+    --primary-800: #6b2a14; // hover
 
     // secondary colors
     --secondary-0: #e1ffdf; // toast bg, label
@@ -82,10 +82,10 @@
     --warning-color: var(--orange);
     --danger-color: var(--red);
 
-    // element based variables
-    --body-background-color: var(--primary-0);
+    // element based variables — white base matching portal
+    --body-background-color: #ffffff;
     --default-text-color: var(--gray-800);
-    --bg-body: var(--primary-0);
+    --bg-body: #ffffff;
     --body-color: var(--gray-800);
 
     // alpha
@@ -224,8 +224,8 @@
     --rc-rgba-black: 0, 0, 0; // var(--black)
     --rc-rgba-white: 255, 255, 255; // var(--white)
     --rc-rgba-gray: 51, 51, 51; // var(--gray-300)
-    --rc-rgba-primary: 2, 79, 157; // var(--primary-color)
-    --rc-rgba-primary-300: 41, 114, 164; //var(--primary-300)
+    --rc-rgba-primary: 168, 82, 54; // var(--primary-color) sunbird-brick
+    --rc-rgba-primary-300: 201, 113, 79; //var(--primary-300)
     --rc-rgba-gray-300: 34, 36, 38; //var(--gray-100)
     --rc-rgba-866a6a: 134, 106, 106;
     --rc-rgba-d0d0d0: 208, 208, 208;

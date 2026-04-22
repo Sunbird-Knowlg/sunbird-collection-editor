@@ -22,15 +22,15 @@
     }
   }
   .sb-bg-header-blue {
-    background: #d8e1e8;
-  }  
+    background: var(--primary-0);
+  }
     
   .sb-bg-lightBlue {
     background: var(--primary-0) !important;
   }
   
   .bb-1 {
-    border-bottom: 1px solid #d8d8d8;
+    border-bottom: 1px solid var(--gray-100);
   }
 
   .flex-as-baseline {

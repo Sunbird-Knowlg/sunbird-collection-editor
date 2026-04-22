@@ -7,7 +7,7 @@
     left: 3rem !important;
   }
   .sbchapter {
-    border-bottom: calculateRem(1px) solid #ddd;
+    border-bottom: calculateRem(1px) solid var(--gray-100);
     padding: calculateRem(16px) calculateRem(16px) calculateRem(8px) calculateRem(16px);
 
     h4 {
@@ -23,8 +23,10 @@
 
     &__item {
       background: var(--white) !important;
-      border: calculateRem(1px) solid #ddd !important;
-      box-shadow: 0 calculateRem(3px) calculateRem(4px) 0 rgba(2, 79, 157, 0.1);
+      border: calculateRem(1px) solid var(--gray-100) !important;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 4px 0 rgba(var(--rc-rgba-primary), 0.08);
+      transition: box-shadow 0.2s ease, border-color 0.2s ease;
       // border: calculateRem(0.5px) solid rgba(35, 97, 255, 0.5);
       display: flex;
       align-items: flex-start;
@@ -93,7 +95,9 @@
       }
 
       &:hover {
-        background: var(--secondary-0) !important;
+        background: var(--primary-0) !important;
+        border-color: var(--primary-200) !important;
+        box-shadow: 0 2px 8px 0 rgba(var(--rc-rgba-primary), 0.14);
       }
 
       &:hover {
@@ -110,7 +114,7 @@
   }
 
   .sbchapter-open {
-    border-bottom: calculateRem(1px) solid #e0e0e0;
+    border-bottom: calculateRem(1px) solid var(--gray-100);
     padding-bottom: var(--base-block-space);
 
     &__title {
@@ -156,3 +160,13 @@
   .textbookBtnLink{
     right: 0;
   }
+
+.sb-btn-dark-green:disabled,
+.sb-btn-dark-green.disabled {
+  background: var(--gray-200) !important;
+  border-color: var(--gray-200) !important;
+  color: var(--gray-500) !important;
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}

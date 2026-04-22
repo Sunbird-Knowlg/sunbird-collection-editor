@@ -46,9 +46,10 @@ button.sb-btn:focus {
   min-width: calculateRem(64px);
   position: relative;
   line-height: 1;
-  border-radius: 3px;
-  -webkit-border-radius: 3px;
+  border-radius: 0.5rem; // rounded corners matching portal
+  -webkit-border-radius: 0.5rem;
   border: 1px solid;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 
   text: {
     transform: inherit;
@@ -152,6 +153,16 @@ $btns: "gray"var(--gray-200) var(--gray-400) var(--gray-100),
         }
       }
     }
+  }
+}
+
+// Primary button shadow — portal style
+.sb-btn-primary {
+  box-shadow: 0 2px 6px 0 rgba(var(--rc-rgba-primary), 0.35);
+  &:hover,
+  &:active,
+  &.active {
+    box-shadow: 0 4px 10px 0 rgba(var(--rc-rgba-primary), 0.45);
   }
 }
 

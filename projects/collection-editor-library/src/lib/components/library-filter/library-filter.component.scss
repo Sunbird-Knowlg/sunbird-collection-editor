@@ -31,19 +31,28 @@
       position: relative;
       top: unset;
       box-shadow: none;
+      background-color: var(--white) !important;
       &:nth-child(6){
         padding-right: 0;
       }
       .sb-search-box{
         width: 36%;
-        border: 1px solid var(--gray-200);
+        border: 1px solid var(--gray-100);
+        border-radius: 0.5rem;
+        background-color: var(--white);
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        &:focus-within {
+          border-color: var(--primary-300);
+          box-shadow: 0 0 0 3px rgba(var(--rc-rgba-primary), 0.12);
+        }
         .search.icon{
           &:before{
-            color:#bbb7b2;
+            color: var(--gray-300);
           }
         }
         .sb-search-input{
           padding: 0.5rem;
+          background: transparent;
         }
       }
       .small{
@@ -51,14 +60,15 @@
       }
       .sb-prominent-filter-field {
         cursor: pointer;
-  
+
         &:last-child {
           text-align: inherit !important;
           margin: inherit !important;
         }
-            
+
         .ui.selection.dropdown {
-          border-color: #999;
+          border-color: var(--gray-100);
+          border-radius: 0.5rem;
         }
   
         ::ng-deep {

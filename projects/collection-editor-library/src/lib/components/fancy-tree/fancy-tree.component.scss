@@ -52,13 +52,18 @@
           &-expanded {
             padding: 15px 33px;
             border: 1px solid transparent;
-            background-color: #fff;
+            background-color: var(--white);
+            border-radius: 0.375rem;
           }
           &-active {
-            border: 1px solid #d0e0f3;
+            border: 1px solid transparent;
             background-color: var(--primary-0);
             padding: 15px 33px;
             border-top: none;
+            border-left: 3px solid var(--primary-400);
+            border-right: none;
+            border-bottom: none;
+            border-radius: 0 0.375rem 0.375rem 0;
           }
         }
 
@@ -101,13 +106,18 @@
               padding: 6px 6px 8px 5px;
               margin-left: 45px;
               border: 1px solid transparent;
+              border-radius: 0.375rem;
+              transition: background-color 0.15s ease, border-color 0.15s ease;
 
               &.fancytree-active,
               &.fancytree-focused,
               &:hover {
-                border: 1px solid #d0e0f3;
+                border: 1px solid transparent;
                 background-color: var(--primary-0);
                 border-right: 0;
+                border-bottom: 0;
+                border-top: 0;
+                border-left: 3px solid var(--primary-400);
               }
 
               &.dependent {
@@ -160,16 +170,17 @@
   .sb-fixed-with-whitebg {
     position: fixed;
     width: 100%;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid var(--gray-100);
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #fff;
+    background-color: var(--white);
+    box-shadow: 0 -2px 8px 0 rgba(0, 0, 0, 0.06);
     z-index: 99999;
     padding: 0 !important;
     .sb-btn-cover{
       padding: 0.5rem;
-      border-right: solid 1px #ccc;
+      border-right: solid 1px var(--gray-100);
       width: 50%;
       text-align: center;
       .sb-btn{

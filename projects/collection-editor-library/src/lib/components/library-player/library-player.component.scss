@@ -1,3 +1,17 @@
 .green-color {
     color: #05bc80 !important;
 }
+
+.sb-btn-dark-green:disabled,
+.sb-btn-dark-green.disabled {
+  background: var(--gray-200) !important;
+  border-color: var(--gray-200) !important;
+  color: var(--gray-500) !important;
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.pointer-events-none {
+  pointer-events: none;
+}

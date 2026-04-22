@@ -1,0 +1,1059 @@
+// =============================================================================
+// Portal Theme Overrides — Sunbird Collection Editor
+// Aligns the collection editor UI with the Sunbird Portal orange/white design system.
+// All rules here are intentionally scoped or use specificity to override
+// vendor/library defaults without breaking structural layout.
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// 1. BODY & PAGE BACKGROUND
+// -----------------------------------------------------------------------------
+
+body,
+.sb-editor-body,
+.editor-body {
+  background-color: var(--bg-body); // #ffffff — white portal base
+}
+
+// -----------------------------------------------------------------------------
+// 2. TYPOGRAPHY — font sizes, weights, link colours
+// -----------------------------------------------------------------------------
+
+body,
+input,
+textarea,
+select,
+button {
+  font-size: var(--font-size-base); // 14px
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--gray-800);
+  font-weight: 600;
+}
+
+a,
+a:link,
+a:visited {
+  color: var(--primary-400); // orange
+  transition: color 0.15s ease;
+}
+
+a:hover,
+a:focus {
+  color: var(--primary-600); // darker orange on hover
+  text-decoration: underline;
+}
+
+// -----------------------------------------------------------------------------
+// 3. FORM INPUTS — rounded corners, orange focus ring
+// -----------------------------------------------------------------------------
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="search"],
+input[type="url"],
+input[type="tel"],
+textarea,
+select {
+  border-radius: 0.5rem;
+  border: 1px solid var(--gray-100);
+  padding: 0.5rem 0.75rem;
+  font-size: var(--font-size-base);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background-color: var(--white);
+  color: var(--gray-800);
+
+  &:focus,
+  &:focus-visible {
+    outline: none;
+    border-color: var(--primary-300);
+    box-shadow: 0 0 0 3px rgba(var(--rc-rgba-primary), 0.15);
+  }
+
+  &::placeholder {
+    color: var(--gray-200);
+    font-size: var(--font-size-base);
+  }
+}
+
+// Semantic UI input overrides
+.ui.input > input,
+.ui.form input[type="text"],
+.ui.form input[type="email"],
+.ui.form input[type="password"],
+.ui.form input[type="search"],
+.ui.form textarea,
+.ui.form select {
+  border-radius: 0.5rem !important;
+  border-color: var(--gray-100) !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+
+  &:focus {
+    border-color: var(--primary-300) !important;
+    box-shadow: 0 0 0 3px rgba(var(--rc-rgba-primary), 0.15) !important;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 4. DROPDOWNS / SELECTS — rounded, orange active state
+// -----------------------------------------------------------------------------
+
+.ui.dropdown,
+.ui.selection.dropdown {
+  border-radius: 0.5rem !important;
+  border-color: var(--gray-100) !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+
+  &.active,
+  &:focus {
+    border-color: var(--primary-300) !important;
+    box-shadow: 0 0 0 3px rgba(var(--rc-rgba-primary), 0.15) !important;
+  }
+
+  .menu {
+    border-radius: 0 0 0.5rem 0.5rem !important;
+    border-color: var(--gray-100) !important;
+    box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.12) !important;
+
+    > .item {
+      font-size: var(--font-size-base) !important;
+      transition: background-color 0.15s ease !important;
+
+      &:hover,
+      &.active,
+      &.selected {
+        background-color: var(--primary-0) !important;
+        color: var(--primary-400) !important;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 5. CHECKBOXES & RADIO BUTTONS — orange accent
+// -----------------------------------------------------------------------------
+
+.ui.checkbox input:checked ~ .box:after,
+.ui.checkbox input:checked ~ label:after {
+  color: var(--primary-400) !important;
+}
+
+.ui.checkbox input:checked ~ .box:before,
+.ui.checkbox input:checked ~ label:before {
+  border-color: var(--primary-400) !important;
+  background-color: var(--primary-400) !important;
+}
+
+.ui.checkbox input:focus ~ .box:before,
+.ui.checkbox input:focus ~ label:before {
+  border-color: var(--primary-300) !important;
+  box-shadow: 0 0 0 3px rgba(var(--rc-rgba-primary), 0.15) !important;
+}
+
+.ui.radio.checkbox input:checked ~ label:after {
+  background-color: var(--primary-400) !important;
+}
+
+// -----------------------------------------------------------------------------
+// 6. TABS / NAV TABS — orange active indicator
+// -----------------------------------------------------------------------------
+
+.ui.menu .item {
+  transition: color 0.15s ease, background-color 0.15s ease !important;
+}
+
+.ui.menu .active.item,
+.ui.menu .item.active {
+  color: var(--primary-400) !important;
+  border-color: var(--primary-400) !important;
+  font-weight: 600;
+}
+
+.ui.pointing.menu .active.item:after {
+  background-color: var(--primary-400) !important;
+  border-color: var(--primary-400) !important;
+}
+
+.ui.secondary.pointing.menu .active.item {
+  border-color: var(--primary-400) !important;
+  color: var(--primary-400) !important;
+}
+
+// Tab underline indicator
+.sb-tabs .sb-tab-item.active,
+.sb-tab.active {
+  border-bottom-color: var(--primary-400) !important;
+  color: var(--primary-400) !important;
+}
+
+// -----------------------------------------------------------------------------
+// 7. TREE / COLLECTION TREE — hover & selected state
+// -----------------------------------------------------------------------------
+
+.fancy-tree .fancytree-node:hover > .fancytree-title,
+.fancytree-node:hover > .fancytree-title {
+  background-color: var(--primary-0) !important;
+  color: var(--primary-400) !important;
+  border-radius: 0.25rem;
+}
+
+.fancy-tree .fancytree-active > .fancytree-title,
+.fancytree-active > .fancytree-title {
+  background-color: var(--primary-0) !important;
+  color: var(--primary-400) !important;
+  border: none !important;
+  border-radius: 0 0.25rem 0.25rem 0;
+}
+
+// Plain tree hover
+.plain-tree .tree-node:hover,
+.sb-tree-node:hover {
+  background-color: var(--primary-0) !important;
+  border-radius: 0.375rem;
+}
+
+.plain-tree .tree-node.active,
+.sb-tree-node.active {
+  background-color: var(--primary-100) !important;
+  border-left: 3px solid var(--primary-400) !important;
+  color: var(--primary-400) !important;
+}
+
+// -----------------------------------------------------------------------------
+// 8. HEADER / TOOLBAR — portal-style top bar
+// -----------------------------------------------------------------------------
+
+.editor-header,
+.sb-editor-header,
+.header-component {
+  background-color: var(--white);
+  border-bottom: 1px solid var(--gray-100);
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.06);
+}
+
+// Primary action area in header
+.header-component .sb-btn-primary,
+.editor-header .sb-btn-primary {
+  background-color: var(--primary-400) !important;
+  border-color: var(--primary-400) !important;
+  color: var(--white) !important;
+  border-radius: 0.5rem !important;
+}
+
+// Override sb-styles full-color primary header background — soften to brand accent strip
+.sb-bg-color-primary {
+  background-color: var(--primary-600) !important;
+  background-image: none !important;
+  // Subtle top header bar — not full dark block
+  padding-top: 0.25rem !important;
+  padding-bottom: 0.25rem !important;
+
+  // Back button inside dark header — no border
+  .sb-btn.back-btn,
+  .sb-btn.sb-btn-primary.back-btn {
+    background: transparent !important;
+    border-color: transparent !important;
+    border: none !important;
+    color: var(--white) !important;
+    font-size: 0.8rem !important;
+    padding: 0.25rem 0.75rem !important;
+    border-radius: 0.375rem !important;
+    box-shadow: none !important;
+    &:hover {
+      background: rgba(255, 255, 255, 0.15) !important;
+    }
+  }
+
+  .sb-color-white,
+  * { color: var(--white) !important; }
+}
+
+// Second row header (title + action buttons)
+.sb-bg-lightBlue {
+  background-color: var(--white) !important;
+  border-bottom: 1px solid var(--gray-100) !important;
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.05) !important;
+
+  .practical-header__title {
+    color: var(--gray-800) !important;
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+  }
+
+  // Outline buttons in toolbar
+  .sb-btn-outline-primary {
+    border-color: var(--primary-300) !important;
+    color: var(--primary-400) !important;
+    border-radius: 0.5rem !important;
+    &:hover {
+      background-color: var(--primary-0) !important;
+    }
+    &.sb-btn-outline-disabled,
+    &[disabled] {
+      background-color: var(--white) !important;
+      border-color: var(--gray-200) !important;
+      color: var(--gray-400) !important;
+      cursor: not-allowed !important;
+      pointer-events: none;
+      &:hover {
+        background-color: var(--white) !important;
+        border-color: var(--gray-200) !important;
+        color: var(--gray-400) !important;
+      }
+    }
+  }
+
+  // Primary buttons in toolbar
+  .sb-btn-primary {
+    background-color: var(--primary-400) !important;
+    border-color: var(--primary-400) !important;
+    color: var(--white) !important;
+    border-radius: 0.5rem !important;
+    font-weight: 600 !important;
+    &:hover {
+      background-color: var(--primary-800) !important;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 9. PROGRESS / STATUS INDICATORS
+// -----------------------------------------------------------------------------
+
+.sb-progress-status .active,
+.progress-status .active {
+  color: var(--primary-400) !important;
+  border-color: var(--primary-400) !important;
+}
+
+.sb-progress-status .completed {
+  color: var(--secondary-200) !important; // green for completed
+}
+
+// Semantic UI progress bar
+.ui.progress .bar {
+  background-color: var(--primary-400) !important;
+  border-radius: 0.5rem !important;
+}
+
+.ui.progress {
+  border-radius: 0.5rem !important;
+}
+
+// -----------------------------------------------------------------------------
+// 10. TOASTS / NOTIFICATIONS — matching portal style
+// -----------------------------------------------------------------------------
+
+.sb-toast,
+.iziToast,
+[class*="iziToast-color"] {
+  border-radius: 0.5rem !important;
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.12) !important;
+}
+
+.iziToast.iziToast-color-blue,
+.sb-toast-info {
+  background-color: var(--primary-0) !important;
+  border-left: 4px solid var(--primary-400) !important;
+  color: var(--gray-800) !important;
+}
+
+.iziToast.iziToast-color-green,
+.sb-toast-success {
+  background-color: var(--secondary-0) !important;
+  border-left: 4px solid var(--secondary-200) !important;
+}
+
+.iziToast.iziToast-color-red,
+.sb-toast-error {
+  background-color: var(--red-0) !important;
+  border-left: 4px solid var(--red-400) !important;
+}
+
+.iziToast.iziToast-color-yellow,
+.sb-toast-warning {
+  background-color: var(--tertiary-0) !important;
+  border-left: 4px solid var(--tertiary-100) !important;
+}
+
+// -----------------------------------------------------------------------------
+// 11. CARDS & CONTENT PANELS — white surface with subtle shadow
+// -----------------------------------------------------------------------------
+
+.sb-card,
+.content-card,
+.meta-form-card,
+.editor-panel {
+  background-color: var(--white);
+  border-radius: 0.75rem;
+  border: 1px solid var(--gray-0);
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.06);
+}
+
+// -----------------------------------------------------------------------------
+// 12. SLIDERS — orange track/thumb
+// -----------------------------------------------------------------------------
+
+input[type="range"] {
+  accent-color: var(--primary-400);
+}
+
+.ui.slider.checkbox input:checked ~ label:before,
+.ui.toggle.checkbox input:checked ~ label:before {
+  background-color: var(--primary-400) !important;
+}
+
+// -----------------------------------------------------------------------------
+// 13. PUBLISH CHECKLIST — orange accent for checked items
+// -----------------------------------------------------------------------------
+
+.publish-checklist .checklist-item.checked,
+.sb-checklist-item.checked {
+  color: var(--primary-400);
+}
+
+.publish-checklist .checklist-item.checked .item-icon,
+.sb-checklist-item.checked .item-icon {
+  color: var(--secondary-200); // green tick for completed
+}
+
+// -----------------------------------------------------------------------------
+// 14. SCROLLBAR — subtle portal-matching style (WebKit)
+// -----------------------------------------------------------------------------
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--gray-0);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-200);
+  border-radius: 3px;
+
+  &:hover {
+    background: var(--primary-300);
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 15. LABELS / BADGES / CHIPS — orange variant
+// -----------------------------------------------------------------------------
+
+.sb-label,
+.ui.label {
+  border-radius: 0.375rem !important;
+}
+
+.sb-label-primary,
+.ui.label.sb-label-primary {
+  background-color: var(--primary-0) !important;
+  color: var(--primary-400) !important;
+  border: 1px solid var(--primary-200) !important;
+}
+
+// Status chips
+.sb-status-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.625rem;
+  border-radius: 1rem;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+
+  &.draft    { background-color: var(--gray-0);     color: var(--gray-400); }
+  &.review   { background-color: var(--tertiary-0); color: var(--tertiary-400); }
+  &.live     { background-color: var(--secondary-0); color: var(--secondary-400); }
+  &.rejected { background-color: var(--red-0);      color: var(--red-400); }
+}
+
+// -----------------------------------------------------------------------------
+// 16. CK EDITOR TOOLBAR — align with portal colour
+// -----------------------------------------------------------------------------
+
+.ck.ck-toolbar {
+  border-radius: 0.5rem 0.5rem 0 0 !important;
+  border-color: var(--gray-100) !important;
+  background-color: var(--primary-0) !important;
+}
+
+.ck.ck-editor__main > .ck-editor__editable {
+  border-radius: 0 0 0.5rem 0.5rem !important;
+  border-color: var(--gray-100) !important;
+
+  &.ck-focused {
+    border-color: var(--primary-300) !important;
+    box-shadow: 0 0 0 3px rgba(var(--rc-rgba-primary), 0.15) !important;
+  }
+}
+
+.ck.ck-button.ck-on,
+.ck.ck-button:hover:not(.ck-disabled) {
+  background-color: var(--primary-0) !important;
+  color: var(--primary-400) !important;
+}
+
+// -----------------------------------------------------------------------------
+// 17. ASSET BROWSER / LIBRARY — card hover
+// -----------------------------------------------------------------------------
+
+.asset-card:hover,
+.library-card:hover,
+.sb-asset-card:hover {
+  border-color: var(--primary-300) !important;
+  box-shadow: 0 4px 12px 0 rgba(var(--rc-rgba-primary), 0.18) !important;
+}
+
+.asset-card.selected,
+.library-card.selected,
+.sb-asset-card.selected {
+  border-color: var(--primary-400) !important;
+  box-shadow: 0 0 0 2px var(--primary-400) !important;
+}
+
+// -----------------------------------------------------------------------------
+// 18. BULK UPLOAD / CSV UPLOAD — collection editor specific
+// -----------------------------------------------------------------------------
+
+.bulk-upload-container,
+.csv-upload-container {
+  border-radius: 0.75rem;
+  border: 2px dashed var(--primary-200);
+  background-color: var(--primary-0);
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+
+  &:hover,
+  &.drag-over {
+    border-color: var(--primary-400);
+    background-color: var(--primary-100);
+  }
+}
+
+// DIAL code component
+.dialcode-container {
+  .dialcode-input {
+    border-radius: 0.5rem;
+    border-color: var(--gray-100);
+    &:focus {
+      border-color: var(--primary-300) !important;
+      box-shadow: 0 0 0 3px rgba(var(--rc-rgba-primary), 0.15) !important;
+    }
+  }
+}
+
+// Resource reorder drag handles
+.resource-reorder-item:hover {
+  background-color: var(--primary-0);
+  border-radius: 0.375rem;
+}
+
+// Skeleton loader shimmer — orange tint
+.skeleton-loader,
+.sb-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--gray-0) 25%,
+    var(--primary-0) 50%,
+    var(--gray-0) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+  border-radius: 0.375rem;
+}
+
+@keyframes skeleton-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+// -----------------------------------------------------------------------------
+// 19. BUTTONS — global .sb-btn rounding & modern style
+// -----------------------------------------------------------------------------
+
+.sb-btn {
+  border-radius: 0.5rem !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
+
+  &.sb-btn-primary {
+    background-color: var(--primary-400) !important;
+    border-color: var(--primary-400) !important;
+    color: var(--white) !important;
+    &:hover { background-color: var(--primary-800) !important; }
+  }
+
+  &.sb-btn-outline-primary {
+    background-color: transparent !important;
+    border: 1px solid var(--primary-300) !important;
+    color: var(--primary-400) !important;
+    &:hover {
+      background-color: var(--primary-0) !important;
+      border-color: var(--primary-400) !important;
+    }
+    &.sb-btn-outline-disabled,
+    &[disabled] {
+      background-color: var(--white) !important;
+      border-color: var(--gray-200) !important;
+      color: var(--gray-400) !important;
+      cursor: not-allowed !important;
+      pointer-events: none;
+      &:hover {
+        background-color: var(--white) !important;
+        border-color: var(--gray-200) !important;
+        color: var(--gray-400) !important;
+      }
+    }
+  }
+
+  &.sb-btn-secondary {
+    background-color: var(--secondary-200) !important;
+    border-color: var(--secondary-200) !important;
+    color: var(--white) !important;
+    border-radius: 0.5rem !important;
+  }
+
+  &.sb-btn-outline-error {
+    border-color: var(--red-400) !important;
+    color: var(--red-400) !important;
+    border-radius: 0.5rem !important;
+  }
+}
+
+// Select content button in library — use secondary/green
+.btn-addtoLibrary .sb-btn,
+.btn-addtoLibrary button {
+  border-radius: 0.5rem !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+}
+
+// -----------------------------------------------------------------------------
+// 20. LEFT PANEL / FOLDER TREE — modern panel styling
+// -----------------------------------------------------------------------------
+
+// Left tree panel header "Folders"
+.sb-collectionTree-fancyTreelist > .d-flex,
+.sb-tree-header {
+  background-color: var(--white) !important;
+  border-bottom: 1px solid var(--gray-100) !important;
+  padding: 0.75rem 1rem !important;
+
+  h6, span, .font-weight-bold {
+    color: var(--gray-800) !important;
+    font-weight: 700 !important;
+    font-size: 0.875rem !important;
+  }
+}
+
+// Folder panel background
+.eight.bg-white,
+.sb-collectionTree-fancyTreelist {
+  background-color: var(--white) !important;
+}
+
+// Add sibling/child bottom buttons
+.sb-fixed-with-whitebg {
+  background-color: var(--white) !important;
+  border-top: 1px solid var(--gray-100) !important;
+  box-shadow: 0 -2px 8px 0 rgba(0, 0, 0, 0.05) !important;
+
+  // Add Sibling / Add Child — text link style, no border
+  .sb-btn-cover .sb-btn {
+    border: none !important;
+    background: transparent !important;
+    color: var(--primary-400) !important;
+    font-weight: 600 !important;
+    font-size: 0.8125rem !important;
+    box-shadow: none !important;
+    &:hover {
+      color: var(--primary-800) !important;
+      background: transparent !important;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 21. LIBRARY / ADD-FROM-LIBRARY PAGE
+// -----------------------------------------------------------------------------
+
+// Library page overall background
+.add-to-library {
+  background-color: var(--gray-0) !important;
+}
+
+// Library list container
+.sbtoc-container {
+  background-color: var(--white) !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.06) !important;
+  padding: 1rem !important;
+}
+
+// Library search/filter bar background
+.sb-prominent-filter,
+.library-filter {
+  background-color: var(--white) !important;
+  border-bottom: 1px solid var(--gray-100) !important;
+  padding: 0.75rem 0 !important;
+}
+
+// Library item cards
+.sbchapter__item {
+  background: var(--white) !important;
+  border: 1px solid var(--gray-100) !important;
+  border-radius: 0.5rem !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06) !important;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease !important;
+  margin-bottom: 0.5rem !important;
+
+  &:hover {
+    border-color: var(--primary-200) !important;
+    box-shadow: 0 3px 10px 0 rgba(var(--rc-rgba-primary), 0.12) !important;
+  }
+
+  h4 {
+    color: var(--gray-800) !important;
+    font-size: 0.8125rem !important;
+    font-weight: 500 !important;
+  }
+}
+
+// Selected item in library
+.sbchapter__item.selected,
+.sbchapter__item.active {
+  border-color: var(--primary-300) !important;
+  background-color: var(--primary-0) !important;
+  box-shadow: 0 0 0 2px rgba(var(--rc-rgba-primary), 0.2) !important;
+}
+
+// Right panel — content preview area
+.min-h-500 {
+  min-height: 500px;
+}
+
+// -----------------------------------------------------------------------------
+// 22. MODALS — rounded, subtle shadow
+// -----------------------------------------------------------------------------
+
+.ui.modal {
+  border-radius: 0.75rem !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.16) !important;
+
+  > .header {
+    border-radius: 0.75rem 0.75rem 0 0 !important;
+    background-color: var(--white) !important;
+    border-bottom: 1px solid var(--gray-100) !important;
+    color: var(--gray-800) !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+  }
+
+  > .actions {
+    background-color: var(--gray-0) !important;
+    border-top: 1px solid var(--gray-100) !important;
+    border-radius: 0 0 0.75rem 0.75rem !important;
+  }
+
+  > .close {
+    right: 1rem !important;
+    &:hover { color: inherit !important; }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 23. FANCYTREE PANEL — left side tree
+// -----------------------------------------------------------------------------
+
+.ui-fancytree {
+  background-color: var(--white) !important;
+
+  li span.fancytree-node {
+    transition: background-color 0.15s ease !important;
+  }
+}
+
+// Active/selected node strip — no border, just background tint
+.fancytree-active > .fancytree-title,
+span.fancytree-active span.fancytree-title {
+  background-color: var(--primary-0) !important;
+  color: var(--primary-400) !important;
+  border: none !important;
+}
+
+// -----------------------------------------------------------------------------
+// 24. CONTENT PLAYER AREA — border radius on all players
+// -----------------------------------------------------------------------------
+
+// Player wrapper containers — border radius only on the container div
+.sunbird-video-player-container,
+.sunbird-pdf-player-container,
+.sunbird-epub-player-container,
+.sunbird-quml-player-container,
+.player-container {
+  border-radius: 0.75rem !important;
+  overflow: hidden !important;
+}
+
+// ECML / old iframe player + inline players inside aspectratio
+.aspectratio,
+.contentViewerIframeShadow {
+  border-radius: 0.75rem !important;
+  overflow: hidden !important;
+}
+
+// -----------------------------------------------------------------------------
+// 26. GREEN BUTTONS → white bg + orange border (portal design system)
+// -----------------------------------------------------------------------------
+
+// sb-btn-success (upload buttons, bulk-upload, csv-upload)
+.sb-btn-success,
+.sb-btn.sb-btn-success {
+  background-color: var(--white) !important;
+  border: 1.5px solid var(--primary-400) !important;
+  color: var(--primary-400) !important;
+
+  &:hover,
+  &:focus {
+    background-color: var(--primary-0) !important;
+    border-color: var(--primary-600) !important;
+    color: var(--primary-600) !important;
+  }
+
+  &:disabled,
+  &.disabled {
+    background-color: var(--gray-100) !important;
+    border-color: var(--gray-300) !important;
+    color: var(--gray-400) !important;
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+// sb-btn-dark-green (Select Content / Add to collection buttons)
+.sb-btn-dark-green,
+.sb-btn.sb-btn-dark-green {
+  background-color: var(--white) !important;
+  border: 1.5px solid var(--primary-400) !important;
+  color: var(--primary-400) !important;
+
+  &:hover,
+  &:focus {
+    background-color: var(--primary-0) !important;
+    border-color: var(--primary-600) !important;
+    color: var(--primary-600) !important;
+  }
+
+  &:disabled,
+  &.disabled {
+    background-color: var(--gray-100) !important;
+    border-color: var(--gray-300) !important;
+    color: var(--gray-400) !important;
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+// sb-color-success (text/icon "Added to Collection" indicator — keep green tick)
+// Only override for buttons that use it as a button background
+button.sb-btn.sb-color-success {
+  background-color: var(--white) !important;
+  border: 1.5px solid var(--primary-400) !important;
+  color: var(--primary-400) !important;
+}
+
+// -----------------------------------------------------------------------------
+// 25. MAIN EDITOR PAGE BACKGROUND — cleaner layering (issue 5)
+// -----------------------------------------------------------------------------
+
+// Main editor layout: white page, grey panels feel
+// Top header: orange (sb-bg-color-primary handled above)
+// Second toolbar row: white (sb-bg-lightBlue handled above)
+// Content area: subtle off-white so panels stand out
+.add-to-library,
+lib-editor > .sb-collectionTree-fancyTreelist,
+.ui.grid.sb-g {
+  background-color: var(--gray-0) !important;
+}
+
+// The right content panel (form area + player)
+.eight.bg-white {
+  background-color: var(--white) !important;
+  border-radius: 0.75rem 0 0 0 !important;
+}
+
+// Left tree panel
+.four.bg-white,
+.w-25 {
+  background-color: var(--white) !important;
+}
+
+// Overall container background after the headers
+.sb-collectionTree-fancyTreelist > .ui.grid {
+  background-color: var(--gray-0) !important;
+}
+
+// Form/meta area — white card
+.ui.twelve.grid,
+.ui.column.grid > [class*='eight wide'].column > .bg-white {
+  background-color: var(--white) !important;
+  border-radius: 0.75rem !important;
+}
+
+// -----------------------------------------------------------------------------
+// 27. UPLOAD AND USE MODAL — content padding
+// -----------------------------------------------------------------------------
+
+// The upload modal content uses .p-10.sb-bg-white — give it more breathing room
+.overflow-modal .p-10.sb-bg-white {
+  padding: 1.5rem !important;
+}
+
+// -----------------------------------------------------------------------------
+// 29. sb-btn-secondary — replace green with white + orange outline
+// -----------------------------------------------------------------------------
+
+.sb-btn-secondary,
+.sb-btn.sb-btn-secondary {
+  background-color: var(--white) !important;
+  border: 1.5px solid var(--primary-400) !important;
+  color: var(--primary-400) !important;
+
+  &:hover,
+  &:focus {
+    background-color: var(--primary-0) !important;
+    border-color: var(--primary-600) !important;
+    color: var(--primary-600) !important;
+  }
+
+  &:disabled,
+  &.disabled {
+    background-color: var(--gray-100) !important;
+    border-color: var(--gray-300) !important;
+    color: var(--gray-400) !important;
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 30. COLLABORATOR POPUP — modern card styling
+// -----------------------------------------------------------------------------
+
+.showCollaborator {
+  // Full-screen modal content area — soft background
+  .sb-modal-content.sb-bg-color-primary-100,
+  .ui.segment.sb-bg-color-primary-100 {
+    background-color: var(--gray-0) !important;
+  }
+
+  // Header bar (title + search)
+  .sb-bg-color-white.h-70 {
+    background-color: var(--white) !important;
+    border-bottom: 1px solid var(--gray-100) !important;
+    padding: 0 1.25rem !important;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.06) !important;
+  }
+
+  // Tab underline — orange active
+  .ui.pointing.secondary.menu .active.item {
+    border-color: var(--primary-400) !important;
+    color: var(--primary-400) !important;
+    font-weight: 600 !important;
+  }
+
+  // Count label
+  .font-weight-bold {
+    color: var(--gray-600) !important;
+    font-size: 0.8125rem !important;
+  }
+
+  // Sort By dropdown
+  select.search.dropdown {
+    border: 1px solid var(--gray-200) !important;
+    border-radius: 0.5rem !important;
+    padding: 0.375rem 0.75rem !important;
+    font-size: 0.8125rem !important;
+    background-color: var(--white) !important;
+    color: var(--gray-700) !important;
+    cursor: pointer;
+  }
+
+  // User / collaborator cards — modern rounded style
+  .sb-card {
+    border: 1px solid var(--gray-100) !important;
+    border-radius: 0.75rem !important;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.06) !important;
+    margin: 0.375rem !important;
+    transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease !important;
+
+    &:hover {
+      border-color: var(--primary-200) !important;
+      box-shadow: 0 4px 12px 0 rgba(var(--rc-rgba-primary), 0.14) !important;
+      transform: translateY(-2px) !important;
+    }
+
+    .sb-card-body {
+      padding: 0.875rem 1rem !important;
+    }
+
+    // Avatar circle — orange toned
+    .sb-card-image {
+      background-color: var(--primary-600) !important;
+      border: none !important;
+      border-radius: 50% !important;
+      color: var(--white) !important;
+      font-size: 1.5rem !important;
+      line-height: 3.75rem !important;
+      flex-shrink: 0;
+    }
+
+    // Name text
+    .sb-card-meta-item {
+      color: var(--gray-800) !important;
+      font-size: 0.875rem !important;
+    }
+
+    // Org text
+    .sb-color-gray-400 {
+      color: var(--gray-500) !important;
+      font-size: 0.8125rem !important;
+    }
+  }
+
+  // "+ Add" link — orange
+  a.sb-color-primary {
+    color: var(--primary-400) !important;
+    font-weight: 600 !important;
+    font-size: 0.8125rem !important;
+    &:hover { color: var(--primary-600) !important; }
+  }
+
+  // "Remove" link — keep error red
+  a.sb-color-error {
+    color: var(--red-400) !important;
+    font-weight: 600 !important;
+    font-size: 0.8125rem !important;
+  }
+
+  // Done button in footer
+  .sb-modal-actions .sb-btn-primary {
+    background-color: var(--primary-400) !important;
+    border-color: var(--primary-400) !important;
+    color: var(--white) !important;
+    border-radius: 0.5rem !important;
+    font-weight: 600 !important;
+    padding: 0.5rem 1.5rem !important;
+    &:hover { background-color: var(--primary-800) !important; }
+  }
+}

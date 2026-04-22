@@ -98,3 +98,177 @@ input[type=number]::-webkit-outer-spin-button {
     width: 50% !important;
   }
 }
+
+// =============================================================================
+// Portal theme overrides for Semantic UI components
+// =============================================================================
+
+// Inputs & Form fields
+.ui.input > input,
+.ui.form input[type=text],
+.ui.form input[type=email],
+.ui.form input[type=password],
+.ui.form input[type=search],
+.ui.form input[type=number],
+.ui.form input[type=url],
+.ui.form input[type=tel],
+.ui.form textarea {
+  border-radius: 0.5rem !important;
+  border-color: var(--gray-100) !important;
+  font-size: 0.875rem !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+  &:focus {
+    border-color: var(--primary-300) !important;
+    box-shadow: 0 0 0 3px rgba(var(--rc-rgba-primary), 0.12) !important;
+  }
+}
+
+// Dropdowns
+.ui.selection.dropdown {
+  border-radius: 0.5rem !important;
+  border-color: var(--gray-100) !important;
+  font-size: 0.875rem !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+  min-height: 2.5rem !important;
+  &.active, &:focus, &.visible {
+    border-color: var(--primary-300) !important;
+    box-shadow: 0 0 0 3px rgba(var(--rc-rgba-primary), 0.12) !important;
+  }
+  > .dropdown.icon {
+    color: var(--gray-400) !important;
+  }
+  > .text {
+    font-size: 0.875rem !important;
+    color: var(--gray-800) !important;
+  }
+  .menu {
+    border-radius: 0 0 0.5rem 0.5rem !important;
+    border-color: var(--gray-100) !important;
+    box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.10) !important;
+    > .item {
+      font-size: 0.875rem !important;
+      transition: background-color 0.15s ease !important;
+      &:hover, &.active, &.selected {
+        background-color: var(--primary-0) !important;
+        color: var(--primary-400) !important;
+        font-weight: 500 !important;
+      }
+    }
+  }
+}
+
+// Cards
+.ui.card, .ui.cards > .card {
+  border-radius: 0.75rem !important;
+  border: 1px solid var(--gray-100) !important;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.06) !important;
+  transition: box-shadow 0.2s ease !important;
+  &:hover {
+    box-shadow: 0 4px 16px 0 rgba(var(--rc-rgba-primary), 0.14) !important;
+  }
+}
+
+// Buttons
+.ui.button {
+  border-radius: 0.5rem !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease !important;
+  &.primary {
+    background-color: var(--primary-400) !important;
+    color: var(--white) !important;
+    &:hover { background-color: var(--primary-800) !important; }
+  }
+  &.secondary {
+    background-color: var(--secondary-200) !important;
+    color: var(--white) !important;
+  }
+}
+
+// Segments / panels
+.ui.segment {
+  border-radius: 0.75rem !important;
+  border-color: var(--gray-100) !important;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.05) !important;
+}
+
+// Tabs / menus
+.ui.menu {
+  border-radius: 0.5rem !important;
+  .item {
+    font-size: 0.875rem !important;
+    transition: color 0.15s ease, background-color 0.15s ease !important;
+  }
+  .active.item {
+    color: var(--primary-400) !important;
+    font-weight: 600 !important;
+    border-color: var(--primary-400) !important;
+  }
+}
+.ui.secondary.pointing.menu {
+  border-color: var(--gray-100) !important;
+  .active.item {
+    border-color: var(--primary-400) !important;
+    color: var(--primary-400) !important;
+  }
+}
+
+// Labels
+.ui.label {
+  border-radius: 0.375rem !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+}
+
+// Tables
+.ui.table {
+  border-radius: 0.75rem !important;
+  border-color: var(--gray-100) !important;
+  thead th {
+    background-color: var(--primary-0) !important;
+    color: var(--gray-800) !important;
+    font-weight: 600 !important;
+    border-bottom-color: var(--gray-100) !important;
+  }
+  tbody tr:hover td {
+    background-color: var(--primary-0) !important;
+  }
+}
+
+// Checkboxes
+.ui.checkbox input:checked ~ .box:before,
+.ui.checkbox input:checked ~ label:before {
+  border-color: var(--primary-400) !important;
+  background: var(--primary-400) !important;
+}
+.ui.checkbox input:checked ~ .box:after,
+.ui.checkbox input:checked ~ label:after {
+  color: var(--white) !important;
+}
+.ui.toggle.checkbox input:checked ~ label:before {
+  background-color: var(--primary-400) !important;
+}
+
+// Search results
+.ui.search > .results {
+  border-radius: 0.5rem !important;
+  border-color: var(--gray-100) !important;
+  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.10) !important;
+  .result:hover {
+    background: var(--primary-0) !important;
+  }
+}
+
+// Accordion
+.ui.accordion .title:not(.ui) {
+  color: var(--primary-400) !important;
+  font-weight: 600 !important;
+}
+
+// Loader
+.ui.loader:before {
+  border-color: var(--gray-100) !important;
+}
+.ui.loader:after {
+  border-color: var(--primary-400) transparent transparent !important;
+}
