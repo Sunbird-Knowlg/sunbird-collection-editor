@@ -1,0 +1,69 @@
+// =============================================================================
+// Sunbird Spark Design Tokens
+// Single source of truth for all Spark brand values.
+// Kept in sync with sunbird-spark-theme.css used by the generic/content editors.
+// Import this BEFORE _variables.scss so variables can reference these tokens.
+// =============================================================================
+
+:root {
+  /* Brand Colors */
+  --spark-brick:         #AC5139;
+  --spark-brick-dark:    #A85236;
+  --spark-ginger:        #CC8545;
+  --spark-yellow:        #FFD954;
+  --spark-sunflower:     #FFDB73;
+  --spark-ivory:         #FFFEF4;
+  --spark-teal:          #4A8C8C;
+  --spark-wave:          #70EDBF;
+  --spark-ink:           #376673;
+  --spark-jamun:         #540F3B;
+
+  /* Surfaces & Backgrounds */
+  --spark-bg:            #E9E8D9;
+  --spark-surface:       #FFFFFF;
+  --spark-card-alt:      #F3F3E5;
+  --spark-sidebar:       #F8F8F8;
+
+  /* Text Colors */
+  --spark-obsidian:      #222222;
+  --spark-charcoal:      #333333;
+  --spark-gray-75:       #757575;
+  --spark-gray-82:       #828282;
+  --spark-gray-b2:       #B2B2B2;
+
+  /* Border Colors */
+  --spark-border:        #D0D5DD;
+  --spark-border-light:  #E5E7EB;
+  --spark-border-card:   #F1F1F1;
+
+  /* Status Colors */
+  --spark-success:       #4CAF50;
+  --spark-success-bg:    #F0F4F0;
+  --spark-warning-bg:    #FFF1C7;
+  --spark-complete-bg:   #CAE5B6;
+  --spark-destructive:   #E53E3E;
+
+  /* Shadows */
+  --spark-shadow-sm:     0 0.125rem 0.625rem rgba(0, 0, 0, 0.05);
+  --spark-shadow-md:     0 0.875rem 0.875rem rgba(0, 0, 0, 0.05);
+  --spark-shadow-lg:     0 0.25rem 1.25rem 0 rgba(0, 0, 0, 0.1);
+  --spark-shadow-card:   0.125rem 0.125rem 1.25rem 0 rgba(0, 0, 0, 0.09);
+
+  /* Border Radius */
+  --spark-radius-xs:     0.625rem;
+  --spark-radius-sm:     0.75rem;
+  --spark-radius-md:     1rem;
+  --spark-radius-lg:     1.25rem;
+  --spark-radius-pill:   2.25rem;
+  --spark-radius-full:   9999px;
+
+  /* Typography */
+  --spark-font:          'Rubik', 'Noto Sans', sans-serif;
+  --spark-font-size-xs:  0.75rem;
+  --spark-font-size-sm:  0.875rem;
+  --spark-font-size-md:  1rem;
+  --spark-font-size-lg:  1.125rem;
+  --spark-font-size-xl:  1.25rem;
+  --spark-font-size-2xl: 1.625rem;
+  --spark-font-size-3xl: 1.875rem;
+}

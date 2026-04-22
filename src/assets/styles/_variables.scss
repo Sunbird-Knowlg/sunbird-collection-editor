@@ -44,19 +44,24 @@
     --gray-400: hsl(var(--gray-hs), 40%); // sub heading #666666
     --gray-800: var(--gray); // text color #333333
 
-    // basetheme — Sunbird Portal orange/white theme
-    --primary-color: #a85236;  // sunbird-brick (terracotta orange)
-    --secondary-color: #008840;
-    --tertiary-color: #e55a28;
+    // Spark tokens are defined in _spark-tokens.scss (imported before this file).
+    // Here we bridge them into the collection editor's legacy variable system.
 
-    // primary colors — orange scale matching portal sunbird-brick
-    --primary-0: #fff5f2; // light orange tint bg
+    // basetheme — bridges to Sunbird Portal's --sunbird-brick CSS variable.
+    // The collection editor web component lives in the same DOM (not an iframe)
+    // so it inherits portal :root CSS variables automatically. Fallback is Spark brick.
+    --primary-color: var(--sunbird-brick, var(--spark-brick));
+    --secondary-color: hsl(var(--sunbird-success-green, 145 63% 49%));
+    --tertiary-color: var(--spark-ginger);
+
+    // primary colors — Spark brick scale
+    --primary-0: #fff5f2;   // light brick tint bg
     --primary-100: #fde8e0; // default button bg
     --primary-200: #e8a48a; // divider
     --primary-250: #f5cfc4; // pagination bg color
     --primary-300: #c9714f; // outline, focus fields
     --primary-400: var(--primary-color); // button bg, heading, table titles, links, toggles
-    --primary-600: #8c3d24; // on press
+    --primary-600: var(--spark-brick-dark); // on press
     --primary-800: #6b2a14; // hover
 
     // secondary colors
@@ -82,11 +87,11 @@
     --warning-color: var(--orange);
     --danger-color: var(--red);
 
-    // element based variables — white base matching portal
-    --body-background-color: #ffffff;
-    --default-text-color: var(--gray-800);
-    --bg-body: #ffffff;
-    --body-color: var(--gray-800);
+    // element based variables
+    --body-background-color: var(--spark-bg);
+    --default-text-color: var(--spark-charcoal, var(--gray-800));
+    --bg-body: var(--spark-bg);
+    --body-color: var(--spark-charcoal, var(--gray-800));
 
     // alpha
     --alpha0: 0;
