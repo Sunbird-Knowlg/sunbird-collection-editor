@@ -32,7 +32,7 @@ lib-editor {
   .add-to-library {
     position: relative;
     z-index: 998 !important;
-    background: var(--primary-0);
+    background: var(--color-brand-tint);
     .sb-required {
       color: #ff4558;
       padding-left: 2px;
@@ -67,14 +67,14 @@ lib-editor {
       select,
       .sb-textarea,
       .list-border {
-        border: 1px solid var(--gray-100) !important;
+        border: 1px solid var(--color-border) !important;
         padding: 0.65rem 0.75rem !important;
         border-radius: 0.5rem;
         font-size: 0.875rem !important;
         font-weight: 400;
         transition: border-color 0.2s ease, box-shadow 0.2s ease;
         &:focus, &:focus-visible {
-          border-color: var(--primary-300) !important;
+          border-color: var(--color-brand-outline) !important;
           box-shadow: 0 0 0 3px rgba(var(--rc-rgba-primary), 0.12) !important;
           outline: none !important;
         }
@@ -120,7 +120,7 @@ lib-editor {
         }
       }
       .sb-keywordbox {
-        border: 1px solid var(--gray-100) !important;
+        border: 1px solid var(--color-border) !important;
         padding: 0.45rem 0.75rem !important;
         border-radius: 0.5rem;
         font-size: 0.785rem !important;
@@ -261,9 +261,9 @@ lib-editor {
   .sb-btn-outline-disabled,
   .sb-btn-outline-primary.sb-btn-outline-disabled,
   .sb-btn-outline-primary[disabled] {
-    background-color: var(--white) !important;
-    border: 1px solid var(--gray-200) !important;
-    color: var(--gray-400) !important;
+    background-color: var(--color-surface) !important;
+    border: 1px solid var(--color-text-disabled) !important;
+    color: var(--color-text-secondary) !important;
     cursor: not-allowed !important;
     pointer-events: none;
     font-weight: 400;
@@ -274,7 +274,7 @@ lib-editor {
     display: none !important;
   }
   .sb-textbox::-webkit-input-placeholder {
-    color: var(--gray-100) !important;
+    color: var(--color-border) !important;
     font-weight: 600 !important;
   }
   .treepicker-parent {
@@ -291,15 +291,15 @@ lib-editor {
   .ck.ck-editor__top
   .ck-sticky-panel
   .ck-toolbar {
-    border-left: 1px solid var(--gray-100) !important;
-    border-right: 1px solid var(--gray-100) !important;
-    border-top: 1px solid var(--gray-100) !important;
+    border-left: 1px solid var(--color-border) !important;
+    border-right: 1px solid var(--color-border) !important;
+    border-top: 1px solid var(--color-border) !important;
     border-bottom-left-radius: 0 !important;
     border-bottom-right-radius: 0 !important;
     border-top-left-radius: 0.5rem !important;
     border-top-right-radius: 0.5rem !important;
     border-bottom: 0 !important;
-    background-color: var(--primary-0) !important;
+    background-color: var(--color-upload-bg) !important;
   }
   sb-dynamic-richtext
   .ck-rounded-corners
@@ -308,11 +308,11 @@ lib-editor {
   sb-dynamic-richtext
   .ck.ck-editor__main
   > .ck-editor__editable.ck-rounded-corners {
-    border: 1px solid var(--gray-100) !important;
+    border: 1px solid var(--color-border) !important;
     border-bottom-left-radius: 0.5rem !important;
     border-bottom-right-radius: 0.5rem !important;
     &.ck-focused {
-      border-color: var(--primary-300) !important;
+      border-color: var(--color-brand-outline) !important;
       box-shadow: 0 0 0 3px rgba(var(--rc-rgba-primary), 0.12) !important;
     }
   }
@@ -340,8 +340,8 @@ lib-editor {
   }
 
   .sb-disabled-textarea {
-    background: var(--gray-0) !important;
-    border: 0.0625rem solid var(--gray-100) !important;
+    background: var(--color-surface-alt) !important;
+    border: 0.0625rem solid var(--color-border) !important;
     opacity: 0.45 !important;
     pointer-events: none !important;
     font-size: 1em !important;

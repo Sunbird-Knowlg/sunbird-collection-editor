@@ -42,7 +42,7 @@
         background-color: var(--spark-surface);
         transition: border-color 0.2s ease, box-shadow 0.2s ease;
         &:focus-within {
-          border-color: var(--primary-300);
+          border-color: var(--color-brand-outline);
           box-shadow: 0 0 0 3px rgba(var(--rc-rgba-primary), 0.12);
         }
         .search.icon{

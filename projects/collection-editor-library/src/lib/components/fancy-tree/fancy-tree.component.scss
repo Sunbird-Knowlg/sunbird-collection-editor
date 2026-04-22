@@ -57,7 +57,7 @@
           }
           &-active {
             border: 1px solid transparent;
-            background-color: var(--primary-0);
+            background-color: var(--color-brand-tint);
             padding: 15px 33px;
             border-top: none;
             border-left: 3px solid var(--spark-brick);
@@ -113,7 +113,7 @@
               &.fancytree-focused,
               &:hover {
                 border: 1px solid transparent;
-                background-color: var(--primary-0);
+                background-color: var(--color-brand-tint);
                 border-right: 0;
                 border-bottom: 0;
                 border-top: 0;

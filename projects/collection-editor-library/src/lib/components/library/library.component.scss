@@ -59,7 +59,7 @@
     position: relative;
 
     &.active{
-      background: var(--secondary-300);
+      background: var(--color-selected-bg);
       border: 0.0625rem solid var(--spark-border-card);
       border-bottom: 0;
       &.active:last-child{
@@ -69,13 +69,13 @@
         visibility: visible;
         right:12px;
         .sb-btn-link{
-          border-color: var(--secondary-0) !important;
-          background-color: var(--secondary-0) !important;
+          border-color: var(--color-success-bg) !important;
+          background-color: var(--color-success-bg) !important;
         }
       }
     }
     &.selected{
-      background: var(--secondary-300);
+      background: var(--color-selected-bg);
       border: solid 1px var(--spark-brick-dark);
     }
     &.active.selected{
@@ -117,8 +117,8 @@
     }
 
     &:hover {
-      background: var(--primary-0);
-      border-color: var(--primary-200);
+      background: var(--color-brand-tint);
+      border-color: var(--color-brand-divider);
       box-shadow: 0 2px 8px 0 rgba(var(--rc-rgba-primary), 0.14);
     }
 
@@ -127,7 +127,7 @@
     }
 
     &--active {
-      background: var(--primary-100);
+      background: var(--color-brand-subtle);
     }
     .sb-checkbox.ui.checkbox{
       min-width: 30px !important;

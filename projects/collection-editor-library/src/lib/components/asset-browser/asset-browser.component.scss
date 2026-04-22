@@ -67,11 +67,11 @@
     justify-content: center;
     flex-direction: column;
     margin: 0 auto;
-    background-color: var(--primary-0);
-    border: 1px dashed var(--primary-200);
+    background-color: var(--color-upload-bg);
+    border: 1px dashed var(--color-upload-border);
     border-radius: 0.5rem;
   }
-  
+
   .upload-file-description p {
     color: #999999;
   }
@@ -175,8 +175,8 @@
     border-radius: 0.5rem;
     width: 100%;
     min-height: 140px;
-    background: var(--primary-0);
-    border: 1px dashed var(--primary-300);
+    background: var(--color-upload-bg);
+    border: 1px dashed var(--color-upload-border-focus);
   }
   
   .upload-input-button {
@@ -202,11 +202,11 @@
     justify-content: center;
     flex-direction: column;
     margin: 0 auto;
-    background-color: var(--primary-0);
-    border: 1px dashed var(--primary-200);
+    background-color: var(--color-upload-bg);
+    border: 1px dashed var(--color-upload-border);
     border-radius: 0.5rem;
   }
-  
+
   .qq-uploader.qq-uploader-selector.custom-qq-uploader {
     background: inherit;
     border-color: none;
