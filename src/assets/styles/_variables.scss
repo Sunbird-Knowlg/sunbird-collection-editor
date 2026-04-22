@@ -44,7 +44,7 @@
     --gray-400: hsl(var(--gray-hs), 40%); // sub heading #666666
     --gray-800: var(--gray); // text color #333333
 
-    // Spark tokens are defined in _spark-tokens.scss (imported before this file).
+    // Spark tokens are defined in _spark-aliases.scss (imported before this file).
     // Here we bridge them into the collection editor's legacy variable system.
 
     // basetheme — bridges to Sunbird Portal's --sunbird-brick CSS variable.

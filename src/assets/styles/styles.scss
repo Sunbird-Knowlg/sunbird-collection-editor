@@ -12,7 +12,7 @@
 @import "./fonts/noto-nastaliqurdu/notonastaliqurdu.css";
 
 @import "./mixins/mixins";
-@import "./spark-tokens";
+@import "./spark-aliases";
 @import "./variables";
 @import "./base/base.scss";
 @import "./vendors/vendors";
@@ -22,4 +22,4 @@
 @import "../lib/semantic/semantic-overrides.scss";
 @import "./legacy";
 @import "./global";
-@import "./portal-theme-overrides"; // Sunbird Portal orange/white theme alignment
+@import "./spark-overrides"; // Spark theme overrides for Semantic UI components
