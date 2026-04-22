@@ -1,50 +1,58 @@
-.sb-disabled{
-    background: var(--spark-card-alt);
-    border: .0625rem solid var(--spark-card-alt);
-    opacity: .45;
-    pointer-events: none;
+.sb-disabled {
+  background: var(--spark-card-alt);
+  border: .0625rem solid var(--spark-card-alt);
+  opacity: .45;
+  pointer-events: none;
 }
-  .hover-none {
-    &:hover {
-      background: none !important;
-    }
+
+.hover-none {
+  &:hover {
+    background: none !important;
   }
-  .bx-none .ui.modal{
-    box-shadow:none !important;
-  }
-  
-  .overflow-modal {
-    .ui.modal{
-      box-shadow: none;
-    }
-    .sb-tabset-segment{
-      border: none;
-    }
-  }
-  .sb-bg-header-blue {
-    background: var(--color-brand-tint);
-  }
-    
-  .sb-bg-lightBlue {
-    background: var(--color-brand-tint) !important;
-  }
-  
-  .bb-1 {
-    border-bottom: 1px solid var(--spark-border-card);
+}
+
+.bx-none .ui.modal {
+  box-shadow: none !important;
+}
+
+.overflow-modal {
+  .ui.modal {
+    box-shadow: none;
   }
 
-  .flex-as-baseline {
-    align-self: baseline !important;
- }
+  .sb-tabset-segment {
+    border: none;
+  }
+}
 
- div[data-title]:before{
+.sb-bg-header-blue {
+  background: var(--color-brand-tint);
+}
+
+.sb-bg-lightBlue {
+  background: var(--color-brand-tint) !important;
+}
+
+.bb-1 {
+  border-bottom: 1px solid var(--spark-border-card);
+}
+
+.flex-as-baseline {
+  align-self: baseline !important;
+}
+
+div[data-title]:before {
   position: absolute;
   right: 30%;
   top: 85%;
   height: 25px;
   width: max-content;
 }
-.sb-modal-fullscreen .modals.dimmer .ui.scrolling.modal{
+
+.sb-modal-fullscreen .modals.dimmer .ui.scrolling.modal {
   margin: 0 auto !important;
 }
-/* .modals.dimmer .ui.scrolling.modal { position: static !important; } — removed: Semantic UI built-in, breaks modal placement */
+
+.modals.dimmer .ui.scrolling.modal {
+  position: fixed !important;
+}
