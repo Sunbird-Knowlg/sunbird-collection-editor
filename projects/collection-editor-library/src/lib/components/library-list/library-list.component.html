@@ -43,8 +43,7 @@
             </div>
             <div libTelemetryInteract
             [telemetryInteractEdata]="telemetryService.getTelemetryInteractEdata('select_content','click','launch', telemetryService?.telemetryPageId)" class="text-right pr-5" *ngIf="content.identifier === selectedContent.identifier">
-              <button class="sb-btn sb-btn-xs sb-btn-dark-green sb-left-icon-btn font-weight-bold text-inherit"
-                (click)="addToLibrary()">
+              <button class="sb-btn sb-btn-xs sb-btn-dark-green sb-left-icon-btn font-weight-bold text-inherit" (click)="addToLibrary()">
                 <i class="plus square icon mr-4" ></i>{{configService.labelConfig?.lbl?.selectContent}}
               </button>
             </div>
