@@ -167,6 +167,18 @@
       list-style-type: none;
     }
   }
+  // Override fancytree default theme hardcoded colors (from minified bundle in editor.component.scss)
+  span.fancytree-active span.fancytree-title,
+  span.fancytree-selected span.fancytree-title {
+    background-color: var(--color-brand-tint) !important;
+    color: var(--color-text) !important;
+  }
+  .fancytree-treefocus span.fancytree-active span.fancytree-title,
+  .fancytree-treefocus span.fancytree-selected span.fancytree-title {
+    background-color: var(--color-brand-tint) !important;
+    color: var(--color-text) !important;
+  }
+
   .sb-fixed-with-whitebg {
     position: fixed;
     width: 100%;
