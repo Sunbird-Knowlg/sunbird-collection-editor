@@ -5,7 +5,8 @@
 // Import this BEFORE _variables.scss so variables can reference these tokens.
 // =============================================================================
 
-:root {
+:root,
+lib-editor {
   /* Brand Colors */
   --spark-brick:         #AC5139;
   --spark-brick-dark:    #A85236;
