@@ -27,6 +27,17 @@ button {
   font-size: var(--font-size-base); // 14px
 }
 
+// Reset portal's inherited h1-h6 font-weight on the editor root, then re-apply
+// so editor controls its own heading weight independently of portal globals.
+lib-editor,
+lib-questionset-editor {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--spark-font);
+    font-weight: 400;
+    color: var(--spark-charcoal);
+  }
+}
+
 h1, h2, h3, h4, h5, h6 {
   color: var(--spark-charcoal);
   font-weight: 600;
@@ -35,13 +46,13 @@ h1, h2, h3, h4, h5, h6 {
 a,
 a:link,
 a:visited {
-  color: var(--spark-brick); // orange
+  color: var(--spark-editor-theme); // orange
   transition: color 0.15s ease;
 }
 
 a:hover,
 a:focus {
-  color: var(--spark-brick-dark); // darker orange on hover
+  color: var(--spark-editor-theme-dark); // darker orange on hover
   text-decoration: underline;
 }
 
@@ -126,7 +137,7 @@ select {
       &.active,
       &.selected {
         background-color: var(--color-brand-tint) !important;
-        color: var(--spark-brick) !important;
+        color: var(--spark-editor-theme) !important;
         font-weight: 500;
       }
     }
@@ -139,13 +150,13 @@ select {
 
 .ui.checkbox input:checked ~ .box:after,
 .ui.checkbox input:checked ~ label:after {
-  color: var(--spark-brick) !important;
+  color: var(--spark-editor-theme) !important;
 }
 
 .ui.checkbox input:checked ~ .box:before,
 .ui.checkbox input:checked ~ label:before {
-  border-color: var(--spark-brick) !important;
-  background-color: var(--spark-brick) !important;
+  border-color: var(--spark-editor-theme) !important;
+  background-color: var(--spark-editor-theme) !important;
 }
 
 .ui.checkbox input:focus ~ .box:before,
@@ -155,7 +166,7 @@ select {
 }
 
 .ui.radio.checkbox input:checked ~ label:after {
-  background-color: var(--spark-brick) !important;
+  background-color: var(--spark-editor-theme) !important;
 }
 
 // -----------------------------------------------------------------------------
@@ -168,26 +179,26 @@ select {
 
 .ui.menu .active.item,
 .ui.menu .item.active {
-  color: var(--spark-brick) !important;
-  border-color: var(--spark-brick) !important;
+  color: var(--spark-editor-theme) !important;
+  border-color: var(--spark-editor-theme) !important;
   font-weight: 600;
 }
 
 .ui.pointing.menu .active.item:after {
-  background-color: var(--spark-brick) !important;
-  border-color: var(--spark-brick) !important;
+  background-color: var(--spark-editor-theme) !important;
+  border-color: var(--spark-editor-theme) !important;
 }
 
 .ui.secondary.pointing.menu .active.item {
-  border-color: var(--spark-brick) !important;
-  color: var(--spark-brick) !important;
+  border-color: var(--spark-editor-theme) !important;
+  color: var(--spark-editor-theme) !important;
 }
 
 // Tab underline indicator
 .sb-tabs .sb-tab-item.active,
 .sb-tab.active {
-  border-bottom-color: var(--spark-brick) !important;
-  color: var(--spark-brick) !important;
+  border-bottom-color: var(--spark-editor-theme) !important;
+  color: var(--spark-editor-theme) !important;
 }
 
 // -----------------------------------------------------------------------------
@@ -197,14 +208,14 @@ select {
 .fancy-tree .fancytree-node:hover > .fancytree-title,
 .fancytree-node:hover > .fancytree-title {
   background-color: var(--color-brand-tint) !important;
-  color: var(--spark-brick) !important;
+  color: var(--spark-editor-theme) !important;
   border-radius: 0.25rem;
 }
 
 .fancy-tree .fancytree-active > .fancytree-title,
 .fancytree-active > .fancytree-title {
   background-color: var(--color-brand-tint) !important;
-  color: var(--spark-brick) !important;
+  color: var(--spark-editor-theme) !important;
   border: none !important;
   border-radius: 0 0.25rem 0.25rem 0;
 }
@@ -219,8 +230,8 @@ select {
 .plain-tree .tree-node.active,
 .sb-tree-node.active {
   background-color: var(--color-brand-subtle) !important;
-  border-left: 3px solid var(--spark-brick) !important;
-  color: var(--spark-brick) !important;
+  border-left: 3px solid var(--spark-editor-theme) !important;
+  color: var(--spark-editor-theme) !important;
 }
 
 // -----------------------------------------------------------------------------
@@ -238,15 +249,15 @@ select {
 // Primary action area in header
 .header-component .sb-btn-primary,
 .editor-header .sb-btn-primary {
-  background-color: var(--spark-brick) !important;
-  border-color: var(--spark-brick) !important;
+  background-color: var(--spark-editor-theme) !important;
+  border-color: var(--spark-editor-theme) !important;
   color: var(--spark-surface) !important;
   border-radius: 0.5rem !important;
 }
 
 // Override sb-styles full-color primary header background — soften to brand accent strip
 .sb-bg-color-primary {
-  background-color: var(--spark-brick-dark) !important;
+  background-color: var(--spark-editor-theme) !important;
   background-image: none !important;
   // Subtle top header bar — not full dark block
   padding-top: 0.25rem !important;
@@ -287,7 +298,7 @@ select {
   // Outline buttons in toolbar
   .sb-btn-outline-primary {
     border-color: var(--color-brand-outline) !important;
-    color: var(--spark-brick) !important;
+    color: var(--spark-editor-theme) !important;
     border-radius: 0.5rem !important;
     &:hover {
       background-color: var(--color-brand-tint) !important;
@@ -309,13 +320,13 @@ select {
 
   // Primary buttons in toolbar
   .sb-btn-primary {
-    background-color: var(--spark-brick) !important;
-    border-color: var(--spark-brick) !important;
+    background-color: var(--spark-editor-theme) !important;
+    border-color: var(--spark-editor-theme) !important;
     color: var(--spark-surface) !important;
     border-radius: 0.5rem !important;
     font-weight: 600 !important;
     &:hover {
-      background-color: var(--spark-brick-dark) !important;
+      background-color: var(--spark-editor-theme-dark) !important;
     }
   }
 }
@@ -326,8 +337,8 @@ select {
 
 .sb-progress-status .active,
 .progress-status .active {
-  color: var(--spark-brick) !important;
-  border-color: var(--spark-brick) !important;
+  color: var(--spark-editor-theme) !important;
+  border-color: var(--spark-editor-theme) !important;
 }
 
 .sb-progress-status .completed {
@@ -336,7 +347,7 @@ select {
 
 // Semantic UI progress bar
 .ui.progress .bar {
-  background-color: var(--spark-brick) !important;
+  background-color: var(--spark-editor-theme) !important;
   border-radius: 0.5rem !important;
 }
 
@@ -358,7 +369,7 @@ select {
 .iziToast.iziToast-color-blue,
 .sb-toast-info {
   background-color: var(--color-brand-tint) !important;
-  border-left: 4px solid var(--spark-brick) !important;
+  border-left: 4px solid var(--spark-editor-theme) !important;
   color: var(--spark-charcoal) !important;
 }
 
@@ -399,12 +410,12 @@ select {
 // -----------------------------------------------------------------------------
 
 input[type="range"] {
-  accent-color: var(--spark-brick);
+  accent-color: var(--spark-editor-theme);
 }
 
 .ui.slider.checkbox input:checked ~ label:before,
 .ui.toggle.checkbox input:checked ~ label:before {
-  background-color: var(--spark-brick) !important;
+  background-color: var(--spark-editor-theme) !important;
 }
 
 // -----------------------------------------------------------------------------
@@ -413,7 +424,7 @@ input[type="range"] {
 
 .publish-checklist .checklist-item.checked,
 .sb-checklist-item.checked {
-  color: var(--spark-brick);
+  color: var(--spark-editor-theme);
 }
 
 .publish-checklist .checklist-item.checked .item-icon,
@@ -456,7 +467,7 @@ input[type="range"] {
 .sb-label-primary,
 .ui.label.sb-label-primary {
   background-color: var(--color-brand-tint) !important;
-  color: var(--spark-brick) !important;
+  color: var(--spark-editor-theme) !important;
   border: 1px solid var(--color-brand-divider) !important;
 }
 
@@ -498,7 +509,7 @@ input[type="range"] {
 .ck.ck-button.ck-on,
 .ck.ck-button:hover:not(.ck-disabled) {
   background-color: var(--color-brand-tint) !important;
-  color: var(--spark-brick) !important;
+  color: var(--spark-editor-theme) !important;
 }
 
 // -----------------------------------------------------------------------------
@@ -515,8 +526,8 @@ input[type="range"] {
 .asset-card.selected,
 .library-card.selected,
 .sb-asset-card.selected {
-  border-color: var(--spark-brick) !important;
-  box-shadow: 0 0 0 2px var(--spark-brick) !important;
+  border-color: var(--spark-editor-theme) !important;
+  box-shadow: 0 0 0 2px var(--spark-editor-theme) !important;
 }
 
 // -----------------------------------------------------------------------------
@@ -532,7 +543,7 @@ input[type="range"] {
 
   &:hover,
   &.drag-over {
-    border-color: var(--spark-brick);
+    border-color: var(--spark-editor-theme);
     background-color: var(--color-brand-subtle);
   }
 }
@@ -585,19 +596,19 @@ input[type="range"] {
   transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
 
   &.sb-btn-primary {
-    background-color: var(--spark-brick) !important;
-    border-color: var(--spark-brick) !important;
+    background-color: var(--spark-editor-theme) !important;
+    border-color: var(--spark-editor-theme) !important;
     color: var(--spark-surface) !important;
-    &:hover { background-color: var(--spark-brick-dark) !important; }
+    &:hover { background-color: var(--spark-editor-theme-dark) !important; }
   }
 
   &.sb-btn-outline-primary {
     background-color: transparent !important;
     border: 1px solid var(--color-brand-outline) !important;
-    color: var(--spark-brick) !important;
+    color: var(--spark-editor-theme) !important;
     &:hover {
       background-color: var(--color-brand-tint) !important;
-      border-color: var(--spark-brick) !important;
+      border-color: var(--spark-editor-theme) !important;
     }
     &.sb-btn-outline-disabled,
     &[disabled] {
@@ -671,12 +682,12 @@ input[type="range"] {
   .sb-btn-cover .sb-btn {
     border: none !important;
     background: transparent !important;
-    color: var(--spark-brick) !important;
+    color: var(--spark-editor-theme) !important;
     font-weight: 600 !important;
     font-size: 0.8125rem !important;
     box-shadow: none !important;
     &:hover {
-      color: var(--spark-brick-dark) !important;
+      color: var(--spark-editor-theme-dark) !important;
       background: transparent !important;
     }
   }
@@ -786,7 +797,7 @@ input[type="range"] {
 .fancytree-active > .fancytree-title,
 span.fancytree-active span.fancytree-title {
   background-color: var(--color-brand-tint) !important;
-  color: var(--spark-brick) !important;
+  color: var(--spark-editor-theme) !important;
   border: none !important;
 }
 
@@ -819,14 +830,14 @@ span.fancytree-active span.fancytree-title {
 .sb-btn-success,
 .sb-btn.sb-btn-success {
   background-color: var(--spark-surface) !important;
-  border: 1.5px solid var(--spark-brick) !important;
-  color: var(--spark-brick) !important;
+  border: 1.5px solid var(--spark-editor-theme) !important;
+  color: var(--spark-editor-theme) !important;
 
   &:hover,
   &:focus {
     background-color: var(--color-brand-tint) !important;
-    border-color: var(--spark-brick-dark) !important;
-    color: var(--spark-brick-dark) !important;
+    border-color: var(--spark-editor-theme-dark) !important;
+    color: var(--spark-editor-theme-dark) !important;
   }
 
   &:disabled,
@@ -843,14 +854,14 @@ span.fancytree-active span.fancytree-title {
 .sb-btn-dark-green,
 .sb-btn.sb-btn-dark-green {
   background-color: var(--spark-surface) !important;
-  border: 1.5px solid var(--spark-brick) !important;
-  color: var(--spark-brick) !important;
+  border: 1.5px solid var(--spark-editor-theme) !important;
+  color: var(--spark-editor-theme) !important;
 
   &:hover,
   &:focus {
     background-color: var(--color-brand-tint) !important;
-    border-color: var(--spark-brick-dark) !important;
-    color: var(--spark-brick-dark) !important;
+    border-color: var(--spark-editor-theme-dark) !important;
+    color: var(--spark-editor-theme-dark) !important;
   }
 
   &:disabled,
@@ -868,8 +879,8 @@ span.fancytree-active span.fancytree-title {
 // Only override for buttons that use it as a button background
 button.sb-btn.sb-color-success {
   background-color: var(--spark-surface) !important;
-  border: 1.5px solid var(--spark-brick) !important;
-  color: var(--spark-brick) !important;
+  border: 1.5px solid var(--spark-editor-theme) !important;
+  color: var(--spark-editor-theme) !important;
 }
 
 // -----------------------------------------------------------------------------
@@ -926,14 +937,14 @@ lib-editor > .sb-collectionTree-fancyTreelist,
 .sb-btn-secondary,
 .sb-btn.sb-btn-secondary {
   background-color: var(--spark-surface) !important;
-  border: 1.5px solid var(--spark-brick) !important;
-  color: var(--spark-brick) !important;
+  border: 1.5px solid var(--spark-editor-theme) !important;
+  color: var(--spark-editor-theme) !important;
 
   &:hover,
   &:focus {
     background-color: var(--color-brand-tint) !important;
-    border-color: var(--spark-brick-dark) !important;
-    color: var(--spark-brick-dark) !important;
+    border-color: var(--spark-editor-theme-dark) !important;
+    color: var(--spark-editor-theme-dark) !important;
   }
 
   &:disabled,
@@ -968,8 +979,8 @@ lib-editor > .sb-collectionTree-fancyTreelist,
 
   // Tab underline — orange active
   .ui.pointing.secondary.menu .active.item {
-    border-color: var(--spark-brick) !important;
-    color: var(--spark-brick) !important;
+    border-color: var(--spark-editor-theme) !important;
+    color: var(--spark-editor-theme) !important;
     font-weight: 600 !important;
   }
 
@@ -1010,7 +1021,7 @@ lib-editor > .sb-collectionTree-fancyTreelist,
 
     // Avatar circle — orange toned
     .sb-card-image {
-      background-color: var(--spark-brick-dark) !important;
+      background-color: var(--spark-editor-theme-dark) !important;
       border: none !important;
       border-radius: 50% !important;
       color: var(--spark-surface) !important;
@@ -1034,10 +1045,10 @@ lib-editor > .sb-collectionTree-fancyTreelist,
 
   // "+ Add" link — orange
   a.sb-color-primary {
-    color: var(--spark-brick) !important;
+    color: var(--spark-editor-theme) !important;
     font-weight: 600 !important;
     font-size: 0.8125rem !important;
-    &:hover { color: var(--spark-brick-dark) !important; }
+    &:hover { color: var(--spark-editor-theme-dark) !important; }
   }
 
   // "Remove" link — keep error red
@@ -1049,12 +1060,12 @@ lib-editor > .sb-collectionTree-fancyTreelist,
 
   // Done button in footer
   .sb-modal-actions .sb-btn-primary {
-    background-color: var(--spark-brick) !important;
-    border-color: var(--spark-brick) !important;
+    background-color: var(--spark-editor-theme) !important;
+    border-color: var(--spark-editor-theme) !important;
     color: var(--spark-surface) !important;
     border-radius: 0.5rem !important;
     font-weight: 600 !important;
     padding: 0.5rem 1.5rem !important;
-    &:hover { background-color: var(--spark-brick-dark) !important; }
+    &:hover { background-color: var(--spark-editor-theme-dark) !important; }
   }
 }

@@ -50,20 +50,20 @@
     // basetheme — bridges to Sunbird Portal's --sunbird-brick CSS variable.
     // The collection editor web component lives in the same DOM (not an iframe)
     // so it inherits portal :root CSS variables automatically. Fallback is Spark brick.
-    --primary-color: var(--spark-brick);
+    --primary-color: var(--spark-editor-theme);
     --secondary-color: hsl(var(--sunbird-success-green, 145 63% 49%));
     --tertiary-color: var(--spark-ginger);
 
-    // primary colors — derived from --spark-brick via color-mix().
-    // Portal overrides --spark-brick on the element; the full scale follows automatically.
-    --primary-0:   color-mix(in srgb, var(--spark-brick)  5%, white);
-    --primary-100: color-mix(in srgb, var(--spark-brick) 15%, white);
-    --primary-200: color-mix(in srgb, var(--spark-brick) 35%, white);
-    --primary-250: color-mix(in srgb, var(--spark-brick) 22%, white);
-    --primary-300: color-mix(in srgb, var(--spark-brick) 55%, white);
-    --primary-400: var(--spark-brick);
-    --primary-600: var(--spark-brick-dark);
-    --primary-800: color-mix(in srgb, var(--spark-brick) 70%, black);
+    // primary colors — derived from --spark-editor-theme via color-mix().
+    // Portal overrides --spark-editor-theme on the element; the full scale follows automatically.
+    --primary-0:   color-mix(in srgb, var(--spark-editor-theme)  5%, white);
+    --primary-100: color-mix(in srgb, var(--spark-editor-theme) 15%, white);
+    --primary-200: color-mix(in srgb, var(--spark-editor-theme) 35%, white);
+    --primary-250: color-mix(in srgb, var(--spark-editor-theme) 22%, white);
+    --primary-300: color-mix(in srgb, var(--spark-editor-theme) 55%, white);
+    --primary-400: var(--spark-editor-theme);
+    --primary-600: var(--spark-editor-theme-dark);
+    --primary-800: color-mix(in srgb, var(--spark-editor-theme) 70%, black);
 
     // secondary colors
     --secondary-0: #e1ffdf; // toast bg, label

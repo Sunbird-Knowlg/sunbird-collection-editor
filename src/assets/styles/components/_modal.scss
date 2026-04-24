@@ -11,7 +11,7 @@
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.18), 0 2px 8px 0 rgba(168, 82, 54, 0.1);
 
   .sb-modal-header {
-    background-color: var(--spark-brick); // now orange via variable
+    background-color: var(--spark-editor-theme); // now orange via variable
     color: var(--spark-surface);
     font-weight: 700;
     font-size: 1rem;
@@ -255,7 +255,7 @@
 .sb-modal-white .ui.modal>.close {
   top: 0;
   right: 0;
-  color: var(--spark-brick);
+  color: var(--spark-editor-theme);
 }
 
 .sb-workspace-modal {
