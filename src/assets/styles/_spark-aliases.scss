@@ -8,8 +8,8 @@
 :root,
 lib-editor {
   /* Brand Colors */
-  --spark-editor-theme:         #AC5139;
-  --spark-editor-theme-dark:    #A85236;
+  --spark-editor-theme:         var(--portal-brand-color, #AC5139);
+  --spark-editor-theme-dark:    var(--portal-brand-color-dark, #A85236);
   --spark-ginger:        #CC8545;
   --spark-yellow:        #FFD954;
   --spark-sunflower:     #FFDB73;
