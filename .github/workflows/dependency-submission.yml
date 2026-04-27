@@ -1,0 +1,68 @@
+name: Dependency Submission
+
+on:
+  schedule:
+    - cron: '0 3 * * 1'          # 03:00 UTC every Monday — runs before Dependabot (03:30)
+  push:
+    branches: [main]
+    paths:
+      - 'package.json'
+      - 'package-lock.json'
+      - 'projects/collection-editor-library/package.json'
+      - 'web-component/package.json'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'package.json'
+      - 'package-lock.json'
+      - 'projects/collection-editor-library/package.json'
+      - 'web-component/package.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  submit-npm-root:
+    name: Submit npm (root)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: advanced-security/npm-dependency-submission-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  submit-npm-library:
+    name: Submit npm (projects/collection-editor-library)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      # No lock file in library subpackage — generate one without installing node_modules
+      - run: npm install --package-lock-only
+        working-directory: projects/collection-editor-library
+      - uses: advanced-security/npm-dependency-submission-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          directory: ./projects/collection-editor-library
+
+  submit-npm-web-component:
+    name: Submit npm (web-component)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      # No lock file in web-component/ — generate one without installing node_modules
+      - run: npm install --package-lock-only
+        working-directory: web-component
+      - uses: advanced-security/npm-dependency-submission-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          directory: ./web-component

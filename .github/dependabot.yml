@@ -1,0 +1,80 @@
+version: 2
+updates:
+  # Root workspace — Angular workspace config, dev tooling, and shared deps
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "03:30"        # 30 min after dependency-submission workflow (03:00 UTC)
+      timezone: "UTC"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      angular:
+        patterns:
+          - "@angular/*"
+          - "@angular-devkit/*"
+          - "@angular-eslint/*"
+          - "@angular/material"
+          - "@angular/cdk"
+      sunbird:
+        patterns:
+          - "@project-sunbird/*"
+      karma-testing:
+        patterns:
+          - "karma*"
+          - "jasmine*"
+          - "@types/jasmine*"
+          - "@types/jasminewd2"
+      types:
+        patterns:
+          - "@types/*"
+
+  # Library package — the publishable Angular library (projects/collection-editor-library)
+  - package-ecosystem: "npm"
+    directory: "/projects/collection-editor-library"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "03:30"
+      timezone: "UTC"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      sunbird:
+        patterns:
+          - "@project-sunbird/*"
+
+  # Web component build — standalone ES module distribution
+  - package-ecosystem: "npm"
+    directory: "/web-component"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "03:30"
+      timezone: "UTC"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+    commit-message:
+      prefix: "chore(deps)"
+
+  # Keep GitHub Actions workflow action versions updated
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "03:30"
+      timezone: "UTC"
+    labels:
+      - "dependencies"
+    commit-message:
+      prefix: "chore(ci)"
