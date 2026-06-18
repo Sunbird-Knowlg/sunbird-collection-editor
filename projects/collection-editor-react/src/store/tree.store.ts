@@ -153,13 +153,12 @@ export const useTreeStore = create<TreeState>((set, get) => ({
     // are included in activeNodeMeta and available to SparkMetaForm on remount.
     const activeNodeMeta = { ...(node?.metadata ?? {}), ...(treeCache[id] ?? {}) };
 
-    // Update editor store node flags (lazy to avoid circular)
-    import('../store/editor.store').then(({ useEditorStore: editorStore }) => {
-      editorStore.getState().setNodeFlags({
-        isFolder: node?.isFolder ?? false,
-        isRoot: !node?.parent,
-        isQuml: false,
-      });
+    // Update editor store node flags synchronously so consumers don't read a
+    // stale isRoot/isFolder for a render after the node changes.
+    useEditorStore.getState().setNodeFlags({
+      isFolder: node?.isFolder ?? false,
+      isRoot: !node?.parent,
+      isQuml: false,
     });
 
     set({ selectedNodeId: id, breadcrumb, activeNodeMeta });

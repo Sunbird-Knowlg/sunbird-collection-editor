@@ -2,7 +2,7 @@ import { apiClient } from './client';
 import type { INode } from '../types/editor';
 
 function mapToINode(raw: unknown, parentId?: string): INode {
-  const r = raw as Record<string, unknown>;
+  const r = (raw ?? {}) as Record<string, unknown>;
   const identifier = (r['identifier'] as string) ?? '';
   const objectType = (r['objectType'] as string) ?? '';
   const mime = (r['mimeType'] as string) ?? '';
@@ -47,7 +47,17 @@ export async function readHierarchy(
     `/action/content/v3/hierarchy/${contentId}`,
     { params: { mode: 'edit' } },
   );
-  const content = response.data?.result?.content as Record<string, unknown>;
+  const content = response.data?.result?.content as Record<string, unknown> | undefined;
+  if (!content || !content['identifier']) {
+    // Surface the API's own error (auth failure, missing content, unexpected
+    // shape) instead of crashing in mapToINode on undefined content.
+    const reason =
+      (response.data?.params?.errmsg as string) ||
+      (response.data?.params?.err as string) ||
+      (response.data?.responseCode as string) ||
+      `No content returned for "${contentId}"`;
+    throw new Error(`Unable to load hierarchy: ${reason}`);
+  }
   const rootNode = mapToINode(content);
   return { content, rootNode };
 }

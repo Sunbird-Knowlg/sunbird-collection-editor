@@ -31,12 +31,18 @@ export const ContextualEditor: React.FC<ContextualEditorProps> = ({ editorMode, 
   const titleTimerRef = useRef<ReturnType<typeof setTimeout>>();
 
   const { selectedNodeId, breadcrumb, activeNodeMeta, updateNode, treeData } = useTreeStore();
-  const { isCurrentNodeFolder, isCurrentNodeRoot } = useEditorStore();
   const contentId = useEditorStore(
     s => s.editorConfig?.context?.contentId ?? s.editorConfig?.context?.identifier ?? '',
   );
 
   const selectedNode = selectedNodeId ? findNodeById(treeData, selectedNodeId) : null;
+
+  // Derive node flags synchronously from the resolved node. The editor-store
+  // flags (isCurrentNodeRoot/isCurrentNodeFolder) are set asynchronously in
+  // selectNode and lag a render behind, which made the form mount with the
+  // wrong field set on root→unit→root and lose its pre-selected dropdowns.
+  const isCurrentNodeRoot = !!selectedNode && !selectedNode.parent;
+  const isCurrentNodeFolder = !!selectedNode?.isFolder;
 
   const isQuml = selectedNode && QUML_TYPES.includes(selectedNode.mimeType ?? '');
   const isLeafContent = selectedNode && !selectedNode.isFolder && !isQuml && !isCurrentNodeRoot;
@@ -143,7 +149,7 @@ export const ContextualEditor: React.FC<ContextualEditorProps> = ({ editorMode, 
       {/* Form */}
       <div className={styles.formArea}>
         <SparkMetaForm
-          key={selectedNodeId ?? 'none'}
+          key={`${selectedNodeId ?? 'none'}:${isCurrentNodeRoot ? 'root' : 'node'}`}
           nodeMetadata={activeNodeMeta}
           activeTab={activeTab}
           isRoot={isCurrentNodeRoot}
