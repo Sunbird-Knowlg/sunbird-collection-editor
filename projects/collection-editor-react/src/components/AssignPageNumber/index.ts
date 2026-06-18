@@ -1,0 +1,1 @@
+export { AssignPageNumber } from './AssignPageNumber';

@@ -1,0 +1,165 @@
+import React, { useCallback, useState } from 'react';
+import {
+  DndContext,
+  DragOverlay,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  type DragStartEvent,
+} from '@dnd-kit/core';
+import type { EditorMode, ToolbarAction } from '../../types/editor';
+import type { IContent } from '../../types/content';
+import { Topbar } from '../Topbar';
+import { OutlineTree } from '../OutlineTree';
+import { ContextualEditor } from '../ContextualEditor';
+import { LibraryDock } from '../LibraryDock';
+import { useTreeStore } from '../../store/tree.store';
+import { useSaveHierarchy } from '../../hooks/useSaveHierarchy';
+import toast from 'react-hot-toast';
+import styles from './SplitBuilderShell.module.scss';
+
+interface SplitBuilderShellProps {
+  editorMode: EditorMode;
+  onToolbarEvent?: (event: { action: ToolbarAction; data?: unknown }) => void;
+  onContentAdded?: (item: unknown, targetNodeId: string) => void;
+  onHierarchySaved?: (hierarchy: unknown) => void;
+}
+
+export const SplitBuilderShell: React.FC<SplitBuilderShellProps> = ({
+  editorMode,
+  onToolbarEvent,
+  onContentAdded,
+  onHierarchySaved,
+}) => {
+  const [activeDragItem, setActiveDragItem] = useState<IContent | null>(null);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [dockCollapsed, setDockCollapsed] = useState(false);
+
+  const { addResource, treeData } = useTreeStore();
+  const selectedNodeId = useTreeStore((s) => s.selectedNodeId);
+  const { save, isSaving, isDirty, lastSaved } = useSaveHierarchy();
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+  );
+
+  const handleDragStart = useCallback((event: DragStartEvent) => {
+    const item = event.active.data.current?.item as IContent | undefined;
+    if (item) setActiveDragItem(item);
+  }, []);
+
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      setActiveDragItem(null);
+      const item = event.active.data.current?.item as IContent | undefined;
+      if (!item) return;
+      const over = event.over;
+      const targetNodeId = (over?.id as string | undefined) ?? selectedNodeId ?? undefined;
+      if (!targetNodeId) {
+        toast.error('Drop onto a unit to add content');
+        return;
+      }
+      const rootId = treeData[0]?.id;
+      const allowContentUnderRoot = false; // matches tree.store guard
+      if (!allowContentUnderRoot && targetNodeId === rootId) {
+        toast.error('Drop content onto a unit, not directly on the course.');
+        return;
+      }
+      addResource(item, targetNodeId);
+      onContentAdded?.(item, targetNodeId);
+      toast.success(`Added "${item.name}" to unit`);
+    },
+    [selectedNodeId, addResource, onContentAdded],
+  );
+
+  const handleToolbarEvent = useCallback(
+    (event: { action: ToolbarAction; data?: unknown }) => {
+      if (event.action === 'saveCollection') {
+        save().then(() => { onHierarchySaved?.(treeData); });
+      }
+      onToolbarEvent?.(event);
+    },
+    [save, onToolbarEvent, onHierarchySaved, treeData],
+  );
+
+  return (
+    <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+      <div className={styles.shell}>
+        <Topbar
+          editorMode={editorMode}
+          isSaving={isSaving}
+          isDirty={isDirty}
+          lastSaved={lastSaved}
+          onToolbarEvent={handleToolbarEvent}
+        />
+
+        <div className={[
+          styles.workspace,
+          sidebarCollapsed ? styles.sidebarCollapsed : '',
+          dockCollapsed ? styles.dockCollapsed : '',
+        ].filter(Boolean).join(' ')}>
+          <aside
+            className={[styles.outline, sidebarCollapsed ? styles.outlineHidden : ''].join(' ')}
+            aria-label="Course outline"
+            aria-hidden={sidebarCollapsed}
+          >
+            <OutlineTree
+              editorMode={editorMode}
+              collapsed={sidebarCollapsed}
+              onToggleCollapse={() => setSidebarCollapsed(v => !v)}
+            />
+          </aside>
+
+          {/* Reopen tab when sidebar is collapsed */}
+          {sidebarCollapsed && (
+            <button
+              className={styles.reopenTab}
+              onClick={() => setSidebarCollapsed(false)}
+              title="Show outline"
+              type="button"
+            >
+              ›
+            </button>
+          )}
+
+          <main className={styles.editor} role="main" aria-label="Content editor">
+            <ContextualEditor editorMode={editorMode} onToolbarEvent={handleToolbarEvent} />
+          </main>
+
+          <aside
+            className={[styles.dock, dockCollapsed ? styles.dockHidden : ''].filter(Boolean).join(' ')}
+            aria-label="Content library"
+            aria-hidden={dockCollapsed}
+          >
+            <LibraryDock
+              editorMode={editorMode}
+              collapsed={dockCollapsed}
+              onToggleCollapse={() => setDockCollapsed(v => !v)}
+            />
+          </aside>
+
+          {/* Reopen tab when library dock is collapsed */}
+          {dockCollapsed && (
+            <button
+              className={styles.dockReopenTab}
+              onClick={() => setDockCollapsed(false)}
+              title="Show library"
+              type="button"
+            >
+              ‹
+            </button>
+          )}
+        </div>
+      </div>
+
+      <DragOverlay dropAnimation={null}>
+        {activeDragItem ? (
+          <div className={styles.dragChip}>
+            <span className={styles.dragChipLabel}>{activeDragItem.name}</span>
+          </div>
+        ) : null}
+      </DragOverlay>
+    </DndContext>
+  );
+};

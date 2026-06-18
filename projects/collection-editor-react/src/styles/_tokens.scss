@@ -1,0 +1,48 @@
+.sb-split-builder {
+  // Primary palette
+  --sbx-primary: #2D6AE3;
+  --sbx-primary-dark: #1A4FA8;
+  --sbx-primary-light: #EEF3FD;
+  --sbx-ai: #7A5BFF;
+  // Semantic
+  --sbx-success: #16A34A;
+  --sbx-error: #DC2626;
+  --sbx-warning: #D97706;
+  --sbx-info: #0EA5E9;
+  // Grays
+  --sbx-gray-50: #F9FAFB;
+  --sbx-gray-100: #F3F4F6;
+  --sbx-gray-200: #E5E7EB;
+  --sbx-gray-300: #D1D5DB;
+  --sbx-gray-400: #9CA3AF;
+  --sbx-gray-500: #6B7280;
+  --sbx-gray-600: #4B5563;
+  --sbx-gray-700: #374151;
+  --sbx-gray-800: #1F2937;
+  --sbx-gray-900: #111827;
+  // Radii
+  --sbx-r-xs: 4px;
+  --sbx-r-sm: 6px;
+  --sbx-r-md: 10px;
+  --sbx-r-lg: 14px;
+  --sbx-r-xl: 20px;
+  // Shadows
+  --sbx-shadow-1: 0 1px 3px rgba(0,0,0,0.10), 0 1px 2px rgba(0,0,0,0.06);
+  --sbx-shadow-2: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06);
+  --sbx-shadow-3: 0 10px 15px rgba(0,0,0,0.08), 0 4px 6px rgba(0,0,0,0.05);
+  // CT colors
+  --sbx-ct-video: #EA580C;
+  --sbx-ct-pdf: #DC2626;
+  --sbx-ct-h5p: #0D9488;
+  --sbx-ct-scorm: #7C3AED;
+  --sbx-ct-audio: #DB2777;
+  --sbx-ct-quiz: #16A34A;
+  --sbx-ct-default: #6B7280;
+  // Font
+  --sbx-font: 'Plus Jakarta Sans', 'Noto Sans', 'Noto Sans Devanagari', 'Noto Sans Tamil', sans-serif;
+  // Topbar height
+  --sbx-topbar-h: 60px;
+  // Column widths
+  --sbx-tree-w: 284px;
+  --sbx-dock-w: 312px;
+}

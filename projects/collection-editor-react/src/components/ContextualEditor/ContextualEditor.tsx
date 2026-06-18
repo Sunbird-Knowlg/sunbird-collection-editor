@@ -1,0 +1,192 @@
+import React, { useState, useCallback, useRef } from 'react';
+import type { EditorMode, ToolbarAction } from '../../types/editor';
+import { useTreeStore } from '../../store/tree.store';
+import { useEditorStore } from '../../store/editor.store';
+import { Breadcrumb } from './Breadcrumb';
+import { TabBar } from './TabBar';
+import { SparkMetaForm } from '../SparkMetaForm';
+import { UnitContentList } from '../UnitContentList';
+import { DropZone } from '../shared/DropZone';
+import { ContentPlayer } from '../ContentPlayer';
+import { ResourceReorderDialog } from '../ResourceReorder/ResourceReorderDialog';
+import { AssignPageNumber } from '../AssignPageNumber/AssignPageNumber';
+import { ContentEditForm } from './ContentEditForm';
+import styles from './ContextualEditor.module.scss';
+
+const QUML_TYPES = ['application/vnd.sunbird.questionset'];
+
+interface ContextualEditorProps {
+  editorMode: EditorMode;
+  onToolbarEvent: (event: { action: ToolbarAction; data?: unknown }) => void;
+}
+
+type TabId = 'details' | 'audience' | 'licensing';
+
+export const ContextualEditor: React.FC<ContextualEditorProps> = ({ editorMode, onToolbarEvent }) => {
+  const [activeTab, setActiveTab] = useState<TabId>('details');
+  const [errorTabs, setErrorTabs] = useState<TabId[]>([]);
+  const [reorderResourceId, setReorderResourceId] = useState<string | null>(null);
+  const [showAssignPage, setShowAssignPage] = useState(false);
+  const titleRef = useRef<HTMLDivElement>(null);
+  const titleTimerRef = useRef<ReturnType<typeof setTimeout>>();
+
+  const { selectedNodeId, breadcrumb, activeNodeMeta, updateNode, treeData } = useTreeStore();
+  const { isCurrentNodeFolder, isCurrentNodeRoot } = useEditorStore();
+  const contentId = useEditorStore(
+    s => s.editorConfig?.context?.contentId ?? s.editorConfig?.context?.identifier ?? '',
+  );
+
+  const selectedNode = selectedNodeId ? findNodeById(treeData, selectedNodeId) : null;
+
+  const isQuml = selectedNode && QUML_TYPES.includes(selectedNode.mimeType ?? '');
+  const isLeafContent = selectedNode && !selectedNode.isFolder && !isQuml && !isCurrentNodeRoot;
+
+  // Review comment from previous rejection cycle
+  const reviewComment = (selectedNode?.metadata?.rejectComment as string | undefined)
+    ?? (isCurrentNodeRoot ? (treeData[0]?.metadata?.rejectComment as string | undefined) : undefined);
+
+  const handleTitleChange = useCallback(() => {
+    const el = titleRef.current;
+    if (!el || !selectedNodeId) return;
+    const newTitle = el.innerText.trim();
+    clearTimeout(titleTimerRef.current);
+    titleTimerRef.current = setTimeout(() => {
+      updateNode(selectedNodeId, { name: newTitle });
+    }, 600);
+  }, [selectedNodeId, updateNode]);
+
+  const handleFormValueChange = useCallback((data: unknown) => {
+    onToolbarEvent({ action: 'onFormValueChange', data });
+  }, [onToolbarEvent]);
+
+  const handleFormStatusChange = useCallback((isValid: boolean, invalidTabs: TabId[]) => {
+    setErrorTabs(invalidTabs);
+    onToolbarEvent({ action: 'onFormStatusChange', data: { isValid } });
+  }, [onToolbarEvent]);
+
+  if (!selectedNode) {
+    return (
+      <div className={styles.emptyState}>
+        <p>Select a unit from the outline to edit its details</p>
+      </div>
+    );
+  }
+
+  if (isQuml) {
+    return <ContentPlayer node={selectedNode} editorMode={editorMode} type="quml" />;
+  }
+
+  if (isLeafContent) {
+    return (
+      <div className={styles.leafContentLayout}>
+        <ContentPlayer node={selectedNode} editorMode={editorMode} type="content" />
+        <ContentEditForm
+          node={selectedNode}
+          editorMode={editorMode}
+          onMoveClick={() => setReorderResourceId(selectedNode.identifier)}
+          reorderDialog={reorderResourceId ? (
+            <ResourceReorderDialog
+              resourceId={reorderResourceId}
+              resourceName={selectedNode.name}
+              currentUnitId={selectedNode.parent ?? ''}
+              onClose={() => setReorderResourceId(null)}
+            />
+          ) : null}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.container}>
+      <Breadcrumb crumbs={breadcrumb} />
+
+      {/* Review comment bar — shown in review mode if a rejection comment exists */}
+      {editorMode === 'review' && reviewComment && (
+        <div className={styles.reviewComment} role="alert">
+          <span className={styles.reviewCommentLabel}>Reviewer comment:</span>
+          <span className={styles.reviewCommentText}>{reviewComment}</span>
+        </div>
+      )}
+
+      {/* Title row: app icon (root only) + inline editable title */}
+      <div className={styles.titleRow}>
+        {isCurrentNodeRoot && !!(selectedNode.appIcon ?? selectedNode.metadata?.appIcon) && (
+          <img
+            src={String(selectedNode.appIcon ?? selectedNode.metadata?.appIcon)}
+            alt="Course icon"
+            className={styles.titleIcon}
+          />
+        )}
+        <div
+          ref={titleRef}
+          className={styles.nodeTitle}
+          contentEditable={editorMode === 'edit'}
+          suppressContentEditableWarning
+          onInput={handleTitleChange}
+          onBlur={handleTitleChange}
+          data-placeholder="Untitled"
+          aria-label="Node title"
+        >
+          {selectedNode.name}
+        </div>
+      </div>
+
+      {/* Tabs — root shows all three; units show only Details */}
+      <TabBar
+        activeTab={activeTab}
+        onChange={tab => setActiveTab(tab as TabId)}
+        errorTabs={errorTabs}
+        visibleTabs={isCurrentNodeRoot ? undefined : ['details']}
+      />
+
+      {/* Form */}
+      <div className={styles.formArea}>
+        <SparkMetaForm
+          key={selectedNodeId ?? 'none'}
+          nodeMetadata={activeNodeMeta}
+          activeTab={activeTab}
+          isRoot={isCurrentNodeRoot}
+          isFolder={isCurrentNodeFolder}
+          editorMode={editorMode}
+          onFormValueChange={handleFormValueChange}
+          onFormStatusChange={handleFormStatusChange}
+        />
+      </div>
+
+      {/* Content list — for folder nodes (both root and non-root units) */}
+      {(isCurrentNodeFolder || isCurrentNodeRoot) && activeTab === 'details' && (
+        <div className={styles.contentListArea}>
+          <UnitContentList editorMode={editorMode} />
+        </div>
+      )}
+
+      {/* Drop zone overlay */}
+      <DropZone
+        isActive={false}
+        label="Drop to add content to this unit"
+        nodeId={selectedNodeId ?? undefined}
+        className={styles.dropZone}
+      />
+
+      {/* Modals */}
+      {showAssignPage && (
+        <AssignPageNumber contentId={contentId} onClose={() => setShowAssignPage(false)} />
+      )}
+    </div>
+  );
+};
+
+function findNodeById(
+  nodes: import('../../types/editor').INode[],
+  id: string,
+): import('../../types/editor').INode | undefined {
+  for (const n of nodes) {
+    if (n.id === id) return n;
+    if (n.children) {
+      const f = findNodeById(n.children, id);
+      if (f) return f;
+    }
+  }
+  return undefined;
+}

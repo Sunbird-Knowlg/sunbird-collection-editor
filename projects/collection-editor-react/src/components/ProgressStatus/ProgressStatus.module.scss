@@ -1,0 +1,11 @@
+.container { background: #fafafa; border: 1px solid #e8e8e8; border-radius: 6px; margin-top: 12px; }
+.toggle { display: flex; align-items: center; gap: 6px; width: 100%; padding: 10px 12px; background: none; border: none; cursor: pointer; font-size: 13px; font-weight: 500; }
+.dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.green { background: #52c41a; }
+.yellow { background: #faad14; }
+.list { padding: 4px 12px 12px; }
+.row { margin-bottom: 10px; }
+.rowLabel { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
+.count { color: #888; }
+.track { height: 6px; background: #f0f0f0; border-radius: 3px; overflow: hidden; }
+.bar { height: 100%; border-radius: 3px; transition: width 0.3s; }

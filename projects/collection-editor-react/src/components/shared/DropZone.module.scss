@@ -1,0 +1,19 @@
+.dropZone {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed var(--sbx-gray-300);
+  border-radius: var(--sbx-r-md);
+  padding: 24px;
+  color: var(--sbx-gray-500);
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.active {
+  display: flex;
+  border-color: var(--sbx-primary);
+  color: var(--sbx-primary);
+  background: var(--sbx-primary-light);
+}

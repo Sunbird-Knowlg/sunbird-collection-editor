@@ -1,0 +1,31 @@
+.tabBar {
+  display: flex;
+  border-bottom: 1px solid var(--sbx-gray-200);
+  margin-bottom: 16px;
+  gap: 0;
+}
+.tab {
+  display: flex; align-items: center; gap: 6px;
+  padding: 10px 16px;
+  border: none; background: none; cursor: pointer;
+  font-size: 13px; font-weight: 500;
+  color: var(--sbx-gray-500);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  white-space: nowrap;
+  transition: all 0.15s;
+  position: relative;
+  &:hover { color: var(--sbx-primary); }
+}
+.active {
+  color: var(--sbx-primary);
+  border-bottom-color: var(--sbx-primary);
+  font-weight: 600;
+}
+.error { color: var(--sbx-error); }
+.errorDot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--sbx-error);
+  display: inline-block;
+}

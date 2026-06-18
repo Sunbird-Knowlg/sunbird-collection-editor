@@ -1,0 +1,129 @@
+.panel {
+  padding: 20px;
+  background: white;
+  border-radius: var(--sbx-r-md);
+  border: 1px solid var(--sbx-gray-200);
+}
+
+.title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--sbx-gray-800);
+  margin: 0 0 16px;
+}
+
+.qrSection {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  padding: 16px;
+  background: var(--sbx-gray-50);
+  border-radius: var(--sbx-r-md);
+  border: 1px solid var(--sbx-gray-200);
+  margin-bottom: 20px;
+}
+
+.qrImageWrap {
+  flex-shrink: 0;
+  border: 1px solid var(--sbx-gray-300);
+  border-radius: var(--sbx-r-sm);
+  overflow: hidden;
+  background: white;
+  padding: 4px;
+}
+
+.qrImage {
+  display: block;
+  width: 150px;
+  height: 150px;
+}
+
+.qrMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: center;
+}
+
+.dialcodeLabel {
+  font-size: 12px;
+  color: var(--sbx-gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.dialcodeValue {
+  font-family: 'Courier New', monospace;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--sbx-gray-900);
+  letter-spacing: 0.1em;
+  background: var(--sbx-gray-100);
+  padding: 4px 10px;
+  border-radius: var(--sbx-r-sm);
+  border: 1px solid var(--sbx-gray-300);
+}
+
+.removeBtn {
+  margin-top: 4px;
+  align-self: flex-start;
+}
+
+.emptyState {
+  font-size: 13px;
+  color: var(--sbx-gray-500);
+  margin: 0 0 20px;
+}
+
+.linkSection {
+  border-top: 1px solid var(--sbx-gray-200);
+  padding-top: 16px;
+}
+
+.sectionLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--sbx-gray-700);
+  margin: 0 0 10px;
+}
+
+.inputRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.input {
+  flex: 1;
+  height: 36px;
+  padding: 0 12px;
+  border: 1.5px solid var(--sbx-gray-300);
+  border-radius: var(--sbx-r-sm);
+  font-size: 14px;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.05em;
+  color: var(--sbx-gray-900);
+  transition: border-color 0.15s;
+
+  &:focus {
+    outline: none;
+    border-color: var(--sbx-primary);
+  }
+
+  &:disabled {
+    background: var(--sbx-gray-100);
+    color: var(--sbx-gray-400);
+  }
+}
+
+.error {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: var(--sbx-error);
+}
+
+.successMsg {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: var(--sbx-success);
+}

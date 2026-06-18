@@ -1,0 +1,62 @@
+import { apiClient } from './client';
+import type { IContent } from '../types/content';
+
+export async function compositeSearch(params: {
+  filters?: Record<string, unknown>;
+  query?: string;
+  limit?: number;
+  offset?: number;
+  fields?: string[];
+  channel?: string;
+  sortBy?: Record<string, string>;
+}): Promise<{ content: IContent[]; count: number }> {
+  const baseFilters: Record<string, unknown> = {
+    status: ['Live'],
+    contentType: ['Resource'],
+    ...(params.filters ?? {}),
+  };
+  if (params.channel) {
+    baseFilters['channel'] = params.channel;
+  }
+
+  const response = await apiClient.post('/action/composite/v3/search', {
+    request: {
+      filters: baseFilters,
+      query: params.query ?? '',
+      limit: params.limit ?? 20,
+      offset: params.offset ?? 0,
+      sort_by: params.sortBy ?? { lastUpdatedOn: 'desc' },
+      fields: params.fields ?? [
+        'identifier',
+        'name',
+        'mimeType',
+        'contentType',
+        'primaryCategory',
+        'appIcon',
+        'channel',
+        'organisation',
+        'pkgVersion',
+      ],
+    },
+  }, {
+    headers: {
+      'X-Source': 'web',
+      'X-msgid': Math.random().toString(36).slice(2),
+    },
+  });
+
+  const result = response.data?.result ?? {};
+  return {
+    content: (result.content ?? []) as IContent[],
+    count: (result.count ?? 0) as number,
+  };
+}
+
+export async function fetchContentDetails(
+  contentId: string,
+): Promise<IContent> {
+  const response = await apiClient.get(
+    `/action/content/v3/read/${contentId}`,
+  );
+  return response.data?.result?.content as IContent;
+}

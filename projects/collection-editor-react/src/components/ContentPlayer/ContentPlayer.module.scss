@@ -1,0 +1,77 @@
+// ── Outer container ──────────────────────────────────────────────────────────
+.contentPlayerRoot {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+// ── 16:9 aspect-ratio player box (mirrors Angular's .aspectratio[data-ratio="16:9"]) ──
+.aspectRatio {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; // 16:9
+
+  > * {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.playerWrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  overflow: hidden;
+}
+
+.playerFrame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+// ── Metadata grid (mirrors Angular's .ui.grid below the player) ──────────────
+.metaGrid {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 12px 16px 8px;
+  background: #fff;
+  border-top: 1px solid var(--sbx-gray-200, #e8e8e8);
+  gap: 0;
+}
+
+// Column width cycle: 50% → 33% → 17% (approximates Angular's 6/4/2 wide columns)
+.metaColWide   { width: 50%; padding: 6px 8px; }
+.metaColMed    { width: 33.33%; padding: 6px 8px; }
+.metaColNarrow { width: 16.67%; padding: 6px 8px; }
+
+.metaField {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.metaLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--sbx-gray-500, #888);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.metaValue {
+  font-size: 13px;
+  color: var(--sbx-gray-800, #333);
+  word-break: break-word;
+}
