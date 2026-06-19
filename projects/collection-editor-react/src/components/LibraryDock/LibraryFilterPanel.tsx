@@ -10,9 +10,20 @@ export interface LibraryFilters {
   medium?: string[];
   gradeLevel?: string[];
   subject?: string[];
+  topic?: string[];
   primaryCategory?: string[];
   contentType?: string[];
 }
+
+// Framework-category filter sections, used when the API search form is absent.
+const DEFAULT_FILTER_SECTIONS: Array<{ key: keyof LibraryFilters; label: string }> = [
+  { key: 'board', label: 'Board' },
+  { key: 'medium', label: 'Medium' },
+  { key: 'gradeLevel', label: 'Class' },
+  { key: 'subject', label: 'Subject' },
+];
+
+const FRAMEWORK_FILTER_KEYS = new Set(['board', 'medium', 'gradeLevel', 'subject', 'topic']);
 
 interface LibraryFilterPanelProps {
   isOpen: boolean;
@@ -57,11 +68,21 @@ export const LibraryFilterPanel: React.FC<LibraryFilterPanelProps> = ({
   onClose,
 }) => {
   const config = useEditorStore((s) => s.editorConfig);
+  const searchFormConfig = useEditorStore((s) => s.searchFormConfig);
   const { organisationFramework } = useFramework(
     config?.context?.framework as string | undefined,
     config?.context?.targetFWIds as string[] | undefined,
   );
   const [local, setLocal] = useState<LibraryFilters>(filters);
+
+  // Drive the framework-category filter sections from the API search form when
+  // available (codes + labels), else fall back to the hardcoded defaults.
+  const filterSections: Array<{ key: keyof LibraryFilters; label: string }> =
+    searchFormConfig?.length
+      ? searchFormConfig
+          .filter((f) => FRAMEWORK_FILTER_KEYS.has(f.code))
+          .map((f) => ({ key: f.code as keyof LibraryFilters, label: f.label || f.code }))
+      : DEFAULT_FILTER_SECTIONS;
 
   useEffect(() => {
     setLocal(filters);
@@ -96,18 +117,12 @@ export const LibraryFilterPanel: React.FC<LibraryFilterPanelProps> = ({
       </div>
 
       <div className={styles.body}>
-        {(['board', 'medium', 'gradeLevel', 'subject'] as const).map((key) => {
+        {filterSections.map(({ key, label }) => {
           const terms = getTerms(key);
           if (!terms.length) return null;
-          const labels: Record<string, string> = {
-            board: 'Board',
-            medium: 'Medium',
-            gradeLevel: 'Class',
-            subject: 'Subject',
-          };
           return (
             <div key={key} className={styles.section}>
-              <div className={styles.sectionLabel}>{labels[key]}</div>
+              <div className={styles.sectionLabel}>{label}</div>
               <div className={styles.chips}>
                 {terms.slice(0, 20).map((t) => (
                   <button

@@ -91,17 +91,17 @@ export const CsvUpload: React.FC<CsvUploadProps> = ({
 
   const handleDownloadSample = useCallback(async () => {
     try {
-      const blob = await downloadSampleCsv(contentId);
-      const url = URL.createObjectURL(blob);
+      // Returns a pre-signed URL to the current hierarchy CSV (used as a template).
+      const url = await downloadSampleCsv(contentId);
       const a = document.createElement('a');
       a.href = url;
       a.download = 'sample_hierarchy.csv';
+      a.target = '_blank';
       a.click();
-      URL.revokeObjectURL(url);
     } catch {
       setErrorMsg('Failed to download sample CSV.');
     }
-  }, []);
+  }, [contentId]);
 
   const handleUpload = useCallback(async () => {
     if (!selectedFile) return;
@@ -112,6 +112,15 @@ export const CsvUpload: React.FC<CsvUploadProps> = ({
 
     try {
       const { processId } = await uploadCsvHierarchy(contentId, selectedFile);
+
+      // Synchronous import (no async process id) — treat as immediate success.
+      if (!processId) {
+        setStatus('done');
+        setSuccessCount(null);
+        setTimeout(onComplete, 1500);
+        return;
+      }
+
       setStatus('processing');
 
       pollRef.current = setInterval(async () => {

@@ -66,12 +66,15 @@ export async function updateHierarchy(
   _contentId: string,
   nodesModified: Record<string, unknown>,
   hierarchy: Record<string, unknown>,
+  lastUpdatedBy?: string,
 ): Promise<void> {
   await apiClient.patch('/action/content/v3/hierarchy/update', {
     request: {
       data: {
         nodesModified,
         hierarchy,
+        // lastUpdatedBy belongs at the data level, not inside nodesModified entries
+        ...(lastUpdatedBy ? { lastUpdatedBy } : {}),
       },
     },
   });
@@ -109,19 +112,10 @@ export async function rejectContent(contentId: string, comment: string): Promise
 }
 
 export async function updateCollaborators(contentId: string, collaborators: string[]): Promise<void> {
-  await apiClient.patch('/action/content/v3/hierarchy/update', {
+  // Collaborators are managed by a dedicated endpoint, not the hierarchy update.
+  await apiClient.patch(`/action/content/v1/collaborator/update/${contentId}`, {
     request: {
-      data: {
-        nodesModified: {
-          [contentId]: {
-            metadata: { collaborators },
-            objectType: 'Collection',
-            root: true,
-            isNew: false,
-          },
-        },
-        hierarchy: {},
-      },
+      content: { collaborators },
     },
   });
 }

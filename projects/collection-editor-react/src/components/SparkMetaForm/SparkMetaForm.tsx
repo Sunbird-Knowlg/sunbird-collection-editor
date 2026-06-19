@@ -4,8 +4,9 @@ import type { EditorMode } from '../../types/editor';
 import { useTreeStore } from '../../store/tree.store';
 import { useEditorStore } from '../../store/editor.store';
 import { useFramework } from '../../hooks/useFramework';
-import { useFieldPrepare } from './hooks/useFieldPrepare';
+import { useFieldPrepare, SECTION_DISPLAY } from './hooks/useFieldPrepare';
 import { useCascade } from './hooks/useCascade';
+import { FormSection } from './FormSection';
 import { TextField } from './fields/TextField';
 import { SelectField } from './fields/SelectField';
 import { MultiSelectField } from './fields/MultiSelectField';
@@ -57,7 +58,8 @@ export const SparkMetaForm: React.FC<SparkMetaFormProps> = ({
     ? (apiFields as Array<Record<string, unknown>>)
     : ((config?.config.hierarchy as Record<string, unknown>)?.formConfig as Array<Record<string, unknown>> ?? []);
   const allFields = useFieldPrepare(formConfig, effectiveMeta, frameworkDetails, isRoot);
-  const tabFields = allFields.filter(f => f.tab === activeTab);
+  // appIcon is always rendered in the title row (TitleAppIcon), never in the form grid
+  const tabFields = allFields.filter(f => f.tab === activeTab && f.inputType !== 'appIcon');
 
   const form = useForm<Record<string, unknown>>({
     mode: 'onChange',
@@ -126,45 +128,76 @@ export const SparkMetaForm: React.FC<SparkMetaFormProps> = ({
 
   const isReadOnly = editorMode !== 'edit';
 
+  // Group consecutive fields with the same section key into boxes.
+  const sectionGroups = tabFields.reduce<Array<{ section: string | undefined; fields: typeof tabFields }>>(
+    (acc, field) => {
+      const last = acc[acc.length - 1];
+      if (last && last.section === field.section) {
+        last.fields.push(field);
+      } else {
+        acc.push({ section: field.section, fields: [field] });
+      }
+      return acc;
+    },
+    [],
+  );
+
+  const renderField = (field: typeof tabFields[number]) => {
+    const commonProps = {
+      key: field.code,
+      name: field.code,
+      label: field.label,
+      required: field.required,
+      disabled: isReadOnly || field.editable === false,
+    };
+    switch (field.inputType) {
+      case 'textarea':
+        return <TextField {...commonProps} multiline maxLength={field.maxLength} />;
+      case 'select':
+        return <SelectField {...commonProps} options={field.options ?? []} />;
+      case 'multiselect':
+        return <MultiSelectField {...commonProps} options={field.options ?? []} />;
+      case 'chips':
+        return <ChipGroupField {...commonProps} />;
+      case 'radio':
+        return <RadioField {...commonProps} options={field.options ?? []} />;
+      case 'appIcon':
+        return <AppIconField {...commonProps} nodeId={selectedNodeId ?? ''} />;
+      case 'datepicker':
+      case 'datetime':
+        return <DateTimeField {...commonProps} />;
+      case 'keywords':
+      case 'tagsinput':
+        return <KeywordSuggestField {...commonProps} />;
+      case 'nestedselect':
+        return <NestedSelectField {...commonProps} levels={field.levels ?? []} />;
+      case 'license':
+        return <LicenseSelectField {...commonProps} />;
+      case 'dialcode':
+        return <DialcodeInputField {...commonProps} />;
+      default:
+        return <TextField {...commonProps} maxLength={field.maxLength} />;
+    }
+  };
+
   return (
     <FormProvider {...form}>
       <div className={styles.form}>
-        {tabFields.map(field => {
-          const commonProps = {
-            key: field.code,
-            name: field.code,
-            label: field.label,
-            required: field.required,
-            disabled: isReadOnly || field.editable === false,
-          };
-          switch (field.inputType) {
-            case 'textarea':
-              return <TextField {...commonProps} multiline maxLength={field.maxLength} />;
-            case 'select':
-              return <SelectField {...commonProps} options={field.options ?? []} />;
-            case 'multiselect':
-              return <MultiSelectField {...commonProps} options={field.options ?? []} />;
-            case 'chips':
-              return <ChipGroupField {...commonProps} />;
-            case 'radio':
-              return <RadioField {...commonProps} options={field.options ?? []} />;
-            case 'appIcon':
-              return <AppIconField {...commonProps} nodeId={selectedNodeId ?? ''} />;
-            case 'datepicker':
-            case 'datetime':
-              return <DateTimeField {...commonProps} />;
-            case 'keywords':
-            case 'tagsinput':
-              return <KeywordSuggestField {...commonProps} />;
-            case 'nestedselect':
-              return <NestedSelectField {...commonProps} levels={field.levels ?? []} />;
-            case 'license':
-              return <LicenseSelectField {...commonProps} />;
-            case 'dialcode':
-              return <DialcodeInputField {...commonProps} />;
-            default:
-              return <TextField {...commonProps} maxLength={field.maxLength} />;
+        {sectionGroups.map((group, idx) => {
+          const display = group.section ? SECTION_DISPLAY[group.section] : undefined;
+          if (display) {
+            return (
+              <FormSection key={group.section ?? idx} title={display.title} description={display.description}>
+                {group.fields.map(renderField)}
+              </FormSection>
+            );
           }
+          // Fields with no known section: render flat inside an unstyled wrapper
+          return (
+            <div key={idx} className={styles.ungrouped}>
+              {group.fields.map(renderField)}
+            </div>
+          );
         })}
         {tabFields.length === 0 && !fwLoading && (
           <p className={styles.noFields}>No fields configured for this tab.</p>

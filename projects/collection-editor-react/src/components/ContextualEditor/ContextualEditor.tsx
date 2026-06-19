@@ -11,6 +11,7 @@ import { ContentPlayer } from '../ContentPlayer';
 import { ResourceReorderDialog } from '../ResourceReorder/ResourceReorderDialog';
 import { AssignPageNumber } from '../AssignPageNumber/AssignPageNumber';
 import { ContentEditForm } from './ContentEditForm';
+import { TitleAppIcon } from './TitleAppIcon';
 import styles from './ContextualEditor.module.scss';
 
 const QUML_TYPES = ['application/vnd.sunbird.questionset'];
@@ -117,11 +118,11 @@ export const ContextualEditor: React.FC<ContextualEditorProps> = ({ editorMode, 
 
       {/* Title row: app icon (root only) + inline editable title */}
       <div className={styles.titleRow}>
-        {isCurrentNodeRoot && !!(selectedNode.appIcon ?? selectedNode.metadata?.appIcon) && (
-          <img
-            src={String(selectedNode.appIcon ?? selectedNode.metadata?.appIcon)}
-            alt="Course icon"
-            className={styles.titleIcon}
+        {isCurrentNodeRoot && selectedNodeId && (
+          <TitleAppIcon
+            nodeId={selectedNodeId}
+            value={String(selectedNode.appIcon ?? selectedNode.metadata?.appIcon ?? '')}
+            editable={editorMode === 'edit'}
           />
         )}
         <div

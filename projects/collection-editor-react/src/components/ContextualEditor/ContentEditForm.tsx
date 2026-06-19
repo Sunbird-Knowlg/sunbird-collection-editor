@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import type { INode, EditorMode } from '../../types/editor';
 import { useTreeStore } from '../../store/tree.store';
+import { useEditorStore } from '../../store/editor.store';
 import { getCtStyle } from '../../hooks/useContentType';
 import styles from './ContentEditForm.module.scss';
 
@@ -19,29 +20,46 @@ export const ContentEditForm: React.FC<ContentEditFormProps> = ({
   const isEditable = editorMode === 'edit';
   const ctStyle = getCtStyle(node);
 
+  // The leaf-in-collection metadata form is defined by forms.relationalMetadata.
+  // Use it to drive field labels / visibility, falling back to defaults.
+  const relationalForm = useEditorStore((s) => s.relationalFormConfig);
+  const fieldOf = (code: string) => relationalForm?.find((f) => f.code === code);
+  const showField = (code: string) => !relationalForm || !!fieldOf(code);
+  const labelOf = (code: string, fallback: string) => fieldOf(code)?.label || fallback;
+
   // Panel-level collapse (entire metadata section)
   const [panelOpen, setPanelOpen] = useState(true);
-  // Keywords section collapse (within the panel)
-  const [kwOpen, setKwOpen] = useState(false);
 
-  const [name, setName] = useState(node.name ?? '');
+  // relationalMetadata holds the collection-specific overrides for this resource.
+  // The hierarchy/update API stores name/keywords/optional there (on the parent unit),
+  // NOT in nodesModified for the leaf content itself.
+  const relMeta = (node.metadata?.relationalMetadata ?? {}) as Record<string, unknown>;
+
+  const [name, setName] = useState(
+    (relMeta.name as string) ?? node.name ?? '',
+  );
   const [keywordsInput, setKeywordsInput] = useState('');
   const [keywords, setKeywords] = useState<string[]>(
-    Array.isArray(node.metadata?.keywords) ? node.metadata.keywords as string[] : [],
+    Array.isArray(relMeta.keywords) ? relMeta.keywords as string[]
+      : Array.isArray(node.metadata?.keywords) ? node.metadata.keywords as string[]
+      : [],
   );
-  const [trackable, setTrackable] = useState<boolean>(
-    !!(node.metadata?.trackable === 'Yes' || node.metadata?.trackable === true
-      || (node.metadata?.trackable as Record<string, unknown>)?.enabled === 'Yes'),
+  // `optional: true`  = content is optional in this collection (tracking not required)
+  // `optional: false` = content is required  (must be completed / tracked)
+  const [optional, setOptional] = useState<boolean>(
+    !!(relMeta.optional),
   );
 
   // Reset when node changes
   useEffect(() => {
-    setName(node.name ?? '');
-    setKeywords(Array.isArray(node.metadata?.keywords) ? node.metadata.keywords as string[] : []);
-    setTrackable(
-      !!(node.metadata?.trackable === 'Yes' || node.metadata?.trackable === true
-        || (node.metadata?.trackable as Record<string, unknown>)?.enabled === 'Yes'),
+    const rm = (node.metadata?.relationalMetadata ?? {}) as Record<string, unknown>;
+    setName((rm.name as string) ?? node.name ?? '');
+    setKeywords(
+      Array.isArray(rm.keywords) ? rm.keywords as string[]
+        : Array.isArray(node.metadata?.keywords) ? node.metadata.keywords as string[]
+        : [],
     );
+    setOptional(!!(rm.optional));
   }, [node.id]);
 
   const handleNameBlur = () => {
@@ -69,9 +87,9 @@ export const ContentEditForm: React.FC<ContentEditFormProps> = ({
     markDirty();
   };
 
-  const handleTrackChange = (val: boolean) => {
-    setTrackable(val);
-    updateNode(node.id, { trackable: { enabled: val ? 'Yes' : 'No', autoBatch: 'No' } });
+  const handleOptionalChange = (val: boolean) => {
+    setOptional(val);
+    updateNode(node.id, { optional: val });
     markDirty();
   };
 
@@ -118,66 +136,56 @@ export const ContentEditForm: React.FC<ContentEditFormProps> = ({
             />
           </div>
 
-          {/* Keywords — collapsible within the panel */}
+          {/* Keywords — the panel-level collapse already covers this section */}
+          {showField('keywords') && (
           <div className={styles.field}>
             <div className={styles.fieldHeader}>
               <label className={styles.label}>
-                Keywords
+                {labelOf('keywords', 'Keywords')}
                 {keywords.length > 0 && (
                   <span className={styles.fieldCount}>{keywords.length}</span>
                 )}
               </label>
-              <button
-                type="button"
-                className={styles.collapseBtn}
-                onClick={() => setKwOpen(v => !v)}
-                aria-expanded={kwOpen}
-                aria-label={kwOpen ? 'Collapse keywords' : 'Expand keywords'}
-              >
-                <ChevronDown size={14} className={kwOpen ? styles.chevronUp : ''} />
-              </button>
             </div>
-            {kwOpen && (
-              <>
-                {keywords.length > 0 && (
-                  <div className={styles.chips}>
-                    {keywords.map(kw => (
-                      <span key={kw} className={styles.chip}>
-                        {kw}
-                        {isEditable && (
-                          <button type="button" className={styles.chipRemove} onClick={() => removeKeyword(kw)}>×</button>
-                        )}
-                      </span>
-                    ))}
-                  </div>
-                )}
-                {isEditable && (
-                  <div className={styles.keywordInput}>
-                    <input
-                      type="text"
-                      className={styles.input}
-                      value={keywordsInput}
-                      placeholder="Add keyword and press Enter"
-                      onChange={e => setKeywordsInput(e.target.value)}
-                      onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addKeyword(); } }}
-                    />
-                    <button type="button" className={styles.addBtn} onClick={addKeyword}>Add</button>
-                  </div>
-                )}
-              </>
+            {keywords.length > 0 && (
+              <div className={styles.chips}>
+                {keywords.map(kw => (
+                  <span key={kw} className={styles.chip}>
+                    {kw}
+                    {isEditable && (
+                      <button type="button" className={styles.chipRemove} onClick={() => removeKeyword(kw)}>×</button>
+                    )}
+                  </span>
+                ))}
+              </div>
+            )}
+            {isEditable && (
+              <div className={styles.keywordInput}>
+                <input
+                  type="text"
+                  className={styles.input}
+                  value={keywordsInput}
+                  placeholder="Add keyword and press Enter"
+                  onChange={e => setKeywordsInput(e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addKeyword(); } }}
+                />
+                <button type="button" className={styles.addBtn} onClick={addKeyword}>Add</button>
+              </div>
             )}
           </div>
+          )}
 
-          {/* Track in Collections */}
+          {/* Optional in collection (optional: true = not required, optional: false = required) */}
+          {showField('optional') && (
           <div className={styles.field}>
-            <label className={styles.label}>Track in Collections</label>
+            <label className={styles.label}>{labelOf('optional', 'Optional in Collection')}</label>
             <div className={styles.radioGroup}>
               <label className={styles.radioLabel}>
                 <input
                   type="radio"
-                  name={`trackable-${node.id}`}
-                  checked={trackable === true}
-                  onChange={() => handleTrackChange(true)}
+                  name={`optional-${node.id}`}
+                  checked={optional === true}
+                  onChange={() => handleOptionalChange(true)}
                   disabled={!isEditable}
                 />
                 Yes
@@ -185,15 +193,16 @@ export const ContentEditForm: React.FC<ContentEditFormProps> = ({
               <label className={styles.radioLabel}>
                 <input
                   type="radio"
-                  name={`trackable-${node.id}`}
-                  checked={trackable === false}
-                  onChange={() => handleTrackChange(false)}
+                  name={`optional-${node.id}`}
+                  checked={optional === false}
+                  onChange={() => handleOptionalChange(false)}
                   disabled={!isEditable}
                 />
                 No
               </label>
             </div>
           </div>
+          )}
         </>
       )}
 

@@ -172,6 +172,9 @@ export const useTreeStore = create<TreeState>((set, get) => ({
         [id]: { ...(state.treeCache[id] ?? {}), ...patch },
       },
     }));
+    // Any node edit (root/unit/leaf form, inline title) must mark the tree
+    // dirty so the debounced autosave in useSaveHierarchy actually runs.
+    useEditorStore.getState().setIsDirty(true);
   },
 
   addNode: (parentId, _type) => {

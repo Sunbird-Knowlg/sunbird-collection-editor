@@ -7,6 +7,14 @@ import toast from 'react-hot-toast';
 
 // ---------------------------------------------------------------------------
 // Build the nodesModified + hierarchy payload expected by Sunbird v3 API
+//
+// Key rules (derived from the working curl reference request):
+//  1. nodesModified  → root node always; new nodes; folders WITH cached edits only
+//                      Leaf content is NEVER in nodesModified (API ignores it)
+//  2. hierarchy      → ALL nodes (root, folders, leaf content)
+//                      Folder entries include relationalMetadata for any leaf
+//                      children that have cached edits (name/keywords/optional)
+//  3. lastUpdatedBy  → top-level field on `data`, NOT inside nodesModified entries
 // ---------------------------------------------------------------------------
 function buildSavePayload(
   nodes: INode[],
@@ -22,11 +30,12 @@ function buildSavePayload(
   // React-internal fields that must never be sent to the API
   const BASE_STRIP = new Set([
     'id', 'isFolder', 'children', 'parent', 'isNew', 'breadcrumb', 'title',
+    // relationalMetadata is leaf-content-specific; it does not belong in nodesModified metadata
+    'relationalMetadata', 'optional',
   ]);
 
   // Framework fields that require validated term identifiers.
-  // Strip these from the ORIGINAL loaded metadata (may contain stale label-based values)
-  // but ALLOW them when the user explicitly sets them via the form (stored in treeCache).
+  // Strip from ORIGINAL loaded metadata but ALLOW when user explicitly sets via form.
   const FRAMEWORK_STRIP = new Set([
     'targetBoardIds', 'targetMediumIds', 'targetGradeLevelIds',
     'targetSubjectIds', 'targetFWIds', 'targetTopicIds',
@@ -65,21 +74,46 @@ function buildSavePayload(
     return out;
   }
 
+  // Build relationalMetadata for direct leaf-content children of a folder.
+  // The API stores collection-specific resource attributes (name, keywords, optional)
+  // on the PARENT unit's hierarchy entry, not on the resource's nodesModified entry.
+  function buildRelationalMeta(node: INode): Record<string, Record<string, unknown>> {
+    const relMeta: Record<string, Record<string, unknown>> = {};
+    for (const child of node.children ?? []) {
+      if (child.isFolder) continue; // only for leaf content
+      const childCached = treeCache[child.identifier];
+      if (!childCached) continue;
+      const { isNew: _, ...childEdits } = childCached;
+      if (Object.keys(childEdits).length === 0) continue;
+
+      // Merge existing relationalMetadata (from the loaded hierarchy) with user edits.
+      const existingRelMeta = (child.metadata?.relationalMetadata ?? {}) as Record<string, unknown>;
+      relMeta[child.identifier] = {
+        name: child.name,
+        ...existingRelMeta,
+        ...childEdits, // user edits always win
+      };
+    }
+    return relMeta;
+  }
+
   function walk(node: INode, isRoot: boolean) {
     const identifier = node.identifier;
     const cached = treeCache[identifier];
     const isNew = identifier.startsWith('temp-') || !!(cached?.isNew);
 
     // ── nodesModified entry ──────────────────────────────────────────────────
-    // Include if: root, new node, or has cached edits, or is a folder (unit)
-    if (isRoot || isNew || cached || node.isFolder) {
+    // Root: always. New nodes: always. Folders with cached edits: yes.
+    // Leaf content: NEVER (goes into parent's relationalMetadata instead).
+    const isLeaf = !node.isFolder && !isRoot;
+
+    if (isRoot || isNew || (cached && !isLeaf)) {
       let metadata: Record<string, unknown>;
 
       if (isNew) {
-        // New unit: send all required creation fields
         metadata = {
           mimeType: 'application/vnd.ekstep.content-collection',
-          code: identifier, // server replaces temp IDs
+          code: identifier,
           contentType: (node.metadata?.contentType as string) ?? 'CourseUnit',
           primaryCategory: (node.metadata?.primaryCategory as string) ?? 'Course Unit',
           name: node.name,
@@ -88,39 +122,40 @@ function buildSavePayload(
           ...cleanMetadata(node.metadata ?? {}),
         };
       } else if (isRoot) {
-        // Root: strip framework fields from original loaded metadata (may have stale label
-        // values), but let user-edited cache values pass through with their correct identifiers.
         const { isNew: _n, ...cacheEdits } = cached ?? {};
         metadata = {
-          ...cleanMetadata(node.metadata ?? {}, true),   // base: strip framework fields
-          ...cleanMetadata(cacheEdits, false),            // user edits: allow framework fields
+          ...cleanMetadata(node.metadata ?? {}, true),
+          ...cleanMetadata(cacheEdits, false),
           name: node.name,
         };
       } else {
-        // Existing folder: send only cached changes + name, stripped of framework fields
+        // Existing folder (unit) with cached edits
         const { isNew: _n, ...cacheEdits } = cached ?? {};
         metadata = {
           name: node.name,
+          visibility: 'Parent',
           ...cleanMetadata(cacheEdits, true),
         };
       }
 
       nodesModified[identifier] = {
         metadata,
-        objectType: 'Content',
+        objectType: node.objectType || (node.isFolder ? 'Collection' : 'Content'),
         root: isRoot,
         isNew,
       };
     }
 
-    // ── hierarchy entry (folder/collection nodes only) ───────────────────────
-    if (node.isFolder) {
-      hierarchy[identifier] = {
-        name: node.name,
-        children: (node.children ?? []).map((c) => c.identifier),
-        root: isRoot,
-      };
-    }
+    // ── hierarchy entry — ALL nodes ──────────────────────────────────────────
+    // Leaf content appears in hierarchy with empty children[].
+    // Folders also carry relationalMetadata for any edited leaf children.
+    const relMeta = node.isFolder ? buildRelationalMeta(node) : {};
+    hierarchy[identifier] = {
+      name: node.name,
+      children: (node.children ?? []).map((c) => c.identifier),
+      ...(Object.keys(relMeta).length > 0 ? { relationalMetadata: relMeta } : {}),
+      root: isRoot,
+    };
 
     // Recurse
     (node.children ?? []).forEach((child) => walk(child, false));
@@ -151,11 +186,12 @@ export function useSaveHierarchy() {
     if (!contentId) return;
 
     const channel = config.context.channel ?? '';
+    const lastUpdatedBy = config.context.userId ?? config.context.uid ?? '';
 
     setIsSaving(true);
     try {
       const { nodesModified, hierarchy } = buildSavePayload(treeData, treeCache, channel);
-      await updateHierarchy(contentId, nodesModified, hierarchy);
+      await updateHierarchy(contentId, nodesModified, hierarchy, lastUpdatedBy);
       const ts = new Date().toISOString();
       setLastSaved(ts);
       setIsDirty(false);

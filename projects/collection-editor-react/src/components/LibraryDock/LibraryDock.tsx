@@ -104,24 +104,24 @@ export const LibraryDock: React.FC<LibraryDockProps> = ({ editorMode, collapsed 
 
   return (
     <div className={styles.dock}>
-      {/* Header */}
+      {/* Header — collapse control sits to the left of the Library icon */}
       <div className={styles.header}>
         <div className={styles.headerLeft}>
+          <button
+            type="button"
+            className={styles.collapseBtn}
+            onClick={onToggleCollapse}
+            aria-label="Collapse library panel"
+            title="Collapse library"
+          >
+            <PanelRightClose size={15} />
+          </button>
           <Library size={16} />
           <span className={styles.headerTitle}>Library</span>
           {totalCount > 0 && (
             <span className={styles.count}>{totalCount}</span>
           )}
         </div>
-        <button
-          type="button"
-          className={styles.collapseBtn}
-          onClick={onToggleCollapse}
-          aria-label="Collapse library panel"
-          title="Collapse library"
-        >
-          <PanelRightClose size={15} />
-        </button>
       </div>
 
       {/* Search + Filter button row */}

@@ -3,7 +3,22 @@ import type { INode, EditorMode } from '../../types/editor';
 import { useEditorStore } from '../../store/editor.store';
 import styles from './ContentPlayer.module.scss';
 
-// ── MIME-type → player type mapping (mirrors player.config.json) ─────────────
+// ── MIME-type classification ──────────────────────────────────────────────────
+const MIME_GROUPS: Array<{ key: string; mimes: string[]; label: string; icon: string }> = [
+  { key: 'video',  mimes: ['video/mp4','video/webm','video/ogg'],               label: 'Video',  icon: '🎬' },
+  { key: 'audio',  mimes: ['audio/mp3','audio/mpeg','audio/ogg','audio/wav'],    label: 'Audio',  icon: '🎵' },
+  { key: 'pdf',    mimes: ['application/pdf'],                                   label: 'PDF',    icon: '📄' },
+  { key: 'epub',   mimes: ['application/epub'],                                  label: 'ePub',   icon: '📖' },
+  { key: 'ecml',   mimes: ['application/vnd.ekstep.ecml-archive'],               label: 'ECML',   icon: '✏️'  },
+  { key: 'h5p',    mimes: ['application/vnd.ekstep.h5p-archive'],                label: 'H5P',    icon: '🎮'  },
+  { key: 'scorm',  mimes: ['application/vnd.ekstep.content-collection'],         label: 'SCORM',  icon: '📦'  },
+];
+
+function getMimeGroup(mimeType: string) {
+  return MIME_GROUPS.find(g => g.mimes.includes(mimeType)) ?? { key: 'other', label: 'Content', icon: '📱' };
+}
+
+// ── Player type resolution ────────────────────────────────────────────────────
 const PLAYER_TYPE_MAP: Record<string, string[]> = {
   'pdf-player':   ['application/pdf'],
   'video-player': ['video/mp4', 'video/webm'],
@@ -32,7 +47,7 @@ function resolvePlayerType(mimeType: string): string {
   return 'default-player';
 }
 
-// ── Build playerConfig the same way as Angular's PlayerService ───────────────
+// ── Player config builder ─────────────────────────────────────────────────────
 function buildPlayerConfig(
   node: INode,
   editorConfig: ReturnType<typeof useEditorStore.getState>['editorConfig'],
@@ -45,11 +60,7 @@ function buildPlayerConfig(
     context: {
       mode: 'play',
       partner: [],
-      pdata: {
-        id: ctx?.pdata?.id ?? 'sunbird.portal',
-        ver: 1.0,
-        pid: 'sunbird-portal',
-      },
+      pdata: { id: ctx?.pdata?.id ?? 'sunbird.portal', ver: 1.0, pid: 'sunbird-portal' },
       contentId: node.identifier,
       sid: ctx?.sid ?? '',
       uid: ctx?.uid ?? '',
@@ -78,14 +89,11 @@ function buildPlayerConfig(
       previewCdnUrl: undefined,
     },
     metadata,
-    // For ECML content include body; otherwise empty object
-    data: mimeType === 'application/vnd.ekstep.ecml-archive'
-      ? (metadata.body ?? {})
-      : {},
+    data: mimeType === 'application/vnd.ekstep.ecml-archive' ? (metadata.body ?? {}) : {},
   };
 }
 
-// ── Script loader (idempotent) ───────────────────────────────────────────────
+// ── Script loader ─────────────────────────────────────────────────────────────
 function loadScript(src: string): Promise<void> {
   if (document.querySelector(`script[src="${src}"]`)) return Promise.resolve();
   return new Promise((resolve, reject) => {
@@ -99,121 +107,139 @@ function loadScript(src: string): Promise<void> {
 
 function waitForCustomElement(tag: string, playerType: string, maxAttempts = 100): Promise<void> {
   return loadScript(PLAYER_SCRIPTS[playerType] ?? '').then(
-    () =>
-      new Promise((resolve) => {
-        if (customElements.get(tag)) { resolve(); return; }
-        let attempts = 0;
-        const id = setInterval(() => {
-          attempts++;
-          if (customElements.get(tag) || attempts >= maxAttempts) {
-            clearInterval(id);
-            resolve();
-          }
-        }, 100);
-      }),
+    () => new Promise((resolve) => {
+      if (customElements.get(tag)) { resolve(); return; }
+      let attempts = 0;
+      const id = setInterval(() => {
+        attempts++;
+        if (customElements.get(tag) || attempts >= maxAttempts) { clearInterval(id); resolve(); }
+      }, 100);
+    }),
   );
 }
 
-// ── Props ────────────────────────────────────────────────────────────────────
-interface ContentPlayerProps {
-  node: INode;
-  editorMode: EditorMode;
-  type: 'content' | 'quml';
-}
-
-// ── Metadata labels (mirrors label.config.json lbl section) ─────────────────
-const META_LABELS: Record<string, string> = {
-  name:         'Name',
-  author:       'Author',
-  license:      'License',
-  copyright:    'Copyright',
-  attributions: 'Attributions',
-  audience:     'Audience',
-  board:        'Board',
-  medium:       'Medium',
-  gradeLevel:   'Class',
-  subject:      'Subject',
-  topic:        'Topic',
-  contentType:  'Content Type',
-  language:     'Language',
-};
-
-// Fields shown below the player (same order as Angular's sessionContext)
-const META_FIELDS = [
-  'name', 'author', 'license', 'copyright',
-  'board', 'medium', 'gradeLevel', 'subject',
-  'topic', 'audience', 'attributions', 'contentType', 'language',
+// ── Info strip ────────────────────────────────────────────────────────────────
+const INFO_FIELDS: Array<{ key: string; label: string; icon: string }> = [
+  { key: 'author',      label: 'Author',   icon: '👤' },
+  { key: 'license',     label: 'License',  icon: '⚖️'  },
+  { key: 'copyright',   label: '©',        icon: ''   },
+  { key: 'language',    label: 'Language', icon: '🌐'  },
+  { key: 'gradeLevel',  label: 'Class',    icon: '🏫'  },
+  { key: 'subject',     label: 'Subject',  icon: '📚'  },
+  { key: 'contentType', label: 'Type',     icon: '🏷️'  },
 ];
 
-interface MetaField { key: string; label: string; value: string }
-
-function buildMetaFields(node: INode): MetaField[] {
+function InfoStrip({ node }: { node: INode }) {
   const meta = (node.metadata ?? {}) as Record<string, unknown>;
-  const fields: MetaField[] = [];
-
-  for (const key of META_FIELDS) {
-    const raw = meta[key] ?? (node as unknown as Record<string, unknown>)[key];
-    if (raw === undefined || raw === null || raw === '') continue;
-    const value = Array.isArray(raw) ? raw.join(', ') : String(raw);
-    if (!value) continue;
-    fields.push({ key, label: META_LABELS[key] ?? key, value });
-  }
-  return fields;
-}
-
-// ── Content metadata strip (mirrors Angular's contentInfoArray grid) ──────────
-function ContentMetaInfo({ node }: { node: INode }) {
-  const fields = buildMetaFields(node);
-  if (!fields.length) return null;
-
-  // Column width cycle: wide → medium → narrow (mirrors Angular's 6/4/2 column pattern)
-  const colStyles = [styles.metaColWide, styles.metaColMed, styles.metaColNarrow];
+  const chips = INFO_FIELDS.flatMap(f => {
+    const raw = meta[f.key];
+    if (!raw) return [];
+    const val = Array.isArray(raw) ? raw.join(', ') : String(raw);
+    if (!val) return [];
+    return [{ ...f, val }];
+  });
+  if (!chips.length) return null;
 
   return (
-    <div className={styles.metaGrid}>
-      {fields.map((f, i) => (
-        <div key={f.key} className={colStyles[i % colStyles.length]}>
-          <div className={styles.metaField}>
-            <span className={styles.metaLabel}>{f.label}</span>
-            <span className={styles.metaValue}>{f.value}</span>
-          </div>
+    <div className={styles.infoStrip}>
+      {chips.map(c => (
+        <div key={c.key} className={styles.infoChip}>
+          {c.icon && <span className={styles.infoChipIcon}>{c.icon}</span>}
+          <span className={styles.infoChipLabel}>{c.label}</span>
+          {c.val}
         </div>
       ))}
     </div>
   );
 }
 
-// ── Root component ───────────────────────────────────────────────────────────
+// ── Cover overlay (shown while player initialises) ────────────────────────────
+function CoverOverlay({ node, hidden }: { node: INode; hidden: boolean }) {
+  const thumb = node.appIcon ?? (node.metadata?.appIcon as string | undefined);
+  return (
+    <div className={`${styles.coverOverlay} ${hidden ? styles.coverHidden : ''}`}>
+      {thumb ? (
+        <>
+          <img src={thumb} alt={node.name} className={styles.coverThumb} />
+          <div className={styles.coverPlayRing}>
+            <div className={styles.coverPlayIcon} />
+          </div>
+          <span className={styles.coverLabel}>Loading preview…</span>
+        </>
+      ) : (
+        <div className={styles.coverSkeleton} />
+      )}
+    </div>
+  );
+}
+
+// ── Type badge ────────────────────────────────────────────────────────────────
+function TypeBadge({ mimeType }: { mimeType: string }) {
+  const group = getMimeGroup(mimeType);
+  return (
+    <span className={styles.typeBadge} data-type={group.key}>
+      <span className={styles.typeDot} />
+      {group.label}
+    </span>
+  );
+}
+
+// ── Props ─────────────────────────────────────────────────────────────────────
+interface ContentPlayerProps {
+  node: INode;
+  editorMode: EditorMode;
+  type: 'content' | 'quml';
+}
+
+// ── Root ──────────────────────────────────────────────────────────────────────
 export const ContentPlayer: React.FC<ContentPlayerProps> = ({ node, editorMode, type }) => {
   if (type === 'quml') return <QumlPlayer node={node} editorMode={editorMode} />;
+
+  const thumb = node.appIcon ?? (node.metadata?.appIcon as string | undefined);
+
   return (
     <div className={styles.contentPlayerRoot}>
-      <SunbirdContentPlayer node={node} />
-      <ContentMetaInfo node={node} />
+      {/* Dark cinema stage */}
+      <div className={styles.stage}>
+        {/* Header gradient bar */}
+        <div className={styles.playerHeader}>
+          {thumb && (
+            <img src={thumb} alt="" className={styles.playerHeaderThumb} />
+          )}
+          <span className={styles.playerHeaderTitle}>{node.name}</span>
+          <TypeBadge mimeType={node.mimeType ?? ''} />
+        </div>
+
+        {/* Actual player */}
+        <SunbirdContentPlayer node={node} />
+      </div>
+
+      {/* Compact info strip below the stage */}
+      <InfoStrip node={node} />
     </div>
   );
 };
 
-// ── Sunbird content player (mirrors ContentplayerPageComponent) ───────────────
+// ── Sunbird content player ────────────────────────────────────────────────────
 function SunbirdContentPlayer({ node }: { node: INode }) {
   const editorConfig = useEditorStore((s) => s.editorConfig);
-  const [playerType, setPlayerType] = useState<string>(() => resolvePlayerType(node.mimeType ?? ''));
+  const [playerType, setPlayerType] = useState(() => resolvePlayerType(node.mimeType ?? ''));
+  const [coverHidden, setCoverHidden] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const webComponentRef = useRef<HTMLDivElement>(null);
 
   const playerConfig = buildPlayerConfig(node, { editorConfig } as any);
 
-  // ── When content changes, re-resolve player type ─────────────────────────
   useEffect(() => {
+    setCoverHidden(false);
     setPlayerType(resolvePlayerType(node.mimeType ?? ''));
   }, [node.identifier, node.mimeType]);
 
-  // ── Default player — iframe + initializePreview() ────────────────────────
+  // Default player — iframe
   useEffect(() => {
     if (playerType !== 'default-player') return;
     const iframe = iframeRef.current;
     if (!iframe) return;
-
     iframe.src = DEFAULT_PLAYER_URL;
     iframe.onload = () => {
       try {
@@ -221,43 +247,32 @@ function SunbirdContentPlayer({ node }: { node: INode }) {
       } catch (err) {
         console.error('initializePreview failed', err);
       }
+      setTimeout(() => setCoverHidden(true), 300);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [node.identifier, playerType]);
 
-  // ── Web component players (pdf / video / epub) ────────────────────────────
+  // Web-component players (pdf / video / epub)
   useEffect(() => {
     if (playerType === 'default-player') return;
     const container = webComponentRef.current;
     if (!container) return;
-
     const tag = PLAYER_TAGS[playerType];
     if (!tag) return;
 
     waitForCustomElement(tag, playerType).then(() => {
-      if (!webComponentRef.current) return; // unmounted
-
-      if (!customElements.get(tag)) {
-        // Web component script unavailable — fall back to default player
-        setPlayerType('default-player');
-        return;
-      }
+      if (!webComponentRef.current) return;
+      if (!customElements.get(tag)) { setPlayerType('default-player'); return; }
 
       const el = document.createElement(tag) as any;
       el.setAttribute('player-config', JSON.stringify(playerConfig));
       el.addEventListener('playerEvent', () => {});
       el.addEventListener('telemetryEvent', () => {});
-
       container.innerHTML = '';
       container.appendChild(el);
-
-      // Give web component a tick to upgrade, then push config via property
       setTimeout(() => {
-        try {
-          el.playerConfig = playerConfig;
-        } catch {
-          // some players only use the attribute
-        }
+        try { el.playerConfig = playerConfig; } catch { /* attribute-only player */ }
+        setCoverHidden(true);
       }, 200);
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -265,6 +280,7 @@ function SunbirdContentPlayer({ node }: { node: INode }) {
 
   return (
     <div className={styles.aspectRatio}>
+      <CoverOverlay node={node} hidden={coverHidden} />
       {playerType === 'default-player' ? (
         <iframe
           ref={iframeRef}
@@ -281,7 +297,7 @@ function SunbirdContentPlayer({ node }: { node: INode }) {
   );
 }
 
-// ── QuML player (web component) ───────────────────────────────────────────────
+// ── QuML player ───────────────────────────────────────────────────────────────
 function QumlPlayer({ node, editorMode }: { node: INode; editorMode: EditorMode }) {
   const editorConfig = useEditorStore((s) => s.editorConfig);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -299,13 +315,7 @@ function QumlPlayer({ node, editorMode }: { node: INode; editorMode: EditorMode 
         channel: ctx?.channel ?? '',
         did: ctx?.did ?? '',
       },
-      config: {
-        enable: false,
-        showShare: false,
-        showDownload: false,
-        showReplay: true,
-        showExit: false,
-      },
+      config: { enable: false, showShare: false, showDownload: false, showReplay: true, showExit: false },
       metadata: node.metadata ?? {},
       data: {},
     };
@@ -316,5 +326,9 @@ function QumlPlayer({ node, editorMode }: { node: INode; editorMode: EditorMode 
     containerRef.current.appendChild(el);
   }, [node.identifier, editorMode]);
 
-  return <div ref={containerRef} className={styles.playerWrapper} />;
+  return (
+    <div className={styles.qumlRoot}>
+      <div ref={containerRef} className={styles.playerWrapper} />
+    </div>
+  );
 }

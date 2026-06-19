@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type { IEditorConfig, EditorMode, IButtonLoaders } from '../types/editor';
-import type { ICategoryDefinitionField } from '../api/categoryDefinition';
+import type { ICategoryField, IParsedCategoryDefinition } from '../api/categoryDefinition';
 
 interface EditorState {
   editorConfig: IEditorConfig | null;
@@ -13,8 +13,19 @@ interface EditorState {
   isQumlPlayer: boolean;
   isDirty: boolean;
   lastSaved: string | null;
-  rootFormConfig: ICategoryDefinitionField[] | null;
-  unitFormConfig: ICategoryDefinitionField[] | null;
+  rootFormConfig: ICategoryField[] | null;
+  unitFormConfig: ICategoryField[] | null;
+  childFormConfig: ICategoryField[] | null;
+  searchFormConfig: ICategoryField[] | null;
+  relationalFormConfig: ICategoryField[] | null;
+  publishChecklist: ICategoryField[] | null;
+  reviewChecklist: ICategoryField[] | null;
+  rfcChecklist: ICategoryField[] | null;
+  categoryMeta: {
+    schemaDefaults: Record<string, unknown>;
+    frameworkMetadata: { orgFWType?: string[]; targetFWType?: string[] };
+    sourcingSettings: Record<string, unknown>;
+  } | null;
   // actions
   setEditorConfig: (config: IEditorConfig) => void;
   setEditorMode: (mode: EditorMode) => void;
@@ -24,7 +35,7 @@ interface EditorState {
   setNodeFlags: (flags: { isFolder?: boolean; isRoot?: boolean; isQuml?: boolean }) => void;
   setLastSaved: (ts: string) => void;
   setIsDirty: (dirty: boolean) => void;
-  setFormConfigs: (rootFields: ICategoryDefinitionField[], unitFields: ICategoryDefinitionField[]) => void;
+  setCategoryDefinition: (parsed: IParsedCategoryDefinition) => void;
 }
 
 export const useEditorStore = create<EditorState>((set) => ({
@@ -48,6 +59,13 @@ export const useEditorStore = create<EditorState>((set) => ({
   lastSaved: null,
   rootFormConfig: null,
   unitFormConfig: null,
+  childFormConfig: null,
+  searchFormConfig: null,
+  relationalFormConfig: null,
+  publishChecklist: null,
+  reviewChecklist: null,
+  rfcChecklist: null,
+  categoryMeta: null,
 
   setEditorConfig: (config) => set({ editorConfig: config }),
   setEditorMode: (mode) => set({ editorMode: mode }),
@@ -65,7 +83,22 @@ export const useEditorStore = create<EditorState>((set) => ({
     }),
   setLastSaved: (ts) => set({ lastSaved: ts }),
   setIsDirty: (dirty) => set({ isDirty: dirty }),
-  setFormConfigs: (rootFields, unitFields) => set({ rootFormConfig: rootFields, unitFormConfig: unitFields }),
+  setCategoryDefinition: (parsed) =>
+    set({
+      rootFormConfig: parsed.rootForm,
+      unitFormConfig: parsed.unitForm,
+      childFormConfig: parsed.childForm,
+      searchFormConfig: parsed.searchForm,
+      relationalFormConfig: parsed.relationalForm,
+      publishChecklist: parsed.publishChecklist,
+      reviewChecklist: parsed.reviewChecklist,
+      rfcChecklist: parsed.rfcChecklist,
+      categoryMeta: {
+        schemaDefaults: parsed.schemaDefaults,
+        frameworkMetadata: parsed.frameworkMetadata,
+        sourcingSettings: parsed.sourcingSettings,
+      },
+    }),
 }));
 
 export const getEditorStore = () => useEditorStore.getState;

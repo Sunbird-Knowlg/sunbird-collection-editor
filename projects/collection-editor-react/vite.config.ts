@@ -33,6 +33,14 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
+      // Category-definition lives on a separate backend in dev (9000) and is
+      // served without the /action prefix. Must be listed BEFORE the generic
+      // '/action' rule so it wins the longest-prefix match.
+      '/action/object/category/definition': {
+        target: 'http://localhost:9000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/action/, ''),
+      },
       '/action': { target: 'http://localhost:3000', changeOrigin: true },
       '/api': { target: 'http://localhost:3000', changeOrigin: true },
       '/content': { target: 'http://localhost:3000', changeOrigin: true },

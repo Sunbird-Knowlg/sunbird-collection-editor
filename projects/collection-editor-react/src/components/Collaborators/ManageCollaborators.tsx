@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Button } from '../shared/Button';
-import { searchUsers } from '../../api/user';
-import { updateCollaborators } from '../../api/hierarchy';
+import { searchUsers, getUsersByIds } from '../../api/user';
+import { updateCollaborators, readContent } from '../../api/hierarchy';
 import type { IUser } from '../../api/user';
 import styles from './ManageCollaborators.module.scss';
 
@@ -22,6 +22,28 @@ export const ManageCollaborators: React.FC<ManageCollaboratorsProps> = ({
   const [saveError, setSaveError] = useState('');
   const [saveSuccess, setSaveSuccess] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Load the content's existing collaborators on open so they can be viewed/removed.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const content = await readContent(contentId);
+        const ids = (content?.collaborators as string[] | undefined) ?? [];
+        if (!ids.length) return;
+        const users = await getUsersByIds(ids);
+        if (cancelled) return;
+        // Fall back to a bare record for any id the search couldn't resolve.
+        const resolved = ids.map(
+          (id) => users.find((u) => u.identifier === id) ?? { identifier: id, firstName: id },
+        );
+        setCollaborators(resolved);
+      } catch {
+        // ignore — start with an empty list
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [contentId]);
 
   // Debounced search
   useEffect(() => {

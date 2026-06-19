@@ -15,7 +15,7 @@ export function useEditorInit({ config, onError }: UseEditorInitOptions) {
   const [error, setError] = useState<Error | null>(null);
   const [isReady, setIsReady] = useState(false);
 
-  const { setEditorConfig, setEditorMode, setFormConfigs } = useEditorStore();
+  const { setEditorConfig, setEditorMode, setCategoryDefinition } = useEditorStore();
   const { setTreeData, selectNode } = useTreeStore();
 
   useEffect(() => {
@@ -47,11 +47,21 @@ export function useEditorInit({ config, onError }: UseEditorInitOptions) {
             ?? 'Course';
           const channel = config.context.channel ?? '';
           try {
-            const { rootFormFields, unitFormFields } = await getCategoryDefinition(
-              primaryCategory, channel,
+            const parsed = await getCategoryDefinition(
+              primaryCategory, channel, config.config.objectType ?? 'Collection',
             );
-            if (!cancelled && (rootFormFields.length > 0 || unitFormFields.length > 0)) {
-              setFormConfigs(rootFormFields, unitFormFields);
+            if (!cancelled) {
+              setCategoryDefinition(parsed);
+              // Honor the maxDepth declared by sourcingSettings when present.
+              const sourcingMaxDepth = (
+                parsed.sourcingSettings?.collection as Record<string, unknown> | undefined
+              )?.maxDepth as number | undefined;
+              if (sourcingMaxDepth && !config.config.maxDepth) {
+                setEditorConfig({
+                  ...config,
+                  config: { ...config.config, maxDepth: sourcingMaxDepth },
+                });
+              }
             }
           } catch {
             // silently fall back to hardcoded defaults

@@ -1,10 +1,22 @@
-// Leaf content: player grows to fill space, edit form sticks to bottom
+// Leaf content: player on top, metadata/edit panel scrolls below.
 .leafContentLayout {
   display: flex;
   flex-direction: column;
   height: 100%;
   overflow: hidden;
-  // ContentPlayer gets flex:1, ContentEditForm is flex-shrink:0
+
+  // ContentPlayer fills remaining vertical space
+  > *:first-child {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  // ContentEditForm is natural height, scrollable
+  > *:last-child {
+    flex: 0 0 auto;
+    overflow-y: auto;
+    background: #fff;
+  }
 }
 
 .container {

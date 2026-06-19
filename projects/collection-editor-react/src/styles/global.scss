@@ -29,6 +29,9 @@
   user-select: none;
 
   &.filled {
+    // Match the outline chip's border width so selected/unselected chips are
+    // the same height and baseline-aligned.
+    border: 1.5px solid var(--sbx-primary);
     background: var(--sbx-primary);
     color: white;
   }

@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { publishContent } from '../../api/hierarchy';
 import { useTreeStore } from '../../store/tree.store';
+import { useEditorStore } from '../../store/editor.store';
 import { Button } from '../shared/Button';
 import styles from './modals.module.scss';
 
@@ -41,6 +42,12 @@ export const PublishChecklist: React.FC<PublishChecklistProps> = ({
   const [isPublishing, setIsPublishing] = useState(false);
 
   const treeData = useTreeStore((s) => s.treeData);
+
+  // Manual confirmation items defined by the category definition (forms.publishchecklist).
+  // The reviewer must tick each before publishing is enabled.
+  const checklistItems = useEditorStore((s) => s.publishChecklist) ?? [];
+  const [confirmed, setConfirmed] = useState<Record<string, boolean>>({});
+  const allConfirmed = checklistItems.every((c) => confirmed[c.code]);
 
   const checks = useMemo<CheckItem[]>(() => {
     const root = treeData[0];
@@ -106,7 +113,7 @@ export const PublishChecklist: React.FC<PublishChecklistProps> = ({
     ];
   }, [treeData]);
 
-  const canPublish = checks.every((c) => !c.critical || c.passed);
+  const canPublish = checks.every((c) => !c.critical || c.passed) && allConfirmed;
   const failCount = checks.filter((c) => !c.passed).length;
 
   const handlePublish = async () => {
@@ -148,6 +155,26 @@ export const PublishChecklist: React.FC<PublishChecklistProps> = ({
               <span>{item.label}</span>
             </div>
           ))}
+
+          {checklistItems.length > 0 && (
+            <>
+              <hr className={styles.divider} />
+              <p className={styles.sectionTitle}>Reviewer confirmation</p>
+              {checklistItems.map((item) => (
+                <label key={item.code} className={styles.checkRow}>
+                  <input
+                    type="checkbox"
+                    checked={!!confirmed[item.code]}
+                    disabled={isPublishing}
+                    onChange={(e) =>
+                      setConfirmed((prev) => ({ ...prev, [item.code]: e.target.checked }))
+                    }
+                  />
+                  <span>{item.label}</span>
+                </label>
+              ))}
+            </>
+          )}
 
           {failCount > 0 && (
             <>

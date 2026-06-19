@@ -8,7 +8,7 @@ import { useEditorStore } from '../../store/editor.store';
 import { TreeNode } from './TreeNode';
 import { Button } from '../shared/Button';
 import { CsvUpload } from '../BulkUpload/CsvUpload';
-import { downloadSampleCsv } from '../../api/bulkUpload';
+import { exportFolderCsv } from '../../api/bulkUpload';
 import styles from './OutlineTree.module.scss';
 
 interface OutlineTreeProps {
@@ -113,15 +113,15 @@ export const OutlineTree: React.FC<OutlineTreeProps> = ({
     setShowMenu(false);
     if (!contentId) return;
     try {
-      const blob = await downloadSampleCsv(contentId);
-      const url = URL.createObjectURL(blob);
+      // The export API returns a pre-signed URL to the generated CSV.
+      const tocUrl = await exportFolderCsv(contentId);
       const a = document.createElement('a');
-      a.href = url;
+      a.href = tocUrl;
       a.download = `${contentId}-folders.csv`;
+      a.target = '_blank';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-      URL.revokeObjectURL(url);
     } catch {
       toast.error('Failed to download CSV');
     }
