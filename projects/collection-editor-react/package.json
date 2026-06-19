@@ -11,7 +11,17 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs",
       "types": "./dist/index.d.ts"
-    }
+    },
+    "./dist/style.css": "./dist/style.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "dev": "vite",
@@ -26,9 +36,7 @@
     "@tanstack/react-query": "^5.51.0",
     "axios": "^1.7.2",
     "lucide-react": "^0.400.0",
-    "react": "^18.3.1",
     "react-arborist": "^3.4.0",
-    "react-dom": "^18.3.1",
     "react-hook-form": "^7.52.0",
     "react-hot-toast": "^2.4.1",
     "react-to-webcomponent": "^1.1.0",

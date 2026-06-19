@@ -60,6 +60,8 @@ export interface IEditorConfig {
   metadata?: Record<string, unknown>;
   data?: unknown;
   enableSplitBuilder?: boolean;
+  /** Base URL for all API calls (e.g. "https://your-domain.com"). Omit when using a proxy. */
+  apiBaseUrl?: string;
 }
 
 export interface IEditorEvents {

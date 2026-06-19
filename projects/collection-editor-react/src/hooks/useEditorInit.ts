@@ -4,6 +4,7 @@ import { useEditorStore } from '../store/editor.store';
 import { useTreeStore } from '../store/tree.store';
 import { readHierarchy } from '../api/hierarchy';
 import { getCategoryDefinition } from '../api/categoryDefinition';
+import { setApiBaseUrl } from '../api/client';
 
 interface UseEditorInitOptions {
   config: IEditorConfig;
@@ -26,6 +27,10 @@ export function useEditorInit({ config, onError }: UseEditorInitOptions) {
         setIsLoading(true);
         setError(null);
 
+        if (config.apiBaseUrl) {
+          setApiBaseUrl(config.apiBaseUrl);
+        }
+
         setEditorConfig(config);
         setEditorMode(config.config.mode);
 
@@ -43,8 +48,7 @@ export function useEditorInit({ config, onError }: UseEditorInitOptions) {
           }
 
           // Fetch category definition for dynamic form fields (best-effort, non-blocking)
-          const primaryCategory = (config.context as unknown as Record<string, unknown>).primaryCategory as string
-            ?? 'Course';
+          const primaryCategory = config.config.primaryCategory ?? 'Course';
           const channel = config.context.channel ?? '';
           try {
             const parsed = await getCategoryDefinition(

@@ -5,3 +5,4 @@ export type { IContent, ILibraryItem } from './types/content';
 export type { IFramework, ICategory, ITerm, IFrameworkDetails } from './types/framework';
 export { registerCollectionEditor } from './web-component/register';
 export { useEditorStore, useTreeStore, useLibraryStore } from './store';
+export { setApiBaseUrl } from './api/client';
