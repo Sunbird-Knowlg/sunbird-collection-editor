@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import type { INode, EditorMode } from '../../types/editor';
 import { useEditorStore } from '../../store/editor.store';
+import { fetchContentDetails } from '../../api/content';
 import styles from './ContentPlayer.module.scss';
 
 // ── MIME-type classification ──────────────────────────────────────────────────
@@ -48,13 +49,14 @@ function resolvePlayerType(mimeType: string): string {
 }
 
 // ── Player config builder ─────────────────────────────────────────────────────
+// fullMetadata: merged object — search-result fields overwritten by full content read
 function buildPlayerConfig(
   node: INode,
+  fullMetadata: Record<string, unknown>,
   editorConfig: ReturnType<typeof useEditorStore.getState>['editorConfig'],
 ) {
   const ctx = editorConfig?.context;
-  const metadata = (node.metadata ?? {}) as Record<string, unknown>;
-  const mimeType = node.mimeType ?? '';
+  const mimeType = (fullMetadata.mimeType as string) ?? node.mimeType ?? '';
 
   return {
     context: {
@@ -86,10 +88,12 @@ function buildPlayerConfig(
         { id: 'org.sunbird.player.endpage', ver: 1.1, type: 'plugin' },
       ],
       enableTelemetryValidation: false,
-      previewCdnUrl: undefined,
     },
-    metadata,
-    data: mimeType === 'application/vnd.ekstep.ecml-archive' ? (metadata.body ?? {}) : {},
+    // Full content data — includes artifactUrl, streamingUrl, body, etc.
+    metadata: fullMetadata,
+    data: mimeType === 'application/vnd.ekstep.ecml-archive'
+      ? (fullMetadata.body ?? {})
+      : {},
   };
 }
 
@@ -105,24 +109,28 @@ function loadScript(src: string): Promise<void> {
   });
 }
 
-function waitForCustomElement(tag: string, playerType: string, maxAttempts = 100): Promise<void> {
-  return loadScript(PLAYER_SCRIPTS[playerType] ?? '').then(
-    () => new Promise((resolve) => {
-      if (customElements.get(tag)) { resolve(); return; }
-      let attempts = 0;
-      const id = setInterval(() => {
-        attempts++;
-        if (customElements.get(tag) || attempts >= maxAttempts) { clearInterval(id); resolve(); }
-      }, 100);
-    }),
-  );
+async function waitForCustomElement(tag: string, playerType: string, maxAttempts = 100): Promise<void> {
+  await loadScript(PLAYER_SCRIPTS[playerType] ?? '');
+  if (customElements.get(tag)) return;
+  await new Promise<void>((resolve, reject) => {
+    let attempts = 0;
+    const id = setInterval(() => {
+      attempts++;
+      if (customElements.get(tag)) {
+        clearInterval(id);
+        resolve();
+      } else if (attempts >= maxAttempts) {
+        clearInterval(id);
+        reject(new Error(`Custom element <${tag}> did not register`));
+      }
+    }, 100);
+  });
 }
 
 // ── Info strip ────────────────────────────────────────────────────────────────
 const INFO_FIELDS: Array<{ key: string; label: string; icon: string }> = [
   { key: 'author',      label: 'Author',   icon: '👤' },
   { key: 'license',     label: 'License',  icon: '⚖️'  },
-  { key: 'copyright',   label: '©',        icon: ''   },
   { key: 'language',    label: 'Language', icon: '🌐'  },
   { key: 'gradeLevel',  label: 'Class',    icon: '🏫'  },
   { key: 'subject',     label: 'Subject',  icon: '📚'  },
@@ -153,7 +161,7 @@ function InfoStrip({ node }: { node: INode }) {
   );
 }
 
-// ── Cover overlay (shown while player initialises) ────────────────────────────
+// ── Cover overlay ─────────────────────────────────────────────────────────────
 function CoverOverlay({ node, hidden }: { node: INode; hidden: boolean }) {
   const thumb = node.appIcon ?? (node.metadata?.appIcon as string | undefined);
   return (
@@ -169,6 +177,16 @@ function CoverOverlay({ node, hidden }: { node: INode; hidden: boolean }) {
       ) : (
         <div className={styles.coverSkeleton} />
       )}
+    </div>
+  );
+}
+
+// ── Player error overlay ──────────────────────────────────────────────────────
+function PlayerError({ message }: { message: string }) {
+  return (
+    <div className={styles.playerError}>
+      <span className={styles.playerErrorIcon}>⚠</span>
+      <span className={styles.playerErrorMsg}>{message}</span>
     </div>
   );
 }
@@ -199,22 +217,14 @@ export const ContentPlayer: React.FC<ContentPlayerProps> = ({ node, editorMode, 
 
   return (
     <div className={styles.contentPlayerRoot}>
-      {/* Dark cinema stage */}
       <div className={styles.stage}>
-        {/* Header gradient bar */}
         <div className={styles.playerHeader}>
-          {thumb && (
-            <img src={thumb} alt="" className={styles.playerHeaderThumb} />
-          )}
+          {thumb && <img src={thumb} alt="" className={styles.playerHeaderThumb} />}
           <span className={styles.playerHeaderTitle}>{node.name}</span>
           <TypeBadge mimeType={node.mimeType ?? ''} />
         </div>
-
-        {/* Actual player */}
         <SunbirdContentPlayer node={node} />
       </div>
-
-      {/* Compact info strip below the stage */}
       <InfoStrip node={node} />
     </div>
   );
@@ -225,62 +235,129 @@ function SunbirdContentPlayer({ node }: { node: INode }) {
   const editorConfig = useEditorStore((s) => s.editorConfig);
   const [playerType, setPlayerType] = useState(() => resolvePlayerType(node.mimeType ?? ''));
   const [coverHidden, setCoverHidden] = useState(false);
+  const [playerError, setPlayerError] = useState<string | null>(null);
+  const [fullMetadata, setFullMetadata] = useState<Record<string, unknown>>(
+    (node.metadata ?? {}) as Record<string, unknown>,
+  );
+  // Gate: don't start the player until the full content fetch has resolved,
+  // so playerConfig.metadata always contains artifactUrl when initializePreview is called.
+  const [contentReady, setContentReady] = useState(false);
+
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const webComponentRef = useRef<HTMLDivElement>(null);
 
-  const playerConfig = buildPlayerConfig(node, { editorConfig } as any);
+  const previewUrl = editorConfig?.config?.previewCdnUrl ?? DEFAULT_PLAYER_URL;
 
+  // Fetch full content details — provides artifactUrl, streamingUrl, body, etc.
   useEffect(() => {
+    let cancelled = false;
+    setContentReady(false);
     setCoverHidden(false);
+    setPlayerError(null);
+    setFullMetadata((node.metadata ?? {}) as Record<string, unknown>);
     setPlayerType(resolvePlayerType(node.mimeType ?? ''));
-  }, [node.identifier, node.mimeType]);
 
-  // Default player — iframe
+    fetchContentDetails(node.identifier)
+      .then((content) => {
+        if (cancelled) return;
+        const merged = { ...(node.metadata ?? {}), ...content } as Record<string, unknown>;
+        setFullMetadata(merged);
+        const mime = (content.mimeType as string) ?? node.mimeType ?? '';
+        setPlayerType(resolvePlayerType(mime));
+        setContentReady(true);
+      })
+      .catch(() => {
+        // Proceed with whatever sparse metadata we have
+        if (!cancelled) setContentReady(true);
+      });
+
+    return () => { cancelled = true; };
+  }, [node.identifier]);
+
+  // Build playerConfig after fullMetadata is populated — this runs on every render
+  // so by the time contentReady=true the config already has artifactUrl
+  const playerConfig = buildPlayerConfig(node, fullMetadata, editorConfig);
+
+  // Default player — iframe. Only runs after contentReady so playerConfig has full metadata.
   useEffect(() => {
-    if (playerType !== 'default-player') return;
+    if (!contentReady || playerType !== 'default-player') return;
     const iframe = iframeRef.current;
     if (!iframe) return;
-    iframe.src = DEFAULT_PLAYER_URL;
-    iframe.onload = () => {
+
+    iframe.src = previewUrl;
+
+    const handleLoad = () => {
       try {
-        (iframe.contentWindow as any)?.initializePreview(playerConfig);
+        const win = iframe.contentWindow as Record<string, unknown> | null;
+        if (typeof win?.['initializePreview'] !== 'function') {
+          setPlayerError('Preview player unavailable. Check that /content/preview is reachable.');
+          return;
+        }
+        // playerConfig is captured here — contentReady gate ensures fullMetadata is set
+        (win['initializePreview'] as (cfg: unknown) => void)(playerConfig);
+        setTimeout(() => setCoverHidden(true), 300);
       } catch (err) {
-        console.error('initializePreview failed', err);
+        console.error('[ContentPlayer] initializePreview failed', err);
+        setPlayerError('Failed to initialize the content player.');
       }
-      setTimeout(() => setCoverHidden(true), 300);
+    };
+
+    const handleError = () => setPlayerError('Preview player could not be loaded.');
+
+    iframe.addEventListener('load', handleLoad);
+    iframe.addEventListener('error', handleError);
+    return () => {
+      iframe.removeEventListener('load', handleLoad);
+      iframe.removeEventListener('error', handleError);
+      iframe.src = '';
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [node.identifier, playerType]);
+  }, [node.identifier, playerType, previewUrl, contentReady]);
 
   // Web-component players (pdf / video / epub)
   useEffect(() => {
-    if (playerType === 'default-player') return;
+    if (!contentReady || playerType === 'default-player') return;
     const container = webComponentRef.current;
     if (!container) return;
     const tag = PLAYER_TAGS[playerType];
     if (!tag) return;
 
-    waitForCustomElement(tag, playerType).then(() => {
-      if (!webComponentRef.current) return;
-      if (!customElements.get(tag)) { setPlayerType('default-player'); return; }
+    // Snapshot playerConfig at effect-run time — contentReady gate ensures fullMetadata is set
+    const config = playerConfig;
 
-      const el = document.createElement(tag) as any;
-      el.setAttribute('player-config', JSON.stringify(playerConfig));
-      el.addEventListener('playerEvent', () => {});
-      el.addEventListener('telemetryEvent', () => {});
-      container.innerHTML = '';
-      container.appendChild(el);
-      setTimeout(() => {
-        try { el.playerConfig = playerConfig; } catch { /* attribute-only player */ }
-        setCoverHidden(true);
-      }, 200);
-    });
+    waitForCustomElement(tag, playerType)
+      .then(() => {
+        if (!webComponentRef.current) return;
+        if (!customElements.get(tag)) {
+          setPlayerType('default-player');
+          return;
+        }
+        const el = document.createElement(tag) as HTMLElement & Record<string, unknown>;
+        el.setAttribute('player-config', JSON.stringify(config));
+        el.addEventListener('playerEvent', () => {});
+        el.addEventListener('telemetryEvent', () => {});
+        container.innerHTML = '';
+        container.appendChild(el);
+        setTimeout(() => {
+          try { el['playerConfig'] = config; } catch { /* attribute-only */ }
+          setCoverHidden(true);
+        }, 200);
+      })
+      .catch(() => {
+        console.warn(`[ContentPlayer] ${playerType} script unavailable, falling back to iframe`);
+        setPlayerType('default-player');
+      });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [node.identifier, playerType]);
+  }, [node.identifier, playerType, contentReady]);
 
   return (
     <div className={styles.aspectRatio}>
-      <CoverOverlay node={node} hidden={coverHidden} />
+      {playerError ? (
+        <PlayerError message={playerError} />
+      ) : (
+        <CoverOverlay node={node} hidden={coverHidden} />
+      )}
+
       {playerType === 'default-player' ? (
         <iframe
           ref={iframeRef}
@@ -320,7 +397,7 @@ function QumlPlayer({ node, editorMode }: { node: INode; editorMode: EditorMode 
       data: {},
     };
 
-    const el = document.createElement('sunbird-quml-player') as any;
+    const el = document.createElement('sunbird-quml-player') as HTMLElement & Record<string, unknown>;
     el.setAttribute('player-config', JSON.stringify(qumlConfig));
     containerRef.current.innerHTML = '';
     containerRef.current.appendChild(el);

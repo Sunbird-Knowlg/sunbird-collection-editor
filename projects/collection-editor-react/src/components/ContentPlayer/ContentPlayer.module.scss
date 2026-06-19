@@ -263,6 +263,34 @@ $type-other : #64748b;
   flex-shrink: 0;
 }
 
+// ── Player error state ────────────────────────────────────────────────────────
+// Shown instead of the cover overlay when the player fails to load.
+.playerError {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #0d1117;
+  padding: 24px;
+  text-align: center;
+}
+
+.playerErrorIcon {
+  font-size: 28px;
+  opacity: .7;
+}
+
+.playerErrorMsg {
+  font-size: 13px;
+  color: rgba(255, 255, 255, .5);
+  max-width: 260px;
+  line-height: 1.5;
+}
+
 // ── QuML player ───────────────────────────────────────────────────────────────
 .qumlRoot {
   display: flex;

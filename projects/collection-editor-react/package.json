@@ -24,6 +24,8 @@
     "access": "public"
   },
   "scripts": {
+    "copy-player-assets": "node scripts/copy-player-assets.mjs",
+    "predev": "npm run copy-player-assets",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",

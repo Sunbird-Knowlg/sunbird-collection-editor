@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import dts from 'vite-plugin-dts';
 import { resolve } from 'path';
+import { existsSync } from 'fs';
 
 export default defineConfig({
   plugins: [
@@ -44,7 +45,21 @@ export default defineConfig({
       '/action': { target: 'http://localhost:3000', changeOrigin: true },
       '/api': { target: 'http://localhost:3000', changeOrigin: true },
       '/content': { target: 'http://localhost:3000', changeOrigin: true },
-      '/assets': { target: 'http://localhost:3000', changeOrigin: true },
+      // Sunbird preview renderer plugins (org.sunbird.iframeEvent etc.)
+      '/sunbird-plugins': { target: 'http://localhost:3000', changeOrigin: true },
+      // Player web-component assets live in public/assets (copied from node_modules).
+      // Serve locally if present; otherwise fall through to the backend.
+      '/assets': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        bypass: (req) => {
+          const url = (req.url ?? '').split('?')[0];
+          if (existsSync(resolve(__dirname, 'public' + url))) {
+            return url; // serve from public/ via Vite static middleware
+          }
+          return undefined; // proxy to backend
+        },
+      },
       '/learner': { target: 'http://localhost:3000', changeOrigin: true },
     },
   },

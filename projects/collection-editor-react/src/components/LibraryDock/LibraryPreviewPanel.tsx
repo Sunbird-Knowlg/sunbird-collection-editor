@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Maximize2, Minimize2 } from 'lucide-react';
 import type { IContent } from '../../types/content';
 import type { INode } from '../../types/editor';
@@ -20,7 +21,7 @@ export const LibraryPreviewPanel: React.FC<LibraryPreviewPanelProps> = ({
 
   if (!content) return null;
 
-  // Convert IContent to INode shape for ContentPlayer
+  // Convert IContent to INode — ContentPlayer will fetch full details by identifier
   const node: INode = {
     id: content.identifier,
     identifier: content.identifier,
@@ -79,12 +80,15 @@ export const LibraryPreviewPanel: React.FC<LibraryPreviewPanelProps> = ({
   );
 
   if (expanded) {
-    return (
+    // Portal to body so the modal escapes the library dock's stacking context
+    // (.sidePanelOverlay is a positioned, z-indexed ancestor that would otherwise trap it).
+    return createPortal(
       <div className={styles.modalOverlay} role="dialog" aria-modal="true" aria-label="Content preview">
         <div className={styles.modalPanel}>
           {panelContent}
         </div>
-      </div>
+      </div>,
+      document.body,
     );
   }
 

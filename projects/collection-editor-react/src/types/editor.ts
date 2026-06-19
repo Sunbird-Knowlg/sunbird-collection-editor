@@ -52,6 +52,8 @@ export interface IConfig {
   defaultFields?: Record<string, unknown>;
   maxDepth?: number;
   allowContentUnderRoot?: boolean;
+  /** URL for the iframe-based content preview player. Defaults to the bundled preview.html path. */
+  previewCdnUrl?: string;
 }
 
 export interface IEditorConfig {

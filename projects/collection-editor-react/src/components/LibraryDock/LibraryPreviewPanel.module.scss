@@ -58,6 +58,9 @@
   flex: 1;
   overflow: hidden;
   min-height: 0;
+  // Must be a flex column so the ContentPlayer (flex:1 1 auto root) gets height.
+  display: flex;
+  flex-direction: column;
 }
 
 .footer {

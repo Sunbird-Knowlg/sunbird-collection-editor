@@ -144,6 +144,17 @@
   flex-direction: column;
 }
 
+// Filter / preview side panels overlay the card list, filling .mainArea.
+// Must have resolved dimensions so the ContentPlayer (flex:1) inside gets height.
+.sidePanelOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  background: white;
+}
+
 .cardList {
   flex: 1;
   overflow-y: auto;
