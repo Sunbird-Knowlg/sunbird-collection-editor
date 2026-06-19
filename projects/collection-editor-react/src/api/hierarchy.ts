@@ -80,11 +80,14 @@ export async function updateHierarchy(
   });
 }
 
-export async function publishContent(contentId: string): Promise<void> {
+export async function publishContent(
+  contentId: string,
+  lastPublishedBy = '',
+): Promise<void> {
   await apiClient.post(`/action/content/v3/publish/${contentId}`, {
     request: {
       content: {
-        lastPublishedBy: '',
+        lastPublishedBy,
       },
     },
   });

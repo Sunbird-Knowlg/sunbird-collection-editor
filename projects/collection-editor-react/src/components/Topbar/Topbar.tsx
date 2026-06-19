@@ -104,6 +104,55 @@ const SendBackModal: React.FC<SendBackModalProps> = ({ onConfirm, onCancel }) =>
 };
 
 // ---------------------------------------------------------------------------
+// Send-for-Review confirmation modal (inline)
+// Mirrors Angular's "Accept Terms & Conditions" confirm before submitting.
+// ---------------------------------------------------------------------------
+interface ConfirmReviewModalProps {
+  onConfirm: () => void;
+  onCancel: () => void;
+}
+
+const ConfirmReviewModal: React.FC<ConfirmReviewModalProps> = ({ onConfirm, onCancel }) => {
+  const [agreed, setAgreed] = useState(false);
+
+  return (
+    <div className={styles.sbOverlay} role="dialog" aria-modal="true" aria-labelledby="review-confirm-title">
+      <div className={styles.sbModal}>
+        <div className={styles.sbModalHeader}>
+          <span id="review-confirm-title" className={styles.sbModalTitle}>Send for Review</span>
+          <button className={styles.sbModalClose} onClick={onCancel} aria-label="Close" type="button">
+            ×
+          </button>
+        </div>
+        <div className={styles.sbModalBody}>
+          <p style={{ fontSize: 13, color: 'var(--sbx-gray-600, #4B5563)', lineHeight: 1.5, margin: 0 }}>
+            Once sent for review, this content will be locked for editing until the
+            review is complete. Please ensure all units and content are finalised.
+          </p>
+          <label style={{ display: 'flex', gap: 8, alignItems: 'flex-start', marginTop: 14, fontSize: 13 }}>
+            <input
+              type="checkbox"
+              checked={agreed}
+              onChange={(e) => setAgreed(e.target.checked)}
+              style={{ marginTop: 2 }}
+            />
+            <span>
+              I confirm this content adheres to the content policy and is ready for review.
+            </span>
+          </label>
+        </div>
+        <div className={styles.sbModalFooter}>
+          <Button variant="ghost" onClick={onCancel}>Cancel</Button>
+          <Button variant="primary" onClick={onConfirm} disabled={!agreed}>
+            Send for review
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ---------------------------------------------------------------------------
 // Generate QR Codes modal (inline)
 // ---------------------------------------------------------------------------
 interface GenerateQRModalProps {
@@ -179,8 +228,11 @@ export const Topbar: React.FC<TopbarProps> = ({
 
   const { activeModal, modalData, closeModal, openModal } = useUiStore();
 
+  const buttonLoaders = useEditorStore((s) => s.buttonLoaders);
+
   // Local state for the send-back modal (not stored in ui.store)
   const [showSendBack, setShowSendBack] = useState(false);
+  const [showConfirmReview, setShowConfirmReview] = useState(false);
   const [showQRMenu, setShowQRMenu] = useState(false);
   const qrMenuRef = useRef<HTMLDivElement>(null);
   const [showGenerateQR, setShowGenerateQR] = useState(false);
@@ -328,8 +380,9 @@ export const Topbar: React.FC<TopbarProps> = ({
             </span>
           ) : null}
 
-          {/* Save as Draft button (hidden in read-only) */}
-          {!isReadOnly && (
+          {/* Save as Draft — author action only. Hidden in read-only and for
+              content under review (review / sourcing modes or Review status). */}
+          {!isReadOnly && !isReviewMode && !isSourcingReviewMode && statusLabel !== 'Review' && (
             <Button variant="ghost" size="sm" onClick={() => emit('saveCollection')}>
               Save as Draft
             </Button>
@@ -338,7 +391,13 @@ export const Topbar: React.FC<TopbarProps> = ({
           {/* ── edit mode ─────────────────────────────────────── */}
           {isEditMode && (
             <>
-              <Button variant="primary" size="sm" onClick={() => emit('sendForReview')}>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => setShowConfirmReview(true)}
+                disabled={buttonLoaders.saveCollection}
+                isLoading={buttonLoaders.saveCollection}
+              >
                 <Send size={14} aria-hidden="true" />
                 &nbsp;Send for review
               </Button>
@@ -402,6 +461,8 @@ export const Topbar: React.FC<TopbarProps> = ({
                 variant="primary"
                 size="sm"
                 onClick={() => openModal('publishChecklist')}
+                disabled={buttonLoaders.publishCollection}
+                isLoading={buttonLoaders.publishCollection}
               >
                 <CheckCircle size={14} aria-hidden="true" />
                 &nbsp;Publish
@@ -411,6 +472,8 @@ export const Topbar: React.FC<TopbarProps> = ({
                 variant="danger"
                 size="sm"
                 onClick={() => openModal('qualityParams', { action: 'reject' })}
+                disabled={buttonLoaders.rejectCollection}
+                isLoading={buttonLoaders.rejectCollection}
               >
                 <XCircle size={14} aria-hidden="true" />
                 &nbsp;Reject
@@ -478,6 +541,13 @@ export const Topbar: React.FC<TopbarProps> = ({
             onClose={closeModal}
           />
         </div>
+      )}
+
+      {showConfirmReview && (
+        <ConfirmReviewModal
+          onConfirm={() => { setShowConfirmReview(false); emit('sendForReview'); }}
+          onCancel={() => setShowConfirmReview(false)}
+        />
       )}
 
       {showSendBack && (

@@ -1,6 +1,4 @@
 import React, { useMemo, useState } from 'react';
-import { toast } from 'react-hot-toast';
-import { publishContent } from '../../api/hierarchy';
 import { useTreeStore } from '../../store/tree.store';
 import { useEditorStore } from '../../store/editor.store';
 import { Button } from '../shared/Button';
@@ -35,12 +33,10 @@ function FailIcon(): React.ReactElement {
 }
 
 export const PublishChecklist: React.FC<PublishChecklistProps> = ({
-  contentId,
+  contentId: _contentId,
   onConfirm,
   onCancel,
 }) => {
-  const [isPublishing, setIsPublishing] = useState(false);
-
   const treeData = useTreeStore((s) => s.treeData);
 
   // Manual confirmation items defined by the category definition (forms.publishchecklist).
@@ -116,19 +112,10 @@ export const PublishChecklist: React.FC<PublishChecklistProps> = ({
   const canPublish = checks.every((c) => !c.critical || c.passed) && allConfirmed;
   const failCount = checks.filter((c) => !c.passed).length;
 
-  const handlePublish = async () => {
-    setIsPublishing(true);
-    try {
-      await publishContent(contentId);
-      toast.success('Content published successfully');
-      onConfirm();
-    } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to publish content';
-      toast.error(message);
-    } finally {
-      setIsPublishing(false);
-    }
+  // Publishing is performed centrally (useToolbarActions) after the modal
+  // confirms — this just signals confirmation.
+  const handlePublish = () => {
+    onConfirm();
   };
 
   return (
@@ -140,7 +127,6 @@ export const PublishChecklist: React.FC<PublishChecklistProps> = ({
             className={styles.modalHeaderClose}
             onClick={onCancel}
             aria-label="Close"
-            disabled={isPublishing}
           >
             ×
           </button>
@@ -165,7 +151,6 @@ export const PublishChecklist: React.FC<PublishChecklistProps> = ({
                   <input
                     type="checkbox"
                     checked={!!confirmed[item.code]}
-                    disabled={isPublishing}
                     onChange={(e) =>
                       setConfirmed((prev) => ({ ...prev, [item.code]: e.target.checked }))
                     }
@@ -189,16 +174,15 @@ export const PublishChecklist: React.FC<PublishChecklistProps> = ({
         </div>
 
         <div className={styles.modalFooter}>
-          <Button variant="ghost" onClick={onCancel} disabled={isPublishing}>
+          <Button variant="ghost" onClick={onCancel}>
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={handlePublish}
-            disabled={!canPublish || isPublishing}
-            isLoading={isPublishing}
+            disabled={!canPublish}
           >
-            {isPublishing ? 'Publishing…' : 'Publish'}
+            Publish
           </Button>
         </div>
       </div>

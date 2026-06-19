@@ -16,6 +16,7 @@ import { ContextualEditor } from '../ContextualEditor';
 import { LibraryDock } from '../LibraryDock';
 import { useTreeStore } from '../../store/tree.store';
 import { useSaveHierarchy } from '../../hooks/useSaveHierarchy';
+import { useToolbarActions } from '../../hooks/useToolbarActions';
 import toast from 'react-hot-toast';
 import styles from './SplitBuilderShell.module.scss';
 
@@ -39,6 +40,7 @@ export const SplitBuilderShell: React.FC<SplitBuilderShellProps> = ({
   const { addResource, treeData } = useTreeStore();
   const selectedNodeId = useTreeStore((s) => s.selectedNodeId);
   const { save, isSaving, isDirty, lastSaved } = useSaveHierarchy();
+  const { runAction } = useToolbarActions(save);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -74,13 +76,27 @@ export const SplitBuilderShell: React.FC<SplitBuilderShellProps> = ({
   );
 
   const handleToolbarEvent = useCallback(
-    (event: { action: ToolbarAction; data?: unknown }) => {
+    async (event: { action: ToolbarAction; data?: unknown }) => {
       if (event.action === 'saveCollection') {
-        save().then(() => { onHierarchySaved?.(treeData); });
+        await save();
+        onHierarchySaved?.(treeData);
+        onToolbarEvent?.(event);
+        return;
+      }
+      // review / publish / reject are handled internally (Angular parity);
+      // still emit afterwards so the host app can navigate/close on success.
+      if (
+        event.action === 'sendForReview' ||
+        event.action === 'reject' ||
+        event.action === 'publish'
+      ) {
+        const ok = await runAction(event.action, event.data);
+        if (ok) onToolbarEvent?.(event);
+        return;
       }
       onToolbarEvent?.(event);
     },
-    [save, onToolbarEvent, onHierarchySaved, treeData],
+    [save, runAction, onToolbarEvent, onHierarchySaved, treeData],
   );
 
   return (
