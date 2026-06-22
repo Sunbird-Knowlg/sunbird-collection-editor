@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   DndContext,
   DragOverlay,
@@ -43,6 +43,16 @@ export const SplitBuilderShell: React.FC<SplitBuilderShellProps> = ({
   const selectedNodeId = useTreeStore((s) => s.selectedNodeId);
   const { save, isSaving, isDirty, lastSaved } = useSaveHierarchy();
   const { runAction } = useToolbarActions(save);
+
+  useEffect(() => {
+    if (!isDirty) return;
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = '';
+    };
+    window.addEventListener('beforeunload', handler);
+    return () => window.removeEventListener('beforeunload', handler);
+  }, [isDirty]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),

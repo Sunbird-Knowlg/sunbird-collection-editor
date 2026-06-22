@@ -11,11 +11,11 @@ interface ResourceReorderDialogProps {
   onClose: () => void;
 }
 
-function collectFolders(nodes: INode[], exclude?: string): INode[] {
+function collectFolders(nodes: INode[], rootId: string, exclude?: string): INode[] {
   const folders: INode[] = [];
   const walk = (ns: INode[]) => {
     for (const n of ns) {
-      if (n.isFolder && n.id !== exclude) folders.push(n);
+      if (n.isFolder && n.id !== exclude && n.id !== rootId) folders.push(n);
       if (n.children?.length) walk(n.children);
     }
   };
@@ -27,7 +27,7 @@ export const ResourceReorderDialog: React.FC<ResourceReorderDialogProps> = ({
   resourceId, resourceName, currentUnitId, onClose,
 }) => {
   const { treeData, moveNode } = useTreeStore();
-  const folders = collectFolders(treeData, currentUnitId);
+  const folders = collectFolders(treeData, treeData[0]?.id ?? '', currentUnitId);
   const [selected, setSelected] = useState<string | null>(null);
 
   const handleMove = () => {

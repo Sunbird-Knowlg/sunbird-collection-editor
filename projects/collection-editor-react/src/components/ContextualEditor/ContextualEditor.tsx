@@ -108,8 +108,8 @@ export const ContextualEditor: React.FC<ContextualEditorProps> = ({ editorMode, 
     <div className={styles.container}>
       <Breadcrumb crumbs={breadcrumb} />
 
-      {/* Review comment bar — shown in review mode if a rejection comment exists */}
-      {editorMode === 'review' && reviewComment && (
+      {/* Review comment bar — shown whenever a rejection comment exists (edit or review mode) */}
+      {reviewComment && (
         <div className={styles.reviewComment} role="alert">
           <span className={styles.reviewCommentLabel}>Reviewer comment:</span>
           <span className={styles.reviewCommentText}>{reviewComment}</span>

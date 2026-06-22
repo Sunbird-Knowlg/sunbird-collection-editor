@@ -3,7 +3,7 @@ import { useDraggable } from '@dnd-kit/core';
 import { Plus, Video, FileText, Layers, Package, Music, HelpCircle, File, Check } from 'lucide-react';
 import type { IContent } from '../../types/content';
 import { getCtStyle } from '../../hooks/useContentType';
-import { useIsDraftStatus } from '../../hooks/useContentStatus';
+import { useIsDraftStatus, useSelectedNodeIsUnit } from '../../hooks/useContentStatus';
 import styles from './LibraryCard.module.scss';
 
 const CT_ICONS: Record<string, React.ElementType> = {
@@ -29,12 +29,13 @@ export const LibraryCard: React.FC<LibraryCardProps> = ({
   const ctStyle = getCtStyle(item);
   const CtIcon = CT_ICONS[ctStyle.key] ?? File;
   const isDraft = useIsDraftStatus();
-  // Content can only be added while the collection is in Draft.
-  const canAdd = isDraft && !isAdded;
+  const isUnitSelected = useSelectedNodeIsUnit();
+  // Content can only be added while the collection is in Draft and a unit is selected.
+  const canAdd = isDraft && !isAdded && isUnitSelected;
 
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: item.identifier,
-    disabled: !isDraggable || !isDraft,
+    disabled: !isDraggable || !isDraft || !isUnitSelected,
     data: { type: 'library-item', item },
   });
 

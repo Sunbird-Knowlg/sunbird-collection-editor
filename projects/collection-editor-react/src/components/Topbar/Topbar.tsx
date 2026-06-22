@@ -51,33 +51,48 @@ function deriveStatusLabel(status: unknown): string {
 }
 
 // ---------------------------------------------------------------------------
-// SendBack confirm modal (inline, lightweight)
+// Generic review-comment modal — used for both Reject and Send Back.
+// Matches the Angular "Add Review Comments" popup text.
 // ---------------------------------------------------------------------------
-interface SendBackModalProps {
+interface ReviewCommentModalProps {
+  titleText: string;
+  labelText: string;
+  placeholderText: string;
+  submitLabel: string;
+  submitVariant?: 'primary' | 'danger';
   onConfirm: (comment: string) => void;
   onCancel: () => void;
 }
 
-const SendBackModal: React.FC<SendBackModalProps> = ({ onConfirm, onCancel }) => {
+const ReviewCommentModal: React.FC<ReviewCommentModalProps> = ({
+  titleText,
+  labelText,
+  placeholderText,
+  submitLabel,
+  submitVariant = 'primary',
+  onConfirm,
+  onCancel,
+}) => {
   const [comment, setComment] = useState('');
+  const modalId = titleText.toLowerCase().replace(/\s+/g, '-');
 
   return (
-    <div className={styles.sbOverlay} role="dialog" aria-modal="true" aria-labelledby="sendback-title">
+    <div className={styles.sbOverlay} role="dialog" aria-modal="true" aria-labelledby={`${modalId}-title`}>
       <div className={styles.sbModal}>
         <div className={styles.sbModalHeader}>
-          <span id="sendback-title" className={styles.sbModalTitle}>Send Back for Corrections</span>
+          <span id={`${modalId}-title`} className={styles.sbModalTitle}>{titleText}</span>
           <button className={styles.sbModalClose} onClick={onCancel} aria-label="Close" type="button">
             ×
           </button>
         </div>
         <div className={styles.sbModalBody}>
-          <label className={styles.sbLabel} htmlFor="sendback-comment">
-            Comment <span aria-hidden="true" style={{ color: 'var(--sbx-error, #DC2626)' }}>*</span>
+          <label className={styles.sbLabel} htmlFor={`${modalId}-comment`}>
+            {labelText} <span aria-hidden="true" style={{ color: 'var(--sbx-error, #DC2626)' }}>*</span>
           </label>
           <textarea
-            id="sendback-comment"
+            id={`${modalId}-comment`}
             className={styles.sbTextarea}
-            placeholder="Describe what needs to be corrected…"
+            placeholder={placeholderText}
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             rows={4}
@@ -85,17 +100,17 @@ const SendBackModal: React.FC<SendBackModalProps> = ({ onConfirm, onCancel }) =>
             aria-required="true"
           />
           {comment.trim().length === 0 && (
-            <p className={styles.sbError}>A comment is required.</p>
+            <p className={styles.sbError}>Fill comments</p>
           )}
         </div>
         <div className={styles.sbModalFooter}>
           <Button variant="ghost" onClick={onCancel}>Cancel</Button>
           <Button
-            variant="primary"
+            variant={submitVariant}
             onClick={() => onConfirm(comment.trim())}
             disabled={comment.trim().length === 0}
           >
-            Send Back
+            {submitLabel}
           </Button>
         </div>
       </div>
@@ -241,6 +256,7 @@ export const Topbar: React.FC<TopbarProps> = ({
 
   // Local state for the send-back modal (not stored in ui.store)
   const [showSendBack, setShowSendBack] = useState(false);
+  const [showRejectModal, setShowRejectModal] = useState(false);
   const [showConfirmReview, setShowConfirmReview] = useState(false);
   const [showQRMenu, setShowQRMenu] = useState(false);
   const qrMenuRef = useRef<HTMLDivElement>(null);
@@ -481,7 +497,7 @@ export const Topbar: React.FC<TopbarProps> = ({
               <Button
                 variant="danger"
                 size="sm"
-                onClick={() => openModal('qualityParams', { action: 'reject' })}
+                onClick={() => setShowRejectModal(true)}
                 disabled={buttonLoaders.rejectCollection}
                 isLoading={buttonLoaders.rejectCollection}
               >
@@ -560,8 +576,24 @@ export const Topbar: React.FC<TopbarProps> = ({
         />
       )}
 
+      {showRejectModal && (
+        <ReviewCommentModal
+          titleText="Add Review Comments"
+          labelText="Enter your comments"
+          placeholderText="Add comment"
+          submitLabel="Submit Review"
+          submitVariant="danger"
+          onConfirm={(comment) => { setShowRejectModal(false); emit('reject', { comment }); }}
+          onCancel={() => setShowRejectModal(false)}
+        />
+      )}
+
       {showSendBack && (
-        <SendBackModal
+        <ReviewCommentModal
+          titleText="Add Review Comments"
+          labelText="Enter your comments"
+          placeholderText="Add comment"
+          submitLabel="Submit Review"
           onConfirm={handleSendBack}
           onCancel={() => setShowSendBack(false)}
         />
