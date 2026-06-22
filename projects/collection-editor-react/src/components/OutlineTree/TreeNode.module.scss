@@ -80,6 +80,12 @@
   font-size: 10px;
 }
 
+// Root (Book) and Unit/Sub-Unit (Folder) icons — neutral accent.
+.folderIcon {
+  background: var(--sbx-primary, #2563eb);
+  color: white;
+}
+
 .title {
   flex: 1;
   font-size: 13px;

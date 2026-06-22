@@ -82,7 +82,8 @@
 }
 
 .unsaved {
-  color: var(--sbx-warning);
+  color: var(--sbx-error, #dc2626);
+  font-weight: 600;
 }
 
 // ── Icon-only buttons (Collaborators, Upload CSV) ────────────────────────────

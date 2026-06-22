@@ -12,7 +12,7 @@
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
-  background: #f1f5f9;
+  background: var(--sbx-gray-100);
   flex-shrink: 0;
   overflow: hidden;
 }
@@ -30,7 +30,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #e2e8f0 0%, #f1f5f9 100%);
+  background: linear-gradient(135deg, var(--sbx-gray-200) 0%, var(--sbx-gray-100) 100%);
 }
 
 .heroPlaceholderIcon {

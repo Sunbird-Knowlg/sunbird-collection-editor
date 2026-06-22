@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { useTreeStore } from '../store/tree.store';
 import { useEditorStore } from '../store/editor.store';
 import { updateHierarchy } from '../api/hierarchy';
@@ -171,7 +171,6 @@ function buildSavePayload(
 // ---------------------------------------------------------------------------
 export function useSaveHierarchy() {
   const [isSaving, setIsSaving] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout>>();
 
   const treeCache = useTreeStore((s) => s.treeCache);
   const treeData = useTreeStore((s) => s.treeData);
@@ -202,14 +201,6 @@ export function useSaveHierarchy() {
       setIsSaving(false);
     }
   }, [config, isSaving, treeData, treeCache, setIsDirty, setLastSaved]);
-
-  // Auto-save debounce on dirty changes
-  useEffect(() => {
-    if (!isDirty) return;
-    clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(save, 1500);
-    return () => clearTimeout(timerRef.current);
-  }, [isDirty, treeCache, save]);
 
   return {
     save,

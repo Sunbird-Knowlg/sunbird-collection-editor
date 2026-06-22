@@ -119,17 +119,13 @@ const ConfirmReviewModal: React.FC<ConfirmReviewModalProps> = ({ onConfirm, onCa
     <div className={styles.sbOverlay} role="dialog" aria-modal="true" aria-labelledby="review-confirm-title">
       <div className={styles.sbModal}>
         <div className={styles.sbModalHeader}>
-          <span id="review-confirm-title" className={styles.sbModalTitle}>Send for Review</span>
+          <span id="review-confirm-title" className={styles.sbModalTitle}>Accepting Terms &amp; Conditions</span>
           <button className={styles.sbModalClose} onClick={onCancel} aria-label="Close" type="button">
             ×
           </button>
         </div>
         <div className={styles.sbModalBody}>
-          <p style={{ fontSize: 13, color: 'var(--sbx-gray-600, #4B5563)', lineHeight: 1.5, margin: 0 }}>
-            Once sent for review, this content will be locked for editing until the
-            review is complete. Please ensure all units and content are finalised.
-          </p>
-          <label style={{ display: 'flex', gap: 8, alignItems: 'flex-start', marginTop: 14, fontSize: 13 }}>
+          <label style={{ display: 'flex', gap: 8, alignItems: 'flex-start', fontSize: 13, lineHeight: 1.55 }}>
             <input
               type="checkbox"
               checked={agreed}
@@ -137,14 +133,27 @@ const ConfirmReviewModal: React.FC<ConfirmReviewModalProps> = ({ onConfirm, onCa
               style={{ marginTop: 2 }}
             />
             <span>
-              I confirm this content adheres to the content policy and is ready for review.
+              I agree that by submitting / publishing this Content, I confirm that this
+              Content complies with prescribed guidelines, including the Terms of Use and
+              Content Policy and that I consent to publish it under the{' '}
+              <a
+                className="sb-color-primary"
+                style={{ fontWeight: 600 }}
+                href="https://creativecommons.org/licenses"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Creative Commons Framework
+              </a>{' '}
+              in accordance with the <strong>Content Policy</strong>. I have made sure that
+              I do not violate others&rsquo; copyright or privacy rights.
             </span>
           </label>
         </div>
         <div className={styles.sbModalFooter}>
           <Button variant="ghost" onClick={onCancel}>Cancel</Button>
           <Button variant="primary" onClick={onConfirm} disabled={!agreed}>
-            Send for review
+            Submit
           </Button>
         </div>
       </div>
@@ -366,17 +375,18 @@ export const Topbar: React.FC<TopbarProps> = ({
             <span className={styles.savedIndicator} aria-live="polite">
               Saving&hellip;
             </span>
-          ) : lastSaved ? (
-            <span className={styles.savedIndicator} aria-live="polite">
-              <Check size={14} aria-hidden="true" />
-              Saved {formatLastSaved(lastSaved)}
-            </span>
           ) : isDirty ? (
+            // Dirty takes precedence over a prior "Saved" — no auto-save anymore.
             <span
               className={`${styles.savedIndicator} ${styles.unsaved}`}
               aria-live="polite"
             >
-              Unsaved changes
+              Unsaved
+            </span>
+          ) : lastSaved ? (
+            <span className={styles.savedIndicator} aria-live="polite">
+              <Check size={14} aria-hidden="true" />
+              Saved {formatLastSaved(lastSaved)}
             </span>
           ) : null}
 

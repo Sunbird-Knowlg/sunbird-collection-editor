@@ -158,21 +158,21 @@
 
   &.status_uploading,
   &.status_processing {
-    background: #EFF6FF;
+    background: var(--sbx-status-info-bg);
     color: var(--sbx-primary);
-    border: 1px solid #BFDBFE;
+    border: 1px solid var(--sbx-status-info-border);
   }
 
   &.status_done {
-    background: #F0FDF4;
+    background: var(--sbx-status-ok-bg);
     color: var(--sbx-success);
-    border: 1px solid #BBF7D0;
+    border: 1px solid var(--sbx-status-ok-border);
   }
 
   &.status_error {
-    background: #FEF2F2;
+    background: var(--sbx-status-err-bg);
     color: var(--sbx-error);
-    border: 1px solid #FECACA;
+    border: 1px solid var(--sbx-status-err-border);
   }
 }
 
@@ -203,7 +203,7 @@
 }
 
 .failedSection {
-  border: 1px solid #FECACA;
+  border: 1px solid var(--sbx-status-err-border);
   border-radius: var(--sbx-r-sm);
   overflow: hidden;
 }
@@ -214,8 +214,8 @@
   color: var(--sbx-error);
   margin: 0;
   padding: 10px 14px;
-  background: #FEF2F2;
-  border-bottom: 1px solid #FECACA;
+  background: var(--sbx-status-err-bg);
+  border-bottom: 1px solid var(--sbx-status-err-border);
 }
 
 .tableWrap {

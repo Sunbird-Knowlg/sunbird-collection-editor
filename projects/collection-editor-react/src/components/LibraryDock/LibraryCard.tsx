@@ -3,6 +3,7 @@ import { useDraggable } from '@dnd-kit/core';
 import { Plus, Video, FileText, Layers, Package, Music, HelpCircle, File, Check } from 'lucide-react';
 import type { IContent } from '../../types/content';
 import { getCtStyle } from '../../hooks/useContentType';
+import { useIsDraftStatus } from '../../hooks/useContentStatus';
 import styles from './LibraryCard.module.scss';
 
 const CT_ICONS: Record<string, React.ElementType> = {
@@ -27,10 +28,13 @@ export const LibraryCard: React.FC<LibraryCardProps> = ({
 }) => {
   const ctStyle = getCtStyle(item);
   const CtIcon = CT_ICONS[ctStyle.key] ?? File;
+  const isDraft = useIsDraftStatus();
+  // Content can only be added while the collection is in Draft.
+  const canAdd = isDraft && !isAdded;
 
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: item.identifier,
-    disabled: !isDraggable,
+    disabled: !isDraggable || !isDraft,
     data: { type: 'library-item', item },
   });
 
@@ -75,14 +79,15 @@ export const LibraryCard: React.FC<LibraryCardProps> = ({
         </span>
       )}
 
-      {/* Add button — hidden when already added */}
+      {/* Add button — hidden when already added; disabled for non-Draft content */}
       {!isAdded && (
         <button
           type="button"
           className={styles.addBtn}
-          onClick={(e) => { e.stopPropagation(); onAdd(item); }}
+          onClick={(e) => { e.stopPropagation(); if (canAdd) onAdd(item); }}
+          disabled={!canAdd}
           aria-label={`Add ${item.name} to unit`}
-          title="Add to unit"
+          title={isDraft ? 'Add to unit' : 'Only Draft content can be edited'}
         >
           <Plus size={14} />
         </button>

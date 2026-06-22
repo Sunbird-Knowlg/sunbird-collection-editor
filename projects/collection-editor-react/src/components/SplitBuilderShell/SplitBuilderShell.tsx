@@ -11,6 +11,7 @@ import {
 import type { EditorMode, ToolbarAction } from '../../types/editor';
 import type { IContent } from '../../types/content';
 import { Topbar } from '../Topbar';
+import { UnsavedChangesModal } from '../modals/UnsavedChangesModal';
 import { OutlineTree } from '../OutlineTree';
 import { ContextualEditor } from '../ContextualEditor';
 import { LibraryDock } from '../LibraryDock';
@@ -36,6 +37,7 @@ export const SplitBuilderShell: React.FC<SplitBuilderShellProps> = ({
   const [activeDragItem, setActiveDragItem] = useState<IContent | null>(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [dockCollapsed, setDockCollapsed] = useState(false);
+  const [showUnsavedPrompt, setShowUnsavedPrompt] = useState(false);
 
   const { addResource, treeData } = useTreeStore();
   const selectedNodeId = useTreeStore((s) => s.selectedNodeId);
@@ -77,6 +79,11 @@ export const SplitBuilderShell: React.FC<SplitBuilderShellProps> = ({
 
   const handleToolbarEvent = useCallback(
     async (event: { action: ToolbarAction; data?: unknown }) => {
+      // Guard Back when there are unsaved changes (auto-save is disabled).
+      if (event.action === 'back' && isDirty) {
+        setShowUnsavedPrompt(true);
+        return;
+      }
       if (event.action === 'saveCollection') {
         await save();
         onHierarchySaved?.(treeData);
@@ -96,8 +103,21 @@ export const SplitBuilderShell: React.FC<SplitBuilderShellProps> = ({
       }
       onToolbarEvent?.(event);
     },
-    [save, runAction, onToolbarEvent, onHierarchySaved, treeData],
+    [save, runAction, onToolbarEvent, onHierarchySaved, treeData, isDirty],
   );
+
+  // Resolve the unsaved-changes prompt for Back.
+  const handleUnsavedSave = useCallback(async () => {
+    await save();
+    setShowUnsavedPrompt(false);
+    onHierarchySaved?.(treeData);
+    onToolbarEvent?.({ action: 'back' });
+  }, [save, onHierarchySaved, onToolbarEvent, treeData]);
+
+  const handleUnsavedDiscard = useCallback(() => {
+    setShowUnsavedPrompt(false);
+    onToolbarEvent?.({ action: 'back' });
+  }, [onToolbarEvent]);
 
   return (
     <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
@@ -176,6 +196,15 @@ export const SplitBuilderShell: React.FC<SplitBuilderShellProps> = ({
           </div>
         ) : null}
       </DragOverlay>
+
+      {showUnsavedPrompt && (
+        <UnsavedChangesModal
+          onSave={handleUnsavedSave}
+          onDiscard={handleUnsavedDiscard}
+          onCancel={() => setShowUnsavedPrompt(false)}
+          isSaving={isSaving}
+        />
+      )}
     </DndContext>
   );
 };

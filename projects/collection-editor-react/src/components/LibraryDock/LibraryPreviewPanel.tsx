@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { createPortal } from 'react-dom';
-import { X, Maximize2, Minimize2 } from 'lucide-react';
+import { X } from 'lucide-react';
 import type { IContent } from '../../types/content';
 import type { INode } from '../../types/editor';
 import { ContentPlayer } from '../ContentPlayer';
@@ -12,16 +12,18 @@ interface LibraryPreviewPanelProps {
   onClose: () => void;
 }
 
+/**
+ * Content preview shown when a library item is selected. Opens directly as a
+ * centered modal (portaled to body so it escapes the dock's stacking context).
+ */
 export const LibraryPreviewPanel: React.FC<LibraryPreviewPanelProps> = ({
   content,
   onAdd,
   onClose,
 }) => {
-  const [expanded, setExpanded] = useState(false);
-
   if (!content) return null;
 
-  // Convert IContent to INode — ContentPlayer will fetch full details by identifier
+  // Convert IContent to INode — ContentPlayer fetches full details by identifier
   const node: INode = {
     id: content.identifier,
     identifier: content.identifier,
@@ -36,65 +38,46 @@ export const LibraryPreviewPanel: React.FC<LibraryPreviewPanelProps> = ({
     metadata: content as unknown as Record<string, unknown>,
   };
 
-  const panelContent = (
-    <>
-      <div className={styles.header}>
-        <span className={styles.title} title={content.name}>
-          {content.name}
-        </span>
-        <div className={styles.headerActions}>
+  return createPortal(
+    <div
+      className={styles.modalOverlay}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Content preview"
+      onClick={onClose}
+    >
+      <div className={styles.modalPanel} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.header}>
+          <span className={styles.title} title={content.name}>
+            {content.name}
+          </span>
+          <div className={styles.headerActions}>
+            <button
+              type="button"
+              className={styles.iconBtn}
+              onClick={onClose}
+              aria-label="Close preview"
+            >
+              <X size={16} />
+            </button>
+          </div>
+        </div>
+
+        <div className={styles.playerArea}>
+          <ContentPlayer node={node} editorMode="read" type="content" />
+        </div>
+
+        <div className={styles.footer}>
           <button
             type="button"
-            className={styles.iconBtn}
-            onClick={() => setExpanded(v => !v)}
-            aria-label={expanded ? 'Collapse preview' : 'Expand preview'}
-            title={expanded ? 'Collapse' : 'Expand'}
+            className={styles.addBtn}
+            onClick={() => onAdd(content)}
           >
-            {expanded ? <Minimize2 size={15} /> : <Maximize2 size={15} />}
-          </button>
-          <button
-            type="button"
-            className={styles.iconBtn}
-            onClick={onClose}
-            aria-label="Close preview"
-          >
-            <X size={16} />
+            + Add to Unit
           </button>
         </div>
       </div>
-
-      <div className={styles.playerArea}>
-        <ContentPlayer node={node} editorMode="read" type="content" />
-      </div>
-
-      <div className={styles.footer}>
-        <button
-          type="button"
-          className={styles.addBtn}
-          onClick={() => onAdd(content)}
-        >
-          + Add to Unit
-        </button>
-      </div>
-    </>
-  );
-
-  if (expanded) {
-    // Portal to body so the modal escapes the library dock's stacking context
-    // (.sidePanelOverlay is a positioned, z-indexed ancestor that would otherwise trap it).
-    return createPortal(
-      <div className={styles.modalOverlay} role="dialog" aria-modal="true" aria-label="Content preview">
-        <div className={styles.modalPanel}>
-          {panelContent}
-        </div>
-      </div>,
-      document.body,
-    );
-  }
-
-  return (
-    <div className={styles.panel}>
-      {panelContent}
-    </div>
+    </div>,
+    document.body,
   );
 };

@@ -135,7 +135,7 @@
   background: none; border: 1px solid var(--sbx-error);
   border-radius: var(--sbx-r-sm); padding: 3px 8px;
   font-size: 12px; color: var(--sbx-error); cursor: pointer;
-  &:hover { background: #fff0f0; }
+  &:hover { background: var(--sbx-status-err-bg); }
 }
 
 // Tag chips used by KeywordSuggestField

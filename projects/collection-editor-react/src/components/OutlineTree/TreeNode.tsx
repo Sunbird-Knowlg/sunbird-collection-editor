@@ -9,6 +9,8 @@ import {
   Plus,
   Trash2,
   FolderPlus,
+  Book,
+  Folder,
   Video,
   FileText,
   Layers,
@@ -19,6 +21,7 @@ import {
 } from 'lucide-react';
 import type { INode, EditorMode } from '../../types/editor';
 import { getCtStyle } from '../../hooks/useContentType';
+import { useIsDraftStatus } from '../../hooks/useContentStatus';
 import styles from './TreeNode.module.scss';
 
 const CT_ICON_COMPONENTS: Record<string, React.ElementType> = {
@@ -46,11 +49,15 @@ export const TreeNode: React.FC<TreeNodeProps> = ({
   const [renameVal, setRenameVal] = useState(node.data.name);
   const menuRef = useRef<HTMLDivElement>(null);
   const isEditable = editorMode === 'edit';
+  const isDraft = useIsDraftStatus();
   const ctStyle = getCtStyle(node.data);
   const CtIcon = CT_ICON_COMPONENTS[ctStyle.key] ?? File;
   const isSelected = node.isSelected;
+  const isRoot = node.level === 0;
   const isFolder =
     node.data.isFolder ?? (node.children && node.children.length > 0);
+  // Root (Course) → Book, Unit/Sub-Unit (folders) → Folder, leaf → content-type icon.
+  const NodeIcon = isRoot ? Book : isFolder ? Folder : CtIcon;
 
   // Close menu on outside click
   useEffect(() => {
@@ -115,12 +122,12 @@ export const TreeNode: React.FC<TreeNodeProps> = ({
         {node.isClosed ? <ChevronRight size={14} /> : <ChevronDown size={14} />}
       </button>
 
-      {/* Content-type icon */}
+      {/* Node icon: Book (root) / Folder (unit) / content-type (leaf) */}
       <span
-        className={`${styles.ctIcon} ${ctStyle.bgClass}`}
+        className={`${styles.ctIcon} ${isRoot || isFolder ? styles.folderIcon ?? '' : ctStyle.bgClass}`}
         aria-hidden="true"
       >
-        <CtIcon size={12} />
+        <NodeIcon size={12} />
       </span>
 
       {/* Title or rename input */}
@@ -174,7 +181,7 @@ export const TreeNode: React.FC<TreeNodeProps> = ({
               >
                 <Pencil size={13} /> Rename
               </button>
-              {isFolder && (
+              {isFolder && isDraft && (
                 <button
                   role="menuitem"
                   onClick={() => {
@@ -185,7 +192,7 @@ export const TreeNode: React.FC<TreeNodeProps> = ({
                   <FolderPlus size={13} /> Add sub-unit
                 </button>
               )}
-              {node.data.parent && (
+              {node.data.parent && isDraft && (
                 <button
                   role="menuitem"
                   onClick={() => {

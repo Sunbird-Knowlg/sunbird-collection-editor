@@ -42,9 +42,9 @@ export const ProgressStatus: React.FC<ProgressStatusProps> = ({ criteria }) => {
 
   const allGood = computed.every(c => c.current >= c.required);
   const barColor = (c: Criterion) => {
-    if (c.current >= c.required) return '#52c41a';
-    if (c.current / c.required > 0.5) return '#faad14';
-    return '#ff4d4f';
+    if (c.current >= c.required) return 'var(--sbx-success)';
+    if (c.current / c.required > 0.5) return 'var(--sbx-warning)';
+    return 'var(--sbx-error)';
   };
 
   return (

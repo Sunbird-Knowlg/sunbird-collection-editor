@@ -231,15 +231,13 @@ export const LibraryDock: React.FC<LibraryDockProps> = ({ editorMode, collapsed 
           </div>
         )}
 
-        {/* Preview panel */}
+        {/* Preview — opens directly as a centered modal (self-portaled) */}
         {previewContent && (
-          <div className={styles.sidePanelOverlay}>
-            <LibraryPreviewPanel
-              content={previewContent}
-              onAdd={handlePreviewAdd}
-              onClose={() => setPreviewContent(null)}
-            />
-          </div>
+          <LibraryPreviewPanel
+            content={previewContent}
+            onAdd={handlePreviewAdd}
+            onClose={() => setPreviewContent(null)}
+          />
         )}
       </div>
     </div>

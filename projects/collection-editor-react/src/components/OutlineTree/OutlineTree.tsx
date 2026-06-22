@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import type { INode, EditorMode } from '../../types/editor';
 import { useTreeStore } from '../../store/tree.store';
 import { useEditorStore } from '../../store/editor.store';
+import { useIsDraftStatus } from '../../hooks/useContentStatus';
 import { TreeNode } from './TreeNode';
 import { Button } from '../shared/Button';
 import { CsvUpload } from '../BulkUpload/CsvUpload';
@@ -32,6 +33,9 @@ export const OutlineTree: React.FC<OutlineTreeProps> = ({
 
   const { treeData, selectedNodeId, selectNode, addNode, deleteNode, reorderChildren } = useTreeStore();
   const isEditable = editorMode === 'edit';
+  const isDraft = useIsDraftStatus();
+  // Adding units/content is only allowed while the collection is in Draft.
+  const canAdd = isEditable && isDraft;
   const contentId = useEditorStore(
     s => s.editorConfig?.context?.contentId ?? s.editorConfig?.context?.identifier ?? '',
   );
@@ -215,14 +219,19 @@ export const OutlineTree: React.FC<OutlineTreeProps> = ({
 
       {isEditable && (
         <div className={styles.footer}>
-          <Button variant="ghost" size="sm" onClick={handleAddUnit}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleAddUnit}
+            disabled={!canAdd}
+          >
             <Plus size={14} /> Add Unit
           </Button>
           <Button
             variant="ghost"
             size="sm"
             onClick={handleAddSubunit}
-            disabled={!selectedNodeId}
+            disabled={!canAdd || !selectedNodeId}
           >
             <FolderPlus size={14} /> Add Sub-unit
           </Button>
