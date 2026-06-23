@@ -35,15 +35,25 @@ async function uploadToSignedUrl(signedUrl: string, file: File): Promise<string>
 }
 
 // Stage 3 — kick off the import from the uploaded fileUrl.
+// The collection/v1/import API expects multipart/form-data with bare fields —
+// NOT a JSON body with a request wrapper. Sending JSON causes a 400/422.
 export async function uploadCsvHierarchy(
   contentId: string,
   file: File,
 ): Promise<{ processId: string }> {
   const signedUrl = await getUploadUrl(contentId, file.name);
   const fileUrl = await uploadToSignedUrl(signedUrl, file);
-  const response = await apiClient.post(`/action/collection/v1/import/${contentId}`, {
-    request: { fileUrl, mimeType: 'text/csv' },
-  });
+
+  const formData = new FormData();
+  formData.append('fileUrl', fileUrl);
+  formData.append('mimeType', file.type || 'text/csv');
+
+  // Do NOT set Content-Type manually — let the browser/axios set
+  // multipart/form-data with the correct boundary automatically.
+  const response = await apiClient.post(
+    `/action/collection/v1/import/${contentId}`,
+    formData,
+  );
   const result = response.data?.result ?? {};
   return { processId: (result.processId as string) ?? '' };
 }

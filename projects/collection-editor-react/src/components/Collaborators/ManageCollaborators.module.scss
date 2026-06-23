@@ -158,6 +158,15 @@
   text-overflow: ellipsis;
 }
 
+.userOrg {
+  font-size: 11px;
+  color: var(--sbx-gray-400);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-style: italic;
+}
+
 .noResults {
   font-size: 13px;
   color: var(--sbx-gray-500);

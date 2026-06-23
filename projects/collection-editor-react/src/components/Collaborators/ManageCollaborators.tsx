@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Button } from '../shared/Button';
 import { searchUsers, getUsersByIds } from '../../api/user';
 import { updateCollaborators, readContent } from '../../api/hierarchy';
+import { useEditorStore } from '../../store/editor.store';
 import type { IUser } from '../../api/user';
 import styles from './ManageCollaborators.module.scss';
 
@@ -14,6 +15,10 @@ export const ManageCollaborators: React.FC<ManageCollaboratorsProps> = ({
   contentId,
   onClose,
 }) => {
+  const editorConfig = useEditorStore((s) => s.editorConfig);
+  const rootOrgId = editorConfig?.context?.channel;
+  const objectType = editorConfig?.config?.objectType;
+
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<IUser[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -58,7 +63,7 @@ export const ManageCollaborators: React.FC<ManageCollaboratorsProps> = ({
     debounceRef.current = setTimeout(async () => {
       setIsSearching(true);
       try {
-        const results = await searchUsers(q);
+        const results = await searchUsers(q, { rootOrgId, objectType });
         // Exclude already-added collaborators
         const collabIds = new Set(collaborators.map((c) => c.identifier));
         setSearchResults(results.filter((u) => !collabIds.has(u.identifier)));
@@ -72,7 +77,7 @@ export const ManageCollaborators: React.FC<ManageCollaboratorsProps> = ({
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [searchQuery, collaborators]);
+  }, [searchQuery, collaborators, rootOrgId, objectType]);
 
   const handleAdd = useCallback(
     (user: IUser) => {
@@ -147,6 +152,11 @@ export const ManageCollaborators: React.FC<ManageCollaboratorsProps> = ({
                     {user.email && (
                       <span className={styles.userEmail}>{user.email}</span>
                     )}
+                    {(user.organisations?.[0]?.orgName ?? user.rootOrgName) && (
+                      <span className={styles.userOrg}>
+                        {user.organisations?.[0]?.orgName ?? user.rootOrgName}
+                      </span>
+                    )}
                   </div>
                   <Button
                     variant="primary"
@@ -187,6 +197,11 @@ export const ManageCollaborators: React.FC<ManageCollaboratorsProps> = ({
                     <span className={styles.userName}>{displayName(user)}</span>
                     {user.email && (
                       <span className={styles.userEmail}>{user.email}</span>
+                    )}
+                    {(user.organisations?.[0]?.orgName ?? user.rootOrgName) && (
+                      <span className={styles.userOrg}>
+                        {user.organisations?.[0]?.orgName ?? user.rootOrgName}
+                      </span>
                     )}
                   </div>
                   <Button

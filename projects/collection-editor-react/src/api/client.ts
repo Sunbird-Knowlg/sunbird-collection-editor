@@ -15,11 +15,18 @@ apiClient.interceptors.request.use(async (config: InternalAxiosRequestConfig) =>
   // Lazy import to avoid circular dependency
   const { useEditorStore } = await import('../store/editor.store');
   const state = useEditorStore.getState();
-  const authToken = state.editorConfig?.context?.authToken;
+  const ctx = state.editorConfig?.context;
 
-  if (authToken) {
-    config.headers = config.headers ?? {};
-    config.headers['Authorization'] = `Bearer ${authToken}`;
+  config.headers = config.headers ?? {};
+
+  if (ctx?.authToken) {
+    config.headers['Authorization'] = `Bearer ${ctx.authToken}`;
+  }
+
+  // Sunbird user/content APIs scope results to the tenant via X-Channel-Id.
+  // Omitting it causes user-search to return cross-tenant results or nothing.
+  if (ctx?.channel) {
+    config.headers['X-Channel-Id'] = ctx.channel;
   }
 
   if (baseUrl) {

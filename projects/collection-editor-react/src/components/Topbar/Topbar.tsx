@@ -294,13 +294,6 @@ export const Topbar: React.FC<TopbarProps> = ({
   }, [contentId, rootNode, updateNode]);
 
   const handleDownloadQR = useCallback(async () => {
-    // Metadata guard — mirrors Angular requirement
-    const meta = rootNode?.metadata ?? {};
-    if (!meta['medium'] || !meta['gradeLevel'] || !meta['subject']) {
-      toast.error('Please ensure Medium, Class and Subject are set before downloading QR Codes.');
-      return;
-    }
-
     if (!qrCodeProcessId) {
       toast.error('No QR codes generated yet. Generate QR Codes first.');
       return;
@@ -330,14 +323,18 @@ export const Topbar: React.FC<TopbarProps> = ({
         reader.readAsDataURL(blob);
       });
 
-      // Dynamic filename matching Angular convention
+      // Build filename — metadata fields are optional, omit empty segments
+      const meta = rootNode?.metadata ?? {};
       const toStr = (v: unknown) =>
         Array.isArray(v) ? v.join('_') : typeof v === 'string' ? v : '';
-      const medium  = toStr(meta['medium']);
-      const grade   = toStr(meta['gradeLevel']);
-      const subject = toStr(meta['subject']);
+      const parts = [
+        contentId,
+        toStr(meta['medium']),
+        toStr(meta['gradeLevel']),
+        toStr(meta['subject']),
+      ].filter(Boolean);
       const ts = new Date().toISOString().replace(/[:.]/g, '-');
-      const filename = `${contentId}_${medium}_${grade}_${subject}_${ts}.zip`;
+      const filename = `${parts.join('_')}_${ts}.zip`;
 
       const a = document.createElement('a');
       a.href = dataUrl;
