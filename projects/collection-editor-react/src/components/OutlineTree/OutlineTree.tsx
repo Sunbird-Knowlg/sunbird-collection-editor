@@ -44,6 +44,13 @@ export const OutlineTree: React.FC<OutlineTreeProps> = ({
     s => s.editorConfig?.context?.contentId ?? s.editorConfig?.context?.identifier ?? '',
   );
 
+  // enableBulkUpload from sourcingSettings controls CSV menu visibility.
+  // Default to true when the category definition hasn't loaded yet.
+  const enableBulkUpload = useEditorStore(s => {
+    const sourcing = s.categoryMeta?.sourcingSettings?.collection as Record<string, unknown> | undefined;
+    return sourcing?.enableBulkUpload !== false;
+  });
+
   // Measure wrapper height for react-arborist virtualization
   useEffect(() => {
     const el = wrapperRef.current;
@@ -173,33 +180,37 @@ export const OutlineTree: React.FC<OutlineTreeProps> = ({
 
               {showMenu && (
                 <div className={styles.dropdownMenu} role="menu">
-                  <button
-                    role="menuitem"
-                    type="button"
-                    disabled={hasFolders}
-                    title={hasFolders ? 'Folders already exist — use "Update" instead' : undefined}
-                    onClick={() => { setShowMenu(false); setCsvMode('create'); setShowCsvUpload(true); }}
-                  >
-                    Create folders using csv file
-                  </button>
-                  <button
-                    role="menuitem"
-                    type="button"
-                    disabled={!hasFolders}
-                    title={!hasFolders ? 'No folders yet — use "Create" first' : undefined}
-                    onClick={handleDownloadCsv}
-                  >
-                    Download folders as csv file
-                  </button>
-                  <button
-                    role="menuitem"
-                    type="button"
-                    disabled={!hasFolders}
-                    title={!hasFolders ? 'No folders yet — use "Create" first' : undefined}
-                    onClick={() => { setShowMenu(false); setCsvMode('update'); setShowCsvUpload(true); }}
-                  >
-                    Update folder metadata using csv file
-                  </button>
+                  {enableBulkUpload && (
+                    <>
+                      <button
+                        role="menuitem"
+                        type="button"
+                        disabled={hasFolders}
+                        title={hasFolders ? 'Folders already exist — use "Update" instead' : undefined}
+                        onClick={() => { setShowMenu(false); setCsvMode('create'); setShowCsvUpload(true); }}
+                      >
+                        Create folders using csv file
+                      </button>
+                      <button
+                        role="menuitem"
+                        type="button"
+                        disabled={!hasFolders}
+                        title={!hasFolders ? 'No folders yet — use "Create" first' : undefined}
+                        onClick={handleDownloadCsv}
+                      >
+                        Download folders as csv file
+                      </button>
+                      <button
+                        role="menuitem"
+                        type="button"
+                        disabled={!hasFolders}
+                        title={!hasFolders ? 'No folders yet — use "Create" first' : undefined}
+                        onClick={() => { setShowMenu(false); setCsvMode('update'); setShowCsvUpload(true); }}
+                      >
+                        Update folder metadata using csv file
+                      </button>
+                    </>
+                  )}
                 </div>
               )}
             </div>

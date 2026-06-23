@@ -254,6 +254,12 @@ export const Topbar: React.FC<TopbarProps> = ({
 
   const buttonLoaders = useEditorStore((s) => s.buttonLoaders);
 
+  // Category definition controls optional toolbar features.
+  // generateDIALCodes default "Yes" means QR codes are enabled for this content type.
+  // Default to showing if the API hasn't loaded yet (backward compat).
+  const categoryMeta = useEditorStore((s) => s.categoryMeta);
+  const showDialcode = !categoryMeta || categoryMeta.schemaDefaults.generateDIALCodes !== 'No';
+
   // Local state for the send-back modal (not stored in ui.store)
   const [showSendBack, setShowSendBack] = useState(false);
   const [showRejectModal, setShowRejectModal] = useState(false);
@@ -471,8 +477,8 @@ export const Topbar: React.FC<TopbarProps> = ({
                 <Users size={16} aria-hidden="true" />
               </button>
 
-              {/* QR Codes dropdown */}
-              <div className={styles.qrDropdown} ref={qrMenuRef}>
+              {/* QR Codes dropdown — hidden when generateDIALCodes is "No" for this category */}
+              {showDialcode && <div className={styles.qrDropdown} ref={qrMenuRef}>
                 <button
                   className={styles.iconBtn}
                   onClick={() => setShowQRMenu(v => !v)}
@@ -508,7 +514,7 @@ export const Topbar: React.FC<TopbarProps> = ({
                     </button>
                   </div>
                 )}
-              </div>
+              </div>}
             </>
           )}
 

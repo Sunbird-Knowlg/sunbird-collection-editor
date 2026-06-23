@@ -50,20 +50,41 @@ export function useEditorInit({ config, onError }: UseEditorInitOptions) {
           // Fetch category definition for dynamic form fields (best-effort, non-blocking)
           const primaryCategory = config.config.primaryCategory ?? 'Course';
           const channel = config.context.channel ?? '';
+          const apiVersion = config.config.categoryDefinitionApiVersion ?? 'v4';
           try {
             const parsed = await getCategoryDefinition(
-              primaryCategory, channel, config.config.objectType ?? 'Collection',
+              primaryCategory, channel, config.config.objectType ?? 'Collection', apiVersion,
             );
             if (!cancelled) {
               setCategoryDefinition(parsed);
-              // Honor the maxDepth declared by sourcingSettings when present.
-              const sourcingMaxDepth = (
+
+              // Apply sourcing settings from the category definition into editorConfig.
+              // Angular does this via sethierarchyConfig() — merges the full
+              // sourcingSettings.collection into editorConfig.config.
+              const sourcing = (
                 parsed.sourcingSettings?.collection as Record<string, unknown> | undefined
-              )?.maxDepth as number | undefined;
-              if (sourcingMaxDepth && !config.config.maxDepth) {
+              ) ?? {};
+
+              const configPatch: Record<string, unknown> = {};
+              if (sourcing.maxDepth && !config.config.maxDepth) {
+                configPatch.maxDepth = sourcing.maxDepth as number;
+              }
+              // Propagate allowed children types and hierarchy level definitions
+              // (used by the tree to control what can be added at each depth).
+              if (sourcing.children && !config.config.children) {
+                configPatch.children = sourcing.children;
+              }
+              if (sourcing.hierarchy && !(config.config.hierarchy as Record<string, unknown> | undefined)?.level1) {
+                configPatch.hierarchy = {
+                  ...(config.config.hierarchy as Record<string, unknown> | undefined ?? {}),
+                  ...sourcing.hierarchy as Record<string, unknown>,
+                };
+              }
+
+              if (Object.keys(configPatch).length > 0) {
                 setEditorConfig({
                   ...config,
-                  config: { ...config.config, maxDepth: sourcingMaxDepth },
+                  config: { ...config.config, ...configPatch },
                 });
               }
             }

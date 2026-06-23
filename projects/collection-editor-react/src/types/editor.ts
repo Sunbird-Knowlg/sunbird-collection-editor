@@ -54,6 +54,11 @@ export interface IConfig {
   allowContentUnderRoot?: boolean;
   /** URL for the iframe-based content preview player. Defaults to the bundled preview.html path. */
   previewCdnUrl?: string;
+  /**
+   * API version for object/category/definition endpoint.
+   * Sandbox/older envs use 'v1'; current backend uses 'v4' (default).
+   */
+  categoryDefinitionApiVersion?: 'v1' | 'v4';
 }
 
 export interface IEditorConfig {

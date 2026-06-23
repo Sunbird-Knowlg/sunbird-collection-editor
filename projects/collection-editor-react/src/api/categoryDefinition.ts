@@ -1,8 +1,8 @@
 import { apiClient } from './client';
 
-// API version: prod historically used v1; the current backend serves v4.
-// Kept as a constant so it can be swapped per environment without touching call sites.
-const CATEGORY_DEFINITION_VERSION = 'v4';
+// Default API version. Sandbox/older environments serve v1; current backends serve v4.
+// Callers can pass a version override via getCategoryDefinition's `version` param.
+const DEFAULT_CATEGORY_DEFINITION_VERSION = 'v4';
 
 // ---------------------------------------------------------------------------
 // A single normalized field, derived from one entry in a form's `properties`
@@ -126,9 +126,10 @@ export async function getCategoryDefinition(
   categoryName: string,
   channel: string,
   objectType = 'Collection',
+  version: 'v1' | 'v4' = DEFAULT_CATEGORY_DEFINITION_VERSION,
 ): Promise<IParsedCategoryDefinition> {
   const response = await apiClient.post(
-    `/action/object/category/definition/${CATEGORY_DEFINITION_VERSION}/read?fields=objectMetadata,forms,name,label`,
+    `/action/object/category/definition/${version}/read?fields=objectMetadata,forms,name,label`,
     {
       request: {
         objectCategoryDefinition: {
