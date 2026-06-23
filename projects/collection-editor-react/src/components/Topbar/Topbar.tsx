@@ -187,7 +187,7 @@ interface GenerateQRModalProps {
 const GenerateQRModal: React.FC<GenerateQRModalProps> = ({ onConfirm, onCancel }) => {
   const [count, setCount] = useState('');
   const numCount = parseInt(count, 10);
-  const isValid = !isNaN(numCount) && numCount >= 1 && numCount <= 250;
+  const isValid = !isNaN(numCount) && numCount >= 2 && numCount <= 250;
 
   return (
     <div className={styles.sbOverlay} role="dialog" aria-modal="true" aria-labelledby="genqr-title">
@@ -205,16 +205,16 @@ const GenerateQRModal: React.FC<GenerateQRModalProps> = ({ onConfirm, onCancel }
           <input
             id="qr-count"
             type="number"
-            min={1}
+            min={2}
             max={250}
             className={styles.sbTextarea}
             style={{ resize: 'none', height: '40px' }}
-            placeholder="Enter number (1–250)"
+            placeholder="Enter number (2–250)"
             value={count}
             onChange={(e) => setCount(e.target.value)}
           />
           {count && !isValid && (
-            <p className={styles.sbError}>Enter a number between 1 and 250.</p>
+            <p className={styles.sbError}>Enter a number between 2 and 250.</p>
           )}
         </div>
         <div className={styles.sbModalFooter}>
@@ -281,9 +281,9 @@ export const Topbar: React.FC<TopbarProps> = ({
     setShowGenerateQR(false);
     setIsGeneratingQR(true);
     try {
-      const processId = await reserveDialcodes(contentId, count);
+      const { processId, reservedDialcodes } = await reserveDialcodes(contentId, count);
       if (processId && rootNode) {
-        updateNode(rootNode.id, { qrCodeProcessId: processId });
+        updateNode(rootNode.id, { qrCodeProcessId: processId, reservedDialcodes });
       }
       toast.success('QR Codes generation started. Use "Download QR Codes" once ready.');
     } catch {
@@ -294,31 +294,66 @@ export const Topbar: React.FC<TopbarProps> = ({
   }, [contentId, rootNode, updateNode]);
 
   const handleDownloadQR = useCallback(async () => {
+    // Metadata guard — mirrors Angular requirement
+    const meta = rootNode?.metadata ?? {};
+    if (!meta['medium'] || !meta['gradeLevel'] || !meta['subject']) {
+      toast.error('Please ensure Medium, Class and Subject are set before downloading QR Codes.');
+      return;
+    }
+
     if (!qrCodeProcessId) {
       toast.error('No QR codes generated yet. Generate QR Codes first.');
       return;
     }
+
     setIsDownloadingQR(true);
     try {
       const result = await getDialcodeProcessStatus(qrCodeProcessId);
-      const zipUrl = result.zipFileName;
-      if (zipUrl) {
-        const a = document.createElement('a');
-        a.href = zipUrl;
-        a.download = 'qrcodes.zip';
-        a.target = '_blank';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-      } else {
-        toast.error('QR Codes not ready yet. Please wait and try again.');
+
+      if (result.status === 'in-process') {
+        toast('QR code image generation is in progress. Please try downloading after some time.', { icon: 'ℹ️' });
+        return;
       }
+
+      const cloudUrl = result.url;
+      if (!cloudUrl) {
+        toast.error('QR Codes not ready yet. Please wait and try again.');
+        return;
+      }
+
+      // Blob-convert so the browser always triggers a local file download
+      // regardless of the cloud storage server's Content-Disposition header.
+      const blob = await fetch(cloudUrl).then(r => r.blob());
+      const dataUrl = await new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.readAsDataURL(blob);
+      });
+
+      // Dynamic filename matching Angular convention
+      const toStr = (v: unknown) =>
+        Array.isArray(v) ? v.join('_') : typeof v === 'string' ? v : '';
+      const medium  = toStr(meta['medium']);
+      const grade   = toStr(meta['gradeLevel']);
+      const subject = toStr(meta['subject']);
+      const ts = new Date().toISOString().replace(/[:.]/g, '-');
+      const filename = `${contentId}_${medium}_${grade}_${subject}_${ts}.zip`;
+
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = filename;
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
+      toast.success('QR codes downloaded.');
     } catch {
       toast.error('Failed to download QR Codes.');
     } finally {
       setIsDownloadingQR(false);
     }
-  }, [qrCodeProcessId]);
+  }, [qrCodeProcessId, rootNode, contentId]);
 
   const isEditMode = editorMode === 'edit';
   const isReviewMode = editorMode === 'review';

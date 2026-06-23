@@ -10,6 +10,7 @@ import { TreeNode } from './TreeNode';
 import { Button } from '../shared/Button';
 import { CsvUpload } from '../BulkUpload/CsvUpload';
 import { exportFolderCsv } from '../../api/bulkUpload';
+import { readHierarchy } from '../../api/hierarchy';
 import styles from './OutlineTree.module.scss';
 
 interface OutlineTreeProps {
@@ -31,11 +32,14 @@ export const OutlineTree: React.FC<OutlineTreeProps> = ({
   const [showCsvUpload, setShowCsvUpload] = useState(false);
   const [csvMode, setCsvMode] = useState<'create' | 'update'>('create');
 
-  const { treeData, selectedNodeId, selectNode, addNode, deleteNode, reorderChildren } = useTreeStore();
+  const { treeData, selectedNodeId, selectNode, addNode, deleteNode, reorderChildren, setTreeData } = useTreeStore();
   const isEditable = editorMode === 'edit';
   const isDraft = useIsDraftStatus();
   // Adding units/content is only allowed while the collection is in Draft.
   const canAdd = isEditable && isDraft;
+  // Mirror Angular: "Create" is only useful when no folders exist yet;
+  // "Download/Update" only make sense when folders already exist.
+  const hasFolders = (treeData[0]?.children ?? []).some(c => c.isFolder);
   const contentId = useEditorStore(
     s => s.editorConfig?.context?.contentId ?? s.editorConfig?.context?.identifier ?? '',
   );
@@ -117,19 +121,36 @@ export const OutlineTree: React.FC<OutlineTreeProps> = ({
     setShowMenu(false);
     if (!contentId) return;
     try {
-      // The export API returns a pre-signed URL to the generated CSV.
       const tocUrl = await exportFolderCsv(contentId);
+      // Blob-convert so download works regardless of server Content-Disposition header
+      const blob = await fetch(tocUrl).then(r => r.blob());
+      const objectUrl = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.href = tocUrl;
+      a.href = objectUrl;
       a.download = `${contentId}-folders.csv`;
-      a.target = '_blank';
+      a.style.display = 'none';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
+      URL.revokeObjectURL(objectUrl);
     } catch {
       toast.error('Failed to download CSV');
     }
   }, [contentId]);
+
+  // After CSV upload succeeds, re-fetch the hierarchy so the tree reflects
+  // the newly created/updated folders without requiring a page reload.
+  const handleCsvComplete = useCallback(async () => {
+    setShowCsvUpload(false);
+    if (!contentId) return;
+    try {
+      const { rootNode } = await readHierarchy(contentId);
+      setTreeData([rootNode]);
+      toast.success('Course outline refreshed.');
+    } catch {
+      toast.error('Outline could not be refreshed automatically. Please reload the page.');
+    }
+  }, [contentId, setTreeData]);
 
   return (
     <div className={styles.container}>
@@ -155,6 +176,8 @@ export const OutlineTree: React.FC<OutlineTreeProps> = ({
                   <button
                     role="menuitem"
                     type="button"
+                    disabled={hasFolders}
+                    title={hasFolders ? 'Folders already exist — use "Update" instead' : undefined}
                     onClick={() => { setShowMenu(false); setCsvMode('create'); setShowCsvUpload(true); }}
                   >
                     Create folders using csv file
@@ -162,6 +185,8 @@ export const OutlineTree: React.FC<OutlineTreeProps> = ({
                   <button
                     role="menuitem"
                     type="button"
+                    disabled={!hasFolders}
+                    title={!hasFolders ? 'No folders yet — use "Create" first' : undefined}
                     onClick={handleDownloadCsv}
                   >
                     Download folders as csv file
@@ -169,6 +194,8 @@ export const OutlineTree: React.FC<OutlineTreeProps> = ({
                   <button
                     role="menuitem"
                     type="button"
+                    disabled={!hasFolders}
+                    title={!hasFolders ? 'No folders yet — use "Create" first' : undefined}
                     onClick={() => { setShowMenu(false); setCsvMode('update'); setShowCsvUpload(true); }}
                   >
                     Update folder metadata using csv file
@@ -243,7 +270,7 @@ export const OutlineTree: React.FC<OutlineTreeProps> = ({
           <CsvUpload
             contentId={contentId}
             mode={csvMode}
-            onComplete={() => setShowCsvUpload(false)}
+            onComplete={handleCsvComplete}
             onClose={() => setShowCsvUpload(false)}
           />
         </div>

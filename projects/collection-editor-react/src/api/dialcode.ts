@@ -26,18 +26,25 @@ export async function linkDialCode(
   return response.data;
 }
 
-export async function reserveDialcodes(contentId: string, count: number): Promise<string> {
+export async function reserveDialcodes(
+  contentId: string,
+  count: number,
+): Promise<{ processId: string; reservedDialcodes: Record<string, unknown> }> {
   const response = await apiClient.post(`/action/dialcode/v1/reserve/${contentId}`, {
     request: {
       dialcodes: { count, qrCodeSpec: { errorCorrectionLevel: 'H' } },
     },
   });
-  return response.data?.result?.processId as string ?? '';
+  const result = response.data?.result ?? {};
+  return {
+    processId: (result.processId as string) ?? '',
+    reservedDialcodes: (result.reservedDialcodes as Record<string, unknown>) ?? {},
+  };
 }
 
 export async function getDialcodeProcessStatus(processId: string): Promise<{
   status: string;
-  zipFileName?: string;
+  url?: string;
   dialcodes?: Array<{ identifier: string }>;
 }> {
   const response = await apiClient.get(`/action/dialcode/v1/process/status/${processId}`);

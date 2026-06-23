@@ -52,8 +52,8 @@ export const CsvUpload: React.FC<CsvUploadProps> = ({
       setErrorMsg('Only .csv files are accepted.');
       return false;
     }
-    if (file.size > 10 * 1024 * 1024) {
-      setErrorMsg('File size must not exceed 10 MB.');
+    if (file.size > 50 * 1024 * 1024) {
+      setErrorMsg('File size must not exceed 50 MB.');
       return false;
     }
     return true;
