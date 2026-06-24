@@ -1,6 +1,7 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Search, Upload, X, Check, Loader } from 'lucide-react';
 import { apiClient } from '../../../api/client';
+import { createMediaAsset, getPreSignedUrl, uploadToBlob, finalizeAssetUpload } from '../../../api/asset';
 import { useEditorStore } from '../../../store/editor.store';
 import styles from './AppIconPickerModal.module.scss';
 
@@ -44,6 +45,9 @@ export const AppIconPickerModal: React.FC<AppIconPickerModalProps> = ({
 
   const channel = useEditorStore(s => s.editorConfig?.context?.channel ?? '');
   const uid = useEditorStore(s => s.editorConfig?.context?.uid ?? '');
+  const presignedHeaders = useEditorStore(
+    s => (s.editorConfig?.context?.cloudStorage?.presigned_headers ?? {}) as Record<string, string>,
+  );
 
   const searchImages = useCallback(async (q: string, off: number, append = false) => {
     setIsLoading(true);
@@ -134,16 +138,21 @@ export const AppIconPickerModal: React.FC<AppIconPickerModalProps> = ({
     setIsUploading(true);
     setUploadError('');
     try {
-      const formData = new FormData();
-      formData.append('file', uploadFile);
-      const resp = await apiClient.post(
-        `/action/content/v3/upload/${nodeId}?fileType=image`,
-        formData,
-        { headers: { 'Content-Type': 'multipart/form-data' } },
+      // Step 1: Register a new asset node in Sunbird
+      const assetId = await createMediaAsset(
+        uploadFile.name.split('.').slice(0, -1).join('.') || uploadFile.name,
+        uploadFile.type,
+        uid,
+        channel,
       );
-      const url = resp.data?.result?.artifactUrl as string | undefined;
-      if (!url) throw new Error('No URL in response');
-      onSelect(url);
+      // Step 2: Get Azure pre-signed upload URL
+      const signedUrl = await getPreSignedUrl(assetId, uploadFile.name);
+      // Step 3: PUT raw file bytes directly to blob storage
+      await uploadToBlob(signedUrl, uploadFile, presignedHeaders);
+      // Step 4: Finalize — link blob URL to asset, get CDN content_url
+      const fileUrl = signedUrl.split('?')[0];
+      const contentUrl = await finalizeAssetUpload(assetId, fileUrl, uploadFile.type);
+      onSelect(contentUrl);
     } catch (err) {
       setUploadError(err instanceof Error ? err.message : 'Upload failed.');
     } finally {

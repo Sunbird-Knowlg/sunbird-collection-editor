@@ -79,6 +79,16 @@
   }
 }
 
+.addBtnMuted {
+  opacity: 0.4;
+  cursor: default;
+
+  &:hover {
+    background: var(--sbx-primary-light);
+    color: var(--sbx-primary);
+  }
+}
+
 .added {
   border-color: var(--sbx-success);
   background: var(--sbx-status-ok-bg);

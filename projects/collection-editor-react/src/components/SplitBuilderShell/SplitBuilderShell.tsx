@@ -83,7 +83,11 @@ export const SplitBuilderShell: React.FC<SplitBuilderShellProps> = ({
         toast.error('Drop content onto a unit, not directly on the course.');
         return;
       }
-      addResource(item, targetNodeId);
+      const added = addResource(item, targetNodeId);
+      if (!added) {
+        toast.error(`"${item.name}" is already in this collection`);
+        return;
+      }
       onContentAdded?.(item, targetNodeId);
       toast.success(`Added "${item.name}" to unit`);
     },
@@ -104,6 +108,10 @@ export const SplitBuilderShell: React.FC<SplitBuilderShellProps> = ({
         return;
       }
       if (event.action === 'saveCollection') {
+        if (!isFormValid) {
+          toast.error('Please fill the required metadata');
+          return;
+        }
         await save();
         onHierarchySaved?.(treeData);
         onToolbarEvent?.(event);
@@ -122,7 +130,7 @@ export const SplitBuilderShell: React.FC<SplitBuilderShellProps> = ({
       }
       onToolbarEvent?.(event);
     },
-    [save, runAction, onToolbarEvent, onHierarchySaved, treeData, isDirty],
+    [save, runAction, onToolbarEvent, onHierarchySaved, treeData, isDirty, isFormValid],
   );
 
   // Resolve the unsaved-changes prompt for Back.

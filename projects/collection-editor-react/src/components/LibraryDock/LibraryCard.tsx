@@ -80,15 +80,18 @@ export const LibraryCard: React.FC<LibraryCardProps> = ({
         </span>
       )}
 
-      {/* Add button — hidden when already added; disabled for non-Draft content */}
+      {/* Add button — hidden when already added; disabled for non-Draft content.
+          When isDraft but no unit is selected, keep the button clickable so the
+          parent can fire a helpful "select a unit first" toast. */}
       {!isAdded && (
         <button
           type="button"
-          className={styles.addBtn}
-          onClick={(e) => { e.stopPropagation(); if (canAdd) onAdd(item); }}
-          disabled={!canAdd}
+          className={[styles.addBtn, !canAdd && isDraft ? styles.addBtnMuted : ''].join(' ')}
+          onClick={(e) => { e.stopPropagation(); onAdd(item); }}
+          disabled={!isDraft}
+          aria-disabled={!canAdd}
           aria-label={`Add ${item.name} to unit`}
-          title={isDraft ? 'Add to unit' : 'Only Draft content can be edited'}
+          title={isDraft ? (isUnitSelected ? 'Add to unit' : 'Select a unit to add') : 'Only Draft content can be added'}
         >
           <Plus size={14} />
         </button>

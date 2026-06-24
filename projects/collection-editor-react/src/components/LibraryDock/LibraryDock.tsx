@@ -66,10 +66,22 @@ export const LibraryDock: React.FC<LibraryDockProps> = ({ editorMode, collapsed 
         toast.error('Select a unit first');
         return;
       }
-      addResource(item, selectedNodeId);
+      const rootId = treeData[0]?.id;
+      if (selectedNodeId === rootId) {
+        toast('Select a unit from the outline to add content — resources cannot be added directly to the course.', {
+          icon: 'ℹ️',
+          duration: 4000,
+        });
+        return;
+      }
+      const added = addResource(item, selectedNodeId);
+      if (added === false) {
+        toast.error(`"${item.name}" is already in this collection`);
+        return;
+      }
       toast.success(`Added "${item.name}"`);
     },
-    [selectedNodeId, addResource],
+    [selectedNodeId, addResource, treeData],
   );
 
   const handleApplyFilters = useCallback(

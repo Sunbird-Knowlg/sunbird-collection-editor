@@ -16,7 +16,7 @@ interface TreeState {
   addNode: (parentId: string, type: 'unit' | 'subunit') => string;
   deleteNode: (id: string) => void;
   reorderChildren: (parentId: string, fromIndex: number, toIndex: number) => void;
-  addResource: (content: IContent, nodeId: string) => void;
+  addResource: (content: IContent, nodeId: string) => boolean;
   markDirty: () => void;
   getNodeById: (id: string) => INode | undefined;
   getChildrenOf: (id: string) => INode[];
@@ -214,7 +214,8 @@ export const useTreeStore = create<TreeState>((set, get) => ({
       },
     }));
 
-    get().selectNode(newId);
+    // Defer selectNode so treeData settles before bfsFind runs — same pattern as setTreeData.
+    setTimeout(() => get().selectNode(newId), 0);
     return newId;
   },
 
@@ -247,7 +248,12 @@ export const useTreeStore = create<TreeState>((set, get) => ({
     const allowContentUnderRoot = config?.config?.allowContentUnderRoot ?? false;
     const rootId = get().treeData[0]?.id;
     if (!allowContentUnderRoot && nodeId === rootId) {
-      return;
+      return false;
+    }
+
+    // Prevent duplicate content anywhere in the collection (cross-unit)
+    if (bfsFind(get().treeData, content.identifier)) {
+      return false;
     }
 
     const leafNode: INode = {
@@ -270,6 +276,7 @@ export const useTreeStore = create<TreeState>((set, get) => ({
     }));
 
     get().markDirty();
+    return true;
   },
 
   markDirty: () => {

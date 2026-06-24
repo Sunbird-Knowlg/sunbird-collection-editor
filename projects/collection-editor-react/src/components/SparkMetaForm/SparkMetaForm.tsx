@@ -88,6 +88,23 @@ export const SparkMetaForm: React.FC<SparkMetaFormProps> = ({
   const onFormStatusChangeRef = useRef(onFormStatusChange);
   onFormStatusChangeRef.current = onFormStatusChange;
 
+  // Report initial validity on mount — mirrors Angular's setTimeout(() => emitStatus(), 0).
+  // This ensures the parent (SplitBuilderShell) knows the form is invalid from the start
+  // when required fields are empty, so Save is disabled before the user touches anything.
+  useEffect(() => {
+    // RHF doesn't trigger validation on mount with defaultValues; run it manually so
+    // formState.errors is populated before we read it.
+    form.trigger().then(() => {
+      const errors = form.formState.errors;
+      const fields = allFieldsRef.current;
+      const errorTabs = Array.from(new Set(
+        Object.keys(errors).map(code => fields.find(f => f.code === code)?.tab).filter(Boolean)
+      )) as Array<'details' | 'audience' | 'licensing'>;
+      onFormStatusChangeRef.current(Object.keys(errors).length === 0, errorTabs);
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // once per form instance (form re-mounts per node via key={selectedNodeId})
+
   // Subscribe once per form instance (key={selectedNodeId} gives a fresh form per node).
   // Write only the specific field that changed — avoids the RHF timing issue where
   // formState.dirtyFields is not yet updated when the watch callback fires for

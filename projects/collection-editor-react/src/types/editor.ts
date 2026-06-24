@@ -38,6 +38,10 @@ export interface IContext {
   targetFWIds?: string[];
   rollup?: Record<string, string>;
   tags?: string[];
+  cloudStorage?: {
+    provider?: string;
+    presigned_headers?: Record<string, string>;
+  };
 }
 
 export interface IConfig {

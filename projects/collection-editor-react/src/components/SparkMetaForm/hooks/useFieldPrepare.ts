@@ -106,7 +106,11 @@ export function useFieldPrepare(
       code,
       label: (field.label as string) ?? code,
       inputType,
-      required: !!(field.required ?? field.validations),
+      required: !!(
+        field.required === true ||
+        (Array.isArray(field.validations) &&
+          (field.validations as Array<Record<string, unknown>>).some(v => v.type === 'required'))
+      ),
       editable: field.editable !== false,
       placeholder: field.placeholder as string | undefined,
       maxLength: field.maxLength as number | undefined,
