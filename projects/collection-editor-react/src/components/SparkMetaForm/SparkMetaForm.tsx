@@ -4,6 +4,7 @@ import type { EditorMode } from '../../types/editor';
 import { useTreeStore } from '../../store/tree.store';
 import { useEditorStore } from '../../store/editor.store';
 import { useFramework } from '../../hooks/useFramework';
+import { useChannelData } from '../../hooks/useChannelData';
 import { useFieldPrepare, SECTION_DISPLAY } from './hooks/useFieldPrepare';
 import { useCascade } from './hooks/useCascade';
 import { FormSection } from './FormSection';
@@ -41,7 +42,11 @@ export const SparkMetaForm: React.FC<SparkMetaFormProps> = ({
     config?.context?.framework as string | undefined,
     config?.context?.targetFWIds as string[] | undefined,
   );
-  const frameworkDetails = { organisationFramework, targetFrameworks };
+  const { frameworks: channelFrameworks, collectionAdditionalCategories } = useChannelData(
+    config?.context?.channel as string | undefined,
+  );
+  const orgFrameworks = channelFrameworks?.map(f => ({ label: f.name, value: f.identifier }));
+  const frameworkDetails = { organisationFramework, targetFrameworks, orgFrameworks, channelAdditionalCategories: collectionAdditionalCategories };
 
   // selectedNodeId must be declared before it is used in effectiveMeta
   const selectedNodeId = useTreeStore(s => s.selectedNodeId);

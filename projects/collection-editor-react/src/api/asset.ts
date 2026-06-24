@@ -49,7 +49,8 @@ export async function uploadToBlob(
     method: 'PUT',
     body: file,
     headers: {
-      'Content-Type': file.type,
+      'x-ms-blob-type': 'BlockBlob',
+      'Content-Type': 'application/octet-stream',
       ...presignedHeaders,
     },
   });

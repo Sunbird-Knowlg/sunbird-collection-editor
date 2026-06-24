@@ -23,4 +23,9 @@ export interface IFramework {
 export interface IFrameworkDetails {
   organisationFramework?: IFramework;
   targetFrameworks?: IFramework[];
+  /** Options for the 'framework' (Course Type) field — built from channel.frameworks
+   *  filtered/extended by orgFWType from the category definition. */
+  orgFrameworks?: Array<{ label: string; value: string }>;
+  /** Options for the 'additionalCategories' field — from channel.collectionAdditionalCategories. */
+  channelAdditionalCategories?: string[];
 }

@@ -243,6 +243,13 @@ function resolveOptions(
   // 3. Framework-backed — use the field's own sourceCategory, falling back to
   //    the legacy code→category map.
   const code = (field.code as string) ?? '';
+
+  // Channel-derived fields: options come from the channel read API, not the framework API.
+  if (code === 'framework') return fw.orgFrameworks;
+  if (code === 'additionalCategories') {
+    return fw.channelAdditionalCategories?.map(c => ({ label: c, value: c }));
+  }
+
   const categoryCode = (field.sourceCategory as string | undefined) ?? FIELD_TO_FW_CATEGORY[code];
   if (!categoryCode) return undefined;
 

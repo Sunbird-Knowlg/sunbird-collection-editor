@@ -37,8 +37,8 @@ export interface ICategoryField {
 
 export interface IParsedCategoryDefinition {
   rootForm: ICategoryField[];          // forms.create
-  unitForm: ICategoryField[];          // forms.unitMetadata
-  childForm: ICategoryField[];         // forms.childMetadata
+  unitForm: ICategoryField[];          // forms.unitMetadata  (name / description / keywords / topic)
+  childForm: ICategoryField[];         // forms.childMetadata (name / author / copyright / license …)
   searchForm: ICategoryField[];        // forms.search
   relationalForm: ICategoryField[];    // forms.relationalMetadata
   publishChecklist: ICategoryField[];  // forms.publishchecklist
