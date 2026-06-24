@@ -38,6 +38,9 @@ export const SplitBuilderShell: React.FC<SplitBuilderShellProps> = ({
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [dockCollapsed, setDockCollapsed] = useState(false);
   const [showUnsavedPrompt, setShowUnsavedPrompt] = useState(false);
+  // Tracks whether the currently selected node's form is valid.
+  // Defaults true so Save is enabled before any form interaction.
+  const [isFormValid, setIsFormValid] = useState(true);
 
   const { addResource, treeData } = useTreeStore();
   const selectedNodeId = useTreeStore((s) => s.selectedNodeId);
@@ -89,6 +92,12 @@ export const SplitBuilderShell: React.FC<SplitBuilderShellProps> = ({
 
   const handleToolbarEvent = useCallback(
     async (event: { action: ToolbarAction; data?: unknown }) => {
+      // Intercept form status updates from ContextualEditor — don't bubble up.
+      if (event.action === 'onFormStatusChange') {
+        const { isValid } = (event.data ?? {}) as { isValid?: boolean };
+        setIsFormValid(isValid !== false);
+        return;
+      }
       // Guard Back when there are unsaved changes (auto-save is disabled).
       if (event.action === 'back' && isDirty) {
         setShowUnsavedPrompt(true);
@@ -137,6 +146,7 @@ export const SplitBuilderShell: React.FC<SplitBuilderShellProps> = ({
           isSaving={isSaving}
           isDirty={isDirty}
           lastSaved={lastSaved}
+          isFormValid={isFormValid}
           onToolbarEvent={handleToolbarEvent}
         />
 

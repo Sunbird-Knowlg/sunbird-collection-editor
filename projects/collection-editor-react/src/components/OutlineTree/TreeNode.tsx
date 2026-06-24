@@ -144,9 +144,10 @@ export const TreeNode: React.FC<TreeNodeProps> = ({
       ) : (
         <span
           className={styles.title}
+          title={node.data.name}
           onDoubleClick={() => isEditable && setIsRenaming(true)}
         >
-          {node.data.name}
+          {node.data.name.length > 25 ? `${node.data.name.slice(0, 25)}...` : node.data.name}
         </span>
       )}
 

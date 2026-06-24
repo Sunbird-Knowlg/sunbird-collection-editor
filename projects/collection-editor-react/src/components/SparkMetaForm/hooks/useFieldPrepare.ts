@@ -85,11 +85,16 @@ export function useFieldPrepare(
 ): PreparedField[] {
   if (!formConfig?.length) return getDefaultFields(nodeMetadata, isRoot, frameworkDetails);
 
+  const seenCodes = new Set<string>();
   return formConfig.filter((field) => {
     // QR/Dial Code is managed via header buttons, not the root form
     if (isRoot && (field.code === 'dialCode' || field.code === 'dialcode')) return false;
     // Honor the API `visible` flag
     if (field.visible === false) return false;
+    // Deduplicate — first occurrence of each code wins
+    const code = field.code as string;
+    if (seenCodes.has(code)) return false;
+    seenCodes.add(code);
     return true;
   }).map((field): PreparedField => {
     const code = (field.code as string) ?? '';

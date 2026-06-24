@@ -56,7 +56,8 @@ export interface IConfig {
   previewCdnUrl?: string;
   /**
    * API version for object/category/definition endpoint.
-   * Sandbox/older envs use 'v1'; current backend uses 'v4' (default).
+   * Defaults to 'v1' (works on both sandbox and test environments).
+   * Set to 'v4' only if your backend specifically requires it.
    */
   categoryDefinitionApiVersion?: 'v1' | 'v4';
 }

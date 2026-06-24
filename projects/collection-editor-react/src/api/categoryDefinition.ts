@@ -1,8 +1,8 @@
 import { apiClient } from './client';
 
-// Default API version. Sandbox/older environments serve v1; current backends serve v4.
+// Default API version. Both sandbox and test environments serve v1.
 // Callers can pass a version override via getCategoryDefinition's `version` param.
-const DEFAULT_CATEGORY_DEFINITION_VERSION = 'v4';
+const DEFAULT_CATEGORY_DEFINITION_VERSION = 'v1';
 
 // ---------------------------------------------------------------------------
 // A single normalized field, derived from one entry in a form's `properties`

@@ -31,6 +31,7 @@ interface TopbarProps {
   isSaving: boolean;
   isDirty: boolean;
   lastSaved: string | null;
+  isFormValid?: boolean;
   onToolbarEvent: (event: { action: ToolbarAction; data?: unknown }) => void;
 }
 
@@ -236,6 +237,7 @@ export const Topbar: React.FC<TopbarProps> = ({
   isSaving,
   isDirty,
   lastSaved,
+  isFormValid = true,
   onToolbarEvent,
 }) => {
   const treeData = useTreeStore((s) => s.treeData);
@@ -447,9 +449,16 @@ export const Topbar: React.FC<TopbarProps> = ({
           {/* Save as Draft — author action only. Hidden in read-only and for
               content under review (review / sourcing modes or Review status). */}
           {!isReadOnly && !isReviewMode && !isSourcingReviewMode && statusLabel !== 'Review' && (
-            <Button variant="ghost" size="sm" onClick={() => emit('saveCollection')}>
-              Save as Draft
-            </Button>
+            <span title={!isFormValid ? 'Fill all required fields before saving' : undefined}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => emit('saveCollection')}
+                disabled={!isFormValid}
+              >
+                Save as Draft
+              </Button>
+            </span>
           )}
 
           {/* ── edit mode ─────────────────────────────────────── */}
@@ -616,10 +625,10 @@ export const Topbar: React.FC<TopbarProps> = ({
 
       {showRejectModal && (
         <ReviewCommentModal
-          titleText="Add Review Comments"
-          labelText="Enter your comments"
-          placeholderText="Add comment"
-          submitLabel="Submit Review"
+          titleText="Reject Content"
+          labelText="Reason for rejection"
+          placeholderText="Explain why this content is being rejected"
+          submitLabel="Reject"
           submitVariant="danger"
           onConfirm={(comment) => { setShowRejectModal(false); emit('reject', { comment }); }}
           onCancel={() => setShowRejectModal(false)}
@@ -628,10 +637,11 @@ export const Topbar: React.FC<TopbarProps> = ({
 
       {showSendBack && (
         <ReviewCommentModal
-          titleText="Add Review Comments"
-          labelText="Enter your comments"
-          placeholderText="Add comment"
-          submitLabel="Submit Review"
+          titleText="Send Back for Corrections"
+          labelText="Corrections needed"
+          placeholderText="Describe the corrections the author needs to make"
+          submitLabel="Send Back"
+          submitVariant="primary"
           onConfirm={handleSendBack}
           onCancel={() => setShowSendBack(false)}
         />
