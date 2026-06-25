@@ -63,8 +63,9 @@ export const SparkMetaForm: React.FC<SparkMetaFormProps> = ({
     ? (apiFields as Array<Record<string, unknown>>)
     : ((config?.config.hierarchy as Record<string, unknown>)?.formConfig as Array<Record<string, unknown>> ?? []);
   const allFields = useFieldPrepare(formConfig, effectiveMeta, frameworkDetails, isRoot);
-  // appIcon is always rendered in the title row (TitleAppIcon), never in the form grid
-  const tabFields = allFields.filter(f => f.tab === activeTab && f.inputType !== 'appIcon');
+  // appIcon is always rendered in the title row (TitleAppIcon), never in the form grid.
+  // Fields with visible === false (e.g. dialcodes when QR code is "No") are excluded.
+  const tabFields = allFields.filter(f => f.tab === activeTab && f.inputType !== 'appIcon' && f.visible !== false);
 
   const form = useForm<Record<string, unknown>>({
     mode: 'onChange',
@@ -96,7 +97,19 @@ export const SparkMetaForm: React.FC<SparkMetaFormProps> = ({
   // Report initial validity on mount — mirrors Angular's setTimeout(() => emitStatus(), 0).
   // This ensures the parent (SplitBuilderShell) knows the form is invalid from the start
   // when required fields are empty, so Save is disabled before the user touches anything.
+  // Also syncs normalized currentValues to treeCache so multiselect fields like medium
+  // are stored as arrays from the first load, even if the user never changes them.
   useEffect(() => {
+    const nodeId = selectedNodeIdRef.current;
+    if (nodeId) {
+      const patch = Object.fromEntries(
+        allFieldsRef.current
+          .filter(f => f.currentValue !== undefined && f.currentValue !== null)
+          .map(f => [f.code, f.currentValue])
+      );
+      if (Object.keys(patch).length > 0) updateNode(nodeId, patch);
+    }
+
     // RHF doesn't trigger validation on mount with defaultValues; run it manually so
     // formState.errors is populated before we read it.
     form.trigger().then(() => {
@@ -122,8 +135,12 @@ export const SparkMetaForm: React.FC<SparkMetaFormProps> = ({
       const validCodes = new Set(fields.map(f => f.code));
 
       if (changedField && validCodes.has(changedField)) {
-        // Single field changed — write just that field to treeCache
-        const value = form.getValues(changedField as string);
+        // Single field changed — write just that field to treeCache.
+        // dialcodes must always be stored as an array (API expects string[]).
+        let value = form.getValues(changedField as string);
+        if (changedField === 'dialcodes') {
+          value = Array.isArray(value) ? value : (value ? [value] : []);
+        }
         updateNode(nodeId, { [changedField]: value });
         onFormValueChangeRef.current({ [changedField]: value });
       } else if (!changedField) {

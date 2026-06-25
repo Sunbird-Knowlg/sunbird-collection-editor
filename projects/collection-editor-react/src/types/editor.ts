@@ -25,6 +25,7 @@ export interface IUser {
 
 export interface IContext {
   authToken: string;
+  userToken?: string;
   userId: string;
   sid: string;
   did: string;

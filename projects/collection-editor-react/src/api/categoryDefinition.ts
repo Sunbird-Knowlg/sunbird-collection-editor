@@ -92,7 +92,9 @@ function normalizeField(raw: Record<string, unknown>, section?: string): ICatego
 }
 
 // Flatten a form's `properties` (sections with `fields[]`, or flat fields)
-// into a single ordered field list, tagging each field with its section title.
+// into a single ordered field list, tagging each field with its section name.
+// Fields are sorted within each section by their `index`, then sections are
+// concatenated in API order — preserving section grouping for the tab renderer.
 function parseForm(form: unknown): ICategoryField[] {
   const properties = (form as { properties?: unknown })?.properties;
   if (!Array.isArray(properties)) return [];
@@ -100,16 +102,19 @@ function parseForm(form: unknown): ICategoryField[] {
   const fields: ICategoryField[] = [];
   for (const item of properties as Array<Record<string, unknown>>) {
     if (Array.isArray(item.fields)) {
-      const sectionTitle = (item.title as string) ?? (item.name as string) ?? undefined;
-      for (const f of item.fields as Array<Record<string, unknown>>) {
-        if (f.code) fields.push(normalizeField(f, sectionTitle));
+      // Use machine name (not display title) so SECTION_TAB_MAP / SECTION_DISPLAY lookups work.
+      const sectionName = (item.name as string) ?? undefined;
+      const sectionFields = (item.fields as Array<Record<string, unknown>>)
+        .filter(f => !!f.code)
+        .sort((a, b) => ((a.index as number) ?? 0) - ((b.index as number) ?? 0));
+      for (const f of sectionFields) {
+        fields.push(normalizeField(f, sectionName));
       }
     } else if (item.code) {
       fields.push(normalizeField(item));
     }
   }
-  // Stable order by `index` when present.
-  return fields.sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
+  return fields;
 }
 
 function parseSchemaDefaults(schema: unknown): Record<string, unknown> {

@@ -23,6 +23,12 @@ apiClient.interceptors.request.use(async (config: InternalAxiosRequestConfig) =>
     config.headers['Authorization'] = `Bearer ${ctx.authToken}`;
   }
 
+  // Portal proxy routes (/api/*) require the user session token in addition
+  // to the Bearer auth token. The dialcode validate and link APIs use /api/*.
+  if (ctx?.userToken) {
+    config.headers['X-Authenticated-User-Token'] = ctx.userToken;
+  }
+
   // Sunbird user/content APIs scope results to the tenant via X-Channel-Id.
   // Omitting it causes user-search to return cross-tenant results or nothing.
   if (ctx?.channel) {

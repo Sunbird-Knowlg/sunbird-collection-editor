@@ -13,6 +13,7 @@ export interface PreparedField {
     | 'datepicker' | 'datetime' | 'keywords' | 'tagsinput' | 'nestedselect' | 'license' | 'dialcode';
   required?: boolean;
   editable?: boolean;
+  visible?: boolean;
   placeholder?: string;
   maxLength?: number;
   options?: Array<{ label: string; value: string }>;
@@ -25,11 +26,13 @@ export interface PreparedField {
 }
 
 export const SECTION_DISPLAY: Record<string, { title: string; description?: string }> = {
-  'First Section': { title: 'Basic Information', description: 'Core details that define the content identity.' },
+  'First Section':  { title: 'Basic Information', description: 'Core details that define the content identity.' },
   'Second Section': { title: 'Categorisation', description: 'Category and type classification for the content.' },
+  'Third Section':  { title: 'Categorisation', description: 'Category and type classification for the content.' },
   'Organisation Framework Terms': { title: 'Curriculum', description: 'Framework-aligned categorisation.' },
   'Target Framework Terms': { title: 'Target Audience', description: 'Curriculum alignment for the intended learners.' },
   'Fourth Section': { title: 'Licensing & Attribution', description: 'Copyright and usage rights information.' },
+  'Sixth Section':  { title: 'Licensing & Attribution', description: 'Copyright and usage rights information.' },
 };
 
 export interface IFieldConfig extends PreparedField {
@@ -42,11 +45,22 @@ export interface IFieldConfig extends PreparedField {
 // Sections from the category-definition map to editor tabs. Falls back to a
 // per-code map, then to Details.
 const SECTION_TAB_MAP: Record<string, PreparedField['tab']> = {
-  'First Section': 'details',
+  'First Section':  'details',
   'Second Section': 'details',
+  'Third Section':  'details',   // Content Playlist: primaryCategory, additionalCategories
   'Organisation Framework Terms': 'details',
   'Target Framework Terms': 'audience',
   'Fourth Section': 'licensing',
+  'Sixth Section':  'licensing', // Content Playlist: author, copyright, license
+};
+
+// Alias map for live APIs that use section display title as the machine name.
+const SECTION_TITLE_ALIAS: Record<string, string> = {
+  'Categorisation':          'Second Section',
+  'Basic Information':       'First Section',
+  'Licensing & Attribution': 'Fourth Section',
+  'Curriculum':              'Organisation Framework Terms',
+  'Target Audience':         'Target Framework Terms',
 };
 
 const FIELD_TAB_MAP: Record<string, PreparedField['tab']> = {
@@ -55,6 +69,7 @@ const FIELD_TAB_MAP: Record<string, PreparedField['tab']> = {
   primaryCategory: 'details', additionalCategories: 'details',
   board: 'details', subject: 'details', subjectIds: 'details', medium: 'details',
   framework: 'details', topicsIds: 'details', topic: 'details',
+  dialcodeRequired: 'details', dialcodes: 'details',
   // Audience & Curriculum
   audience: 'audience',
   targetBoardIds: 'audience', targetMediumIds: 'audience',
@@ -102,7 +117,7 @@ export function useFieldPrepare(
     const options = resolveOptions(field, frameworkDetails, nodeMetadata);
     const rawValue = nodeMetadata[code];
     const currentValue = normalizeCurrentValue(rawValue, inputType);
-    return {
+    const base: PreparedField = {
       code,
       label: (field.label as string) ?? code,
       inputType,
@@ -124,6 +139,16 @@ export function useFieldPrepare(
       defaultValue: field.defaultValue ?? field.default,
       currentValue,
     };
+
+    // dialcodes is only visible and required when dialcodeRequired === 'Yes'.
+    // The API marks it required unconditionally; override here to respect the
+    // QR code toggle (default is "No").
+    if (code === 'dialcodes') {
+      const isQrRequired = (nodeMetadata['dialcodeRequired'] as string | undefined) === 'Yes';
+      return { ...base, required: isQrRequired, visible: isQrRequired };
+    }
+
+    return base;
   });
 }
 
@@ -172,7 +197,11 @@ function withSelectedOptions(
 // ----- Tab resolver ----------------------------------------------------------
 function resolveTab(field: Record<string, unknown>): PreparedField['tab'] {
   const section = field.section as string | undefined;
-  if (section && SECTION_TAB_MAP[section]) return SECTION_TAB_MAP[section];
+  if (section) {
+    if (SECTION_TAB_MAP[section]) return SECTION_TAB_MAP[section];
+    const alias = SECTION_TITLE_ALIAS[section];
+    if (alias && SECTION_TAB_MAP[alias]) return SECTION_TAB_MAP[alias];
+  }
   const code = (field.code as string) ?? '';
   return FIELD_TAB_MAP[code] ?? 'details';
 }
@@ -313,26 +342,9 @@ function fwOpts(code: string, fw: IFrameworkDetails) {
   return resolveFwOptions(code, categoryCode, { code }, fw, {});
 }
 
-const AUDIENCE_OPTIONS = [
-  { label: 'Student', value: 'Student' },
-  { label: 'Teacher', value: 'Teacher' },
-  { label: 'Administrator', value: 'Administrator' },
-  { label: 'Parent', value: 'Parent' },
-  { label: 'Other', value: 'Other' },
-];
-
-const LICENSE_OPTIONS = [
-  { label: 'CC BY 4.0', value: 'CC BY 4.0' },
-  { label: 'CC BY-SA 4.0', value: 'CC BY-SA 4.0' },
-  { label: 'CC BY-ND 4.0', value: 'CC BY-ND 4.0' },
-  { label: 'CC BY-NC 4.0', value: 'CC BY-NC 4.0' },
-  { label: 'CC BY-NC-SA 4.0', value: 'CC BY-NC-SA 4.0' },
-  { label: 'CC BY-NC-ND 4.0', value: 'CC BY-NC-ND 4.0' },
-  { label: 'CC0 1.0', value: 'CC0 1.0' },
-  { label: 'All Rights Reserved', value: 'All Rights Reserved' },
-];
-
 // ----- Default fields (used when no formConfig from API) --------------------
+// Structural skeleton only — no hardcoded options. All option values come from
+// the API category definition; this fallback exists only for graceful degradation.
 function cv(meta: Record<string, unknown>, code: string, inputType: PreparedField['inputType']): unknown {
   return normalizeCurrentValue(meta[code], inputType);
 }
@@ -342,7 +354,6 @@ function getDefaultFields(
   isRoot: boolean,
   fw: IFrameworkDetails,
 ): PreparedField[] {
-  // Fields shown for all nodes (root + units)
   const fields: PreparedField[] = [
     {
       code: 'name', label: 'Title', inputType: 'text', required: true,
@@ -360,46 +371,34 @@ function getDefaultFields(
 
   if (!isRoot) return fields;
 
-  // ── Root (Course) node — Details tab ─────────────────────────────────────
+  // ── Root node — Details tab ───────────────────────────────────────────────
   fields.push(
     {
       code: 'primaryCategory', label: 'Category', inputType: 'select',
       editable: false, tab: 'details', section: 'Second Section', currentValue: cv(meta, 'primaryCategory', 'select'),
-      options: [
-        { label: 'Course', value: 'Course' },
-        { label: 'Digital Textbook', value: 'Digital Textbook' },
-        { label: 'Teacher Resource', value: 'Teacher Resource' },
-        { label: 'Learning Resource', value: 'Learning Resource' },
-        { label: 'Practice Question Set', value: 'Practice Question Set' },
-      ],
     },
     {
       code: 'additionalCategories', label: 'Additional Category', inputType: 'multiselect',
       editable: true, tab: 'details', section: 'Second Section', currentValue: cv(meta, 'additionalCategories', 'multiselect'),
-      options: [
-        { label: 'Lesson Plan', value: 'Lesson Plan' },
-        { label: 'Textbook', value: 'Textbook' },
-        { label: 'TV Lesson', value: 'TV Lesson' },
-        { label: 'Revision Material', value: 'Revision Material' },
-      ],
+      options: fw.channelAdditionalCategories?.map(c => ({ label: c, value: c })),
     },
     {
-      code: 'board', label: 'Course Type', inputType: 'select',
+      code: 'framework', label: 'Course Type', inputType: 'select',
       required: true, editable: true, tab: 'details', section: 'Organisation Framework Terms',
-      options: fwOpts('board', fw), currentValue: cv(meta, 'board', 'select'),
+      options: fw.orgFrameworks, currentValue: cv(meta, 'framework', 'select'),
     },
     {
-      code: 'subject', label: 'Subjects covered in the course', inputType: 'multiselect',
+      code: 'subjectIds', label: 'Subjects covered', inputType: 'multiselect',
       required: true, editable: true, tab: 'details', section: 'Organisation Framework Terms',
-      options: fwOpts('subject', fw), currentValue: cv(meta, 'subject', 'multiselect'),
+      options: fwOpts('subjectIds', fw), currentValue: cv(meta, 'subjectIds', 'multiselect'),
     },
   );
 
-  // ── Root (Course) node — Audience & Curriculum tab ───────────────────────
+  // ── Root node — Audience & Curriculum tab ─────────────────────────────────
   fields.push(
     {
       code: 'audience', label: 'Audience Type', inputType: 'multiselect',
-      editable: true, tab: 'audience', section: 'Target Framework Terms', options: AUDIENCE_OPTIONS,
+      editable: true, tab: 'audience', section: 'Target Framework Terms',
       currentValue: cv(meta, 'audience', 'multiselect'),
     },
     {
@@ -424,7 +423,7 @@ function getDefaultFields(
     },
   );
 
-  // ── Root (Course) node — Licensing tab ──────────────────────────────────
+  // ── Root node — Licensing tab ─────────────────────────────────────────────
   fields.push(
     {
       code: 'creator', label: 'Author', inputType: 'text',
@@ -445,7 +444,7 @@ function getDefaultFields(
     {
       code: 'license', label: 'License', inputType: 'select',
       required: true, editable: true, tab: 'licensing', section: 'Fourth Section',
-      options: LICENSE_OPTIONS, currentValue: cv(meta, 'license', 'select'),
+      currentValue: cv(meta, 'license', 'select'),
     },
   );
 
