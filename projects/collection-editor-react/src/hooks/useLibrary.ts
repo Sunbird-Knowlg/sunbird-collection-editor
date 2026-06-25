@@ -65,7 +65,6 @@ export function useLibrary() {
       try {
         const filters: Record<string, unknown> = {
           status: ['Live'],
-          contentType: ['Resource'],
           primaryCategory: filter && filter !== 'all'
             ? [filter]
             : allowedCategories,

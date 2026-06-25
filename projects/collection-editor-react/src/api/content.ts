@@ -12,7 +12,6 @@ export async function compositeSearch(params: {
 }): Promise<{ content: IContent[]; count: number }> {
   const baseFilters: Record<string, unknown> = {
     status: ['Live'],
-    contentType: ['Resource'],
     ...(params.filters ?? {}),
   };
   if (params.channel) {
