@@ -67,7 +67,7 @@ const FIELD_TAB_MAP: Record<string, PreparedField['tab']> = {
   // Details
   name: 'details', description: 'details', keywords: 'details', appIcon: 'details',
   primaryCategory: 'details', additionalCategories: 'details',
-  board: 'details', subject: 'details', subjectIds: 'details', medium: 'details',
+  board: 'details', boardIds: 'details', subject: 'details', subjectIds: 'details', medium: 'details',
   framework: 'details', topicsIds: 'details', topic: 'details',
   dialcodeRequired: 'details', dialcodes: 'details',
   // Audience & Curriculum
@@ -82,7 +82,7 @@ const FIELD_TAB_MAP: Record<string, PreparedField['tab']> = {
 
 // ----- Framework category mapping (fallback when field has no sourceCategory) -
 const FIELD_TO_FW_CATEGORY: Record<string, string> = {
-  board: 'board', medium: 'medium', gradeLevel: 'gradeLevel', subject: 'subject',
+  board: 'board', boardIds: 'board', medium: 'medium', gradeLevel: 'gradeLevel', subject: 'subject',
   subjectIds: 'subject', topicsIds: 'topic', topic: 'topic',
   targetBoardIds: 'board', targetMediumIds: 'medium',
   targetGradeLevelIds: 'gradeLevel', targetSubjectIds: 'subject',
@@ -232,7 +232,9 @@ function resolveInputType(field: Record<string, unknown>): PreparedField['inputT
   const dataType = (field.dataType as string ?? '').toLowerCase();
   const isList = dataType === 'list';
 
-  if (type === 'select' || type === 'framework') return 'select';
+  if (type === 'select') return 'select';
+  // 'framework' inputType: respect dataType — list means multiple boards/frameworks allowed
+  if (type === 'framework') return isList ? 'multiselect' : 'select';
   // Framework category selects (subjectIds, targetMediumIds, …): list ⇒ multi
   if (type === 'frameworkcategoryselect') return isList ? 'multiselect' : 'select';
   if (type === 'topicselector') return 'chips';
