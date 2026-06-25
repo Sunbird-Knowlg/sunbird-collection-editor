@@ -50,7 +50,7 @@ export function useEditorInit({ config, onError }: UseEditorInitOptions) {
           // Fetch category definition for dynamic form fields (best-effort, non-blocking)
           const primaryCategory = config.config.primaryCategory ?? 'Course';
           const channel = config.context.channel ?? '';
-          const apiVersion = config.config.categoryDefinitionApiVersion ?? 'v4';
+          const apiVersion = config.config.categoryDefinitionApiVersion ?? 'v1';
           try {
             const parsed = await getCategoryDefinition(
               primaryCategory, channel, config.config.objectType ?? 'Collection', apiVersion,

@@ -48,7 +48,10 @@ export async function getDialcodeProcessStatus(processId: string): Promise<{
   dialcodes?: Array<{ identifier: string }>;
 }> {
   const response = await apiClient.get(`/action/dialcode/v1/process/status/${processId}`);
-  return response.data?.result ?? { status: 'PENDING' };
+  const raw = (response.data?.result ?? { status: 'PENDING' }) as { status: string; url?: string; dialcodes?: Array<{ identifier: string }> };
+  // Normalize the API's 'PENDING' sentinel to the internal 'in-process' value
+  // used by Topbar so both callers agree on a single status string.
+  return { ...raw, status: raw.status === 'PENDING' ? 'in-process' : raw.status };
 }
 
 export async function releaseDialcodes(_contentId: string, ids: string[]): Promise<void> {

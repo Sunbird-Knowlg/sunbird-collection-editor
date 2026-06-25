@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import toast from 'react-hot-toast';
 import type { ToolbarAction } from '../types/editor';
 import { useEditorStore } from '../store/editor.store';
+import { useTreeStore } from '../store/tree.store';
 import {
   sendForReview as sendForReviewApi,
   rejectContent,
@@ -21,6 +22,8 @@ import {
 export function useToolbarActions(save: () => Promise<void>) {
   const config = useEditorStore((s) => s.editorConfig);
   const setButtonLoader = useEditorStore((s) => s.setButtonLoader);
+  const validateAllForms = useEditorStore((s) => s.validateAllForms);
+  const treeData = useTreeStore((s) => s.treeData);
 
   const runAction = useCallback(
     async (action: ToolbarAction, data?: unknown): Promise<boolean> => {
@@ -36,6 +39,10 @@ export function useToolbarActions(save: () => Promise<void>) {
       try {
         switch (action) {
           case 'sendForReview':
+            if (!validateAllForms(treeData)) {
+              toast.error('Some units have missing required fields. Please fill them before sending for review.');
+              return false;
+            }
             setButtonLoader('saveCollection', true);
             // Persist the hierarchy first (Angular: saveContent() -> reviewContent()).
             await save();
@@ -52,6 +59,10 @@ export function useToolbarActions(save: () => Promise<void>) {
           }
 
           case 'publish':
+            if (!validateAllForms(treeData)) {
+              toast.error('Some units have missing required fields. Please fill them before publishing.');
+              return false;
+            }
             setButtonLoader('publishCollection', true);
             await save();
             await publishContent(contentId, lastUpdatedBy);

@@ -22,6 +22,7 @@ interface TreeState {
   getChildrenOf: (id: string) => INode[];
   getBreadcrumb: (id: string) => Array<{ id: string; name: string }>;
   moveNode: (nodeId: string, fromParentId: string, toParentId: string) => void;
+  replaceNodeIds: (identifiers: Record<string, string>) => void;
 }
 
 // BFS through treeData to find a node by id
@@ -49,7 +50,10 @@ function getNodeDepth(nodes: INode[], targetId: string, depth = 0): number {
 
 // Deep merge a patch into a node's properties within a tree
 // Fields that live both on INode top-level AND inside node.metadata
-const METADATA_MIRROR_FIELDS = new Set(['name', 'appIcon', 'description', 'keywords', 'trackable']);
+const METADATA_MIRROR_FIELDS = new Set([
+  'name', 'appIcon', 'description', 'keywords', 'trackable',
+  'qrCodeProcessId', 'reservedDialcodes',
+]);
 
 function deepMergeNode(nodes: INode[], id: string, patch: Record<string, unknown>): INode[] {
   return nodes.map((node) => {
@@ -110,6 +114,33 @@ function reorderInParent(nodes: INode[], parentId: string, from: number, to: num
     }
     return node;
   });
+}
+
+// Recursively rename node ids (temp-xxx → do_xxx) after a save that returns identifiers
+function renameNodeIds(nodes: INode[], idMap: Record<string, string>): INode[] {
+  return nodes.map((node) => {
+    const newId = idMap[node.id] ?? node.id;
+    const newParent = node.parent ? (idMap[node.parent] ?? node.parent) : node.parent;
+    return {
+      ...node,
+      id: newId,
+      identifier: newId,
+      parent: newParent,
+      children: node.children ? renameNodeIds(node.children, idMap) : [],
+    };
+  });
+}
+
+// Count all non-folder (leaf content) nodes in the tree via BFS
+function countLeafNodes(nodes: INode[]): number {
+  let count = 0;
+  const queue: INode[] = [...nodes];
+  while (queue.length > 0) {
+    const node = queue.shift()!;
+    if (!node.isFolder) count++;
+    if (node.children) queue.push(...node.children);
+  }
+  return count;
 }
 
 // Build breadcrumb by walking parent references via BFS lookup
@@ -182,10 +213,9 @@ export const useTreeStore = create<TreeState>((set, get) => ({
     const maxDepth = useEditorStore.getState().editorConfig?.config?.maxDepth ?? 4;
     const parentDepth = getNodeDepth(state.treeData, parentId);
 
-    // parentDepth is the depth of the parent; the new child would be at parentDepth + 1.
-    // We allow depths 0 .. maxDepth-1, so the child must satisfy: parentDepth + 1 <= maxDepth - 1
-    // i.e. parentDepth >= maxDepth - 1 means the child would exceed the limit.
-    if (parentDepth >= maxDepth - 1) {
+    // parentDepth is the depth of the parent; child would be at parentDepth + 1.
+    // Allow children at depths 1..maxDepth (root is depth 0), matching Angular behaviour.
+    if (parentDepth >= maxDepth) {
       console.warn(`[tree.store] addNode: depth would exceed maxDepth (${maxDepth}). parentDepth=${parentDepth}`);
       return '';
     }
@@ -238,13 +268,14 @@ export const useTreeStore = create<TreeState>((set, get) => ({
       if (!node) return state;
       let newTree = removeNode(state.treeData, nodeId);
       newTree = insertIntoParent(newTree, toParentId, { ...node, parent: toParentId });
-      return { treeData: newTree, isDirty: true } as Partial<TreeState> as TreeState;
+      return { treeData: newTree };
     });
+    useEditorStore.getState().setIsDirty(true);
   },
 
   addResource: (content, nodeId) => {
-    // Prevent adding content directly under the root node unless explicitly allowed by config
     const config = useEditorStore.getState().editorConfig;
+    // Prevent adding content directly under the root node unless explicitly allowed by config
     const allowContentUnderRoot = config?.config?.allowContentUnderRoot ?? false;
     const rootId = get().treeData[0]?.id;
     if (!allowContentUnderRoot && nodeId === rootId) {
@@ -253,6 +284,13 @@ export const useTreeStore = create<TreeState>((set, get) => ({
 
     // Prevent duplicate content anywhere in the collection (cross-unit)
     if (bfsFind(get().treeData, content.identifier)) {
+      return false;
+    }
+
+    // Enforce maxContentsLimit (default 1200) and maxQuestionsLimit (default 500)
+    const maxContents = (config?.config as unknown as Record<string, unknown>)?.['maxContentsLimit'] as number | undefined ?? 1200;
+    const currentLeafCount = countLeafNodes(get().treeData);
+    if (currentLeafCount >= maxContents) {
       return false;
     }
 
@@ -280,8 +318,24 @@ export const useTreeStore = create<TreeState>((set, get) => ({
   },
 
   markDirty: () => {
-    import('../store/editor.store').then(({ useEditorStore: editorStore }) => {
-      editorStore.getState().setIsDirty(true);
+    useEditorStore.getState().setIsDirty(true);
+  },
+
+  replaceNodeIds: (identifiers) => {
+    if (!identifiers || Object.keys(identifiers).length === 0) return;
+    set((state) => {
+      const newTreeData = renameNodeIds(state.treeData, identifiers);
+      // Rebuild treeCache with renamed keys and clear isNew flags for persisted nodes
+      const newCache: Record<string, Record<string, unknown>> = {};
+      for (const [oldId, cached] of Object.entries(state.treeCache)) {
+        const newId = identifiers[oldId] ?? oldId;
+        const { isNew: _, ...rest } = cached;
+        newCache[newId] = rest;
+      }
+      const newSelectedId = state.selectedNodeId
+        ? (identifiers[state.selectedNodeId] ?? state.selectedNodeId)
+        : null;
+      return { treeData: newTreeData, treeCache: newCache, selectedNodeId: newSelectedId };
     });
   },
 

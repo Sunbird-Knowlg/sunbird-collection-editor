@@ -68,8 +68,8 @@ export const ContextualEditor: React.FC<ContextualEditorProps> = ({ editorMode, 
 
   const handleFormStatusChange = useCallback((isValid: boolean, invalidTabs: TabId[]) => {
     setErrorTabs(invalidTabs);
-    onToolbarEvent({ action: 'onFormStatusChange', data: { isValid } });
-  }, [onToolbarEvent]);
+    onToolbarEvent({ action: 'onFormStatusChange', data: { isValid, nodeId: selectedNodeId } });
+  }, [onToolbarEvent, selectedNodeId]);
 
   if (!selectedNode) {
     return (

@@ -175,6 +175,7 @@ export function useSaveHierarchy() {
   const treeCache = useTreeStore((s) => s.treeCache);
   const treeData = useTreeStore((s) => s.treeData);
   const isDirty = useEditorStore((s) => s.isDirty);
+  const lastSaved = useEditorStore((s) => s.lastSaved);
   const { setIsDirty, setLastSaved } = useEditorStore();
   const config = useEditorStore((s) => s.editorConfig);
 
@@ -190,7 +191,12 @@ export function useSaveHierarchy() {
     setIsSaving(true);
     try {
       const { nodesModified, hierarchy } = buildSavePayload(treeData, treeCache, channel);
-      await updateHierarchy(contentId, nodesModified, hierarchy, lastUpdatedBy);
+      const { identifiers } = await updateHierarchy(contentId, nodesModified, hierarchy, lastUpdatedBy);
+      // Replace temp- ids with server-assigned do_ ids so subsequent saves
+      // don't re-create the same nodes as new duplicates.
+      if (identifiers && Object.keys(identifiers).length > 0) {
+        useTreeStore.getState().replaceNodeIds(identifiers);
+      }
       const ts = new Date().toISOString();
       setLastSaved(ts);
       setIsDirty(false);
@@ -206,6 +212,6 @@ export function useSaveHierarchy() {
     save,
     isSaving,
     isDirty,
-    lastSaved: useEditorStore.getState().lastSaved,
+    lastSaved,
   };
 }

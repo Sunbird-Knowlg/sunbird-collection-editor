@@ -64,6 +64,15 @@ export interface IConfig {
    * Set to 'v4' only if your backend specifically requires it.
    */
   categoryDefinitionApiVersion?: 'v1' | 'v4';
+  /**
+   * Asset upload constraints for the app icon picker.
+   * Defaults: size = 1 MB, accepted = 'image/png,image/jpeg'.
+   * SVG is intentionally excluded to prevent active-content / XSS vectors.
+   */
+  assetConfig?: {
+    size?: number;
+    accepted?: string;
+  };
 }
 
 export interface IEditorConfig {

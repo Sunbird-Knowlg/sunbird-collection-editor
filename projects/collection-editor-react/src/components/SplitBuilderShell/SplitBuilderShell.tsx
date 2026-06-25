@@ -16,6 +16,7 @@ import { OutlineTree } from '../OutlineTree';
 import { ContextualEditor } from '../ContextualEditor';
 import { LibraryDock } from '../LibraryDock';
 import { useTreeStore } from '../../store/tree.store';
+import { useEditorStore } from '../../store/editor.store';
 import { useSaveHierarchy } from '../../hooks/useSaveHierarchy';
 import { useToolbarActions } from '../../hooks/useToolbarActions';
 import toast from 'react-hot-toast';
@@ -38,11 +39,11 @@ export const SplitBuilderShell: React.FC<SplitBuilderShellProps> = ({
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [dockCollapsed, setDockCollapsed] = useState(false);
   const [showUnsavedPrompt, setShowUnsavedPrompt] = useState(false);
-  // Tracks whether the currently selected node's form is valid.
-  // Defaults true so Save is enabled before any form interaction.
-  const [isFormValid, setIsFormValid] = useState(true);
 
   const { addResource, treeData } = useTreeStore();
+  const setFormStatus = useEditorStore((s) => s.setFormStatus);
+  // isFormValid: true while the current node's form hasn't been touched or is valid.
+  const [isFormValid, setIsFormValid] = useState(true);
   const selectedNodeId = useTreeStore((s) => s.selectedNodeId);
   const { save, isSaving, isDirty, lastSaved } = useSaveHierarchy();
   const { runAction } = useToolbarActions(save);
@@ -98,8 +99,10 @@ export const SplitBuilderShell: React.FC<SplitBuilderShellProps> = ({
     async (event: { action: ToolbarAction; data?: unknown }) => {
       // Intercept form status updates from ContextualEditor — don't bubble up.
       if (event.action === 'onFormStatusChange') {
-        const { isValid } = (event.data ?? {}) as { isValid?: boolean };
-        setIsFormValid(isValid !== false);
+        const { isValid, nodeId } = (event.data ?? {}) as { isValid?: boolean; nodeId?: string | null };
+        const valid = isValid !== false;
+        setIsFormValid(valid);
+        if (nodeId) setFormStatus(nodeId, valid);
         return;
       }
       // Guard Back when there are unsaved changes (auto-save is disabled).

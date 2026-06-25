@@ -1,7 +1,10 @@
 import React, { useState, useCallback } from 'react';
 import { Button } from '../shared/Button';
 import { checkDialCode, linkDialCode, unlinkDialcode } from '../../api/dialcode';
+import { useTreeStore } from '../../store/tree.store';
 import styles from './DialcodePanel.module.scss';
+
+const DIALCODE_FORMAT = /^[A-Z0-9]{2,}$/;
 
 interface DialcodePanelProps {
   contentId: string;
@@ -23,11 +26,34 @@ export const DialcodePanel: React.FC<DialcodePanelProps> = ({
   const [status, setStatus] = useState<Status>('idle');
   const [errorMsg, setErrorMsg] = useState('');
 
+  const treeData = useTreeStore((s) => s.treeData);
   const isReadOnly = editorMode === 'review' || editorMode === 'read' || editorMode === 'sourcingreview';
 
   const handleLink = useCallback(async () => {
     const code = inputValue.trim().toUpperCase();
     if (!code) return;
+
+    // Format check: must be alphanumeric uppercase, at least 2 chars
+    if (!DIALCODE_FORMAT.test(code)) {
+      setErrorMsg('Invalid DIAL code format. Use uppercase letters and digits only (e.g. A1B2C3).');
+      setStatus('error');
+      return;
+    }
+
+    // Cross-tree duplicate check — same QR on multiple nodes causes ambiguous scans
+    const isDuplicate = (function checkTree(nodes: typeof treeData): boolean {
+      for (const node of nodes) {
+        const nodeCodes = node.metadata?.['dialcodes'] as string[] | undefined;
+        if (nodeCodes?.includes(code)) return true;
+        if (node.children && checkTree(node.children)) return true;
+      }
+      return false;
+    })(treeData);
+    if (isDuplicate) {
+      setErrorMsg(`DIAL code "${code}" is already linked to another node in this collection.`);
+      setStatus('error');
+      return;
+    }
 
     setStatus('loading');
     setErrorMsg('');
@@ -51,7 +77,7 @@ export const DialcodePanel: React.FC<DialcodePanelProps> = ({
       setErrorMsg('Failed to link dialcode. Please try again.');
       setStatus('error');
     }
-  }, [contentId, inputValue, onDialcodeChange]);
+  }, [contentId, inputValue, onDialcodeChange, treeData]);
 
   const handleUnlink = useCallback(async () => {
     if (!dialcode) return;
@@ -78,7 +104,7 @@ export const DialcodePanel: React.FC<DialcodePanelProps> = ({
         <div className={styles.qrSection}>
           <div className={styles.qrImageWrap}>
             <img
-              src={`https://chart.googleapis.com/chart?cht=qr&chs=150x150&chl=${dialcode}`}
+              src={`https://chart.googleapis.com/chart?cht=qr&chs=150x150&chl=${encodeURIComponent(dialcode ?? '')}`}
               alt={`QR code for ${dialcode}`}
               className={styles.qrImage}
             />

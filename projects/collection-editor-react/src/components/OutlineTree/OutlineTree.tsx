@@ -32,7 +32,7 @@ export const OutlineTree: React.FC<OutlineTreeProps> = ({
   const [showCsvUpload, setShowCsvUpload] = useState(false);
   const [csvMode, setCsvMode] = useState<'create' | 'update'>('create');
 
-  const { treeData, selectedNodeId, selectNode, addNode, deleteNode, reorderChildren, setTreeData } = useTreeStore();
+  const { treeData, selectedNodeId, selectNode, addNode, deleteNode, reorderChildren, moveNode, setTreeData } = useTreeStore();
   const isEditable = editorMode === 'edit';
   const isDraft = useIsDraftStatus();
   // Adding units/content is only allowed while the collection is in Draft.
@@ -81,13 +81,23 @@ export const OutlineTree: React.FC<OutlineTreeProps> = ({
     ({ parentId, index, dragIds }: { parentId: string | null; index: number; dragIds: string[] }) => {
       if (!parentId) return;
       const nodeId = dragIds[0];
-      const parent = findNode(treeData, parentId);
-      if (!parent?.children) return;
-      const fromIndex = parent.children.findIndex((c) => c.id === nodeId);
-      if (fromIndex < 0) return;
-      reorderChildren(parentId, fromIndex, index > fromIndex ? index - 1 : index);
+      const sourceNode = findNode(treeData, nodeId);
+      if (!sourceNode) return;
+      const sourceParentId = sourceNode.parent;
+
+      if (sourceParentId === parentId) {
+        // Same parent: reorder within the folder
+        const parent = findNode(treeData, parentId);
+        if (!parent?.children) return;
+        const fromIndex = parent.children.findIndex((c) => c.id === nodeId);
+        if (fromIndex < 0) return;
+        reorderChildren(parentId, fromIndex, index > fromIndex ? index - 1 : index);
+      } else {
+        // Cross-folder: move to destination parent
+        moveNode(nodeId, sourceParentId ?? '', parentId);
+      }
     },
-    [treeData, reorderChildren],
+    [treeData, reorderChildren, moveNode],
   );
 
   const handleDelete = useCallback(

@@ -26,6 +26,9 @@ interface EditorState {
     frameworkMetadata: { orgFWType?: string[]; targetFWType?: string[] };
     sourcingSettings: Record<string, unknown>;
   } | null;
+  // Per-node form validity map — mirrors Angular's formStatusMapper.
+  // Keys are node ids; value is false only when the form has been touched and is invalid.
+  formStatusMapper: Record<string, boolean>;
   // actions
   setEditorConfig: (config: IEditorConfig) => void;
   setEditorMode: (mode: EditorMode) => void;
@@ -36,6 +39,8 @@ interface EditorState {
   setLastSaved: (ts: string) => void;
   setIsDirty: (dirty: boolean) => void;
   setCategoryDefinition: (parsed: IParsedCategoryDefinition) => void;
+  setFormStatus: (nodeId: string, isValid: boolean) => void;
+  validateAllForms: (treeNodes: import('../types/editor').INode[]) => boolean;
 }
 
 export const useEditorStore = create<EditorState>((set) => ({
@@ -57,6 +62,7 @@ export const useEditorStore = create<EditorState>((set) => ({
   isQumlPlayer: false,
   isDirty: false,
   lastSaved: null,
+  formStatusMapper: {},
   rootFormConfig: null,
   unitFormConfig: null,
   childFormConfig: null,
@@ -83,6 +89,20 @@ export const useEditorStore = create<EditorState>((set) => ({
     }),
   setLastSaved: (ts) => set({ lastSaved: ts }),
   setIsDirty: (dirty) => set({ isDirty: dirty }),
+  setFormStatus: (nodeId, isValid) =>
+    set((state) => ({
+      formStatusMapper: { ...state.formStatusMapper, [nodeId]: isValid },
+    })),
+  validateAllForms: (treeNodes) => {
+    const mapper = useEditorStore.getState().formStatusMapper;
+    const queue = [...treeNodes];
+    while (queue.length > 0) {
+      const node = queue.shift()!;
+      if (mapper[node.id] === false) return false;
+      if (node.children) queue.push(...node.children);
+    }
+    return true;
+  },
   setCategoryDefinition: (parsed) =>
     set({
       rootFormConfig: parsed.rootForm,

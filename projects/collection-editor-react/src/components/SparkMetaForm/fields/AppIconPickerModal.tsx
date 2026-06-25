@@ -48,6 +48,9 @@ export const AppIconPickerModal: React.FC<AppIconPickerModalProps> = ({
   const presignedHeaders = useEditorStore(
     s => (s.editorConfig?.context?.cloudStorage?.presigned_headers ?? {}) as Record<string, string>,
   );
+  // Read tenant-configured asset limits; default to 1 MB / png+jpeg (no SVG — XSS risk)
+  const assetMaxBytes = useEditorStore(s => s.editorConfig?.config?.assetConfig?.size ?? 1 * 1024 * 1024);
+  const assetAccept = useEditorStore(s => s.editorConfig?.config?.assetConfig?.accepted ?? 'image/png,image/jpeg');
 
   const searchImages = useCallback(async (q: string, off: number, append = false) => {
     setIsLoading(true);
@@ -115,19 +118,33 @@ export const AppIconPickerModal: React.FC<AppIconPickerModalProps> = ({
     if (url) onSelect(url);
   };
 
+  // Revoke the Object URL when the component unmounts or when preview changes
+  React.useEffect(() => {
+    return () => {
+      if (uploadPreview) URL.revokeObjectURL(uploadPreview);
+    };
+  }, [uploadPreview]);
+
   // Upload tab handlers
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     e.target.value = '';
     if (!file) return;
-    if (!file.type.startsWith('image/')) {
-      setUploadError('Only image files are accepted.');
+
+    // Validate MIME type against the configured allowlist (default: png + jpeg, no SVG)
+    const allowedTypes = assetAccept.split(',').map(t => t.trim());
+    if (!allowedTypes.includes(file.type)) {
+      const readableTypes = allowedTypes.map(t => t.replace('image/', '').toUpperCase()).join(', ');
+      setUploadError(`Only ${readableTypes} files are accepted.`);
       return;
     }
-    if (file.size > 4 * 1024 * 1024) {
-      setUploadError('Image must be under 4 MB.');
+    if (file.size > assetMaxBytes) {
+      const mb = (assetMaxBytes / (1024 * 1024)).toFixed(0);
+      setUploadError(`Image must be under ${mb} MB.`);
       return;
     }
+    // Revoke previous preview before creating a new one to avoid blob URL leaks
+    if (uploadPreview) URL.revokeObjectURL(uploadPreview);
     setUploadFile(file);
     setUploadPreview(URL.createObjectURL(file));
     setUploadError('');
@@ -253,11 +270,11 @@ export const AppIconPickerModal: React.FC<AppIconPickerModalProps> = ({
                   <>
                     <Upload size={32} className={styles.uploadIcon} />
                     <p className={styles.dropText}>Drag &amp; drop or click to browse</p>
-                    <p className={styles.dropSubtext}>PNG, JPG, SVG · max 4 MB</p>
+                    <p className={styles.dropSubtext}>{assetAccept.split(',').map(t => t.replace('image/', '').toUpperCase()).join(', ')} · max {(assetMaxBytes / (1024 * 1024)).toFixed(0)} MB</p>
                   </>
                 )}
               </div>
-              <input ref={fileRef} type="file" accept="image/*" className={styles.hiddenInput} onChange={handleFileChange} />
+              <input ref={fileRef} type="file" accept={assetAccept} className={styles.hiddenInput} onChange={handleFileChange} />
               {uploadFile && <p className={styles.fileName}>{uploadFile.name}</p>}
               {uploadError && <p className={styles.errorText}>{uploadError}</p>}
             </div>
