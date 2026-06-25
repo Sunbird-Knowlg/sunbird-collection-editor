@@ -16,7 +16,7 @@ export function useEditorInit({ config, onError }: UseEditorInitOptions) {
   const [error, setError] = useState<Error | null>(null);
   const [isReady, setIsReady] = useState(false);
 
-  const { setEditorConfig, setEditorMode, setCategoryDefinition } = useEditorStore();
+  const { setEditorConfig, setEditorMode, setCategoryDefinition, setContentFramework } = useEditorStore();
   const { setTreeData, selectNode } = useTreeStore();
 
   useEffect(() => {
@@ -44,6 +44,15 @@ export function useEditorInit({ config, onError }: UseEditorInitOptions) {
             setTreeData(nodes);
             if (rootNode) {
               selectNode(rootNode.id);
+              // Mirror Angular's `collection.framework || context.framework`:
+              // the loaded content's own framework takes precedence over the
+              // editor context, so editing existing content drives the cascade
+              // off the right framework.
+              const meta = rootNode.metadata ?? {};
+              const fw = (meta['framework'] as string | undefined) ?? config.context.framework ?? null;
+              const tfw = (meta['targetFWIds'] as string[] | undefined)
+                ?? config.context.targetFWIds ?? null;
+              setContentFramework(fw, tfw);
             }
           }
 

@@ -47,9 +47,9 @@ function buildSavePayload(
   // because different category definitions use different field codes.
   const ARRAY_FIELDS = new Set([
     'audience', 'attributions', 'keywords', 'language', 'additionalCategories',
-    // Org-framework fields — legacy codes
-    'board', 'medium', 'gradeLevel', 'subject',
-    // Org-framework fields — *Ids codes used by newer category definitions
+    // Org-framework fields — legacy codes (board is scalar; medium/gradeLevel/subject are arrays)
+    'medium', 'gradeLevel', 'subject',
+    // Org-framework fields — *Ids codes used by newer category definitions (all arrays)
     'boardIds', 'mediumIds', 'gradeLevelIds', 'subjectIds',
     // Target-framework fields
     'targetBoardIds', 'targetMediumIds', 'targetGradeLevelIds', 'targetSubjectIds',

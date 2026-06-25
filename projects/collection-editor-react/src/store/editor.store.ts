@@ -29,6 +29,11 @@ interface EditorState {
   // Per-node form validity map — mirrors Angular's formStatusMapper.
   // Keys are node ids; value is false only when the form has been touched and is invalid.
   formStatusMapper: Record<string, boolean>;
+  // Framework resolved from the loaded collection (rootNode.framework /
+  // targetFWIds). Mirrors Angular's `collection.framework || context.framework`
+  // precedence — the content's own framework wins over the editor context.
+  contentFramework: string | null;
+  contentTargetFWIds: string[] | null;
   // actions
   setEditorConfig: (config: IEditorConfig) => void;
   setEditorMode: (mode: EditorMode) => void;
@@ -39,6 +44,7 @@ interface EditorState {
   setLastSaved: (ts: string) => void;
   setIsDirty: (dirty: boolean) => void;
   setCategoryDefinition: (parsed: IParsedCategoryDefinition) => void;
+  setContentFramework: (framework: string | null, targetFWIds: string[] | null) => void;
   setFormStatus: (nodeId: string, isValid: boolean) => void;
   validateAllForms: (treeNodes: import('../types/editor').INode[]) => boolean;
 }
@@ -63,6 +69,8 @@ export const useEditorStore = create<EditorState>((set) => ({
   isDirty: false,
   lastSaved: null,
   formStatusMapper: {},
+  contentFramework: null,
+  contentTargetFWIds: null,
   rootFormConfig: null,
   unitFormConfig: null,
   childFormConfig: null,
@@ -89,6 +97,8 @@ export const useEditorStore = create<EditorState>((set) => ({
     }),
   setLastSaved: (ts) => set({ lastSaved: ts }),
   setIsDirty: (dirty) => set({ isDirty: dirty }),
+  setContentFramework: (framework, targetFWIds) =>
+    set({ contentFramework: framework, contentTargetFWIds: targetFWIds }),
   setFormStatus: (nodeId, isValid) =>
     set((state) => ({
       formStatusMapper: { ...state.formStatusMapper, [nodeId]: isValid },

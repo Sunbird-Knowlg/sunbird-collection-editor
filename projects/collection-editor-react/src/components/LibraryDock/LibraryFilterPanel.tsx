@@ -69,9 +69,11 @@ export const LibraryFilterPanel: React.FC<LibraryFilterPanelProps> = ({
 }) => {
   const config = useEditorStore((s) => s.editorConfig);
   const searchFormConfig = useEditorStore((s) => s.searchFormConfig);
+  const contentFramework = useEditorStore((s) => s.contentFramework);
+  const contentTargetFWIds = useEditorStore((s) => s.contentTargetFWIds);
   const { organisationFramework } = useFramework(
-    config?.context?.framework as string | undefined,
-    config?.context?.targetFWIds as string[] | undefined,
+    (contentFramework ?? config?.context?.framework) as string | undefined,
+    (contentTargetFWIds ?? config?.context?.targetFWIds) as string[] | undefined,
   );
   const [local, setLocal] = useState<LibraryFilters>(filters);
 

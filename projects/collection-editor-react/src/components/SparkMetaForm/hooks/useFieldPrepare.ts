@@ -41,6 +41,37 @@ export interface IFieldConfig extends PreparedField {
   range?: Array<{ name: string; identifier: string }>;
 }
 
+/**
+ * Extra context the form needs to seed defaults / ranges and to decide
+ * per-field editability — mirrors the data Angular reads from EditorService,
+ * HelperService.channelInfo and ConfigService inside `prepareFields` /
+ * `ifFieldIsEditable`. All fields optional so existing callers keep working.
+ */
+export interface IPrepareContext {
+  editorMode?: string;
+  /** editorConfig.config.editableFields — { review: ['name', …], … }. */
+  editableFields?: Record<string, string[]>;
+  /** editorConfig.config.objectType — picks the channel additionalCategories source. */
+  objectType?: string;
+  setDefaultCopyRight?: boolean;
+  /** editorConfig.context.defaultLicense */
+  defaultLicense?: string;
+  /** editorConfig.context.additionalCategories (fallback). */
+  contextAdditionalCategories?: string[];
+  /** editorConfig.context.user.fullName */
+  userFullName?: string;
+  /** channelInfo.name — used as default copyright when setDefaultCopyRight. */
+  channelName?: string;
+  /** channelInfo.collectionAdditionalCategories */
+  collectionAdditionalCategories?: string[];
+  /** channelInfo.contentAdditionalCategories */
+  contentAdditionalCategories?: string[];
+  /** Count of the active node's direct children — feeds maxQuestions range. */
+  childCount?: number;
+}
+
+const REVIEW_MODES = new Set(['review', 'read', 'sourcingreview', 'orgreview']);
+
 // ----- Tab assignment --------------------------------------------------------
 // Sections from the category-definition map to editor tabs. Falls back to a
 // per-code map, then to Details.
@@ -96,9 +127,18 @@ export function useFieldPrepare(
   formConfig: Array<Record<string, unknown>>,
   nodeMetadata: Record<string, unknown>,
   frameworkDetails: IFrameworkDetails,
-  isRoot: boolean
+  isRoot: boolean,
+  ctx: IPrepareContext = {},
 ): PreparedField[] {
   if (!formConfig?.length) return getDefaultFields(nodeMetadata, isRoot, frameworkDetails);
+
+  // Code → raw field config, so a dependent field can read its PARENT field's
+  // sourceCategory (mirrors Angular's `findField(parentCode)`).
+  const fieldsByCode = new Map<string, Record<string, unknown>>();
+  for (const f of formConfig) {
+    const c = f.code as string;
+    if (c && !fieldsByCode.has(c)) fieldsByCode.set(c, f);
+  }
 
   const seenCodes = new Set<string>();
   return formConfig.filter((field) => {
@@ -114,9 +154,11 @@ export function useFieldPrepare(
   }).map((field): PreparedField => {
     const code = (field.code as string) ?? '';
     const inputType = resolveInputType(field);
-    const options = resolveOptions(field, frameworkDetails, nodeMetadata);
+    const options = resolveOptions(field, frameworkDetails, nodeMetadata, fieldsByCode, ctx);
     const rawValue = nodeMetadata[code];
-    const currentValue = normalizeCurrentValue(rawValue, inputType);
+    const currentValue = applyFieldDefault(
+      code, normalizeCurrentValue(rawValue, inputType), inputType, nodeMetadata, ctx,
+    );
     const base: PreparedField = {
       code,
       label: (field.label as string) ?? code,
@@ -126,7 +168,7 @@ export function useFieldPrepare(
         (Array.isArray(field.validations) &&
           (field.validations as Array<Record<string, unknown>>).some(v => v.type === 'required'))
       ),
-      editable: field.editable !== false,
+      editable: computeEditable(code, field.editable !== false, ctx),
       placeholder: field.placeholder as string | undefined,
       maxLength: field.maxLength as number | undefined,
       // Guarantee the stored value is selectable/displayable even when the API
@@ -150,6 +192,77 @@ export function useFieldPrepare(
 
     return base;
   });
+}
+
+// ----- Editability (mirrors Angular ifFieldIsEditable) -----------------------
+// Outside review modes a field is editable unless the API marked it
+// non-editable. Inside a review mode (review/read/sourcingreview/orgreview) a
+// field is editable ONLY if editorConfig.config.editableFields[mode] lists it.
+function computeEditable(code: string, apiEditable: boolean, ctx: IPrepareContext): boolean {
+  const mode = ctx.editorMode ?? 'edit';
+  if (!REVIEW_MODES.has(mode)) {
+    return apiEditable !== false;
+  }
+  const allowed = ctx.editableFields?.[mode];
+  return !!(allowed && allowed.includes(code));
+}
+
+// ----- Per-field default & range seeding (mirrors prepareFields 180-244) -----
+// Returns the effective currentValue. Only fills a value when the node has
+// none — never overrides authored metadata.
+function applyFieldDefault(
+  code: string,
+  currentValue: unknown,
+  inputType: PreparedField['inputType'],
+  meta: Record<string, unknown>,
+  ctx: IPrepareContext,
+): unknown {
+  const isEmpty = currentValue === undefined || currentValue === null || currentValue === ''
+    || (Array.isArray(currentValue) && currentValue.length === 0);
+
+  switch (code) {
+    case 'license':
+      if (isEmpty) return ctx.defaultLicense ?? '';
+      return currentValue;
+    case 'copyright':
+      if (isEmpty && ctx.setDefaultCopyRight && ctx.channelName) return ctx.channelName;
+      return currentValue;
+    case 'author':
+    case 'creator':
+      if (isEmpty && ctx.userFullName) return ctx.userFullName;
+      return currentValue;
+    case 'instructions': {
+      // metadata.instructions is an object { default: '...' }; always surface its
+      // `default` string (Angular: _.get(meta, 'instructions.default') || '').
+      const inst = meta['instructions'];
+      if (inst && typeof inst === 'object' && !Array.isArray(inst)) {
+        return ((inst as Record<string, unknown>)['default'] as string) ?? '';
+      }
+      return typeof currentValue === 'object' && currentValue !== null ? '' : currentValue;
+    }
+    case 'maxTime':
+    case 'warningTime': {
+      if (!isEmpty) return currentValue;
+      const limits = meta['timeLimits'] as Record<string, unknown> | undefined;
+      const raw = limits?.[code];
+      if (raw !== undefined && raw !== null && raw !== '') {
+        return formatDurationSeconds(Number(raw));
+      }
+      return currentValue;
+    }
+    default:
+      return currentValue;
+  }
+}
+
+// seconds → 'HH:MM:SS' (or 'MM:SS' when under an hour) — replaces moment.
+function formatDurationSeconds(totalSeconds: number): string {
+  if (!Number.isFinite(totalSeconds) || totalSeconds < 0) return '';
+  const s = Math.floor(totalSeconds % 60);
+  const m = Math.floor((totalSeconds / 60) % 60);
+  const h = Math.floor(totalSeconds / 3600);
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return h > 0 ? `${pad(h)}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
 }
 
 // ----- Selected-value guarantee ---------------------------------------------
@@ -258,7 +371,17 @@ function resolveOptions(
   field: Record<string, unknown>,
   fw: IFrameworkDetails,
   nodeMetadata: Record<string, unknown>,
+  fieldsByCode: Map<string, Record<string, unknown>>,
+  ctx: IPrepareContext,
 ): Array<{ label: string; value: string }> | undefined {
+  const code = (field.code as string) ?? '';
+
+  // maxQuestions: range is 1..(child count) — mirrors Angular's _.times(childCount).
+  if (code === 'maxQuestions') {
+    const n = ctx.childCount ?? 0;
+    if (n > 0) return Array.from({ length: n }, (_, i) => ({ label: String(i + 1), value: String(i + 1) }));
+  }
+
   // 1. Explicit range — either string[] (e.g. audience) or {name, identifier}[]
   const range = field.range as Array<unknown> | undefined;
   if (Array.isArray(range) && range.length) {
@@ -271,77 +394,143 @@ function resolveOptions(
   const enumVals = field.enum as string[] | undefined;
   if (enumVals?.length) return enumVals.map(v => ({ label: v, value: v }));
 
-  // 3. Framework-backed — use the field's own sourceCategory, falling back to
-  //    the legacy code→category map.
-  const code = (field.code as string) ?? '';
-
   // Channel-derived fields: options come from the channel read API, not the framework API.
   if (code === 'framework') return fw.orgFrameworks;
   if (code === 'additionalCategories') {
-    return fw.channelAdditionalCategories?.map(c => ({ label: c, value: c }));
+    // Source depends on objectType: QuestionSet → contentAdditionalCategories,
+    // otherwise collectionAdditionalCategories; falls back to context list.
+    // (mirrors categoryConfig.additionalCategories[objectType] ∥ context.additionalCategories)
+    const objType = ctx.objectType ?? '';
+    const channelList = objType === 'QuestionSet'
+      ? (ctx.contentAdditionalCategories ?? ctx.collectionAdditionalCategories)
+      : (ctx.collectionAdditionalCategories ?? ctx.contentAdditionalCategories);
+    const list = (channelList && channelList.length ? channelList : ctx.contextAdditionalCategories)
+      ?? fw.channelAdditionalCategories;
+    return list?.length ? uniq(list).map(c => ({ label: c, value: c })) : undefined;
   }
 
+  // 3. Framework-backed — use the field's own sourceCategory, falling back to
+  //    the legacy code→category map.
   const categoryCode = (field.sourceCategory as string | undefined) ?? FIELD_TO_FW_CATEGORY[code];
   if (!categoryCode) return undefined;
 
-  return resolveFwOptions(code, categoryCode, field, fw, nodeMetadata);
+  return resolveFwOptions(code, categoryCode, field, fw, nodeMetadata, fieldsByCode);
 }
 
+// Decide whether a field's value is the term identifier (target fields,
+// explicit output:'identifier', Target sections) or the term name (org default).
+function usesIdentifier(code: string, field: Record<string, unknown>): boolean {
+  return (
+    TARGET_FW_FIELDS.has(code) ||
+    (field.output as string | undefined) === 'identifier' ||
+    (typeof (field.section as string) === 'string' && (field.section as string).includes('Target'))
+  );
+}
+
+function prefersTargetFramework(code: string, field: Record<string, unknown>): boolean {
+  return TARGET_FW_FIELDS.has(code) ||
+    (typeof (field.section as string) === 'string' && (field.section as string).includes('Target'));
+}
+
+// Terms of a single framework category. Org cascade reads from the org
+// framework; target cascade prefers the target framework, falling back to org.
+function categoryTerms(fw: IFrameworkDetails, categoryCode: string, preferTarget: boolean): ITerm[] {
+  const orgCat = fw.organisationFramework?.categories?.find(c => c.code === categoryCode);
+  const targetCat = fw.targetFrameworks?.[0]?.categories?.find(c => c.code === categoryCode);
+  if (preferTarget) return targetCat?.terms ?? orgCat?.terms ?? [];
+  return orgCat?.terms ?? targetCat?.terms ?? [];
+}
+
+function uniqByIdentifier(terms: ITerm[]): ITerm[] {
+  const seen = new Set<string>();
+  const out: ITerm[] = [];
+  for (const t of terms) {
+    const key = t.identifier ?? t.name;
+    if (key && !seen.has(key)) { seen.add(key); out.push(t); }
+  }
+  return out;
+}
+
+function uniq<T>(arr: T[]): T[] { return Array.from(new Set(arr)); }
+
+function asArray(v: unknown): unknown[] {
+  if (Array.isArray(v)) return v;
+  return v != null && v !== '' ? [v] : [];
+}
+
+/**
+ * Compute a framework-backed dropdown's options.
+ *
+ * Mirrors Angular `computeOptions` (spark-meta-form.component.ts:333-366):
+ * a dependent field's options come from the SELECTED PARENT term's
+ * `.associations`, filtered to this field's category — i.e. the graph is read
+ * PARENT → CHILD. (The previous React code read CHILD → PARENT, which dropped
+ * valid terms — e.g. "English" — whose own associations didn't point back at
+ * the selected board. That was the "English not in Medium" bug.)
+ *
+ * Fallback (mirrors Angular's target-framework association synthesis,
+ * prepareFields:144-178): when the matched parent terms carry no associations
+ * for this category — common for target frameworks, or frameworks modelled in
+ * reverse — fall back to this field's own category terms so the dropdown is
+ * never wrongly emptied.
+ */
 function resolveFwOptions(
   code: string,
   categoryCode: string,
   field: Record<string, unknown>,
   fw: IFrameworkDetails,
   nodeMetadata: Record<string, unknown>,
+  fieldsByCode: Map<string, Record<string, unknown>>,
 ): Array<{ label: string; value: string }> | undefined {
-  // Decide value source: target fields & explicit output:'identifier' use the
-  // term identifier; org fields default to the term name (Sunbird convention).
-  const useIdentifier =
-    TARGET_FW_FIELDS.has(code) ||
-    (field.output as string | undefined) === 'identifier' ||
-    (typeof (field.section as string) === 'string' && (field.section as string).includes('Target'));
-
+  const useIdentifier = usesIdentifier(code, field);
+  const preferTarget = prefersTargetFramework(code, field);
   const fromTerm = (t: ITerm) => ({ label: t.name, value: useIdentifier ? t.identifier : t.name });
 
-  // Source framework: target fields prefer the target framework, then org.
-  const orgCat = fw.organisationFramework?.categories?.find(c => c.code === categoryCode);
-  const targetCat = fw.targetFrameworks?.[0]?.categories?.find(c => c.code === categoryCode);
-  let terms: ITerm[] = (TARGET_FW_FIELDS.has(code) ? targetCat?.terms : orgCat?.terms)
-    ?? targetCat?.terms ?? orgCat?.terms ?? [];
-
-  // Cascade filtering: if this field depends on parent fields, keep only terms
-  // whose associations include a currently-selected parent value. Parent values
-  // are read from nodeMetadata (which merges live form edits), so options
-  // re-filter reactively as parents change — no extra fetch needed.
   const depends = field.depends as string[] | undefined;
-  if (depends?.length) {
-    const parentValues = depends
-      .flatMap(p => {
-        const v = nodeMetadata[p];
-        return Array.isArray(v) ? v : (v != null && v !== '' ? [v] : []);
-      })
-      .map(String);
-    if (parentValues.length) {
-      const filtered = terms.filter(t => {
-        const assoc = t.associations;
-        if (!assoc || !assoc.length) return true; // no association info ⇒ keep
-        return assoc.some(a => parentValues.includes(a.identifier) || parentValues.includes(a.code) || parentValues.includes(a.name));
-      });
-      // Only narrow when the association graph actually matched something —
-      // otherwise (associations absent or modelled the other direction) keep
-      // the full list so the dropdown isn't emptied.
-      if (filtered.length) terms = filtered;
-    }
+
+  // Non-dependent field → its own category terms.
+  if (!depends?.length) {
+    return categoryTerms(fw, categoryCode, preferTarget).map(fromTerm);
   }
 
-  return terms.map(fromTerm);
+  // Dependent field → read the selected parent term's associations.
+  const selected = depends.flatMap(p => asArray(nodeMetadata[p])).map(String);
+  // Empty until a parent is chosen — matches Angular (computeOptions returns []).
+  if (!selected.length) return [];
+
+  // Gather parent terms (each carries `.associations`).
+  const parentTerms: ITerm[] = [];
+  for (const pCode of depends) {
+    const pField = fieldsByCode.get(pCode);
+    const pCat = (pField?.sourceCategory as string | undefined) ?? FIELD_TO_FW_CATEGORY[pCode] ?? pCode;
+    parentTerms.push(...categoryTerms(fw, pCat, preferTarget));
+  }
+
+  // Parent terms matching the selected parent value(s) (by name / identifier / code).
+  const matched = parentTerms.filter(t =>
+    selected.includes(String(t.name)) ||
+    selected.includes(String(t.identifier)) ||
+    selected.includes(String(t.code)));
+
+  // Their associations, filtered to THIS field's category.
+  const associations = matched
+    .flatMap(t => t.associations ?? [])
+    .filter(a => String(a.category ?? '').toLowerCase() === categoryCode.toLowerCase());
+
+  const uniqueAssoc = uniqByIdentifier(associations);
+  if (uniqueAssoc.length) return uniqueAssoc.map(fromTerm);
+
+  // Fallback: parents carry no associations for this category (target frameworks
+  // / reverse-modelled data) → show the child's own terms. Equivalent outcome
+  // to Angular's cross-product synthesis, without emptying the dropdown.
+  return categoryTerms(fw, categoryCode, preferTarget).map(fromTerm);
 }
 
 // ----- Helper ----------------------------------------------------------------
 function fwOpts(code: string, fw: IFrameworkDetails) {
   const categoryCode = FIELD_TO_FW_CATEGORY[code];
   if (!categoryCode) return undefined;
-  return resolveFwOptions(code, categoryCode, { code }, fw, {});
+  return resolveFwOptions(code, categoryCode, { code }, fw, {}, new Map());
 }
 
 // ----- Default fields (used when no formConfig from API) --------------------
@@ -451,4 +640,21 @@ function getDefaultFields(
   );
 
   return fields;
+}
+
+// ----- Testable pure export --------------------------------------------------
+// Direct access to the cascade resolver for unit tests (the "English in Medium"
+// regression guard). Mirrors what useFieldPrepare computes for one field.
+export function __computeFieldOptionsForTest(
+  field: Record<string, unknown>,
+  fw: IFrameworkDetails,
+  nodeMetadata: Record<string, unknown>,
+  siblingFields: Array<Record<string, unknown>> = [],
+): Array<{ label: string; value: string }> | undefined {
+  const fieldsByCode = new Map<string, Record<string, unknown>>();
+  for (const f of siblingFields) {
+    const c = f.code as string;
+    if (c && !fieldsByCode.has(c)) fieldsByCode.set(c, f);
+  }
+  return resolveOptions(field, fw, nodeMetadata, fieldsByCode, {});
 }

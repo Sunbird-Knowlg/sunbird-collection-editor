@@ -1,11 +1,15 @@
 import React, { useEffect, useRef } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import type { EditorMode } from '../../types/editor';
 import { useTreeStore } from '../../store/tree.store';
 import { useEditorStore } from '../../store/editor.store';
 import { useFramework } from '../../hooks/useFramework';
+import { useFrameworkOptions } from '../../hooks/useFrameworkOptions';
 import { useChannelData } from '../../hooks/useChannelData';
 import { useFieldPrepare, SECTION_DISPLAY } from './hooks/useFieldPrepare';
+import type { IPrepareContext } from './hooks/useFieldPrepare';
+import { transformEmit, transformFieldPatch } from './hooks/emitTransform';
 import { useCascade } from './hooks/useCascade';
 import { FormSection } from './FormSection';
 import { TextField } from './fields/TextField';
@@ -38,18 +42,33 @@ export const SparkMetaForm: React.FC<SparkMetaFormProps> = ({
   const config = useEditorStore(s => s.editorConfig);
   const rootFormConfig = useEditorStore(s => s.rootFormConfig);
   const unitFormConfig = useEditorStore(s => s.unitFormConfig);
+  const categoryMeta = useEditorStore(s => s.categoryMeta);
+  // Framework resolved from the loaded content (rootNode.framework) wins over
+  // the editor context — mirrors Angular's `collection.framework || context.framework`.
+  const contentFramework = useEditorStore(s => s.contentFramework);
+  const contentTargetFWIds = useEditorStore(s => s.contentTargetFWIds);
   const { organisationFramework, targetFrameworks, isLoading: fwLoading } = useFramework(
-    config?.context?.framework as string | undefined,
-    config?.context?.targetFWIds as string[] | undefined,
+    (contentFramework ?? config?.context?.framework) as string | undefined,
+    (contentTargetFWIds ?? config?.context?.targetFWIds) as string[] | undefined,
   );
-  const { frameworks: channelFrameworks, collectionAdditionalCategories } = useChannelData(
+  const {
+    frameworks: channelFrameworks,
+    collectionAdditionalCategories,
+    contentAdditionalCategories,
+    defaultLicense: channelDefaultLicense,
+    name: channelName,
+  } = useChannelData(config?.context?.channel as string | undefined);
+  // Course Type options: channel frameworks filtered/extended by orgFWType.
+  const orgFrameworks = useFrameworkOptions(
+    channelFrameworks,
+    categoryMeta?.frameworkMetadata?.orgFWType,
     config?.context?.channel as string | undefined,
   );
-  const orgFrameworks = channelFrameworks?.map(f => ({ label: f.name, value: f.identifier }));
   const frameworkDetails = { organisationFramework, targetFrameworks, orgFrameworks, channelAdditionalCategories: collectionAdditionalCategories };
 
   // selectedNodeId must be declared before it is used in effectiveMeta
   const selectedNodeId = useTreeStore(s => s.selectedNodeId);
+  const treeData = useTreeStore(s => s.treeData);
 
   // Merge treeCache edits on top of nodeMetadata so the form restores user edits
   // when switching back to a previously-edited node (avoids reset-on-reselect).
@@ -57,12 +76,41 @@ export const SparkMetaForm: React.FC<SparkMetaFormProps> = ({
   const cachedEdits = selectedNodeId ? (treeCache[selectedNodeId] ?? {}) : {};
   const effectiveMeta = { ...nodeMetadata, ...cachedEdits };
 
+  // Count the active node's direct children — feeds the maxQuestions range.
+  const childCount = React.useMemo(() => {
+    if (!selectedNodeId) return 0;
+    const queue = [...treeData];
+    while (queue.length) {
+      const n = queue.shift()!;
+      if (n.id === selectedNodeId) return n.children?.length ?? 0;
+      if (n.children) queue.push(...n.children);
+    }
+    return 0;
+  }, [treeData, selectedNodeId]);
+
+  // Extra inputs Angular reads from EditorService / channelInfo / ConfigService.
+  const cfg = (config?.config ?? {}) as Record<string, unknown>;
+  const ctxCtx = (config?.context ?? {}) as Record<string, unknown>;
+  const prepareCtx: IPrepareContext = {
+    editorMode,
+    editableFields: cfg.editableFields as Record<string, string[]> | undefined,
+    objectType: cfg.objectType as string | undefined,
+    setDefaultCopyRight: cfg.setDefaultCopyRight === true,
+    defaultLicense: (ctxCtx.defaultLicense as string | undefined) ?? channelDefaultLicense,
+    contextAdditionalCategories: ctxCtx.additionalCategories as string[] | undefined,
+    userFullName: (ctxCtx.user as { fullName?: string } | undefined)?.fullName,
+    channelName,
+    collectionAdditionalCategories,
+    contentAdditionalCategories,
+    childCount,
+  };
+
   // Use category-definition API fields if available, fall back to static config
   const apiFields = isRoot ? rootFormConfig : unitFormConfig;
   const formConfig = apiFields
     ? (apiFields as Array<Record<string, unknown>>)
     : ((config?.config.hierarchy as Record<string, unknown>)?.formConfig as Array<Record<string, unknown>> ?? []);
-  const allFields = useFieldPrepare(formConfig, effectiveMeta, frameworkDetails, isRoot);
+  const allFields = useFieldPrepare(formConfig, effectiveMeta, frameworkDetails, isRoot, prepareCtx);
   // appIcon is always rendered in the title row (TitleAppIcon), never in the form grid.
   // Fields with visible === false (e.g. dialcodes when QR code is "No") are excluded.
   const tabFields = allFields.filter(f => f.tab === activeTab && f.inputType !== 'appIcon' && f.visible !== false);
@@ -93,6 +141,16 @@ export const SparkMetaForm: React.FC<SparkMetaFormProps> = ({
   onFormValueChangeRef.current = onFormValueChange;
   const onFormStatusChangeRef = useRef(onFormStatusChange);
   onFormStatusChangeRef.current = onFormStatusChange;
+  // Track previous shuffle so we can fire the "shuffling enabled" toast only on
+  // the false→true transition (mirrors Angular showShuffleMessage).
+  const prevShuffleRef = useRef<boolean | undefined>(
+    typeof effectiveMeta.shuffle === 'boolean' ? (effectiveMeta.shuffle as boolean) : undefined,
+  );
+  const nodeTitleRef = useRef<string>((effectiveMeta.name as string) ?? '');
+  nodeTitleRef.current = (effectiveMeta.name as string) ?? '';
+  const editorModeRef = useRef(editorMode);
+  editorModeRef.current = editorMode;
+  const REVIEW_MODES = ['review', 'read', 'sourcingreview', 'orgreview'];
 
   // Report initial validity on mount — mirrors Angular's setTimeout(() => emitStatus(), 0).
   // This ensures the parent (SplitBuilderShell) knows the form is invalid from the start
@@ -141,14 +199,30 @@ export const SparkMetaForm: React.FC<SparkMetaFormProps> = ({
         if (changedField === 'dialcodes') {
           value = Array.isArray(value) ? value : (value ? [value] : []);
         }
-        updateNode(nodeId, { [changedField]: value });
-        onFormValueChangeRef.current({ [changedField]: value });
+        // Shuffle false→true shows an info toast (Angular showShuffleMessage).
+        if (changedField === 'shuffle') {
+          if (value === true && prevShuffleRef.current === false) {
+            toast('Shuffling is enabled for this question set.', { icon: 'ℹ️' });
+          }
+          prevShuffleRef.current = value as boolean;
+        }
+        // transformFieldPatch omits UI-only keys (allowECM/setPeriod → null) and
+        // maps levels→outcomeDeclaration, instances→{label}.
+        const patch = transformFieldPatch(changedField, value);
+        if (patch) {
+          updateNode(nodeId, patch);
+          onFormValueChangeRef.current(patch);
+        }
       } else if (!changedField) {
-        // Batch / cascade update — write all valid codes
+        // Batch / cascade update — write all valid codes, transformed.
         const allValues = form.getValues();
-        const patch = Object.fromEntries(
+        const valid = Object.fromEntries(
           Object.entries(allValues).filter(([k]) => validCodes.has(k))
         );
+        const patch = transformEmit(valid, {
+          isReview: REVIEW_MODES.includes(editorModeRef.current),
+          nodeTitle: nodeTitleRef.current,
+        });
         if (Object.keys(patch).length > 0) {
           updateNode(nodeId, patch);
           onFormValueChangeRef.current(patch);
@@ -165,7 +239,10 @@ export const SparkMetaForm: React.FC<SparkMetaFormProps> = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form]);
 
-  const isReadOnly = editorMode !== 'edit';
+  // Per-field editability is computed in useFieldPrepare (computeEditable):
+  // outside review modes a field is editable unless the API says otherwise;
+  // inside review/read/sourcingreview/orgreview only editableFields[mode] codes
+  // stay editable. So a field is disabled iff its computed `editable` is false.
 
   // Group consecutive fields with the same section key into boxes.
   const sectionGroups = tabFields.reduce<Array<{ section: string | undefined; fields: typeof tabFields }>>(
@@ -187,7 +264,7 @@ export const SparkMetaForm: React.FC<SparkMetaFormProps> = ({
       name: field.code,
       label: field.label,
       required: field.required,
-      disabled: isReadOnly || field.editable === false,
+      disabled: field.editable === false,
     };
     switch (field.inputType) {
       case 'textarea':
