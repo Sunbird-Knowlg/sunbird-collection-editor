@@ -42,11 +42,19 @@ function buildSavePayload(
     'topic', 'topicsIds',
   ]);
 
-  // Fields the API requires as arrays
+  // Fields the API requires as arrays.
+  // Both legacy names (board/medium/gradeLevel/subject) and *Ids variants are listed
+  // because different category definitions use different field codes.
   const ARRAY_FIELDS = new Set([
-    'audience', 'attributions', 'targetBoardIds', 'targetMediumIds', 'targetGradeLevelIds',
-    'targetSubjectIds', 'medium', 'gradeLevel', 'subject', 'additionalCategories',
-    'keywords', 'language',
+    'audience', 'attributions', 'keywords', 'language', 'additionalCategories',
+    // Org-framework fields — legacy codes
+    'board', 'medium', 'gradeLevel', 'subject',
+    // Org-framework fields — *Ids codes used by newer category definitions
+    'boardIds', 'mediumIds', 'gradeLevelIds', 'subjectIds',
+    // Target-framework fields
+    'targetBoardIds', 'targetMediumIds', 'targetGradeLevelIds', 'targetSubjectIds',
+    // Dial codes
+    'dialcodes',
   ]);
 
   // Fields the API requires as numbers
