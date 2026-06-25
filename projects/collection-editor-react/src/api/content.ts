@@ -45,8 +45,12 @@ export async function compositeSearch(params: {
   });
 
   const result = response.data?.result ?? {};
+  const NON_CONTENT_KEYS = new Set(['count', 'facets']);
+  const content = Object.entries(result as Record<string, unknown>)
+    .filter(([key]) => !NON_CONTENT_KEYS.has(key))
+    .flatMap(([, items]) => Array.isArray(items) ? items : []) as IContent[];
   return {
-    content: (result.content ?? []) as IContent[],
+    content,
     count: (result.count ?? 0) as number,
   };
 }
