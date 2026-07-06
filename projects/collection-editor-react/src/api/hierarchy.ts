@@ -1,11 +1,18 @@
 import { apiClient } from './client';
 import type { INode } from '../types/editor';
+import { readQuestionSetHierarchy } from './question';
 
-function mapToINode(raw: unknown, parentId?: string): INode {
+export function mapToINode(raw: unknown, parentId?: string): INode {
   const r = (raw ?? {}) as Record<string, unknown>;
   const identifier = (r['identifier'] as string) ?? '';
   const objectType = (r['objectType'] as string) ?? '';
   const mime = (r['mimeType'] as string) ?? '';
+
+  const rawChildren = r['children'];
+  const children: INode[] = Array.isArray(rawChildren)
+    ? rawChildren.map((child) => mapToINode(child, identifier))
+    : [];
+
   const isFolder =
     mime === 'application/vnd.ekstep.content-collection' ||
     objectType.toLowerCase().includes('unit') ||
@@ -13,12 +20,11 @@ function mapToINode(raw: unknown, parentId?: string): INode {
     objectType.toLowerCase().includes('collection') ||
     objectType.toLowerCase().includes('course') ||
     objectType.toLowerCase().includes('lesson') ||
-    (r['visibility'] as string) === 'Parent';
-
-  const rawChildren = r['children'];
-  const children: INode[] = Array.isArray(rawChildren)
-    ? rawChildren.map((child) => mapToINode(child, identifier))
-    : [];
+    (r['visibility'] as string) === 'Parent' ||
+    // A QuestionSet with children is the root of a questionset editor (a
+    // container of units/questions). A childless QuestionSet is a leaf
+    // resource inside a Collection — kept as a leaf so it previews as a set.
+    (mime === 'application/vnd.sunbird.questionset' && children.length > 0);
 
   return {
     id: identifier,
@@ -60,6 +66,20 @@ export async function readHierarchy(
   }
   const rootNode = mapToINode(content);
   return { content, rootNode };
+}
+
+/**
+ * Loads a QuestionSet hierarchy as an editor tree. Used when the editor root
+ * itself is a QuestionSet (objectType === 'QuestionSet'), where the correct
+ * endpoint is /questionset/v2/hierarchy (payload under result.questionset)
+ * rather than the content-collection endpoint.
+ */
+export async function readQuestionSetHierarchyTree(
+  questionSetId: string,
+): Promise<{ content: Record<string, unknown>; rootNode: INode }> {
+  const questionset = await readQuestionSetHierarchy(questionSetId);
+  const rootNode = mapToINode(questionset);
+  return { content: questionset, rootNode };
 }
 
 export async function updateHierarchy(

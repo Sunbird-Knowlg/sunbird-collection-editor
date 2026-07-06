@@ -1,10 +1,37 @@
 import React, { useEffect, useRef, useState } from 'react';
 import type { INode, EditorMode } from '../../types/editor';
 import { useEditorStore } from '../../store/editor.store';
+import { useTreeStore } from '../../store/tree.store';
 import { fetchContentDetails } from '../../api/content';
-import { useQumlContent } from '../../hooks/useQumlContent';
+import { useQumlContent, buildSingleQuestionHierarchy } from '../../hooks/useQumlContent';
 import { qumlPlayerService, QumlPlayerService } from '../../services/quml/QumlPlayerService';
 import styles from './ContentPlayer.module.scss';
+
+const QUESTIONSET_MIME = 'application/vnd.sunbird.questionset';
+
+/**
+ * Walks the tree from a question node up to the nearest ancestor QuestionSet —
+ * the base hierarchy for a single-question preview. The QuestionSet may be the
+ * editor root or a leaf inside a Collection, so we resolve it from the tree
+ * rather than the editor context.
+ */
+function findAncestorQuestionSetId(nodes: INode[], nodeId: string): string | null {
+  const byId = new Map<string, INode>();
+  const index = (list: INode[]) => {
+    for (const n of list) {
+      byId.set(n.id, n);
+      if (n.children) index(n.children);
+    }
+  };
+  index(nodes);
+
+  let current = byId.get(nodeId);
+  while (current) {
+    if (current.mimeType === QUESTIONSET_MIME) return current.identifier;
+    current = current.parent ? byId.get(current.parent) : undefined;
+  }
+  return null;
+}
 
 // ── MIME-type classification ──────────────────────────────────────────────────
 const MIME_GROUPS: Array<{ key: string; mimes: string[]; label: string; icon: string }> = [
@@ -209,11 +236,13 @@ interface ContentPlayerProps {
   node: INode;
   editorMode: EditorMode;
   type: 'content' | 'quml';
+  /** For type='quml': render a single question rather than the whole set. */
+  singleQuestion?: boolean;
 }
 
 // ── Root ──────────────────────────────────────────────────────────────────────
-export const ContentPlayer: React.FC<ContentPlayerProps> = ({ node, editorMode, type }) => {
-  if (type === 'quml') return <QumlPlayer node={node} editorMode={editorMode} />;
+export const ContentPlayer: React.FC<ContentPlayerProps> = ({ node, editorMode, type, singleQuestion }) => {
+  if (type === 'quml') return <QumlPlayer node={node} editorMode={editorMode} singleQuestion={!!singleQuestion} />;
 
   const thumb = node.appIcon ?? (node.metadata?.appIcon as string | undefined);
 
@@ -377,13 +406,40 @@ function SunbirdContentPlayer({ node }: { node: INode }) {
 }
 
 // ── QuML player ───────────────────────────────────────────────────────────────
-// Loads a full QuestionSet: fetches the hierarchy + inlines every question's
-// body, then renders it through the <sunbird-quml-player> web component.
-function QumlPlayer({ node, editorMode }: { node: INode; editorMode: EditorMode }) {
+// Renders through the <sunbird-quml-player> web component. Two modes:
+//  • whole set   — fetch the questionset hierarchy (questions inlined) for the node.
+//  • single question — fetch the ancestor questionset, then expose only the one
+//    selected question (mirrors Angular's isSingleQuestionPreview).
+function QumlPlayer({
+  node,
+  editorMode,
+  singleQuestion,
+}: {
+  node: INode;
+  editorMode: EditorMode;
+  singleQuestion: boolean;
+}) {
   const editorConfig = useEditorStore((s) => s.editorConfig);
+  const treeData = useTreeStore((s) => s.treeData);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const { data: metadata, isLoading, error } = useQumlContent(node.identifier);
+  // Base questionset id: the node itself for a set, or its nearest ancestor
+  // questionset when previewing a single question.
+  const baseQuestionSetId = singleQuestion
+    ? findAncestorQuestionSetId(treeData, node.id)
+    : node.identifier;
+
+  const { data: baseHierarchy, isLoading, error } = useQumlContent(
+    baseQuestionSetId ?? '',
+    { enabled: !!baseQuestionSetId },
+  );
+
+  // For single-question mode, derive a one-question hierarchy from the set.
+  const metadata = React.useMemo(() => {
+    if (!baseHierarchy) return null;
+    if (!singleQuestion) return baseHierarchy;
+    return buildSingleQuestionHierarchy(baseHierarchy, node.identifier);
+  }, [baseHierarchy, singleQuestion, node.identifier]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -397,7 +453,7 @@ function QumlPlayer({ node, editorMode }: { node: INode; editorMode: EditorMode 
         const config = await qumlPlayerService.createConfig(
           metadata,
           editorConfig?.context,
-          { mode: editorMode === 'edit' ? 'edit' : 'play' },
+          { mode: editorMode === 'edit' ? 'edit' : 'play', singleQuestion },
         );
         if (cancelled || !containerRef.current) return;
         const element = qumlPlayerService.createElement(config);
@@ -422,12 +478,20 @@ function QumlPlayer({ node, editorMode }: { node: INode; editorMode: EditorMode 
       }
       QumlPlayerService.unloadStyles();
     };
-  }, [metadata, editorConfig, editorMode]);
+  }, [metadata, editorConfig, editorMode, singleQuestion]);
+
+  const errorMessage = error
+    ? `Unable to load questionset: ${error.message}`
+    : singleQuestion && !baseQuestionSetId
+      ? 'Could not resolve the parent questionset for this question.'
+      : singleQuestion && baseHierarchy && !metadata
+        ? 'Question not found in the questionset.'
+        : null;
 
   return (
     <div className={styles.qumlRoot}>
-      {error ? (
-        <PlayerError message={`Unable to load questionset: ${error.message}`} />
+      {errorMessage ? (
+        <PlayerError message={errorMessage} />
       ) : isLoading || !metadata ? (
         <CoverOverlay node={node} hidden={false} />
       ) : null}

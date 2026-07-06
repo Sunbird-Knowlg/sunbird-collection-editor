@@ -14,7 +14,9 @@ import { ContentEditForm } from './ContentEditForm';
 import { TitleAppIcon } from './TitleAppIcon';
 import styles from './ContextualEditor.module.scss';
 
-const QUML_TYPES = ['application/vnd.sunbird.questionset'];
+const QUESTIONSET_MIME = 'application/vnd.sunbird.questionset';
+const QUESTION_MIME = 'application/vnd.sunbird.question';
+const QUML_TYPES = [QUESTIONSET_MIME, QUESTION_MIME];
 
 interface ContextualEditorProps {
   editorMode: EditorMode;
@@ -46,6 +48,7 @@ export const ContextualEditor: React.FC<ContextualEditorProps> = ({ editorMode, 
   const isCurrentNodeFolder = !!selectedNode?.isFolder;
 
   const isQuml = selectedNode && QUML_TYPES.includes(selectedNode.mimeType ?? '');
+  const isSingleQuestion = selectedNode?.mimeType === QUESTION_MIME;
   const isLeafContent = selectedNode && !selectedNode.isFolder && !isQuml && !isCurrentNodeRoot;
 
   // Review comment from previous rejection cycle
@@ -80,7 +83,14 @@ export const ContextualEditor: React.FC<ContextualEditorProps> = ({ editorMode, 
   }
 
   if (isQuml) {
-    return <ContentPlayer node={selectedNode} editorMode={editorMode} type="quml" />;
+    return (
+      <ContentPlayer
+        node={selectedNode}
+        editorMode={editorMode}
+        type="quml"
+        singleQuestion={isSingleQuestion}
+      />
+    );
   }
 
   if (isLeafContent) {

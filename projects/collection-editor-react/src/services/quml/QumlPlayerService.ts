@@ -10,6 +10,8 @@ export interface QumlContextProps {
   cdata?: unknown[];
   contextRollup?: Record<string, string>;
   objectRollup?: Record<string, string>;
+  /** When true, configures the player to render exactly one question. */
+  singleQuestion?: boolean;
 }
 
 export interface QumlPlayerConfig {
@@ -95,6 +97,16 @@ export class QumlPlayerService {
   ): Promise<QumlPlayerConfig> {
     await this.loadScript();
 
+    // Single-question preview: constrain the set to one question and strip the
+    // start/timer/legend chrome, mirroring Angular's isSingleQuestionPreview.
+    const playerMetadata: Record<string, unknown> = { ...metadata };
+    if (props?.singleQuestion) {
+      playerMetadata['maxQuestions'] = 1;
+      playerMetadata['showStartPage'] = 'No';
+      playerMetadata['showTimer'] = 'No';
+      playerMetadata['requiresSubmit'] = 'No';
+    }
+
     const context: Record<string, unknown> = {
       mode: props?.mode ?? 'play',
       pdata: {
@@ -111,6 +123,7 @@ export class QumlPlayerService {
       contextRollup: props?.contextRollup ?? ctx?.rollup ?? {},
       objectRollup: props?.objectRollup ?? {},
       ...(props?.cdata ? { cdata: props.cdata } : {}),
+      ...(props?.singleQuestion ? { threshold: 1 } : {}),
     };
 
     return {
@@ -123,8 +136,9 @@ export class QumlPlayerService {
           showReplay: true,
           showExit: false,
         },
+        ...(props?.singleQuestion ? { showLegend: false } : {}),
       },
-      metadata,
+      metadata: playerMetadata,
     };
   }
 

@@ -19,6 +19,59 @@ function maxScoreDecl(source: Node): Record<string, unknown> {
 }
 
 /**
+ * Finds a question node and its immediate parent within an enriched hierarchy.
+ */
+function findQuestionWithParent(
+  node: Node | undefined,
+  questionId: string,
+  parent?: Node,
+): { question: Node; parent?: Node } | null {
+  if (!node) return null;
+  if (node['identifier'] === questionId) return { question: node, parent };
+  for (const child of node.children ?? []) {
+    const found = findQuestionWithParent(child, questionId, node);
+    if (found) return found;
+  }
+  return null;
+}
+
+/**
+ * Builds a single-question questionset hierarchy from an enriched base set,
+ * mirroring Angular's qumlplayer-page.component.initQumlPlayer(): keep the
+ * questionset shell but expose only the selected question, so the player
+ * renders exactly one question.
+ */
+export function buildSingleQuestionHierarchy(
+  base: Record<string, unknown>,
+  questionId: string,
+): Record<string, unknown> | null {
+  const match = findQuestionWithParent(base as Node, questionId);
+  if (!match) return null;
+  const { question, parent } = match;
+
+  const hierarchy: Record<string, unknown> = {
+    ...base,
+    children: [question],
+    childNodes: [questionId],
+    shuffle: parent?.['shuffle'],
+    showSolutions: (parent?.['showSolutions'] as string) ?? 'No',
+    showFeedback: (parent?.['showFeedback'] as string) ?? 'No',
+  };
+
+  // maxScore rules from Angular: shuffle → 1; short-answer (SA) → omit;
+  // otherwise carry the question's own maxScore.
+  if (parent?.['shuffle'] === true) {
+    hierarchy['maxScore'] = 1;
+  } else if (question['qType'] === 'SA') {
+    delete hierarchy['maxScore'];
+  } else if (question['maxScore'] != null) {
+    hierarchy['maxScore'] = question['maxScore'];
+  }
+
+  return hierarchy;
+}
+
+/**
  * Fetches and assembles the QuestionSet metadata a QuML player needs.
  *  - reads the questionset hierarchy
  *  - collects all question identifiers from the tree

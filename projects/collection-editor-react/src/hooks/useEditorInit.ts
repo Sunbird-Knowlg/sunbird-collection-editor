@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import type { IEditorConfig } from '../types/editor';
 import { useEditorStore } from '../store/editor.store';
 import { useTreeStore } from '../store/tree.store';
-import { readHierarchy } from '../api/hierarchy';
+import { readHierarchy, readQuestionSetHierarchyTree } from '../api/hierarchy';
 import { getCategoryDefinition } from '../api/categoryDefinition';
 import { setApiBaseUrl } from '../api/client';
 
@@ -38,7 +38,13 @@ export function useEditorInit({ config, onError }: UseEditorInitOptions) {
           config.context.contentId ?? config.context.identifier ?? '';
 
         if (contentId) {
-          const { rootNode } = await readHierarchy(contentId);
+          // QuestionSet-rooted editors must read from the questionset endpoint
+          // (payload under result.questionset); everything else is a
+          // content-collection hierarchy.
+          const isQuestionSetRoot = config.config.objectType === 'QuestionSet';
+          const { rootNode } = isQuestionSetRoot
+            ? await readQuestionSetHierarchyTree(contentId)
+            : await readHierarchy(contentId);
           if (!cancelled) {
             const nodes = rootNode ? [rootNode] : [];
             setTreeData(nodes);
