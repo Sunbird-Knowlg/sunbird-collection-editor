@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import type { INode, EditorMode } from '../../types/editor';
 import { useEditorStore } from '../../store/editor.store';
 import { fetchContentDetails } from '../../api/content';
+import { useQumlContent } from '../../hooks/useQumlContent';
+import { qumlPlayerService, QumlPlayerService } from '../../services/quml/QumlPlayerService';
 import styles from './ContentPlayer.module.scss';
 
 // ── MIME-type classification ──────────────────────────────────────────────────
@@ -375,36 +377,60 @@ function SunbirdContentPlayer({ node }: { node: INode }) {
 }
 
 // ── QuML player ───────────────────────────────────────────────────────────────
+// Loads a full QuestionSet: fetches the hierarchy + inlines every question's
+// body, then renders it through the <sunbird-quml-player> web component.
 function QumlPlayer({ node, editorMode }: { node: INode; editorMode: EditorMode }) {
   const editorConfig = useEditorStore((s) => s.editorConfig);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!containerRef.current) return;
-    const ctx = editorConfig?.context;
-    const qumlConfig = {
-      context: {
-        mode: editorMode === 'edit' ? 'edit' : 'play',
-        pdata: { id: ctx?.pdata?.id ?? 'sunbird.portal', ver: '1.0', pid: 'sunbird-portal' },
-        contentId: node.identifier,
-        sid: ctx?.sid ?? '',
-        uid: ctx?.uid ?? '',
-        channel: ctx?.channel ?? '',
-        did: ctx?.did ?? '',
-      },
-      config: { enable: false, showShare: false, showDownload: false, showReplay: true, showExit: false },
-      metadata: node.metadata ?? {},
-      data: {},
-    };
+  const { data: metadata, isLoading, error } = useQumlContent(node.identifier);
 
-    const el = document.createElement('sunbird-quml-player') as HTMLElement & Record<string, unknown>;
-    el.setAttribute('player-config', JSON.stringify(qumlConfig));
-    containerRef.current.innerHTML = '';
-    containerRef.current.appendChild(el);
-  }, [node.identifier, editorMode]);
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container || !metadata) return;
+
+    let el: HTMLElement | null = null;
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const config = await qumlPlayerService.createConfig(
+          metadata,
+          editorConfig?.context,
+          { mode: editorMode === 'edit' ? 'edit' : 'play' },
+        );
+        if (cancelled || !containerRef.current) return;
+        const element = qumlPlayerService.createElement(config);
+        el = element;
+        qumlPlayerService.attachEventListeners(
+          element,
+          (e: CustomEvent) => console.debug('[QumlPlayer] playerEvent', e.detail),
+          (detail: unknown) => console.debug('[QumlPlayer] telemetryEvent', detail),
+        );
+        container.innerHTML = '';
+        container.appendChild(element);
+      } catch (err) {
+        console.error('[QumlPlayer] failed to initialize', err);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+      if (el) {
+        qumlPlayerService.removeEventListeners(el);
+        el.remove();
+      }
+      QumlPlayerService.unloadStyles();
+    };
+  }, [metadata, editorConfig, editorMode]);
 
   return (
     <div className={styles.qumlRoot}>
+      {error ? (
+        <PlayerError message={`Unable to load questionset: ${error.message}`} />
+      ) : isLoading || !metadata ? (
+        <CoverOverlay node={node} hidden={false} />
+      ) : null}
       <div ref={containerRef} className={styles.playerWrapper} />
     </div>
   );

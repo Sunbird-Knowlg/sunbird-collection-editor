@@ -18,26 +18,48 @@ const projectRoot = resolve(__dirname, '..');
 const nodeModules = resolve(projectRoot, '../../node_modules');
 const destDir = resolve(projectRoot, 'public/assets');
 
-const PLAYERS = [
+// Flattened players (pdf/video/epub) — served at /assets/sunbird-*-player.js.
+// Their contents share the /assets root as angular.json does.
+const FLAT_PLAYERS = [
   '@project-sunbird/sunbird-pdf-player-web-component/assets/pdf-player',
   '@project-sunbird/sunbird-video-player-web-component/assets/video-player',
   '@project-sunbird/sunbird-epub-player-web-component/assets/epub-player',
-  '@project-sunbird/sunbird-quml-player-web-component/assets/quml-player',
+];
+
+// QuML is copied into its own subdir so its styles.css does not collide with
+// the other players' styles.css when flattened. Served at
+// /assets/quml-player/sunbird-quml-player.js and /assets/quml-player/styles.css.
+const SUBDIR_PLAYERS = [
+  {
+    rel: '@project-sunbird/sunbird-quml-player-web-component/assets/quml-player',
+    dest: resolve(destDir, 'quml-player'),
+  },
 ];
 
 mkdirSync(destDir, { recursive: true });
 
 let copied = 0;
-for (const rel of PLAYERS) {
+const total = FLAT_PLAYERS.length + SUBDIR_PLAYERS.length;
+for (const rel of FLAT_PLAYERS) {
   const src = resolve(nodeModules, rel);
   if (!existsSync(src)) {
     console.warn(`[copy-player-assets] skip (not found): ${rel}`);
     continue;
   }
-  // Flatten each player dir's contents directly into public/assets (as angular.json does)
   cpSync(src, destDir, { recursive: true });
   copied++;
   console.log(`[copy-player-assets] copied ${rel} -> public/assets/`);
 }
+for (const { rel, dest } of SUBDIR_PLAYERS) {
+  const src = resolve(nodeModules, rel);
+  if (!existsSync(src)) {
+    console.warn(`[copy-player-assets] skip (not found): ${rel}`);
+    continue;
+  }
+  mkdirSync(dest, { recursive: true });
+  cpSync(src, dest, { recursive: true });
+  copied++;
+  console.log(`[copy-player-assets] copied ${rel} -> ${dest}/`);
+}
 
-console.log(`[copy-player-assets] done (${copied}/${PLAYERS.length} players)`);
+console.log(`[copy-player-assets] done (${copied}/${total} players)`);
