@@ -61,6 +61,9 @@ export default defineConfig({
         },
       },
       '/learner': { target: 'http://localhost:3000', changeOrigin: true },
+      // Portal-service proxy — questionset/v2 hierarchy + question/v2 list
+      // (session-cookie authed) used for QuML questionset preview.
+      '/portal': { target: 'http://localhost:3000', changeOrigin: true },
     },
   },
   css: {

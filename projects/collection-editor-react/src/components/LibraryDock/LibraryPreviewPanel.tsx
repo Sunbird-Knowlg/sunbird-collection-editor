@@ -6,6 +6,8 @@ import type { INode } from '../../types/editor';
 import { ContentPlayer } from '../ContentPlayer';
 import styles from './LibraryPreviewPanel.module.scss';
 
+const QUESTIONSET_MIME = 'application/vnd.sunbird.questionset';
+
 interface LibraryPreviewPanelProps {
   content: IContent | null;
   onAdd: (item: IContent) => void;
@@ -64,7 +66,13 @@ export const LibraryPreviewPanel: React.FC<LibraryPreviewPanelProps> = ({
         </div>
 
         <div className={styles.playerArea}>
-          <ContentPlayer node={node} editorMode="read" type="content" />
+          {/* QuestionSets preview via the QuML player (whole set); everything
+              else goes through the content players. */}
+          <ContentPlayer
+            node={node}
+            editorMode="read"
+            type={content.mimeType === QUESTIONSET_MIME ? 'quml' : 'content'}
+          />
         </div>
 
         <div className={styles.footer}>
