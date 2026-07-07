@@ -29,9 +29,11 @@ const FLAT_PLAYERS = [
 // QuML is copied into its own subdir so its styles.css does not collide with
 // the other players' styles.css when flattened. Served at
 // /assets/quml-player/sunbird-quml-player.js and /assets/quml-player/styles.css.
+// Source is the React-based rebuild of the player (same custom element and
+// player-config contract; new data.sections/identifier config schema).
 const SUBDIR_PLAYERS = [
   {
-    rel: '@project-sunbird/sunbird-quml-player-web-component/assets/quml-player',
+    rel: '@project-sunbird/sunbird-quml-player-web-component-react/assets/quml-player',
     dest: resolve(destDir, 'quml-player'),
   },
 ];

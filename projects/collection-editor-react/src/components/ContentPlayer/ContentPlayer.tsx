@@ -450,10 +450,12 @@ function QumlPlayer({
 
     (async () => {
       try {
+        // Single-question preview needs no player flags: metadata is already a
+        // one-question hierarchy, so the derived inline section has one entry.
         const config = await qumlPlayerService.createConfig(
           metadata,
           editorConfig?.context,
-          { mode: editorMode === 'edit' ? 'edit' : 'play', singleQuestion },
+          { mode: editorMode === 'edit' ? 'edit' : 'play' },
         );
         if (cancelled || !containerRef.current) return;
         const element = qumlPlayerService.createElement(config);

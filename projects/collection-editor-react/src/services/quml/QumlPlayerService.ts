@@ -2,7 +2,6 @@ import type { IContext } from '../../types/editor';
 
 const SCRIPT_SRC = '/assets/quml-player/sunbird-quml-player.js';
 const STYLES_HREF = '/assets/quml-player/styles.css';
-const QUESTION_LIST_URL = '/action/question/v2/list';
 const TAG = 'sunbird-quml-player';
 
 export interface QumlContextProps {
@@ -10,14 +9,30 @@ export interface QumlContextProps {
   cdata?: unknown[];
   contextRollup?: Record<string, string>;
   objectRollup?: Record<string, string>;
-  /** When true, configures the player to render exactly one question. */
-  singleQuestion?: boolean;
 }
 
 export interface QumlPlayerConfig {
   context: Record<string, unknown>;
   config: Record<string, unknown>;
+  /** React-player load source: inline sections (preferred) or identifier self-fetch. */
+  data: Record<string, unknown>;
   metadata: Record<string, unknown>;
+}
+
+/**
+ * Derives the react player's inline `sections` from a questionset hierarchy
+ * whose questions are already inlined (useQumlContent output). Mirrors the
+ * player's own section derivation: a set whose children are all Questions is
+ * a single section; otherwise each child unit is a section.
+ */
+function toSections(
+  hierarchy: Record<string, unknown>,
+): Array<Record<string, unknown>> {
+  const children =
+    (hierarchy['children'] as Array<Record<string, unknown>> | undefined) ?? [];
+  if (!children.length) return [];
+  const allQuestions = children.every((c) => c['objectType'] === 'Question');
+  return allQuestions ? [hierarchy] : children;
 }
 
 /**
@@ -61,10 +76,6 @@ export class QumlPlayerService {
   }
 
   private loadStyles(): void {
-    // The web component fetches individual questions from this URL.
-    (window as unknown as Record<string, unknown>)['questionListUrl'] =
-      QUESTION_LIST_URL;
-
     if (
       QumlPlayerService.stylesLoaded ||
       document.querySelector('[data-quml-player-styles="true"]')
@@ -97,18 +108,11 @@ export class QumlPlayerService {
   ): Promise<QumlPlayerConfig> {
     await this.loadScript();
 
-    // Single-question preview: constrain the set to one question and strip the
-    // start/timer/legend chrome, mirroring Angular's isSingleQuestionPreview.
-    const playerMetadata: Record<string, unknown> = { ...metadata };
-    if (props?.singleQuestion) {
-      playerMetadata['maxQuestions'] = 1;
-      playerMetadata['showStartPage'] = 'No';
-      playerMetadata['showTimer'] = 'No';
-      playerMetadata['requiresSubmit'] = 'No';
-    }
-
     const context: Record<string, unknown> = {
       mode: props?.mode ?? 'play',
+      // Same-origin base for the player's identifier self-fetch fallback
+      // (/learner/questionset/v2/hierarchy + /api/question/v2/list).
+      host: '',
       pdata: {
         id: ctx?.pdata?.id ?? 'sunbird.portal',
         ver: ctx?.pdata?.ver ?? '1.0',
@@ -123,22 +127,21 @@ export class QumlPlayerService {
       contextRollup: props?.contextRollup ?? ctx?.rollup ?? {},
       objectRollup: props?.objectRollup ?? {},
       ...(props?.cdata ? { cdata: props.cdata } : {}),
-      ...(props?.singleQuestion ? { threshold: 1 } : {}),
     };
 
     return {
       context,
-      config: {
-        sideMenu: {
-          enable: false,
-          showShare: false,
-          showDownload: false,
-          showReplay: true,
-          showExit: false,
-        },
-        ...(props?.singleQuestion ? { showLegend: false } : {}),
+      config: { language: 'en' },
+      // Inline sections render with no network call — required for draft
+      // preview, since the player's identifier self-fetch hits the published
+      // /learner endpoint. identifier is kept as a graceful fallback should
+      // the inline payload fail to normalize.
+      data: {
+        sections: toSections(metadata),
+        identifier: (metadata['identifier'] as string) ?? '',
       },
-      metadata: playerMetadata,
+      // Used by the player for media basePath resolution.
+      metadata,
     };
   }
 
