@@ -30,11 +30,11 @@ describe('per-field default seeding (mirrors prepareFields 180-244)', () => {
     expect(f.currentValue).toBe('Existing');
   });
 
-  it('defaults author to the user full name and locks the field', () => {
+  it('defaults author to the user full name and keeps it editable', () => {
     const cfg = [{ code: 'author', label: 'Author' }];
     const f = find(useFieldPrepare(cfg, {}, fw, true, { userFullName: 'Jane Doe', editorMode: 'edit' }), 'author');
     expect(f.currentValue).toBe('Jane Doe');
-    expect(f.editable).toBe(false);
+    expect(f.editable).toBe(true);
   });
 
   it('defaults license to the context/channel default license', () => {

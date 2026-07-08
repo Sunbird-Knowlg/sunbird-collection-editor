@@ -97,3 +97,14 @@ export async function getUsersByIds(ids: string[]): Promise<IUser[]> {
   });
   return (response.data?.result?.response?.content ?? []) as IUser[];
 }
+
+/**
+ * Read a user's profile — used to auto-fill the author field with the current
+ * user's name. Served via the portal-service proxy (session auth), the same
+ * route family as the questionset APIs (/portal/*).
+ * Response shape: { result: { response: { firstName, lastName, userName, … } } }
+ */
+export async function readUser(userId: string): Promise<IUser> {
+  const response = await apiClient.get(`/portal/user/v5/read/${userId}`);
+  return (response.data?.result?.response ?? {}) as IUser;
+}

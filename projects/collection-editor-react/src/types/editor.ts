@@ -33,6 +33,9 @@ export interface IContext {
   channel: string;
   pdata: { id: string; ver: string; pid?: string };
   env: string;
+  /** Current user profile — user.fullName auto-fills the author field.
+   *  When absent, the editor resolves it via /portal/user/v5/read. */
+  user?: { fullName?: string };
   contentId?: string;
   identifier?: string;
   framework?: string;

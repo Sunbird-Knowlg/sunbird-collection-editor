@@ -7,6 +7,7 @@ import { useEditorStore } from '../../store/editor.store';
 import { useFramework } from '../../hooks/useFramework';
 import { useFrameworkOptions } from '../../hooks/useFrameworkOptions';
 import { useChannelData } from '../../hooks/useChannelData';
+import { useUserFullName } from '../../hooks/useUserFullName';
 import { useFieldPrepare, SECTION_DISPLAY } from './hooks/useFieldPrepare';
 import type { IPrepareContext } from './hooks/useFieldPrepare';
 import { transformEmit, transformFieldPatch } from './hooks/emitTransform';
@@ -58,6 +59,11 @@ export const SparkMetaForm: React.FC<SparkMetaFormProps> = ({
     defaultLicense: channelDefaultLicense,
     name: channelName,
   } = useChannelData(config?.context?.channel as string | undefined);
+  // Current user's display name — auto-fills the author field when the host
+  // app doesn't pass context.user.fullName.
+  const fetchedUserFullName = useUserFullName(
+    (config?.context?.userId ?? config?.context?.uid) as string | undefined,
+  );
   // Course Type options: channel frameworks filtered/extended by orgFWType.
   const orgFrameworks = useFrameworkOptions(
     channelFrameworks,
@@ -98,7 +104,8 @@ export const SparkMetaForm: React.FC<SparkMetaFormProps> = ({
     setDefaultCopyRight: cfg.setDefaultCopyRight === true,
     defaultLicense: (ctxCtx.defaultLicense as string | undefined) ?? channelDefaultLicense,
     contextAdditionalCategories: ctxCtx.additionalCategories as string[] | undefined,
-    userFullName: (ctxCtx.user as { fullName?: string } | undefined)?.fullName,
+    // Host-provided name wins; otherwise resolved from the user-read API.
+    userFullName: (ctxCtx.user as { fullName?: string } | undefined)?.fullName ?? fetchedUserFullName,
     channelName,
     collectionAdditionalCategories,
     contentAdditionalCategories,
@@ -238,6 +245,22 @@ export const SparkMetaForm: React.FC<SparkMetaFormProps> = ({
     return () => sub.unsubscribe();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form]);
+
+  // Late-arriving defaults: RHF captures defaultValues at mount, but the user
+  // name (user-read API) and channel name resolve async. When they land, seed
+  // any still-empty licensing fields so the values are visible and persisted
+  // (setValue fires the watch subscription → treeCache patch).
+  useEffect(() => {
+    for (const code of ['author', 'creator', 'copyright', 'copyrightYear', 'license'] as const) {
+      const field = allFieldsRef.current.find(f => f.code === code);
+      if (!field || field.currentValue === undefined || field.currentValue === null || field.currentValue === '') continue;
+      const formValue = form.getValues(code);
+      if (formValue === undefined || formValue === null || formValue === '') {
+        form.setValue(code, field.currentValue, { shouldDirty: false });
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetchedUserFullName, channelName, form]);
 
   // Per-field editability is computed in useFieldPrepare (computeEditable):
   // outside review modes a field is editable unless the API says otherwise;

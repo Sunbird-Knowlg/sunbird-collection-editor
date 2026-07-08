@@ -168,8 +168,7 @@ export function useFieldPrepare(
         (Array.isArray(field.validations) &&
           (field.validations as Array<Record<string, unknown>>).some(v => v.type === 'required'))
       ),
-      // author is always auto-filled with the current user and locked.
-      editable: code === 'author' ? false : computeEditable(code, field.editable !== false, ctx),
+      editable: computeEditable(code, field.editable !== false, ctx),
       placeholder: field.placeholder as string | undefined,
       maxLength: field.maxLength as number | undefined,
       // Guarantee the stored value is selectable/displayable even when the API
