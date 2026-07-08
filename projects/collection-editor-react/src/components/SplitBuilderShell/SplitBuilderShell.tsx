@@ -46,7 +46,7 @@ export const SplitBuilderShell: React.FC<SplitBuilderShellProps> = ({
   const [isFormValid, setIsFormValid] = useState(true);
   const selectedNodeId = useTreeStore((s) => s.selectedNodeId);
   const { save, isSaving, isDirty, lastSaved } = useSaveHierarchy();
-  const { runAction } = useToolbarActions(save);
+  const { runAction, checkRequiredFields } = useToolbarActions(save);
 
   useEffect(() => {
     if (!isDirty) return;
@@ -106,7 +106,8 @@ export const SplitBuilderShell: React.FC<SplitBuilderShellProps> = ({
         return;
       }
       // Guard Back when there are unsaved changes (auto-save is disabled).
-      if (event.action === 'back' && isDirty) {
+      // Only in edit mode — reviewers/viewers exit without a save prompt.
+      if (event.action === 'back' && isDirty && editorMode === 'edit') {
         setShowUnsavedPrompt(true);
         return;
       }
@@ -115,6 +116,9 @@ export const SplitBuilderShell: React.FC<SplitBuilderShellProps> = ({
           toast.error('Please fill the required metadata');
           return;
         }
+        // Tree-wide required-field gate — blocks saving until every node's
+        // required metadata is filled (toasts + selects the offender itself).
+        if (!checkRequiredFields()) return;
         await save();
         onHierarchySaved?.(treeData);
         onToolbarEvent?.(event);
@@ -133,16 +137,22 @@ export const SplitBuilderShell: React.FC<SplitBuilderShellProps> = ({
       }
       onToolbarEvent?.(event);
     },
-    [save, runAction, onToolbarEvent, onHierarchySaved, treeData, isDirty, isFormValid],
+    [save, runAction, checkRequiredFields, onToolbarEvent, onHierarchySaved, treeData, isDirty, isFormValid, editorMode],
   );
 
   // Resolve the unsaved-changes prompt for Back.
   const handleUnsavedSave = useCallback(async () => {
+    // Same required-field gate as Save — stay in the editor so the user can
+    // fill the flagged fields (the gate toasts and selects the offender).
+    if (!checkRequiredFields()) {
+      setShowUnsavedPrompt(false);
+      return;
+    }
     await save();
     setShowUnsavedPrompt(false);
     onHierarchySaved?.(treeData);
     onToolbarEvent?.({ action: 'back' });
-  }, [save, onHierarchySaved, onToolbarEvent, treeData]);
+  }, [save, checkRequiredFields, onHierarchySaved, onToolbarEvent, treeData]);
 
   const handleUnsavedDiscard = useCallback(() => {
     setShowUnsavedPrompt(false);

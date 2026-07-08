@@ -6,12 +6,22 @@ const fw: IFrameworkDetails = {};
 const find = (fields: ReturnType<typeof useFieldPrepare>, code: string) => fields.find(f => f.code === code)!;
 
 describe('per-field default seeding (mirrors prepareFields 180-244)', () => {
-  it('defaults copyright to the channel name only when setDefaultCopyRight', () => {
+  it('defaults copyright to the channel name whenever empty', () => {
     const cfg = [{ code: 'copyright', label: 'Copyright' }];
     const seeded = find(useFieldPrepare(cfg, {}, fw, true, { setDefaultCopyRight: true, channelName: 'Acme Org' }), 'copyright');
     expect(seeded.currentValue).toBe('Acme Org');
-    const notSeeded = find(useFieldPrepare(cfg, {}, fw, true, { channelName: 'Acme Org' }), 'copyright');
-    expect(notSeeded.currentValue).toBe('');
+    // No setDefaultCopyRight flag needed — channel name is the default.
+    const alsoSeeded = find(useFieldPrepare(cfg, {}, fw, true, { channelName: 'Acme Org' }), 'copyright');
+    expect(alsoSeeded.currentValue).toBe('Acme Org');
+  });
+
+  it('defaults copyrightYear to the current year and keeps it editable', () => {
+    const cfg = [{ code: 'copyrightYear', label: 'Copyright Year' }];
+    const f = find(useFieldPrepare(cfg, {}, fw, true, {}), 'copyrightYear');
+    expect(f.currentValue).toBe(String(new Date().getFullYear()));
+    expect(f.editable).toBe(true);
+    const authored = find(useFieldPrepare(cfg, { copyrightYear: '2020' }, fw, true, {}), 'copyrightYear');
+    expect(authored.currentValue).toBe('2020');
   });
 
   it('does not override an authored copyright value', () => {
@@ -20,10 +30,11 @@ describe('per-field default seeding (mirrors prepareFields 180-244)', () => {
     expect(f.currentValue).toBe('Existing');
   });
 
-  it('defaults author to the user full name', () => {
+  it('defaults author to the user full name and locks the field', () => {
     const cfg = [{ code: 'author', label: 'Author' }];
-    const f = find(useFieldPrepare(cfg, {}, fw, true, { userFullName: 'Jane Doe' }), 'author');
+    const f = find(useFieldPrepare(cfg, {}, fw, true, { userFullName: 'Jane Doe', editorMode: 'edit' }), 'author');
     expect(f.currentValue).toBe('Jane Doe');
+    expect(f.editable).toBe(false);
   });
 
   it('defaults license to the context/channel default license', () => {

@@ -60,7 +60,7 @@ export interface IPrepareContext {
   contextAdditionalCategories?: string[];
   /** editorConfig.context.user.fullName */
   userFullName?: string;
-  /** channelInfo.name — used as default copyright when setDefaultCopyRight. */
+  /** channelInfo.name — default copyright whenever the field is empty. */
   channelName?: string;
   /** channelInfo.collectionAdditionalCategories */
   collectionAdditionalCategories?: string[];
@@ -168,7 +168,8 @@ export function useFieldPrepare(
         (Array.isArray(field.validations) &&
           (field.validations as Array<Record<string, unknown>>).some(v => v.type === 'required'))
       ),
-      editable: computeEditable(code, field.editable !== false, ctx),
+      // author is always auto-filled with the current user and locked.
+      editable: code === 'author' ? false : computeEditable(code, field.editable !== false, ctx),
       placeholder: field.placeholder as string | undefined,
       maxLength: field.maxLength as number | undefined,
       // Guarantee the stored value is selectable/displayable even when the API
@@ -225,7 +226,12 @@ function applyFieldDefault(
       if (isEmpty) return ctx.defaultLicense ?? '';
       return currentValue;
     case 'copyright':
-      if (isEmpty && ctx.setDefaultCopyRight && ctx.channelName) return ctx.channelName;
+      // Default to the tenant/channel name whenever empty.
+      if (isEmpty && ctx.channelName) return ctx.channelName;
+      return currentValue;
+    case 'copyrightYear':
+      // Default to the current year; stays editable.
+      if (isEmpty) return String(new Date().getFullYear());
       return currentValue;
     case 'author':
     case 'creator':

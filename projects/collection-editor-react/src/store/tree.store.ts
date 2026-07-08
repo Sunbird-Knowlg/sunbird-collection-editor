@@ -205,7 +205,7 @@ export const useTreeStore = create<TreeState>((set, get) => ({
     }));
     // Any node edit (root/unit/leaf form, inline title) must mark the tree
     // dirty so the debounced autosave in useSaveHierarchy actually runs.
-    useEditorStore.getState().setIsDirty(true);
+    get().markDirty();
   },
 
   addNode: (parentId, _type) => {
@@ -270,7 +270,7 @@ export const useTreeStore = create<TreeState>((set, get) => ({
       newTree = insertIntoParent(newTree, toParentId, { ...node, parent: toParentId });
       return { treeData: newTree };
     });
-    useEditorStore.getState().setIsDirty(true);
+    get().markDirty();
   },
 
   addResource: (content, nodeId) => {
@@ -318,7 +318,11 @@ export const useTreeStore = create<TreeState>((set, get) => ({
   },
 
   markDirty: () => {
-    useEditorStore.getState().setIsDirty(true);
+    // View modes (review/read/sourcingreview) never dirty the tree — form
+    // mount-time normalization fires updateNode even when just viewing, which
+    // would otherwise show "Unsaved" and trigger the back-guard.
+    const { editorMode, setIsDirty } = useEditorStore.getState();
+    if (editorMode === 'edit') setIsDirty(true);
   },
 
   replaceNodeIds: (identifiers) => {

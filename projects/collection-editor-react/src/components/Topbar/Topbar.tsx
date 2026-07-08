@@ -431,8 +431,9 @@ export const Topbar: React.FC<TopbarProps> = ({
             <span className={styles.savedIndicator} aria-live="polite">
               Saving&hellip;
             </span>
-          ) : isDirty ? (
+          ) : isDirty && isEditMode ? (
             // Dirty takes precedence over a prior "Saved" — no auto-save anymore.
+            // View modes (review/read) never show "Unsaved".
             <span
               className={`${styles.savedIndicator} ${styles.unsaved}`}
               aria-live="polite"

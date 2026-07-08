@@ -292,15 +292,28 @@ $type-other : #64748b;
 }
 
 // ── QuML player ───────────────────────────────────────────────────────────────
+// Light background: the React QuML player draws its own light UI at content
+// height, so a dark wrapper would show as a black band below short content
+// (video/pdf keep their black letterboxing via the default .playerWrapper).
 .qumlRoot {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
   min-height: 0;
-  background: #0d1117;
+  background: #fff;
 
   .playerWrapper {
     flex: 1;
     min-height: 0;
+    background: #fff;
+    // Stretch the custom element to fill the area instead of centering it.
+    align-items: stretch;
+    justify-content: stretch;
+
+    :global(sunbird-quml-player) {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
   }
 }

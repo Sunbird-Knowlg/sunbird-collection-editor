@@ -8,6 +8,7 @@ import {
   rejectContent,
   publishContent,
 } from '../api/hierarchy';
+import { findMissingRequiredFields } from '../utils/validateRequiredFields';
 
 /**
  * Centralises the review / publish / reject toolbar flows — mirroring how the
@@ -23,7 +24,44 @@ export function useToolbarActions(save: () => Promise<void>) {
   const config = useEditorStore((s) => s.editorConfig);
   const setButtonLoader = useEditorStore((s) => s.setButtonLoader);
   const validateAllForms = useEditorStore((s) => s.validateAllForms);
+  const rootFormConfig = useEditorStore((s) => s.rootFormConfig);
+  const unitFormConfig = useEditorStore((s) => s.unitFormConfig);
   const treeData = useTreeStore((s) => s.treeData);
+  const treeCache = useTreeStore((s) => s.treeCache);
+  const selectNode = useTreeStore((s) => s.selectNode);
+
+  /**
+   * Tree-wide required-field gate for Save / Send-for-review / Publish.
+   * Unlike validateAllForms (touched-forms only), this validates every
+   * root/unit node's metadata against its form config. On failure: toast the
+   * first offending node + fields, flag the nodes, and select the first one
+   * so its form opens with the errors visible.
+   */
+  const checkRequiredFields = useCallback((): boolean => {
+    const ctx = {
+      editorMode: 'edit' as const,
+      objectType: config?.config?.objectType,
+      userFullName: (config?.context as unknown as { user?: { fullName?: string } })
+        ?.user?.fullName,
+    };
+    const gaps = findMissingRequiredFields(
+      treeData,
+      treeCache,
+      rootFormConfig as Array<Record<string, unknown>> | null,
+      unitFormConfig as Array<Record<string, unknown>> | null,
+      ctx,
+    );
+    if (gaps.length === 0) return true;
+
+    const first = gaps[0];
+    toast.error(
+      `"${first.nodeName}": please fill required field${first.missing.length > 1 ? 's' : ''} — ${first.missing.join(', ')}`,
+    );
+    const { setFormStatus } = useEditorStore.getState();
+    gaps.forEach((g) => setFormStatus(g.nodeId, false));
+    selectNode(first.nodeId);
+    return false;
+  }, [treeData, treeCache, rootFormConfig, unitFormConfig, config, selectNode]);
 
   const runAction = useCallback(
     async (action: ToolbarAction, data?: unknown): Promise<boolean> => {
@@ -39,6 +77,9 @@ export function useToolbarActions(save: () => Promise<void>) {
       try {
         switch (action) {
           case 'sendForReview':
+            // Metadata-level gate (toasts specifics internally), then the
+            // touched-form mapper for format-level errors.
+            if (!checkRequiredFields()) return false;
             if (!validateAllForms(treeData)) {
               toast.error('Some units have missing required fields. Please fill them before sending for review.');
               return false;
@@ -59,6 +100,7 @@ export function useToolbarActions(save: () => Promise<void>) {
           }
 
           case 'publish':
+            if (!checkRequiredFields()) return false;
             if (!validateAllForms(treeData)) {
               toast.error('Some units have missing required fields. Please fill them before publishing.');
               return false;
@@ -88,8 +130,8 @@ export function useToolbarActions(save: () => Promise<void>) {
         setButtonLoader('publishCollection', false);
       }
     },
-    [config, save, setButtonLoader],
+    [config, save, setButtonLoader, checkRequiredFields, validateAllForms, treeData],
   );
 
-  return { runAction };
+  return { runAction, checkRequiredFields };
 }
