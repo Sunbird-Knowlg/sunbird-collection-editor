@@ -238,16 +238,22 @@ interface ContentPlayerProps {
   type: 'content' | 'quml';
   /** For type='quml': render a single question rather than the whole set. */
   singleQuestion?: boolean;
+  /**
+   * 'fill' (default): player flex-fills its container (library preview modal).
+   * 'flow': player keeps an intrinsic 16:9 height so it can sit in a
+   * scrollable column with the info strip and edit form below (leaf content).
+   */
+  layout?: 'fill' | 'flow';
 }
 
 // ── Root ──────────────────────────────────────────────────────────────────────
-export const ContentPlayer: React.FC<ContentPlayerProps> = ({ node, editorMode, type, singleQuestion }) => {
+export const ContentPlayer: React.FC<ContentPlayerProps> = ({ node, editorMode, type, singleQuestion, layout = 'fill' }) => {
   if (type === 'quml') return <QumlPlayer node={node} editorMode={editorMode} singleQuestion={!!singleQuestion} />;
 
   const thumb = node.appIcon ?? (node.metadata?.appIcon as string | undefined);
 
   return (
-    <div className={styles.contentPlayerRoot}>
+    <div className={`${styles.contentPlayerRoot} ${layout === 'flow' ? styles.flowLayout : ''}`}>
       <div className={styles.stage}>
         <div className={styles.playerHeader}>
           {thumb && <img src={thumb} alt="" className={styles.playerHeaderThumb} />}

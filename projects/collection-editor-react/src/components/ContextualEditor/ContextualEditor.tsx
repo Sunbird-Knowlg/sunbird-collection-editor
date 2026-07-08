@@ -96,7 +96,7 @@ export const ContextualEditor: React.FC<ContextualEditorProps> = ({ editorMode, 
   if (isLeafContent) {
     return (
       <div className={styles.leafContentLayout}>
-        <ContentPlayer node={selectedNode} editorMode={editorMode} type="content" />
+        <ContentPlayer node={selectedNode} editorMode={editorMode} type="content" layout="flow" />
         <ContentEditForm
           node={selectedNode}
           editorMode={editorMode}

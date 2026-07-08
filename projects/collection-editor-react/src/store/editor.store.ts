@@ -57,7 +57,6 @@ export const useEditorStore = create<EditorState>((set) => ({
     publishCollection: false,
     addFromLibrary: false,
     rejectCollection: false,
-    sendBackCollection: false,
     sourcingApproveCollection: false,
     sourcingRejectCollection: false,
   },

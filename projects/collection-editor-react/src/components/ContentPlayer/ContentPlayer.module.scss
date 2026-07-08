@@ -19,6 +19,24 @@ $type-other : #64748b;
   overflow: hidden;
 }
 
+// Flow layout — used inside the scrollable leaf-content panel. The player
+// keeps an intrinsic 16:9 height (capped) instead of flex-filling, so the
+// info strip and edit form below stay reachable via the panel's scrollbar.
+.flowLayout {
+  flex: 0 0 auto;
+  overflow: visible;
+
+  .stage {
+    flex: 0 0 auto;
+  }
+
+  .aspectRatio {
+    flex: 0 0 auto;
+    aspect-ratio: 16 / 9;
+    max-height: 62vh;
+  }
+}
+
 // ── Stage  ────────────────────────────────────────────────────────────────────
 // Dark "cinema" frame around the player.
 .stage {
