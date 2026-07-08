@@ -1,0 +1,220 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-top: 1px solid var(--sbx-gray-200);
+  background: white;
+  flex-shrink: 0;
+}
+
+// Always-visible top bar with content-type badge + move btn + collapse toggle
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--sbx-gray-100);
+  gap: 8px;
+}
+
+.panelHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.panelCollapseBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  color: var(--sbx-gray-400);
+  border-radius: var(--sbx-r-sm);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  &:hover { background: var(--sbx-gray-100); color: var(--sbx-gray-700); }
+}
+
+// panel body fields share padding
+.titleRow,
+.field {
+  padding: 0 16px;
+}
+
+.container > .titleRow { padding-top: 16px; }
+.container > .field:last-of-type { padding-bottom: 16px; }
+.container > * + .titleRow,
+.container > * + .field { margin-top: 16px; }
+
+.moveBtn {
+  font-size: 12px;
+  padding: 4px 12px;
+  border: 1px solid var(--sbx-gray-300);
+  border-radius: var(--sbx-r-sm);
+  background: white;
+  cursor: pointer;
+  color: var(--sbx-gray-600);
+  &:hover { border-color: var(--sbx-primary); color: var(--sbx-primary); }
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--sbx-r-sm);
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid var(--sbx-gray-200);
+}
+
+.nameInput {
+  flex: 1;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--sbx-gray-900);
+  border: none;
+  border-bottom: 2px solid var(--sbx-gray-200);
+  padding: 4px 0;
+  background: transparent;
+  outline: none;
+  &:focus { border-bottom-color: var(--sbx-primary); }
+  &:disabled { color: var(--sbx-gray-700); cursor: default; }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fieldHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--sbx-gray-700);
+}
+
+.fieldCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: var(--sbx-primary-light, #EFF6FF);
+  color: var(--sbx-primary);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.collapseBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  color: var(--sbx-gray-500);
+  border-radius: var(--sbx-r-sm);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  &:hover { background: var(--sbx-gray-100); color: var(--sbx-gray-700); }
+}
+
+.chevronUp {
+  transform: rotate(180deg);
+  transition: transform 0.2s;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: var(--sbx-r-xl);
+  background: var(--sbx-primary-light, #EFF6FF);
+  color: var(--sbx-primary);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.chipRemove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  padding: 0;
+  line-height: 1;
+  font-size: 14px;
+  opacity: 0.7;
+  &:hover { opacity: 1; }
+}
+
+.keywordInput {
+  display: flex;
+  gap: 8px;
+}
+
+.input {
+  flex: 1;
+  height: 36px;
+  padding: 0 10px;
+  border: 1.5px solid var(--sbx-gray-300);
+  border-radius: var(--sbx-r-sm);
+  font-size: 13px;
+  outline: none;
+  &:focus { border-color: var(--sbx-primary); }
+}
+
+.addBtn {
+  height: 36px;
+  padding: 0 16px;
+  border: 1.5px solid var(--sbx-gray-300);
+  border-radius: var(--sbx-r-sm);
+  background: white;
+  font-size: 13px;
+  cursor: pointer;
+  &:hover { border-color: var(--sbx-primary); color: var(--sbx-primary); }
+}
+
+.radioGroup {
+  display: flex;
+  gap: 20px;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--sbx-gray-700);
+  cursor: pointer;
+  input { cursor: pointer; accent-color: var(--sbx-primary); }
+}

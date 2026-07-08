@@ -1,0 +1,107 @@
+// ── Pluggable theme tokens ────────────────────────────────────────────────────
+//
+// When mounted in spark-portal the host CSS vars on :root resolve and the
+// editor adopts the host theme (primary colour, radius, shadows, font).
+// Standalone / no host vars: fallback values → default blue theme.
+//
+// Host vars consumed (set by spark-portal ThemeProvider + index.css):
+//   --primary                          bare HSL triple, e.g. "12 50% 45%"
+//   --sunbird-spark-theme-primary-h/s/l  individual seed channels
+//   --destructive                      bare HSL triple for error colour
+//   --sunbird-success-green            bare HSL triple for success colour
+//   --border, --muted, --muted-foreground, --surface, --background, --foreground
+//   --r-xs / --r-sm / --r-md / --r-lg / --r-xl  radius scale
+//   --sunbird-shadow-sm / --sunbird-shadow-md / --sunbird-shadow-lg
+//   --app-font-family                  font stack
+
+:root {
+  // ── Primary palette ───────────────────────────────────────────────────────
+  --sbx-primary:       hsl(var(--primary, 217 71% 46%));
+  // Dark and light variants derived from the host's seed channels.
+  // Lightness is locked (32% dark, 96% light); hue + saturation follow theme.
+  --sbx-primary-dark:  hsl(
+    var(--sunbird-spark-theme-primary-h, 217)
+    var(--sunbird-spark-theme-primary-s, 71%)
+    32%
+  );
+  --sbx-primary-light: hsl(
+    var(--sunbird-spark-theme-primary-h, 217)
+    var(--sunbird-spark-theme-primary-s, 71%)
+    96%
+  );
+  --sbx-ai: #7A5BFF;
+
+  // ── Semantic ──────────────────────────────────────────────────────────────
+  --sbx-success: hsl(var(--sunbird-success-green, 145 63% 49%));
+  --sbx-error:   hsl(var(--destructive,           0 84% 60%));
+  --sbx-warning: #D97706; // fixed amber — not theme-reactive
+  --sbx-info:    #0EA5E9; // fixed cyan  — not theme-reactive
+
+  // ── Grays (neutral — intentionally not theme-reactive) ────────────────────
+  --sbx-gray-50:  #F9FAFB;
+  --sbx-gray-100: #F3F4F6;
+  --sbx-gray-200: #E5E7EB;
+  --sbx-gray-300: #D1D5DB;
+  --sbx-gray-400: #9CA3AF;
+  --sbx-gray-500: #6B7280;
+  --sbx-gray-600: #4B5563;
+  --sbx-gray-700: #374151;
+  --sbx-gray-800: #1F2937;
+  --sbx-gray-900: #111827;
+
+  // ── Radii ─────────────────────────────────────────────────────────────────
+  --sbx-r-xs: var(--r-xs, 4px);
+  --sbx-r-sm: var(--r-sm, 6px);
+  --sbx-r-md: var(--r-md, 10px);
+  --sbx-r-lg: var(--r-lg, 14px);
+  --sbx-r-xl: var(--r-xl, 20px);
+
+  // ── Shadows ───────────────────────────────────────────────────────────────
+  --sbx-shadow-1: var(--sunbird-shadow-sm, 0 1px 3px rgba(0,0,0,0.10), 0 1px 2px rgba(0,0,0,0.06));
+  --sbx-shadow-2: var(--sunbird-shadow-md, 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06));
+  --sbx-shadow-3: var(--sunbird-shadow-lg, 0 10px 15px rgba(0,0,0,0.08), 0 4px 6px rgba(0,0,0,0.05));
+
+  // ── Content-type badge colors (fixed semantic hues) ───────────────────────
+  --sbx-ct-video:   #EA580C;
+  --sbx-ct-pdf:     #DC2626;
+  --sbx-ct-h5p:     #0D9488;
+  --sbx-ct-scorm:   #7C3AED;
+  --sbx-ct-audio:   #DB2777;
+  --sbx-ct-quiz:    #16A34A;
+  --sbx-ct-default: #6B7280;
+
+  // ── Font ──────────────────────────────────────────────────────────────────
+  --sbx-font: var(
+    --app-font-family,
+    'Plus Jakarta Sans', 'Noto Sans', 'Noto Sans Devanagari', 'Noto Sans Tamil', sans-serif
+  );
+
+  // ── Layout constants ──────────────────────────────────────────────────────
+  --sbx-topbar-h: 60px;
+  --sbx-tree-w:   284px;
+  --sbx-dock-w:   312px;
+
+  // ── Phase 2 — surfaces / borders (defer to host where available) ──────────
+  --sbx-surface:  hsl(var(--surface,            0  0% 100%));
+  --sbx-bg:       hsl(var(--background,        48 23%  91%));
+  --sbx-fg:       hsl(var(--foreground,          0  0%  13%));
+  --sbx-border:   hsl(var(--border,           210 25%  80%));
+  --sbx-muted:    hsl(var(--muted,            210 20%  96%));
+  --sbx-muted-fg: hsl(var(--muted-foreground, 210 11%  45%));
+
+  // ── Phase 3 — status-band tokens (extracted from component files) ─────────
+  // Uploading / processing band — primary-tinted, shifts with theme
+  --sbx-status-info-bg:     hsl(var(--primary, 217 71% 46%) / 0.06);
+  --sbx-status-info-border: hsl(var(--primary, 217 71% 46%) / 0.22);
+  // Success band — semantic green, fixed
+  --sbx-status-ok-bg:     #F0FDF4;
+  --sbx-status-ok-border: #BBF7D0;
+  // Error band — semantic red, fixed
+  --sbx-status-err-bg:     #FEF2F2;
+  --sbx-status-err-border: #FECACA;
+  // Warning / review-comment band — fixed amber (semantic, not brand-reactive)
+  --sbx-warn-bg:     #FFFBE6;
+  --sbx-warn-border: #FFE58F;
+  --sbx-warn-text:   #AD6800;
+  --sbx-warn-body:   #595959;
+}

@@ -1,0 +1,4 @@
+/* Plus Jakarta Sans covers Latin glyphs only.
+   Indic chars (Devanagari, Tamil, Urdu) fall through to system Noto fonts.
+   Do NOT add Indic Unicode ranges to this @import. */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');

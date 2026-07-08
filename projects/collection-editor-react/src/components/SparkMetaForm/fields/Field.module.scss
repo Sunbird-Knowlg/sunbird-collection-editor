@@ -1,0 +1,190 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fullWidth { grid-column: 1 / -1; }
+
+.label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--sbx-gray-600);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.required { color: var(--sbx-error); margin-left: 2px; }
+
+.input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1.5px solid var(--sbx-gray-200);
+  border-radius: var(--sbx-r-sm);
+  font-size: 14px;
+  color: var(--sbx-gray-900);
+  font-family: var(--sbx-font);
+  outline: none;
+  transition: border-color 0.15s;
+  background: white;
+  &:focus { border-color: var(--sbx-primary); }
+  &:disabled { background: var(--sbx-gray-50); color: var(--sbx-gray-400); cursor: not-allowed; }
+}
+
+.textarea { resize: vertical; min-height: 80px; }
+
+.inputError { border-color: var(--sbx-error); }
+
+.error { font-size: 12px; color: var(--sbx-error); }
+
+.selectBtn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 12px;
+  border: 1.5px solid var(--sbx-gray-200);
+  border-radius: var(--sbx-r-sm);
+  background: white;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: var(--sbx-font);
+  color: var(--sbx-gray-900);
+  transition: border-color 0.15s;
+  &:hover:not(:disabled) { border-color: var(--sbx-primary); }
+  &:disabled { background: var(--sbx-gray-50); cursor: not-allowed; opacity: 0.7; }
+}
+
+.selectOpen { border-color: var(--sbx-primary); }
+.placeholder { color: var(--sbx-gray-400); }
+.selectedVal { color: var(--sbx-gray-900); }
+.chevronUp { transform: rotate(180deg); transition: transform 0.15s; }
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0; right: 0;
+  z-index: 200;
+  background: white;
+  border: 1px solid var(--sbx-gray-200);
+  border-radius: var(--sbx-r-md);
+  box-shadow: var(--sbx-shadow-3);
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 4px;
+  margin-top: 4px;
+}
+
+.option {
+  display: flex; align-items: center; gap: 8px;
+  width: 100%; padding: 8px 12px; border: none; background: none;
+  cursor: pointer; font-size: 14px; color: var(--sbx-gray-700);
+  border-radius: var(--sbx-r-sm); text-align: left;
+  &:hover { background: var(--sbx-gray-50); }
+}
+
+.optionSelected { color: var(--sbx-primary); font-weight: 500; }
+.noOpts { display: block; padding: 8px 12px; color: var(--sbx-gray-400); font-size: 13px; }
+
+.chipGroup {
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  padding: 8px;
+  border: 1.5px solid var(--sbx-gray-200);
+  border-radius: var(--sbx-r-sm);
+  min-height: 40px;
+  background: white;
+}
+
+.chipInput {
+  border: 1px solid var(--sbx-primary);
+  border-radius: var(--sbx-r-xl);
+  padding: 3px 10px;
+  font-size: 13px;
+  outline: none;
+  width: 120px;
+}
+
+.addChipBtn {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: none; border: 1px dashed var(--sbx-gray-300);
+  border-radius: var(--sbx-r-xl); padding: 3px 10px;
+  font-size: 12px; color: var(--sbx-gray-500); cursor: pointer;
+  &:hover { border-color: var(--sbx-primary); color: var(--sbx-primary); }
+}
+
+.radioGroup { display: flex; gap: 16px; flex-wrap: wrap; padding: 4px 0; }
+.radioLabel { display: flex; align-items: center; gap: 6px; font-size: 14px; cursor: pointer; }
+
+.iconWrap {
+  width: 80px; height: 80px;
+  border-radius: var(--sbx-r-md);
+  border: 2px dashed var(--sbx-gray-300);
+  cursor: pointer; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  &:hover { border-color: var(--sbx-primary); }
+}
+
+.iconPreview { width: 100%; height: 100%; object-fit: cover; }
+.iconPlaceholder { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--sbx-gray-400); font-size: 11px; }
+.hidden { display: none; }
+
+.removeIconBtn {
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+  width: 80px;
+  margin-top: 4px;
+  background: none; border: 1px solid var(--sbx-error);
+  border-radius: var(--sbx-r-sm); padding: 3px 8px;
+  font-size: 12px; color: var(--sbx-error); cursor: pointer;
+  &:hover { background: var(--sbx-status-err-bg); }
+}
+
+// Tag chips used by KeywordSuggestField
+.tagChip {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--sbx-primary-light, #e8f4fd);
+  color: var(--sbx-primary);
+  border-radius: var(--sbx-r-xl);
+  padding: 3px 10px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.tagChipRemove {
+  display: inline-flex; align-items: center;
+  background: none; border: none; padding: 0 0 0 2px;
+  cursor: pointer; color: var(--sbx-primary); line-height: 1;
+  &:hover { color: var(--sbx-error); }
+}
+
+// Nested selects row
+.nestedSelectRow {
+  display: flex; gap: 12px; flex-wrap: wrap;
+  & > * { min-width: 140px; }
+}
+
+// Dialcode input row
+.dialcodeRow {
+  display: flex; align-items: center; gap: 8px;
+}
+
+.validateBtn {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  background: var(--sbx-primary);
+  color: white;
+  border: none;
+  border-radius: var(--sbx-r-sm);
+  font-size: 13px;
+  font-family: var(--sbx-font);
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+  &:hover:not(:disabled) { background: var(--sbx-primary-dark, #0056b3); }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+.dialcodeValid { font-size: 12px; color: var(--sbx-success, #2e7d32); }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+.dialcodeSpinner { animation: spin 1s linear infinite; }
