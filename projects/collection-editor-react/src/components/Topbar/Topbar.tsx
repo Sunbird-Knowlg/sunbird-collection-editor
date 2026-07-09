@@ -9,6 +9,8 @@ import {
   Shield,
   QrCode,
   Download,
+  ChevronDown,
+  Info,
 } from 'lucide-react';
 import type { EditorMode, ToolbarAction } from '../../types/editor';
 import { useTreeStore } from '../../store/tree.store';
@@ -312,7 +314,7 @@ export const Topbar: React.FC<TopbarProps> = ({
       const result = await getDialcodeProcessStatus(qrCodeProcessId);
 
       if (result.status === 'in-process') {
-        toast(lbl.topbar.qrGenerationInProgressToast, { icon: 'ℹ️' });
+        toast(lbl.topbar.qrGenerationInProgressToast, { icon: <Info size={16} /> });
         return;
       }
 
@@ -494,7 +496,7 @@ export const Topbar: React.FC<TopbarProps> = ({
                 >
                   <QrCode size={16} aria-hidden="true" />
                   <span className={styles.iconBtnLabel}>{lbl.topbar.qrCodesLabel}</span>
-                  <span style={{ fontSize: 10, marginLeft: 2 }}>▾</span>
+                  <ChevronDown size={14} style={{ marginLeft: 2 }} aria-hidden="true" />
                 </button>
                 {showQRMenu && (
                   <div className={styles.qrMenu} role="menu">

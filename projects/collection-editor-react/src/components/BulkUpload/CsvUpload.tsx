@@ -1,4 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
+import { X, FileText, Upload } from 'lucide-react';
 import { Button } from '../shared/Button';
 import {
   uploadCsvHierarchy,
@@ -173,7 +174,7 @@ export const CsvUpload: React.FC<CsvUploadProps> = ({
           {mode === 'update' ? lbl.csvUpload.titleUpdate : lbl.csvUpload.titleCreate}
         </h2>
         <button className={styles.closeBtn} onClick={onClose} aria-label={lbl.csvUpload.closeAriaLabel}>
-          ✕
+          <X size={18} />
         </button>
       </div>
 
@@ -201,7 +202,7 @@ export const CsvUpload: React.FC<CsvUploadProps> = ({
           />
           {selectedFile ? (
             <div className={styles.fileInfo}>
-              <span className={styles.fileIcon}>📄</span>
+              <FileText size={24} className={styles.fileIcon} />
               <span className={styles.fileName}>{selectedFile.name}</span>
               <span className={styles.fileSize}>
                 ({(selectedFile.size / 1024).toFixed(1)} KB)
@@ -209,7 +210,7 @@ export const CsvUpload: React.FC<CsvUploadProps> = ({
             </div>
           ) : (
             <div className={styles.dropHint}>
-              <span className={styles.dropIcon}>⬆️</span>
+              <Upload size={32} className={styles.dropIcon} />
               <p className={styles.dropText}>{lbl.csvUpload.dropText}</p>
               <p className={styles.dropSubtext}>{lbl.csvUpload.dropSubtext}</p>
             </div>

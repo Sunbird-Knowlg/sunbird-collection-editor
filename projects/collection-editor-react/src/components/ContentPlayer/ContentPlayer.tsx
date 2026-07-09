@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { User, Scale, Globe, School, BookOpen, Tag, AlertTriangle } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import type { INode, EditorMode } from '../../types/editor';
 import { useEditorStore } from '../../store/editor.store';
 import { useTreeStore } from '../../store/tree.store';
@@ -35,18 +37,18 @@ function findAncestorQuestionSetId(nodes: INode[], nodeId: string): string | nul
 }
 
 // ── MIME-type classification ──────────────────────────────────────────────────
-const MIME_GROUPS: Array<{ key: string; mimes: string[]; icon: string }> = [
-  { key: 'video',  mimes: ['video/mp4','video/webm','video/ogg'],               icon: '🎬' },
-  { key: 'audio',  mimes: ['audio/mp3','audio/mpeg','audio/ogg','audio/wav'],    icon: '🎵' },
-  { key: 'pdf',    mimes: ['application/pdf'],                                   icon: '📄' },
-  { key: 'epub',   mimes: ['application/epub'],                                  icon: '📖' },
-  { key: 'ecml',   mimes: ['application/vnd.ekstep.ecml-archive'],               icon: '✏️'  },
-  { key: 'h5p',    mimes: ['application/vnd.ekstep.h5p-archive'],                icon: '🎮'  },
-  { key: 'scorm',  mimes: ['application/vnd.ekstep.content-collection'],         icon: '📦'  },
+const MIME_GROUPS: Array<{ key: string; mimes: string[] }> = [
+  { key: 'video',  mimes: ['video/mp4','video/webm','video/ogg'] },
+  { key: 'audio',  mimes: ['audio/mp3','audio/mpeg','audio/ogg','audio/wav'] },
+  { key: 'pdf',    mimes: ['application/pdf'] },
+  { key: 'epub',   mimes: ['application/epub'] },
+  { key: 'ecml',   mimes: ['application/vnd.ekstep.ecml-archive'] },
+  { key: 'h5p',    mimes: ['application/vnd.ekstep.h5p-archive'] },
+  { key: 'scorm',  mimes: ['application/vnd.ekstep.content-collection'] },
 ];
 
 function getMimeGroup(mimeType: string) {
-  return MIME_GROUPS.find(g => g.mimes.includes(mimeType)) ?? { key: 'other', icon: '📱' };
+  return MIME_GROUPS.find(g => g.mimes.includes(mimeType)) ?? { key: 'other' };
 }
 
 // Maps a MIME group key to its translated display label. Kept separate from
@@ -174,13 +176,13 @@ async function waitForCustomElement(tag: string, playerType: string, maxAttempts
 }
 
 // ── Info strip ────────────────────────────────────────────────────────────────
-const INFO_FIELDS: Array<{ key: string; icon: string }> = [
-  { key: 'author',      icon: '👤' },
-  { key: 'license',     icon: '⚖️'  },
-  { key: 'language',    icon: '🌐'  },
-  { key: 'gradeLevel',  icon: '🏫'  },
-  { key: 'subject',     icon: '📚'  },
-  { key: 'contentType', icon: '🏷️'  },
+const INFO_FIELDS: Array<{ key: string; icon: LucideIcon }> = [
+  { key: 'author',      icon: User },
+  { key: 'license',     icon: Scale },
+  { key: 'language',    icon: Globe },
+  { key: 'gradeLevel',  icon: School },
+  { key: 'subject',     icon: BookOpen },
+  { key: 'contentType', icon: Tag },
 ];
 
 // Maps an info field key to its translated display label — see getMimeGroupLabel
@@ -213,7 +215,7 @@ function InfoStrip({ node }: { node: INode }) {
     <div className={styles.infoStrip}>
       {chips.map(c => (
         <div key={c.key} className={styles.infoChip}>
-          {c.icon && <span className={styles.infoChipIcon}>{c.icon}</span>}
+          {c.icon && <c.icon size={13} className={styles.infoChipIcon} />}
           <span className={styles.infoChipLabel}>{c.label}</span>
           {c.val}
         </div>
@@ -247,7 +249,7 @@ function CoverOverlay({ node, hidden }: { node: INode; hidden: boolean }) {
 function PlayerError({ message }: { message: string }) {
   return (
     <div className={styles.playerError}>
-      <span className={styles.playerErrorIcon}>⚠</span>
+      <AlertTriangle size={28} className={styles.playerErrorIcon} />
       <span className={styles.playerErrorMsg}>{message}</span>
     </div>
   );

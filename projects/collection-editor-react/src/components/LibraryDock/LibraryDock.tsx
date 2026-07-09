@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Search, Library, SlidersHorizontal, ArrowUpAZ, Clock, PanelRightClose } from 'lucide-react';
+import { Search, Library, SlidersHorizontal, ArrowUpAZ, Clock, PanelRightClose, Info } from 'lucide-react';
 import type { EditorMode } from '../../types/editor';
 import type { IContent } from '../../types/content';
 import { CT_FILTERS } from '../../types/content';
@@ -71,7 +71,7 @@ export const LibraryDock: React.FC<LibraryDockProps> = ({ editorMode, collapsed 
       const rootId = treeData[0]?.id;
       if (selectedNodeId === rootId) {
         toast(lbl.libraryDock.selectUnitFromOutlineToast, {
-          icon: 'ℹ️',
+          icon: <Info size={16} />,
           duration: 4000,
         });
         return;

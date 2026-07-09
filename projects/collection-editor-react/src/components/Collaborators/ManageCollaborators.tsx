@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
+import { X } from 'lucide-react';
 import { Button } from '../shared/Button';
 import { searchUsers, getUsersByIds } from '../../api/user';
 import { updateCollaborators, readContent } from '../../api/hierarchy';
@@ -123,7 +124,7 @@ export const ManageCollaborators: React.FC<ManageCollaboratorsProps> = ({
       <div className={styles.header}>
         <h2 className={styles.title}>{lbl.manageCollaborators.title}</h2>
         <button className={styles.closeBtn} onClick={onClose} aria-label={lbl.manageCollaborators.closeAriaLabel}>
-          ✕
+          <X size={18} />
         </button>
       </div>
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import { Info } from 'lucide-react';
 import type { EditorMode } from '../../types/editor';
 import { useTreeStore } from '../../store/tree.store';
 import { useEditorStore } from '../../store/editor.store';
@@ -211,7 +212,7 @@ export const SparkMetaForm: React.FC<SparkMetaFormProps> = ({
         // Shuffle false→true shows an info toast (Angular showShuffleMessage).
         if (changedField === 'shuffle') {
           if (value === true && prevShuffleRef.current === false) {
-            toast(lbl.sparkMetaForm.shuffleEnabledMessage, { icon: 'ℹ️' });
+            toast(lbl.sparkMetaForm.shuffleEnabledMessage, { icon: <Info size={16} /> });
           }
           prevShuffleRef.current = value as boolean;
         }
