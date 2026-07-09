@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import { useTreeStore } from '../../store/tree.store';
 import type { INode } from '../../types/editor';
+import { useLabels } from '../../hooks/useLabels';
 import styles from './ProgressStatus.module.scss';
 
 interface Criterion {
@@ -27,6 +28,7 @@ function countNodes(nodes: INode[], isFolder: boolean): number {
 }
 
 export const ProgressStatus: React.FC<ProgressStatusProps> = ({ criteria }) => {
+  const lbl = useLabels();
   const [open, setOpen] = useState(false);
   const { treeData } = useTreeStore();
 
@@ -35,10 +37,10 @@ export const ProgressStatus: React.FC<ProgressStatusProps> = ({ criteria }) => {
     const units = countNodes(treeData, true);
     const content = countNodes(treeData, false);
     return [
-      { label: 'Units added', current: units, required: 1 },
-      { label: 'Content items', current: content, required: 1 },
+      { label: lbl.progressStatus.unitsAddedLabel, current: units, required: 1 },
+      { label: lbl.progressStatus.contentItemsLabel, current: content, required: 1 },
     ];
-  }, [criteria, treeData]);
+  }, [criteria, treeData, lbl]);
 
   const allGood = computed.every(c => c.current >= c.required);
   const barColor = (c: Criterion) => {
@@ -51,7 +53,7 @@ export const ProgressStatus: React.FC<ProgressStatusProps> = ({ criteria }) => {
     <div className={styles.container}>
       <button className={styles.toggle} onClick={() => setOpen(v => !v)}>
         <span className={`${styles.dot} ${allGood ? styles.green : styles.yellow}`} />
-        <span>Progress</span>
+        <span>{lbl.progressStatus.progressLabel}</span>
         {open ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
       </button>
       {open && (

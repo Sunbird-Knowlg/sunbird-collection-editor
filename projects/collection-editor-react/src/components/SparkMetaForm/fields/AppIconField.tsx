@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { ImageIcon, Trash2 } from 'lucide-react';
 import { AppIconPickerModal } from './AppIconPickerModal';
+import { useLabels } from '../../../hooks/useLabels';
 import styles from './Field.module.scss';
 
 interface AppIconFieldProps {
@@ -13,6 +14,7 @@ interface AppIconFieldProps {
 }
 
 export const AppIconField: React.FC<AppIconFieldProps> = ({ name, label, nodeId, required, disabled }) => {
+  const lbl = useLabels();
   const [pickerOpen, setPickerOpen] = useState(false);
   const { watch, setValue, register, formState: { errors } } = useFormContext();
   const value = watch(name) as string | undefined;
@@ -34,22 +36,22 @@ export const AppIconField: React.FC<AppIconFieldProps> = ({ name, label, nodeId,
       </label>
       <input
         type="hidden"
-        {...register(name, { required: required ? `${label} is required` : false })}
+        {...register(name, { required: required ? lbl.appIconField.requiredError.replace('{field}', label) : false })}
       />
       <div
         className={styles.iconWrap}
         role="button"
         tabIndex={disabled ? -1 : 0}
-        aria-label="Select app icon"
+        aria-label={lbl.appIconField.selectIconAriaLabel}
         onClick={() => !disabled && setPickerOpen(true)}
         onKeyDown={e => { if ((e.key === 'Enter' || e.key === ' ') && !disabled) setPickerOpen(true); }}
       >
         {value ? (
-          <img src={value} alt="App icon" className={styles.iconPreview} />
+          <img src={value} alt={lbl.appIconField.iconAlt} className={styles.iconPreview} />
         ) : (
           <div className={styles.iconPlaceholder}>
             <ImageIcon size={20} />
-            <span>Select icon</span>
+            <span>{lbl.appIconField.selectIconLabel}</span>
           </div>
         )}
       </div>
@@ -58,10 +60,10 @@ export const AppIconField: React.FC<AppIconFieldProps> = ({ name, label, nodeId,
           type="button"
           className={styles.removeIconBtn}
           onClick={handleRemove}
-          aria-label="Remove app icon"
+          aria-label={lbl.appIconField.removeIconAriaLabel}
         >
           <Trash2 size={13} />
-          <span>Remove</span>
+          <span>{lbl.appIconField.removeLabel}</span>
         </button>
       )}
       {error && <span className={styles.error}>{String(error.message)}</span>}

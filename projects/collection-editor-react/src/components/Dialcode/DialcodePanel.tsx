@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { Button } from '../shared/Button';
 import { checkDialCode, linkDialCode, unlinkDialcode } from '../../api/dialcode';
 import { useTreeStore } from '../../store/tree.store';
+import { useLabels } from '../../hooks/useLabels';
 import styles from './DialcodePanel.module.scss';
 
 const DIALCODE_FORMAT = /^[A-Z0-9]{2,}$/;
@@ -21,6 +22,7 @@ export const DialcodePanel: React.FC<DialcodePanelProps> = ({
   editorMode,
   onDialcodeChange,
 }) => {
+  const lbl = useLabels();
   const [dialcode, setDialcode] = useState<string | null>(existingDialcode ?? null);
   const [inputValue, setInputValue] = useState('');
   const [status, setStatus] = useState<Status>('idle');
@@ -35,7 +37,7 @@ export const DialcodePanel: React.FC<DialcodePanelProps> = ({
 
     // Format check: must be alphanumeric uppercase, at least 2 chars
     if (!DIALCODE_FORMAT.test(code)) {
-      setErrorMsg('Invalid DIAL code format. Use uppercase letters and digits only (e.g. A1B2C3).');
+      setErrorMsg(lbl.dialcodePanel.invalidFormatError);
       setStatus('error');
       return;
     }
@@ -50,7 +52,7 @@ export const DialcodePanel: React.FC<DialcodePanelProps> = ({
       return false;
     })(treeData);
     if (isDuplicate) {
-      setErrorMsg(`DIAL code "${code}" is already linked to another node in this collection.`);
+      setErrorMsg(lbl.dialcodePanel.duplicateDialcodeError.replace('{code}', code));
       setStatus('error');
       return;
     }
@@ -63,7 +65,7 @@ export const DialcodePanel: React.FC<DialcodePanelProps> = ({
       const dialcodeData = (result as Record<string, unknown>)?.result as Record<string, unknown> | undefined;
       const dialcodes = dialcodeData?.['dialcodes'] as unknown[] | undefined;
       if (!dialcodes || dialcodes.length === 0) {
-        setErrorMsg('Dialcode not found. Please enter a valid code.');
+        setErrorMsg(lbl.dialcodePanel.dialcodeNotFoundError);
         setStatus('error');
         return;
       }
@@ -74,10 +76,10 @@ export const DialcodePanel: React.FC<DialcodePanelProps> = ({
       setStatus('success');
       onDialcodeChange?.(code);
     } catch {
-      setErrorMsg('Failed to link dialcode. Please try again.');
+      setErrorMsg(lbl.dialcodePanel.linkFailedError);
       setStatus('error');
     }
-  }, [contentId, inputValue, onDialcodeChange, treeData]);
+  }, [contentId, inputValue, onDialcodeChange, treeData, lbl]);
 
   const handleUnlink = useCallback(async () => {
     if (!dialcode) return;
@@ -91,26 +93,26 @@ export const DialcodePanel: React.FC<DialcodePanelProps> = ({
       setStatus('idle');
       onDialcodeChange?.(null);
     } catch {
-      setErrorMsg('Failed to remove dialcode. Please try again.');
+      setErrorMsg(lbl.dialcodePanel.unlinkFailedError);
       setStatus('error');
     }
-  }, [contentId, dialcode, onDialcodeChange]);
+  }, [contentId, dialcode, onDialcodeChange, lbl]);
 
   return (
     <div className={styles.panel}>
-      <h3 className={styles.title}>QR Code (Dialcode)</h3>
+      <h3 className={styles.title}>{lbl.dialcodePanel.title}</h3>
 
       {dialcode ? (
         <div className={styles.qrSection}>
           <div className={styles.qrImageWrap}>
             <img
               src={`https://chart.googleapis.com/chart?cht=qr&chs=150x150&chl=${encodeURIComponent(dialcode ?? '')}`}
-              alt={`QR code for ${dialcode}`}
+              alt={`${lbl.dialcodePanel.qrCodeAltPrefix} ${dialcode}`}
               className={styles.qrImage}
             />
           </div>
           <div className={styles.qrMeta}>
-            <span className={styles.dialcodeLabel}>Linked code:</span>
+            <span className={styles.dialcodeLabel}>{lbl.dialcodePanel.linkedCodeLabel}</span>
             <code className={styles.dialcodeValue}>{dialcode}</code>
             {!isReadOnly && (
               <Button
@@ -120,23 +122,23 @@ export const DialcodePanel: React.FC<DialcodePanelProps> = ({
                 onClick={handleUnlink}
                 className={styles.removeBtn}
               >
-                Remove
+                {lbl.dialcodePanel.removeButton}
               </Button>
             )}
           </div>
         </div>
       ) : (
-        <p className={styles.emptyState}>No QR code linked to this content.</p>
+        <p className={styles.emptyState}>{lbl.dialcodePanel.noCodeLinkedMessage}</p>
       )}
 
       {!isReadOnly && (
         <div className={styles.linkSection}>
-          <p className={styles.sectionLabel}>Link manually</p>
+          <p className={styles.sectionLabel}>{lbl.dialcodePanel.linkManuallyLabel}</p>
           <div className={styles.inputRow}>
             <input
               type="text"
               className={styles.input}
-              placeholder="Enter dialcode (e.g. A1B2C3)"
+              placeholder={lbl.dialcodePanel.dialcodeInputPlaceholder}
               value={inputValue}
               onChange={(e) => {
                 setInputValue(e.target.value.toUpperCase());
@@ -144,7 +146,7 @@ export const DialcodePanel: React.FC<DialcodePanelProps> = ({
               }}
               onKeyDown={(e) => e.key === 'Enter' && handleLink()}
               disabled={status === 'loading'}
-              aria-label="Dialcode input"
+              aria-label={lbl.dialcodePanel.dialcodeInputAriaLabel}
             />
             <Button
               variant="primary"
@@ -153,12 +155,12 @@ export const DialcodePanel: React.FC<DialcodePanelProps> = ({
               disabled={!inputValue.trim()}
               onClick={handleLink}
             >
-              Link
+              {lbl.dialcodePanel.linkButton}
             </Button>
           </div>
           {errorMsg && <p className={styles.error} role="alert">{errorMsg}</p>}
           {status === 'success' && (
-            <p className={styles.successMsg} role="status">Dialcode linked successfully.</p>
+            <p className={styles.successMsg} role="status">{lbl.dialcodePanel.linkedSuccessMessage}</p>
           )}
         </div>
       )}

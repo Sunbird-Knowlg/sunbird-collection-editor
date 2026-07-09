@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ImageIcon, Trash2 } from 'lucide-react';
 import { AppIconPickerModal } from '../SparkMetaForm/fields/AppIconPickerModal';
 import { useTreeStore } from '../../store/tree.store';
+import { useLabels } from '../../hooks/useLabels';
 import styles from './TitleAppIcon.module.scss';
 
 interface TitleAppIconProps {
@@ -13,6 +14,7 @@ interface TitleAppIconProps {
 export const TitleAppIcon: React.FC<TitleAppIconProps> = ({ nodeId, value, editable }) => {
   const [pickerOpen, setPickerOpen] = useState(false);
   const { updateNode, markDirty } = useTreeStore();
+  const lbl = useLabels();
 
   const handleSelect = (url: string) => {
     updateNode(nodeId, { appIcon: url });
@@ -32,12 +34,12 @@ export const TitleAppIcon: React.FC<TitleAppIconProps> = ({ nodeId, value, edita
         className={[styles.iconBtn, editable ? styles.editable : ''].filter(Boolean).join(' ')}
         role={editable ? 'button' : undefined}
         tabIndex={editable ? 0 : -1}
-        aria-label={editable ? 'Select app icon' : 'App icon'}
+        aria-label={editable ? lbl.titleAppIcon.selectAppIconAriaLabel : lbl.titleAppIcon.appIconAriaLabel}
         onClick={() => editable && setPickerOpen(true)}
         onKeyDown={e => { if (editable && (e.key === 'Enter' || e.key === ' ')) setPickerOpen(true); }}
       >
         {value ? (
-          <img src={value} alt="App icon" className={styles.iconImg} />
+          <img src={value} alt={lbl.titleAppIcon.appIconAlt} className={styles.iconImg} />
         ) : (
           <div className={styles.placeholder}>
             <ImageIcon size={18} />
@@ -48,7 +50,7 @@ export const TitleAppIcon: React.FC<TitleAppIconProps> = ({ nodeId, value, edita
             type="button"
             className={styles.removeBtn}
             onClick={handleRemove}
-            aria-label="Remove icon"
+            aria-label={lbl.titleAppIcon.removeIconAriaLabel}
           >
             <Trash2 size={11} />
           </button>

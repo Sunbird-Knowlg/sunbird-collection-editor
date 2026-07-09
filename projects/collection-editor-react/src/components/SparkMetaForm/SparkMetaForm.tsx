@@ -8,6 +8,7 @@ import { useFramework } from '../../hooks/useFramework';
 import { useFrameworkOptions } from '../../hooks/useFrameworkOptions';
 import { useChannelData } from '../../hooks/useChannelData';
 import { useUserFullName } from '../../hooks/useUserFullName';
+import { useLabels } from '../../hooks/useLabels';
 import { useFieldPrepare, SECTION_DISPLAY } from './hooks/useFieldPrepare';
 import type { IPrepareContext } from './hooks/useFieldPrepare';
 import { transformEmit, transformFieldPatch } from './hooks/emitTransform';
@@ -40,6 +41,7 @@ export const SparkMetaForm: React.FC<SparkMetaFormProps> = ({
   nodeMetadata, activeTab, isRoot, isFolder, editorMode,
   onFormValueChange, onFormStatusChange,
 }) => {
+  const lbl = useLabels();
   const config = useEditorStore(s => s.editorConfig);
   const rootFormConfig = useEditorStore(s => s.rootFormConfig);
   const unitFormConfig = useEditorStore(s => s.unitFormConfig);
@@ -209,7 +211,7 @@ export const SparkMetaForm: React.FC<SparkMetaFormProps> = ({
         // Shuffle false→true shows an info toast (Angular showShuffleMessage).
         if (changedField === 'shuffle') {
           if (value === true && prevShuffleRef.current === false) {
-            toast('Shuffling is enabled for this question set.', { icon: 'ℹ️' });
+            toast(lbl.sparkMetaForm.shuffleEnabledMessage, { icon: 'ℹ️' });
           }
           prevShuffleRef.current = value as boolean;
         }
@@ -339,7 +341,7 @@ export const SparkMetaForm: React.FC<SparkMetaFormProps> = ({
           );
         })}
         {tabFields.length === 0 && !fwLoading && (
-          <p className={styles.noFields}>No fields configured for this tab.</p>
+          <p className={styles.noFields}>{lbl.sparkMetaForm.noFieldsMessage}</p>
         )}
       </div>
     </FormProvider>

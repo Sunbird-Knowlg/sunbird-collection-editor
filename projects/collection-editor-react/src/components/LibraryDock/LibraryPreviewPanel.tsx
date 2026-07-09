@@ -4,6 +4,7 @@ import { X } from 'lucide-react';
 import type { IContent } from '../../types/content';
 import type { INode } from '../../types/editor';
 import { ContentPlayer } from '../ContentPlayer';
+import { useLabels } from '../../hooks/useLabels';
 import styles from './LibraryPreviewPanel.module.scss';
 
 const QUESTIONSET_MIME = 'application/vnd.sunbird.questionset';
@@ -23,6 +24,7 @@ export const LibraryPreviewPanel: React.FC<LibraryPreviewPanelProps> = ({
   onAdd,
   onClose,
 }) => {
+  const lbl = useLabels();
   if (!content) return null;
 
   // Convert IContent to INode — ContentPlayer fetches full details by identifier
@@ -45,7 +47,7 @@ export const LibraryPreviewPanel: React.FC<LibraryPreviewPanelProps> = ({
       className={styles.modalOverlay}
       role="dialog"
       aria-modal="true"
-      aria-label="Content preview"
+      aria-label={lbl.libraryPreviewPanel.contentPreviewAriaLabel}
       onClick={onClose}
     >
       <div className={styles.modalPanel} onClick={(e) => e.stopPropagation()}>
@@ -58,7 +60,7 @@ export const LibraryPreviewPanel: React.FC<LibraryPreviewPanelProps> = ({
               type="button"
               className={styles.iconBtn}
               onClick={onClose}
-              aria-label="Close preview"
+              aria-label={lbl.libraryPreviewPanel.closePreviewAriaLabel}
             >
               <X size={16} />
             </button>
@@ -81,7 +83,7 @@ export const LibraryPreviewPanel: React.FC<LibraryPreviewPanelProps> = ({
             className={styles.addBtn}
             onClick={() => onAdd(content)}
           >
-            + Add to Unit
+            {lbl.libraryPreviewPanel.addToUnitButton}
           </button>
         </div>
       </div>

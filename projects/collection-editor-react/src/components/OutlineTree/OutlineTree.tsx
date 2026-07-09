@@ -6,6 +6,7 @@ import type { INode, EditorMode } from '../../types/editor';
 import { useTreeStore } from '../../store/tree.store';
 import { useEditorStore } from '../../store/editor.store';
 import { useIsDraftStatus } from '../../hooks/useContentStatus';
+import { useLabels } from '../../hooks/useLabels';
 import { TreeNode } from './TreeNode';
 import { Button } from '../shared/Button';
 import { CsvUpload } from '../BulkUpload/CsvUpload';
@@ -24,6 +25,7 @@ export const OutlineTree: React.FC<OutlineTreeProps> = ({
   collapsed = false,
   onToggleCollapse,
 }) => {
+  const lbl = useLabels();
   const treeRef = useRef<TreeApi<INode>>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -111,28 +113,28 @@ export const OutlineTree: React.FC<OutlineTreeProps> = ({
       if (!resolvedParentId) return { id: crypto.randomUUID() };
       const id = addNode(resolvedParentId, 'unit');
       if (!id) {
-        toast.error('Maximum depth reached');
+        toast.error(lbl.outlineTree.maxDepthReachedToast);
         return { id: crypto.randomUUID() };
       }
       return { id };
     },
-    [addNode, treeData],
+    [addNode, treeData, lbl],
   );
 
   const handleAddUnit = useCallback(() => {
     const rootId = treeData[0]?.id;
     if (rootId) {
       const id = addNode(rootId, 'unit');
-      if (!id) toast.error('Maximum depth reached');
+      if (!id) toast.error(lbl.outlineTree.maxDepthReachedToast);
     }
-  }, [treeData, addNode]);
+  }, [treeData, addNode, lbl]);
 
   const handleAddSubunit = useCallback(() => {
     if (selectedNodeId) {
       const id = addNode(selectedNodeId, 'subunit');
-      if (!id) toast.error('Maximum depth reached');
+      if (!id) toast.error(lbl.outlineTree.maxDepthReachedToast);
     }
-  }, [selectedNodeId, addNode]);
+  }, [selectedNodeId, addNode, lbl]);
 
   const handleDownloadCsv = useCallback(async () => {
     setShowMenu(false);
@@ -151,9 +153,9 @@ export const OutlineTree: React.FC<OutlineTreeProps> = ({
       document.body.removeChild(a);
       URL.revokeObjectURL(objectUrl);
     } catch {
-      toast.error('Failed to download CSV');
+      toast.error(lbl.outlineTree.downloadCsvFailedToast);
     }
-  }, [contentId]);
+  }, [contentId, lbl]);
 
   // After CSV upload succeeds, re-fetch the hierarchy so the tree reflects
   // the newly created/updated folders without requiring a page reload.
@@ -163,11 +165,11 @@ export const OutlineTree: React.FC<OutlineTreeProps> = ({
     try {
       const { rootNode } = await readHierarchy(contentId);
       setTreeData([rootNode]);
-      toast.success('Course outline refreshed.');
+      toast.success(lbl.outlineTree.outlineRefreshedToast);
     } catch {
-      toast.error('Outline could not be refreshed automatically. Please reload the page.');
+      toast.error(lbl.outlineTree.outlineRefreshFailedToast);
     }
-  }, [contentId, setTreeData]);
+  }, [contentId, setTreeData, lbl]);
 
   return (
     <div className={styles.container}>
@@ -180,8 +182,8 @@ export const OutlineTree: React.FC<OutlineTreeProps> = ({
                 type="button"
                 className={styles.iconBtn}
                 onClick={() => setShowMenu(v => !v)}
-                aria-label="More options"
-                title="More options"
+                aria-label={lbl.outlineTree.moreOptionsAriaLabel}
+                title={lbl.outlineTree.moreOptionsTitle}
                 aria-haspopup="true"
                 aria-expanded={showMenu}
               >
@@ -196,28 +198,28 @@ export const OutlineTree: React.FC<OutlineTreeProps> = ({
                         role="menuitem"
                         type="button"
                         disabled={hasFolders}
-                        title={hasFolders ? 'Folders already exist — use "Update" instead' : undefined}
+                        title={hasFolders ? lbl.outlineTree.foldersExistTitle : undefined}
                         onClick={() => { setShowMenu(false); setCsvMode('create'); setShowCsvUpload(true); }}
                       >
-                        Create folders using csv file
+                        {lbl.outlineTree.createFoldersCsvButton}
                       </button>
                       <button
                         role="menuitem"
                         type="button"
                         disabled={!hasFolders}
-                        title={!hasFolders ? 'No folders yet — use "Create" first' : undefined}
+                        title={!hasFolders ? lbl.outlineTree.noFoldersYetTitle : undefined}
                         onClick={handleDownloadCsv}
                       >
-                        Download folders as csv file
+                        {lbl.outlineTree.downloadFoldersCsvButton}
                       </button>
                       <button
                         role="menuitem"
                         type="button"
                         disabled={!hasFolders}
-                        title={!hasFolders ? 'No folders yet — use "Create" first' : undefined}
+                        title={!hasFolders ? lbl.outlineTree.noFoldersYetTitle : undefined}
                         onClick={() => { setShowMenu(false); setCsvMode('update'); setShowCsvUpload(true); }}
                       >
-                        Update folder metadata using csv file
+                        {lbl.outlineTree.updateFoldersCsvButton}
                       </button>
                     </>
                   )}
@@ -231,8 +233,8 @@ export const OutlineTree: React.FC<OutlineTreeProps> = ({
               type="button"
               className={styles.iconBtn}
               onClick={onToggleCollapse}
-              aria-label={collapsed ? 'Expand outline' : 'Collapse outline'}
-              title={collapsed ? 'Expand outline' : 'Collapse outline'}
+              aria-label={collapsed ? lbl.outlineTree.expandOutlineAriaLabel : lbl.outlineTree.collapseOutlineAriaLabel}
+              title={collapsed ? lbl.outlineTree.expandOutlineAriaLabel : lbl.outlineTree.collapseOutlineAriaLabel}
             >
               {collapsed ? <PanelLeftOpen size={15} /> : <PanelLeftClose size={15} />}
             </button>
@@ -273,7 +275,7 @@ export const OutlineTree: React.FC<OutlineTreeProps> = ({
             onClick={handleAddUnit}
             disabled={!canAdd}
           >
-            <Plus size={14} /> Add Unit
+            <Plus size={14} /> {lbl.outlineTree.addUnitButton}
           </Button>
           <Button
             variant="ghost"
@@ -281,7 +283,7 @@ export const OutlineTree: React.FC<OutlineTreeProps> = ({
             onClick={handleAddSubunit}
             disabled={!canAdd || !selectedNodeId}
           >
-            <FolderPlus size={14} /> Add Sub-unit
+            <FolderPlus size={14} /> {lbl.outlineTree.addSubunitButton}
           </Button>
         </div>
       )}

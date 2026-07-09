@@ -22,6 +22,7 @@ import {
 import type { INode, EditorMode } from '../../types/editor';
 import { getCtStyle } from '../../hooks/useContentType';
 import { useIsDraftStatus } from '../../hooks/useContentStatus';
+import { useLabels } from '../../hooks/useLabels';
 import styles from './TreeNode.module.scss';
 
 const CT_ICON_COMPONENTS: Record<string, React.ElementType> = {
@@ -48,6 +49,7 @@ export const TreeNode: React.FC<TreeNodeProps> = ({
   const [isRenaming, setIsRenaming] = useState(false);
   const [renameVal, setRenameVal] = useState(node.data.name);
   const menuRef = useRef<HTMLDivElement>(null);
+  const lbl = useLabels();
   const isEditable = editorMode === 'edit';
   const isDraft = useIsDraftStatus();
   const ctStyle = getCtStyle(node.data);
@@ -116,7 +118,7 @@ export const TreeNode: React.FC<TreeNodeProps> = ({
           e.stopPropagation();
           node.toggle();
         }}
-        aria-label={node.isClosed ? 'Expand' : 'Collapse'}
+        aria-label={node.isClosed ? lbl.treeNode.expandAriaLabel : lbl.treeNode.collapseAriaLabel}
         style={{ visibility: isFolder ? 'visible' : 'hidden' }}
       >
         {node.isClosed ? <ChevronRight size={14} /> : <ChevronDown size={14} />}
@@ -154,7 +156,7 @@ export const TreeNode: React.FC<TreeNodeProps> = ({
       {/* "Drop here" marker (visible when drag is over this folder) */}
       {(node.state as unknown as Record<string, boolean>).isOver && isFolder && (
         <span className={styles.dropHere} aria-hidden="true">
-          Drop here
+          {lbl.treeNode.dropHereLabel}
         </span>
       )}
 
@@ -167,7 +169,7 @@ export const TreeNode: React.FC<TreeNodeProps> = ({
               e.stopPropagation();
               setMenuOpen((v) => !v);
             }}
-            aria-label="Node options"
+            aria-label={lbl.treeNode.nodeOptionsAriaLabel}
           >
             <MoreVertical size={14} />
           </button>
@@ -180,7 +182,7 @@ export const TreeNode: React.FC<TreeNodeProps> = ({
                   setMenuOpen(false);
                 }}
               >
-                <Pencil size={13} /> Rename
+                <Pencil size={13} /> {lbl.treeNode.renameMenuItem}
               </button>
               {isFolder && isDraft && (
                 <button
@@ -190,7 +192,7 @@ export const TreeNode: React.FC<TreeNodeProps> = ({
                     setMenuOpen(false);
                   }}
                 >
-                  <FolderPlus size={13} /> Add sub-unit
+                  <FolderPlus size={13} /> {lbl.treeNode.addSubunitMenuItem}
                 </button>
               )}
               {node.data.parent && isDraft && (
@@ -201,7 +203,7 @@ export const TreeNode: React.FC<TreeNodeProps> = ({
                     setMenuOpen(false);
                   }}
                 >
-                  <Plus size={13} /> Add Sibling
+                  <Plus size={13} /> {lbl.treeNode.addSiblingMenuItem}
                 </button>
               )}
               <button
@@ -212,7 +214,7 @@ export const TreeNode: React.FC<TreeNodeProps> = ({
                   setMenuOpen(false);
                 }}
               >
-                <Trash2 size={13} /> Delete
+                <Trash2 size={13} /> {lbl.treeNode.deleteMenuItem}
               </button>
             </div>
           )}

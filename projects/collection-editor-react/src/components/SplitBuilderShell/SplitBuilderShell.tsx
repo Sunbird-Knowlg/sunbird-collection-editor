@@ -19,6 +19,7 @@ import { useTreeStore } from '../../store/tree.store';
 import { useEditorStore } from '../../store/editor.store';
 import { useSaveHierarchy } from '../../hooks/useSaveHierarchy';
 import { useToolbarActions } from '../../hooks/useToolbarActions';
+import { useLabels } from '../../hooks/useLabels';
 import toast from 'react-hot-toast';
 import styles from './SplitBuilderShell.module.scss';
 
@@ -35,6 +36,7 @@ export const SplitBuilderShell: React.FC<SplitBuilderShellProps> = ({
   onContentAdded,
   onHierarchySaved,
 }) => {
+  const lbl = useLabels();
   const [activeDragItem, setActiveDragItem] = useState<IContent | null>(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [dockCollapsed, setDockCollapsed] = useState(false);
@@ -75,24 +77,24 @@ export const SplitBuilderShell: React.FC<SplitBuilderShellProps> = ({
       const over = event.over;
       const targetNodeId = (over?.id as string | undefined) ?? selectedNodeId ?? undefined;
       if (!targetNodeId) {
-        toast.error('Drop onto a unit to add content');
+        toast.error(lbl.splitBuilderShell.dropOntoUnitError);
         return;
       }
       const rootId = treeData[0]?.id;
       const allowContentUnderRoot = false; // matches tree.store guard
       if (!allowContentUnderRoot && targetNodeId === rootId) {
-        toast.error('Drop content onto a unit, not directly on the course.');
+        toast.error(lbl.splitBuilderShell.dropOntoCourseError);
         return;
       }
       const added = addResource(item, targetNodeId);
       if (!added) {
-        toast.error(`"${item.name}" is already in this collection`);
+        toast.error(lbl.splitBuilderShell.alreadyInCollectionError.replace('{name}', item.name));
         return;
       }
       onContentAdded?.(item, targetNodeId);
-      toast.success(`Added "${item.name}" to unit`);
+      toast.success(lbl.splitBuilderShell.addedToUnitSuccess.replace('{name}', item.name));
     },
-    [selectedNodeId, addResource, onContentAdded],
+    [selectedNodeId, addResource, onContentAdded, lbl],
   );
 
   const handleToolbarEvent = useCallback(
@@ -113,7 +115,7 @@ export const SplitBuilderShell: React.FC<SplitBuilderShellProps> = ({
       }
       if (event.action === 'saveCollection') {
         if (!isFormValid) {
-          toast.error('Please fill the required metadata');
+          toast.error(lbl.splitBuilderShell.fillRequiredMetadataError);
           return;
         }
         // Tree-wide required-field gate — blocks saving until every node's
@@ -137,7 +139,7 @@ export const SplitBuilderShell: React.FC<SplitBuilderShellProps> = ({
       }
       onToolbarEvent?.(event);
     },
-    [save, runAction, checkRequiredFields, onToolbarEvent, onHierarchySaved, treeData, isDirty, isFormValid, editorMode],
+    [save, runAction, checkRequiredFields, onToolbarEvent, onHierarchySaved, treeData, isDirty, isFormValid, editorMode, lbl],
   );
 
   // Resolve the unsaved-changes prompt for Back.
@@ -178,7 +180,7 @@ export const SplitBuilderShell: React.FC<SplitBuilderShellProps> = ({
         ].filter(Boolean).join(' ')}>
           <aside
             className={[styles.outline, sidebarCollapsed ? styles.outlineHidden : ''].join(' ')}
-            aria-label="Course outline"
+            aria-label={lbl.splitBuilderShell.outlineAriaLabel}
             aria-hidden={sidebarCollapsed}
           >
             <OutlineTree
@@ -193,20 +195,20 @@ export const SplitBuilderShell: React.FC<SplitBuilderShellProps> = ({
             <button
               className={styles.reopenTab}
               onClick={() => setSidebarCollapsed(false)}
-              title="Show outline"
+              title={lbl.splitBuilderShell.showOutlineTitle}
               type="button"
             >
               ›
             </button>
           )}
 
-          <main className={styles.editor} role="main" aria-label="Content editor">
+          <main className={styles.editor} role="main" aria-label={lbl.splitBuilderShell.editorAriaLabel}>
             <ContextualEditor editorMode={editorMode} onToolbarEvent={handleToolbarEvent} />
           </main>
 
           <aside
             className={[styles.dock, dockCollapsed ? styles.dockHidden : ''].filter(Boolean).join(' ')}
-            aria-label="Content library"
+            aria-label={lbl.splitBuilderShell.libraryAriaLabel}
             aria-hidden={dockCollapsed}
           >
             <LibraryDock
@@ -221,7 +223,7 @@ export const SplitBuilderShell: React.FC<SplitBuilderShellProps> = ({
             <button
               className={styles.dockReopenTab}
               onClick={() => setDockCollapsed(false)}
-              title="Show library"
+              title={lbl.splitBuilderShell.showLibraryTitle}
               type="button"
             >
               ‹

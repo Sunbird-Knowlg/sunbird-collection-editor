@@ -12,6 +12,7 @@ import { ResourceReorderDialog } from '../ResourceReorder/ResourceReorderDialog'
 import { AssignPageNumber } from '../AssignPageNumber/AssignPageNumber';
 import { ContentEditForm } from './ContentEditForm';
 import { TitleAppIcon } from './TitleAppIcon';
+import { useLabels } from '../../hooks/useLabels';
 import styles from './ContextualEditor.module.scss';
 
 const QUESTIONSET_MIME = 'application/vnd.sunbird.questionset';
@@ -37,6 +38,7 @@ function getDraftRejectComment(node: INode | null | undefined): string | undefin
 }
 
 export const ContextualEditor: React.FC<ContextualEditorProps> = ({ editorMode, onToolbarEvent }) => {
+  const lbl = useLabels();
   const [activeTab, setActiveTab] = useState<TabId>('details');
   const [errorTabs, setErrorTabs] = useState<TabId[]>([]);
   const [reorderResourceId, setReorderResourceId] = useState<string | null>(null);
@@ -89,7 +91,7 @@ export const ContextualEditor: React.FC<ContextualEditorProps> = ({ editorMode, 
   if (!selectedNode) {
     return (
       <div className={styles.emptyState}>
-        <p>Select a unit from the outline to edit its details</p>
+        <p>{lbl.contextualEditor.emptyStateMessage}</p>
       </div>
     );
   }
@@ -133,7 +135,7 @@ export const ContextualEditor: React.FC<ContextualEditorProps> = ({ editorMode, 
       {/* Review comment bar — shown whenever a rejection comment exists (edit or review mode) */}
       {reviewComment && (
         <div className={styles.reviewComment} role="alert">
-          <span className={styles.reviewCommentLabel}>Reviewer comment:</span>
+          <span className={styles.reviewCommentLabel}>{lbl.contextualEditor.reviewCommentLabel}</span>
           <span className={styles.reviewCommentText}>{reviewComment}</span>
         </div>
       )}
@@ -154,8 +156,8 @@ export const ContextualEditor: React.FC<ContextualEditorProps> = ({ editorMode, 
           suppressContentEditableWarning
           onInput={handleTitleChange}
           onBlur={handleTitleChange}
-          data-placeholder="Untitled"
-          aria-label="Node title"
+          data-placeholder={lbl.contextualEditor.untitledPlaceholder}
+          aria-label={lbl.contextualEditor.nodeTitleAriaLabel}
         >
           {selectedNode.name}
         </div>
@@ -193,7 +195,7 @@ export const ContextualEditor: React.FC<ContextualEditorProps> = ({ editorMode, 
       {/* Drop zone overlay */}
       <DropZone
         isActive={false}
-        label="Drop to add content to this unit"
+        label={lbl.contextualEditor.dropZoneLabel}
         nodeId={selectedNodeId ?? undefined}
         className={styles.dropZone}
       />

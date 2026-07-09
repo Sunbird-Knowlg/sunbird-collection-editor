@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLabels } from '../../hooks/useLabels';
 import styles from './FilterChips.module.scss';
 
 interface FilterChip { label: string; value: string; }
@@ -8,8 +9,10 @@ interface FilterChipsProps {
   onChange: (value: string) => void;
 }
 
-export const FilterChips: React.FC<FilterChipsProps> = ({ filters, active, onChange }) => (
-  <div className={styles.chips} role="group" aria-label="Content type filters">
+export const FilterChips: React.FC<FilterChipsProps> = ({ filters, active, onChange }) => {
+  const lbl = useLabels();
+  return (
+  <div className={styles.chips} role="group" aria-label={lbl.filterChips.contentTypeFiltersAriaLabel}>
     {filters.map(f => (
       <button
         key={f.value}
@@ -23,4 +26,5 @@ export const FilterChips: React.FC<FilterChipsProps> = ({ filters, active, onCha
       </button>
     ))}
   </div>
-);
+  );
+};

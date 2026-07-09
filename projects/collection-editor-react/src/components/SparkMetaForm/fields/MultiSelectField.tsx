@@ -1,18 +1,20 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { ChevronDown, Check } from 'lucide-react';
+import { useLabels } from '../../../hooks/useLabels';
 import styles from './Field.module.scss';
 
 interface Option { label: string; value: string; }
 interface MultiSelectFieldProps { name: string; label: string; options: Option[]; required?: boolean; disabled?: boolean; }
 
 export const MultiSelectField: React.FC<MultiSelectFieldProps> = ({ name, label, options, required, disabled }) => {
+  const lbl = useLabels();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const { register, watch, setValue, formState: { errors } } = useFormContext();
   const values = (watch(name) as string[]) ?? [];
   const error = errors[name];
-  const displayText = values.length ? `${values.length} selected` : 'Select…';
+  const displayText = values.length ? `${values.length} ${lbl.multiSelectField.selectedCountSuffix}` : lbl.multiSelectField.selectPlaceholder;
 
   useEffect(() => {
     if (!open) return;
@@ -29,7 +31,7 @@ export const MultiSelectField: React.FC<MultiSelectFieldProps> = ({ name, label,
   return (
     <div className={styles.field} ref={ref} style={{ position: 'relative' }}>
       <label className={styles.label}>{label}{required && <span className={styles.required}>*</span>}</label>
-      <input type="hidden" {...register(name, { required: required ? `${label} is required` : false })} />
+      <input type="hidden" {...register(name, { required: required ? lbl.multiSelectField.requiredError.replace('{field}', label) : false })} />
       <button type="button" disabled={disabled} className={[styles.selectBtn, error ? styles.inputError : '', open ? styles.selectOpen : ''].join(' ')} onClick={() => setOpen(v => !v)}>
         <span className={values.length ? styles.selectedVal : styles.placeholder}>{displayText}</span>
         <ChevronDown size={14} className={open ? styles.chevronUp : ''} />
@@ -42,7 +44,7 @@ export const MultiSelectField: React.FC<MultiSelectFieldProps> = ({ name, label,
               <span>{opt.label}</span>
             </button>
           ))}
-          {!options.length && <span className={styles.noOpts}>No options</span>}
+          {!options.length && <span className={styles.noOpts}>{lbl.multiSelectField.noOptionsMessage}</span>}
         </div>
       )}
       {error && <span className={styles.error}>{String(error.message)}</span>}

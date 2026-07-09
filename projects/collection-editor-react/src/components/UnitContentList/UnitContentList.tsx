@@ -4,6 +4,7 @@ import { SortableContext, verticalListSortingStrategy, sortableKeyboardCoordinat
 import { Plus } from 'lucide-react';
 import type { EditorMode } from '../../types/editor';
 import { useTreeStore } from '../../store/tree.store';
+import { useLabels } from '../../hooks/useLabels';
 import { ContentRow } from './ContentRow';
 import styles from './UnitContentList.module.scss';
 
@@ -12,6 +13,7 @@ interface UnitContentListProps {
 }
 
 export const UnitContentList: React.FC<UnitContentListProps> = ({ editorMode }) => {
+  const lbl = useLabels();
   const { selectedNodeId, getChildrenOf, reorderChildren, deleteNode } = useTreeStore();
   const children = selectedNodeId ? getChildrenOf(selectedNodeId) : [];
   const isEditable = editorMode === 'edit';
@@ -34,17 +36,17 @@ export const UnitContentList: React.FC<UnitContentListProps> = ({ editorMode }) 
   }, [selectedNodeId, reorderChildren]);
 
   const handleRemove = useCallback((id: string) => {
-    if (window.confirm('Remove this content from the unit?')) {
+    if (window.confirm(lbl.unitContentList.removeConfirm)) {
       deleteNode(id);
     }
-  }, [deleteNode]);
+  }, [deleteNode, lbl.unitContentList.removeConfirm]);
 
   if (!selectedNodeId) return null;
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <span className={styles.heading}>Content in this unit</span>
+        <span className={styles.heading}>{lbl.unitContentList.heading}</span>
         <span className={styles.count}>{children.length}</span>
       </div>
 
@@ -65,14 +67,14 @@ export const UnitContentList: React.FC<UnitContentListProps> = ({ editorMode }) 
         </DndContext>
       ) : (
         <div className={styles.emptyState}>
-          <p>No content yet</p>
-          <span>Drag from the library or click Add content</span>
+          <p>{lbl.unitContentList.emptyTitle}</p>
+          <span>{lbl.unitContentList.emptyHint}</span>
         </div>
       )}
 
       {isEditable && (
-        <button className={styles.addRow} type="button" aria-label="Add content to unit">
-          <Plus size={14} /> Add content
+        <button className={styles.addRow} type="button" aria-label={lbl.unitContentList.addContentAriaLabel}>
+          <Plus size={14} /> {lbl.unitContentList.addContent}
         </button>
       )}
     </div>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, FolderOpen } from 'lucide-react';
 import { useTreeStore } from '../../store/tree.store';
 import type { INode } from '../../types/editor';
+import { useLabels } from '../../hooks/useLabels';
 import styles from './ResourceReorderDialog.module.scss';
 
 interface ResourceReorderDialogProps {
@@ -26,6 +27,7 @@ function collectFolders(nodes: INode[], rootId: string, exclude?: string): INode
 export const ResourceReorderDialog: React.FC<ResourceReorderDialogProps> = ({
   resourceId, resourceName, currentUnitId, onClose,
 }) => {
+  const lbl = useLabels();
   const { treeData, moveNode } = useTreeStore();
   const folders = collectFolders(treeData, treeData[0]?.id ?? '', currentUnitId);
   const [selected, setSelected] = useState<string | null>(null);
@@ -37,14 +39,14 @@ export const ResourceReorderDialog: React.FC<ResourceReorderDialogProps> = ({
   };
 
   return (
-    <div className={styles.overlay} role="dialog" aria-label="Move resource">
+    <div className={styles.overlay} role="dialog" aria-label={lbl.resourceReorderDialog.dialogAriaLabel}>
       <div className={styles.modal}>
         <div className={styles.header}>
-          <span>Move &quot;{resourceName}&quot;</span>
-          <button onClick={onClose} aria-label="Close"><X size={16} /></button>
+          <span>{lbl.resourceReorderDialog.moveHeaderPrefix} &quot;{resourceName}&quot;</span>
+          <button onClick={onClose} aria-label={lbl.resourceReorderDialog.closeAriaLabel}><X size={16} /></button>
         </div>
         <div className={styles.body}>
-          <p className={styles.hint}>Select a unit to move this content to:</p>
+          <p className={styles.hint}>{lbl.resourceReorderDialog.selectUnitHint}</p>
           <ul className={styles.list}>
             {folders.map(f => (
               <li
@@ -56,12 +58,12 @@ export const ResourceReorderDialog: React.FC<ResourceReorderDialogProps> = ({
                 <span>{f.name}</span>
               </li>
             ))}
-            {folders.length === 0 && <li className={styles.empty}>No other units available</li>}
+            {folders.length === 0 && <li className={styles.empty}>{lbl.resourceReorderDialog.noUnitsAvailable}</li>}
           </ul>
         </div>
         <div className={styles.footer}>
-          <button className={styles.cancelBtn} onClick={onClose}>Cancel</button>
-          <button className={styles.moveBtn} onClick={handleMove} disabled={!selected}>Move here</button>
+          <button className={styles.cancelBtn} onClick={onClose}>{lbl.resourceReorderDialog.cancelButton}</button>
+          <button className={styles.moveBtn} onClick={handleMove} disabled={!selected}>{lbl.resourceReorderDialog.moveButton}</button>
         </div>
       </div>
     </div>

@@ -1,0 +1,32 @@
+.languageSelector {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: 1.5px solid var(--sbx-gray-200);
+  border-radius: var(--sbx-r-sm);
+  padding: 2px;
+}
+
+.languageBtn {
+  border: none;
+  background: transparent;
+  color: var(--sbx-gray-600);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: var(--sbx-r-sm);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--sbx-gray-100);
+  }
+}
+
+.active {
+  background: var(--sbx-primary, #1976d2);
+  color: white;
+
+  &:hover {
+    background: var(--sbx-primary, #1976d2);
+  }
+}

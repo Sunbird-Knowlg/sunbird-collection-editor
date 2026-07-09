@@ -1,5 +1,6 @@
 import React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
+import { useLabels } from '../../../hooks/useLabels';
 import styles from './Field.module.scss';
 
 interface DateTimeFieldProps {
@@ -10,6 +11,7 @@ interface DateTimeFieldProps {
 }
 
 export const DateTimeField: React.FC<DateTimeFieldProps> = ({ name, label, required, disabled }) => {
+  const lbl = useLabels();
   const { control } = useFormContext();
   const {
     field,
@@ -17,7 +19,7 @@ export const DateTimeField: React.FC<DateTimeFieldProps> = ({ name, label, requi
   } = useController({
     name,
     control,
-    rules: { required: required ? `${label} is required` : false },
+    rules: { required: required ? lbl.dateTimeField.requiredError.replace('{field}', label) : false },
   });
 
   return (

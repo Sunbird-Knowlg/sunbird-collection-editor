@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { ChevronDown, Check } from 'lucide-react';
+import { useLabels } from '../../../hooks/useLabels';
 import styles from './Field.module.scss';
 
 const LICENSE_OPTIONS = [
@@ -20,12 +21,13 @@ interface LicenseSelectFieldProps {
 }
 
 export const LicenseSelectField: React.FC<LicenseSelectFieldProps> = ({ name, label, required, disabled }) => {
+  const lbl = useLabels();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const { register, watch, setValue, formState: { errors } } = useFormContext();
   const value = watch(name) as string;
   const selectedOption = LICENSE_OPTIONS.find(o => o.value === value);
-  const selectedLabel = selectedOption?.label ?? 'Select license…';
+  const selectedLabel = selectedOption?.label ?? lbl.licenseSelectField.selectPlaceholder;
   const error = errors[name];
 
   useEffect(() => {
@@ -44,7 +46,7 @@ export const LicenseSelectField: React.FC<LicenseSelectFieldProps> = ({ name, la
       </label>
       <input
         type="hidden"
-        {...register(name, { required: required ? `${label} is required` : false })}
+        {...register(name, { required: required ? lbl.licenseSelectField.requiredError.replace('{field}', label) : false })}
       />
       <button
         type="button"

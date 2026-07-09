@@ -1,0 +1,458 @@
+{
+  "contextualEditor": {
+    "emptyStateMessage": "Selecione uma unidade no esquema para editar seus detalhes",
+    "reviewCommentLabel": "Comentário do revisor:",
+    "untitledPlaceholder": "Sem título",
+    "nodeTitleAriaLabel": "Título do nó",
+    "dropZoneLabel": "Solte para adicionar conteúdo a esta unidade"
+  },
+  "languageSelector": {
+    "ariaLabel": "Selecionar idioma"
+  },
+  "collectionEditor": {
+    "errorBoundaryTitle": "Algo deu errado",
+    "retryButton": "Tentar novamente",
+    "loadingMessage": "Carregando editor...",
+    "loadErrorTitle": "Falha ao carregar o editor"
+  },
+  "breadcrumb": {
+    "nodePathAriaLabel": "Caminho do nó",
+    "homeAriaLabel": "Início"
+  },
+  "tabBar": {
+    "detailsTab": "Detalhes",
+    "audienceCurriculumTab": "Público e Currículo",
+    "licensingTab": "Licenciamento",
+    "metadataSectionsAriaLabel": "Seções de metadados",
+    "hasErrorsAriaLabel": "Contém erros"
+  },
+  "contentEditForm": {
+    "moveToAnotherUnitButton": "Mover para outra unidade",
+    "collapseMetadataPanelAriaLabel": "Recolher painel de metadados",
+    "expandMetadataPanelAriaLabel": "Expandir painel de metadados",
+    "collapseTitle": "Recolher",
+    "expandTitle": "Expandir",
+    "iconAlt": "ícone",
+    "contentNamePlaceholder": "Nome do conteúdo",
+    "keywordsLabel": "Palavras-chave",
+    "addKeywordPlaceholder": "Adicione uma palavra-chave e pressione Enter",
+    "addButton": "Adicionar",
+    "optionalInCollectionLabel": "Opcional na coleção",
+    "yesOption": "Sim",
+    "noOption": "Não"
+  },
+  "titleAppIcon": {
+    "selectAppIconAriaLabel": "Selecionar ícone do aplicativo",
+    "appIconAriaLabel": "Ícone do aplicativo",
+    "appIconAlt": "Ícone do aplicativo",
+    "removeIconAriaLabel": "Remover ícone"
+  },
+  "unitContentList": {
+    "removeConfirm": "Remover este conteúdo da unidade?",
+    "heading": "Conteúdo nesta unidade",
+    "emptyTitle": "Ainda não há conteúdo",
+    "emptyHint": "Arraste da biblioteca ou clique em Adicionar conteúdo",
+    "addContentAriaLabel": "Adicionar conteúdo à unidade",
+    "addContent": "Adicionar conteúdo"
+  },
+  "contentRow": {
+    "dragToReorderAriaLabel": "Arrastar para reordenar",
+    "removeAriaLabel": "Remover {name}"
+  },
+  "csvUpload": {
+    "invalidFileType": "Somente arquivos .csv são aceitos.",
+    "fileTooLarge": "O tamanho do arquivo não deve exceder 50 MB.",
+    "downloadSampleFailed": "Falha ao baixar o CSV de exemplo.",
+    "processingFailed": "Falha no processamento do upload. Verifique as linhas com erro abaixo.",
+    "connectionLost": "Conexão perdida ao verificar o status. Tente novamente.",
+    "uploadFailed": "Falha no envio. Verifique seu arquivo e tente novamente.",
+    "statusUploading": "Enviando...",
+    "statusProcessing": "Processando...",
+    "statusDone": "Concluído!",
+    "statusError": "Erro",
+    "titleUpdate": "Atualizar metadados das pastas via CSV",
+    "titleCreate": "Criar pastas via CSV",
+    "closeAriaLabel": "Fechar",
+    "dropZoneAriaLabel": "Solte o arquivo CSV aqui ou clique para procurar",
+    "dropText": "Arraste e solte seu CSV aqui",
+    "dropSubtext": "ou clique para procurar",
+    "downloadSample": "Baixar CSV de exemplo",
+    "itemsImportedSuffix": "— {count} item(ns) importado(s)",
+    "failedRowsTitle": "Linhas com falha ({count})",
+    "rowHeader": "Linha",
+    "nameHeader": "Nome",
+    "reasonHeader": "Motivo",
+    "unknownError": "Erro desconhecido",
+    "cancel": "Cancelar",
+    "uploaded": "Enviado",
+    "upload": "Enviar"
+  },
+  "manageCollaborators": {
+    "saveFailed": "Falha ao salvar colaboradores. Tente novamente.",
+    "title": "Gerenciar colaboradores",
+    "closeAriaLabel": "Fechar",
+    "searchUsersLabel": "Buscar usuários",
+    "searchPlaceholder": "Buscar por nome ou e-mail...",
+    "searchingAriaLabel": "Buscando...",
+    "searchResultsAriaLabel": "Resultados da busca",
+    "add": "Adicionar",
+    "noUsersFound": "Nenhum usuário encontrado.",
+    "currentCollaborators": "Colaboradores atuais",
+    "noCollaboratorsYet": "Nenhum colaborador adicionado ainda.",
+    "remove": "Remover",
+    "saveSuccess": "Colaboradores salvos com sucesso.",
+    "cancel": "Cancelar",
+    "save": "Salvar"
+  },
+  "sparkMetaForm": {
+    "shuffleEnabledMessage": "A ordem aleatória está ativada para este conjunto de questões.",
+    "noFieldsMessage": "Nenhum campo configurado para esta aba."
+  },
+  "appIconField": {
+    "requiredError": "{field} é obrigatório",
+    "selectIconAriaLabel": "Selecionar ícone do aplicativo",
+    "iconAlt": "Ícone do aplicativo",
+    "selectIconLabel": "Selecionar ícone",
+    "removeIconAriaLabel": "Remover ícone do aplicativo",
+    "removeLabel": "Remover"
+  },
+  "appIconPickerModal": {
+    "dialogAriaLabel": "Selecionar ícone do aplicativo",
+    "title": "Selecionar ícone do aplicativo",
+    "closeAriaLabel": "Fechar",
+    "myImagesTab": "Minhas imagens",
+    "allImagesTab": "Todas as imagens",
+    "uploadTab": "Enviar",
+    "searchPlaceholder": "Buscar imagens…",
+    "loadingText": "Carregando…",
+    "noImagesFound": "Nenhuma imagem encontrada",
+    "noThumbnailText": "IMG",
+    "loadMoreButton": "Carregar mais",
+    "previewAlt": "Pré-visualização",
+    "dropZoneText": "Arraste e solte ou clique para procurar",
+    "acceptedTypesInfo": "{types} · máx. {size} MB",
+    "cancelButton": "Cancelar",
+    "uploadingText": "Enviando…",
+    "uploadAndUseButton": "Enviar e usar",
+    "useSelectedButton": "Usar selecionado",
+    "invalidFileTypeError": "Somente arquivos {types} são aceitos.",
+    "fileTooLargeError": "A imagem deve ter menos de {size} MB.",
+    "uploadFailedError": "Falha no envio."
+  },
+  "chipGroupField": {
+    "addPlaceholder": "Adicionar…",
+    "addButtonLabel": "Adicionar"
+  },
+  "dateTimeField": {
+    "requiredError": "{field} é obrigatório"
+  },
+  "dialcodeInputField": {
+    "requiredError": "{field} é obrigatório",
+    "enterCodeMessage": "Insira um código dial para validar.",
+    "validMessage": "O código dial é válido.",
+    "notFoundMessage": "Código dial não encontrado.",
+    "validationFailedMessage": "Falha na validação. Tente novamente.",
+    "placeholderExample": "ex. A1B2C3",
+    "validateAriaLabel": "Validar código dial",
+    "validatingLabel": "Validando…",
+    "validateButtonLabel": "Validar"
+  },
+  "keywordSuggestField": {
+    "requiredError": "{field} é obrigatório",
+    "inputPlaceholder": "Digite e pressione Enter ou vírgula…"
+  },
+  "licenseSelectField": {
+    "requiredError": "{field} é obrigatório",
+    "selectPlaceholder": "Selecionar licença…"
+  },
+  "multiSelectField": {
+    "requiredError": "{field} é obrigatório",
+    "selectedCountSuffix": "selecionado(s)",
+    "selectPlaceholder": "Selecionar…",
+    "noOptionsMessage": "Sem opções"
+  },
+  "nestedSelectField": {
+    "requiredError": "{field} é obrigatório",
+    "selectPlaceholder": "Selecionar…"
+  },
+  "radioField": {
+    "requiredError": "{field} é obrigatório"
+  },
+  "selectField": {
+    "requiredError": "{field} é obrigatório",
+    "selectPlaceholder": "Selecionar…",
+    "noOptionsMessage": "Sem opções"
+  },
+  "textField": {
+    "requiredError": "{field} é obrigatório",
+    "maxLengthError": "Máx. {max} caracteres"
+  },
+  "assetBrowser": {
+    "dialogAriaLabel": "Navegador de recursos",
+    "title": "Navegador de recursos",
+    "closeAriaLabel": "Fechar",
+    "browseTab": "Procurar",
+    "uploadTab": "Enviar",
+    "searchPlaceholder": "Buscar recursos...",
+    "searchButton": "Buscar",
+    "loadingMessage": "Carregando...",
+    "uploadingMessage": "Enviando...",
+    "chooseFileButton": "Escolher arquivo para enviar"
+  },
+  "resourceReorderDialog": {
+    "dialogAriaLabel": "Mover recurso",
+    "moveHeaderPrefix": "Mover",
+    "closeAriaLabel": "Fechar",
+    "selectUnitHint": "Selecione uma unidade para mover este conteúdo:",
+    "noUnitsAvailable": "Nenhuma outra unidade disponível",
+    "cancelButton": "Cancelar",
+    "moveButton": "Mover para aqui"
+  },
+  "assignPageNumber": {
+    "dialogAriaLabel": "Atribuir números de página",
+    "title": "Atribuir números de página",
+    "closeAriaLabel": "Fechar",
+    "emptyState": "Nenhum item de conteúdo encontrado nesta coleção.",
+    "contentColumnHeader": "Conteúdo",
+    "pageNumberColumnHeader": "Número da página",
+    "cancelButton": "Cancelar",
+    "saveButton": "Salvar"
+  },
+  "confirmDialog": {
+    "confirmButton": "Confirmar",
+    "cancelButton": "Cancelar",
+    "closeAriaLabel": "Fechar"
+  },
+  "publishChecklist": {
+    "publishTitlePrefix": "Publicar",
+    "closeAriaLabel": "Fechar",
+    "confirmPublishPrefix": "Tem certeza de que deseja publicar este(a)",
+    "checklistInstructions": "Confirme que TODOS os itens a seguir foram verificados (marcando as caixas de seleção) antes de publicar:",
+    "noButton": "Não",
+    "yesButton": "Sim"
+  },
+  "qualityParamsModal": {
+    "reviewQualityTitle": "Revisar qualidade",
+    "rejectContentTitle": "Rejeitar conteúdo",
+    "closeAriaLabel": "Fechar",
+    "qualityScoreLabel": "Nota de qualidade",
+    "scorePoorLabel": "0 — Ruim",
+    "scoreExcellentLabel": "10 — Excelente",
+    "commentLabel": "Comentário",
+    "optionalLabel": "(opcional)",
+    "commentPlaceholder": "Adicione observações para o criador do conteúdo…",
+    "rejectionReasonLabel": "Motivo da rejeição",
+    "rejectReasonPlaceholder": "Descreva por que este conteúdo está sendo rejeitado…",
+    "rejectionRequiredMessage": "É necessário informar um motivo de rejeição.",
+    "cancelButton": "Cancelar",
+    "approveButton": "Aprovar",
+    "rejectButton": "Rejeitar"
+  },
+  "unsavedChangesModal": {
+    "title": "Alterações não salvas",
+    "closeAriaLabel": "Fechar",
+    "bodyMessage": "Você tem alterações não salvas. Deseja salvá-las antes de sair?",
+    "cancelButton": "Cancelar",
+    "discardButton": "Descartar",
+    "saveButton": "Salvar"
+  },
+  "filterChips": {
+    "contentTypeFiltersAriaLabel": "Filtros de tipo de conteúdo"
+  },
+  "libraryCard": {
+    "alreadyAddedAriaLabel": "Já adicionado",
+    "alreadyAddedTitle": "Já adicionado a esta coleção",
+    "addItemAriaLabel": "Adicionar {name} à unidade",
+    "addToUnitTitle": "Adicionar à unidade",
+    "selectUnitToAddTitle": "Selecione uma unidade para adicionar",
+    "draftOnlyTitle": "Somente conteúdo em rascunho pode ser adicionado"
+  },
+  "libraryDock": {
+    "selectUnitFirstToast": "Selecione uma unidade primeiro",
+    "selectUnitFromOutlineToast": "Selecione uma unidade no esquema para adicionar conteúdo — recursos não podem ser adicionados diretamente ao curso.",
+    "itemAlreadyAddedToast": "\"{name}\" já está nesta coleção",
+    "itemAddedToast": "\"{name}\" adicionado",
+    "collapseLibraryPanelAriaLabel": "Recolher painel da biblioteca",
+    "collapseLibraryTitle": "Recolher biblioteca",
+    "headerTitle": "Biblioteca",
+    "searchPlaceholder": "Buscar conteúdo…",
+    "searchAriaLabel": "Buscar na biblioteca",
+    "sortAZAriaLabel": "Ordenar: A–Z (clique para Recentes)",
+    "sortRecentAriaLabel": "Ordenar: Recentes (clique para A–Z)",
+    "sortAZTitle": "A–Z",
+    "sortRecentTitle": "Recentes",
+    "toggleAdvancedFiltersAriaLabel": "Alternar filtros avançados",
+    "advancedFiltersTitle": "Filtros avançados",
+    "libraryContentAriaLabel": "Conteúdo da biblioteca",
+    "loadMoreAriaLabel": "Carregar mais conteúdo",
+    "loadingText": "Carregando…",
+    "loadMoreText": "Carregar mais",
+    "noContentFound": "Nenhum conteúdo encontrado",
+    "tryDifferentSearch": "Tente uma busca ou filtro diferente"
+  },
+  "libraryFilterPanel": {
+    "boardLabel": "Conselho",
+    "mediumLabel": "Idioma de Instrução",
+    "classLabel": "Série",
+    "subjectLabel": "Disciplina",
+    "primaryCategoryLabel": "Categoria principal",
+    "filterLibraryAriaLabel": "Filtrar biblioteca",
+    "filtersHeaderTitle": "Filtros",
+    "closeFiltersAriaLabel": "Fechar filtros",
+    "resetButton": "Redefinir",
+    "applyButton": "Aplicar"
+  },
+  "libraryPreviewPanel": {
+    "contentPreviewAriaLabel": "Pré-visualização do conteúdo",
+    "closePreviewAriaLabel": "Fechar pré-visualização",
+    "addToUnitButton": "+ Adicionar à unidade"
+  },
+  "outlineTree": {
+    "maxDepthReachedToast": "Profundidade máxima atingida",
+    "downloadCsvFailedToast": "Falha ao baixar o CSV",
+    "outlineRefreshedToast": "Esquema do curso atualizado.",
+    "outlineRefreshFailedToast": "Não foi possível atualizar o esquema automaticamente. Recarregue a página.",
+    "moreOptionsAriaLabel": "Mais opções",
+    "moreOptionsTitle": "Mais opções",
+    "foldersExistTitle": "As pastas já existem — use \"Atualizar\"",
+    "createFoldersCsvButton": "Criar pastas usando arquivo csv",
+    "noFoldersYetTitle": "Ainda não há pastas — use \"Criar\" primeiro",
+    "downloadFoldersCsvButton": "Baixar pastas como arquivo csv",
+    "updateFoldersCsvButton": "Atualizar metadados das pastas usando arquivo csv",
+    "expandOutlineAriaLabel": "Expandir esquema",
+    "collapseOutlineAriaLabel": "Recolher esquema",
+    "addUnitButton": "Adicionar unidade",
+    "addSubunitButton": "Adicionar subunidade"
+  },
+  "treeNode": {
+    "expandAriaLabel": "Expandir",
+    "collapseAriaLabel": "Recolher",
+    "dropHereLabel": "Solte aqui",
+    "nodeOptionsAriaLabel": "Opções do nó",
+    "renameMenuItem": "Renomear",
+    "addSubunitMenuItem": "Adicionar subunidade",
+    "addSiblingMenuItem": "Adicionar item no mesmo nível",
+    "deleteMenuItem": "Excluir"
+  },
+  "contentPlayer": {
+    "mimeLabelVideo": "Vídeo",
+    "mimeLabelAudio": "Áudio",
+    "mimeLabelPdf": "PDF",
+    "mimeLabelEpub": "ePub",
+    "mimeLabelEcml": "ECML",
+    "mimeLabelH5p": "H5P",
+    "mimeLabelScorm": "SCORM",
+    "mimeLabelOther": "Conteúdo",
+    "infoFieldAuthor": "Autor",
+    "infoFieldLicense": "Licença",
+    "infoFieldLanguage": "Idioma",
+    "infoFieldClass": "Série",
+    "infoFieldSubject": "Disciplina",
+    "infoFieldType": "Tipo",
+    "loadingPreview": "Carregando pré-visualização…",
+    "previewPlayerUnavailable": "Player de pré-visualização indisponível. Verifique se /content/preview está acessível.",
+    "failedToInitializePlayer": "Falha ao inicializar o player de conteúdo.",
+    "previewPlayerLoadFailed": "Não foi possível carregar o player de pré-visualização.",
+    "unableToLoadQuestionset": "Não foi possível carregar o conjunto de questões:",
+    "parentQuestionsetNotResolved": "Não foi possível identificar o conjunto de questões principal desta questão.",
+    "questionNotFoundInQuestionset": "Questão não encontrada no conjunto de questões."
+  },
+  "dialcodePanel": {
+    "title": "Código QR (Dialcode)",
+    "invalidFormatError": "Formato de código DIAL inválido. Use apenas letras maiúsculas e números (ex. A1B2C3).",
+    "duplicateDialcodeError": "O código DIAL \"{code}\" já está vinculado a outro nó nesta coleção.",
+    "dialcodeNotFoundError": "Dialcode não encontrado. Insira um código válido.",
+    "linkFailedError": "Falha ao vincular o dialcode. Tente novamente.",
+    "unlinkFailedError": "Falha ao remover o dialcode. Tente novamente.",
+    "qrCodeAltPrefix": "Código QR para",
+    "linkedCodeLabel": "Código vinculado:",
+    "removeButton": "Remover",
+    "noCodeLinkedMessage": "Nenhum código QR vinculado a este conteúdo.",
+    "linkManuallyLabel": "Vincular manualmente",
+    "dialcodeInputPlaceholder": "Insira o dialcode (ex. A1B2C3)",
+    "dialcodeInputAriaLabel": "Campo de dialcode",
+    "linkButton": "Vincular",
+    "linkedSuccessMessage": "Dialcode vinculado com sucesso."
+  },
+  "progressStatus": {
+    "unitsAddedLabel": "Unidades adicionadas",
+    "contentItemsLabel": "Itens de conteúdo",
+    "progressLabel": "Progresso"
+  },
+  "splitBuilderShell": {
+    "dropOntoUnitError": "Solte sobre uma unidade para adicionar conteúdo",
+    "dropOntoCourseError": "Solte o conteúdo sobre uma unidade, não diretamente sobre o curso.",
+    "alreadyInCollectionError": "\"{name}\" já está nesta coleção",
+    "addedToUnitSuccess": "\"{name}\" adicionado à unidade",
+    "fillRequiredMetadataError": "Preencha os metadados obrigatórios",
+    "outlineAriaLabel": "Esquema do curso",
+    "showOutlineTitle": "Mostrar esquema",
+    "editorAriaLabel": "Editor de conteúdo",
+    "libraryAriaLabel": "Biblioteca de conteúdo",
+    "showLibraryTitle": "Mostrar biblioteca"
+  },
+  "topbar": {
+    "draftStatusFallback": "Rascunho",
+    "backAriaLabel": "Voltar",
+    "statusAriaLabelPrefix": "Status:",
+    "savingIndicator": "Salvando…",
+    "unsavedIndicator": "Não salvo",
+    "savedIndicatorPrefix": "Salvo",
+    "fillRequiredFieldsTooltip": "Preencha todos os campos obrigatórios antes de salvar",
+    "saveAsDraftButton": "Salvar como rascunho",
+    "sendForReviewButton": "Enviar para revisão",
+    "collaboratorsLabel": "Colaboradores",
+    "qrCodesLabel": "Códigos QR",
+    "generatingEllipsis": "Gerando…",
+    "generateQrCodesMenuItem": "Gerar códigos QR",
+    "downloadingEllipsis": "Baixando…",
+    "downloadQrCodesMenuItem": "Baixar códigos QR",
+    "publishButton": "Publicar",
+    "requestForChangesButton": "Solicitar alterações",
+    "approveButton": "Aprovar",
+    "qrGenerationStartedToast": "Geração dos códigos QR iniciada. Use \"Baixar códigos QR\" quando estiverem prontos.",
+    "qrGenerationFailedToast": "Falha ao gerar os códigos QR. Tente novamente.",
+    "qrCodesNotGeneratedToast": "Nenhum código QR gerado ainda. Gere os códigos QR primeiro.",
+    "qrGenerationInProgressToast": "A geração das imagens dos códigos QR está em andamento. Tente baixar novamente mais tarde.",
+    "qrCodesNotReadyToast": "Os códigos QR ainda não estão prontos. Aguarde e tente novamente.",
+    "qrCodesDownloadedToast": "Códigos QR baixados.",
+    "qrCodesDownloadFailedToast": "Falha ao baixar os códigos QR.",
+    "requestChangesTitle": "Solicitar alterações",
+    "changesRequestedLabel": "Alterações solicitadas",
+    "describeChangesPlaceholder": "Descreva as alterações que o autor precisa fazer"
+  },
+  "reviewCommentModal": {
+    "closeAriaLabel": "Fechar",
+    "fillCommentsError": "Preencha os comentários",
+    "cancelButton": "Cancelar"
+  },
+  "confirmReviewModal": {
+    "closeAriaLabel": "Fechar",
+    "title": "Aceitar Termos e Condições",
+    "agreementTextPart1": "Concordo que, ao enviar/publicar este Conteúdo, confirmo que ele está em conformidade com as diretrizes estabelecidas, incluindo os Termos de Uso e a Política de Conteúdo, e que consinto em publicá-lo sob a",
+    "creativeCommonsLinkText": "Estrutura Creative Commons",
+    "agreementTextPart2": "de acordo com a",
+    "contentPolicyText": "Política de Conteúdo",
+    "agreementTextPart3": ". Certifiquei-me de que não violo direitos de autor ou de privacidade de terceiros.",
+    "cancelButton": "Cancelar",
+    "submitButton": "Enviar"
+  },
+  "generateQRModal": {
+    "closeAriaLabel": "Fechar",
+    "title": "Gerar códigos QR",
+    "numberOfCodesLabel": "Número de códigos QR",
+    "countPlaceholder": "Insira um número (2–250)",
+    "countRangeError": "Insira um número entre 2 e 250.",
+    "cancelButton": "Cancelar",
+    "generateButton": "Gerar"
+  },
+  "chip": {
+    "remove": "Remover"
+  },
+  "dropZone": {
+    "dropHere": "Solte aqui"
+  },
+  "spinner": {
+    "loading": "Carregando"
+  }
+}

@@ -5,6 +5,7 @@ import {
   getCsvUploadStatus,
   downloadSampleCsv,
 } from '../../api/bulkUpload';
+import { useLabels } from '../../hooks/useLabels';
 import styles from './BulkUpload.module.scss';
 
 interface CsvUploadProps {
@@ -29,6 +30,7 @@ export const CsvUpload: React.FC<CsvUploadProps> = ({
   onClose,
   mode = 'create',
 }) => {
+  const lbl = useLabels();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
   const [status, setStatus] = useState<UploadStatus>('idle');
@@ -49,11 +51,11 @@ export const CsvUpload: React.FC<CsvUploadProps> = ({
 
   const validateFile = (file: File): boolean => {
     if (!file.name.toLowerCase().endsWith('.csv')) {
-      setErrorMsg('Only .csv files are accepted.');
+      setErrorMsg(lbl.csvUpload.invalidFileType);
       return false;
     }
     if (file.size > 50 * 1024 * 1024) {
-      setErrorMsg('File size must not exceed 50 MB.');
+      setErrorMsg(lbl.csvUpload.fileTooLarge);
       return false;
     }
     return true;
@@ -99,9 +101,9 @@ export const CsvUpload: React.FC<CsvUploadProps> = ({
       a.target = '_blank';
       a.click();
     } catch {
-      setErrorMsg('Failed to download sample CSV.');
+      setErrorMsg(lbl.csvUpload.downloadSampleFailed);
     }
-  }, [contentId]);
+  }, [contentId, lbl.csvUpload.downloadSampleFailed]);
 
   const handleUpload = useCallback(async () => {
     if (!selectedFile) return;
@@ -139,7 +141,7 @@ export const CsvUpload: React.FC<CsvUploadProps> = ({
           } else if (result.status === 'FAILED') {
             stopPolling();
             setStatus('error');
-            setErrorMsg('Upload processing failed. Please check the error rows below.');
+            setErrorMsg(lbl.csvUpload.processingFailed);
             if (result.failedRecords) {
               setFailedRecords(result.failedRecords as FailedRecord[]);
             }
@@ -147,30 +149,30 @@ export const CsvUpload: React.FC<CsvUploadProps> = ({
         } catch {
           stopPolling();
           setStatus('error');
-          setErrorMsg('Lost connection while checking status. Please try again.');
+          setErrorMsg(lbl.csvUpload.connectionLost);
         }
       }, 2000);
     } catch {
       setStatus('error');
-      setErrorMsg('Upload failed. Please check your file and try again.');
+      setErrorMsg(lbl.csvUpload.uploadFailed);
     }
-  }, [contentId, selectedFile, onComplete, stopPolling]);
+  }, [contentId, selectedFile, onComplete, stopPolling, lbl.csvUpload.processingFailed, lbl.csvUpload.connectionLost, lbl.csvUpload.uploadFailed]);
 
   const statusLabel: Record<UploadStatus, string> = {
     idle: '',
-    uploading: 'Uploading...',
-    processing: 'Processing...',
-    done: 'Done!',
-    error: 'Error',
+    uploading: lbl.csvUpload.statusUploading,
+    processing: lbl.csvUpload.statusProcessing,
+    done: lbl.csvUpload.statusDone,
+    error: lbl.csvUpload.statusError,
   };
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
         <h2 className={styles.title}>
-          {mode === 'update' ? 'Update Folder Metadata via CSV' : 'Create Folders via CSV'}
+          {mode === 'update' ? lbl.csvUpload.titleUpdate : lbl.csvUpload.titleCreate}
         </h2>
-        <button className={styles.closeBtn} onClick={onClose} aria-label="Close">
+        <button className={styles.closeBtn} onClick={onClose} aria-label={lbl.csvUpload.closeAriaLabel}>
           ✕
         </button>
       </div>
@@ -186,7 +188,7 @@ export const CsvUpload: React.FC<CsvUploadProps> = ({
           onClick={() => fileInputRef.current?.click()}
           role="button"
           tabIndex={0}
-          aria-label="Drop CSV file here or click to browse"
+          aria-label={lbl.csvUpload.dropZoneAriaLabel}
           onKeyDown={(e) => e.key === 'Enter' && fileInputRef.current?.click()}
         >
           <input
@@ -208,8 +210,8 @@ export const CsvUpload: React.FC<CsvUploadProps> = ({
           ) : (
             <div className={styles.dropHint}>
               <span className={styles.dropIcon}>⬆️</span>
-              <p className={styles.dropText}>Drag &amp; drop your CSV here</p>
-              <p className={styles.dropSubtext}>or click to browse</p>
+              <p className={styles.dropText}>{lbl.csvUpload.dropText}</p>
+              <p className={styles.dropSubtext}>{lbl.csvUpload.dropSubtext}</p>
             </div>
           )}
         </div>
@@ -220,7 +222,7 @@ export const CsvUpload: React.FC<CsvUploadProps> = ({
           onClick={handleDownloadSample}
           type="button"
         >
-          Download Sample CSV
+          {lbl.csvUpload.downloadSample}
         </button>
 
         {/* Status indicator */}
@@ -235,7 +237,9 @@ export const CsvUpload: React.FC<CsvUploadProps> = ({
             )}
             {statusLabel[status]}
             {status === 'done' && successCount !== null && (
-              <span className={styles.successDetail}> — {successCount} item(s) imported</span>
+              <span className={styles.successDetail}>
+                {lbl.csvUpload.itemsImportedSuffix.replace('{count}', String(successCount))}
+              </span>
             )}
           </div>
         )}
@@ -248,14 +252,16 @@ export const CsvUpload: React.FC<CsvUploadProps> = ({
         {/* Failed records table */}
         {failedRecords.length > 0 && (
           <div className={styles.failedSection}>
-            <h4 className={styles.failedTitle}>Failed Rows ({failedRecords.length})</h4>
+            <h4 className={styles.failedTitle}>
+              {lbl.csvUpload.failedRowsTitle.replace('{count}', String(failedRecords.length))}
+            </h4>
             <div className={styles.tableWrap}>
               <table className={styles.failedTable}>
                 <thead>
                   <tr>
-                    <th>Row</th>
-                    <th>Name</th>
-                    <th>Reason</th>
+                    <th>{lbl.csvUpload.rowHeader}</th>
+                    <th>{lbl.csvUpload.nameHeader}</th>
+                    <th>{lbl.csvUpload.reasonHeader}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -263,7 +269,7 @@ export const CsvUpload: React.FC<CsvUploadProps> = ({
                     <tr key={idx}>
                       <td>{row.rowNumber ?? idx + 1}</td>
                       <td>{row.name ?? '—'}</td>
-                      <td className={styles.reasonCell}>{row.reason ?? 'Unknown error'}</td>
+                      <td className={styles.reasonCell}>{row.reason ?? lbl.csvUpload.unknownError}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -275,7 +281,7 @@ export const CsvUpload: React.FC<CsvUploadProps> = ({
 
       <div className={styles.footer}>
         <Button variant="ghost" onClick={onClose} disabled={status === 'uploading' || status === 'processing'}>
-          Cancel
+          {lbl.csvUpload.cancel}
         </Button>
         <Button
           variant="primary"
@@ -283,7 +289,7 @@ export const CsvUpload: React.FC<CsvUploadProps> = ({
           disabled={!selectedFile || status === 'done'}
           onClick={handleUpload}
         >
-          {status === 'done' ? 'Uploaded' : 'Upload'}
+          {status === 'done' ? lbl.csvUpload.uploaded : lbl.csvUpload.upload}
         </Button>
       </div>
     </div>

@@ -3,6 +3,8 @@ import { X } from 'lucide-react';
 import { useEditorStore } from '../../store/editor.store';
 import { useFramework } from '../../hooks/useFramework';
 import { useAllowedCategories } from '../../hooks/useLibrary';
+import { useLabels } from '../../hooks/useLabels';
+import type { LabelConfig } from '../../i18n';
 import styles from './LibraryFilterPanel.module.scss';
 
 export interface LibraryFilters {
@@ -16,11 +18,13 @@ export interface LibraryFilters {
 }
 
 // Framework-category filter sections, used when the API search form is absent.
-const DEFAULT_FILTER_SECTIONS: Array<{ key: keyof LibraryFilters; label: string }> = [
-  { key: 'board', label: 'Board' },
-  { key: 'medium', label: 'Medium' },
-  { key: 'gradeLevel', label: 'Class' },
-  { key: 'subject', label: 'Subject' },
+const getDefaultFilterSections = (
+  lbl: LabelConfig,
+): Array<{ key: keyof LibraryFilters; label: string }> => [
+  { key: 'board', label: lbl.libraryFilterPanel.boardLabel },
+  { key: 'medium', label: lbl.libraryFilterPanel.mediumLabel },
+  { key: 'gradeLevel', label: lbl.libraryFilterPanel.classLabel },
+  { key: 'subject', label: lbl.libraryFilterPanel.subjectLabel },
 ];
 
 const FRAMEWORK_FILTER_KEYS = new Set(['board', 'medium', 'gradeLevel', 'subject', 'topic']);
@@ -37,11 +41,12 @@ const AllowedCategorySection: React.FC<{
   local: LibraryFilters;
   toggle: (key: keyof LibraryFilters, val: string) => void;
 }> = ({ local, toggle }) => {
+  const lbl = useLabels();
   const categories = useAllowedCategories();
   if (!categories.length) return null;
   return (
     <div className={styles.section}>
-      <div className={styles.sectionLabel}>Primary Category</div>
+      <div className={styles.sectionLabel}>{lbl.libraryFilterPanel.primaryCategoryLabel}</div>
       <div className={styles.chips}>
         {categories.map((cat) => (
           <button
@@ -67,6 +72,7 @@ export const LibraryFilterPanel: React.FC<LibraryFilterPanelProps> = ({
   onApply,
   onClose,
 }) => {
+  const lbl = useLabels();
   const config = useEditorStore((s) => s.editorConfig);
   const searchFormConfig = useEditorStore((s) => s.searchFormConfig);
   const contentFramework = useEditorStore((s) => s.contentFramework);
@@ -84,7 +90,7 @@ export const LibraryFilterPanel: React.FC<LibraryFilterPanelProps> = ({
       ? searchFormConfig
           .filter((f) => FRAMEWORK_FILTER_KEYS.has(f.code))
           .map((f) => ({ key: f.code as keyof LibraryFilters, label: f.label || f.code }))
-      : DEFAULT_FILTER_SECTIONS;
+      : getDefaultFilterSections(lbl);
 
   useEffect(() => {
     setLocal(filters);
@@ -105,14 +111,14 @@ export const LibraryFilterPanel: React.FC<LibraryFilterPanelProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className={styles.panel} role="dialog" aria-label="Filter library" aria-modal="true">
+    <div className={styles.panel} role="dialog" aria-label={lbl.libraryFilterPanel.filterLibraryAriaLabel} aria-modal="true">
       <div className={styles.header}>
-        <span className={styles.headerTitle}>Filters</span>
+        <span className={styles.headerTitle}>{lbl.libraryFilterPanel.filtersHeaderTitle}</span>
         <button
           type="button"
           className={styles.closeBtn}
           onClick={onClose}
-          aria-label="Close filters"
+          aria-label={lbl.libraryFilterPanel.closeFiltersAriaLabel}
         >
           <X size={16} />
         </button>
@@ -153,7 +159,7 @@ export const LibraryFilterPanel: React.FC<LibraryFilterPanelProps> = ({
           className={styles.resetBtn}
           onClick={() => setLocal({})}
         >
-          Reset
+          {lbl.libraryFilterPanel.resetButton}
         </button>
         <button
           type="button"
@@ -163,7 +169,7 @@ export const LibraryFilterPanel: React.FC<LibraryFilterPanelProps> = ({
             onClose();
           }}
         >
-          Apply
+          {lbl.libraryFilterPanel.applyButton}
         </button>
       </div>
     </div>

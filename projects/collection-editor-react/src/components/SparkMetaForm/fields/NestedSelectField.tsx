@@ -1,5 +1,6 @@
 import React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
+import { useLabels } from '../../../hooks/useLabels';
 import styles from './Field.module.scss';
 
 interface LevelOption { label: string; value: string; }
@@ -16,6 +17,7 @@ interface NestedSelectFieldProps {
 export const NestedSelectField: React.FC<NestedSelectFieldProps> = ({
   name, label, levels, required, disabled,
 }) => {
+  const lbl = useLabels();
   const { control } = useFormContext();
   const {
     field,
@@ -23,7 +25,7 @@ export const NestedSelectField: React.FC<NestedSelectFieldProps> = ({
   } = useController({
     name,
     control,
-    rules: { required: required ? `${label} is required` : false },
+    rules: { required: required ? lbl.nestedSelectField.requiredError.replace('{field}', label) : false },
     defaultValue: {},
   });
 
@@ -65,7 +67,7 @@ export const NestedSelectField: React.FC<NestedSelectFieldProps> = ({
                 onChange={e => handleChange(level.code, idx, e.target.value)}
                 onBlur={field.onBlur}
               >
-                <option value="">Select…</option>
+                <option value="">{lbl.nestedSelectField.selectPlaceholder}</option>
                 {level.options.map(opt => (
                   <option key={opt.value} value={opt.value}>{opt.label}</option>
                 ))}

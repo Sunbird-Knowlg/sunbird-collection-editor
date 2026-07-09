@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './DropZone.module.scss';
+import { useLabels } from '../../hooks/useLabels';
 
 interface DropZoneProps {
   isActive: boolean;
@@ -10,17 +11,21 @@ interface DropZoneProps {
 
 export const DropZone: React.FC<DropZoneProps> = ({
   isActive,
-  label = 'Drop here',
+  label,
   nodeId,
   className,
-}) => (
-  <div
-    className={`${styles.dropZone} ${isActive ? styles.active : ''} ${className ?? ''}`}
-    data-droppable={isActive ? 'true' : undefined}
-    data-node-id={nodeId}
-    aria-label={label}
-    role="region"
-  >
-    <span>{label}</span>
-  </div>
-);
+}) => {
+  const lbl = useLabels();
+  const resolvedLabel = label ?? lbl.dropZone.dropHere;
+  return (
+    <div
+      className={`${styles.dropZone} ${isActive ? styles.active : ''} ${className ?? ''}`}
+      data-droppable={isActive ? 'true' : undefined}
+      data-node-id={nodeId}
+      aria-label={resolvedLabel}
+      role="region"
+    >
+      <span>{resolvedLabel}</span>
+    </div>
+  );
+};

@@ -3,6 +3,7 @@ import { Button } from '../shared/Button';
 import { searchUsers, getUsersByIds } from '../../api/user';
 import { updateCollaborators, readContent } from '../../api/hierarchy';
 import { useEditorStore } from '../../store/editor.store';
+import { useLabels } from '../../hooks/useLabels';
 import type { IUser } from '../../api/user';
 import styles from './ManageCollaborators.module.scss';
 
@@ -15,6 +16,7 @@ export const ManageCollaborators: React.FC<ManageCollaboratorsProps> = ({
   contentId,
   onClose,
 }) => {
+  const lbl = useLabels();
   const editorConfig = useEditorStore((s) => s.editorConfig);
   const rootOrgId = editorConfig?.context?.channel;
   const objectType = editorConfig?.config?.objectType;
@@ -107,11 +109,11 @@ export const ManageCollaborators: React.FC<ManageCollaboratorsProps> = ({
       );
       setSaveSuccess(true);
     } catch {
-      setSaveError('Failed to save collaborators. Please try again.');
+      setSaveError(lbl.manageCollaborators.saveFailed);
     } finally {
       setIsSaving(false);
     }
-  }, [contentId, collaborators]);
+  }, [contentId, collaborators, lbl.manageCollaborators.saveFailed]);
 
   const displayName = (user: IUser) =>
     `${user.firstName}${user.lastName ? ` ${user.lastName}` : ''}`;
@@ -119,8 +121,8 @@ export const ManageCollaborators: React.FC<ManageCollaboratorsProps> = ({
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h2 className={styles.title}>Manage Collaborators</h2>
-        <button className={styles.closeBtn} onClick={onClose} aria-label="Close">
+        <h2 className={styles.title}>{lbl.manageCollaborators.title}</h2>
+        <button className={styles.closeBtn} onClick={onClose} aria-label={lbl.manageCollaborators.closeAriaLabel}>
           ✕
         </button>
       </div>
@@ -129,22 +131,22 @@ export const ManageCollaborators: React.FC<ManageCollaboratorsProps> = ({
         {/* Search */}
         <div className={styles.searchSection}>
           <label className={styles.label} htmlFor="collab-search">
-            Search users
+            {lbl.manageCollaborators.searchUsersLabel}
           </label>
           <div className={styles.searchRow}>
             <input
               id="collab-search"
               type="text"
               className={styles.searchInput}
-              placeholder="Search by name or email..."
+              placeholder={lbl.manageCollaborators.searchPlaceholder}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            {isSearching && <span className={styles.searchSpinner} aria-label="Searching..." />}
+            {isSearching && <span className={styles.searchSpinner} aria-label={lbl.manageCollaborators.searchingAriaLabel} />}
           </div>
 
           {searchResults.length > 0 && (
-            <ul className={styles.resultsList} role="listbox" aria-label="Search results">
+            <ul className={styles.resultsList} role="listbox" aria-label={lbl.manageCollaborators.searchResultsAriaLabel}>
               {searchResults.map((user) => (
                 <li key={user.identifier} className={styles.resultItem} role="option" aria-selected="false">
                   <div className={styles.userInfo}>
@@ -163,7 +165,7 @@ export const ManageCollaborators: React.FC<ManageCollaboratorsProps> = ({
                     size="sm"
                     onClick={() => handleAdd(user)}
                   >
-                    Add
+                    {lbl.manageCollaborators.add}
                   </Button>
                 </li>
               ))}
@@ -171,21 +173,21 @@ export const ManageCollaborators: React.FC<ManageCollaboratorsProps> = ({
           )}
 
           {searchQuery.trim().length >= 2 && !isSearching && searchResults.length === 0 && (
-            <p className={styles.noResults}>No users found.</p>
+            <p className={styles.noResults}>{lbl.manageCollaborators.noUsersFound}</p>
           )}
         </div>
 
         {/* Current collaborators */}
         <div className={styles.collabSection}>
           <h3 className={styles.sectionTitle}>
-            Current Collaborators
+            {lbl.manageCollaborators.currentCollaborators}
             {collaborators.length > 0 && (
               <span className={styles.badge}>{collaborators.length}</span>
             )}
           </h3>
 
           {collaborators.length === 0 ? (
-            <p className={styles.emptyCollab}>No collaborators added yet.</p>
+            <p className={styles.emptyCollab}>{lbl.manageCollaborators.noCollaboratorsYet}</p>
           ) : (
             <ul className={styles.collabList}>
               {collaborators.map((user) => (
@@ -209,7 +211,7 @@ export const ManageCollaborators: React.FC<ManageCollaboratorsProps> = ({
                     size="sm"
                     onClick={() => handleRemove(user.identifier)}
                   >
-                    Remove
+                    {lbl.manageCollaborators.remove}
                   </Button>
                 </li>
               ))}
@@ -219,20 +221,20 @@ export const ManageCollaborators: React.FC<ManageCollaboratorsProps> = ({
 
         {saveError && <p className={styles.error} role="alert">{saveError}</p>}
         {saveSuccess && (
-          <p className={styles.success} role="status">Collaborators saved successfully.</p>
+          <p className={styles.success} role="status">{lbl.manageCollaborators.saveSuccess}</p>
         )}
       </div>
 
       <div className={styles.footer}>
         <Button variant="ghost" onClick={onClose} disabled={isSaving}>
-          Cancel
+          {lbl.manageCollaborators.cancel}
         </Button>
         <Button
           variant="primary"
           isLoading={isSaving}
           onClick={handleSave}
         >
-          Save
+          {lbl.manageCollaborators.save}
         </Button>
       </div>
     </div>
