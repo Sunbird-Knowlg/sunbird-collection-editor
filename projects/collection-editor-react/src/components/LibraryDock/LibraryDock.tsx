@@ -249,6 +249,7 @@ export const LibraryDock: React.FC<LibraryDockProps> = ({ editorMode, collapsed 
         {previewContent && (
           <LibraryPreviewPanel
             content={previewContent}
+            editorMode={editorMode}
             onAdd={handlePreviewAdd}
             onClose={() => setPreviewContent(null)}
           />

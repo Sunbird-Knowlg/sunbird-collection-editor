@@ -82,10 +82,11 @@ export const LibraryCard: React.FC<LibraryCardProps> = ({
         </span>
       )}
 
-      {/* Add button — hidden when already added; disabled for non-Draft content.
-          When isDraft but no unit is selected, keep the button clickable so the
-          parent can fire a helpful "select a unit first" toast. */}
-      {!isAdded && (
+      {/* Add button — hidden when already added, or when not in an editable
+          (author) session; disabled for non-Draft content. When isDraft but no
+          unit is selected, keep the button clickable so the parent can fire a
+          helpful "select a unit first" toast. */}
+      {!isAdded && isDraggable && (
         <button
           type="button"
           className={[styles.addBtn, !canAdd && isDraft ? styles.addBtnMuted : ''].join(' ')}
