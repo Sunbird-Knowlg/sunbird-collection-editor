@@ -1,0 +1,11 @@
+.container { background: var(--sbx-gray-50); border: 1px solid var(--sbx-gray-200); border-radius: var(--sbx-r-sm); margin-top: 12px; }
+.toggle { display: flex; align-items: center; gap: 6px; width: 100%; padding: 10px 12px; background: none; border: none; cursor: pointer; font-size: 13px; font-weight: 500; }
+.dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.green { background: var(--sbx-success); }
+.yellow { background: var(--sbx-warning); }
+.list { padding: 4px 12px 12px; }
+.row { margin-bottom: 10px; }
+.rowLabel { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
+.count { color: var(--sbx-gray-500); }
+.track { height: 6px; background: var(--sbx-gray-100); border-radius: 3px; overflow: hidden; }
+.bar { height: 100%; border-radius: 3px; transition: width 0.3s; }

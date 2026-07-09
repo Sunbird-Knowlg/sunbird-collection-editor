@@ -1,0 +1,295 @@
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--sbx-topbar-h, 60px);
+  padding: 0 20px;
+  background: white;
+  border-bottom: 1px solid var(--sbx-gray-200);
+  box-shadow: var(--sbx-shadow-1);
+  flex-shrink: 0;
+  gap: 16px;
+  z-index: 10;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.backBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--sbx-r-sm);
+  border: 1.5px solid var(--sbx-gray-200);
+  background: white;
+  cursor: pointer;
+  color: var(--sbx-gray-600);
+  flex-shrink: 0;
+  transition: border-color 0.15s, color 0.15s;
+
+  &:hover {
+    border-color: var(--sbx-primary);
+    color: var(--sbx-primary);
+  }
+}
+
+.title {
+  font-family: var(--sbx-font);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--sbx-gray-900);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 300px;
+}
+
+.statusChip {
+  font-size: 12px;
+  font-family: var(--sbx-font);
+  flex-shrink: 0;
+  padding: 2px 10px;
+  border-radius: var(--sbx-r-xl);
+  border: 1.5px solid var(--sbx-gray-300);
+  color: var(--sbx-gray-600);
+  background: var(--sbx-gray-50);
+  font-weight: 500;
+}
+
+.savedIndicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--sbx-font);
+  font-size: 12px;
+  color: var(--sbx-gray-500);
+  white-space: nowrap;
+}
+
+.unsaved {
+  color: var(--sbx-error, #dc2626);
+  font-weight: 600;
+}
+
+// ── Icon-only buttons (Collaborators, Upload CSV) ────────────────────────────
+
+.iconBtn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: var(--sbx-r-sm);
+  border: 1.5px solid var(--sbx-gray-200);
+  background: white;
+  cursor: pointer;
+  color: var(--sbx-gray-600);
+  font-family: var(--sbx-font);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+
+  &:hover {
+    border-color: var(--sbx-primary);
+    color: var(--sbx-primary);
+    background: var(--sbx-primary-50, #EFF6FF);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--sbx-primary);
+    outline-offset: 2px;
+  }
+}
+
+.iconBtnLabel {
+  // Hide on very narrow viewports if needed; keep visible by default
+  display: inline;
+}
+
+// ── QR dropdown ──────────────────────────────────────────────────────────────
+
+.qrDropdown {
+  position: relative;
+}
+
+.qrMenu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  background: white;
+  border: 1.5px solid var(--sbx-gray-200);
+  border-radius: var(--sbx-r-md, 8px);
+  box-shadow: var(--sbx-shadow-2, 0 4px 16px rgba(0,0,0,0.12));
+  min-width: 190px;
+  z-index: 200;
+  overflow: hidden;
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 14px;
+    border: none;
+    background: none;
+    font-family: var(--sbx-font);
+    font-size: 13px;
+    color: var(--sbx-gray-700);
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.12s;
+
+    &:hover:not(:disabled) { background: var(--sbx-gray-50); }
+    &:disabled { opacity: 0.45; cursor: not-allowed; }
+  }
+}
+
+// ── Review mode button group ─────────────────────────────────────────────────
+
+.reviewBtns {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-left: 8px;
+  border-left: 1px solid var(--sbx-gray-200);
+  margin-left: 4px;
+}
+
+// ── Sourcing-review mode button group ────────────────────────────────────────
+
+.sourcingBtns {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-left: 8px;
+  border-left: 1px solid var(--sbx-gray-200);
+  margin-left: 4px;
+}
+
+// ── Modal overlay backdrop ────────────────────────────────────────────────────
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// ── Inline SendBack modal ─────────────────────────────────────────────────────
+
+.sbOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.sbModal {
+  background: white;
+  border-radius: var(--sbx-r-md, 8px);
+  box-shadow: var(--sbx-shadow-3, 0 8px 32px rgba(0, 0, 0, 0.18));
+  width: 480px;
+  max-width: calc(100vw - 32px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sbModalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--sbx-gray-200);
+}
+
+.sbModalTitle {
+  font-family: var(--sbx-font);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--sbx-gray-900);
+}
+
+.sbModalClose {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--sbx-gray-500);
+  padding: 0 4px;
+
+  &:hover {
+    color: var(--sbx-gray-900);
+  }
+}
+
+.sbModalBody {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sbLabel {
+  font-family: var(--sbx-font);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--sbx-gray-700);
+}
+
+.sbTextarea {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: var(--sbx-font);
+  font-size: 13px;
+  color: var(--sbx-gray-900);
+  border: 1.5px solid var(--sbx-gray-300);
+  border-radius: var(--sbx-r-sm, 6px);
+  padding: 10px 12px;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.15s;
+
+  &:focus {
+    border-color: var(--sbx-primary);
+  }
+}
+
+.sbError {
+  font-family: var(--sbx-font);
+  font-size: 12px;
+  color: var(--sbx-error, #DC2626);
+  margin: 0;
+}
+
+.sbModalFooter {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--sbx-gray-200);
+}

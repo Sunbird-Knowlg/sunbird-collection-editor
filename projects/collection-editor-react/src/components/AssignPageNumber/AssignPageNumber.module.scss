@@ -1,0 +1,13 @@
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center; }
+.modal { background: #fff; border-radius: var(--sbx-r-md); width: 560px; max-height: 80vh; display: flex; flex-direction: column; box-shadow: var(--sbx-shadow-3); }
+.header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; font-weight: 600; font-size: 16px; border-bottom: 1px solid var(--sbx-gray-200); }
+.header button { background: none; border: none; cursor: pointer; }
+.body { padding: 16px; overflow-y: auto; flex: 1; }
+.table { width: 100%; border-collapse: collapse; }
+.table th, .table td { padding: 10px 12px; border-bottom: 1px solid var(--sbx-gray-100); text-align: left; font-size: 14px; }
+.table th { font-weight: 600; color: var(--sbx-gray-600); background: var(--sbx-gray-50); }
+.pageInput { width: 80px; padding: 4px 8px; border: 1px solid var(--sbx-gray-300); border-radius: var(--sbx-r-xs); }
+.empty { color: var(--sbx-gray-500); text-align: center; padding: 24px; }
+.footer { display: flex; justify-content: flex-end; gap: 8px; padding: 12px 20px; border-top: 1px solid var(--sbx-gray-200); }
+.cancelBtn { padding: 8px 16px; background: none; border: 1px solid var(--sbx-gray-300); border-radius: var(--sbx-r-xs); cursor: pointer; }
+.saveBtn { display: flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--sbx-primary); color: #fff; border: none; border-radius: var(--sbx-r-xs); cursor: pointer; }

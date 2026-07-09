@@ -1,0 +1,152 @@
+@use './tokens' as *;
+@use './fonts' as *;
+@use './content-types' as *;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.sb-split-builder {
+  font-family: var(--sbx-font);
+  color: var(--sbx-gray-900);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+// Chip
+.sbx-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--sbx-r-xl);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+
+  &.filled {
+    // Match the outline chip's border width so selected/unselected chips are
+    // the same height and baseline-aligned.
+    border: 1.5px solid var(--sbx-primary);
+    background: var(--sbx-primary);
+    color: white;
+  }
+
+  &.outline {
+    border: 1.5px solid var(--sbx-gray-300);
+    color: var(--sbx-gray-700);
+    background: white;
+  }
+
+  &.outline:hover,
+  &.outline.active {
+    border-color: var(--sbx-primary);
+    color: var(--sbx-primary);
+    background: var(--sbx-primary-light);
+  }
+
+  &.filled.active {
+    background: var(--sbx-primary-dark);
+  }
+
+  .sbx-chip-remove {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    color: inherit;
+    opacity: 0.7;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+// Card
+.sbx-card {
+  background: white;
+  border-radius: var(--sbx-r-md);
+  box-shadow: var(--sbx-shadow-1);
+}
+
+// Buttons base
+.sbx-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  border-radius: var(--sbx-r-md);
+  padding: 0 18px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+  white-space: nowrap;
+  box-sizing: border-box;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.sbx-btn-primary {
+  @extend .sbx-btn;
+  background: var(--sbx-primary);
+  color: white;
+
+  &:hover:not(:disabled) {
+    background: var(--sbx-primary-dark);
+  }
+}
+
+.sbx-btn-ghost {
+  @extend .sbx-btn;
+  background: transparent;
+  color: var(--sbx-gray-700);
+  border: 1.5px solid var(--sbx-gray-300);
+
+  &:hover:not(:disabled) {
+    border-color: var(--sbx-primary);
+    color: var(--sbx-primary);
+  }
+}
+
+.sbx-btn-danger {
+  @extend .sbx-btn;
+  background: transparent;
+  color: var(--sbx-error);
+  border: 1.5px solid var(--sbx-error);
+
+  &:hover:not(:disabled) {
+    background: var(--sbx-error);
+    color: white;
+  }
+}
+
+.sbx-btn-sm {
+  height: 36px;
+  padding: 0 14px;
+  font-size: 13px;
+  border-radius: var(--sbx-r-sm);
+}
+
+// Targeted RTL overrides (dir="ar" sets document.documentElement[dir="rtl"]
+// via the i18n store). Flips flex-direction on the toolbar-style rows that
+// otherwise read visually backwards in RTL; expand as real Arabic content
+// surfaces further layout issues.
+[dir='rtl'] {
+  .sbx-btn svg {
+    margin-left: 4px;
+    margin-right: 0;
+  }
+
+  text-align: right;
+}

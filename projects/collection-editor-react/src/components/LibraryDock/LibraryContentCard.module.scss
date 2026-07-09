@@ -1,0 +1,123 @@
+// ── Library content preview card ──────────────────────────────────────────────
+
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #fff;
+}
+
+// Thumbnail hero
+.hero {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: var(--sbx-gray-100);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.heroImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.heroPlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--sbx-gray-200) 0%, var(--sbx-gray-100) 100%);
+}
+
+.heroPlaceholderIcon {
+  font-size: 48px;
+  opacity: 0.4;
+}
+
+.typeBadge {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+// Details area
+.body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.name {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--sbx-gray-900, #0f172a);
+  line-height: 1.4;
+}
+
+.description {
+  margin: 0;
+  font-size: 13px;
+  color: var(--sbx-gray-500, #64748b);
+  line-height: 1.55;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.metaChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: var(--sbx-gray-50, #f8fafc);
+  border: 1px solid var(--sbx-gray-200, #e2e8f0);
+  font-size: 12px;
+  color: var(--sbx-gray-700, #334155);
+  max-width: 100%;
+}
+
+.metaLabel {
+  font-weight: 600;
+  font-size: 11px;
+  color: var(--sbx-gray-400, #94a3b8);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  flex-shrink: 0;
+}
+
+.metaValue {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+}
+
+.org {
+  margin: 0;
+  font-size: 12px;
+  color: var(--sbx-gray-400, #94a3b8);
+  font-style: italic;
+}

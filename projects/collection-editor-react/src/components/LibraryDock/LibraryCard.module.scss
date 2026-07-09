@@ -1,0 +1,112 @@
+.card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 10px 10px 12px;
+  border-radius: var(--sbx-r-md);
+  border: 1px solid var(--sbx-gray-200);
+  background: white;
+  cursor: grab;
+  transition: all 0.15s;
+  user-select: none;
+
+  &:hover {
+    border-color: var(--sbx-primary);
+    box-shadow: var(--sbx-shadow-1);
+
+    .addBtn {
+      opacity: 1;
+    }
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.dragging {
+  opacity: 0.4;
+  box-shadow: none;
+}
+
+.ctIcon {
+  flex-shrink: 0;
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--sbx-gray-800);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meta {
+  font-size: 11px;
+  color: var(--sbx-gray-500);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.addBtn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: var(--sbx-primary-light);
+  color: var(--sbx-primary);
+  border-radius: var(--sbx-r-sm);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s, background 0.15s;
+
+  &:hover {
+    background: var(--sbx-primary);
+    color: white;
+  }
+}
+
+.addBtnMuted {
+  opacity: 0.4;
+  cursor: default;
+
+  &:hover {
+    background: var(--sbx-primary-light);
+    color: var(--sbx-primary);
+  }
+}
+
+.added {
+  border-color: var(--sbx-success);
+  background: var(--sbx-status-ok-bg);
+
+  &:hover {
+    border-color: var(--sbx-success);
+    box-shadow: var(--sbx-shadow-1);
+  }
+}
+
+.addedBadge {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--sbx-success);
+  color: white;
+}

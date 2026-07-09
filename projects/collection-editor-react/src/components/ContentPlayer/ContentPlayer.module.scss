@@ -1,0 +1,337 @@
+// ── Content-type accent colours ───────────────────────────────────────────────
+// Each mime-family gets a signature hue used on badge + stage border glow.
+$type-video : #e63946;
+$type-pdf   : #2563eb;
+$type-epub  : #7c3aed;
+$type-ecml  : #059669;
+$type-h5p   : #d97706;
+$type-scorm : #0891b2;
+$type-audio : #7c3aed;
+$type-other : #64748b;
+
+// ── Root wrapper ──────────────────────────────────────────────────────────────
+// Takes all available height from the leafContentLayout column.
+.contentPlayerRoot {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+// Flow layout — used inside the scrollable leaf-content panel. The player
+// keeps an intrinsic 16:9 height (capped) instead of flex-filling, so the
+// info strip and edit form below stay reachable via the panel's scrollbar.
+.flowLayout {
+  flex: 0 0 auto;
+  overflow: visible;
+
+  .stage {
+    flex: 0 0 auto;
+  }
+
+  .aspectRatio {
+    flex: 0 0 auto;
+    aspect-ratio: 16 / 9;
+    max-height: 62vh;
+  }
+}
+
+// ── Stage  ────────────────────────────────────────────────────────────────────
+// Dark "cinema" frame around the player.
+.stage {
+  position: relative;
+  background: #0d1117;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+// ── Player header bar ─────────────────────────────────────────────────────────
+.playerHeader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px 24px;
+  background: linear-gradient(to bottom, rgba(0,0,0,.72) 0%, transparent 100%);
+  pointer-events: none; // clicks pass through to player
+}
+
+.playerHeaderThumb {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+  opacity: .9;
+  border: 1.5px solid rgba(255,255,255,.2);
+}
+
+.playerHeaderTitle {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,.92);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// ── Content-type badge ────────────────────────────────────────────────────────
+.typeBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  color: #fff;
+  flex-shrink: 0;
+  pointer-events: auto;
+
+  // per-type colours
+  &[data-type="video"]  { background: $type-video; }
+  &[data-type="pdf"]    { background: $type-pdf;   }
+  &[data-type="epub"]   { background: $type-epub;  }
+  &[data-type="ecml"]   { background: $type-ecml;  }
+  &[data-type="h5p"]    { background: $type-h5p;   }
+  &[data-type="scorm"]  { background: $type-scorm; }
+  &[data-type="audio"]  { background: $type-audio; }
+  &[data-type="other"]  { background: $type-other; }
+}
+
+.typeDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.7);
+}
+
+// ── 16:9 player area ──────────────────────────────────────────────────────────
+.aspectRatio {
+  position: relative;
+  width: 100%;
+  // Use padding-top trick only as fallback; flex:1 handles most layouts
+  flex: 1 1 auto;
+  min-height: 0;
+
+  > * {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.playerFrame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+  background: #000;
+}
+
+// ── Thumbnail cover (shown while player loads) ────────────────────────────────
+.coverOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: #0d1117;
+  z-index: 5;
+  transition: opacity .4s ease;
+
+  &.coverHidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+.coverThumb {
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  object-fit: cover;
+  opacity: .85;
+  border: 2px solid rgba(255,255,255,.15);
+}
+
+.coverPlayRing {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,.08);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.coverPlayIcon {
+  width: 0;
+  height: 0;
+  border-top: 11px solid transparent;
+  border-bottom: 11px solid transparent;
+  border-left: 18px solid rgba(255,255,255,.85);
+  margin-left: 4px;
+}
+
+.coverLabel {
+  font-size: 12px;
+  color: rgba(255,255,255,.45);
+  letter-spacing: .5px;
+}
+
+// Skeleton shimmer — shown when there's no thumbnail
+.coverSkeleton {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    #1a1f2e 25%,
+    #242938 50%,
+    #1a1f2e 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1);    opacity: .8; }
+  50%       { transform: scale(1.1); opacity: 1;  }
+}
+
+// ── Player wrapper (web components) ──────────────────────────────────────────
+.playerWrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  overflow: hidden;
+}
+
+// ── Bottom info strip ─────────────────────────────────────────────────────────
+// Compact dark strip below the player — replaces the old raw metadata grid.
+.infoStrip {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0 4px;
+  background: #161b27;
+  border-top: 1px solid rgba(255,255,255,.07);
+  overflow-x: auto;
+  flex-shrink: 0;
+  min-height: 38px;
+
+  // hide scrollbar but keep scroll
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+.infoChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 12px;
+  height: 38px;
+  flex-shrink: 0;
+  border-right: 1px solid rgba(255,255,255,.07);
+  font-size: 12px;
+  color: rgba(255,255,255,.6);
+  transition: color .15s;
+
+  &:hover { color: rgba(255,255,255,.9); }
+  &:last-child { border-right: none; }
+}
+
+.infoChipLabel {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+  color: rgba(255,255,255,.35);
+  margin-right: 2px;
+}
+
+.infoChipIcon {
+  font-size: 13px;
+  opacity: .6;
+  flex-shrink: 0;
+}
+
+// ── Player error state ────────────────────────────────────────────────────────
+// Shown instead of the cover overlay when the player fails to load.
+.playerError {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #0d1117;
+  padding: 24px;
+  text-align: center;
+}
+
+.playerErrorIcon {
+  font-size: 28px;
+  opacity: .7;
+}
+
+.playerErrorMsg {
+  font-size: 13px;
+  color: rgba(255, 255, 255, .5);
+  max-width: 260px;
+  line-height: 1.5;
+}
+
+// ── QuML player ───────────────────────────────────────────────────────────────
+// Light background: the React QuML player draws its own light UI at content
+// height, so a dark wrapper would show as a black band below short content
+// (video/pdf keep their black letterboxing via the default .playerWrapper).
+.qumlRoot {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  background: #fff;
+
+  .playerWrapper {
+    flex: 1;
+    min-height: 0;
+    background: #fff;
+    // Stretch the custom element to fill the area instead of centering it.
+    align-items: stretch;
+    justify-content: stretch;
+
+    :global(sunbird-quml-player) {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+  }
+}

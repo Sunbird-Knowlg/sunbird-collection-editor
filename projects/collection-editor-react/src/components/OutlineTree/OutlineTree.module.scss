@@ -1,0 +1,122 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+// ── Header bar ────────────────────────────────────────────────
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 6px;
+  height: 40px;
+  border-bottom: 1px solid var(--sbx-gray-200);
+  flex-shrink: 0;
+  background: white;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.iconBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  border-radius: var(--sbx-r-sm);
+  color: var(--sbx-gray-500);
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+
+  &:hover {
+    background: var(--sbx-gray-100);
+    color: var(--sbx-gray-800);
+  }
+}
+
+// ── 3-dot dropdown ────────────────────────────────────────────
+.menuWrap {
+  position: relative;
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 200;
+  min-width: 220px;
+  background: white;
+  border: 1px solid var(--sbx-gray-200);
+  border-radius: var(--sbx-r-md);
+  box-shadow: var(--sbx-shadow-2, 0 4px 16px rgba(0,0,0,0.12));
+  padding: 4px 0;
+  overflow: hidden;
+
+  button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 9px 14px;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--sbx-gray-700);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.1s;
+
+    &:hover {
+      background: var(--sbx-gray-50);
+      color: var(--sbx-gray-900);
+    }
+  }
+}
+
+// ── Tree area ─────────────────────────────────────────────────
+.treeWrapper {
+  flex: 1;
+  overflow: hidden;
+  padding: 4px 0;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--sbx-gray-300);
+    border-radius: 2px;
+  }
+}
+
+// ── CSV modal overlay ─────────────────────────────────────────
+.csvModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// ── Footer ────────────────────────────────────────────────────
+.footer {
+  border-top: 1px solid var(--sbx-gray-200);
+  padding: 10px 12px;
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}

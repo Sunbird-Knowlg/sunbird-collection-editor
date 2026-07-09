@@ -1,0 +1,41 @@
+$ct-map: (
+  'video': (#EA580C, white),
+  'pdf': (#DC2626, white),
+  'h5p': (#0D9488, white),
+  'scorm': (#7C3AED, white),
+  'audio': (#DB2777, white),
+  'quiz': (#16A34A, white),
+  'default': (#6B7280, white)
+);
+
+@each $key, $vals in $ct-map {
+  $color: nth($vals, 1);
+  $text: nth($vals, 2);
+
+  .sbx-ct-sq--#{$key} {
+    background-color: $color;
+    color: $text;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .sbx-ct-badge--#{$key} {
+    background-color: rgba($color, 0.12);
+    color: $color;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    display: inline-block;
+  }
+
+  .sbx-ct-tint--#{$key} {
+    color: $color;
+    font-weight: 600;
+  }
+}

@@ -1,0 +1,19 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ungrouped {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 24px;
+
+  @media (max-width: 700px) { grid-template-columns: 1fr; }
+}
+
+.noFields {
+  color: var(--sbx-gray-400);
+  font-size: 13px;
+  font-style: italic;
+}

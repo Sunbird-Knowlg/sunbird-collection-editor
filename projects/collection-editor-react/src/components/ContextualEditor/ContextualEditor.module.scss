@@ -1,0 +1,131 @@
+// Leaf content: one scrollable column — player (intrinsic 16:9 via the
+// ContentPlayer 'flow' layout), info strip, then the edit form. The panel
+// itself scrolls so the bottom information is always reachable.
+.leafContentLayout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+
+  // ContentPlayer keeps its intrinsic height (flow layout)
+  > *:first-child {
+    flex: 0 0 auto;
+  }
+
+  // ContentEditForm at natural height in the scroll flow
+  > *:last-child {
+    flex: 0 0 auto;
+    background: #fff;
+  }
+}
+
+.container {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-height: 100%;
+  position: relative;
+}
+.emptyState {
+  display: flex; align-items: center; justify-content: center;
+  height: 100%; color: var(--sbx-gray-400); font-size: 14px; font-style: italic;
+}
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0 16px;
+}
+.titleIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--sbx-r-sm);
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid var(--sbx-gray-200);
+}
+.nodeTitle {
+  font-size: 22px; font-weight: 700; color: var(--sbx-gray-900);
+  margin: 0;
+  outline: none;
+  border-radius: var(--sbx-r-sm);
+  padding: 2px 4px;
+  min-height: 1.3em;
+  &:focus { background: var(--sbx-gray-50); box-shadow: 0 0 0 2px var(--sbx-primary); }
+  &:empty::before { content: attr(data-placeholder); color: var(--sbx-gray-400); }
+  &[contenteditable="false"] { cursor: default; }
+}
+.formArea { margin-bottom: 24px; }
+.contentListArea { border-top: 1px solid var(--sbx-gray-200); padding-top: 20px; }
+.dropZone { position: absolute; inset: 0; z-index: 5; border-radius: 0; }
+
+// Review comment banner
+.reviewComment {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  background: var(--sbx-warn-bg);
+  border: 1px solid var(--sbx-warn-border);
+  border-radius: var(--sbx-r-sm, 4px);
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.reviewCommentLabel {
+  font-weight: 600;
+  color: var(--sbx-warn-text);
+  white-space: nowrap;
+}
+.reviewCommentText { color: var(--sbx-warn-body); }
+
+// Dialcode section
+.dialcodeSection {
+  border-top: 1px solid var(--sbx-gray-200, #e8e8e8);
+  padding-top: 16px;
+  margin-top: 8px;
+  margin-bottom: 16px;
+}
+.sectionTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--sbx-gray-600, #555);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 10px;
+}
+
+// Content toolbar (leaf nodes)
+.contentToolbar {
+  display: flex;
+  gap: 8px;
+  padding: 8px 24px;
+  border-bottom: 1px solid var(--sbx-gray-200, #e8e8e8);
+  background: var(--sbx-gray-50, #fafafa);
+}
+.moveBtn {
+  padding: 4px 12px;
+  font-size: 12px;
+  border: 1px solid var(--sbx-gray-300, #d9d9d9);
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  &:hover { border-color: var(--sbx-primary, #1890ff); color: var(--sbx-primary, #1890ff); }
+}
+
+// Assign page row
+.assignPageRow {
+  border-top: 1px solid var(--sbx-gray-200, #e8e8e8);
+  padding-top: 12px;
+  margin-top: 8px;
+}
+.assignPageBtn {
+  font-size: 13px;
+  padding: 6px 14px;
+  border: 1px solid var(--sbx-gray-300, #d9d9d9);
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  &:hover { border-color: var(--sbx-primary, #1890ff); color: var(--sbx-primary, #1890ff); }
+}

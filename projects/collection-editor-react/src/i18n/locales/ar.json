@@ -1,0 +1,458 @@
+{
+  "contextualEditor": {
+    "emptyStateMessage": "اختر وحدة من المخطط التفصيلي لتحرير تفاصيلها",
+    "reviewCommentLabel": "تعليق المراجع:",
+    "untitledPlaceholder": "بدون عنوان",
+    "nodeTitleAriaLabel": "عنوان العنصر",
+    "dropZoneLabel": "أفلت هنا لإضافة محتوى إلى هذه الوحدة"
+  },
+  "languageSelector": {
+    "ariaLabel": "اختيار اللغة"
+  },
+  "collectionEditor": {
+    "errorBoundaryTitle": "حدث خطأ ما",
+    "retryButton": "إعادة المحاولة",
+    "loadingMessage": "جارٍ تحميل المحرر...",
+    "loadErrorTitle": "فشل تحميل المحرر"
+  },
+  "breadcrumb": {
+    "nodePathAriaLabel": "مسار العنصر",
+    "homeAriaLabel": "الصفحة الرئيسية"
+  },
+  "tabBar": {
+    "detailsTab": "التفاصيل",
+    "audienceCurriculumTab": "الجمهور والمنهج",
+    "licensingTab": "الترخيص",
+    "metadataSectionsAriaLabel": "أقسام البيانات الوصفية",
+    "hasErrorsAriaLabel": "يحتوي على أخطاء"
+  },
+  "contentEditForm": {
+    "moveToAnotherUnitButton": "نقل إلى وحدة أخرى",
+    "collapseMetadataPanelAriaLabel": "طي لوحة البيانات الوصفية",
+    "expandMetadataPanelAriaLabel": "توسيع لوحة البيانات الوصفية",
+    "collapseTitle": "طي",
+    "expandTitle": "توسيع",
+    "iconAlt": "أيقونة",
+    "contentNamePlaceholder": "اسم المحتوى",
+    "keywordsLabel": "الكلمات المفتاحية",
+    "addKeywordPlaceholder": "أضف كلمة مفتاحية واضغط Enter",
+    "addButton": "إضافة",
+    "optionalInCollectionLabel": "اختياري في المجموعة",
+    "yesOption": "نعم",
+    "noOption": "لا"
+  },
+  "titleAppIcon": {
+    "selectAppIconAriaLabel": "اختيار أيقونة التطبيق",
+    "appIconAriaLabel": "أيقونة التطبيق",
+    "appIconAlt": "أيقونة التطبيق",
+    "removeIconAriaLabel": "إزالة الأيقونة"
+  },
+  "unitContentList": {
+    "removeConfirm": "هل تريد إزالة هذا المحتوى من الوحدة؟",
+    "heading": "المحتوى في هذه الوحدة",
+    "emptyTitle": "لا يوجد محتوى بعد",
+    "emptyHint": "اسحب من المكتبة أو انقر فوق إضافة محتوى",
+    "addContentAriaLabel": "إضافة محتوى إلى الوحدة",
+    "addContent": "إضافة محتوى"
+  },
+  "contentRow": {
+    "dragToReorderAriaLabel": "اسحب لإعادة الترتيب",
+    "removeAriaLabel": "إزالة {name}"
+  },
+  "csvUpload": {
+    "invalidFileType": "يُقبل فقط ملفات .csv.",
+    "fileTooLarge": "يجب ألا يتجاوز حجم الملف 50 ميجابايت.",
+    "downloadSampleFailed": "فشل تنزيل نموذج ملف CSV.",
+    "processingFailed": "فشلت معالجة التحميل. يرجى التحقق من صفوف الأخطاء أدناه.",
+    "connectionLost": "انقطع الاتصال أثناء التحقق من الحالة. يرجى المحاولة مرة أخرى.",
+    "uploadFailed": "فشل التحميل. يرجى التحقق من الملف والمحاولة مرة أخرى.",
+    "statusUploading": "جارٍ التحميل...",
+    "statusProcessing": "جارٍ المعالجة...",
+    "statusDone": "تم!",
+    "statusError": "خطأ",
+    "titleUpdate": "تحديث بيانات المجلدات الوصفية عبر CSV",
+    "titleCreate": "إنشاء مجلدات عبر CSV",
+    "closeAriaLabel": "إغلاق",
+    "dropZoneAriaLabel": "أفلت ملف CSV هنا أو انقر للتصفح",
+    "dropText": "اسحب وأفلت ملف CSV هنا",
+    "dropSubtext": "أو انقر للتصفح",
+    "downloadSample": "تنزيل نموذج CSV",
+    "itemsImportedSuffix": "— تم استيراد {count} عنصر (عناصر)",
+    "failedRowsTitle": "الصفوف الفاشلة ({count})",
+    "rowHeader": "الصف",
+    "nameHeader": "الاسم",
+    "reasonHeader": "السبب",
+    "unknownError": "خطأ غير معروف",
+    "cancel": "إلغاء",
+    "uploaded": "تم التحميل",
+    "upload": "تحميل"
+  },
+  "manageCollaborators": {
+    "saveFailed": "فشل حفظ المتعاونين. يرجى المحاولة مرة أخرى.",
+    "title": "إدارة المتعاونين",
+    "closeAriaLabel": "إغلاق",
+    "searchUsersLabel": "البحث عن المستخدمين",
+    "searchPlaceholder": "البحث بالاسم أو البريد الإلكتروني...",
+    "searchingAriaLabel": "جارٍ البحث...",
+    "searchResultsAriaLabel": "نتائج البحث",
+    "add": "إضافة",
+    "noUsersFound": "لم يتم العثور على مستخدمين.",
+    "currentCollaborators": "المتعاونون الحاليون",
+    "noCollaboratorsYet": "لم تتم إضافة أي متعاونين بعد.",
+    "remove": "إزالة",
+    "saveSuccess": "تم حفظ المتعاونين بنجاح.",
+    "cancel": "إلغاء",
+    "save": "حفظ"
+  },
+  "sparkMetaForm": {
+    "shuffleEnabledMessage": "تم تفعيل الترتيب العشوائي لهذه المجموعة من الأسئلة.",
+    "noFieldsMessage": "لا توجد حقول مُهيَّأة لهذا التبويب."
+  },
+  "appIconField": {
+    "requiredError": "{field} مطلوب",
+    "selectIconAriaLabel": "اختيار أيقونة التطبيق",
+    "iconAlt": "أيقونة التطبيق",
+    "selectIconLabel": "اختيار أيقونة",
+    "removeIconAriaLabel": "إزالة أيقونة التطبيق",
+    "removeLabel": "إزالة"
+  },
+  "appIconPickerModal": {
+    "dialogAriaLabel": "اختيار أيقونة التطبيق",
+    "title": "اختيار أيقونة التطبيق",
+    "closeAriaLabel": "إغلاق",
+    "myImagesTab": "صوري",
+    "allImagesTab": "جميع الصور",
+    "uploadTab": "تحميل",
+    "searchPlaceholder": "البحث في الصور…",
+    "loadingText": "جارٍ التحميل…",
+    "noImagesFound": "لم يتم العثور على صور",
+    "noThumbnailText": "صورة",
+    "loadMoreButton": "تحميل المزيد",
+    "previewAlt": "معاينة",
+    "dropZoneText": "اسحب وأفلت أو انقر للتصفح",
+    "acceptedTypesInfo": "{types} · بحد أقصى {size} ميجابايت",
+    "cancelButton": "إلغاء",
+    "uploadingText": "جارٍ التحميل…",
+    "uploadAndUseButton": "تحميل واستخدام",
+    "useSelectedButton": "استخدام المحدد",
+    "invalidFileTypeError": "يُقبل فقط ملفات {types}.",
+    "fileTooLargeError": "يجب أن يكون حجم الصورة أقل من {size} ميجابايت.",
+    "uploadFailedError": "فشل التحميل."
+  },
+  "chipGroupField": {
+    "addPlaceholder": "إضافة…",
+    "addButtonLabel": "إضافة"
+  },
+  "dateTimeField": {
+    "requiredError": "{field} مطلوب"
+  },
+  "dialcodeInputField": {
+    "requiredError": "{field} مطلوب",
+    "enterCodeMessage": "أدخل رمز الطلب للتحقق منه.",
+    "validMessage": "رمز الطلب صالح.",
+    "notFoundMessage": "رمز الطلب غير موجود.",
+    "validationFailedMessage": "فشل التحقق. يرجى المحاولة مرة أخرى.",
+    "placeholderExample": "مثال: A1B2C3",
+    "validateAriaLabel": "التحقق من رمز الطلب",
+    "validatingLabel": "جارٍ التحقق…",
+    "validateButtonLabel": "تحقق"
+  },
+  "keywordSuggestField": {
+    "requiredError": "{field} مطلوب",
+    "inputPlaceholder": "اكتب واضغط Enter أو فاصلة…"
+  },
+  "licenseSelectField": {
+    "requiredError": "{field} مطلوب",
+    "selectPlaceholder": "اختر ترخيصًا…"
+  },
+  "multiSelectField": {
+    "requiredError": "{field} مطلوب",
+    "selectedCountSuffix": "محدد",
+    "selectPlaceholder": "اختر…",
+    "noOptionsMessage": "لا توجد خيارات"
+  },
+  "nestedSelectField": {
+    "requiredError": "{field} مطلوب",
+    "selectPlaceholder": "اختر…"
+  },
+  "radioField": {
+    "requiredError": "{field} مطلوب"
+  },
+  "selectField": {
+    "requiredError": "{field} مطلوب",
+    "selectPlaceholder": "اختر…",
+    "noOptionsMessage": "لا توجد خيارات"
+  },
+  "textField": {
+    "requiredError": "{field} مطلوب",
+    "maxLengthError": "الحد الأقصى {max} حرفًا"
+  },
+  "assetBrowser": {
+    "dialogAriaLabel": "متصفح الأصول",
+    "title": "متصفح الأصول",
+    "closeAriaLabel": "إغلاق",
+    "browseTab": "تصفح",
+    "uploadTab": "تحميل",
+    "searchPlaceholder": "البحث في الأصول...",
+    "searchButton": "بحث",
+    "loadingMessage": "جارٍ التحميل...",
+    "uploadingMessage": "جارٍ التحميل...",
+    "chooseFileButton": "اختر ملفًا للتحميل"
+  },
+  "resourceReorderDialog": {
+    "dialogAriaLabel": "نقل المورد",
+    "moveHeaderPrefix": "نقل",
+    "closeAriaLabel": "إغلاق",
+    "selectUnitHint": "اختر وحدة لنقل هذا المحتوى إليها:",
+    "noUnitsAvailable": "لا توجد وحدات أخرى متاحة",
+    "cancelButton": "إلغاء",
+    "moveButton": "نقل إلى هنا"
+  },
+  "assignPageNumber": {
+    "dialogAriaLabel": "تعيين أرقام الصفحات",
+    "title": "تعيين أرقام الصفحات",
+    "closeAriaLabel": "إغلاق",
+    "emptyState": "لم يتم العثور على عناصر محتوى في هذه المجموعة.",
+    "contentColumnHeader": "المحتوى",
+    "pageNumberColumnHeader": "رقم الصفحة",
+    "cancelButton": "إلغاء",
+    "saveButton": "حفظ"
+  },
+  "confirmDialog": {
+    "confirmButton": "تأكيد",
+    "cancelButton": "إلغاء",
+    "closeAriaLabel": "إغلاق"
+  },
+  "publishChecklist": {
+    "publishTitlePrefix": "نشر",
+    "closeAriaLabel": "إغلاق",
+    "confirmPublishPrefix": "هل أنت متأكد من رغبتك في نشر هذا",
+    "checklistInstructions": "يرجى تأكيد التحقق من جميع العناصر التالية (بتحديد مربعات الاختيار) قبل أن تتمكن من النشر:",
+    "noButton": "لا",
+    "yesButton": "نعم"
+  },
+  "qualityParamsModal": {
+    "reviewQualityTitle": "مراجعة الجودة",
+    "rejectContentTitle": "رفض المحتوى",
+    "closeAriaLabel": "إغلاق",
+    "qualityScoreLabel": "درجة الجودة",
+    "scorePoorLabel": "0 — ضعيف",
+    "scoreExcellentLabel": "10 — ممتاز",
+    "commentLabel": "تعليق",
+    "optionalLabel": "(اختياري)",
+    "commentPlaceholder": "أضف أي ملاحظات لمنشئ المحتوى…",
+    "rejectionReasonLabel": "سبب الرفض",
+    "rejectReasonPlaceholder": "اذكر سبب رفض هذا المحتوى…",
+    "rejectionRequiredMessage": "سبب الرفض مطلوب.",
+    "cancelButton": "إلغاء",
+    "approveButton": "قبول",
+    "rejectButton": "رفض"
+  },
+  "unsavedChangesModal": {
+    "title": "تغييرات غير محفوظة",
+    "closeAriaLabel": "إغلاق",
+    "bodyMessage": "لديك تغييرات غير محفوظة. هل تريد حفظها قبل المغادرة؟",
+    "cancelButton": "إلغاء",
+    "discardButton": "تجاهل",
+    "saveButton": "حفظ"
+  },
+  "filterChips": {
+    "contentTypeFiltersAriaLabel": "مرشحات نوع المحتوى"
+  },
+  "libraryCard": {
+    "alreadyAddedAriaLabel": "تمت إضافته مسبقًا",
+    "alreadyAddedTitle": "تمت إضافته مسبقًا إلى هذه المجموعة",
+    "addItemAriaLabel": "إضافة {name} إلى الوحدة",
+    "addToUnitTitle": "إضافة إلى الوحدة",
+    "selectUnitToAddTitle": "اختر وحدة للإضافة إليها",
+    "draftOnlyTitle": "يمكن إضافة المحتوى المسودة فقط"
+  },
+  "libraryDock": {
+    "selectUnitFirstToast": "اختر وحدة أولاً",
+    "selectUnitFromOutlineToast": "اختر وحدة من المخطط التفصيلي لإضافة محتوى — لا يمكن إضافة الموارد مباشرة إلى الدورة.",
+    "itemAlreadyAddedToast": "\"{name}\" موجود مسبقًا في هذه المجموعة",
+    "itemAddedToast": "تمت إضافة \"{name}\"",
+    "collapseLibraryPanelAriaLabel": "طي لوحة المكتبة",
+    "collapseLibraryTitle": "طي المكتبة",
+    "headerTitle": "المكتبة",
+    "searchPlaceholder": "البحث في المحتوى…",
+    "searchAriaLabel": "البحث في المكتبة",
+    "sortAZAriaLabel": "الترتيب: أ–ي (انقر للأحدث)",
+    "sortRecentAriaLabel": "الترتيب: الأحدث (انقر لـ أ–ي)",
+    "sortAZTitle": "أ–ي",
+    "sortRecentTitle": "الأحدث",
+    "toggleAdvancedFiltersAriaLabel": "تبديل المرشحات المتقدمة",
+    "advancedFiltersTitle": "المرشحات المتقدمة",
+    "libraryContentAriaLabel": "محتوى المكتبة",
+    "loadMoreAriaLabel": "تحميل المزيد من المحتوى",
+    "loadingText": "جارٍ التحميل…",
+    "loadMoreText": "تحميل المزيد",
+    "noContentFound": "لم يتم العثور على محتوى",
+    "tryDifferentSearch": "جرّب بحثًا أو مرشحًا مختلفًا"
+  },
+  "libraryFilterPanel": {
+    "boardLabel": "المجلس التعليمي",
+    "mediumLabel": "لغة التدريس",
+    "classLabel": "الصف",
+    "subjectLabel": "المادة",
+    "primaryCategoryLabel": "الفئة الأساسية",
+    "filterLibraryAriaLabel": "تصفية المكتبة",
+    "filtersHeaderTitle": "المرشحات",
+    "closeFiltersAriaLabel": "إغلاق المرشحات",
+    "resetButton": "إعادة تعيين",
+    "applyButton": "تطبيق"
+  },
+  "libraryPreviewPanel": {
+    "contentPreviewAriaLabel": "معاينة المحتوى",
+    "closePreviewAriaLabel": "إغلاق المعاينة",
+    "addToUnitButton": "+ إضافة إلى الوحدة"
+  },
+  "outlineTree": {
+    "maxDepthReachedToast": "تم الوصول إلى الحد الأقصى للعمق",
+    "downloadCsvFailedToast": "فشل تنزيل ملف CSV",
+    "outlineRefreshedToast": "تم تحديث مخطط الدورة.",
+    "outlineRefreshFailedToast": "تعذّر تحديث المخطط التفصيلي تلقائيًا. يرجى إعادة تحميل الصفحة.",
+    "moreOptionsAriaLabel": "خيارات إضافية",
+    "moreOptionsTitle": "خيارات إضافية",
+    "foldersExistTitle": "المجلدات موجودة مسبقًا — استخدم \"تحديث\" بدلاً من ذلك",
+    "createFoldersCsvButton": "إنشاء مجلدات باستخدام ملف csv",
+    "noFoldersYetTitle": "لا توجد مجلدات بعد — استخدم \"إنشاء\" أولاً",
+    "downloadFoldersCsvButton": "تنزيل المجلدات كملف csv",
+    "updateFoldersCsvButton": "تحديث بيانات المجلدات الوصفية باستخدام ملف csv",
+    "expandOutlineAriaLabel": "توسيع المخطط التفصيلي",
+    "collapseOutlineAriaLabel": "طي المخطط التفصيلي",
+    "addUnitButton": "إضافة وحدة",
+    "addSubunitButton": "إضافة وحدة فرعية"
+  },
+  "treeNode": {
+    "expandAriaLabel": "توسيع",
+    "collapseAriaLabel": "طي",
+    "dropHereLabel": "أفلت هنا",
+    "nodeOptionsAriaLabel": "خيارات العنصر",
+    "renameMenuItem": "إعادة تسمية",
+    "addSubunitMenuItem": "إضافة وحدة فرعية",
+    "addSiblingMenuItem": "إضافة عنصر مماثل",
+    "deleteMenuItem": "حذف"
+  },
+  "contentPlayer": {
+    "mimeLabelVideo": "فيديو",
+    "mimeLabelAudio": "صوت",
+    "mimeLabelPdf": "PDF",
+    "mimeLabelEpub": "ePub",
+    "mimeLabelEcml": "ECML",
+    "mimeLabelH5p": "H5P",
+    "mimeLabelScorm": "SCORM",
+    "mimeLabelOther": "محتوى",
+    "infoFieldAuthor": "المؤلف",
+    "infoFieldLicense": "الترخيص",
+    "infoFieldLanguage": "اللغة",
+    "infoFieldClass": "الصف",
+    "infoFieldSubject": "المادة",
+    "infoFieldType": "النوع",
+    "loadingPreview": "جارٍ تحميل المعاينة…",
+    "previewPlayerUnavailable": "مشغّل المعاينة غير متاح. تحقق من إمكانية الوصول إلى /content/preview.",
+    "failedToInitializePlayer": "فشل تهيئة مشغّل المحتوى.",
+    "previewPlayerLoadFailed": "تعذّر تحميل مشغّل المعاينة.",
+    "unableToLoadQuestionset": "تعذّر تحميل مجموعة الأسئلة:",
+    "parentQuestionsetNotResolved": "تعذّر تحديد مجموعة الأسئلة الرئيسية لهذا السؤال.",
+    "questionNotFoundInQuestionset": "لم يتم العثور على السؤال في مجموعة الأسئلة."
+  },
+  "dialcodePanel": {
+    "title": "رمز الاستجابة السريعة (رمز الطلب)",
+    "invalidFormatError": "تنسيق رمز DIAL غير صالح. استخدم الأحرف الكبيرة والأرقام فقط (مثال: A1B2C3).",
+    "duplicateDialcodeError": "رمز DIAL \"{code}\" مرتبط مسبقًا بعنصر آخر في هذه المجموعة.",
+    "dialcodeNotFoundError": "رمز الطلب غير موجود. يرجى إدخال رمز صالح.",
+    "linkFailedError": "فشل ربط رمز الطلب. يرجى المحاولة مرة أخرى.",
+    "unlinkFailedError": "فشلت إزالة رمز الطلب. يرجى المحاولة مرة أخرى.",
+    "qrCodeAltPrefix": "رمز الاستجابة السريعة لـ",
+    "linkedCodeLabel": "الرمز المرتبط:",
+    "removeButton": "إزالة",
+    "noCodeLinkedMessage": "لا يوجد رمز استجابة سريعة مرتبط بهذا المحتوى.",
+    "linkManuallyLabel": "الربط يدويًا",
+    "dialcodeInputPlaceholder": "أدخل رمز الطلب (مثال: A1B2C3)",
+    "dialcodeInputAriaLabel": "إدخال رمز الطلب",
+    "linkButton": "ربط",
+    "linkedSuccessMessage": "تم ربط رمز الطلب بنجاح."
+  },
+  "progressStatus": {
+    "unitsAddedLabel": "الوحدات المضافة",
+    "contentItemsLabel": "عناصر المحتوى",
+    "progressLabel": "التقدّم"
+  },
+  "splitBuilderShell": {
+    "dropOntoUnitError": "أفلت على وحدة لإضافة محتوى",
+    "dropOntoCourseError": "أفلت المحتوى على وحدة، وليس مباشرة على الدورة.",
+    "alreadyInCollectionError": "\"{name}\" موجود مسبقًا في هذه المجموعة",
+    "addedToUnitSuccess": "تمت إضافة \"{name}\" إلى الوحدة",
+    "fillRequiredMetadataError": "يرجى تعبئة البيانات الوصفية المطلوبة",
+    "outlineAriaLabel": "مخطط الدورة",
+    "showOutlineTitle": "إظهار المخطط التفصيلي",
+    "editorAriaLabel": "محرر المحتوى",
+    "libraryAriaLabel": "مكتبة المحتوى",
+    "showLibraryTitle": "إظهار المكتبة"
+  },
+  "topbar": {
+    "draftStatusFallback": "مسودة",
+    "backAriaLabel": "رجوع",
+    "statusAriaLabelPrefix": "الحالة:",
+    "savingIndicator": "جارٍ الحفظ…",
+    "unsavedIndicator": "غير محفوظ",
+    "savedIndicatorPrefix": "تم الحفظ",
+    "fillRequiredFieldsTooltip": "عبّئ جميع الحقول المطلوبة قبل الحفظ",
+    "saveAsDraftButton": "حفظ كمسودة",
+    "sendForReviewButton": "إرسال للمراجعة",
+    "collaboratorsLabel": "المتعاونون",
+    "qrCodesLabel": "رموز الاستجابة السريعة",
+    "generatingEllipsis": "جارٍ الإنشاء…",
+    "generateQrCodesMenuItem": "إنشاء رموز استجابة سريعة",
+    "downloadingEllipsis": "جارٍ التنزيل…",
+    "downloadQrCodesMenuItem": "تنزيل رموز الاستجابة السريعة",
+    "publishButton": "نشر",
+    "requestForChangesButton": "طلب إجراء تغييرات",
+    "approveButton": "قبول",
+    "qrGenerationStartedToast": "بدأ إنشاء رموز الاستجابة السريعة. استخدم \"تنزيل رموز الاستجابة السريعة\" عند الجهوز.",
+    "qrGenerationFailedToast": "فشل إنشاء رموز الاستجابة السريعة. يرجى المحاولة مرة أخرى.",
+    "qrCodesNotGeneratedToast": "لم يتم إنشاء أي رموز استجابة سريعة بعد. قم بإنشاء رموز الاستجابة السريعة أولاً.",
+    "qrGenerationInProgressToast": "إنشاء صور رموز الاستجابة السريعة قيد التنفيذ. يرجى المحاولة بالتنزيل بعد قليل.",
+    "qrCodesNotReadyToast": "رموز الاستجابة السريعة ليست جاهزة بعد. يرجى الانتظار والمحاولة مرة أخرى.",
+    "qrCodesDownloadedToast": "تم تنزيل رموز الاستجابة السريعة.",
+    "qrCodesDownloadFailedToast": "فشل تنزيل رموز الاستجابة السريعة.",
+    "requestChangesTitle": "طلب إجراء تغييرات",
+    "changesRequestedLabel": "تم طلب تغييرات",
+    "describeChangesPlaceholder": "اذكر التغييرات التي يجب على المؤلف إجراؤها"
+  },
+  "reviewCommentModal": {
+    "closeAriaLabel": "إغلاق",
+    "fillCommentsError": "أضف تعليقات",
+    "cancelButton": "إلغاء"
+  },
+  "confirmReviewModal": {
+    "closeAriaLabel": "إغلاق",
+    "title": "قبول الشروط والأحكام",
+    "agreementTextPart1": "أوافق على أنه بإرسال / نشر هذا المحتوى، فإنني أؤكد أن هذا المحتوى يتوافق مع الإرشادات المعتمدة، بما في ذلك شروط الاستخدام وسياسة المحتوى، وأني أوافق على نشره بموجب",
+    "creativeCommonsLinkText": "إطار عمل Creative Commons",
+    "agreementTextPart2": "وفقًا لـ",
+    "contentPolicyText": "سياسة المحتوى",
+    "agreementTextPart3": ". وقد تحققت من أنني لا أنتهك حقوق النشر أو الخصوصية الخاصة بالآخرين.",
+    "cancelButton": "إلغاء",
+    "submitButton": "إرسال"
+  },
+  "generateQRModal": {
+    "closeAriaLabel": "إغلاق",
+    "title": "إنشاء رموز الاستجابة السريعة",
+    "numberOfCodesLabel": "عدد رموز الاستجابة السريعة",
+    "countPlaceholder": "أدخل رقمًا (2–250)",
+    "countRangeError": "أدخل رقمًا بين 2 و 250.",
+    "cancelButton": "إلغاء",
+    "generateButton": "إنشاء"
+  },
+  "chip": {
+    "remove": "إزالة"
+  },
+  "dropZone": {
+    "dropHere": "أفلت هنا"
+  },
+  "spinner": {
+    "loading": "جارٍ التحميل"
+  }
+}

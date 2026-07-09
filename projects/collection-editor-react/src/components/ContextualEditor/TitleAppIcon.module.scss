@@ -1,0 +1,53 @@
+.iconBtn {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: var(--sbx-r-sm);
+  border: 1.5px dashed var(--sbx-gray-300);
+  overflow: visible;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--sbx-gray-50);
+
+  &.editable {
+    cursor: pointer;
+    &:hover { border-color: var(--sbx-primary); background: var(--sbx-primary-light, #eef3fd); }
+    &:focus-visible { outline: 2px solid var(--sbx-primary); outline-offset: 2px; }
+  }
+}
+
+.iconImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: calc(var(--sbx-r-sm) - 1px);
+  display: block;
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sbx-gray-400);
+}
+
+.removeBtn {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--sbx-error, #dc2626);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+
+  .iconBtn:hover & { display: flex; }
+}
