@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef } from 'react';
-import type { EditorMode, ToolbarAction } from '../../types/editor';
+import type { EditorMode, ToolbarAction, INode } from '../../types/editor';
 import { useTreeStore } from '../../store/tree.store';
 import { useEditorStore } from '../../store/editor.store';
 import { Breadcrumb } from './Breadcrumb';
@@ -24,6 +24,17 @@ interface ContextualEditorProps {
 }
 
 type TabId = 'details' | 'audience' | 'licensing';
+
+// A reviewer's rejectComment should only surface while the node is still in
+// the Draft-after-reject state — hidden once resubmitted for review (status
+// moves to 'Review') or published (status moves to 'Live'), even though the
+// comment persists on the content's metadata.
+function getDraftRejectComment(node: INode | null | undefined): string | undefined {
+  if (!node || node.status !== 'Draft' || node.metadata?.prevStatus !== 'Review') {
+    return undefined;
+  }
+  return node.metadata?.rejectComment as string | undefined;
+}
 
 export const ContextualEditor: React.FC<ContextualEditorProps> = ({ editorMode, onToolbarEvent }) => {
   const [activeTab, setActiveTab] = useState<TabId>('details');
@@ -51,9 +62,10 @@ export const ContextualEditor: React.FC<ContextualEditorProps> = ({ editorMode, 
   const isSingleQuestion = selectedNode?.mimeType === QUESTION_MIME;
   const isLeafContent = selectedNode && !selectedNode.isFolder && !isQuml && !isCurrentNodeRoot;
 
-  // Review comment from previous rejection cycle
-  const reviewComment = (selectedNode?.metadata?.rejectComment as string | undefined)
-    ?? (isCurrentNodeRoot ? (treeData[0]?.metadata?.rejectComment as string | undefined) : undefined);
+  // Review comment from previous rejection cycle — only while still in the
+  // Draft-after-reject state; hidden once resubmitted for review or published.
+  const reviewComment = getDraftRejectComment(selectedNode)
+    ?? (isCurrentNodeRoot ? getDraftRejectComment(treeData[0]) : undefined);
 
   const handleTitleChange = useCallback(() => {
     const el = titleRef.current;
@@ -96,7 +108,7 @@ export const ContextualEditor: React.FC<ContextualEditorProps> = ({ editorMode, 
   if (isLeafContent) {
     return (
       <div className={styles.leafContentLayout}>
-        <ContentPlayer node={selectedNode} editorMode={editorMode} type="content" />
+        <ContentPlayer node={selectedNode} editorMode={editorMode} type="content" layout="flow" />
         <ContentEditForm
           node={selectedNode}
           editorMode={editorMode}

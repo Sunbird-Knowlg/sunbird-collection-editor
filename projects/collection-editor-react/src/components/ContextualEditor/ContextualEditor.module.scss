@@ -1,20 +1,20 @@
-// Leaf content: player on top, metadata/edit panel scrolls below.
+// Leaf content: one scrollable column — player (intrinsic 16:9 via the
+// ContentPlayer 'flow' layout), info strip, then the edit form. The panel
+// itself scrolls so the bottom information is always reachable.
 .leafContentLayout {
   display: flex;
   flex-direction: column;
   height: 100%;
-  overflow: hidden;
+  overflow-y: auto;
 
-  // ContentPlayer fills remaining vertical space
+  // ContentPlayer keeps its intrinsic height (flow layout)
   > *:first-child {
-    flex: 1 1 auto;
-    min-height: 0;
+    flex: 0 0 auto;
   }
 
-  // ContentEditForm is natural height, scrollable
+  // ContentEditForm at natural height in the scroll flow
   > *:last-child {
     flex: 0 0 auto;
-    overflow-y: auto;
     background: #fff;
   }
 }

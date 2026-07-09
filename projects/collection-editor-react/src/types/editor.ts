@@ -11,7 +11,6 @@ export type ToolbarAction =
   | 'saveCollection'
   | 'publish'
   | 'reject'
-  | 'sendBackForCorrections'
   | 'sourcingApprove'
   | 'sourcingReject'
   | 'manageCollaborators'
@@ -121,7 +120,6 @@ export interface IButtonLoaders {
   publishCollection: boolean;
   addFromLibrary: boolean;
   rejectCollection: boolean;
-  sendBackCollection: boolean;
   sourcingApproveCollection: boolean;
   sourcingRejectCollection: boolean;
 }

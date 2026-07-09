@@ -5,7 +5,6 @@ import {
   Check,
   Users,
   CheckCircle,
-  XCircle,
   RotateCcw,
   Shield,
   QrCode,
@@ -52,7 +51,7 @@ function deriveStatusLabel(status: unknown): string {
 }
 
 // ---------------------------------------------------------------------------
-// Generic review-comment modal — used for both Reject and Send Back.
+// Generic review-comment modal — used by Request for Changes.
 // Matches the Angular "Add Review Comments" popup text.
 // ---------------------------------------------------------------------------
 interface ReviewCommentModalProps {
@@ -262,8 +261,6 @@ export const Topbar: React.FC<TopbarProps> = ({
   const categoryMeta = useEditorStore((s) => s.categoryMeta);
   const showDialcode = !categoryMeta || categoryMeta.schemaDefaults.generateDIALCodes !== 'No';
 
-  // Local state for the send-back modal (not stored in ui.store)
-  const [showSendBack, setShowSendBack] = useState(false);
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [showConfirmReview, setShowConfirmReview] = useState(false);
   const [showQRMenu, setShowQRMenu] = useState(false);
@@ -391,14 +388,6 @@ export const Topbar: React.FC<TopbarProps> = ({
       }
     },
     [closeModal, emit, modalData],
-  );
-
-  const handleSendBack = useCallback(
-    (comment: string) => {
-      setShowSendBack(false);
-      emit('sendBackForCorrections', { comment });
-    },
-    [emit],
   );
 
   return (
@@ -543,23 +532,14 @@ export const Topbar: React.FC<TopbarProps> = ({
               </Button>
 
               <Button
-                variant="danger"
+                variant="primary"
                 size="sm"
                 onClick={() => setShowRejectModal(true)}
                 disabled={buttonLoaders.rejectCollection}
                 isLoading={buttonLoaders.rejectCollection}
               >
-                <XCircle size={14} aria-hidden="true" />
-                &nbsp;Reject
-              </Button>
-
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowSendBack(true)}
-              >
                 <RotateCcw size={14} aria-hidden="true" />
-                &nbsp;Send Back
+                &nbsp;Request for Changes
               </Button>
             </div>
           )}
@@ -577,12 +557,12 @@ export const Topbar: React.FC<TopbarProps> = ({
               </Button>
 
               <Button
-                variant="danger"
+                variant="primary"
                 size="sm"
                 onClick={() => openModal('qualityParams', { action: 'reject' })}
               >
-                <XCircle size={14} aria-hidden="true" />
-                &nbsp;Reject
+                <RotateCcw size={14} aria-hidden="true" />
+                &nbsp;Request for Changes
               </Button>
             </div>
           )}
@@ -626,25 +606,13 @@ export const Topbar: React.FC<TopbarProps> = ({
 
       {showRejectModal && (
         <ReviewCommentModal
-          titleText="Reject Content"
-          labelText="Reason for rejection"
-          placeholderText="Explain why this content is being rejected"
-          submitLabel="Reject"
-          submitVariant="danger"
+          titleText="Request Changes"
+          labelText="Changes requested"
+          placeholderText="Describe the changes the author needs to make"
+          submitLabel="Request for Changes"
+          submitVariant="primary"
           onConfirm={(comment) => { setShowRejectModal(false); emit('reject', { comment }); }}
           onCancel={() => setShowRejectModal(false)}
-        />
-      )}
-
-      {showSendBack && (
-        <ReviewCommentModal
-          titleText="Send Back for Corrections"
-          labelText="Corrections needed"
-          placeholderText="Describe the corrections the author needs to make"
-          submitLabel="Send Back"
-          submitVariant="primary"
-          onConfirm={handleSendBack}
-          onCancel={() => setShowSendBack(false)}
         />
       )}
 
