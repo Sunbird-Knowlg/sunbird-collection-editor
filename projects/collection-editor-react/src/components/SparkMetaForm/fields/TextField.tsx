@@ -1,5 +1,6 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
+import { useLabels } from '../../../hooks/useLabels';
 import styles from './Field.module.scss';
 
 interface TextFieldProps {
@@ -8,9 +9,13 @@ interface TextFieldProps {
 }
 
 export const TextField: React.FC<TextFieldProps> = ({ name, label, required, disabled, multiline, maxLength, placeholder }) => {
+  const lbl = useLabels();
   const { register, formState: { errors } } = useFormContext();
   const error = errors[name];
-  const registerOpts = { required: required ? `${label} is required` : false, maxLength: maxLength ? { value: maxLength, message: `Max ${maxLength} characters` } : undefined };
+  const registerOpts = {
+    required: required ? lbl.textField.requiredError.replace('{field}', label) : false,
+    maxLength: maxLength ? { value: maxLength, message: lbl.textField.maxLengthError.replace('{max}', String(maxLength)) } : undefined,
+  };
 
   return (
     <div className={[styles.field, multiline ? styles.fullWidth : ''].join(' ')}>

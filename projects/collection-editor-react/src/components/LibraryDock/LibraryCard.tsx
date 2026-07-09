@@ -4,6 +4,7 @@ import { Plus, Video, FileText, Layers, Package, Music, HelpCircle, File, Check 
 import type { IContent } from '../../types/content';
 import { getCtStyle } from '../../hooks/useContentType';
 import { useIsDraftStatus, useSelectedNodeIsUnit } from '../../hooks/useContentStatus';
+import { useLabels } from '../../hooks/useLabels';
 import styles from './LibraryCard.module.scss';
 
 const CT_ICONS: Record<string, React.ElementType> = {
@@ -26,6 +27,7 @@ export const LibraryCard: React.FC<LibraryCardProps> = ({
   isDraggable,
   isAdded,
 }) => {
+  const lbl = useLabels();
   const ctStyle = getCtStyle(item);
   const CtIcon = CT_ICONS[ctStyle.key] ?? File;
   const isDraft = useIsDraftStatus();
@@ -75,23 +77,24 @@ export const LibraryCard: React.FC<LibraryCardProps> = ({
 
       {/* Already-added badge */}
       {isAdded && (
-        <span className={styles.addedBadge} aria-label="Already added" title="Already added to this collection">
+        <span className={styles.addedBadge} aria-label={lbl.libraryCard.alreadyAddedAriaLabel} title={lbl.libraryCard.alreadyAddedTitle}>
           <Check size={12} />
         </span>
       )}
 
-      {/* Add button — hidden when already added; disabled for non-Draft content.
-          When isDraft but no unit is selected, keep the button clickable so the
-          parent can fire a helpful "select a unit first" toast. */}
-      {!isAdded && (
+      {/* Add button — hidden when already added, or when not in an editable
+          (author) session; disabled for non-Draft content. When isDraft but no
+          unit is selected, keep the button clickable so the parent can fire a
+          helpful "select a unit first" toast. */}
+      {!isAdded && isDraggable && (
         <button
           type="button"
           className={[styles.addBtn, !canAdd && isDraft ? styles.addBtnMuted : ''].join(' ')}
           onClick={(e) => { e.stopPropagation(); onAdd(item); }}
           disabled={!isDraft}
           aria-disabled={!canAdd}
-          aria-label={`Add ${item.name} to unit`}
-          title={isDraft ? (isUnitSelected ? 'Add to unit' : 'Select a unit to add') : 'Only Draft content can be added'}
+          aria-label={lbl.libraryCard.addItemAriaLabel.replace('{name}', item.name)}
+          title={isDraft ? (isUnitSelected ? lbl.libraryCard.addToUnitTitle : lbl.libraryCard.selectUnitToAddTitle) : lbl.libraryCard.draftOnlyTitle}
         >
           <Plus size={14} />
         </button>

@@ -1,9 +1,10 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Search, Library, SlidersHorizontal, ArrowUpAZ, Clock, PanelRightClose } from 'lucide-react';
+import { Search, Library, SlidersHorizontal, ArrowUpAZ, Clock, PanelRightClose, Info } from 'lucide-react';
 import type { EditorMode } from '../../types/editor';
 import type { IContent } from '../../types/content';
 import { CT_FILTERS } from '../../types/content';
 import { useLibrary } from '../../hooks/useLibrary';
+import { useLabels } from '../../hooks/useLabels';
 import { useTreeStore } from '../../store/tree.store';
 import { LibraryCard } from './LibraryCard';
 import { FilterChips } from './FilterChips';
@@ -34,6 +35,7 @@ function collectResourceIds(nodes: ReturnType<typeof useTreeStore.getState>['tre
 }
 
 export const LibraryDock: React.FC<LibraryDockProps> = ({ editorMode, collapsed = false, onToggleCollapse }) => {
+  const lbl = useLabels();
   const {
     content,
     isLoading,
@@ -63,25 +65,25 @@ export const LibraryDock: React.FC<LibraryDockProps> = ({ editorMode, collapsed 
   const handleAdd = useCallback(
     (item: IContent) => {
       if (!selectedNodeId) {
-        toast.error('Select a unit first');
+        toast.error(lbl.libraryDock.selectUnitFirstToast);
         return;
       }
       const rootId = treeData[0]?.id;
       if (selectedNodeId === rootId) {
-        toast('Select a unit from the outline to add content — resources cannot be added directly to the course.', {
-          icon: 'ℹ️',
+        toast(lbl.libraryDock.selectUnitFromOutlineToast, {
+          icon: <Info size={16} />,
           duration: 4000,
         });
         return;
       }
       const added = addResource(item, selectedNodeId);
       if (added === false) {
-        toast.error(`"${item.name}" is already in this collection`);
+        toast.error(lbl.libraryDock.itemAlreadyAddedToast.replace('{name}', item.name));
         return;
       }
-      toast.success(`Added "${item.name}"`);
+      toast.success(lbl.libraryDock.itemAddedToast.replace('{name}', item.name));
     },
-    [selectedNodeId, addResource, treeData],
+    [selectedNodeId, addResource, treeData, lbl],
   );
 
   const handleApplyFilters = useCallback(
@@ -123,13 +125,13 @@ export const LibraryDock: React.FC<LibraryDockProps> = ({ editorMode, collapsed 
             type="button"
             className={styles.collapseBtn}
             onClick={onToggleCollapse}
-            aria-label="Collapse library panel"
-            title="Collapse library"
+            aria-label={lbl.libraryDock.collapseLibraryPanelAriaLabel}
+            title={lbl.libraryDock.collapseLibraryTitle}
           >
             <PanelRightClose size={15} />
           </button>
           <Library size={16} />
-          <span className={styles.headerTitle}>Library</span>
+          <span className={styles.headerTitle}>{lbl.libraryDock.headerTitle}</span>
           {totalCount > 0 && (
             <span className={styles.count}>{totalCount}</span>
           )}
@@ -143,18 +145,18 @@ export const LibraryDock: React.FC<LibraryDockProps> = ({ editorMode, collapsed 
           <input
             type="search"
             className={styles.searchInput}
-            placeholder="Search content…"
+            placeholder={lbl.libraryDock.searchPlaceholder}
             value={searchQuery}
             onChange={(e) => search(e.target.value)}
-            aria-label="Search library"
+            aria-label={lbl.libraryDock.searchAriaLabel}
           />
         </div>
         <button
           type="button"
           className={[styles.filterToggleBtn, sortAZ ? styles.filterToggleBtnActive : ''].join(' ')}
           onClick={toggleSort}
-          aria-label={sortAZ ? 'Sort: A–Z (click for Recent)' : 'Sort: Recent (click for A–Z)'}
-          title={sortAZ ? 'A–Z' : 'Recent'}
+          aria-label={sortAZ ? lbl.libraryDock.sortAZAriaLabel : lbl.libraryDock.sortRecentAriaLabel}
+          title={sortAZ ? lbl.libraryDock.sortAZTitle : lbl.libraryDock.sortRecentTitle}
         >
           {sortAZ ? <ArrowUpAZ size={15} /> : <Clock size={15} />}
         </button>
@@ -165,9 +167,9 @@ export const LibraryDock: React.FC<LibraryDockProps> = ({ editorMode, collapsed 
             filterPanelOpen ? styles.filterToggleBtnActive : '',
           ].join(' ')}
           onClick={() => setFilterPanelOpen((v) => !v)}
-          aria-label="Toggle advanced filters"
+          aria-label={lbl.libraryDock.toggleAdvancedFiltersAriaLabel}
           aria-pressed={filterPanelOpen}
-          title="Advanced filters"
+          title={lbl.libraryDock.advancedFiltersTitle}
         >
           <SlidersHorizontal size={15} />
           {activeFilterCount > 0 && (
@@ -184,7 +186,7 @@ export const LibraryDock: React.FC<LibraryDockProps> = ({ editorMode, collapsed 
       {/* Main area: card list + optional side panels */}
       <div className={styles.mainArea}>
         {/* Card list */}
-        <div className={styles.cardList} role="list" aria-label="Library content">
+        <div className={styles.cardList} role="list" aria-label={lbl.libraryDock.libraryContentAriaLabel}>
           {isLoading && content.length === 0 ? (
             // Loading skeleton
             Array.from({ length: 4 }).map((_, i) => (
@@ -216,17 +218,17 @@ export const LibraryDock: React.FC<LibraryDockProps> = ({ editorMode, collapsed 
                   className={styles.loadMoreBtn}
                   onClick={loadMore}
                   disabled={isLoading}
-                  aria-label="Load more content"
+                  aria-label={lbl.libraryDock.loadMoreAriaLabel}
                 >
-                  {isLoading ? 'Loading…' : 'Load More'}
+                  {isLoading ? lbl.libraryDock.loadingText : lbl.libraryDock.loadMoreText}
                 </button>
               )}
             </>
           ) : (
             <div className={styles.emptyState}>
               <Search size={24} />
-              <p>No content found</p>
-              <span>Try a different search or filter</span>
+              <p>{lbl.libraryDock.noContentFound}</p>
+              <span>{lbl.libraryDock.tryDifferentSearch}</span>
             </div>
           )}
         </div>
@@ -247,6 +249,7 @@ export const LibraryDock: React.FC<LibraryDockProps> = ({ editorMode, collapsed 
         {previewContent && (
           <LibraryPreviewPanel
             content={previewContent}
+            editorMode={editorMode}
             onAdd={handlePreviewAdd}
             onClose={() => setPreviewContent(null)}
           />

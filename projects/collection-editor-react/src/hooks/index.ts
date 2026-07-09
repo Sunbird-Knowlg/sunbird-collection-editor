@@ -7,3 +7,5 @@ export { useSaveHierarchy } from './useSaveHierarchy';
 export { useContentType, getCtStyle } from './useContentType';
 export type { CtStyle } from './useContentType';
 export { useTelemetry } from './useTelemetry';
+export { useI18nInit } from './useI18nInit';
+export { useLabels } from './useLabels';

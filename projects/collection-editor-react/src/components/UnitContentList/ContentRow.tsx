@@ -4,6 +4,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, X, Video, FileText, Layers, Package, Music, HelpCircle, File } from 'lucide-react';
 import type { INode } from '../../types/editor';
 import { getCtStyle } from '../../hooks/useContentType';
+import { useLabels } from '../../hooks/useLabels';
 import styles from './ContentRow.module.scss';
 
 const CT_ICONS: Record<string, React.ElementType> = {
@@ -18,6 +19,7 @@ interface ContentRowProps {
 }
 
 export const ContentRow: React.FC<ContentRowProps> = ({ item, onRemove, isEditable }) => {
+  const lbl = useLabels();
   const ctStyle = getCtStyle(item);
   const CtIcon = CT_ICONS[ctStyle.key] ?? File;
 
@@ -36,7 +38,7 @@ export const ContentRow: React.FC<ContentRowProps> = ({ item, onRemove, isEditab
     <div ref={setNodeRef} style={style} className={styles.row} role="listitem">
       {/* Drag grip */}
       {isEditable && (
-        <span className={styles.grip} {...attributes} {...listeners} aria-label="Drag to reorder">
+        <span className={styles.grip} {...attributes} {...listeners} aria-label={lbl.contentRow.dragToReorderAriaLabel}>
           <GripVertical size={15} />
         </span>
       )}
@@ -61,7 +63,7 @@ export const ContentRow: React.FC<ContentRowProps> = ({ item, onRemove, isEditab
           type="button"
           className={styles.removeBtn}
           onClick={() => onRemove(item.id)}
-          aria-label={`Remove ${item.name}`}
+          aria-label={lbl.contentRow.removeAriaLabel.replace('{name}', item.name)}
         >
           <X size={14} />
         </button>

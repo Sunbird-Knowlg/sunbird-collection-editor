@@ -1,0 +1,458 @@
+{
+  "contextualEditor": {
+    "emptyStateMessage": "Select a unit from the outline to edit its details",
+    "reviewCommentLabel": "Reviewer comment:",
+    "untitledPlaceholder": "Untitled",
+    "nodeTitleAriaLabel": "Node title",
+    "dropZoneLabel": "Drop to add content to this unit"
+  },
+  "languageSelector": {
+    "ariaLabel": "Select language"
+  },
+  "collectionEditor": {
+    "errorBoundaryTitle": "Something went wrong",
+    "retryButton": "Retry",
+    "loadingMessage": "Loading editor...",
+    "loadErrorTitle": "Failed to load editor"
+  },
+  "breadcrumb": {
+    "nodePathAriaLabel": "Node path",
+    "homeAriaLabel": "Home"
+  },
+  "tabBar": {
+    "detailsTab": "Details",
+    "audienceCurriculumTab": "Audience & Curriculum",
+    "licensingTab": "Licensing",
+    "metadataSectionsAriaLabel": "Metadata sections",
+    "hasErrorsAriaLabel": "Has errors"
+  },
+  "contentEditForm": {
+    "moveToAnotherUnitButton": "Move to another unit",
+    "collapseMetadataPanelAriaLabel": "Collapse metadata panel",
+    "expandMetadataPanelAriaLabel": "Expand metadata panel",
+    "collapseTitle": "Collapse",
+    "expandTitle": "Expand",
+    "iconAlt": "icon",
+    "contentNamePlaceholder": "Content name",
+    "keywordsLabel": "Keywords",
+    "addKeywordPlaceholder": "Add keyword and press Enter",
+    "addButton": "Add",
+    "optionalInCollectionLabel": "Optional in Collection",
+    "yesOption": "Yes",
+    "noOption": "No"
+  },
+  "titleAppIcon": {
+    "selectAppIconAriaLabel": "Select app icon",
+    "appIconAriaLabel": "App icon",
+    "appIconAlt": "App icon",
+    "removeIconAriaLabel": "Remove icon"
+  },
+  "unitContentList": {
+    "removeConfirm": "Remove this content from the unit?",
+    "heading": "Content in this unit",
+    "emptyTitle": "No content yet",
+    "emptyHint": "Drag from the library or click Add content",
+    "addContentAriaLabel": "Add content to unit",
+    "addContent": "Add content"
+  },
+  "contentRow": {
+    "dragToReorderAriaLabel": "Drag to reorder",
+    "removeAriaLabel": "Remove {name}"
+  },
+  "csvUpload": {
+    "invalidFileType": "Only .csv files are accepted.",
+    "fileTooLarge": "File size must not exceed 50 MB.",
+    "downloadSampleFailed": "Failed to download sample CSV.",
+    "processingFailed": "Upload processing failed. Please check the error rows below.",
+    "connectionLost": "Lost connection while checking status. Please try again.",
+    "uploadFailed": "Upload failed. Please check your file and try again.",
+    "statusUploading": "Uploading...",
+    "statusProcessing": "Processing...",
+    "statusDone": "Done!",
+    "statusError": "Error",
+    "titleUpdate": "Update Folder Metadata via CSV",
+    "titleCreate": "Create Folders via CSV",
+    "closeAriaLabel": "Close",
+    "dropZoneAriaLabel": "Drop CSV file here or click to browse",
+    "dropText": "Drag & drop your CSV here",
+    "dropSubtext": "or click to browse",
+    "downloadSample": "Download Sample CSV",
+    "itemsImportedSuffix": "— {count} item(s) imported",
+    "failedRowsTitle": "Failed Rows ({count})",
+    "rowHeader": "Row",
+    "nameHeader": "Name",
+    "reasonHeader": "Reason",
+    "unknownError": "Unknown error",
+    "cancel": "Cancel",
+    "uploaded": "Uploaded",
+    "upload": "Upload"
+  },
+  "manageCollaborators": {
+    "saveFailed": "Failed to save collaborators. Please try again.",
+    "title": "Manage Collaborators",
+    "closeAriaLabel": "Close",
+    "searchUsersLabel": "Search users",
+    "searchPlaceholder": "Search by name or email...",
+    "searchingAriaLabel": "Searching...",
+    "searchResultsAriaLabel": "Search results",
+    "add": "Add",
+    "noUsersFound": "No users found.",
+    "currentCollaborators": "Current Collaborators",
+    "noCollaboratorsYet": "No collaborators added yet.",
+    "remove": "Remove",
+    "saveSuccess": "Collaborators saved successfully.",
+    "cancel": "Cancel",
+    "save": "Save"
+  },
+  "sparkMetaForm": {
+    "shuffleEnabledMessage": "Shuffling is enabled for this question set.",
+    "noFieldsMessage": "No fields configured for this tab."
+  },
+  "appIconField": {
+    "requiredError": "{field} is required",
+    "selectIconAriaLabel": "Select app icon",
+    "iconAlt": "App icon",
+    "selectIconLabel": "Select icon",
+    "removeIconAriaLabel": "Remove app icon",
+    "removeLabel": "Remove"
+  },
+  "appIconPickerModal": {
+    "dialogAriaLabel": "Select App Icon",
+    "title": "Select App Icon",
+    "closeAriaLabel": "Close",
+    "myImagesTab": "My Images",
+    "allImagesTab": "All Images",
+    "uploadTab": "Upload",
+    "searchPlaceholder": "Search images…",
+    "loadingText": "Loading…",
+    "noImagesFound": "No images found",
+    "noThumbnailText": "IMG",
+    "loadMoreButton": "Load More",
+    "previewAlt": "Preview",
+    "dropZoneText": "Drag & drop or click to browse",
+    "acceptedTypesInfo": "{types} · max {size} MB",
+    "cancelButton": "Cancel",
+    "uploadingText": "Uploading…",
+    "uploadAndUseButton": "Upload & Use",
+    "useSelectedButton": "Use Selected",
+    "invalidFileTypeError": "Only {types} files are accepted.",
+    "fileTooLargeError": "Image must be under {size} MB.",
+    "uploadFailedError": "Upload failed."
+  },
+  "chipGroupField": {
+    "addPlaceholder": "Add…",
+    "addButtonLabel": "Add"
+  },
+  "dateTimeField": {
+    "requiredError": "{field} is required"
+  },
+  "dialcodeInputField": {
+    "requiredError": "{field} is required",
+    "enterCodeMessage": "Enter a dial code to validate.",
+    "validMessage": "Dial code is valid.",
+    "notFoundMessage": "Dial code not found.",
+    "validationFailedMessage": "Validation failed. Please try again.",
+    "placeholderExample": "e.g. A1B2C3",
+    "validateAriaLabel": "Validate dial code",
+    "validatingLabel": "Validating…",
+    "validateButtonLabel": "Validate"
+  },
+  "keywordSuggestField": {
+    "requiredError": "{field} is required",
+    "inputPlaceholder": "Type and press Enter or comma…"
+  },
+  "licenseSelectField": {
+    "requiredError": "{field} is required",
+    "selectPlaceholder": "Select license…"
+  },
+  "multiSelectField": {
+    "requiredError": "{field} is required",
+    "selectedCountSuffix": "selected",
+    "selectPlaceholder": "Select…",
+    "noOptionsMessage": "No options"
+  },
+  "nestedSelectField": {
+    "requiredError": "{field} is required",
+    "selectPlaceholder": "Select…"
+  },
+  "radioField": {
+    "requiredError": "{field} is required"
+  },
+  "selectField": {
+    "requiredError": "{field} is required",
+    "selectPlaceholder": "Select…",
+    "noOptionsMessage": "No options"
+  },
+  "textField": {
+    "requiredError": "{field} is required",
+    "maxLengthError": "Max {max} characters"
+  },
+  "assetBrowser": {
+    "dialogAriaLabel": "Asset Browser",
+    "title": "Asset Browser",
+    "closeAriaLabel": "Close",
+    "browseTab": "Browse",
+    "uploadTab": "Upload",
+    "searchPlaceholder": "Search assets...",
+    "searchButton": "Search",
+    "loadingMessage": "Loading...",
+    "uploadingMessage": "Uploading...",
+    "chooseFileButton": "Choose file to upload"
+  },
+  "resourceReorderDialog": {
+    "dialogAriaLabel": "Move resource",
+    "moveHeaderPrefix": "Move",
+    "closeAriaLabel": "Close",
+    "selectUnitHint": "Select a unit to move this content to:",
+    "noUnitsAvailable": "No other units available",
+    "cancelButton": "Cancel",
+    "moveButton": "Move here"
+  },
+  "assignPageNumber": {
+    "dialogAriaLabel": "Assign Page Numbers",
+    "title": "Assign Page Numbers",
+    "closeAriaLabel": "Close",
+    "emptyState": "No content items found in this collection.",
+    "contentColumnHeader": "Content",
+    "pageNumberColumnHeader": "Page Number",
+    "cancelButton": "Cancel",
+    "saveButton": "Save"
+  },
+  "confirmDialog": {
+    "confirmButton": "Confirm",
+    "cancelButton": "Cancel",
+    "closeAriaLabel": "Close"
+  },
+  "publishChecklist": {
+    "publishTitlePrefix": "Publish",
+    "closeAriaLabel": "Close",
+    "confirmPublishPrefix": "Are you sure you want to publish this",
+    "checklistInstructions": "Please confirm that ALL the following items are verified (by ticking the check-boxes) before you can publish:",
+    "noButton": "No",
+    "yesButton": "Yes"
+  },
+  "qualityParamsModal": {
+    "reviewQualityTitle": "Review Quality",
+    "rejectContentTitle": "Reject Content",
+    "closeAriaLabel": "Close",
+    "qualityScoreLabel": "Quality Score",
+    "scorePoorLabel": "0 — Poor",
+    "scoreExcellentLabel": "10 — Excellent",
+    "commentLabel": "Comment",
+    "optionalLabel": "(optional)",
+    "commentPlaceholder": "Add any notes for the content creator…",
+    "rejectionReasonLabel": "Rejection Reason",
+    "rejectReasonPlaceholder": "Describe why this content is being rejected…",
+    "rejectionRequiredMessage": "A rejection reason is required.",
+    "cancelButton": "Cancel",
+    "approveButton": "Approve",
+    "rejectButton": "Reject"
+  },
+  "unsavedChangesModal": {
+    "title": "Unsaved changes",
+    "closeAriaLabel": "Close",
+    "bodyMessage": "You have unsaved changes. Would you like to save them before leaving?",
+    "cancelButton": "Cancel",
+    "discardButton": "Discard",
+    "saveButton": "Save"
+  },
+  "filterChips": {
+    "contentTypeFiltersAriaLabel": "Content type filters"
+  },
+  "libraryCard": {
+    "alreadyAddedAriaLabel": "Already added",
+    "alreadyAddedTitle": "Already added to this collection",
+    "addItemAriaLabel": "Add {name} to unit",
+    "addToUnitTitle": "Add to unit",
+    "selectUnitToAddTitle": "Select a unit to add",
+    "draftOnlyTitle": "Only Draft content can be added"
+  },
+  "libraryDock": {
+    "selectUnitFirstToast": "Select a unit first",
+    "selectUnitFromOutlineToast": "Select a unit from the outline to add content — resources cannot be added directly to the course.",
+    "itemAlreadyAddedToast": "\"{name}\" is already in this collection",
+    "itemAddedToast": "Added \"{name}\"",
+    "collapseLibraryPanelAriaLabel": "Collapse library panel",
+    "collapseLibraryTitle": "Collapse library",
+    "headerTitle": "Library",
+    "searchPlaceholder": "Search content…",
+    "searchAriaLabel": "Search library",
+    "sortAZAriaLabel": "Sort: A–Z (click for Recent)",
+    "sortRecentAriaLabel": "Sort: Recent (click for A–Z)",
+    "sortAZTitle": "A–Z",
+    "sortRecentTitle": "Recent",
+    "toggleAdvancedFiltersAriaLabel": "Toggle advanced filters",
+    "advancedFiltersTitle": "Advanced filters",
+    "libraryContentAriaLabel": "Library content",
+    "loadMoreAriaLabel": "Load more content",
+    "loadingText": "Loading…",
+    "loadMoreText": "Load More",
+    "noContentFound": "No content found",
+    "tryDifferentSearch": "Try a different search or filter"
+  },
+  "libraryFilterPanel": {
+    "boardLabel": "Board",
+    "mediumLabel": "Medium",
+    "classLabel": "Class",
+    "subjectLabel": "Subject",
+    "primaryCategoryLabel": "Primary Category",
+    "filterLibraryAriaLabel": "Filter library",
+    "filtersHeaderTitle": "Filters",
+    "closeFiltersAriaLabel": "Close filters",
+    "resetButton": "Reset",
+    "applyButton": "Apply"
+  },
+  "libraryPreviewPanel": {
+    "contentPreviewAriaLabel": "Content preview",
+    "closePreviewAriaLabel": "Close preview",
+    "addToUnitButton": "+ Add to Unit"
+  },
+  "outlineTree": {
+    "maxDepthReachedToast": "Maximum depth reached",
+    "downloadCsvFailedToast": "Failed to download CSV",
+    "outlineRefreshedToast": "Course outline refreshed.",
+    "outlineRefreshFailedToast": "Outline could not be refreshed automatically. Please reload the page.",
+    "moreOptionsAriaLabel": "More options",
+    "moreOptionsTitle": "More options",
+    "foldersExistTitle": "Folders already exist — use \"Update\" instead",
+    "createFoldersCsvButton": "Create folders using csv file",
+    "noFoldersYetTitle": "No folders yet — use \"Create\" first",
+    "downloadFoldersCsvButton": "Download folders as csv file",
+    "updateFoldersCsvButton": "Update folder metadata using csv file",
+    "expandOutlineAriaLabel": "Expand outline",
+    "collapseOutlineAriaLabel": "Collapse outline",
+    "addUnitButton": "Add Unit",
+    "addSubunitButton": "Add Sub-unit"
+  },
+  "treeNode": {
+    "expandAriaLabel": "Expand",
+    "collapseAriaLabel": "Collapse",
+    "dropHereLabel": "Drop here",
+    "nodeOptionsAriaLabel": "Node options",
+    "renameMenuItem": "Rename",
+    "addSubunitMenuItem": "Add sub-unit",
+    "addSiblingMenuItem": "Add Sibling",
+    "deleteMenuItem": "Delete"
+  },
+  "contentPlayer": {
+    "mimeLabelVideo": "Video",
+    "mimeLabelAudio": "Audio",
+    "mimeLabelPdf": "PDF",
+    "mimeLabelEpub": "ePub",
+    "mimeLabelEcml": "ECML",
+    "mimeLabelH5p": "H5P",
+    "mimeLabelScorm": "SCORM",
+    "mimeLabelOther": "Content",
+    "infoFieldAuthor": "Author",
+    "infoFieldLicense": "License",
+    "infoFieldLanguage": "Language",
+    "infoFieldClass": "Class",
+    "infoFieldSubject": "Subject",
+    "infoFieldType": "Type",
+    "loadingPreview": "Loading preview…",
+    "previewPlayerUnavailable": "Preview player unavailable. Check that /content/preview is reachable.",
+    "failedToInitializePlayer": "Failed to initialize the content player.",
+    "previewPlayerLoadFailed": "Preview player could not be loaded.",
+    "unableToLoadQuestionset": "Unable to load questionset:",
+    "parentQuestionsetNotResolved": "Could not resolve the parent questionset for this question.",
+    "questionNotFoundInQuestionset": "Question not found in the questionset."
+  },
+  "dialcodePanel": {
+    "title": "QR Code (Dialcode)",
+    "invalidFormatError": "Invalid DIAL code format. Use uppercase letters and digits only (e.g. A1B2C3).",
+    "duplicateDialcodeError": "DIAL code \"{code}\" is already linked to another node in this collection.",
+    "dialcodeNotFoundError": "Dialcode not found. Please enter a valid code.",
+    "linkFailedError": "Failed to link dialcode. Please try again.",
+    "unlinkFailedError": "Failed to remove dialcode. Please try again.",
+    "qrCodeAltPrefix": "QR code for",
+    "linkedCodeLabel": "Linked code:",
+    "removeButton": "Remove",
+    "noCodeLinkedMessage": "No QR code linked to this content.",
+    "linkManuallyLabel": "Link manually",
+    "dialcodeInputPlaceholder": "Enter dialcode (e.g. A1B2C3)",
+    "dialcodeInputAriaLabel": "Dialcode input",
+    "linkButton": "Link",
+    "linkedSuccessMessage": "Dialcode linked successfully."
+  },
+  "progressStatus": {
+    "unitsAddedLabel": "Units added",
+    "contentItemsLabel": "Content items",
+    "progressLabel": "Progress"
+  },
+  "splitBuilderShell": {
+    "dropOntoUnitError": "Drop onto a unit to add content",
+    "dropOntoCourseError": "Drop content onto a unit, not directly on the course.",
+    "alreadyInCollectionError": "\"{name}\" is already in this collection",
+    "addedToUnitSuccess": "Added \"{name}\" to unit",
+    "fillRequiredMetadataError": "Please fill the required metadata",
+    "outlineAriaLabel": "Course outline",
+    "showOutlineTitle": "Show outline",
+    "editorAriaLabel": "Content editor",
+    "libraryAriaLabel": "Content library",
+    "showLibraryTitle": "Show library"
+  },
+  "topbar": {
+    "draftStatusFallback": "Draft",
+    "backAriaLabel": "Go back",
+    "statusAriaLabelPrefix": "Status:",
+    "savingIndicator": "Saving…",
+    "unsavedIndicator": "Unsaved",
+    "savedIndicatorPrefix": "Saved",
+    "fillRequiredFieldsTooltip": "Fill all required fields before saving",
+    "saveAsDraftButton": "Save as Draft",
+    "sendForReviewButton": "Send for review",
+    "collaboratorsLabel": "Collaborators",
+    "qrCodesLabel": "QR Codes",
+    "generatingEllipsis": "Generating…",
+    "generateQrCodesMenuItem": "Generate QR Codes",
+    "downloadingEllipsis": "Downloading…",
+    "downloadQrCodesMenuItem": "Download QR Codes",
+    "publishButton": "Publish",
+    "requestForChangesButton": "Request for Changes",
+    "approveButton": "Approve",
+    "qrGenerationStartedToast": "QR Codes generation started. Use \"Download QR Codes\" once ready.",
+    "qrGenerationFailedToast": "Failed to generate QR Codes. Please try again.",
+    "qrCodesNotGeneratedToast": "No QR codes generated yet. Generate QR Codes first.",
+    "qrGenerationInProgressToast": "QR code image generation is in progress. Please try downloading after some time.",
+    "qrCodesNotReadyToast": "QR Codes not ready yet. Please wait and try again.",
+    "qrCodesDownloadedToast": "QR codes downloaded.",
+    "qrCodesDownloadFailedToast": "Failed to download QR Codes.",
+    "requestChangesTitle": "Request Changes",
+    "changesRequestedLabel": "Changes requested",
+    "describeChangesPlaceholder": "Describe the changes the author needs to make"
+  },
+  "reviewCommentModal": {
+    "closeAriaLabel": "Close",
+    "fillCommentsError": "Fill comments",
+    "cancelButton": "Cancel"
+  },
+  "confirmReviewModal": {
+    "closeAriaLabel": "Close",
+    "title": "Accepting Terms & Conditions",
+    "agreementTextPart1": "I agree that by submitting / publishing this Content, I confirm that this Content complies with prescribed guidelines, including the Terms of Use and Content Policy and that I consent to publish it under the",
+    "creativeCommonsLinkText": "Creative Commons Framework",
+    "agreementTextPart2": "in accordance with the",
+    "contentPolicyText": "Content Policy",
+    "agreementTextPart3": ". I have made sure that I do not violate others' copyright or privacy rights.",
+    "cancelButton": "Cancel",
+    "submitButton": "Submit"
+  },
+  "generateQRModal": {
+    "closeAriaLabel": "Close",
+    "title": "Generate QR Codes",
+    "numberOfCodesLabel": "Number of QR Codes",
+    "countPlaceholder": "Enter number (2–250)",
+    "countRangeError": "Enter a number between 2 and 250.",
+    "cancelButton": "Cancel",
+    "generateButton": "Generate"
+  },
+  "chip": {
+    "remove": "Remove"
+  },
+  "dropZone": {
+    "dropHere": "Drop here"
+  },
+  "spinner": {
+    "loading": "Loading"
+  }
+}

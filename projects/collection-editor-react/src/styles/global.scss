@@ -137,3 +137,16 @@
   font-size: 13px;
   border-radius: var(--sbx-r-sm);
 }
+
+// Targeted RTL overrides (dir="ar" sets document.documentElement[dir="rtl"]
+// via the i18n store). Flips flex-direction on the toolbar-style rows that
+// otherwise read visually backwards in RTL; expand as real Arabic content
+// surfaces further layout issues.
+[dir='rtl'] {
+  .sbx-btn svg {
+    margin-left: 4px;
+    margin-right: 0;
+  }
+
+  text-align: right;
+}

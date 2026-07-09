@@ -4,6 +4,7 @@ import type { INode, EditorMode } from '../../types/editor';
 import { useTreeStore } from '../../store/tree.store';
 import { useEditorStore } from '../../store/editor.store';
 import { getCtStyle } from '../../hooks/useContentType';
+import { useLabels } from '../../hooks/useLabels';
 import styles from './ContentEditForm.module.scss';
 
 interface ContentEditFormProps {
@@ -19,6 +20,7 @@ export const ContentEditForm: React.FC<ContentEditFormProps> = ({
   const { updateNode, markDirty } = useTreeStore();
   const isEditable = editorMode === 'edit';
   const ctStyle = getCtStyle(node);
+  const lbl = useLabels();
 
   // The leaf-in-collection metadata form is defined by forms.relationalMetadata.
   // Use it to drive field labels / visibility, falling back to defaults.
@@ -101,7 +103,7 @@ export const ContentEditForm: React.FC<ContentEditFormProps> = ({
           <span className={`sbx-ct-badge--${ctStyle.key}`}>{ctStyle.label}</span>
           {isEditable && (
             <button type="button" className={styles.moveBtn} onClick={onMoveClick}>
-              Move to another unit
+              {lbl.contentEditForm.moveToAnotherUnitButton}
             </button>
           )}
         </div>
@@ -110,8 +112,8 @@ export const ContentEditForm: React.FC<ContentEditFormProps> = ({
           className={styles.panelCollapseBtn}
           onClick={() => setPanelOpen(v => !v)}
           aria-expanded={panelOpen}
-          aria-label={panelOpen ? 'Collapse metadata panel' : 'Expand metadata panel'}
-          title={panelOpen ? 'Collapse' : 'Expand'}
+          aria-label={panelOpen ? lbl.contentEditForm.collapseMetadataPanelAriaLabel : lbl.contentEditForm.expandMetadataPanelAriaLabel}
+          title={panelOpen ? lbl.contentEditForm.collapseTitle : lbl.contentEditForm.expandTitle}
         >
           {panelOpen ? <ChevronDown size={15} /> : <ChevronUp size={15} />}
         </button>
@@ -123,7 +125,7 @@ export const ContentEditForm: React.FC<ContentEditFormProps> = ({
           {/* App icon + name */}
           <div className={styles.titleRow}>
             {node.appIcon && (
-              <img src={node.appIcon} alt="icon" className={styles.icon} />
+              <img src={node.appIcon} alt={lbl.contentEditForm.iconAlt} className={styles.icon} />
             )}
             <input
               type="text"
@@ -132,7 +134,7 @@ export const ContentEditForm: React.FC<ContentEditFormProps> = ({
               disabled={!isEditable}
               onChange={e => setName(e.target.value)}
               onBlur={handleNameBlur}
-              placeholder="Content name"
+              placeholder={lbl.contentEditForm.contentNamePlaceholder}
             />
           </div>
 
@@ -141,7 +143,7 @@ export const ContentEditForm: React.FC<ContentEditFormProps> = ({
           <div className={styles.field}>
             <div className={styles.fieldHeader}>
               <label className={styles.label}>
-                {labelOf('keywords', 'Keywords')}
+                {labelOf('keywords', lbl.contentEditForm.keywordsLabel)}
                 {keywords.length > 0 && (
                   <span className={styles.fieldCount}>{keywords.length}</span>
                 )}
@@ -165,11 +167,11 @@ export const ContentEditForm: React.FC<ContentEditFormProps> = ({
                   type="text"
                   className={styles.input}
                   value={keywordsInput}
-                  placeholder="Add keyword and press Enter"
+                  placeholder={lbl.contentEditForm.addKeywordPlaceholder}
                   onChange={e => setKeywordsInput(e.target.value)}
                   onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addKeyword(); } }}
                 />
-                <button type="button" className={styles.addBtn} onClick={addKeyword}>Add</button>
+                <button type="button" className={styles.addBtn} onClick={addKeyword}>{lbl.contentEditForm.addButton}</button>
               </div>
             )}
           </div>
@@ -178,7 +180,7 @@ export const ContentEditForm: React.FC<ContentEditFormProps> = ({
           {/* Optional in collection (optional: true = not required, optional: false = required) */}
           {showField('optional') && (
           <div className={styles.field}>
-            <label className={styles.label}>{labelOf('optional', 'Optional in Collection')}</label>
+            <label className={styles.label}>{labelOf('optional', lbl.contentEditForm.optionalInCollectionLabel)}</label>
             <div className={styles.radioGroup}>
               <label className={styles.radioLabel}>
                 <input
@@ -188,7 +190,7 @@ export const ContentEditForm: React.FC<ContentEditFormProps> = ({
                   onChange={() => handleOptionalChange(true)}
                   disabled={!isEditable}
                 />
-                Yes
+                {lbl.contentEditForm.yesOption}
               </label>
               <label className={styles.radioLabel}>
                 <input
@@ -198,7 +200,7 @@ export const ContentEditForm: React.FC<ContentEditFormProps> = ({
                   onChange={() => handleOptionalChange(false)}
                   disabled={!isEditable}
                 />
-                No
+                {lbl.contentEditForm.noOption}
               </label>
             </div>
           </div>

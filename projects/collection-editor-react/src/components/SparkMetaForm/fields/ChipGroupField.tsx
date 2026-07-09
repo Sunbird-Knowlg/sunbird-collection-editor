@@ -1,11 +1,14 @@
 import React, { useState, useRef } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { Plus } from 'lucide-react';
+import { useLabels } from '../../../hooks/useLabels';
 import styles from './Field.module.scss';
 
 interface ChipGroupFieldProps { name: string; label: string; required?: boolean; disabled?: boolean; placeholder?: string; }
 
-export const ChipGroupField: React.FC<ChipGroupFieldProps> = ({ name, label, required, disabled, placeholder = 'Add…' }) => {
+export const ChipGroupField: React.FC<ChipGroupFieldProps> = ({ name, label, required, disabled, placeholder }) => {
+  const lbl = useLabels();
+  const effectivePlaceholder = placeholder ?? lbl.chipGroupField.addPlaceholder;
   const [inputVal, setInputVal] = useState('');
   const [adding, setAdding] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -37,11 +40,11 @@ export const ChipGroupField: React.FC<ChipGroupFieldProps> = ({ name, label, req
             <input ref={inputRef} autoFocus className={styles.chipInput} value={inputVal}
               onChange={e => setInputVal(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); add(); } if (e.key === 'Escape') { setInputVal(''); setAdding(false); } }}
-              onBlur={add} placeholder={placeholder}
+              onBlur={add} placeholder={effectivePlaceholder}
             />
           ) : (
             <button type="button" className={styles.addChipBtn} onClick={() => { setAdding(true); setTimeout(() => inputRef.current?.focus(), 50); }}>
-              <Plus size={12} /> Add
+              <Plus size={12} /> {lbl.chipGroupField.addButtonLabel}
             </button>
           )
         )}

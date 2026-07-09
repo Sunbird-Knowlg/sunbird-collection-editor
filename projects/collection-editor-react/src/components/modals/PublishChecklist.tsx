@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useEditorStore } from '../../store/editor.store';
 import { Button } from '../shared/Button';
+import { useLabels } from '../../hooks/useLabels';
 import styles from './modals.module.scss';
 
 interface PublishChecklistProps {
@@ -19,6 +20,7 @@ export const PublishChecklist: React.FC<PublishChecklistProps> = ({
   onConfirm,
   onCancel,
 }) => {
+  const lbl = useLabels();
   const objectType =
     useEditorStore((s) => s.editorConfig?.config?.objectType) || 'Content';
 
@@ -37,11 +39,11 @@ export const PublishChecklist: React.FC<PublishChecklistProps> = ({
     <div className={styles.overlay} role="dialog" aria-modal="true" aria-labelledby="publish-modal-title">
       <div className={styles.modal}>
         <div className={styles.modalHeader}>
-          <span id="publish-modal-title">Publish {objectType}</span>
+          <span id="publish-modal-title">{lbl.publishChecklist.publishTitlePrefix} {objectType}</span>
           <button
             className={styles.modalHeaderClose}
             onClick={onCancel}
-            aria-label="Close"
+            aria-label={lbl.publishChecklist.closeAriaLabel}
           >
             ×
           </button>
@@ -50,13 +52,12 @@ export const PublishChecklist: React.FC<PublishChecklistProps> = ({
         <div className={styles.modalBody}>
           {checklistItems.length === 0 ? (
             <p style={{ margin: 0, fontSize: 14, lineHeight: 1.5 }}>
-              Are you sure you want to publish this {objectType}?
+              {lbl.publishChecklist.confirmPublishPrefix} {objectType}?
             </p>
           ) : (
             <>
               <p className={styles.sectionTitle}>
-                Please confirm that ALL the following items are verified (by ticking the
-                check-boxes) before you can publish:
+                {lbl.publishChecklist.checklistInstructions}
               </p>
               {checklistItems.map((item) => (
                 <label key={item.code} className={styles.checkRow}>
@@ -76,10 +77,10 @@ export const PublishChecklist: React.FC<PublishChecklistProps> = ({
 
         <div className={styles.modalFooter}>
           <Button variant="ghost" onClick={onCancel}>
-            No
+            {lbl.publishChecklist.noButton}
           </Button>
           <Button variant="primary" onClick={handlePublish} disabled={!canPublish}>
-            Yes
+            {lbl.publishChecklist.yesButton}
           </Button>
         </div>
       </div>

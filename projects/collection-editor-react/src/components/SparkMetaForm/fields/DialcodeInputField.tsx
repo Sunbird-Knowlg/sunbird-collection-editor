@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { CheckCircle, XCircle, Loader } from 'lucide-react';
 import { checkDialCode } from '../../../api/dialcode';
+import { useLabels } from '../../../hooks/useLabels';
 import styles from './Field.module.scss';
 
 type ValidationStatus = 'idle' | 'loading' | 'valid' | 'invalid';
@@ -14,6 +15,7 @@ interface DialcodeInputFieldProps {
 }
 
 export const DialcodeInputField: React.FC<DialcodeInputFieldProps> = ({ name, label, required, disabled }) => {
+  const lbl = useLabels();
   const { control } = useFormContext();
   const {
     field,
@@ -21,7 +23,7 @@ export const DialcodeInputField: React.FC<DialcodeInputFieldProps> = ({ name, la
   } = useController({
     name,
     control,
-    rules: { required: required ? `${label} is required` : false },
+    rules: { required: required ? lbl.dialcodeInputField.requiredError.replace('{field}', label) : false },
     defaultValue: '',
   });
 
@@ -32,7 +34,7 @@ export const DialcodeInputField: React.FC<DialcodeInputFieldProps> = ({ name, la
     const code = (field.value as string ?? '').trim();
     if (!code) {
       setStatus('invalid');
-      setValidationMessage('Enter a dial code to validate.');
+      setValidationMessage(lbl.dialcodeInputField.enterCodeMessage);
       return;
     }
     setStatus('loading');
@@ -43,14 +45,14 @@ export const DialcodeInputField: React.FC<DialcodeInputFieldProps> = ({ name, la
       const dialcodes = result?.dialcodes as unknown[];
       if (Array.isArray(dialcodes) && dialcodes.length > 0) {
         setStatus('valid');
-        setValidationMessage('Dial code is valid.');
+        setValidationMessage(lbl.dialcodeInputField.validMessage);
       } else {
         setStatus('invalid');
-        setValidationMessage('Dial code not found.');
+        setValidationMessage(lbl.dialcodeInputField.notFoundMessage);
       }
     } catch {
       setStatus('invalid');
-      setValidationMessage('Validation failed. Please try again.');
+      setValidationMessage(lbl.dialcodeInputField.validationFailedMessage);
     }
   };
 
@@ -80,7 +82,7 @@ export const DialcodeInputField: React.FC<DialcodeInputFieldProps> = ({ name, la
           }}
           onBlur={field.onBlur}
           ref={field.ref}
-          placeholder="e.g. A1B2C3"
+          placeholder={lbl.dialcodeInputField.placeholderExample}
           style={{ flex: 1 }}
         />
         <button
@@ -88,9 +90,9 @@ export const DialcodeInputField: React.FC<DialcodeInputFieldProps> = ({ name, la
           className={styles.validateBtn}
           onClick={handleValidate}
           disabled={disabled || status === 'loading'}
-          aria-label="Validate dial code"
+          aria-label={lbl.dialcodeInputField.validateAriaLabel}
         >
-          {status === 'loading' ? 'Validating…' : 'Validate'}
+          {status === 'loading' ? lbl.dialcodeInputField.validatingLabel : lbl.dialcodeInputField.validateButtonLabel}
         </button>
         {statusIcon()}
       </div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLabels } from '../../hooks/useLabels';
 
 interface ChipProps {
   variant?: 'filled' | 'outline';
@@ -16,7 +17,9 @@ export const Chip: React.FC<ChipProps> = ({
   onClick,
   className,
   children,
-}) => (
+}) => {
+  const lbl = useLabels();
+  return (
   <span
     className={`sbx-chip ${variant} ${active ? 'active' : ''} ${className ?? ''}`}
     onClick={onClick}
@@ -42,10 +45,11 @@ export const Chip: React.FC<ChipProps> = ({
           e.stopPropagation();
           onRemove();
         }}
-        aria-label="Remove"
+        aria-label={lbl.chip.remove}
       >
         ×
       </button>
     )}
   </span>
-);
+  );
+};

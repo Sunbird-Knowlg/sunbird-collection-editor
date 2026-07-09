@@ -9,16 +9,20 @@ import {
   Shield,
   QrCode,
   Download,
+  ChevronDown,
+  Info,
 } from 'lucide-react';
 import type { EditorMode, ToolbarAction } from '../../types/editor';
 import { useTreeStore } from '../../store/tree.store';
 import { useEditorStore } from '../../store/editor.store';
 import { useUiStore } from '../../store/ui.store';
 import { Button } from '../shared/Button';
+import { LanguageSelector } from '../shared/LanguageSelector/LanguageSelector';
 import { PublishChecklist } from '../modals/PublishChecklist';
 import { QualityParamsModal } from '../modals/QualityParamsModal';
 import { ManageCollaborators } from '../Collaborators/ManageCollaborators';
 import { reserveDialcodes, getDialcodeProcessStatus } from '../../api/dialcode';
+import { useLabels } from '../../hooks/useLabels';
 import toast from 'react-hot-toast';
 import styles from './Topbar.module.scss';
 
@@ -43,11 +47,11 @@ function formatLastSaved(ts: string | null): string {
   return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
-function deriveStatusLabel(status: unknown): string {
+function deriveStatusLabel(status: unknown, draftFallbackLabel: string): string {
   if (typeof status === 'string' && status.trim().length > 0) {
     return status.trim();
   }
-  return 'Draft';
+  return draftFallbackLabel;
 }
 
 // ---------------------------------------------------------------------------
@@ -73,6 +77,7 @@ const ReviewCommentModal: React.FC<ReviewCommentModalProps> = ({
   onConfirm,
   onCancel,
 }) => {
+  const lbl = useLabels();
   const [comment, setComment] = useState('');
   const modalId = titleText.toLowerCase().replace(/\s+/g, '-');
 
@@ -81,7 +86,7 @@ const ReviewCommentModal: React.FC<ReviewCommentModalProps> = ({
       <div className={styles.sbModal}>
         <div className={styles.sbModalHeader}>
           <span id={`${modalId}-title`} className={styles.sbModalTitle}>{titleText}</span>
-          <button className={styles.sbModalClose} onClick={onCancel} aria-label="Close" type="button">
+          <button className={styles.sbModalClose} onClick={onCancel} aria-label={lbl.reviewCommentModal.closeAriaLabel} type="button">
             ×
           </button>
         </div>
@@ -100,11 +105,11 @@ const ReviewCommentModal: React.FC<ReviewCommentModalProps> = ({
             aria-required="true"
           />
           {comment.trim().length === 0 && (
-            <p className={styles.sbError}>Fill comments</p>
+            <p className={styles.sbError}>{lbl.reviewCommentModal.fillCommentsError}</p>
           )}
         </div>
         <div className={styles.sbModalFooter}>
-          <Button variant="ghost" onClick={onCancel}>Cancel</Button>
+          <Button variant="ghost" onClick={onCancel}>{lbl.reviewCommentModal.cancelButton}</Button>
           <Button
             variant={submitVariant}
             onClick={() => onConfirm(comment.trim())}
@@ -128,14 +133,15 @@ interface ConfirmReviewModalProps {
 }
 
 const ConfirmReviewModal: React.FC<ConfirmReviewModalProps> = ({ onConfirm, onCancel }) => {
+  const lbl = useLabels();
   const [agreed, setAgreed] = useState(false);
 
   return (
     <div className={styles.sbOverlay} role="dialog" aria-modal="true" aria-labelledby="review-confirm-title">
       <div className={styles.sbModal}>
         <div className={styles.sbModalHeader}>
-          <span id="review-confirm-title" className={styles.sbModalTitle}>Accepting Terms &amp; Conditions</span>
-          <button className={styles.sbModalClose} onClick={onCancel} aria-label="Close" type="button">
+          <span id="review-confirm-title" className={styles.sbModalTitle}>{lbl.confirmReviewModal.title}</span>
+          <button className={styles.sbModalClose} onClick={onCancel} aria-label={lbl.confirmReviewModal.closeAriaLabel} type="button">
             ×
           </button>
         </div>
@@ -148,9 +154,7 @@ const ConfirmReviewModal: React.FC<ConfirmReviewModalProps> = ({ onConfirm, onCa
               style={{ marginTop: 2 }}
             />
             <span>
-              I agree that by submitting / publishing this Content, I confirm that this
-              Content complies with prescribed guidelines, including the Terms of Use and
-              Content Policy and that I consent to publish it under the{' '}
+              {lbl.confirmReviewModal.agreementTextPart1}{' '}
               <a
                 className="sb-color-primary"
                 style={{ fontWeight: 600 }}
@@ -158,17 +162,16 @@ const ConfirmReviewModal: React.FC<ConfirmReviewModalProps> = ({ onConfirm, onCa
                 target="_blank"
                 rel="noreferrer"
               >
-                Creative Commons Framework
+                {lbl.confirmReviewModal.creativeCommonsLinkText}
               </a>{' '}
-              in accordance with the <strong>Content Policy</strong>. I have made sure that
-              I do not violate others&rsquo; copyright or privacy rights.
+              {lbl.confirmReviewModal.agreementTextPart2} <strong>{lbl.confirmReviewModal.contentPolicyText}</strong>{lbl.confirmReviewModal.agreementTextPart3}
             </span>
           </label>
         </div>
         <div className={styles.sbModalFooter}>
-          <Button variant="ghost" onClick={onCancel}>Cancel</Button>
+          <Button variant="ghost" onClick={onCancel}>{lbl.confirmReviewModal.cancelButton}</Button>
           <Button variant="primary" onClick={onConfirm} disabled={!agreed}>
-            Submit
+            {lbl.confirmReviewModal.submitButton}
           </Button>
         </div>
       </div>
@@ -185,6 +188,7 @@ interface GenerateQRModalProps {
 }
 
 const GenerateQRModal: React.FC<GenerateQRModalProps> = ({ onConfirm, onCancel }) => {
+  const lbl = useLabels();
   const [count, setCount] = useState('');
   const numCount = parseInt(count, 10);
   const isValid = !isNaN(numCount) && numCount >= 2 && numCount <= 250;
@@ -193,14 +197,14 @@ const GenerateQRModal: React.FC<GenerateQRModalProps> = ({ onConfirm, onCancel }
     <div className={styles.sbOverlay} role="dialog" aria-modal="true" aria-labelledby="genqr-title">
       <div className={styles.sbModal}>
         <div className={styles.sbModalHeader}>
-          <span id="genqr-title" className={styles.sbModalTitle}>Generate QR Codes</span>
-          <button className={styles.sbModalClose} onClick={onCancel} aria-label="Close" type="button">
+          <span id="genqr-title" className={styles.sbModalTitle}>{lbl.generateQRModal.title}</span>
+          <button className={styles.sbModalClose} onClick={onCancel} aria-label={lbl.generateQRModal.closeAriaLabel} type="button">
             ×
           </button>
         </div>
         <div className={styles.sbModalBody}>
           <label className={styles.sbLabel} htmlFor="qr-count">
-            Number of QR Codes <span aria-hidden="true" style={{ color: 'var(--sbx-error, #DC2626)' }}>*</span>
+            {lbl.generateQRModal.numberOfCodesLabel} <span aria-hidden="true" style={{ color: 'var(--sbx-error, #DC2626)' }}>*</span>
           </label>
           <input
             id="qr-count"
@@ -209,18 +213,18 @@ const GenerateQRModal: React.FC<GenerateQRModalProps> = ({ onConfirm, onCancel }
             max={250}
             className={styles.sbTextarea}
             style={{ resize: 'none', height: '40px' }}
-            placeholder="Enter number (2–250)"
+            placeholder={lbl.generateQRModal.countPlaceholder}
             value={count}
             onChange={(e) => setCount(e.target.value)}
           />
           {count && !isValid && (
-            <p className={styles.sbError}>Enter a number between 2 and 250.</p>
+            <p className={styles.sbError}>{lbl.generateQRModal.countRangeError}</p>
           )}
         </div>
         <div className={styles.sbModalFooter}>
-          <Button variant="ghost" onClick={onCancel}>Cancel</Button>
+          <Button variant="ghost" onClick={onCancel}>{lbl.generateQRModal.cancelButton}</Button>
           <Button variant="primary" onClick={() => onConfirm(numCount)} disabled={!isValid}>
-            Generate
+            {lbl.generateQRModal.generateButton}
           </Button>
         </div>
       </div>
@@ -239,10 +243,11 @@ export const Topbar: React.FC<TopbarProps> = ({
   isFormValid = true,
   onToolbarEvent,
 }) => {
+  const lbl = useLabels();
   const treeData = useTreeStore((s) => s.treeData);
   const rootNode = treeData[0];
-  const title = rootNode?.name ?? 'Untitled';
-  const statusLabel = deriveStatusLabel(rootNode?.metadata?.status ?? rootNode?.status);
+  const title = rootNode?.name ?? lbl.contextualEditor.untitledPlaceholder;
+  const statusLabel = deriveStatusLabel(rootNode?.metadata?.status ?? rootNode?.status, lbl.topbar.draftStatusFallback);
 
   const contentId = useEditorStore(
     (s) =>
@@ -290,17 +295,17 @@ export const Topbar: React.FC<TopbarProps> = ({
       if (processId && rootNode) {
         updateNode(rootNode.id, { qrCodeProcessId: processId, reservedDialcodes });
       }
-      toast.success('QR Codes generation started. Use "Download QR Codes" once ready.');
+      toast.success(lbl.topbar.qrGenerationStartedToast);
     } catch {
-      toast.error('Failed to generate QR Codes. Please try again.');
+      toast.error(lbl.topbar.qrGenerationFailedToast);
     } finally {
       setIsGeneratingQR(false);
     }
-  }, [contentId, rootNode, updateNode]);
+  }, [contentId, rootNode, updateNode, lbl]);
 
   const handleDownloadQR = useCallback(async () => {
     if (!qrCodeProcessId) {
-      toast.error('No QR codes generated yet. Generate QR Codes first.');
+      toast.error(lbl.topbar.qrCodesNotGeneratedToast);
       return;
     }
 
@@ -309,13 +314,13 @@ export const Topbar: React.FC<TopbarProps> = ({
       const result = await getDialcodeProcessStatus(qrCodeProcessId);
 
       if (result.status === 'in-process') {
-        toast('QR code image generation is in progress. Please try downloading after some time.', { icon: 'ℹ️' });
+        toast(lbl.topbar.qrGenerationInProgressToast, { icon: <Info size={16} /> });
         return;
       }
 
       const cloudUrl = result.url;
       if (!cloudUrl) {
-        toast.error('QR Codes not ready yet. Please wait and try again.');
+        toast.error(lbl.topbar.qrCodesNotReadyToast);
         return;
       }
 
@@ -349,13 +354,13 @@ export const Topbar: React.FC<TopbarProps> = ({
       a.click();
       document.body.removeChild(a);
 
-      toast.success('QR codes downloaded.');
+      toast.success(lbl.topbar.qrCodesDownloadedToast);
     } catch {
-      toast.error('Failed to download QR Codes.');
+      toast.error(lbl.topbar.qrCodesDownloadFailedToast);
     } finally {
       setIsDownloadingQR(false);
     }
-  }, [qrCodeProcessId, rootNode, contentId]);
+  }, [qrCodeProcessId, rootNode, contentId, lbl]);
 
   const isEditMode = editorMode === 'edit';
   const isReviewMode = editorMode === 'review';
@@ -398,7 +403,7 @@ export const Topbar: React.FC<TopbarProps> = ({
           <button
             className={styles.backBtn}
             onClick={() => emit('back')}
-            aria-label="Go back"
+            aria-label={lbl.topbar.backAriaLabel}
             type="button"
           >
             <ArrowLeft size={18} />
@@ -408,17 +413,19 @@ export const Topbar: React.FC<TopbarProps> = ({
             {title}
           </h1>
 
-          <span className={`sbx-chip ${styles.statusChip}`} aria-label={`Status: ${statusLabel}`}>
+          <span className={`sbx-chip ${styles.statusChip}`} aria-label={`${lbl.topbar.statusAriaLabelPrefix} ${statusLabel}`}>
             {statusLabel}
           </span>
         </div>
 
         {/* ── Right: Save indicator + actions ──────────────────── */}
         <div className={styles.right}>
+          <LanguageSelector />
+
           {/* Autosave / dirty indicator */}
           {isSaving ? (
             <span className={styles.savedIndicator} aria-live="polite">
-              Saving&hellip;
+              {lbl.topbar.savingIndicator}
             </span>
           ) : isDirty && isEditMode ? (
             // Dirty takes precedence over a prior "Saved" — no auto-save anymore.
@@ -427,26 +434,26 @@ export const Topbar: React.FC<TopbarProps> = ({
               className={`${styles.savedIndicator} ${styles.unsaved}`}
               aria-live="polite"
             >
-              Unsaved
+              {lbl.topbar.unsavedIndicator}
             </span>
           ) : lastSaved ? (
             <span className={styles.savedIndicator} aria-live="polite">
               <Check size={14} aria-hidden="true" />
-              Saved {formatLastSaved(lastSaved)}
+              {lbl.topbar.savedIndicatorPrefix} {formatLastSaved(lastSaved)}
             </span>
           ) : null}
 
           {/* Save as Draft — author action only. Hidden in read-only and for
               content under review (review / sourcing modes or Review status). */}
           {!isReadOnly && !isReviewMode && !isSourcingReviewMode && statusLabel !== 'Review' && (
-            <span title={!isFormValid ? 'Fill all required fields before saving' : undefined}>
+            <span title={!isFormValid ? lbl.topbar.fillRequiredFieldsTooltip : undefined}>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => emit('saveCollection')}
                 disabled={!isFormValid}
               >
-                Save as Draft
+                {lbl.topbar.saveAsDraftButton}
               </Button>
             </span>
           )}
@@ -462,15 +469,15 @@ export const Topbar: React.FC<TopbarProps> = ({
                 isLoading={buttonLoaders.saveCollection}
               >
                 <Send size={14} aria-hidden="true" />
-                &nbsp;Send for review
+                &nbsp;{lbl.topbar.sendForReviewButton}
               </Button>
 
               {/* Collaborators — icon only with tooltip */}
               <button
                 className={styles.iconBtn}
                 onClick={() => openModal('manageCollaborators')}
-                aria-label="Collaborators"
-                title="Collaborators"
+                aria-label={lbl.topbar.collaboratorsLabel}
+                title={lbl.topbar.collaboratorsLabel}
                 type="button"
               >
                 <Users size={16} aria-hidden="true" />
@@ -481,15 +488,15 @@ export const Topbar: React.FC<TopbarProps> = ({
                 <button
                   className={styles.iconBtn}
                   onClick={() => setShowQRMenu(v => !v)}
-                  aria-label="QR Codes"
-                  title="QR Codes"
+                  aria-label={lbl.topbar.qrCodesLabel}
+                  title={lbl.topbar.qrCodesLabel}
                   type="button"
                   aria-haspopup="true"
                   aria-expanded={showQRMenu}
                 >
                   <QrCode size={16} aria-hidden="true" />
-                  <span className={styles.iconBtnLabel}>QR Codes</span>
-                  <span style={{ fontSize: 10, marginLeft: 2 }}>▾</span>
+                  <span className={styles.iconBtnLabel}>{lbl.topbar.qrCodesLabel}</span>
+                  <ChevronDown size={14} style={{ marginLeft: 2 }} aria-hidden="true" />
                 </button>
                 {showQRMenu && (
                   <div className={styles.qrMenu} role="menu">
@@ -500,7 +507,7 @@ export const Topbar: React.FC<TopbarProps> = ({
                       disabled={isGeneratingQR}
                     >
                       <QrCode size={14} />
-                      {isGeneratingQR ? 'Generating…' : 'Generate QR Codes'}
+                      {isGeneratingQR ? lbl.topbar.generatingEllipsis : lbl.topbar.generateQrCodesMenuItem}
                     </button>
                     <button
                       role="menuitem"
@@ -509,7 +516,7 @@ export const Topbar: React.FC<TopbarProps> = ({
                       disabled={isDownloadingQR || !qrCodeProcessId}
                     >
                       <Download size={14} />
-                      {isDownloadingQR ? 'Downloading…' : 'Download QR Codes'}
+                      {isDownloadingQR ? lbl.topbar.downloadingEllipsis : lbl.topbar.downloadQrCodesMenuItem}
                     </button>
                   </div>
                 )}
@@ -528,7 +535,7 @@ export const Topbar: React.FC<TopbarProps> = ({
                 isLoading={buttonLoaders.publishCollection}
               >
                 <CheckCircle size={14} aria-hidden="true" />
-                &nbsp;Publish
+                &nbsp;{lbl.topbar.publishButton}
               </Button>
 
               <Button
@@ -539,7 +546,7 @@ export const Topbar: React.FC<TopbarProps> = ({
                 isLoading={buttonLoaders.rejectCollection}
               >
                 <RotateCcw size={14} aria-hidden="true" />
-                &nbsp;Request for Changes
+                &nbsp;{lbl.topbar.requestForChangesButton}
               </Button>
             </div>
           )}
@@ -553,7 +560,7 @@ export const Topbar: React.FC<TopbarProps> = ({
                 onClick={() => openModal('qualityParams', { action: 'approve' })}
               >
                 <Shield size={14} aria-hidden="true" />
-                &nbsp;Approve
+                &nbsp;{lbl.topbar.approveButton}
               </Button>
 
               <Button
@@ -562,7 +569,7 @@ export const Topbar: React.FC<TopbarProps> = ({
                 onClick={() => openModal('qualityParams', { action: 'reject' })}
               >
                 <RotateCcw size={14} aria-hidden="true" />
-                &nbsp;Request for Changes
+                &nbsp;{lbl.topbar.requestForChangesButton}
               </Button>
             </div>
           )}
@@ -606,10 +613,10 @@ export const Topbar: React.FC<TopbarProps> = ({
 
       {showRejectModal && (
         <ReviewCommentModal
-          titleText="Request Changes"
-          labelText="Changes requested"
-          placeholderText="Describe the changes the author needs to make"
-          submitLabel="Request for Changes"
+          titleText={lbl.topbar.requestChangesTitle}
+          labelText={lbl.topbar.changesRequestedLabel}
+          placeholderText={lbl.topbar.describeChangesPlaceholder}
+          submitLabel={lbl.topbar.requestForChangesButton}
           submitVariant="primary"
           onConfirm={(comment) => { setShowRejectModal(false); emit('reject', { comment }); }}
           onCancel={() => setShowRejectModal(false)}

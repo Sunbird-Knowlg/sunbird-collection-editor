@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '../shared/Button';
+import { useLabels } from '../../hooks/useLabels';
 import styles from './modals.module.scss';
 
 interface QualityParamsModalProps {
@@ -15,11 +16,12 @@ export const QualityParamsModal: React.FC<QualityParamsModalProps> = ({
   onConfirm,
   onCancel,
 }) => {
+  const lbl = useLabels();
   const [comment, setComment] = useState('');
   const [score, setScore] = useState<number>(7);
 
   const isApprove = action === 'approve';
-  const title = isApprove ? 'Review Quality' : 'Reject Content';
+  const title = isApprove ? lbl.qualityParamsModal.reviewQualityTitle : lbl.qualityParamsModal.rejectContentTitle;
 
   // For reject the comment is required; for approve it is optional
   const isSubmitDisabled = !isApprove && comment.trim().length === 0;
@@ -40,7 +42,7 @@ export const QualityParamsModal: React.FC<QualityParamsModalProps> = ({
           <button
             className={styles.modalHeaderClose}
             onClick={onCancel}
-            aria-label="Close"
+            aria-label={lbl.qualityParamsModal.closeAriaLabel}
           >
             ×
           </button>
@@ -50,7 +52,7 @@ export const QualityParamsModal: React.FC<QualityParamsModalProps> = ({
           {isApprove ? (
             <>
               <div className={styles.formGroup}>
-                <label htmlFor="quality-score">Quality Score</label>
+                <label htmlFor="quality-score">{lbl.qualityParamsModal.qualityScoreLabel}</label>
                 <div className={styles.sliderGroup}>
                   <input
                     id="quality-score"
@@ -67,22 +69,22 @@ export const QualityParamsModal: React.FC<QualityParamsModalProps> = ({
                   <span className={styles.sliderValue}>{score}</span>
                 </div>
                 <div className={styles.sliderLabels}>
-                  <span>0 — Poor</span>
-                  <span>10 — Excellent</span>
+                  <span>{lbl.qualityParamsModal.scorePoorLabel}</span>
+                  <span>{lbl.qualityParamsModal.scoreExcellentLabel}</span>
                 </div>
               </div>
 
               <div className={styles.formGroup}>
                 <label htmlFor="quality-comment">
-                  Comment{' '}
+                  {lbl.qualityParamsModal.commentLabel}{' '}
                   <span style={{ fontWeight: 400, color: 'var(--sbx-gray-400, #9CA3AF)' }}>
-                    (optional)
+                    {lbl.qualityParamsModal.optionalLabel}
                   </span>
                 </label>
                 <textarea
                   id="quality-comment"
                   className={styles.textarea}
-                  placeholder="Add any notes for the content creator…"
+                  placeholder={lbl.qualityParamsModal.commentPlaceholder}
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
                   rows={4}
@@ -92,13 +94,13 @@ export const QualityParamsModal: React.FC<QualityParamsModalProps> = ({
           ) : (
             <div className={styles.formGroup}>
               <label htmlFor="reject-reason">
-                Rejection Reason{' '}
+                {lbl.qualityParamsModal.rejectionReasonLabel}{' '}
                 <span style={{ color: 'var(--sbx-error, #DC2626)' }}>*</span>
               </label>
               <textarea
                 id="reject-reason"
                 className={styles.textarea}
-                placeholder="Describe why this content is being rejected…"
+                placeholder={lbl.qualityParamsModal.rejectReasonPlaceholder}
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 rows={5}
@@ -113,7 +115,7 @@ export const QualityParamsModal: React.FC<QualityParamsModalProps> = ({
                     marginTop: 4,
                   }}
                 >
-                  A rejection reason is required.
+                  {lbl.qualityParamsModal.rejectionRequiredMessage}
                 </p>
               )}
             </div>
@@ -122,14 +124,14 @@ export const QualityParamsModal: React.FC<QualityParamsModalProps> = ({
 
         <div className={styles.modalFooter}>
           <Button variant="ghost" onClick={onCancel}>
-            Cancel
+            {lbl.qualityParamsModal.cancelButton}
           </Button>
           <Button
             variant={isApprove ? 'primary' : 'danger'}
             onClick={handleSubmit}
             disabled={isSubmitDisabled}
           >
-            {isApprove ? 'Approve' : 'Reject'}
+            {isApprove ? lbl.qualityParamsModal.approveButton : lbl.qualityParamsModal.rejectButton}
           </Button>
         </div>
       </div>

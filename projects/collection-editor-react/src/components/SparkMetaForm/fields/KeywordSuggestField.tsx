@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { X } from 'lucide-react';
+import { useLabels } from '../../../hooks/useLabels';
 import styles from './Field.module.scss';
 
 interface KeywordSuggestFieldProps {
@@ -11,6 +12,7 @@ interface KeywordSuggestFieldProps {
 }
 
 export const KeywordSuggestField: React.FC<KeywordSuggestFieldProps> = ({ name, label, required, disabled }) => {
+  const lbl = useLabels();
   const { control } = useFormContext();
   const {
     field,
@@ -18,7 +20,7 @@ export const KeywordSuggestField: React.FC<KeywordSuggestFieldProps> = ({ name, 
   } = useController({
     name,
     control,
-    rules: { required: required ? `${label} is required` : false },
+    rules: { required: required ? lbl.keywordSuggestField.requiredError.replace('{field}', label) : false },
     defaultValue: [],
   });
 
@@ -87,7 +89,7 @@ export const KeywordSuggestField: React.FC<KeywordSuggestFieldProps> = ({ name, 
             onChange={e => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
             onBlur={handleBlur}
-            placeholder={tags.length === 0 ? 'Type and press Enter or comma…' : ''}
+            placeholder={tags.length === 0 ? lbl.keywordSuggestField.inputPlaceholder : ''}
             style={{ flexGrow: 1, minWidth: 120 }}
           />
         )}

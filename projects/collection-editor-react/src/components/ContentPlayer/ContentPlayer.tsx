@@ -1,10 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { User, Scale, Globe, School, BookOpen, Tag, AlertTriangle } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import type { INode, EditorMode } from '../../types/editor';
 import { useEditorStore } from '../../store/editor.store';
 import { useTreeStore } from '../../store/tree.store';
 import { fetchContentDetails } from '../../api/content';
 import { useQumlContent, buildSingleQuestionHierarchy } from '../../hooks/useQumlContent';
 import { qumlPlayerService, QumlPlayerService } from '../../services/quml/QumlPlayerService';
+import { useLabels } from '../../hooks/useLabels';
 import styles from './ContentPlayer.module.scss';
 
 const QUESTIONSET_MIME = 'application/vnd.sunbird.questionset';
@@ -34,18 +37,34 @@ function findAncestorQuestionSetId(nodes: INode[], nodeId: string): string | nul
 }
 
 // ── MIME-type classification ──────────────────────────────────────────────────
-const MIME_GROUPS: Array<{ key: string; mimes: string[]; label: string; icon: string }> = [
-  { key: 'video',  mimes: ['video/mp4','video/webm','video/ogg'],               label: 'Video',  icon: '🎬' },
-  { key: 'audio',  mimes: ['audio/mp3','audio/mpeg','audio/ogg','audio/wav'],    label: 'Audio',  icon: '🎵' },
-  { key: 'pdf',    mimes: ['application/pdf'],                                   label: 'PDF',    icon: '📄' },
-  { key: 'epub',   mimes: ['application/epub'],                                  label: 'ePub',   icon: '📖' },
-  { key: 'ecml',   mimes: ['application/vnd.ekstep.ecml-archive'],               label: 'ECML',   icon: '✏️'  },
-  { key: 'h5p',    mimes: ['application/vnd.ekstep.h5p-archive'],                label: 'H5P',    icon: '🎮'  },
-  { key: 'scorm',  mimes: ['application/vnd.ekstep.content-collection'],         label: 'SCORM',  icon: '📦'  },
+const MIME_GROUPS: Array<{ key: string; mimes: string[] }> = [
+  { key: 'video',  mimes: ['video/mp4','video/webm','video/ogg'] },
+  { key: 'audio',  mimes: ['audio/mp3','audio/mpeg','audio/ogg','audio/wav'] },
+  { key: 'pdf',    mimes: ['application/pdf'] },
+  { key: 'epub',   mimes: ['application/epub'] },
+  { key: 'ecml',   mimes: ['application/vnd.ekstep.ecml-archive'] },
+  { key: 'h5p',    mimes: ['application/vnd.ekstep.h5p-archive'] },
+  { key: 'scorm',  mimes: ['application/vnd.ekstep.content-collection'] },
 ];
 
 function getMimeGroup(mimeType: string) {
-  return MIME_GROUPS.find(g => g.mimes.includes(mimeType)) ?? { key: 'other', label: 'Content', icon: '📱' };
+  return MIME_GROUPS.find(g => g.mimes.includes(mimeType)) ?? { key: 'other' };
+}
+
+// Maps a MIME group key to its translated display label. Kept separate from
+// MIME_GROUPS (a module-level constant) since label lookup needs the current
+// LabelConfig from useLabels(), which is only available inside components.
+function getMimeGroupLabel(key: string, lbl: ReturnType<typeof useLabels>): string {
+  switch (key) {
+    case 'video': return lbl.contentPlayer.mimeLabelVideo;
+    case 'audio': return lbl.contentPlayer.mimeLabelAudio;
+    case 'pdf': return lbl.contentPlayer.mimeLabelPdf;
+    case 'epub': return lbl.contentPlayer.mimeLabelEpub;
+    case 'ecml': return lbl.contentPlayer.mimeLabelEcml;
+    case 'h5p': return lbl.contentPlayer.mimeLabelH5p;
+    case 'scorm': return lbl.contentPlayer.mimeLabelScorm;
+    default: return lbl.contentPlayer.mimeLabelOther;
+  }
 }
 
 // ── Player type resolution ────────────────────────────────────────────────────
@@ -157,23 +176,38 @@ async function waitForCustomElement(tag: string, playerType: string, maxAttempts
 }
 
 // ── Info strip ────────────────────────────────────────────────────────────────
-const INFO_FIELDS: Array<{ key: string; label: string; icon: string }> = [
-  { key: 'author',      label: 'Author',   icon: '👤' },
-  { key: 'license',     label: 'License',  icon: '⚖️'  },
-  { key: 'language',    label: 'Language', icon: '🌐'  },
-  { key: 'gradeLevel',  label: 'Class',    icon: '🏫'  },
-  { key: 'subject',     label: 'Subject',  icon: '📚'  },
-  { key: 'contentType', label: 'Type',     icon: '🏷️'  },
+const INFO_FIELDS: Array<{ key: string; icon: LucideIcon }> = [
+  { key: 'author',      icon: User },
+  { key: 'license',     icon: Scale },
+  { key: 'language',    icon: Globe },
+  { key: 'gradeLevel',  icon: School },
+  { key: 'subject',     icon: BookOpen },
+  { key: 'contentType', icon: Tag },
 ];
 
+// Maps an info field key to its translated display label — see getMimeGroupLabel
+// for why this can't just live on the INFO_FIELDS constant itself.
+function getInfoFieldLabel(key: string, lbl: ReturnType<typeof useLabels>): string {
+  switch (key) {
+    case 'author': return lbl.contentPlayer.infoFieldAuthor;
+    case 'license': return lbl.contentPlayer.infoFieldLicense;
+    case 'language': return lbl.contentPlayer.infoFieldLanguage;
+    case 'gradeLevel': return lbl.contentPlayer.infoFieldClass;
+    case 'subject': return lbl.contentPlayer.infoFieldSubject;
+    case 'contentType': return lbl.contentPlayer.infoFieldType;
+    default: return key;
+  }
+}
+
 function InfoStrip({ node }: { node: INode }) {
+  const lbl = useLabels();
   const meta = (node.metadata ?? {}) as Record<string, unknown>;
   const chips = INFO_FIELDS.flatMap(f => {
     const raw = meta[f.key];
     if (!raw) return [];
     const val = Array.isArray(raw) ? raw.join(', ') : String(raw);
     if (!val) return [];
-    return [{ ...f, val }];
+    return [{ ...f, label: getInfoFieldLabel(f.key, lbl), val }];
   });
   if (!chips.length) return null;
 
@@ -181,7 +215,7 @@ function InfoStrip({ node }: { node: INode }) {
     <div className={styles.infoStrip}>
       {chips.map(c => (
         <div key={c.key} className={styles.infoChip}>
-          {c.icon && <span className={styles.infoChipIcon}>{c.icon}</span>}
+          {c.icon && <c.icon size={13} className={styles.infoChipIcon} />}
           <span className={styles.infoChipLabel}>{c.label}</span>
           {c.val}
         </div>
@@ -192,6 +226,7 @@ function InfoStrip({ node }: { node: INode }) {
 
 // ── Cover overlay ─────────────────────────────────────────────────────────────
 function CoverOverlay({ node, hidden }: { node: INode; hidden: boolean }) {
+  const lbl = useLabels();
   const thumb = node.appIcon ?? (node.metadata?.appIcon as string | undefined);
   return (
     <div className={`${styles.coverOverlay} ${hidden ? styles.coverHidden : ''}`}>
@@ -201,7 +236,7 @@ function CoverOverlay({ node, hidden }: { node: INode; hidden: boolean }) {
           <div className={styles.coverPlayRing}>
             <div className={styles.coverPlayIcon} />
           </div>
-          <span className={styles.coverLabel}>Loading preview…</span>
+          <span className={styles.coverLabel}>{lbl.contentPlayer.loadingPreview}</span>
         </>
       ) : (
         <div className={styles.coverSkeleton} />
@@ -214,7 +249,7 @@ function CoverOverlay({ node, hidden }: { node: INode; hidden: boolean }) {
 function PlayerError({ message }: { message: string }) {
   return (
     <div className={styles.playerError}>
-      <span className={styles.playerErrorIcon}>⚠</span>
+      <AlertTriangle size={28} className={styles.playerErrorIcon} />
       <span className={styles.playerErrorMsg}>{message}</span>
     </div>
   );
@@ -222,11 +257,12 @@ function PlayerError({ message }: { message: string }) {
 
 // ── Type badge ────────────────────────────────────────────────────────────────
 function TypeBadge({ mimeType }: { mimeType: string }) {
+  const lbl = useLabels();
   const group = getMimeGroup(mimeType);
   return (
     <span className={styles.typeBadge} data-type={group.key}>
       <span className={styles.typeDot} />
-      {group.label}
+      {getMimeGroupLabel(group.key, lbl)}
     </span>
   );
 }
@@ -269,6 +305,7 @@ export const ContentPlayer: React.FC<ContentPlayerProps> = ({ node, editorMode, 
 
 // ── Sunbird content player ────────────────────────────────────────────────────
 function SunbirdContentPlayer({ node }: { node: INode }) {
+  const lbl = useLabels();
   const editorConfig = useEditorStore((s) => s.editorConfig);
   const [playerType, setPlayerType] = useState(() => resolvePlayerType(node.mimeType ?? ''));
   const [coverHidden, setCoverHidden] = useState(false);
@@ -327,7 +364,7 @@ function SunbirdContentPlayer({ node }: { node: INode }) {
       try {
         const win = iframe.contentWindow as Record<string, unknown> | null;
         if (typeof win?.['initializePreview'] !== 'function') {
-          setPlayerError('Preview player unavailable. Check that /content/preview is reachable.');
+          setPlayerError(lbl.contentPlayer.previewPlayerUnavailable);
           return;
         }
         // playerConfig is captured here — contentReady gate ensures fullMetadata is set
@@ -335,11 +372,11 @@ function SunbirdContentPlayer({ node }: { node: INode }) {
         setTimeout(() => setCoverHidden(true), 300);
       } catch (err) {
         console.error('[ContentPlayer] initializePreview failed', err);
-        setPlayerError('Failed to initialize the content player.');
+        setPlayerError(lbl.contentPlayer.failedToInitializePlayer);
       }
     };
 
-    const handleError = () => setPlayerError('Preview player could not be loaded.');
+    const handleError = () => setPlayerError(lbl.contentPlayer.previewPlayerLoadFailed);
 
     iframe.addEventListener('load', handleLoad);
     iframe.addEventListener('error', handleError);
@@ -349,7 +386,7 @@ function SunbirdContentPlayer({ node }: { node: INode }) {
       iframe.src = '';
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [node.identifier, playerType, previewUrl, contentReady]);
+  }, [node.identifier, playerType, previewUrl, contentReady, lbl]);
 
   // Web-component players (pdf / video / epub)
   useEffect(() => {
@@ -425,6 +462,7 @@ function QumlPlayer({
   editorMode: EditorMode;
   singleQuestion: boolean;
 }) {
+  const lbl = useLabels();
   const editorConfig = useEditorStore((s) => s.editorConfig);
   const treeData = useTreeStore((s) => s.treeData);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -489,11 +527,11 @@ function QumlPlayer({
   }, [metadata, editorConfig, editorMode, singleQuestion]);
 
   const errorMessage = error
-    ? `Unable to load questionset: ${error.message}`
+    ? `${lbl.contentPlayer.unableToLoadQuestionset} ${error.message}`
     : singleQuestion && !baseQuestionSetId
-      ? 'Could not resolve the parent questionset for this question.'
+      ? lbl.contentPlayer.parentQuestionsetNotResolved
       : singleQuestion && baseHierarchy && !metadata
-        ? 'Question not found in the questionset.'
+        ? lbl.contentPlayer.questionNotFoundInQuestionset
         : null;
 
   return (

@@ -3,6 +3,7 @@ import { Search, Upload, X, Check, Loader } from 'lucide-react';
 import { apiClient } from '../../../api/client';
 import { createMediaAsset, getPreSignedUrl, uploadToBlob, finalizeAssetUpload } from '../../../api/asset';
 import { useEditorStore } from '../../../store/editor.store';
+import { useLabels } from '../../../hooks/useLabels';
 import styles from './AppIconPickerModal.module.scss';
 
 interface ImageAsset {
@@ -28,6 +29,7 @@ export const AppIconPickerModal: React.FC<AppIconPickerModalProps> = ({
   onSelect,
   onClose,
 }) => {
+  const lbl = useLabels();
   const [tab, setTab] = useState<'my' | 'all' | 'upload'>('my');
   const [query, setQuery] = useState('');
   const [images, setImages] = useState<ImageAsset[]>([]);
@@ -135,12 +137,12 @@ export const AppIconPickerModal: React.FC<AppIconPickerModalProps> = ({
     const allowedTypes = assetAccept.split(',').map(t => t.trim());
     if (!allowedTypes.includes(file.type)) {
       const readableTypes = allowedTypes.map(t => t.replace('image/', '').toUpperCase()).join(', ');
-      setUploadError(`Only ${readableTypes} files are accepted.`);
+      setUploadError(lbl.appIconPickerModal.invalidFileTypeError.replace('{types}', readableTypes));
       return;
     }
     if (file.size > assetMaxBytes) {
       const mb = (assetMaxBytes / (1024 * 1024)).toFixed(0);
-      setUploadError(`Image must be under ${mb} MB.`);
+      setUploadError(lbl.appIconPickerModal.fileTooLargeError.replace('{size}', mb));
       return;
     }
     // Revoke previous preview before creating a new one to avoid blob URL leaks
@@ -171,7 +173,7 @@ export const AppIconPickerModal: React.FC<AppIconPickerModalProps> = ({
       const contentUrl = await finalizeAssetUpload(assetId, fileUrl, uploadFile.type);
       onSelect(contentUrl);
     } catch (err) {
-      setUploadError(err instanceof Error ? err.message : 'Upload failed.');
+      setUploadError(err instanceof Error ? err.message : lbl.appIconPickerModal.uploadFailedError);
     } finally {
       setIsUploading(false);
     }
@@ -180,23 +182,23 @@ export const AppIconPickerModal: React.FC<AppIconPickerModalProps> = ({
   const hasMore = images.length < totalCount;
 
   return (
-    <div className={styles.overlay} role="dialog" aria-modal="true" aria-label="Select App Icon">
+    <div className={styles.overlay} role="dialog" aria-modal="true" aria-label={lbl.appIconPickerModal.dialogAriaLabel}>
       <div className={styles.modal}>
         {/* Header */}
         <div className={styles.header}>
-          <span className={styles.title}>Select App Icon</span>
-          <button className={styles.closeBtn} onClick={onClose} aria-label="Close">
+          <span className={styles.title}>{lbl.appIconPickerModal.title}</span>
+          <button className={styles.closeBtn} onClick={onClose} aria-label={lbl.appIconPickerModal.closeAriaLabel}>
             <X size={18} />
           </button>
         </div>
 
         {/* Tabs */}
         <div className={styles.tabs} role="tablist">
-          <button role="tab" aria-selected={tab === 'my'} className={`${styles.tab} ${tab === 'my' ? styles.activeTab : ''}`} onClick={() => setTab('my')}>My Images</button>
-          <button role="tab" aria-selected={tab === 'all'} className={`${styles.tab} ${tab === 'all' ? styles.activeTab : ''}`} onClick={() => setTab('all')}>All Images</button>
+          <button role="tab" aria-selected={tab === 'my'} className={`${styles.tab} ${tab === 'my' ? styles.activeTab : ''}`} onClick={() => setTab('my')}>{lbl.appIconPickerModal.myImagesTab}</button>
+          <button role="tab" aria-selected={tab === 'all'} className={`${styles.tab} ${tab === 'all' ? styles.activeTab : ''}`} onClick={() => setTab('all')}>{lbl.appIconPickerModal.allImagesTab}</button>
           <button role="tab" aria-selected={tab === 'upload'} className={`${styles.tab} ${tab === 'upload' ? styles.activeTab : ''}`} onClick={() => setTab('upload')}>
             <Upload size={13} style={{ marginRight: 4 }} />
-            Upload
+            {lbl.appIconPickerModal.uploadTab}
           </button>
         </div>
 
@@ -209,7 +211,7 @@ export const AppIconPickerModal: React.FC<AppIconPickerModalProps> = ({
                 <input
                   type="search"
                   className={styles.searchInput}
-                  placeholder="Search images…"
+                  placeholder={lbl.appIconPickerModal.searchPlaceholder}
                   value={query}
                   onChange={e => handleQueryChange(e.target.value)}
                 />
@@ -219,10 +221,10 @@ export const AppIconPickerModal: React.FC<AppIconPickerModalProps> = ({
               {isLoading && images.length === 0 ? (
                 <div className={styles.loadingRow}>
                   <Loader size={20} className={styles.spinner} />
-                  <span>Loading…</span>
+                  <span>{lbl.appIconPickerModal.loadingText}</span>
                 </div>
               ) : images.length === 0 ? (
-                <div className={styles.empty}>No images found</div>
+                <div className={styles.empty}>{lbl.appIconPickerModal.noImagesFound}</div>
               ) : (
                 <div className={styles.grid}>
                   {images.map(img => {
@@ -239,7 +241,7 @@ export const AppIconPickerModal: React.FC<AppIconPickerModalProps> = ({
                         {thumb ? (
                           <img src={thumb} alt={img.name} className={styles.thumb} />
                         ) : (
-                          <div className={styles.noThumb}>IMG</div>
+                          <div className={styles.noThumb}>{lbl.appIconPickerModal.noThumbnailText}</div>
                         )}
                         {isSelected && <div className={styles.checkBadge}><Check size={12} /></div>}
                       </button>
@@ -249,7 +251,7 @@ export const AppIconPickerModal: React.FC<AppIconPickerModalProps> = ({
               )}
 
               {hasMore && !isLoading && (
-                <button className={styles.loadMoreBtn} onClick={handleLoadMore}>Load More</button>
+                <button className={styles.loadMoreBtn} onClick={handleLoadMore}>{lbl.appIconPickerModal.loadMoreButton}</button>
               )}
               {isLoading && images.length > 0 && (
                 <div className={styles.loadingRow}><Loader size={16} className={styles.spinner} /></div>
@@ -265,12 +267,16 @@ export const AppIconPickerModal: React.FC<AppIconPickerModalProps> = ({
                 onDrop={e => { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f) handleFileChange({ target: { files: [f], value: '' } } as unknown as React.ChangeEvent<HTMLInputElement>); }}
               >
                 {uploadPreview ? (
-                  <img src={uploadPreview} alt="Preview" className={styles.uploadPreview} />
+                  <img src={uploadPreview} alt={lbl.appIconPickerModal.previewAlt} className={styles.uploadPreview} />
                 ) : (
                   <>
                     <Upload size={32} className={styles.uploadIcon} />
-                    <p className={styles.dropText}>Drag &amp; drop or click to browse</p>
-                    <p className={styles.dropSubtext}>{assetAccept.split(',').map(t => t.replace('image/', '').toUpperCase()).join(', ')} · max {(assetMaxBytes / (1024 * 1024)).toFixed(0)} MB</p>
+                    <p className={styles.dropText}>{lbl.appIconPickerModal.dropZoneText}</p>
+                    <p className={styles.dropSubtext}>
+                      {lbl.appIconPickerModal.acceptedTypesInfo
+                        .replace('{types}', assetAccept.split(',').map(t => t.replace('image/', '').toUpperCase()).join(', '))
+                        .replace('{size}', (assetMaxBytes / (1024 * 1024)).toFixed(0))}
+                    </p>
                   </>
                 )}
               </div>
@@ -283,14 +289,14 @@ export const AppIconPickerModal: React.FC<AppIconPickerModalProps> = ({
 
         {/* Footer */}
         <div className={styles.footer}>
-          <button className={styles.cancelBtn} onClick={onClose}>Cancel</button>
+          <button className={styles.cancelBtn} onClick={onClose}>{lbl.appIconPickerModal.cancelButton}</button>
           {tab === 'upload' ? (
             <button
               className={styles.confirmBtn}
               disabled={!uploadFile || isUploading}
               onClick={handleUpload}
             >
-              {isUploading ? <><Loader size={14} className={styles.spinner} /> Uploading…</> : 'Upload & Use'}
+              {isUploading ? <><Loader size={14} className={styles.spinner} /> {lbl.appIconPickerModal.uploadingText}</> : lbl.appIconPickerModal.uploadAndUseButton}
             </button>
           ) : (
             <button
@@ -298,7 +304,7 @@ export const AppIconPickerModal: React.FC<AppIconPickerModalProps> = ({
               disabled={!selected}
               onClick={handleConfirmSelect}
             >
-              Use Selected
+              {lbl.appIconPickerModal.useSelectedButton}
             </button>
           )}
         </div>
