@@ -9,6 +9,7 @@ import {
   publishContent,
 } from '../api/hierarchy';
 import { findMissingRequiredFields } from '../utils/validateRequiredFields';
+import { useFramework } from './useFramework';
 
 /**
  * Centralises the review / publish / reject toolbar flows — mirroring how the
@@ -30,6 +31,16 @@ export function useToolbarActions(save: () => Promise<void>) {
   const treeCache = useTreeStore((s) => s.treeCache);
   const selectNode = useTreeStore((s) => s.selectNode);
 
+  // Same framework resolution as SparkMetaForm (react-query dedupes the read),
+  // so required-field validation sees the same adapted field set the form
+  // renders — e.g. USF drops the BMGS fields, so they must not be validated.
+  const contentFramework = useEditorStore((s) => s.contentFramework);
+  const contentTargetFWIds = useEditorStore((s) => s.contentTargetFWIds);
+  const { organisationFramework, targetFrameworks } = useFramework(
+    (contentFramework ?? config?.context?.framework) as string | undefined,
+    (contentTargetFWIds ?? config?.context?.targetFWIds) as string[] | undefined,
+  );
+
   /**
    * Tree-wide required-field gate for Save / Send-for-review / Publish.
    * Unlike validateAllForms (touched-forms only), this validates every
@@ -50,6 +61,7 @@ export function useToolbarActions(save: () => Promise<void>) {
       rootFormConfig as Array<Record<string, unknown>> | null,
       unitFormConfig as Array<Record<string, unknown>> | null,
       ctx,
+      { organisationFramework, targetFrameworks },
     );
     if (gaps.length === 0) return true;
 
@@ -61,7 +73,7 @@ export function useToolbarActions(save: () => Promise<void>) {
     gaps.forEach((g) => setFormStatus(g.nodeId, false));
     selectNode(first.nodeId);
     return false;
-  }, [treeData, treeCache, rootFormConfig, unitFormConfig, config, selectNode]);
+  }, [treeData, treeCache, rootFormConfig, unitFormConfig, config, selectNode, organisationFramework, targetFrameworks]);
 
   const runAction = useCallback(
     async (action: ToolbarAction, data?: unknown): Promise<boolean> => {

@@ -4,11 +4,35 @@ import { useEditorStore } from '../store/editor.store';
 import { useTreeStore } from '../store/tree.store';
 import { readHierarchy, readQuestionSetHierarchyTree } from '../api/hierarchy';
 import { getCategoryDefinition } from '../api/categoryDefinition';
+import { getChannelData } from '../api/channel';
 import { setApiBaseUrl } from '../api/client';
 
 interface UseEditorInitOptions {
   config: IEditorConfig;
   onError?: (e: Error) => void;
+}
+
+/**
+ * Pure framework/target resolution — exported for tests.
+ *
+ * Priority: content metadata (existing content keeps the framework it was
+ * authored in) → channel defaultFramework (new/unpinned content follows the
+ * channel) → editorConfig context → null.
+ */
+export function resolveFrameworkIds(
+  meta: Record<string, unknown>,
+  channelDefaultFramework: string | undefined,
+  context: { framework?: string; targetFWIds?: string[] },
+): { framework: string | null; targetFWIds: string[] | null } {
+  return {
+    framework: (meta['framework'] as string | undefined)
+      ?? channelDefaultFramework
+      ?? context.framework
+      ?? null,
+    targetFWIds: (meta['targetFWIds'] as string[] | undefined)
+      ?? context.targetFWIds
+      ?? null,
+  };
 }
 
 export function useEditorInit({ config, onError }: UseEditorInitOptions) {
@@ -37,6 +61,18 @@ export function useEditorInit({ config, onError }: UseEditorInitOptions) {
         const contentId =
           config.context.contentId ?? config.context.identifier ?? '';
 
+        // Channel defaultFramework is the middle fallback for framework
+        // resolution (content metadata → channel default → context). Fetched
+        // best-effort: a failed channel read must not block editor init.
+        const channelId = config.context.channel ?? '';
+        let channelDefaultFramework: string | undefined;
+        if (channelId) {
+          try {
+            channelDefaultFramework = (await getChannelData(channelId))?.defaultFramework;
+          } catch { /* fall through to context.framework */ }
+        }
+        let frameworkResolved = false;
+
         if (contentId) {
           // QuestionSet-rooted editors must read from the questionset endpoint
           // (payload under result.questionset); everything else is a
@@ -50,15 +86,11 @@ export function useEditorInit({ config, onError }: UseEditorInitOptions) {
             setTreeData(nodes);
             if (rootNode) {
               selectNode(rootNode.id);
-              // Mirror Angular's `collection.framework || context.framework`:
-              // the loaded content's own framework takes precedence over the
-              // editor context, so editing existing content drives the cascade
-              // off the right framework.
-              const meta = rootNode.metadata ?? {};
-              const fw = (meta['framework'] as string | undefined) ?? config.context.framework ?? null;
-              const tfw = (meta['targetFWIds'] as string[] | undefined)
-                ?? config.context.targetFWIds ?? null;
-              setContentFramework(fw, tfw);
+              const { framework, targetFWIds } = resolveFrameworkIds(
+                rootNode.metadata ?? {}, channelDefaultFramework, config.context,
+              );
+              setContentFramework(framework, targetFWIds);
+              frameworkResolved = true;
             }
           }
 
@@ -106,6 +138,16 @@ export function useEditorInit({ config, onError }: UseEditorInitOptions) {
           } catch {
             // silently fall back to hardcoded defaults
           }
+        }
+
+        // New content (no contentId) or a hierarchy read that returned no root
+        // node: still resolve the framework so the form doesn't fall back to
+        // context.framework when the channel declares a default.
+        if (!cancelled && !frameworkResolved) {
+          const { framework, targetFWIds } = resolveFrameworkIds(
+            {}, channelDefaultFramework, config.context,
+          );
+          setContentFramework(framework, targetFWIds);
         }
 
         if (!cancelled) {

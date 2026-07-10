@@ -7,6 +7,8 @@ export interface IChannelData {
   collectionAdditionalCategories?: string[];
   contentAdditionalCategories?: string[];
   defaultLicense?: string;
+  defaultFramework?: string;
+  defaultCourseFramework?: string;
 }
 
 export async function getChannelData(channelId: string): Promise<IChannelData> {

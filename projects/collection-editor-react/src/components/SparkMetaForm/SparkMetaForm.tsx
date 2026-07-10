@@ -216,6 +216,15 @@ export const SparkMetaForm: React.FC<SparkMetaFormProps> = ({
           }
           prevShuffleRef.current = value as boolean;
         }
+        // Course Type IS the framework selector: apply it to the store
+        // immediately so useFramework refetches and the field set re-shapes
+        // live (e.g. USF → industry/domain/skill). Without this the switch
+        // only takes effect after reload — the user gets no feedback and the
+        // saved framework silently disagrees with the fields they filled.
+        if (changedField === 'framework' && isRoot && typeof value === 'string' && value) {
+          const editorState = useEditorStore.getState();
+          editorState.setContentFramework(value, editorState.contentTargetFWIds);
+        }
         // transformFieldPatch omits UI-only keys (allowECM/setPeriod → null) and
         // maps levels→outcomeDeclaration, instances→{label}.
         const patch = transformFieldPatch(changedField, value);

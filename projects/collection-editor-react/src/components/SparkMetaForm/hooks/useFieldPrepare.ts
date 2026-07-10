@@ -21,6 +21,8 @@ export interface PreparedField {
   depends?: string[];
   tab: 'details' | 'audience' | 'licensing';
   section?: string;
+  /** Framework category the field's options are sourced from (board/medium/…). */
+  sourceCategory?: string;
   defaultValue?: unknown;
   currentValue?: unknown;
 }
@@ -130,7 +132,12 @@ export function useFieldPrepare(
   isRoot: boolean,
   ctx: IPrepareContext = {},
 ): PreparedField[] {
-  if (!formConfig?.length) return getDefaultFields(nodeMetadata, isRoot, frameworkDetails);
+  if (!formConfig?.length) {
+    return adaptFrameworkFields(
+      getDefaultFields(nodeMetadata, isRoot, frameworkDetails),
+      frameworkDetails, nodeMetadata, isRoot,
+    );
+  }
 
   // Code → raw field config, so a dependent field can read its PARENT field's
   // sourceCategory (mirrors Angular's `findField(parentCode)`).
@@ -141,7 +148,7 @@ export function useFieldPrepare(
   }
 
   const seenCodes = new Set<string>();
-  return formConfig.filter((field) => {
+  const prepared = formConfig.filter((field) => {
     // QR/Dial Code is managed via header buttons, not the root form
     if (isRoot && (field.code === 'dialCode' || field.code === 'dialcode')) return false;
     // Honor the API `visible` flag
@@ -178,6 +185,7 @@ export function useFieldPrepare(
       depends: field.depends as string[] | undefined,
       tab: resolveTab(field),
       section: field.section as string | undefined,
+      sourceCategory: field.sourceCategory as string | undefined,
       defaultValue: field.defaultValue ?? field.default,
       currentValue,
     };
@@ -192,6 +200,8 @@ export function useFieldPrepare(
 
     return base;
   });
+
+  return adaptFrameworkFields(prepared, frameworkDetails, nodeMetadata, isRoot);
 }
 
 // ----- Editability (mirrors Angular ifFieldIsEditable) -----------------------
@@ -543,6 +553,79 @@ function fwOpts(code: string, fw: IFrameworkDetails) {
 // the API category definition; this fallback exists only for graceful degradation.
 function cv(meta: Record<string, unknown>, code: string, inputType: PreparedField['inputType']): unknown {
   return normalizeCurrentValue(meta[code], inputType);
+}
+
+// Category codes of the classic K-12 (BMGS) framework shape. When the resolved
+// framework has none of these (e.g. a skills framework with industry/domain/
+// skill), the hardcoded BMGS skeleton would render only empty required
+// dropdowns — so the framework fields are generated from the framework's own
+// categories instead.
+const K12_CATEGORY_CODES = ['board', 'medium', 'gradeLevel', 'subject'];
+
+function isK12Framework(fw: IFrameworkDetails): boolean {
+  const categories = fw.organisationFramework?.categories ?? [];
+  // Treat "not loaded yet" as K-12 so the familiar skeleton renders while the
+  // framework read is in flight (options fill in once it resolves).
+  if (!categories.length) return true;
+  return categories.some(c => K12_CATEGORY_CODES.includes(c.code));
+}
+
+function frameworkHasCategory(fw: IFrameworkDetails, categoryCode: string): boolean {
+  return !!(
+    fw.organisationFramework?.categories?.some(c => c.code === categoryCode) ||
+    fw.targetFrameworks?.some(f => f.categories?.some(c => c.code === categoryCode))
+  );
+}
+
+/**
+ * Adapt a prepared field list to the shape of the resolved framework. Applied
+ * to BOTH the API-form-config path and the local defaults path (the server's
+ * category definition hardcodes the BMGS field set too, so patching only the
+ * defaults left production — which gets a `create` form from the API — broken).
+ *
+ * For K-12 (BMGS) frameworks, or while the framework read is still in flight,
+ * this is a no-op. For custom frameworks (e.g. USF: industry/domain/skill):
+ * - drops framework-backed fields whose category doesn't exist in the resolved
+ *   org/target frameworks (they'd render as empty required dropdowns that
+ *   block validation);
+ * - inserts one optional multiselect per actual framework category, saved
+ *   under the category code, right after the 'framework' (Course Type) field.
+ */
+function adaptFrameworkFields(
+  fields: PreparedField[],
+  fw: IFrameworkDetails,
+  meta: Record<string, unknown>,
+  isRoot: boolean,
+): PreparedField[] {
+  if (!isRoot || isK12Framework(fw)) return fields;
+
+  const kept = fields.filter(f => {
+    const categoryCode = f.sourceCategory ?? FIELD_TO_FW_CATEGORY[f.code];
+    return !categoryCode || frameworkHasCategory(fw, categoryCode);
+  });
+
+  const existingCodes = new Set(kept.map(f => f.code));
+  const dynamic: PreparedField[] = [];
+  for (const cat of fw.organisationFramework?.categories ?? []) {
+    if (existingCodes.has(cat.code)) continue;
+    dynamic.push({
+      code: cat.code, label: cat.name, inputType: 'multiselect',
+      editable: true, tab: 'details', section: 'Organisation Framework Terms',
+      options: (cat.terms ?? []).map(t => ({ label: t.name, value: t.name })),
+      currentValue: cv(meta, cat.code, 'multiselect'),
+    });
+  }
+  if (!dynamic.length) return kept;
+
+  const frameworkFieldIndex = kept.findIndex(f => f.code === 'framework');
+  if (frameworkFieldIndex >= 0) {
+    return [
+      ...kept.slice(0, frameworkFieldIndex + 1),
+      ...dynamic,
+      ...kept.slice(frameworkFieldIndex + 1),
+    ];
+  }
+  return [...kept, ...dynamic];
 }
 
 function getDefaultFields(

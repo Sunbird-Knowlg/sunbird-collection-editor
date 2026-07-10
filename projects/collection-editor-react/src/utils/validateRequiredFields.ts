@@ -38,6 +38,11 @@ export function findMissingRequiredFields(
   rootFormConfig: Array<Record<string, unknown>> | null,
   unitFormConfig: Array<Record<string, unknown>> | null,
   ctx: IPrepareContext,
+  // The resolved framework must be passed for validation to agree with the
+  // rendered form: useFieldPrepare adapts the field set to the framework's
+  // categories (dropping BMGS fields for e.g. USF), so required-ness has to be
+  // computed against that same adapted set — not the raw API form config.
+  frameworkDetails: IFrameworkDetails = EMPTY_FW,
 ): MissingFieldsReport[] {
   const reports: MissingFieldsReport[] = [];
 
@@ -55,7 +60,7 @@ export function findMissingRequiredFields(
           ...(node.metadata ?? {}),
           ...(treeCache[node.id] ?? {}),
         };
-        const fields = useFieldPrepare(formConfig, merged, EMPTY_FW, isRoot, ctx);
+        const fields = useFieldPrepare(formConfig, merged, frameworkDetails, isRoot, ctx);
         const missing = fields
           .filter(
             (f) =>

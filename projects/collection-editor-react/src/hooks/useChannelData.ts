@@ -17,6 +17,7 @@ export function useChannelData(channelId?: string): IChannelData & { isLoading: 
     collectionAdditionalCategories: query.data?.collectionAdditionalCategories,
     contentAdditionalCategories: query.data?.contentAdditionalCategories,
     defaultLicense: query.data?.defaultLicense,
+    defaultFramework: query.data?.defaultFramework,
     isLoading: query.isLoading,
   };
 }
