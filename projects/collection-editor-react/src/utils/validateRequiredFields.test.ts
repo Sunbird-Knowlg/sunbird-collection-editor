@@ -75,4 +75,34 @@ describe('findMissingRequiredFields', () => {
     );
     expect(reports).toHaveLength(0);
   });
+
+  // Production regression ("C1: please fill required fields — Subjects covered,
+  // Board/Syllabus of the audience, …"): required BMGS fields from the server's
+  // create form must NOT be validated when the resolved framework (USF) has no
+  // such categories — validation must see the same adapted field set the form
+  // renders.
+  it('does not demand BMGS fields when the framework has no BMGS categories', () => {
+    const bmgsConfig = [
+      { code: 'name', label: 'Title', required: true },
+      { code: 'subjectIds', label: 'Subjects covered in the course', required: true, sourceCategory: 'subject' },
+      { code: 'targetBoardIds', label: 'Board/Syllabus of the audience', required: true, sourceCategory: 'board' },
+      { code: 'targetMediumIds', label: 'Medium(s) of the audience', required: true, sourceCategory: 'medium' },
+    ];
+    const usfFw = {
+      organisationFramework: {
+        identifier: 'USF', name: 'USF', code: 'USF',
+        categories: [
+          { identifier: 'usf_industry', name: 'Industry', code: 'industry', terms: [] },
+          { identifier: 'usf_skill', name: 'Skill', code: 'skill', terms: [] },
+        ],
+      },
+    };
+    const tree = [
+      node({ id: 'root', identifier: 'root', name: 'C1', isFolder: true, metadata: { name: 'C1' } }),
+    ];
+    // Without the framework (legacy call shape) the BMGS fields are demanded…
+    expect(findMissingRequiredFields(tree, {}, bmgsConfig, null, {})).toHaveLength(1);
+    // …but with the resolved USF framework they are dropped from validation.
+    expect(findMissingRequiredFields(tree, {}, bmgsConfig, null, {}, usfFw)).toHaveLength(0);
+  });
 });
