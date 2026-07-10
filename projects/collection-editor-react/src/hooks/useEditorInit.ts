@@ -12,6 +12,29 @@ interface UseEditorInitOptions {
   onError?: (e: Error) => void;
 }
 
+/**
+ * Pure framework/target resolution — exported for tests.
+ *
+ * Priority: content metadata (existing content keeps the framework it was
+ * authored in) → channel defaultFramework (new/unpinned content follows the
+ * channel) → editorConfig context → null.
+ */
+export function resolveFrameworkIds(
+  meta: Record<string, unknown>,
+  channelDefaultFramework: string | undefined,
+  context: { framework?: string; targetFWIds?: string[] },
+): { framework: string | null; targetFWIds: string[] | null } {
+  return {
+    framework: (meta['framework'] as string | undefined)
+      ?? channelDefaultFramework
+      ?? context.framework
+      ?? null,
+    targetFWIds: (meta['targetFWIds'] as string[] | undefined)
+      ?? context.targetFWIds
+      ?? null,
+  };
+}
+
 export function useEditorInit({ config, onError }: UseEditorInitOptions) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -63,17 +86,10 @@ export function useEditorInit({ config, onError }: UseEditorInitOptions) {
             setTreeData(nodes);
             if (rootNode) {
               selectNode(rootNode.id);
-              // Framework resolution: the loaded content's own framework wins
-              // (editing existing content keeps its authored cascade), then
-              // the channel's defaultFramework, then the editor context.
-              const meta = rootNode.metadata ?? {};
-              const fw = (meta['framework'] as string | undefined)
-                ?? channelDefaultFramework
-                ?? config.context.framework
-                ?? null;
-              const tfw = (meta['targetFWIds'] as string[] | undefined)
-                ?? config.context.targetFWIds ?? null;
-              setContentFramework(fw, tfw);
+              const { framework, targetFWIds } = resolveFrameworkIds(
+                rootNode.metadata ?? {}, channelDefaultFramework, config.context,
+              );
+              setContentFramework(framework, targetFWIds);
               frameworkResolved = true;
             }
           }
@@ -128,10 +144,10 @@ export function useEditorInit({ config, onError }: UseEditorInitOptions) {
         // node: still resolve the framework so the form doesn't fall back to
         // context.framework when the channel declares a default.
         if (!cancelled && !frameworkResolved) {
-          setContentFramework(
-            channelDefaultFramework ?? config.context.framework ?? null,
-            config.context.targetFWIds ?? null,
+          const { framework, targetFWIds } = resolveFrameworkIds(
+            {}, channelDefaultFramework, config.context,
           );
+          setContentFramework(framework, targetFWIds);
         }
 
         if (!cancelled) {

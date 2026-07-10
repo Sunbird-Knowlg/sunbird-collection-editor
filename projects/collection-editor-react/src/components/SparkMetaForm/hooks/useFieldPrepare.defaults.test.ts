@@ -84,3 +84,56 @@ describe('per-field editability (mirrors ifFieldIsEditable)', () => {
     expect(find(fields, 'description').editable).toBe(false);
   });
 });
+
+describe('default framework fields adapt to the framework shape', () => {
+  const usfFw: IFrameworkDetails = {
+    organisationFramework: {
+      identifier: 'USF', name: 'USF', code: 'USF',
+      categories: [
+        {
+          identifier: 'usf_industry', name: 'Industry', code: 'industry',
+          terms: [{ identifier: 'usf_industry_it', name: 'Information Technology', code: 'it' }],
+        },
+        { identifier: 'usf_domain', name: 'Domain', code: 'domain', terms: [] },
+        { identifier: 'usf_skill', name: 'Skill', code: 'skill', terms: [] },
+      ],
+    },
+  };
+  const ncfFw: IFrameworkDetails = {
+    organisationFramework: {
+      identifier: 'NCF', name: 'NCF', code: 'NCF',
+      categories: [
+        { identifier: 'ncf_board', name: 'Board', code: 'board', terms: [] },
+        { identifier: 'ncf_medium', name: 'Medium', code: 'medium', terms: [] },
+      ],
+    },
+  };
+
+  it('generates one optional field per category for non-K12 frameworks and drops the BMGS cascade', () => {
+    const fields = useFieldPrepare([], {}, usfFw, true, {});
+    const codes = fields.map(f => f.code);
+    expect(codes).toEqual(expect.arrayContaining(['industry', 'domain', 'skill']));
+    expect(codes).not.toContain('subjectIds');
+    expect(codes).not.toContain('targetBoardIds');
+    expect(codes).not.toContain('targetMediumIds');
+    expect(codes).not.toContain('targetGradeLevelIds');
+    expect(codes).not.toContain('targetSubjectIds');
+    const industry = find(fields, 'industry');
+    expect(industry.required).toBeFalsy();
+    expect(industry.tab).toBe('details');
+    expect(industry.options?.map(o => o.value)).toEqual(['Information Technology']);
+  });
+
+  it('keeps the BMGS skeleton for K-12 frameworks', () => {
+    const fields = useFieldPrepare([], {}, ncfFw, true, {});
+    const codes = fields.map(f => f.code);
+    expect(codes).toContain('subjectIds');
+    expect(codes).toContain('targetBoardIds');
+    expect(codes).not.toContain('board');
+  });
+
+  it('keeps the BMGS skeleton while the framework has not loaded yet', () => {
+    const fields = useFieldPrepare([], {}, {}, true, {});
+    expect(fields.map(f => f.code)).toContain('targetBoardIds');
+  });
+});

@@ -545,6 +545,21 @@ function cv(meta: Record<string, unknown>, code: string, inputType: PreparedFiel
   return normalizeCurrentValue(meta[code], inputType);
 }
 
+// Category codes of the classic K-12 (BMGS) framework shape. When the resolved
+// framework has none of these (e.g. a skills framework with industry/domain/
+// skill), the hardcoded BMGS skeleton would render only empty required
+// dropdowns — so the framework fields are generated from the framework's own
+// categories instead.
+const K12_CATEGORY_CODES = ['board', 'medium', 'gradeLevel', 'subject'];
+
+function isK12Framework(fw: IFrameworkDetails): boolean {
+  const categories = fw.organisationFramework?.categories ?? [];
+  // Treat "not loaded yet" as K-12 so the familiar skeleton renders while the
+  // framework read is in flight (options fill in once it resolves).
+  if (!categories.length) return true;
+  return categories.some(c => K12_CATEGORY_CODES.includes(c.code));
+}
+
 function getDefaultFields(
   meta: Record<string, unknown>,
   isRoot: boolean,
@@ -567,6 +582,8 @@ function getDefaultFields(
 
   if (!isRoot) return fields;
 
+  const k12 = isK12Framework(fw);
+
   // ── Root node — Details tab ───────────────────────────────────────────────
   fields.push(
     {
@@ -583,12 +600,26 @@ function getDefaultFields(
       required: true, editable: true, tab: 'details', section: 'Organisation Framework Terms',
       options: fw.orgFrameworks, currentValue: cv(meta, 'framework', 'select'),
     },
-    {
+  );
+
+  if (k12) {
+    fields.push({
       code: 'subjectIds', label: 'Subjects covered', inputType: 'multiselect',
       required: true, editable: true, tab: 'details', section: 'Organisation Framework Terms',
       options: fwOpts('subjectIds', fw), currentValue: cv(meta, 'subjectIds', 'multiselect'),
-    },
-  );
+    });
+  } else {
+    // Non-BMGS framework (e.g. USF: industry/domain/skill) — one optional
+    // multiselect per framework category, saved under the category code.
+    for (const cat of fw.organisationFramework?.categories ?? []) {
+      fields.push({
+        code: cat.code, label: cat.name, inputType: 'multiselect',
+        editable: true, tab: 'details', section: 'Organisation Framework Terms',
+        options: (cat.terms ?? []).map(t => ({ label: t.name, value: t.name })),
+        currentValue: cv(meta, cat.code, 'multiselect'),
+      });
+    }
+  }
 
   // ── Root node — Audience & Curriculum tab ─────────────────────────────────
   fields.push(
@@ -597,27 +628,35 @@ function getDefaultFields(
       editable: true, tab: 'audience', section: 'Target Framework Terms',
       currentValue: cv(meta, 'audience', 'multiselect'),
     },
-    {
-      code: 'targetBoardIds', label: 'Board/Syllabus of the audience', inputType: 'select',
-      required: true, editable: true, tab: 'audience', section: 'Target Framework Terms',
-      options: fwOpts('targetBoardIds', fw), currentValue: cv(meta, 'targetBoardIds', 'select'),
-    },
-    {
-      code: 'targetMediumIds', label: 'Medium(s) of the audience', inputType: 'multiselect',
-      required: true, editable: true, tab: 'audience', section: 'Target Framework Terms', depends: ['targetBoardIds'],
-      options: fwOpts('targetMediumIds', fw), currentValue: cv(meta, 'targetMediumIds', 'multiselect'),
-    },
-    {
-      code: 'targetGradeLevelIds', label: 'Class(es) of the audience', inputType: 'multiselect',
-      required: true, editable: true, tab: 'audience', section: 'Target Framework Terms', depends: ['targetMediumIds'],
-      options: fwOpts('targetGradeLevelIds', fw), currentValue: cv(meta, 'targetGradeLevelIds', 'multiselect'),
-    },
-    {
-      code: 'targetSubjectIds', label: 'Subject(s) of the audience', inputType: 'multiselect',
-      required: true, editable: true, tab: 'audience', section: 'Target Framework Terms', depends: ['targetGradeLevelIds'],
-      options: fwOpts('targetSubjectIds', fw), currentValue: cv(meta, 'targetSubjectIds', 'multiselect'),
-    },
   );
+
+  // Target BMGS cascade only makes sense for K-12 frameworks — for custom
+  // frameworks these categories don't exist and would render as empty
+  // required dropdowns that block validation.
+  if (k12) {
+    fields.push(
+      {
+        code: 'targetBoardIds', label: 'Board/Syllabus of the audience', inputType: 'select',
+        required: true, editable: true, tab: 'audience', section: 'Target Framework Terms',
+        options: fwOpts('targetBoardIds', fw), currentValue: cv(meta, 'targetBoardIds', 'select'),
+      },
+      {
+        code: 'targetMediumIds', label: 'Medium(s) of the audience', inputType: 'multiselect',
+        required: true, editable: true, tab: 'audience', section: 'Target Framework Terms', depends: ['targetBoardIds'],
+        options: fwOpts('targetMediumIds', fw), currentValue: cv(meta, 'targetMediumIds', 'multiselect'),
+      },
+      {
+        code: 'targetGradeLevelIds', label: 'Class(es) of the audience', inputType: 'multiselect',
+        required: true, editable: true, tab: 'audience', section: 'Target Framework Terms', depends: ['targetMediumIds'],
+        options: fwOpts('targetGradeLevelIds', fw), currentValue: cv(meta, 'targetGradeLevelIds', 'multiselect'),
+      },
+      {
+        code: 'targetSubjectIds', label: 'Subject(s) of the audience', inputType: 'multiselect',
+        required: true, editable: true, tab: 'audience', section: 'Target Framework Terms', depends: ['targetGradeLevelIds'],
+        options: fwOpts('targetSubjectIds', fw), currentValue: cv(meta, 'targetSubjectIds', 'multiselect'),
+      },
+    );
+  }
 
   // ── Root node — Licensing tab ─────────────────────────────────────────────
   fields.push(
