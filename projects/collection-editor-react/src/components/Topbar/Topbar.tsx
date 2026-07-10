@@ -17,7 +17,6 @@ import { useTreeStore } from '../../store/tree.store';
 import { useEditorStore } from '../../store/editor.store';
 import { useUiStore } from '../../store/ui.store';
 import { Button } from '../shared/Button';
-import { LanguageSelector } from '../shared/LanguageSelector/LanguageSelector';
 import { PublishChecklist } from '../modals/PublishChecklist';
 import { QualityParamsModal } from '../modals/QualityParamsModal';
 import { ManageCollaborators } from '../Collaborators/ManageCollaborators';
@@ -420,8 +419,6 @@ export const Topbar: React.FC<TopbarProps> = ({
 
         {/* ── Right: Save indicator + actions ──────────────────── */}
         <div className={styles.right}>
-          <LanguageSelector />
-
           {/* Autosave / dirty indicator */}
           {isSaving ? (
             <span className={styles.savedIndicator} aria-live="polite">

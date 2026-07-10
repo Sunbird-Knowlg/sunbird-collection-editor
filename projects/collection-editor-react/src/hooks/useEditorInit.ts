@@ -4,6 +4,7 @@ import { useEditorStore } from '../store/editor.store';
 import { useTreeStore } from '../store/tree.store';
 import { readHierarchy, readQuestionSetHierarchyTree } from '../api/hierarchy';
 import { getCategoryDefinition } from '../api/categoryDefinition';
+import { getChannelData } from '../api/channel';
 import { setApiBaseUrl } from '../api/client';
 
 interface UseEditorInitOptions {
@@ -37,6 +38,18 @@ export function useEditorInit({ config, onError }: UseEditorInitOptions) {
         const contentId =
           config.context.contentId ?? config.context.identifier ?? '';
 
+        // Channel defaultFramework is the middle fallback for framework
+        // resolution (content metadata → channel default → context). Fetched
+        // best-effort: a failed channel read must not block editor init.
+        const channelId = config.context.channel ?? '';
+        let channelDefaultFramework: string | undefined;
+        if (channelId) {
+          try {
+            channelDefaultFramework = (await getChannelData(channelId))?.defaultFramework;
+          } catch { /* fall through to context.framework */ }
+        }
+        let frameworkResolved = false;
+
         if (contentId) {
           // QuestionSet-rooted editors must read from the questionset endpoint
           // (payload under result.questionset); everything else is a
@@ -50,15 +63,18 @@ export function useEditorInit({ config, onError }: UseEditorInitOptions) {
             setTreeData(nodes);
             if (rootNode) {
               selectNode(rootNode.id);
-              // Mirror Angular's `collection.framework || context.framework`:
-              // the loaded content's own framework takes precedence over the
-              // editor context, so editing existing content drives the cascade
-              // off the right framework.
+              // Framework resolution: the loaded content's own framework wins
+              // (editing existing content keeps its authored cascade), then
+              // the channel's defaultFramework, then the editor context.
               const meta = rootNode.metadata ?? {};
-              const fw = (meta['framework'] as string | undefined) ?? config.context.framework ?? null;
+              const fw = (meta['framework'] as string | undefined)
+                ?? channelDefaultFramework
+                ?? config.context.framework
+                ?? null;
               const tfw = (meta['targetFWIds'] as string[] | undefined)
                 ?? config.context.targetFWIds ?? null;
               setContentFramework(fw, tfw);
+              frameworkResolved = true;
             }
           }
 
@@ -106,6 +122,16 @@ export function useEditorInit({ config, onError }: UseEditorInitOptions) {
           } catch {
             // silently fall back to hardcoded defaults
           }
+        }
+
+        // New content (no contentId) or a hierarchy read that returned no root
+        // node: still resolve the framework so the form doesn't fall back to
+        // context.framework when the channel declares a default.
+        if (!cancelled && !frameworkResolved) {
+          setContentFramework(
+            channelDefaultFramework ?? config.context.framework ?? null,
+            config.context.targetFWIds ?? null,
+          );
         }
 
         if (!cancelled) {
