@@ -1,1 +1,0 @@
-export { LibraryDock } from './LibraryDock';

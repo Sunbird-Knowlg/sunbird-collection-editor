@@ -1,1 +1,0 @@
-export { DialcodePanel } from './DialcodePanel';

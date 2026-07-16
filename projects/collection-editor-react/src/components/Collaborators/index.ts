@@ -1,1 +1,0 @@
-export { ManageCollaborators } from './ManageCollaborators';
