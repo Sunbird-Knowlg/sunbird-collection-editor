@@ -1,3 +1,6 @@
+### ⚠️ Archived. 
+#### This repository is no longer maintained. Development has moved to the new React-based editor: collection-editor-v2. Please file issues and submit changes there.
+https://github.com/Sunbird-Knowlg/collection-editor-v2
 
 # :diamond_shape_with_a_dot_inside: Collection Editor library for Sunbird platform
 Contains Collection Editor library components powered by angular. These components are designed to be used in the sunbirdEd portal and web portal to drive reusability, maintainability hence reducing the redundant development effort significantly.
