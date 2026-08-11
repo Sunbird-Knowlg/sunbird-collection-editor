@@ -12,6 +12,7 @@
 @import "./fonts/noto-nastaliqurdu/notonastaliqurdu.css";
 
 @import "./mixins/mixins";
+@import "./spark-aliases";
 @import "./variables";
 @import "./base/base.scss";
 @import "./vendors/vendors";
@@ -21,3 +22,4 @@
 @import "../lib/semantic/semantic-overrides.scss";
 @import "./legacy";
 @import "./global";
+@import "./spark-overrides"; // Spark theme overrides for Semantic UI components

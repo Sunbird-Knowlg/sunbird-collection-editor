@@ -7,13 +7,13 @@
     left: 3rem !important;
   }
   .sbchapter {
-    border-bottom: calculateRem(1px) solid #ddd;
+    border-bottom: calculateRem(1px) solid var(--spark-border-card);
     padding: calculateRem(16px) calculateRem(16px) calculateRem(8px) calculateRem(16px);
 
     h4 {
       font-size: 10px;
       line-height: normal;
-      color: var(--gray-800);
+      color: var(--spark-charcoal);
       margin-bottom: calculateRem(8px);
     }
 
@@ -22,9 +22,11 @@
     }
 
     &__item {
-      background: var(--white) !important;
-      border: calculateRem(1px) solid #ddd !important;
-      box-shadow: 0 calculateRem(3px) calculateRem(4px) 0 rgba(2, 79, 157, 0.1);
+      background: var(--spark-surface) !important;
+      border: calculateRem(1px) solid var(--spark-border-card) !important;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 4px 0 rgba(var(--rc-rgba-primary), 0.08);
+      transition: box-shadow 0.2s ease, border-color 0.2s ease;
       // border: calculateRem(0.5px) solid rgba(35, 97, 255, 0.5);
       display: flex;
       align-items: flex-start;
@@ -36,27 +38,27 @@
       position: relative;
 
       &.active{
-        background: var(--secondary-300);
-        border: 0.0625rem solid var(--gray-100);
+        background: var(--color-selected-bg);
+        border: 0.0625rem solid var(--spark-border-card);
         border-bottom: 0;
         &.active:last-child{
-          border-bottom: 0.0625rem solid var(--gray-100);
+          border-bottom: 0.0625rem solid var(--spark-border-card);
         }
         .textbookBtnLink {
           visibility: visible;
           right:12px;
           .sb-btn-link{
-            border-color: var(--secondary-0) !important;
-            background-color: var(--secondary-0) !important;
+            border-color: var(--color-success-bg) !important;
+            background-color: var(--color-success-bg) !important;
           }
         }
       }
       &.selected{
-        background: var(--secondary-300);
-        border: solid 1px var(--primary-600);
+        background: var(--color-selected-bg);
+        border: solid 1px var(--spark-brick-dark);
       }
       &.active.selected{
-        border: solid 1px var(--primary-600) !important;
+        border: solid 1px var(--spark-brick-dark) !important;
       }
 
       .btn-addtoLibrary {
@@ -73,7 +75,7 @@
       h4 {
         font-size: 12px;
         line-height: calculateRem(20px);
-        color: var(--primary-400);
+        color: var(--spark-brick);
         margin: 0px;
         padding: 0px;
       }
@@ -93,7 +95,9 @@
       }
 
       &:hover {
-        background: var(--secondary-0) !important;
+        background: var(--color-brand-tint) !important;
+        border-color: var(--color-brand-divider) !important;
+        box-shadow: 0 2px 8px 0 rgba(var(--rc-rgba-primary), 0.14);
       }
 
       &:hover {
@@ -101,7 +105,7 @@
       }
 
       &--active {
-        background: var(--primary-100);
+        background: var(--color-brand-subtle);
       }
       .sb-checkbox.ui.checkbox{
         min-width: 30px !important;
@@ -110,14 +114,14 @@
   }
 
   .sbchapter-open {
-    border-bottom: calculateRem(1px) solid #e0e0e0;
+    border-bottom: calculateRem(1px) solid var(--spark-border-card);
     padding-bottom: var(--base-block-space);
 
     &__title {
       //@extend .sbaccordion__panel-header__tilte;
       font-size: 14px;
       font-weight: bold;
-      color: var(--primary-400);
+      color: var(--spark-brick);
       margin: 0px;
       padding: calculateRem(16px);
       width: 100%;
@@ -130,7 +134,7 @@
     &__topics__title {
       font-size: 14px;
       margin: 0px 0px calculateRem(8px) 0px;
-      color: var(--primary-400);
+      color: var(--spark-brick);
       padding: 0px calculateRem(16px);
     }
 
@@ -138,15 +142,15 @@
       font-size: 12px;
       padding: calculateRem(8px) calculateRem(32px);
       margin: 0px;
-      color: var(--primary-400);
+      color: var(--spark-brick);
     }
 
     &__topic--active {
-      background: var(--primary-100);
+      background: var(--color-brand-subtle);
     }
 
     &__topic:hover {
-      background: var(--gray-0);
+      background: var(--spark-card-alt);
     }
   }
   .sb-library-scroll{
@@ -156,3 +160,13 @@
   .textbookBtnLink{
     right: 0;
   }
+
+.sb-btn-dark-green:disabled,
+.sb-btn-dark-green.disabled {
+  background: var(--spark-gray-b2) !important;
+  border-color: var(--spark-gray-b2) !important;
+  color: var(--spark-gray-75) !important;
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}

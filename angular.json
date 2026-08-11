@@ -58,15 +58,15 @@
             "styles": [
               "src/assets/quml-styles/quml-carousel.css",
               "node_modules/@project-sunbird/sb-styles/assets/styles.scss",
+              "src/styles.scss",
+              "src/assets/lib/semantic/semantic.min.css",
+              "node_modules/font-awesome/css/font-awesome.css",
+              "node_modules/katex/dist/katex.min.css",
               "node_modules/@project-sunbird/sunbird-pdf-player-web-component/assets/pdf-player/styles.css",
               "node_modules/@project-sunbird/sunbird-video-player-web-component/assets/video-player/styles.css",
               "node_modules/@project-sunbird/sunbird-epub-player-web-component/assets/epub-player/styles.css",
               "node_modules/@project-sunbird/sunbird-quml-player-web-component/assets/quml-player/styles.css",
-              "src/styles.scss",
-              "src/assets/lib/semantic/semantic.min.css",
-              "src/assets/styles/styles.scss",
-              "node_modules/font-awesome/css/font-awesome.css",
-              "node_modules/katex/dist/katex.min.css"
+              "src/assets/styles/styles.scss"
             ],
             "scripts": [
               "node_modules/epubjs/dist/epub.js",
@@ -256,13 +256,13 @@
               "src/assets/quml-styles/quml-carousel.css",
               "node_modules/@project-sunbird/sb-styles/assets/styles.scss",
               "src/assets/lib/semantic/semantic.min.css",
-              "src/assets/styles/styles.scss",
               "node_modules/font-awesome/css/font-awesome.css",
               "node_modules/katex/dist/katex.min.css",
               "node_modules/@project-sunbird/sunbird-pdf-player-web-component/assets/pdf-player/styles.css",
               "node_modules/@project-sunbird/sunbird-video-player-web-component/assets/video-player/styles.css",
               "node_modules/@project-sunbird/sunbird-epub-player-web-component/assets/epub-player/styles.css",
-              "node_modules/@project-sunbird/sunbird-quml-player-web-component/assets/quml-player/styles.css"
+              "node_modules/@project-sunbird/sunbird-quml-player-web-component/assets/quml-player/styles.css",
+              "src/assets/styles/styles.scss"
             ],
             "scripts": [
               "node_modules/@project-sunbird/sunbird-file-upload-library/sunbird-file-upload-library.js",

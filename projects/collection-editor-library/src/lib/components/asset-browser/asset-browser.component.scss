@@ -67,10 +67,11 @@
     justify-content: center;
     flex-direction: column;
     margin: 0 auto;
-    background-color: #F5F9FC;
-    border: 1px dashed #80a7ce;
+    background-color: var(--color-upload-bg);
+    border: 1px dashed var(--color-upload-border);
+    border-radius: 0.5rem;
   }
-  
+
   .upload-file-description p {
     color: #999999;
   }
@@ -171,11 +172,11 @@
   }
   
   .upload-image-modal-section {
-    border-radius: 4px;
+    border-radius: 0.5rem;
     width: 100%;
     min-height: 140px;
-    background: #F5F9FC;
-    border: 1px dashed #024f9d;
+    background: var(--color-upload-bg);
+    border: 1px dashed var(--color-upload-border-focus);
   }
   
   .upload-input-button {
@@ -201,10 +202,11 @@
     justify-content: center;
     flex-direction: column;
     margin: 0 auto;
-    background-color: #F5F9FC;
-    border: 1px dashed #80a7ce;
+    background-color: var(--color-upload-bg);
+    border: 1px dashed var(--color-upload-border);
+    border-radius: 0.5rem;
   }
-  
+
   .qq-uploader.qq-uploader-selector.custom-qq-uploader {
     background: inherit;
     border-color: none;
@@ -248,9 +250,9 @@
       position: relative;
       margin-bottom: 0.5rem;
       .sb-form-control{
-        border: 1px solid rgba(34,36,38,.15);
+        border: 1px solid var(--spark-border-card);
         width: 100%;
-        border-radius: .28571429rem;
+        border-radius: 0.5rem;
         box-shadow: 0 0 0 0 transparent inset;
         padding: .25rem .5rem!important;
       }

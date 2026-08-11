@@ -1,0 +1,1071 @@
+// =============================================================================
+// Portal Theme Overrides — Sunbird Collection Editor
+// Aligns the collection editor UI with the Sunbird Portal orange/white design system.
+// All rules here are intentionally scoped or use specificity to override
+// vendor/library defaults without breaking structural layout.
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// 1. BODY & PAGE BACKGROUND
+// -----------------------------------------------------------------------------
+
+body,
+.sb-editor-body,
+.editor-body {
+  background-color: var(--bg-body); // #E9E8D9 — Spark warm parchment
+}
+
+// -----------------------------------------------------------------------------
+// 2. TYPOGRAPHY — font sizes, weights, link colours
+// -----------------------------------------------------------------------------
+
+body,
+input,
+textarea,
+select,
+button {
+  font-size: var(--font-size-base); // 14px
+}
+
+// Reset portal's inherited h1-h6 font-weight on the editor root, then re-apply
+// so editor controls its own heading weight independently of portal globals.
+lib-editor,
+lib-questionset-editor {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--spark-font);
+    font-weight: 400;
+    color: var(--spark-charcoal);
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--spark-charcoal);
+  font-weight: 600;
+}
+
+a,
+a:link,
+a:visited {
+  color: var(--spark-editor-theme); // orange
+  transition: color 0.15s ease;
+}
+
+a:hover,
+a:focus {
+  color: var(--spark-editor-theme-dark); // darker orange on hover
+  text-decoration: underline;
+}
+
+// -----------------------------------------------------------------------------
+// 3. FORM INPUTS — rounded corners, orange focus ring
+// -----------------------------------------------------------------------------
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="search"],
+input[type="url"],
+input[type="tel"],
+textarea,
+select {
+  border-radius: 0.5rem;
+  border: 1px solid var(--spark-border-card);
+  padding: 0.5rem 0.75rem;
+  font-size: var(--font-size-base);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background-color: var(--spark-surface);
+  color: var(--spark-charcoal);
+
+  &:focus,
+  &:focus-visible {
+    outline: none;
+    border-color: var(--color-brand-outline);
+    box-shadow: 0 0 0 3px rgba(var(--rc-rgba-primary), 0.15);
+  }
+
+  &::placeholder {
+    color: var(--spark-gray-b2);
+    font-size: var(--font-size-base);
+  }
+}
+
+// Semantic UI input overrides
+.ui.input > input,
+.ui.form input[type="text"],
+.ui.form input[type="email"],
+.ui.form input[type="password"],
+.ui.form input[type="search"],
+.ui.form textarea,
+.ui.form select {
+  border-radius: 0.5rem !important;
+  border-color: var(--spark-border-card) !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+
+  &:focus {
+    border-color: var(--color-brand-outline) !important;
+    box-shadow: 0 0 0 3px rgba(var(--rc-rgba-primary), 0.15) !important;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 4. DROPDOWNS / SELECTS — rounded, orange active state
+// -----------------------------------------------------------------------------
+
+.ui.dropdown,
+.ui.selection.dropdown {
+  border-radius: 0.5rem !important;
+  border-color: var(--spark-border-card) !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+
+  &.active,
+  &:focus {
+    border-color: var(--color-brand-outline) !important;
+    box-shadow: 0 0 0 3px rgba(var(--rc-rgba-primary), 0.15) !important;
+  }
+
+  .menu {
+    border-radius: 0 0 0.5rem 0.5rem !important;
+    border-color: var(--spark-border-card) !important;
+    box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.12) !important;
+
+    > .item {
+      font-size: var(--font-size-base) !important;
+      transition: background-color 0.15s ease !important;
+
+      &:hover,
+      &.active,
+      &.selected {
+        background-color: var(--color-brand-tint) !important;
+        color: var(--spark-editor-theme) !important;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 5. CHECKBOXES & RADIO BUTTONS — orange accent
+// -----------------------------------------------------------------------------
+
+.ui.checkbox input:checked ~ .box:after,
+.ui.checkbox input:checked ~ label:after {
+  color: var(--spark-editor-theme) !important;
+}
+
+.ui.checkbox input:checked ~ .box:before,
+.ui.checkbox input:checked ~ label:before {
+  border-color: var(--spark-editor-theme) !important;
+  background-color: var(--spark-editor-theme) !important;
+}
+
+.ui.checkbox input:focus ~ .box:before,
+.ui.checkbox input:focus ~ label:before {
+  border-color: var(--color-brand-outline) !important;
+  box-shadow: 0 0 0 3px rgba(var(--rc-rgba-primary), 0.15) !important;
+}
+
+.ui.radio.checkbox input:checked ~ label:after {
+  background-color: var(--spark-editor-theme) !important;
+}
+
+// -----------------------------------------------------------------------------
+// 6. TABS / NAV TABS — orange active indicator
+// -----------------------------------------------------------------------------
+
+.ui.menu .item {
+  transition: color 0.15s ease, background-color 0.15s ease !important;
+}
+
+.ui.menu .active.item,
+.ui.menu .item.active {
+  color: var(--spark-editor-theme) !important;
+  border-color: var(--spark-editor-theme) !important;
+  font-weight: 600;
+}
+
+.ui.pointing.menu .active.item:after {
+  background-color: var(--spark-editor-theme) !important;
+  border-color: var(--spark-editor-theme) !important;
+}
+
+.ui.secondary.pointing.menu .active.item {
+  border-color: var(--spark-editor-theme) !important;
+  color: var(--spark-editor-theme) !important;
+}
+
+// Tab underline indicator
+.sb-tabs .sb-tab-item.active,
+.sb-tab.active {
+  border-bottom-color: var(--spark-editor-theme) !important;
+  color: var(--spark-editor-theme) !important;
+}
+
+// -----------------------------------------------------------------------------
+// 7. TREE / COLLECTION TREE — hover & selected state
+// -----------------------------------------------------------------------------
+
+.fancy-tree .fancytree-node:hover > .fancytree-title,
+.fancytree-node:hover > .fancytree-title {
+  background-color: var(--color-brand-tint) !important;
+  color: var(--spark-editor-theme) !important;
+  border-radius: 0.25rem;
+}
+
+.fancy-tree .fancytree-active > .fancytree-title,
+.fancytree-active > .fancytree-title {
+  background-color: var(--color-brand-tint) !important;
+  color: var(--spark-editor-theme) !important;
+  border: none !important;
+  border-radius: 0 0.25rem 0.25rem 0;
+}
+
+// Plain tree hover
+.plain-tree .tree-node:hover,
+.sb-tree-node:hover {
+  background-color: var(--color-brand-tint) !important;
+  border-radius: 0.375rem;
+}
+
+.plain-tree .tree-node.active,
+.sb-tree-node.active {
+  background-color: var(--color-brand-subtle) !important;
+  border-left: 3px solid var(--spark-editor-theme) !important;
+  color: var(--spark-editor-theme) !important;
+}
+
+// -----------------------------------------------------------------------------
+// 8. HEADER / TOOLBAR — portal-style top bar
+// -----------------------------------------------------------------------------
+
+.editor-header,
+.sb-editor-header,
+.header-component {
+  background-color: var(--spark-surface);
+  border-bottom: 1px solid var(--spark-border-card);
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.06);
+}
+
+// Primary action area in header
+.header-component .sb-btn-primary,
+.editor-header .sb-btn-primary {
+  background-color: var(--spark-editor-theme) !important;
+  border-color: var(--spark-editor-theme) !important;
+  color: var(--spark-surface) !important;
+  border-radius: 0.5rem !important;
+}
+
+// Override sb-styles full-color primary header background — soften to brand accent strip
+.sb-bg-color-primary {
+  background-color: var(--spark-editor-theme) !important;
+  background-image: none !important;
+  // Subtle top header bar — not full dark block
+  padding-top: 0.25rem !important;
+  padding-bottom: 0.25rem !important;
+
+  // Back button inside dark header — no border
+  .sb-btn.back-btn,
+  .sb-btn.sb-btn-primary.back-btn {
+    background: transparent !important;
+    border-color: transparent !important;
+    border: none !important;
+    color: var(--spark-surface) !important;
+    font-size: 0.8rem !important;
+    padding: 0.25rem 0.75rem !important;
+    border-radius: 0.375rem !important;
+    box-shadow: none !important;
+    &:hover {
+      background: rgba(255, 255, 255, 0.15) !important;
+    }
+  }
+
+  .sb-color-white,
+  * { color: var(--spark-surface) !important; }
+}
+
+// Second row header (title + action buttons)
+.sb-bg-lightBlue {
+  background-color: var(--spark-surface) !important;
+  border-bottom: 1px solid var(--spark-border-card) !important;
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.05) !important;
+
+  .practical-header__title {
+    color: var(--spark-charcoal) !important;
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+  }
+
+  // Outline buttons in toolbar
+  .sb-btn-outline-primary {
+    border-color: var(--color-brand-outline) !important;
+    color: var(--spark-editor-theme) !important;
+    border-radius: 0.5rem !important;
+    &:hover {
+      background-color: var(--color-brand-tint) !important;
+    }
+    &.sb-btn-outline-disabled,
+    &[disabled] {
+      background-color: var(--spark-surface) !important;
+      border-color: var(--spark-gray-b2) !important;
+      color: var(--spark-gray-75) !important;
+      cursor: not-allowed !important;
+      pointer-events: none;
+      &:hover {
+        background-color: var(--spark-surface) !important;
+        border-color: var(--spark-gray-b2) !important;
+        color: var(--spark-gray-75) !important;
+      }
+    }
+  }
+
+  // Primary buttons in toolbar
+  .sb-btn-primary {
+    background-color: var(--spark-editor-theme) !important;
+    border-color: var(--spark-editor-theme) !important;
+    color: var(--spark-surface) !important;
+    border-radius: 0.5rem !important;
+    font-weight: 600 !important;
+    &:hover {
+      background-color: var(--spark-editor-theme-dark) !important;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 9. PROGRESS / STATUS INDICATORS
+// -----------------------------------------------------------------------------
+
+.sb-progress-status .active,
+.progress-status .active {
+  color: var(--spark-editor-theme) !important;
+  border-color: var(--spark-editor-theme) !important;
+}
+
+.sb-progress-status .completed {
+  color: var(--color-success) !important; // green for completed
+}
+
+// Semantic UI progress bar
+.ui.progress .bar {
+  background-color: var(--spark-editor-theme) !important;
+  border-radius: 0.5rem !important;
+}
+
+.ui.progress {
+  border-radius: 0.5rem !important;
+}
+
+// -----------------------------------------------------------------------------
+// 10. TOASTS / NOTIFICATIONS — matching portal style
+// -----------------------------------------------------------------------------
+
+.sb-toast,
+.iziToast,
+[class*="iziToast-color"] {
+  border-radius: 0.5rem !important;
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.12) !important;
+}
+
+.iziToast.iziToast-color-blue,
+.sb-toast-info {
+  background-color: var(--color-brand-tint) !important;
+  border-left: 4px solid var(--spark-editor-theme) !important;
+  color: var(--spark-charcoal) !important;
+}
+
+.iziToast.iziToast-color-green,
+.sb-toast-success {
+  background-color: var(--color-success-bg) !important;
+  border-left: 4px solid var(--color-success) !important;
+}
+
+.iziToast.iziToast-color-red,
+.sb-toast-error {
+  background-color: var(--red-0) !important;
+  border-left: 4px solid var(--red-400) !important;
+}
+
+.iziToast.iziToast-color-yellow,
+.sb-toast-warning {
+  background-color: var(--tertiary-0) !important;
+  border-left: 4px solid var(--tertiary-100) !important;
+}
+
+// -----------------------------------------------------------------------------
+// 11. CARDS & CONTENT PANELS — white surface with subtle shadow
+// -----------------------------------------------------------------------------
+
+.sb-card,
+.content-card,
+.meta-form-card,
+.editor-panel {
+  background-color: var(--spark-surface);
+  border-radius: 0.75rem;
+  border: 1px solid var(--spark-card-alt);
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.06);
+}
+
+// -----------------------------------------------------------------------------
+// 12. SLIDERS — orange track/thumb
+// -----------------------------------------------------------------------------
+
+input[type="range"] {
+  accent-color: var(--spark-editor-theme);
+}
+
+.ui.slider.checkbox input:checked ~ label:before,
+.ui.toggle.checkbox input:checked ~ label:before {
+  background-color: var(--spark-editor-theme) !important;
+}
+
+// -----------------------------------------------------------------------------
+// 13. PUBLISH CHECKLIST — orange accent for checked items
+// -----------------------------------------------------------------------------
+
+.publish-checklist .checklist-item.checked,
+.sb-checklist-item.checked {
+  color: var(--spark-editor-theme);
+}
+
+.publish-checklist .checklist-item.checked .item-icon,
+.sb-checklist-item.checked .item-icon {
+  color: var(--color-success); // green tick for completed
+}
+
+// -----------------------------------------------------------------------------
+// 14. SCROLLBAR — subtle portal-matching style (WebKit)
+// -----------------------------------------------------------------------------
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--spark-card-alt);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-brand-divider);
+  border-radius: 3px;
+
+  &:hover {
+    background: var(--color-brand-outline);
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 15. LABELS / BADGES / CHIPS — orange variant
+// -----------------------------------------------------------------------------
+
+.sb-label,
+.ui.label {
+  border-radius: 0.375rem !important;
+}
+
+.sb-label-primary,
+.ui.label.sb-label-primary {
+  background-color: var(--color-brand-tint) !important;
+  color: var(--spark-editor-theme) !important;
+  border: 1px solid var(--color-brand-divider) !important;
+}
+
+// Status chips
+.sb-status-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.625rem;
+  border-radius: 1rem;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+
+  &.draft    { background-color: var(--spark-card-alt);     color: var(--spark-gray-75); }
+  &.review   { background-color: var(--tertiary-0); color: var(--tertiary-400); }
+  &.live     { background-color: var(--color-success-bg); color: var(--color-selected-deep); }
+  &.rejected { background-color: var(--red-0);      color: var(--red-400); }
+}
+
+// -----------------------------------------------------------------------------
+// 16. CK EDITOR TOOLBAR — align with portal colour
+// -----------------------------------------------------------------------------
+
+.ck.ck-toolbar {
+  border-radius: 0.5rem 0.5rem 0 0 !important;
+  border-color: var(--spark-border-card) !important;
+  background-color: var(--color-brand-tint) !important;
+}
+
+.ck.ck-editor__main > .ck-editor__editable {
+  border-radius: 0 0 0.5rem 0.5rem !important;
+  border-color: var(--spark-border-card) !important;
+
+  &.ck-focused {
+    border-color: var(--color-brand-outline) !important;
+    box-shadow: 0 0 0 3px rgba(var(--rc-rgba-primary), 0.15) !important;
+  }
+}
+
+.ck.ck-button.ck-on,
+.ck.ck-button:hover:not(.ck-disabled) {
+  background-color: var(--color-brand-tint) !important;
+  color: var(--spark-editor-theme) !important;
+}
+
+// -----------------------------------------------------------------------------
+// 17. ASSET BROWSER / LIBRARY — card hover
+// -----------------------------------------------------------------------------
+
+.asset-card:hover,
+.library-card:hover,
+.sb-asset-card:hover {
+  border-color: var(--color-brand-outline) !important;
+  box-shadow: 0 4px 12px 0 rgba(var(--rc-rgba-primary), 0.18) !important;
+}
+
+.asset-card.selected,
+.library-card.selected,
+.sb-asset-card.selected {
+  border-color: var(--spark-editor-theme) !important;
+  box-shadow: 0 0 0 2px var(--spark-editor-theme) !important;
+}
+
+// -----------------------------------------------------------------------------
+// 18. BULK UPLOAD / CSV UPLOAD — collection editor specific
+// -----------------------------------------------------------------------------
+
+.bulk-upload-container,
+.csv-upload-container {
+  border-radius: 0.75rem;
+  border: 2px dashed var(--color-brand-divider);
+  background-color: var(--color-brand-tint);
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+
+  &:hover,
+  &.drag-over {
+    border-color: var(--spark-editor-theme);
+    background-color: var(--color-brand-subtle);
+  }
+}
+
+// DIAL code component
+.dialcode-container {
+  .dialcode-input {
+    border-radius: 0.5rem;
+    border-color: var(--spark-border-card);
+    &:focus {
+      border-color: var(--color-brand-outline) !important;
+      box-shadow: 0 0 0 3px rgba(var(--rc-rgba-primary), 0.15) !important;
+    }
+  }
+}
+
+// Resource reorder drag handles
+.resource-reorder-item:hover {
+  background-color: var(--color-brand-tint);
+  border-radius: 0.375rem;
+}
+
+// Skeleton loader shimmer — orange tint
+.skeleton-loader,
+.sb-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--spark-card-alt) 25%,
+    var(--color-brand-tint) 50%,
+    var(--spark-card-alt) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+  border-radius: 0.375rem;
+}
+
+@keyframes skeleton-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+// -----------------------------------------------------------------------------
+// 19. BUTTONS — global .sb-btn rounding & modern style
+// -----------------------------------------------------------------------------
+
+.sb-btn {
+  border-radius: 0.5rem !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
+
+  &.sb-btn-primary {
+    background-color: var(--spark-editor-theme) !important;
+    border-color: var(--spark-editor-theme) !important;
+    color: var(--spark-surface) !important;
+    &:hover { background-color: var(--spark-editor-theme-dark) !important; }
+  }
+
+  &.sb-btn-outline-primary {
+    background-color: transparent !important;
+    border: 1px solid var(--color-brand-outline) !important;
+    color: var(--spark-editor-theme) !important;
+    &:hover {
+      background-color: var(--color-brand-tint) !important;
+      border-color: var(--spark-editor-theme) !important;
+    }
+    &.sb-btn-outline-disabled,
+    &[disabled] {
+      background-color: var(--spark-surface) !important;
+      border-color: var(--spark-gray-b2) !important;
+      color: var(--spark-gray-75) !important;
+      cursor: not-allowed !important;
+      pointer-events: none;
+      &:hover {
+        background-color: var(--spark-surface) !important;
+        border-color: var(--spark-gray-b2) !important;
+        color: var(--spark-gray-75) !important;
+      }
+    }
+  }
+
+  &.sb-btn-secondary {
+    background-color: var(--color-success) !important;
+    border-color: var(--color-success) !important;
+    color: var(--spark-surface) !important;
+    border-radius: 0.5rem !important;
+  }
+
+  &.sb-btn-outline-error {
+    border-color: var(--red-400) !important;
+    color: var(--red-400) !important;
+    border-radius: 0.5rem !important;
+  }
+}
+
+// Select content button in library — use secondary/green
+.btn-addtoLibrary .sb-btn,
+.btn-addtoLibrary button {
+  border-radius: 0.5rem !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+}
+
+// -----------------------------------------------------------------------------
+// 20. LEFT PANEL / FOLDER TREE — modern panel styling
+// -----------------------------------------------------------------------------
+
+// Left tree panel header "Folders"
+.sb-collectionTree-fancyTreelist > .d-flex,
+.sb-collectionTree-fancyTreelist > .flex-ai-jc-center,
+.sb-collectionTree-fancyTreelist > .flex-jc-ai-center,
+.sb-tree-header {
+  background-color: var(--spark-surface) !important;
+  border-bottom: 1px solid var(--spark-border-card) !important;
+
+  h6, span, .font-weight-bold {
+    color: var(--spark-charcoal) !important;
+    font-weight: 700 !important;
+    font-size: 0.875rem !important;
+  }
+}
+
+// Folder panel background
+.eight.bg-white,
+.sb-collectionTree-fancyTreelist {
+  background-color: var(--spark-surface) !important;
+}
+
+// Add sibling/child bottom buttons
+.sb-fixed-with-whitebg {
+  background-color: var(--spark-surface) !important;
+  border-top: 1px solid var(--spark-border-card) !important;
+  box-shadow: 0 -2px 8px 0 rgba(0, 0, 0, 0.05) !important;
+
+  // Add Sibling / Add Child — text link style, no border
+  .sb-btn-cover .sb-btn {
+    border: none !important;
+    background: transparent !important;
+    color: var(--spark-editor-theme) !important;
+    font-weight: 600 !important;
+    font-size: 0.8125rem !important;
+    box-shadow: none !important;
+    &:hover {
+      color: var(--spark-editor-theme-dark) !important;
+      background: transparent !important;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 21. LIBRARY / ADD-FROM-LIBRARY PAGE
+// -----------------------------------------------------------------------------
+
+// Library page overall background
+.add-to-library {
+  background-color: var(--spark-card-alt) !important;
+}
+
+// Library list container
+.sbtoc-container {
+  background-color: var(--spark-surface) !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.06) !important;
+  padding: 1rem !important;
+}
+
+// Library search/filter bar background
+.sb-prominent-filter,
+.library-filter {
+  background-color: var(--spark-surface) !important;
+  border-bottom: 1px solid var(--spark-border-card) !important;
+  padding: 0.75rem 0 !important;
+}
+
+// Library item cards
+.sbchapter__item {
+  background: var(--spark-surface) !important;
+  border: 1px solid var(--spark-border-card) !important;
+  border-radius: 0.5rem !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06) !important;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease !important;
+  margin-bottom: 0.5rem !important;
+
+  &:hover {
+    border-color: var(--color-brand-divider) !important;
+    box-shadow: 0 3px 10px 0 rgba(var(--rc-rgba-primary), 0.12) !important;
+  }
+
+  h4 {
+    color: var(--spark-charcoal) !important;
+    font-size: 0.8125rem !important;
+    font-weight: 500 !important;
+  }
+}
+
+// Selected item in library
+.sbchapter__item.selected,
+.sbchapter__item.active {
+  border-color: var(--color-brand-outline) !important;
+  background-color: var(--color-brand-tint) !important;
+  box-shadow: 0 0 0 2px rgba(var(--rc-rgba-primary), 0.2) !important;
+}
+
+// Right panel — content preview area
+.min-h-500 {
+  min-height: 500px;
+}
+
+// -----------------------------------------------------------------------------
+// 22. MODALS — rounded, subtle shadow
+// -----------------------------------------------------------------------------
+
+.ui.modal {
+  border-radius: 0.75rem !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.16) !important;
+
+  > .header {
+    border-radius: 0.75rem 0.75rem 0 0 !important;
+    background-color: var(--spark-surface) !important;
+    border-bottom: 1px solid var(--spark-border-card) !important;
+    color: var(--spark-charcoal) !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+  }
+
+  > .actions {
+    background-color: var(--spark-card-alt) !important;
+    border-top: 1px solid var(--spark-border-card) !important;
+    border-radius: 0 0 0.75rem 0.75rem !important;
+  }
+
+  > .close {
+    right: 1rem !important;
+    &:hover { color: inherit !important; }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 23. FANCYTREE PANEL — left side tree
+// -----------------------------------------------------------------------------
+
+.ui-fancytree {
+  background-color: var(--spark-surface) !important;
+
+  li span.fancytree-node {
+    transition: background-color 0.15s ease !important;
+  }
+}
+
+// Active/selected node strip — no border, just background tint
+.fancytree-active > .fancytree-title,
+span.fancytree-active span.fancytree-title {
+  background-color: var(--color-brand-tint) !important;
+  color: var(--spark-editor-theme) !important;
+  border: none !important;
+}
+
+// -----------------------------------------------------------------------------
+// 24. CONTENT PLAYER AREA — border radius on all players
+// -----------------------------------------------------------------------------
+
+// Player wrapper containers — border radius only on the container div
+.sunbird-video-player-container,
+.sunbird-pdf-player-container,
+.sunbird-epub-player-container,
+.sunbird-quml-player-container,
+.player-container {
+  border-radius: 0.75rem !important;
+  overflow: hidden !important;
+}
+
+// ECML / old iframe player + inline players inside aspectratio
+.aspectratio,
+.contentViewerIframeShadow {
+  border-radius: 0.75rem !important;
+  overflow: hidden !important;
+}
+
+// -----------------------------------------------------------------------------
+// 26. GREEN BUTTONS → white bg + orange border (portal design system)
+// -----------------------------------------------------------------------------
+
+// sb-btn-success (upload buttons, bulk-upload, csv-upload)
+.sb-btn-success,
+.sb-btn.sb-btn-success {
+  background-color: var(--spark-surface) !important;
+  border: 1.5px solid var(--spark-editor-theme) !important;
+  color: var(--spark-editor-theme) !important;
+
+  &:hover,
+  &:focus {
+    background-color: var(--color-brand-tint) !important;
+    border-color: var(--spark-editor-theme-dark) !important;
+    color: var(--spark-editor-theme-dark) !important;
+  }
+
+  &:disabled,
+  &.disabled {
+    background-color: var(--spark-border-card) !important;
+    border-color: var(--spark-gray-82) !important;
+    color: var(--spark-gray-75) !important;
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+// sb-btn-dark-green (Select Content / Add to collection buttons)
+.sb-btn-dark-green,
+.sb-btn.sb-btn-dark-green {
+  background-color: var(--spark-surface) !important;
+  border: 1.5px solid var(--spark-editor-theme) !important;
+  color: var(--spark-editor-theme) !important;
+
+  &:hover,
+  &:focus {
+    background-color: var(--color-brand-tint) !important;
+    border-color: var(--spark-editor-theme-dark) !important;
+    color: var(--spark-editor-theme-dark) !important;
+  }
+
+  &:disabled,
+  &.disabled {
+    background-color: var(--spark-border-card) !important;
+    border-color: var(--spark-gray-82) !important;
+    color: var(--spark-gray-75) !important;
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+// sb-color-success (text/icon "Added to Collection" indicator — keep green tick)
+// Only override for buttons that use it as a button background
+button.sb-btn.sb-color-success {
+  background-color: var(--spark-surface) !important;
+  border: 1.5px solid var(--spark-editor-theme) !important;
+  color: var(--spark-editor-theme) !important;
+}
+
+// -----------------------------------------------------------------------------
+// 25. MAIN EDITOR PAGE BACKGROUND — cleaner layering (issue 5)
+// -----------------------------------------------------------------------------
+
+// Main editor layout: white page, grey panels feel
+// Top header: orange (sb-bg-color-primary handled above)
+// Second toolbar row: white (sb-bg-lightBlue handled above)
+// Content area: subtle off-white so panels stand out
+.add-to-library,
+lib-editor > .sb-collectionTree-fancyTreelist,
+.ui.grid.sb-g {
+  background-color: var(--spark-card-alt) !important;
+}
+
+// The right content panel (form area + player)
+.eight.bg-white {
+  background-color: var(--spark-surface) !important;
+  border-radius: 0.75rem 0 0 0 !important;
+}
+
+// Left tree panel
+.four.bg-white,
+.w-25 {
+  background-color: var(--spark-surface) !important;
+}
+
+// Overall container background after the headers
+.sb-collectionTree-fancyTreelist > .ui.grid {
+  background-color: var(--spark-card-alt) !important;
+}
+
+// Form/meta area — white card
+.ui.twelve.grid,
+.ui.column.grid > [class*='eight wide'].column > .bg-white {
+  background-color: var(--spark-surface) !important;
+  border-radius: 0.75rem !important;
+}
+
+// -----------------------------------------------------------------------------
+// 27. UPLOAD AND USE MODAL — content padding
+// -----------------------------------------------------------------------------
+
+// The upload modal content uses .p-10.sb-bg-white — give it more breathing room
+.overflow-modal .p-10.sb-bg-white {
+  padding: 1.5rem !important;
+}
+
+// -----------------------------------------------------------------------------
+// 29. sb-btn-secondary — replace green with white + orange outline
+// -----------------------------------------------------------------------------
+
+.sb-btn-secondary,
+.sb-btn.sb-btn-secondary {
+  background-color: var(--spark-surface) !important;
+  border: 1.5px solid var(--spark-editor-theme) !important;
+  color: var(--spark-editor-theme) !important;
+
+  &:hover,
+  &:focus {
+    background-color: var(--color-brand-tint) !important;
+    border-color: var(--spark-editor-theme-dark) !important;
+    color: var(--spark-editor-theme-dark) !important;
+  }
+
+  &:disabled,
+  &.disabled {
+    background-color: var(--spark-border-card) !important;
+    border-color: var(--spark-gray-82) !important;
+    color: var(--spark-gray-75) !important;
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 30. COLLABORATOR POPUP — modern card styling
+// -----------------------------------------------------------------------------
+
+.showCollaborator {
+  // Full-screen modal content area — soft background
+  .sb-modal-content.sb-bg-color-primary-100,
+  .ui.segment.sb-bg-color-primary-100 {
+    background-color: var(--spark-card-alt) !important;
+  }
+
+  // Header bar (title + search)
+  .sb-bg-color-white.h-70 {
+    background-color: var(--spark-surface) !important;
+    border-bottom: 1px solid var(--spark-border-card) !important;
+    padding: 0 1.25rem !important;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.06) !important;
+  }
+
+  // Tab underline — orange active
+  .ui.pointing.secondary.menu .active.item {
+    border-color: var(--spark-editor-theme) !important;
+    color: var(--spark-editor-theme) !important;
+    font-weight: 600 !important;
+  }
+
+  // Count label
+  .font-weight-bold {
+    color: var(--color-text-placeholder) !important;
+    font-size: 0.8125rem !important;
+  }
+
+  // Sort By dropdown
+  select.search.dropdown {
+    border: 1px solid var(--spark-gray-b2) !important;
+    border-radius: 0.5rem !important;
+    padding: 0.375rem 0.75rem !important;
+    font-size: 0.8125rem !important;
+    background-color: var(--spark-surface) !important;
+    color: var(--color-text) !important;
+    cursor: pointer;
+  }
+
+  // User / collaborator cards — modern rounded style
+  .sb-card {
+    border: 1px solid var(--spark-border-card) !important;
+    border-radius: 0.75rem !important;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.06) !important;
+    margin: 0.375rem !important;
+    transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease !important;
+
+    &:hover {
+      border-color: var(--color-brand-divider) !important;
+      box-shadow: 0 4px 12px 0 rgba(var(--rc-rgba-primary), 0.14) !important;
+      transform: translateY(-2px) !important;
+    }
+
+    .sb-card-body {
+      padding: 0.875rem 1rem !important;
+    }
+
+    // Avatar circle — orange toned
+    .sb-card-image {
+      background-color: var(--spark-editor-theme-dark) !important;
+      border: none !important;
+      border-radius: 50% !important;
+      color: var(--spark-surface) !important;
+      font-size: 1.5rem !important;
+      line-height: 3.75rem !important;
+      flex-shrink: 0;
+    }
+
+    // Name text
+    .sb-card-meta-item {
+      color: var(--spark-charcoal) !important;
+      font-size: 0.875rem !important;
+    }
+
+    // Org text
+    .sb-color-gray-400 {
+      color: var(--color-text-placeholder) !important;
+      font-size: 0.8125rem !important;
+    }
+  }
+
+  // "+ Add" link — orange
+  a.sb-color-primary {
+    color: var(--spark-editor-theme) !important;
+    font-weight: 600 !important;
+    font-size: 0.8125rem !important;
+    &:hover { color: var(--spark-editor-theme-dark) !important; }
+  }
+
+  // "Remove" link — keep error red
+  a.sb-color-error {
+    color: var(--red-400) !important;
+    font-weight: 600 !important;
+    font-size: 0.8125rem !important;
+  }
+
+  // Done button in footer
+  .sb-modal-actions .sb-btn-primary {
+    background-color: var(--spark-editor-theme) !important;
+    border-color: var(--spark-editor-theme) !important;
+    color: var(--spark-surface) !important;
+    border-radius: 0.5rem !important;
+    font-weight: 600 !important;
+    padding: 0.5rem 1.5rem !important;
+    &:hover { background-color: var(--spark-editor-theme-dark) !important; }
+  }
+}

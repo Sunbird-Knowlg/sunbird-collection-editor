@@ -69,7 +69,7 @@
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
     "tslib": "^2.6.2",
-    "uuid": "^9.0.0",
+    "uuid": "^14.0.0",
     "video.js": "^7.18.1",
     "videojs-contrib-quality-levels": "^2.1.0",
     "videojs-http-source-selector": "^1.1.6",
@@ -135,6 +135,7 @@
     "qs": "^6.14.2",
     "jsonld": "^8.3.3",
     "jsonld-signatures": "^11.6.0",
-    "undici": "^6.25.0"
+    "undici": "^6.25.0",
+    "uuid": "^14.0.0"
   }
 }

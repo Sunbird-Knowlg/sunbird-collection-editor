@@ -31,19 +31,28 @@
       position: relative;
       top: unset;
       box-shadow: none;
+      background-color: var(--spark-surface) !important;
       &:nth-child(6){
         padding-right: 0;
       }
       .sb-search-box{
         width: 36%;
-        border: 1px solid var(--gray-200);
+        border: 1px solid var(--spark-border-card);
+        border-radius: 0.5rem;
+        background-color: var(--spark-surface);
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        &:focus-within {
+          border-color: var(--color-brand-outline);
+          box-shadow: 0 0 0 3px rgba(var(--rc-rgba-primary), 0.12);
+        }
         .search.icon{
           &:before{
-            color:#bbb7b2;
+            color: var(--spark-gray-82);
           }
         }
         .sb-search-input{
           padding: 0.5rem;
+          background: transparent;
         }
       }
       .small{
@@ -51,14 +60,15 @@
       }
       .sb-prominent-filter-field {
         cursor: pointer;
-  
+
         &:last-child {
           text-align: inherit !important;
           margin: inherit !important;
         }
-            
+
         .ui.selection.dropdown {
-          border-color: #999;
+          border-color: var(--spark-border-card);
+          border-radius: 0.5rem;
         }
   
         ::ng-deep {
